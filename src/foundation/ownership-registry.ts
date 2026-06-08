@@ -382,7 +382,21 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     ownerModule: 'devpulse_v2_world2_isolation_gate',
     ownerFunction: 'assertWorld2Isolation',
     phase: 5,
-    description: 'World 2 sandbox isolation (deferred until Phase 5)',
+    description: 'World 2 sandbox isolation gate — distinct from workspace foundation',
+  },
+  world2_workspace_foundation: {
+    domain: 'world2_workspace_foundation',
+    ownerModule: 'devpulse_v2_world2_workspace_foundation',
+    ownerFunction: 'createDevPulseV2World2WorkspaceFoundation',
+    phase: 7.1,
+    description: 'World 2 isolated project workspace foundation — multi-workspace isolation, no autonomous builder',
+  },
+  world2_execution_planner: {
+    domain: 'world2_execution_planner',
+    ownerModule: 'devpulse_v2_world2_execution_planner',
+    ownerFunction: 'createDevPulseV2World2ExecutionPlanner',
+    phase: 7.2,
+    description: 'World 2 execution planner — creates execution plans only, no execution or code generation',
   },
 };
 

@@ -1,6 +1,6 @@
 /** Shared types for DevPulse V2 foundation enforcement. */
 
-export type DevPulseV2Phase = 1 | 2 | 3 | 4 | 4.5 | 5 | 5.5 | 6.1 | 6.2 | 6.3 | 6.4 | 6.5 | 6.6 | 6.7 | 6.8 | 6.9 | 6.10 | 6.11;
+export type DevPulseV2Phase = 1 | 2 | 3 | 4 | 4.5 | 5 | 5.5 | 6.1 | 6.2 | 6.3 | 6.4 | 6.5 | 6.6 | 6.7 | 6.8 | 6.9 | 6.10 | 6.11 | 7.1 | 7.2;
 
 export type DevPulseV2SystemId =
   | 'foundation_enforcement'
@@ -111,7 +111,9 @@ export type OwnershipDomain =
   | 'phase_gate'
   | 'performance_gate'
   | 'growth_protection'
-  | 'world2_isolation';
+  | 'world2_isolation'
+  | 'world2_workspace_foundation'
+  | 'world2_execution_planner';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

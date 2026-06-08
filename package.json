@@ -52,6 +52,8 @@
     "validate:rollback-retry": "tsx scripts/validate-rollback-retry-engine.ts",
     "validate:verification-gated-apply": "tsx scripts/validate-verification-gated-apply.ts",
     "validate:phase6-checkpoint": "tsx scripts/validate-phase6-governance-stack-checkpoint.ts",
+    "validate:world2-workspace-foundation": "tsx scripts/validate-world2-workspace-foundation.ts",
+    "validate:world2-execution-planner": "tsx scripts/validate-world2-execution-planner.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
