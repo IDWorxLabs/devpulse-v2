@@ -68,6 +68,7 @@
     "validate:phase8-governance-stack-checkpoint": "tsx scripts/validate-phase8-governance-stack-checkpoint.ts",
     "validate:missing-capability-detector": "tsx scripts/validate-missing-capability-detector.ts",
     "validate:safe-capability-acquisition": "tsx scripts/validate-safe-capability-acquisition.ts",
+    "validate:self-learning-engine": "tsx scripts/validate-self-learning-engine.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

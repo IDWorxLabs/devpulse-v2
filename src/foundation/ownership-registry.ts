@@ -482,6 +482,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 9.2,
     description: 'Phase 9.2 safe capability acquisition foundation — plans safe acquisition only, no execution, download, install, or modification',
   },
+  self_learning_engine: {
+    domain: 'self_learning_engine',
+    ownerModule: 'devpulse_v2_self_learning_engine',
+    ownerFunction: 'createDevPulseV2SelfLearningEngine',
+    phase: 9.3,
+    description: 'Phase 9.3 self-learning engine foundation — records structured lessons and future guidance only, no model training, execution, or automatic behavior change',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
