@@ -72,6 +72,7 @@
     "validate:architecture-drift-detection": "tsx scripts/validate-architecture-drift-detection.ts",
     "validate:complexity-score-foundation": "tsx scripts/validate-complexity-score-foundation.ts",
     "validate:future-problem-prediction": "tsx scripts/validate-future-problem-prediction.ts",
+    "validate:phase9-governance-stack-checkpoint": "tsx scripts/validate-phase9-governance-stack-checkpoint.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
