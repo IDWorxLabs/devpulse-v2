@@ -545,6 +545,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 11.1,
     description: 'Phase 11.1 unified command center brain foundation — local intelligence orchestration for Command Center chat, understands registered systems and roadmap, no execution, file modification, external AI, or system replacement',
   },
+  cross_system_awareness: {
+    domain: 'cross_system_awareness',
+    ownerModule: 'devpulse_v2_cross_system_awareness',
+    ownerFunction: 'getDevPulseV2CrossSystemAwareness',
+    phase: 11.2,
+    description: 'Phase 11.2 cross-system awareness — relationship, dependency, and impact understanding for Command Center Brain, awareness only, no execution or shared memory',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {

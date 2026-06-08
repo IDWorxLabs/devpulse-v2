@@ -9,12 +9,18 @@ export {
   DevPulseV2CommandCenterBrain,
   getDevPulseV2CommandCenterBrain,
   resetDevPulseV2CommandCenterBrainForTests,
+  getLastCrossSystemDiagnostics,
+  resetCrossSystemDiagnosticsForTests,
   classificationKey,
   responseKey,
   systemsAwarenessKey,
   roadmapContextKey,
+  crossSystemAwarenessKey,
   BRAIN_PIPELINE_SEQUENCE,
   OPERATOR_FEED_EVENT_SEQUENCE,
+  CROSS_SYSTEM_FEED_DEPENDENCY,
+  CROSS_SYSTEM_FEED_IMPACT,
+  CROSS_SYSTEM_FEED_RELATIONSHIP,
   COMMAND_CENTER_BRAIN_OWNER_MODULE,
   COMMAND_CENTER_BRAIN_PASS_TOKEN,
 } from './command-center-brain.js';
@@ -25,6 +31,10 @@ export {
   isRoadmapQuestion,
   isSystemQuestion,
   isArchitectureQuestion,
+  isRelationshipQuestion,
+  isDependencyQuestion,
+  isImpactQuestion,
+  isCrossSystemQuestion,
 } from './brain-request-classifier.js';
 
 export {
@@ -59,7 +69,26 @@ export type {
   OperatorFeedEvent,
   BrainConfirmation,
   BrainResponseResult,
+  CrossSystemAwarenessSnapshot,
+  CrossSystemDiagnostics,
+  CrossSystemRoutingReport,
 } from './brain-types.js';
+
+export {
+  CROSS_SYSTEM_AWARENESS_PASS_TOKEN,
+  CROSS_SYSTEM_AWARENESS_OWNER_MODULE,
+  DUPLICATE_CROSS_SYSTEM_PATTERNS,
+  CROSS_SYSTEM_ROUTING_PASS_TOKEN,
+  buildCrossSystemRegistry,
+  getRelationshipEdges,
+  analyzeDependencies,
+  analyzeImpact,
+  processCrossSystemAwareness,
+  buildCrossSystemRoutingReport,
+  routingReportKey,
+  getDevPulseV2CrossSystemAwareness,
+  DevPulseV2CrossSystemAwareness,
+} from './cross-system-awareness/index.js';
 
 export {
   BRAIN_REQUEST_CATEGORIES,

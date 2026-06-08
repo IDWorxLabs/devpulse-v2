@@ -29,7 +29,7 @@ function governanceExplanation(): string {
 
 function generateRoadmapResponse(roadmap: BrainRoadmapContext): string {
   return [
-    `Phase ${roadmap.nextPhase} is the next roadmap item after Unified Command Center Brain (11.1).`,
+    `Current phase: ${roadmap.currentPhase}. Next: ${roadmap.nextPhase}.`,
     '',
     'Current foundation maturity:',
     roadmap.stackMaturitySummary,
@@ -150,7 +150,7 @@ function generateGeneralResponse(roadmap: BrainRoadmapContext): string {
     `Current phase: ${roadmap.currentPhase}.`,
     roadmap.recommendedNextStep,
     '',
-    'Try: "What should we build next?" or "Explain the Trust Engine" or "How mature is World 2?"',
+    'Try: "What should we build next?" or "How does World 2 connect to Command Center?" or "What depends on Governance?"',
   ].join('\n');
 }
 

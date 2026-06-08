@@ -67,6 +67,41 @@
     renderNotifications(runtimeNotifications);
   }
 
+  function renderCrossSystemDiagnostics(diag) {
+    var list = el('cross-system-diagnostics-list');
+    if (!list || !diag) return;
+    var rows = [
+      { label: 'Relationship Count', ok: diag.relationshipCount > 0, value: String(diag.relationshipCount) },
+      { label: 'Dependency Count', ok: diag.dependencyCount > 0, value: String(diag.dependencyCount) },
+      { label: 'Impact Analysis Available', ok: diag.impactAnalysisAvailable === true, value: diag.impactAnalysisAvailable ? 'YES' : 'NO' },
+    ];
+    list.innerHTML = '';
+    for (var i = 0; i < rows.length; i += 1) {
+      var li = document.createElement('li');
+      li.className = rows[i].ok ? 'ok' : 'fail';
+      li.textContent = rows[i].label + ': ' + rows[i].value;
+      list.appendChild(li);
+    }
+    if (el('last-query-type')) {
+      el('last-query-type').textContent = diag.lastQueryType || 'None';
+    }
+    if (el('last-analyzer-used')) {
+      el('last-analyzer-used').textContent = diag.lastAnalyzerUsed || 'None';
+    }
+    if (el('last-routing-result')) {
+      el('last-routing-result').textContent = diag.lastRoutingResult || 'None';
+    }
+    if (el('last-relationship-query')) {
+      el('last-relationship-query').textContent = diag.lastRelationshipQuery || 'None';
+    }
+    if (el('last-dependency-query')) {
+      el('last-dependency-query').textContent = diag.lastDependencyQuery || 'None';
+    }
+    if (el('last-impact-query')) {
+      el('last-impact-query').textContent = diag.lastImpactQuery || 'None';
+    }
+  }
+
   function renderRuntimeDiagnostics() {
     var list = el('runtime-diagnostics-list');
     if (!list) return;
@@ -167,8 +202,11 @@
   function mapEventToSection(eventType) {
     if (eventType === 'Classifying Request') return 'Planning';
     if (eventType === 'Checking Systems') return 'Execution';
+    if (eventType === 'Loading Relationships') return 'Verification';
     if (eventType === 'Checking Roadmap') return 'Verification';
-    if (eventType === 'Generating Response') return 'Approvals';
+    if (eventType === 'Checking Dependencies') return 'Approvals';
+    if (eventType === 'Performing Impact Analysis') return 'Approvals';
+    if (eventType === 'Generating Response') return 'Learning';
     if (eventType === 'Response Ready') return 'Learning';
     return 'Planning';
   }
@@ -208,11 +246,13 @@
       var isActive = activeEvent && section === mapEventToSection(activeEvent);
       var isCompleted = completedSections.indexOf(section) !== -1;
       var isReady = activeEvent === 'Response Ready' && section === 'Learning';
+      var isImpact = activeEvent === 'Performing Impact Analysis' && isActive;
       div.className =
         'feed-section' +
         (isActive ? ' active-feed' : '') +
         (isCompleted && !isActive ? ' completed-feed' : '') +
-        (isReady ? ' ready-feed' : '');
+        (isReady ? ' ready-feed' : '') +
+        (isImpact ? ' active-feed' : '');
       var statusText = 'Waiting for pipeline';
       if (isActive) statusText = activeEvent;
       else if (isCompleted) {
@@ -421,7 +461,7 @@
 
     if (el('page-title')) el('page-title').textContent = data.title;
     if (el('page-subtitle')) el('page-subtitle').textContent = 'Command Center';
-    if (el('phase-badge')) el('phase-badge').textContent = 'Phase 11.1B — UX Stabilization';
+    if (el('phase-badge')) el('phase-badge').textContent = 'Phase 11.2 — Cross-System Awareness';
     if (el('current-status')) el('current-status').textContent = data.currentStatus;
     if (el('experience-placeholder')) el('experience-placeholder').textContent = data.experienceLayerPlaceholder;
     if (el('trust-placeholder')) el('trust-placeholder').textContent = data.trustEnginePlaceholder;
@@ -487,6 +527,9 @@
           pushNotification('Brain Request Completed');
           setLastError('None');
           renderRuntimeDiagnostics();
+          if (result.crossSystemDiagnostics) {
+            renderCrossSystemDiagnostics(result.crossSystemDiagnostics);
+          }
         });
       })
       .catch(function (err) {
@@ -547,6 +590,17 @@
   switchView('command-center');
   showWelcomeState();
   renderRuntimeDiagnostics();
+  renderCrossSystemDiagnostics({
+    relationshipCount: 0,
+    dependencyCount: 0,
+    impactAnalysisAvailable: true,
+    lastQueryType: null,
+    lastAnalyzerUsed: null,
+    lastRoutingResult: null,
+    lastRelationshipQuery: null,
+    lastDependencyQuery: null,
+    lastImpactQuery: null,
+  });
 
   fetch('/api/founder-reality.json')
     .then(function (res) {

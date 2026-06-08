@@ -80,6 +80,8 @@
     "validate:command-center-brain": "tsx scripts/validate-command-center-brain.ts",
     "validate:command-center-brain-runtime": "tsx scripts/validate-command-center-brain-runtime.ts",
     "validate:command-center-ux-stabilization": "tsx scripts/validate-command-center-ux-stabilization.ts",
+    "validate:cross-system-awareness": "tsx scripts/validate-cross-system-awareness.ts",
+    "validate:cross-system-routing": "tsx scripts/validate-cross-system-routing.ts",
     "dev": "tsx server/founder-reality-server.ts",
     "start": "tsx server/founder-reality-server.ts",
     "typecheck": "tsc --noEmit"

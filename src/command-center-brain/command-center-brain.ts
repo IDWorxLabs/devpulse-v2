@@ -1,5 +1,5 @@
 /**
- * DevPulse V2 Unified Command Center Brain — Phase 11.1.
+ * DevPulse V2 Unified Command Center Brain — Phase 11.1+.
  * Local intelligence orchestration. Thinks — does NOT execute.
  */
 
@@ -21,10 +21,19 @@ import {
   generateBrainResponse,
   responseKey,
 } from './brain-response-generator.js';
+import {
+  buildCrossSystemSnapshot,
+  crossSystemAwarenessKey,
+  isCrossSystemCategory,
+  processCrossSystemAwareness,
+} from './cross-system-awareness/index.js';
+import { buildCrossSystemRoutingReport } from './cross-system-awareness/runtime-verification/index.js';
 import type {
   BrainPipelineStage,
+  BrainRequestCategory,
   BrainRequestInput,
   BrainResponseResult,
+  CrossSystemDiagnostics,
   OperatorFeedEvent,
   OperatorFeedEventType,
 } from './brain-types.js';
@@ -33,12 +42,27 @@ import {
   CODE_GEN_BLOCKED_PATTERNS,
   COMMAND_CENTER_BRAIN_OWNER_MODULE,
   COMMAND_CENTER_BRAIN_PASS_TOKEN,
+  CROSS_SYSTEM_FEED_DEPENDENCY,
+  CROSS_SYSTEM_FEED_IMPACT,
+  CROSS_SYSTEM_FEED_RELATIONSHIP,
   DUPLICATE_BRAIN_PATTERNS,
   EXECUTION_BLOCKED_PATTERNS,
   FILE_MOD_BLOCKED_PATTERNS,
   OPERATOR_FEED_EVENT_SEQUENCE,
   nextBrainResponseId,
 } from './brain-types.js';
+
+let lastCrossSystemDiagnostics: CrossSystemDiagnostics = {
+  relationshipCount: 0,
+  dependencyCount: 0,
+  impactAnalysisAvailable: true,
+  lastRelationshipQuery: null,
+  lastDependencyQuery: null,
+  lastImpactQuery: null,
+  lastQueryType: null,
+  lastAnalyzerUsed: null,
+  lastRoutingResult: null,
+};
 
 function getForbiddenPatterns(): string[] {
   return [
@@ -66,8 +90,19 @@ function detectBlockedIntent(message: string): string | null {
   return null;
 }
 
-function buildOperatorFeedEvents(timestamp: number): OperatorFeedEvent[] {
-  return OPERATOR_FEED_EVENT_SEQUENCE.map((eventType, index) => ({
+function feedSequenceForCategory(category: BrainRequestCategory): readonly OperatorFeedEventType[] {
+  if (category === 'DEPENDENCY') return CROSS_SYSTEM_FEED_DEPENDENCY;
+  if (category === 'IMPACT') return CROSS_SYSTEM_FEED_IMPACT;
+  if (category === 'RELATIONSHIP') return CROSS_SYSTEM_FEED_RELATIONSHIP;
+  return OPERATOR_FEED_EVENT_SEQUENCE;
+}
+
+function buildOperatorFeedEvents(
+  timestamp: number,
+  category: BrainRequestCategory,
+): OperatorFeedEvent[] {
+  const sequence = feedSequenceForCategory(category);
+  return sequence.map((eventType, index) => ({
     eventId: `feed-${(index + 1).toString().padStart(2, '0')}`,
     eventType,
     timestamp: timestamp + index,
@@ -78,6 +113,54 @@ function buildOperatorFeedEvents(timestamp: number): OperatorFeedEvent[] {
 function buildPipelineStages(blocked: boolean): BrainPipelineStage[] {
   if (blocked) return ['BRAIN_REQUEST_RECEIVED', 'BRAIN_REQUEST_BLOCKED'];
   return [...BRAIN_PIPELINE_SEQUENCE];
+}
+
+function updateCrossSystemDiagnostics(
+  message: string,
+  category: BrainRequestCategory,
+  snapshot: ReturnType<typeof buildCrossSystemSnapshot>,
+  routingReport: ReturnType<typeof buildCrossSystemRoutingReport> | undefined,
+): CrossSystemDiagnostics {
+  const base = buildCrossSystemSnapshot('NONE', null);
+  const next: CrossSystemDiagnostics = {
+    relationshipCount: snapshot.relationshipCount || base.relationshipCount,
+    dependencyCount: snapshot.dependencyCount || base.dependencyCount,
+    impactAnalysisAvailable: snapshot.impactAnalysisAvailable,
+    lastRelationshipQuery: lastCrossSystemDiagnostics.lastRelationshipQuery,
+    lastDependencyQuery: lastCrossSystemDiagnostics.lastDependencyQuery,
+    lastImpactQuery: lastCrossSystemDiagnostics.lastImpactQuery,
+    lastQueryType: routingReport?.classification ?? category,
+    lastAnalyzerUsed: routingReport?.selectedAnalyzer ?? null,
+    lastRoutingResult: routingReport?.routingResult ?? null,
+  };
+  if (category === 'RELATIONSHIP') next.lastRelationshipQuery = message;
+  if (category === 'DEPENDENCY') next.lastDependencyQuery = message;
+  if (category === 'IMPACT') next.lastImpactQuery = message;
+  lastCrossSystemDiagnostics = next;
+  return next;
+}
+
+export function getLastCrossSystemDiagnostics(): CrossSystemDiagnostics {
+  const base = buildCrossSystemSnapshot('NONE', null);
+  return {
+    ...lastCrossSystemDiagnostics,
+    relationshipCount: lastCrossSystemDiagnostics.relationshipCount || base.relationshipCount,
+    dependencyCount: lastCrossSystemDiagnostics.dependencyCount || base.dependencyCount,
+  };
+}
+
+export function resetCrossSystemDiagnosticsForTests(): void {
+  lastCrossSystemDiagnostics = {
+    relationshipCount: 0,
+    dependencyCount: 0,
+    impactAnalysisAvailable: true,
+    lastRelationshipQuery: null,
+    lastDependencyQuery: null,
+    lastImpactQuery: null,
+    lastQueryType: null,
+    lastAnalyzerUsed: null,
+    lastRoutingResult: null,
+  };
 }
 
 export function processBrainRequest(input: BrainRequestInput): BrainResponseResult {
@@ -94,12 +177,47 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
   const referenced = blocked ? [] : findSystemByKeyword(message).map((s) => s.systemId);
   const roadmap = getBrainRoadmapContext();
 
+  const isCrossSystem = !blocked && isCrossSystemCategory(classification.category);
+  let crossSystemResult = null;
+  if (isCrossSystem) {
+    crossSystemResult = processCrossSystemAwareness(
+      message,
+      classification.category as 'DEPENDENCY' | 'IMPACT' | 'RELATIONSHIP',
+    );
+  }
+
+  const operatorFeedEvents = blocked ? [] : buildOperatorFeedEvents(timestamp, classification.category);
+  const feedStages = operatorFeedEvents.map((e) => e.eventType);
+
+  const routingReport = isCrossSystem
+    ? buildCrossSystemRoutingReport({
+        classification,
+        category: classification.category,
+        operatorFeedStages: feedStages,
+        crossSystemResult,
+        dependencyAnalysis: crossSystemResult?.dependencyAnalysis ?? null,
+        impactAnalysis: crossSystemResult?.impactAnalysis ?? null,
+        responseText: crossSystemResult?.responseText ?? '',
+        timestamp,
+      })
+    : undefined;
+
   const brainResponse = blocked
     ? generateBlockedResponse(blockedReason!)
-    : generateBrainResponse(message, classification, systems, roadmap);
+    : isCrossSystem
+      ? crossSystemResult!.responseText
+      : generateBrainResponse(message, classification, systems, roadmap);
 
   const pipelineStages = buildPipelineStages(blocked);
-  const operatorFeedEvents = blocked ? [] : buildOperatorFeedEvents(timestamp);
+
+  const crossSystemDiagnostics = blocked
+    ? undefined
+    : updateCrossSystemDiagnostics(
+        message,
+        classification.category,
+        crossSystemResult?.snapshot ?? buildCrossSystemSnapshot('NONE', null),
+        routingReport,
+      );
 
   return {
     responseId: nextBrainResponseId(),
@@ -109,6 +227,9 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
     classification,
     systemsReferenced: referenced,
     roadmapContext: roadmap,
+    crossSystemContext: crossSystemResult?.snapshot,
+    crossSystemDiagnostics,
+    crossSystemRoutingReport: routingReport,
     pipelineStages,
     operatorFeedEvents,
     confirmation: {
@@ -134,6 +255,7 @@ export function brainStructuralKey(result: BrainResponseResult): string {
     classificationKey(result.classification),
     responseKey(result.category, result.userMessage),
     systemsAwarenessKey(getCommandCenterAwareSystems()),
+    crossSystemAwarenessKey(),
     roadmapContextKey(result.roadmapContext),
     result.pipelineStages.join('→'),
   ].join('|');
@@ -216,6 +338,7 @@ export function getDevPulseV2CommandCenterBrain(): DevPulseV2CommandCenterBrain 
 
 export function resetDevPulseV2CommandCenterBrainForTests(): DevPulseV2CommandCenterBrain {
   singleton = new DevPulseV2CommandCenterBrain();
+  resetCrossSystemDiagnosticsForTests();
   return singleton;
 }
 
@@ -224,8 +347,12 @@ export {
   responseKey,
   systemsAwarenessKey,
   roadmapContextKey,
+  crossSystemAwarenessKey,
   BRAIN_PIPELINE_SEQUENCE,
   OPERATOR_FEED_EVENT_SEQUENCE,
+  CROSS_SYSTEM_FEED_DEPENDENCY,
+  CROSS_SYSTEM_FEED_IMPACT,
+  CROSS_SYSTEM_FEED_RELATIONSHIP,
   COMMAND_CENTER_BRAIN_OWNER_MODULE,
   COMMAND_CENTER_BRAIN_PASS_TOKEN,
 };

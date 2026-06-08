@@ -125,11 +125,11 @@ async function main(): Promise<void> {
   assert('23. feed classifying', roadmapQ.operatorFeedEvents[0]!.eventType === 'Classifying Request', 'classifying');
   assert('24. feed response ready', roadmapQ.operatorFeedEvents[4]!.eventType === 'Response Ready', 'ready');
   assert('25. aware systems count', COMMAND_CENTER_AWARE_SYSTEMS.length >= 9, String(COMMAND_CENTER_AWARE_SYSTEMS.length));
-  assert('26. categories count', BRAIN_REQUEST_CATEGORIES.length === 7, String(BRAIN_REQUEST_CATEGORIES.length));
-  assert('27. pipeline sequence', BRAIN_PIPELINE_SEQUENCE.length === 6, String(BRAIN_PIPELINE_SEQUENCE.length));
+  assert('26. categories count', BRAIN_REQUEST_CATEGORIES.length === 10, String(BRAIN_REQUEST_CATEGORIES.length));
+  assert('27. pipeline sequence', BRAIN_PIPELINE_SEQUENCE.length === 7, String(BRAIN_PIPELINE_SEQUENCE.length));
   assert('28. operator sequence', OPERATOR_FEED_EVENT_SEQUENCE.length === 5, String(OPERATOR_FEED_EVENT_SEQUENCE.length));
   assert('29. duplicate patterns', DUPLICATE_BRAIN_PATTERNS.length === 4, String(DUPLICATE_BRAIN_PATTERNS.length));
-  assert('30. roadmap context', getBrainRoadmapContext().currentPhase.includes('11.1'), getBrainRoadmapContext().currentPhase);
+  assert('30. roadmap context', getBrainRoadmapContext().currentPhase.includes('11.2'), getBrainRoadmapContext().currentPhase);
 
   assert('31. app brain API', appJs.includes('/api/brain/respond'), 'api');
   assert('32. app askBrain', appJs.includes('askBrain'), 'askBrain');
@@ -187,7 +187,7 @@ async function main(): Promise<void> {
   assert('75. find trust keyword', findSystemByKeyword('trust engine').some((s) => s.systemId.includes('trust')), 'trust');
   assert('76. find world2 keyword', findSystemByKeyword('world 2').some((s) => s.systemId.includes('world2')), 'world2');
   assert('77. summarize maturity', summarizeSystemMaturity().includes('foundation-complete'), summarizeSystemMaturity());
-  assert('78. next recommendation', getNextBuildRecommendation().includes('11.2'), getNextBuildRecommendation());
+  assert('78. next recommendation', getNextBuildRecommendation().includes('Shared Context'), getNextBuildRecommendation());
   assert('79. completed phases list', formatCompletedPhasesList().includes('Phase 6'), 'phase 6');
   assert('80. blocked response helper', generateBlockedResponse('test').includes('blocked'), 'blocked');
 

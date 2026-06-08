@@ -6,6 +6,9 @@ import type { BrainClassification, BrainRequestCategory, BrainRequestInput } fro
 import { BRAIN_REQUEST_CATEGORIES } from './brain-types.js';
 
 const CATEGORY_PATTERNS: Array<{ category: BrainRequestCategory; patterns: string[] }> = [
+  { category: 'IMPACT', patterns: ['what breaks if', 'what would break', 'what happens if', 'disappeared', 'disappear', 'if trust engine', 'if operator feed', 'if world 2'] },
+  { category: 'DEPENDENCY', patterns: ['what systems depend', 'systems depend on', 'what depends on', 'depends on', 'depend on', 'what relies on', 'relies on', 'rely on', 'downstream of'] },
+  { category: 'RELATIONSHIP', patterns: ['how does', 'connect to', 'connects to', 'relationship between', 'relate to', 'link between', 'how do'] },
   { category: 'ROADMAP', patterns: ['what should we build', 'build next', 'next phase', 'roadmap', 'what next', 'what should we do next'] },
   { category: 'STATUS', patterns: ['how mature', 'maturity', 'status', 'complete', 'ready', 'what exists', 'what phase'] },
   { category: 'RISK', patterns: ['risk', 'danger', 'unsafe', 'will this break', 'concern'] },
@@ -58,4 +61,21 @@ export function isSystemQuestion(message: string): boolean {
 
 export function isArchitectureQuestion(message: string): boolean {
   return classifyBrainRequest({ message }).category === 'ARCHITECTURE';
+}
+
+export function isRelationshipQuestion(message: string): boolean {
+  return classifyBrainRequest({ message }).category === 'RELATIONSHIP';
+}
+
+export function isDependencyQuestion(message: string): boolean {
+  return classifyBrainRequest({ message }).category === 'DEPENDENCY';
+}
+
+export function isImpactQuestion(message: string): boolean {
+  return classifyBrainRequest({ message }).category === 'IMPACT';
+}
+
+export function isCrossSystemQuestion(message: string): boolean {
+  const cat = classifyBrainRequest({ message }).category;
+  return cat === 'DEPENDENCY' || cat === 'IMPACT' || cat === 'RELATIONSHIP';
 }

@@ -1,4 +1,8 @@
-/** DevPulse V2 Phase 11.1 Unified Command Center Brain — types. */
+/** DevPulse V2 Phase 11.1+ Unified Command Center Brain — types. */
+
+import type { CrossSystemAwarenessSnapshot } from './cross-system-awareness/relationship-types.js';
+
+export type { CrossSystemAwarenessSnapshot };
 
 export type BrainRequestCategory =
   | 'ROADMAP'
@@ -7,12 +11,16 @@ export type BrainRequestCategory =
   | 'ARCHITECTURE'
   | 'RISK'
   | 'STATUS'
+  | 'DEPENDENCY'
+  | 'IMPACT'
+  | 'RELATIONSHIP'
   | 'GENERAL';
 
 export type BrainPipelineStage =
   | 'BRAIN_REQUEST_RECEIVED'
   | 'REQUEST_CLASSIFIED'
   | 'SYSTEM_AWARENESS_CHECKED'
+  | 'CROSS_SYSTEM_AWARENESS_CHECKED'
   | 'ROADMAP_AWARENESS_CHECKED'
   | 'RESPONSE_GENERATED'
   | 'BRAIN_RESPONSE_READY'
@@ -22,6 +30,9 @@ export type OperatorFeedEventType =
   | 'Classifying Request'
   | 'Checking Systems'
   | 'Checking Roadmap'
+  | 'Loading Relationships'
+  | 'Checking Dependencies'
+  | 'Performing Impact Analysis'
   | 'Generating Response'
   | 'Response Ready';
 
@@ -84,10 +95,35 @@ export interface BrainResponseResult {
   classification: BrainClassification;
   systemsReferenced: string[];
   roadmapContext: BrainRoadmapContext;
+  crossSystemContext?: CrossSystemAwarenessSnapshot;
+  crossSystemDiagnostics?: CrossSystemDiagnostics;
+  crossSystemRoutingReport?: CrossSystemRoutingReport;
   pipelineStages: BrainPipelineStage[];
   operatorFeedEvents: OperatorFeedEvent[];
   confirmation: BrainConfirmation;
   createdAt: number;
+}
+
+export interface CrossSystemDiagnostics {
+  relationshipCount: number;
+  dependencyCount: number;
+  impactAnalysisAvailable: boolean;
+  lastRelationshipQuery: string | null;
+  lastDependencyQuery: string | null;
+  lastImpactQuery: string | null;
+  lastQueryType: string | null;
+  lastAnalyzerUsed: string | null;
+  lastRoutingResult: string | null;
+}
+
+export interface CrossSystemRoutingReport {
+  classification: BrainRequestCategory;
+  selectedAnalyzer: 'relationship_engine' | 'dependency_analyzer' | 'impact_analyzer' | 'none';
+  analyzerExecuted: boolean;
+  responseSource: 'relationship_engine' | 'dependency_analyzer' | 'impact_analyzer' | 'fallback' | 'none';
+  operatorFeedStages: OperatorFeedEventType[];
+  routingResult: 'routed' | 'fallback_blocked';
+  timestamp: number;
 }
 
 export const COMMAND_CENTER_BRAIN_OWNER_MODULE = 'devpulse_v2_command_center_brain';
@@ -100,6 +136,9 @@ export const BRAIN_REQUEST_CATEGORIES: readonly BrainRequestCategory[] = [
   'ARCHITECTURE',
   'RISK',
   'STATUS',
+  'DEPENDENCY',
+  'IMPACT',
+  'RELATIONSHIP',
   'GENERAL',
 ] as const;
 
@@ -107,6 +146,7 @@ export const BRAIN_PIPELINE_SEQUENCE: readonly BrainPipelineStage[] = [
   'BRAIN_REQUEST_RECEIVED',
   'REQUEST_CLASSIFIED',
   'SYSTEM_AWARENESS_CHECKED',
+  'CROSS_SYSTEM_AWARENESS_CHECKED',
   'ROADMAP_AWARENESS_CHECKED',
   'RESPONSE_GENERATED',
   'BRAIN_RESPONSE_READY',
@@ -116,6 +156,29 @@ export const OPERATOR_FEED_EVENT_SEQUENCE: readonly OperatorFeedEventType[] = [
   'Classifying Request',
   'Checking Systems',
   'Checking Roadmap',
+  'Generating Response',
+  'Response Ready',
+] as const;
+
+export const CROSS_SYSTEM_FEED_DEPENDENCY: readonly OperatorFeedEventType[] = [
+  'Classifying Request',
+  'Loading Relationships',
+  'Checking Dependencies',
+  'Generating Response',
+  'Response Ready',
+] as const;
+
+export const CROSS_SYSTEM_FEED_IMPACT: readonly OperatorFeedEventType[] = [
+  'Classifying Request',
+  'Loading Relationships',
+  'Performing Impact Analysis',
+  'Generating Response',
+  'Response Ready',
+] as const;
+
+export const CROSS_SYSTEM_FEED_RELATIONSHIP: readonly OperatorFeedEventType[] = [
+  'Classifying Request',
+  'Loading Relationships',
   'Generating Response',
   'Response Ready',
 ] as const;

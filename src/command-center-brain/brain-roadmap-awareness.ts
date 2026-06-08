@@ -10,7 +10,7 @@ export function roadmapContextKey(ctx: BrainRoadmapContext): string {
 
 export function getBrainRoadmapContext(): BrainRoadmapContext {
   return {
-    currentPhase: '11.1 — Unified Command Center Brain Foundation',
+    currentPhase: '11.2 — Cross-System Awareness Foundation',
     completedPhases: [
       'Phase 6 — Governance Stack',
       'Phase 7 — World 2 Foundation Stack',
@@ -21,14 +21,17 @@ export function getBrainRoadmapContext(): BrainRoadmapContext {
       'Phase 10.3 — Founder Reality Surface Foundation',
       'Phase 10.3.1 — Command Center Runtime Shell Foundation',
       'Phase 11.1 — Unified Command Center Brain Foundation',
+      'Phase 11.1A — Brain Runtime Verification',
+      'Phase 11.1B — Command Center UX Stabilization',
+      'Phase 11.2 — Cross-System Awareness Foundation',
     ],
-    nextPhase: '11.2 — Cross-System Awareness',
+    nextPhase: '11.3 — Shared Context Layer',
     nextPhaseDescription:
-      'Deepen Command Center Brain awareness across registered systems without duplicating their intelligence or execution paths.',
+      'Optional shared context for Brain responses across sessions — still intelligence only, no execution or shared memory execution paths.',
     recommendedNextStep:
-      'After Unified Command Center Brain stabilizes, implement Phase 11.2 Cross-System Awareness to connect brain responses to live system context — still intelligence only, no execution.',
+      'Cross-System Awareness is active. Next optional step: Phase 11.3 Shared Context Layer for session continuity — still intelligence only.',
     stackMaturitySummary:
-      'Foundation architecture is extensive and validated. Runnable product experience is beginning. Command Center Brain provides local intelligence. Execution runtime, cloud runtime, autonomous building, and real mobile control are not yet connected.',
+      'Foundation architecture is extensive and validated. Command Center Brain understands system relationships. Execution runtime, cloud runtime, autonomous building, and real mobile control are not yet connected.',
   };
 }
 
