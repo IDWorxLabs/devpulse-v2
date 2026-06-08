@@ -13,6 +13,8 @@ import {
   CROSS_SYSTEM_FEED_IMPACT,
   CROSS_SYSTEM_FEED_RELATIONSHIP,
   DUPLICATE_CROSS_SYSTEM_PATTERNS,
+  OPERATOR_FEED_EVENT_SEQUENCE,
+  withSharedMemoryFeedStages,
   analyzeDependencies,
   analyzeImpact,
   buildCrossSystemRegistry,
@@ -201,12 +203,12 @@ async function main(): Promise<void> {
 
   for (let i = 0; i < 10; i += 1) {
     const r = processBrainRequest({ message: 'What should we build next?' });
-    assert(`${134 + i}. roadmap unchanged ${i}`, r.category === 'ROADMAP' && r.operatorFeedEvents.length === 5, r.category);
+    assert(`${134 + i}. roadmap unchanged ${i}`, r.category === 'ROADMAP' && r.operatorFeedEvents.length === withSharedMemoryFeedStages(OPERATOR_FEED_EVENT_SEQUENCE).length, r.category);
   }
 
   for (let i = 0; i < 10; i += 1) {
     const r = processBrainRequest({ message: 'What depends on Governance?' });
-    assert(`${144 + i}. dep feed count ${i}`, r.operatorFeedEvents.length === 5, String(r.operatorFeedEvents.length));
+    assert(`${144 + i}. dep feed count ${i}`, r.operatorFeedEvents.length === withSharedMemoryFeedStages(CROSS_SYSTEM_FEED_DEPENDENCY).length, String(r.operatorFeedEvents.length));
   }
 
   for (let i = 0; i < 10; i += 1) {

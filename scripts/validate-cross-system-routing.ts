@@ -10,6 +10,7 @@ import {
   CROSS_SYSTEM_FEED_IMPACT,
   CROSS_SYSTEM_FEED_RELATIONSHIP,
   CROSS_SYSTEM_ROUTING_PASS_TOKEN,
+  withSharedMemoryFeedStages,
   buildCrossSystemRegistry,
   classifyBrainRequest,
   processBrainRequest,
@@ -151,9 +152,9 @@ async function main(): Promise<void> {
   assert('32. impact affected systems', impactQ.brainResponse.includes('Affected Systems:') || impactQ.brainResponse.includes('Visibility'), 'missing');
   assert('33. impact severity', impactQ.brainResponse.includes('Severity:'), 'missing');
 
-  assert('34. rel feed count', relQ.operatorFeedEvents.length === 4, String(relQ.operatorFeedEvents.length));
-  assert('35. dep feed count', depQ.operatorFeedEvents.length === 5, String(depQ.operatorFeedEvents.length));
-  assert('36. impact feed count', impactQ.operatorFeedEvents.length === 5, String(impactQ.operatorFeedEvents.length));
+  assert('34. rel feed count', relQ.operatorFeedEvents.length === withSharedMemoryFeedStages(CROSS_SYSTEM_FEED_RELATIONSHIP).length, String(relQ.operatorFeedEvents.length));
+  assert('35. dep feed count', depQ.operatorFeedEvents.length === withSharedMemoryFeedStages(CROSS_SYSTEM_FEED_DEPENDENCY).length, String(depQ.operatorFeedEvents.length));
+  assert('36. impact feed count', impactQ.operatorFeedEvents.length === withSharedMemoryFeedStages(CROSS_SYSTEM_FEED_IMPACT).length, String(impactQ.operatorFeedEvents.length));
 
   assert('37. rel feed no checking deps', !feedTypes(relQ.operatorFeedEvents).includes('Checking Dependencies'), 'wrong stage');
   assert('38. dep feed has checking deps', feedTypes(depQ.operatorFeedEvents).includes('Checking Dependencies'), 'missing stage');
@@ -179,9 +180,9 @@ async function main(): Promise<void> {
   assert('54. app renders analyzer', appJs.includes('last-analyzer-used'), 'app');
   assert('55. app renders routing result', appJs.includes('last-routing-result'), 'app');
 
-  assert('56. feed rel sequence match', JSON.stringify(feedTypes(relQ.operatorFeedEvents)) === JSON.stringify([...CROSS_SYSTEM_FEED_RELATIONSHIP]), 'sequence');
-  assert('57. feed dep sequence match', JSON.stringify(feedTypes(depQ.operatorFeedEvents)) === JSON.stringify([...CROSS_SYSTEM_FEED_DEPENDENCY]), 'sequence');
-  assert('58. feed impact sequence match', JSON.stringify(feedTypes(impactQ.operatorFeedEvents)) === JSON.stringify([...CROSS_SYSTEM_FEED_IMPACT]), 'sequence');
+  assert('56. feed rel sequence match', JSON.stringify(feedTypes(relQ.operatorFeedEvents)) === JSON.stringify(withSharedMemoryFeedStages([...CROSS_SYSTEM_FEED_RELATIONSHIP])), 'sequence');
+  assert('57. feed dep sequence match', JSON.stringify(feedTypes(depQ.operatorFeedEvents)) === JSON.stringify(withSharedMemoryFeedStages([...CROSS_SYSTEM_FEED_DEPENDENCY])), 'sequence');
+  assert('58. feed impact sequence match', JSON.stringify(feedTypes(impactQ.operatorFeedEvents)) === JSON.stringify(withSharedMemoryFeedStages([...CROSS_SYSTEM_FEED_IMPACT])), 'sequence');
 
   assert('59. routing report key unique rel/dep', routingReportKey(relQ.crossSystemRoutingReport!) !== routingReportKey(depQ.crossSystemRoutingReport!), 'distinct');
   assert('60. routing report key unique dep/impact', routingReportKey(depQ.crossSystemRoutingReport!) !== routingReportKey(impactQ.crossSystemRoutingReport!), 'distinct');

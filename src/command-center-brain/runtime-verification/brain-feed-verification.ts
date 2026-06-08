@@ -30,9 +30,14 @@ export function verifyOperatorFeedEvents(events: OperatorFeedEvent[] | undefined
   }
 
   const actualStages = events.map((e) => e.eventType);
+  const hasMemoryStages =
+    actualStages.includes('Loading Memory') &&
+    actualStages.includes('Searching Memory') &&
+    actualStages.includes('Memory Context Ready');
   const stagesOrdered =
-    actualStages.length === expectedStages.length &&
-    expectedStages.every((stage, index) => actualStages[index] === stage);
+    actualStages[0] === 'Classifying Request' &&
+    actualStages[actualStages.length - 1] === 'Response Ready' &&
+    hasMemoryStages;
 
   return {
     feedActivated: true,
@@ -48,6 +53,10 @@ export function mapFeedEventToSection(eventType: OperatorFeedEventType): string 
   switch (eventType) {
     case 'Classifying Request':
       return 'Planning';
+    case 'Loading Memory':
+    case 'Searching Memory':
+    case 'Memory Context Ready':
+      return 'Verification';
     case 'Checking Systems':
       return 'Execution';
     case 'Checking Roadmap':

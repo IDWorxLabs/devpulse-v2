@@ -201,6 +201,9 @@
 
   function mapEventToSection(eventType) {
     if (eventType === 'Classifying Request') return 'Planning';
+    if (eventType === 'Loading Memory') return 'Verification';
+    if (eventType === 'Searching Memory') return 'Verification';
+    if (eventType === 'Memory Context Ready') return 'Verification';
     if (eventType === 'Checking Systems') return 'Execution';
     if (eventType === 'Loading Relationships') return 'Verification';
     if (eventType === 'Checking Roadmap') return 'Verification';

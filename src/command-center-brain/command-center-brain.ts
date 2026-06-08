@@ -28,6 +28,13 @@ import {
   processCrossSystemAwareness,
 } from './cross-system-awareness/index.js';
 import { buildCrossSystemRoutingReport } from './cross-system-awareness/runtime-verification/index.js';
+import {
+  formatMemoryRecallResponse,
+  processMemoryForRequest,
+  recallRelevantMemories,
+  resetSharedMemoryForTests,
+  sharedMemoryKey,
+} from '../shared-memory/index.js';
 import type {
   BrainPipelineStage,
   BrainRequestCategory,
@@ -49,6 +56,8 @@ import {
   EXECUTION_BLOCKED_PATTERNS,
   FILE_MOD_BLOCKED_PATTERNS,
   OPERATOR_FEED_EVENT_SEQUENCE,
+  SHARED_MEMORY_OPERATOR_FEED_STAGES,
+  withSharedMemoryFeedStages,
   nextBrainResponseId,
 } from './brain-types.js';
 
@@ -100,8 +109,10 @@ function feedSequenceForCategory(category: BrainRequestCategory): readonly Opera
 function buildOperatorFeedEvents(
   timestamp: number,
   category: BrainRequestCategory,
+  memoryLookup: boolean,
 ): OperatorFeedEvent[] {
-  const sequence = feedSequenceForCategory(category);
+  const base = feedSequenceForCategory(category);
+  const sequence = memoryLookup ? withSharedMemoryFeedStages(base) : base;
   return sequence.map((eventType, index) => ({
     eventId: `feed-${(index + 1).toString().padStart(2, '0')}`,
     eventType,
@@ -110,9 +121,13 @@ function buildOperatorFeedEvents(
   }));
 }
 
-function buildPipelineStages(blocked: boolean): BrainPipelineStage[] {
+function buildPipelineStages(blocked: boolean, memoryChecked: boolean): BrainPipelineStage[] {
   if (blocked) return ['BRAIN_REQUEST_RECEIVED', 'BRAIN_REQUEST_BLOCKED'];
-  return [...BRAIN_PIPELINE_SEQUENCE];
+  const stages = [...BRAIN_PIPELINE_SEQUENCE];
+  if (!memoryChecked) {
+    return stages.filter((s) => s !== 'SHARED_MEMORY_CHECKED');
+  }
+  return stages;
 }
 
 function updateCrossSystemDiagnostics(
@@ -177,7 +192,10 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
   const referenced = blocked ? [] : findSystemByKeyword(message).map((s) => s.systemId);
   const roadmap = getBrainRoadmapContext();
 
-  const isCrossSystem = !blocked && isCrossSystemCategory(classification.category);
+  const memoryContext = blocked ? undefined : processMemoryForRequest(message);
+  const isMemoryRecall = !blocked && classification.category === 'MEMORY';
+
+  const isCrossSystem = !blocked && !isMemoryRecall && isCrossSystemCategory(classification.category);
   let crossSystemResult = null;
   if (isCrossSystem) {
     crossSystemResult = processCrossSystemAwareness(
@@ -186,7 +204,9 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
     );
   }
 
-  const operatorFeedEvents = blocked ? [] : buildOperatorFeedEvents(timestamp, classification.category);
+  const operatorFeedEvents = blocked
+    ? []
+    : buildOperatorFeedEvents(timestamp, classification.category, Boolean(memoryContext?.lookupPerformed));
   const feedStages = operatorFeedEvents.map((e) => e.eventType);
 
   const routingReport = isCrossSystem
@@ -204,11 +224,13 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
 
   const brainResponse = blocked
     ? generateBlockedResponse(blockedReason!)
-    : isCrossSystem
-      ? crossSystemResult!.responseText
-      : generateBrainResponse(message, classification, systems, roadmap);
+    : isMemoryRecall
+      ? formatMemoryRecallResponse(message, recallRelevantMemories(message))
+      : isCrossSystem
+        ? crossSystemResult!.responseText
+        : generateBrainResponse(message, classification, systems, roadmap);
 
-  const pipelineStages = buildPipelineStages(blocked);
+  const pipelineStages = buildPipelineStages(blocked, Boolean(memoryContext?.lookupPerformed));
 
   const crossSystemDiagnostics = blocked
     ? undefined
@@ -230,6 +252,7 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
     crossSystemContext: crossSystemResult?.snapshot,
     crossSystemDiagnostics,
     crossSystemRoutingReport: routingReport,
+    sharedMemoryContext: memoryContext,
     pipelineStages,
     operatorFeedEvents,
     confirmation: {
@@ -256,6 +279,7 @@ export function brainStructuralKey(result: BrainResponseResult): string {
     responseKey(result.category, result.userMessage),
     systemsAwarenessKey(getCommandCenterAwareSystems()),
     crossSystemAwarenessKey(),
+    sharedMemoryKey(),
     roadmapContextKey(result.roadmapContext),
     result.pipelineStages.join('→'),
   ].join('|');
@@ -339,6 +363,7 @@ export function getDevPulseV2CommandCenterBrain(): DevPulseV2CommandCenterBrain 
 export function resetDevPulseV2CommandCenterBrainForTests(): DevPulseV2CommandCenterBrain {
   singleton = new DevPulseV2CommandCenterBrain();
   resetCrossSystemDiagnosticsForTests();
+  resetSharedMemoryForTests();
   return singleton;
 }
 
@@ -353,6 +378,8 @@ export {
   CROSS_SYSTEM_FEED_DEPENDENCY,
   CROSS_SYSTEM_FEED_IMPACT,
   CROSS_SYSTEM_FEED_RELATIONSHIP,
+  SHARED_MEMORY_OPERATOR_FEED_STAGES,
+  withSharedMemoryFeedStages,
   COMMAND_CENTER_BRAIN_OWNER_MODULE,
   COMMAND_CENTER_BRAIN_PASS_TOKEN,
 };

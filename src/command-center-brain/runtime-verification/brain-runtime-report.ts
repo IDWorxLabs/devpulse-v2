@@ -17,6 +17,8 @@ export interface BrainRuntimeVerificationReport {
   classificationComplete: boolean;
   systemAwarenessComplete: boolean;
   roadmapAwarenessComplete: boolean;
+  memoryLookupComplete: boolean;
+  memoryCount: number;
   responseGenerated: boolean;
   responseRendered: boolean;
   feedActivated: boolean;
@@ -44,6 +46,8 @@ export function buildBrainRuntimeVerificationReportFromResult(
     classificationComplete: Boolean(result.classification?.category),
     systemAwarenessComplete: Array.isArray(result.systemsReferenced),
     roadmapAwarenessComplete: Boolean(result.roadmapContext?.currentPhase),
+    memoryLookupComplete: Boolean(result.sharedMemoryContext?.lookupPerformed),
+    memoryCount: result.sharedMemoryContext?.memoryCount ?? 0,
     responseGenerated: Boolean(result.brainResponse?.trim()),
     responseRendered: options.responseRendered ?? false,
     feedActivated: feed.feedActivated && feed.stagesOrdered,
@@ -65,6 +69,8 @@ export function buildBrainRuntimeVerificationReport(message: string): BrainRunti
       classificationComplete: false,
       systemAwarenessComplete: false,
       roadmapAwarenessComplete: false,
+      memoryLookupComplete: false,
+      memoryCount: 0,
       responseGenerated: false,
       responseRendered: false,
       feedActivated: false,

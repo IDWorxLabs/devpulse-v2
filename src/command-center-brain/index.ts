@@ -21,6 +21,8 @@ export {
   CROSS_SYSTEM_FEED_DEPENDENCY,
   CROSS_SYSTEM_FEED_IMPACT,
   CROSS_SYSTEM_FEED_RELATIONSHIP,
+  SHARED_MEMORY_OPERATOR_FEED_STAGES,
+  withSharedMemoryFeedStages,
   COMMAND_CENTER_BRAIN_OWNER_MODULE,
   COMMAND_CENTER_BRAIN_PASS_TOKEN,
 } from './command-center-brain.js';
@@ -35,6 +37,7 @@ export {
   isDependencyQuestion,
   isImpactQuestion,
   isCrossSystemQuestion,
+  isMemoryQuestion,
 } from './brain-request-classifier.js';
 
 export {
@@ -72,6 +75,7 @@ export type {
   CrossSystemAwarenessSnapshot,
   CrossSystemDiagnostics,
   CrossSystemRoutingReport,
+  SharedMemoryContext,
 } from './brain-types.js';
 
 export {

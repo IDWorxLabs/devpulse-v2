@@ -15,6 +15,7 @@ import {
   DevPulseV2CommandCenterBrain,
   DUPLICATE_BRAIN_PATTERNS,
   OPERATOR_FEED_EVENT_SEQUENCE,
+  withSharedMemoryFeedStages,
   assertDistinctFromCentralBrain,
   brainStructuralKey,
   classifyBrainRequest,
@@ -121,7 +122,7 @@ async function main(): Promise<void> {
   assert('20. no code generation', roadmapQ.confirmation.noCodeGenerated === true, 'confirmed');
 
   assert('21. pipeline stages visible', roadmapQ.pipelineStages.length >= 6, String(roadmapQ.pipelineStages.length));
-  assert('22. operator feed events', roadmapQ.operatorFeedEvents.length === 5, String(roadmapQ.operatorFeedEvents.length));
+  assert('22. operator feed events', roadmapQ.operatorFeedEvents.length === withSharedMemoryFeedStages(OPERATOR_FEED_EVENT_SEQUENCE).length, String(roadmapQ.operatorFeedEvents.length));
   assert('23. feed classifying', roadmapQ.operatorFeedEvents[0]!.eventType === 'Classifying Request', 'classifying');
   assert('24. feed response ready', roadmapQ.operatorFeedEvents[4]!.eventType === 'Response Ready', 'ready');
   assert('25. aware systems count', COMMAND_CENTER_AWARE_SYSTEMS.length >= 9, String(COMMAND_CENTER_AWARE_SYSTEMS.length));

@@ -5,7 +5,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { processBrainRequest } from '../src/command-center-brain/index.js';
+import { processBrainRequest, withSharedMemoryFeedStages, OPERATOR_FEED_EVENT_SEQUENCE } from '../src/command-center-brain/index.js';
 import {
   COMMAND_CENTER_UX_STABILIZATION_PASS_TOKEN,
   UX_CHAT_INPUT_ID,
@@ -147,7 +147,7 @@ async function main(): Promise<void> {
 
   const brain = processBrainRequest({ message: 'What should we build next?' });
   assert('61. brain still responds locally', brain.brainResponse.length > 20, 'response');
-  assert('62. brain feed events', brain.operatorFeedEvents.length === 5, String(brain.operatorFeedEvents.length));
+  assert('62. brain feed events', brain.operatorFeedEvents.length === withSharedMemoryFeedStages(OPERATOR_FEED_EVENT_SEQUENCE).length, String(brain.operatorFeedEvents.length));
   assert('63. brain no execution', brain.confirmation.noExecutionPerformed === true, 'confirm');
 
   const http = await postBrain('What should we build next?');

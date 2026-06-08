@@ -135,7 +135,8 @@ export type OwnershipDomain =
   | 'founder_reality_surface'
   | 'command_center_runtime_shell'
   | 'command_center_brain'
-  | 'cross_system_awareness';
+  | 'cross_system_awareness'
+  | 'shared_memory_layer';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

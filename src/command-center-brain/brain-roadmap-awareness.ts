@@ -10,7 +10,7 @@ export function roadmapContextKey(ctx: BrainRoadmapContext): string {
 
 export function getBrainRoadmapContext(): BrainRoadmapContext {
   return {
-    currentPhase: '11.2 — Cross-System Awareness Foundation',
+    currentPhase: '11.3 — Shared Memory Layer',
     completedPhases: [
       'Phase 6 — Governance Stack',
       'Phase 7 — World 2 Foundation Stack',
@@ -24,12 +24,13 @@ export function getBrainRoadmapContext(): BrainRoadmapContext {
       'Phase 11.1A — Brain Runtime Verification',
       'Phase 11.1B — Command Center UX Stabilization',
       'Phase 11.2 — Cross-System Awareness Foundation',
+      'Phase 11.3 — Shared Memory Layer',
     ],
-    nextPhase: '11.3 — Shared Context Layer',
+    nextPhase: '11.4 — Project Understanding Layer',
     nextPhaseDescription:
-      'Optional shared context for Brain responses across sessions — still intelligence only, no execution or shared memory execution paths.',
+      'Optional project-scoped understanding for Brain responses — still intelligence only, no execution.',
     recommendedNextStep:
-      'Cross-System Awareness is active. Next optional step: Phase 11.3 Shared Context Layer for session continuity — still intelligence only.',
+      'Shared Memory Layer is active. Next optional step: Phase 11.4 Project Understanding — still intelligence only.',
     stackMaturitySummary:
       'Foundation architecture is extensive and validated. Command Center Brain understands system relationships. Execution runtime, cloud runtime, autonomous building, and real mobile control are not yet connected.',
   };

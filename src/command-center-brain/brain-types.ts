@@ -1,8 +1,10 @@
 /** DevPulse V2 Phase 11.1+ Unified Command Center Brain — types. */
 
 import type { CrossSystemAwarenessSnapshot } from './cross-system-awareness/relationship-types.js';
+import type { SharedMemoryContext } from '../shared-memory/shared-memory-types.js';
 
 export type { CrossSystemAwarenessSnapshot };
+export type { SharedMemoryContext };
 
 export type BrainRequestCategory =
   | 'ROADMAP'
@@ -14,6 +16,7 @@ export type BrainRequestCategory =
   | 'DEPENDENCY'
   | 'IMPACT'
   | 'RELATIONSHIP'
+  | 'MEMORY'
   | 'GENERAL';
 
 export type BrainPipelineStage =
@@ -21,6 +24,7 @@ export type BrainPipelineStage =
   | 'REQUEST_CLASSIFIED'
   | 'SYSTEM_AWARENESS_CHECKED'
   | 'CROSS_SYSTEM_AWARENESS_CHECKED'
+  | 'SHARED_MEMORY_CHECKED'
   | 'ROADMAP_AWARENESS_CHECKED'
   | 'RESPONSE_GENERATED'
   | 'BRAIN_RESPONSE_READY'
@@ -28,6 +32,9 @@ export type BrainPipelineStage =
 
 export type OperatorFeedEventType =
   | 'Classifying Request'
+  | 'Loading Memory'
+  | 'Searching Memory'
+  | 'Memory Context Ready'
   | 'Checking Systems'
   | 'Checking Roadmap'
   | 'Loading Relationships'
@@ -98,6 +105,7 @@ export interface BrainResponseResult {
   crossSystemContext?: CrossSystemAwarenessSnapshot;
   crossSystemDiagnostics?: CrossSystemDiagnostics;
   crossSystemRoutingReport?: CrossSystemRoutingReport;
+  sharedMemoryContext?: SharedMemoryContext;
   pipelineStages: BrainPipelineStage[];
   operatorFeedEvents: OperatorFeedEvent[];
   confirmation: BrainConfirmation;
@@ -139,6 +147,7 @@ export const BRAIN_REQUEST_CATEGORIES: readonly BrainRequestCategory[] = [
   'DEPENDENCY',
   'IMPACT',
   'RELATIONSHIP',
+  'MEMORY',
   'GENERAL',
 ] as const;
 
@@ -147,10 +156,29 @@ export const BRAIN_PIPELINE_SEQUENCE: readonly BrainPipelineStage[] = [
   'REQUEST_CLASSIFIED',
   'SYSTEM_AWARENESS_CHECKED',
   'CROSS_SYSTEM_AWARENESS_CHECKED',
+  'SHARED_MEMORY_CHECKED',
   'ROADMAP_AWARENESS_CHECKED',
   'RESPONSE_GENERATED',
   'BRAIN_RESPONSE_READY',
 ] as const;
+
+export const SHARED_MEMORY_OPERATOR_FEED_STAGES: readonly OperatorFeedEventType[] = [
+  'Loading Memory',
+  'Searching Memory',
+  'Memory Context Ready',
+] as const;
+
+export function withSharedMemoryFeedStages(
+  sequence: readonly OperatorFeedEventType[],
+): OperatorFeedEventType[] {
+  const classifyIndex = sequence.indexOf('Classifying Request');
+  const insertAt = classifyIndex >= 0 ? classifyIndex + 1 : 0;
+  return [
+    ...sequence.slice(0, insertAt),
+    ...SHARED_MEMORY_OPERATOR_FEED_STAGES,
+    ...sequence.slice(insertAt),
+  ];
+}
 
 export const OPERATOR_FEED_EVENT_SEQUENCE: readonly OperatorFeedEventType[] = [
   'Classifying Request',

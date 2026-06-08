@@ -550,7 +550,14 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     ownerModule: 'devpulse_v2_cross_system_awareness',
     ownerFunction: 'getDevPulseV2CrossSystemAwareness',
     phase: 11.2,
-    description: 'Phase 11.2 cross-system awareness — relationship, dependency, and impact understanding for Command Center Brain, awareness only, no execution or shared memory',
+    description: 'Phase 11.2 cross-system awareness — relationship, dependency, and impact understanding for Command Center Brain, awareness only, no execution',
+  },
+  shared_memory_layer: {
+    domain: 'shared_memory_layer',
+    ownerModule: 'devpulse_v2_shared_memory_layer',
+    ownerFunction: 'getDevPulseV2SharedMemoryLayer',
+    phase: 11.3,
+    description: 'Phase 11.3 shared memory layer — in-memory structured DevPulse memory for Command Center Brain, read/store/recall only, no persistence, execution, or file modification',
   },
 };
 
