@@ -468,6 +468,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 8.5,
     description: 'Phase 8.5 cross-device continuity foundation — context transfer only, cloud workspace remains source of truth, no execution',
   },
+  missing_capability_detector: {
+    domain: 'missing_capability_detector',
+    ownerModule: 'devpulse_v2_missing_capability_detector',
+    ownerFunction: 'createDevPulseV2MissingCapabilityDetector',
+    phase: 9.1,
+    description: 'Phase 9.1 missing capability detector foundation — detects capability gaps only, no acquisition, execution, or modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
