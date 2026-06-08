@@ -65,6 +65,7 @@
     "validate:mobile-live-preview-foundation": "tsx scripts/validate-mobile-live-preview-foundation.ts",
     "validate:mobile-approval-flow-foundation": "tsx scripts/validate-mobile-approval-flow-foundation.ts",
     "validate:cross-device-continuity-foundation": "tsx scripts/validate-cross-device-continuity-foundation.ts",
+    "validate:phase8-governance-stack-checkpoint": "tsx scripts/validate-phase8-governance-stack-checkpoint.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
