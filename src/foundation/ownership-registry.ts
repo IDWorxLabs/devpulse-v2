@@ -405,6 +405,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 7.3,
     description: 'World 2 simulation runtime — simulates execution plans only, no execution or file modification',
   },
+  world2_autonomous_builder: {
+    domain: 'world2_autonomous_builder',
+    ownerModule: 'devpulse_v2_world2_autonomous_builder',
+    ownerFunction: 'createDevPulseV2World2AutonomousBuilder',
+    phase: 7.4,
+    description: 'World 2 autonomous builder foundation — prepares dry-run build packets only, no execution or file modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
