@@ -69,6 +69,7 @@
     "validate:missing-capability-detector": "tsx scripts/validate-missing-capability-detector.ts",
     "validate:safe-capability-acquisition": "tsx scripts/validate-safe-capability-acquisition.ts",
     "validate:self-learning-engine": "tsx scripts/validate-self-learning-engine.ts",
+    "validate:architecture-drift-detection": "tsx scripts/validate-architecture-drift-detection.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

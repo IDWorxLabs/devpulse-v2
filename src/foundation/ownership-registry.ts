@@ -489,6 +489,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 9.3,
     description: 'Phase 9.3 self-learning engine foundation — records structured lessons and future guidance only, no model training, execution, or automatic behavior change',
   },
+  architecture_drift_detection: {
+    domain: 'architecture_drift_detection',
+    ownerModule: 'devpulse_v2_architecture_drift_detection',
+    ownerFunction: 'createDevPulseV2ArchitectureDriftDetection',
+    phase: 9.4,
+    description: 'Phase 9.4 architecture drift detection foundation — detects architectural drift and produces review recommendations only, no refactoring, auto-fix, or modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
