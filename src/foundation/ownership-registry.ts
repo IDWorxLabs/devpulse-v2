@@ -433,6 +433,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 7.7,
     description: 'Phase 7.7 controlled execution bridge foundation — classifies gated execution eligibility only, no execution or file modification',
   },
+  mobile_command_foundation: {
+    domain: 'mobile_command_foundation',
+    ownerModule: 'devpulse_v2_mobile_command_foundation',
+    ownerFunction: 'createDevPulseV2MobileCommandFoundation',
+    phase: 8.1,
+    description: 'Phase 8.1 mobile command foundation — remote command center session establishment only, no execution or file modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
