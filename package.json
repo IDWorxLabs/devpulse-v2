@@ -59,6 +59,7 @@
     "validate:world2-completion-verifier": "tsx scripts/validate-world2-completion-verifier.ts",
     "validate:world2-learning-loop": "tsx scripts/validate-world2-learning-loop.ts",
     "validate:governance-stack-checkpoint": "tsx scripts/validate-governance-stack-checkpoint.ts",
+    "validate:controlled-execution-bridge": "tsx scripts/validate-controlled-execution-bridge.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

@@ -426,6 +426,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 7.6,
     description: 'World 2 learning loop foundation — captures structured lessons only, no execution or file modification',
   },
+  controlled_execution_bridge: {
+    domain: 'controlled_execution_bridge',
+    ownerModule: 'devpulse_v2_controlled_execution_bridge',
+    ownerFunction: 'createDevPulseV2ControlledExecutionBridge',
+    phase: 7.7,
+    description: 'Phase 7.7 controlled execution bridge foundation — classifies gated execution eligibility only, no execution or file modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
