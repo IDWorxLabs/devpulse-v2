@@ -454,6 +454,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 8.3,
     description: 'Phase 8.3 mobile live preview foundation — remote preview viewer only, no execution, rendering, or file modification',
   },
+  mobile_approval_flow_foundation: {
+    domain: 'mobile_approval_flow_foundation',
+    ownerModule: 'devpulse_v2_mobile_approval_flow_foundation',
+    ownerFunction: 'createDevPulseV2MobileApprovalFlowFoundation',
+    phase: 8.4,
+    description: 'Phase 8.4 mobile approval flow foundation — decision interface only, records governed approval decisions, no execution',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
