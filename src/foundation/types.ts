@@ -1,6 +1,6 @@
 /** Shared types for DevPulse V2 foundation enforcement. */
 
-export type DevPulseV2Phase = 1 | 2 | 3 | 4 | 4.5 | 5;
+export type DevPulseV2Phase = 1 | 2 | 3 | 4 | 4.5 | 5 | 5.5;
 
 export type DevPulseV2SystemId =
   | 'foundation_enforcement'
@@ -38,6 +38,10 @@ export type DevPulseV2SystemId =
   | 'founder_notifications'
   | 'console_intelligence'
   | 'reality_replay'
+  | 'session_replay'
+  | 'failure_prediction'
+  | 'root_cause_attribution'
+  | 'observability_stack_reality_validation'
   | 'mobile_command'
   | 'world2_builder'
   | 'autonomous_execution'
@@ -74,6 +78,12 @@ export type OwnershipDomain =
   | 'code_generation_planner'
   | 'recovery_strategy_planner'
   | 'planning_stack_reality_validation'
+  | 'self_vision'
+  | 'reality_replay'
+  | 'session_replay'
+  | 'failure_prediction'
+  | 'root_cause_attribution'
+  | 'observability_stack_reality_validation'
   | 'background_task_budgeting'
   | 'law_enforcement'
   | 'phase_gate'

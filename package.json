@@ -34,6 +34,12 @@
     "validate:code-generation-planner": "tsx scripts/validate-code-generation-planner-foundation.ts",
     "validate:recovery-strategy-planner": "tsx scripts/validate-recovery-strategy-planner-foundation.ts",
     "validate:planning-stack": "tsx scripts/validate-planning-stack-reality.ts",
+    "validate:self-vision": "tsx scripts/validate-self-vision-foundation.ts",
+    "validate:reality-replay": "tsx scripts/validate-reality-replay-foundation.ts",
+    "validate:session-replay": "tsx scripts/validate-session-replay-foundation.ts",
+    "validate:failure-prediction": "tsx scripts/validate-failure-prediction-foundation.ts",
+    "validate:root-cause-attribution": "tsx scripts/validate-root-cause-attribution-foundation.ts",
+    "validate:observability-stack": "tsx scripts/validate-observability-stack-reality.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
