@@ -57,6 +57,7 @@
     "validate:world2-simulation-runtime": "tsx scripts/validate-world2-simulation-runtime.ts",
     "validate:world2-autonomous-builder": "tsx scripts/validate-world2-autonomous-builder.ts",
     "validate:world2-completion-verifier": "tsx scripts/validate-world2-completion-verifier.ts",
+    "validate:world2-learning-loop": "tsx scripts/validate-world2-learning-loop.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

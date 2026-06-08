@@ -419,6 +419,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 7.5,
     description: 'World 2 completion verifier foundation — determines completion truth only, no execution or file modification',
   },
+  world2_learning_loop: {
+    domain: 'world2_learning_loop',
+    ownerModule: 'devpulse_v2_world2_learning_loop',
+    ownerFunction: 'createDevPulseV2World2LearningLoop',
+    phase: 7.6,
+    description: 'World 2 learning loop foundation — captures structured lessons only, no execution or file modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
