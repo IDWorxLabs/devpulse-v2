@@ -461,6 +461,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 8.4,
     description: 'Phase 8.4 mobile approval flow foundation — decision interface only, records governed approval decisions, no execution',
   },
+  cross_device_continuity_foundation: {
+    domain: 'cross_device_continuity_foundation',
+    ownerModule: 'devpulse_v2_cross_device_continuity_foundation',
+    ownerFunction: 'createDevPulseV2CrossDeviceContinuityFoundation',
+    phase: 8.5,
+    description: 'Phase 8.5 cross-device continuity foundation — context transfer only, cloud workspace remains source of truth, no execution',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {

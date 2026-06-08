@@ -64,6 +64,7 @@
     "validate:mobile-chat-interface": "tsx scripts/validate-mobile-chat-interface.ts",
     "validate:mobile-live-preview-foundation": "tsx scripts/validate-mobile-live-preview-foundation.ts",
     "validate:mobile-approval-flow-foundation": "tsx scripts/validate-mobile-approval-flow-foundation.ts",
+    "validate:cross-device-continuity-foundation": "tsx scripts/validate-cross-device-continuity-foundation.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
