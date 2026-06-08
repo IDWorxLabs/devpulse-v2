@@ -68,7 +68,8 @@ export const COMPLETED_STACKS: CompletedStack[] = [
   { phase: 'Phase 10.1', name: 'Experience Layer Foundation', status: 'COMPLETE', note: 'Founder experience map — descriptive, no execution' },
   { phase: 'Phase 10.2', name: 'Trust Engine Expansion Foundation', status: 'COMPLETE', note: 'Trust aggregation — does not replace source systems' },
   { phase: 'Phase 10.3', name: 'Founder Reality Surface Foundation', status: 'COMPLETE', note: 'First runnable visibility surface' },
-  { phase: 'Phase 10.3.1', name: 'Command Center Runtime Shell Foundation', status: 'COMPLETE', note: 'Command Center UI shell — intelligence not connected' },
+  { phase: 'Phase 10.3.1', name: 'Command Center Runtime Shell Foundation', status: 'COMPLETE', note: 'Command Center UI shell — hosts intelligence' },
+  { phase: 'Phase 11.1', name: 'Unified Command Center Brain Foundation', status: 'COMPLETE', note: 'Local intelligence — understands systems, does not execute' },
 ];
 
 export const REALITY_WARNINGS: RealityWarning[] = [
@@ -121,11 +122,11 @@ export function buildFounderRealityManifest(validators: string[]): FounderRealit
   return {
     title: 'DevPulse V2',
     subtitle: 'Command Center Runtime Shell',
-    phase: '10.3.1',
+    phase: '11.1',
     ownerModule: FOUNDER_REALITY_SURFACE_OWNER_MODULE,
     runtimeShell: buildCommandCenterShellManifest(),
     currentStatus:
-      'DevPulse V2 Command Center Runtime Shell is active. Foundations are built and validated — this is the interaction shell for future intelligence, not a complete product.',
+      'DevPulse V2 Command Center Brain is connected. Foundations are built and validated — the Brain provides local intelligence only, not execution or autonomous building.',
     completedStacks: COMPLETED_STACKS,
     realityWarnings: REALITY_WARNINGS,
     founderChecklist: FOUNDER_CHECKLIST,
@@ -135,7 +136,7 @@ export function buildFounderRealityManifest(validators: string[]): FounderRealit
     trustEnginePlaceholder:
       'Trust Engine Expansion (10.2) aggregates trust signals — unified score, no replacement of verification or evidence systems.',
     nextRecommendedStep:
-      'Phase 11 — Command Center Intelligence (connect intelligence to this shell). Product hardening follows after usable runtime.',
+      'Phase 11.2 — Cross-System Awareness (deepen Brain context across registered systems). Execution runtime and autonomous building remain future phases.',
     validators,
     confirmation: {
       visibilityOnly: true,

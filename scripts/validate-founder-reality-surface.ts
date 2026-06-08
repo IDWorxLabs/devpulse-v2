@@ -115,8 +115,8 @@ async function main(): Promise<void> {
 
   assert('21. manifest title', manifest.title === 'DevPulse V2', manifest.title);
   assert('22. manifest subtitle', manifest.subtitle === 'Command Center Runtime Shell' || manifest.subtitle.includes('Command Center'), manifest.subtitle);
-  assert('23. manifest phase', manifest.phase === '10.3.1', manifest.phase);
-  assert('24. completed stacks count', manifest.completedStacks.length >= 7, String(manifest.completedStacks.length));
+  assert('23. manifest phase', manifest.phase === '11.1', manifest.phase);
+  assert('24. completed stacks count', manifest.completedStacks.length >= 8, String(manifest.completedStacks.length));
   assert('25. reality warnings count', manifest.realityWarnings.length === 7, String(manifest.realityWarnings.length));
   assert('26. founder checklist count', manifest.founderChecklist.length === 9, String(manifest.founderChecklist.length));
   assert('27. validators loaded', manifest.validators.length >= 50, String(manifest.validators.length));
@@ -192,7 +192,7 @@ async function main(): Promise<void> {
   const httpResponse = await fetchManifestFromServer();
   assert('93. server api status 200', httpResponse.status === 200, String(httpResponse.status));
   assert('94. server api json valid', httpResponse.body.includes('"title": "DevPulse V2"'), 'json');
-  assert('95. server api phase header', httpResponse.headers['x-devpulse-phase'] === '10.3.1', String(httpResponse.headers['x-devpulse-phase']));
+  assert('95. server api phase header', httpResponse.headers['x-devpulse-phase'] === '11.1', String(httpResponse.headers['x-devpulse-phase']));
 
   const forbiddenFetch = await new Promise<number>((resolve) => {
     const server = createFounderRealityServer();

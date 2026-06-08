@@ -538,6 +538,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 10.31,
     description: 'Phase 10.3.1 command center runtime shell foundation — three-zone UI shell for future Command Center intelligence, local chat append only, no execution, persistence, or intelligence connection',
   },
+  command_center_brain: {
+    domain: 'command_center_brain',
+    ownerModule: 'devpulse_v2_command_center_brain',
+    ownerFunction: 'getDevPulseV2CommandCenterBrain',
+    phase: 11.1,
+    description: 'Phase 11.1 unified command center brain foundation — local intelligence orchestration for Command Center chat, understands registered systems and roadmap, no execution, file modification, external AI, or system replacement',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {

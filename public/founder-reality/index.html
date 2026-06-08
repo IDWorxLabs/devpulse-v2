@@ -43,13 +43,22 @@
 
       <div class="center-view" id="view-command-center">
         <div class="chat-surface" id="chat-surface">
-          <div class="chat-history" id="chat-history" aria-live="polite"></div>
+          <div class="chat-messages-panel" id="chat-messages-panel">
+            <div class="chat-welcome-state" id="chat-welcome-state">
+              <div class="welcome-content">
+                <h3 class="welcome-title">DevPulse V2</h3>
+                <p class="welcome-subtitle">Unified Command Center Brain Connected</p>
+                <p class="welcome-hint">Ask DevPulse anything about roadmap, systems, architecture, or project status.</p>
+              </div>
+            </div>
+            <div class="chat-history" id="chat-history" aria-live="polite"></div>
+          </div>
           <form class="chat-input-row" id="chat-form">
             <input
               type="text"
               id="chat-input"
               class="chat-input"
-              placeholder="Message DevPulse… (local shell only — no intelligence connected)"
+              placeholder="Message DevPulse…"
               autocomplete="off"
             />
             <button type="submit" class="send-btn" id="chat-send">Send</button>
@@ -110,6 +119,13 @@
             <p id="next-step"></p>
           </section>
 
+          <section class="card" id="section-runtime-diagnostics">
+            <h2>Runtime Diagnostics (Temporary — remove after Phase 11 stabilizes)</h2>
+            <ul id="runtime-diagnostics-list" class="diagnostics-list"></ul>
+            <p class="diag-line"><strong>Last Request Status:</strong> <span id="last-request-status">Not started</span></p>
+            <p class="diag-line"><strong>Last Error:</strong> <span id="last-error">None</span></p>
+          </section>
+
           <p class="founder-footer" id="confirmation-text">Founder Reality Surface — visibility only.</p>
         </div>
       </div>
@@ -124,7 +140,10 @@
 
     <aside class="operator-feed" id="operator-feed" aria-label="Operator Feed">
       <h2 class="feed-title">Operator Feed</h2>
-      <div class="feed-sections" id="feed-sections"></div>
+      <div class="operator-feed-body" id="operator-feed-body">
+        <div class="feed-stream-log" id="feed-stream-log" aria-live="polite"></div>
+        <div class="feed-sections" id="feed-sections"></div>
+      </div>
     </aside>
 
     <footer class="status-bar" id="status-bar">

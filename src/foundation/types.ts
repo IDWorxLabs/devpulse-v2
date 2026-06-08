@@ -1,6 +1,6 @@
 /** Shared types for DevPulse V2 foundation enforcement. */
 
-export type DevPulseV2Phase = 1 | 2 | 3 | 4 | 4.5 | 5 | 5.5 | 6.1 | 6.2 | 6.3 | 6.4 | 6.5 | 6.6 | 6.7 | 6.8 | 6.9 | 6.10 | 6.11 | 7.1 | 7.2 | 7.3 | 7.4 | 7.5 | 7.6 | 7.7 | 8.1 | 8.2 | 8.3 | 8.4 | 8.5 | 9.1 | 9.2 | 9.3 | 9.4 | 9.5 | 9.6 | 10.1 | 10.2 | 10.3 | 10.31;
+export type DevPulseV2Phase = 1 | 2 | 3 | 4 | 4.5 | 5 | 5.5 | 6.1 | 6.2 | 6.3 | 6.4 | 6.5 | 6.6 | 6.7 | 6.8 | 6.9 | 6.10 | 6.11 | 7.1 | 7.2 | 7.3 | 7.4 | 7.5 | 7.6 | 7.7 | 8.1 | 8.2 | 8.3 | 8.4 | 8.5 | 9.1 | 9.2 | 9.3 | 9.4 | 9.5 | 9.6 | 10.1 | 10.2 | 10.3 | 10.31 | 11.1;
 
 export type DevPulseV2SystemId =
   | 'foundation_enforcement'
@@ -133,7 +133,8 @@ export type OwnershipDomain =
   | 'experience_layer_foundation'
   | 'trust_engine_expansion'
   | 'founder_reality_surface'
-  | 'command_center_runtime_shell';
+  | 'command_center_runtime_shell'
+  | 'command_center_brain';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

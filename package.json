@@ -77,6 +77,9 @@
     "validate:trust-engine-expansion": "tsx scripts/validate-trust-engine-expansion.ts",
     "validate:founder-reality-surface": "tsx scripts/validate-founder-reality-surface.ts",
     "validate:command-center-runtime-shell": "tsx scripts/validate-command-center-runtime-shell.ts",
+    "validate:command-center-brain": "tsx scripts/validate-command-center-brain.ts",
+    "validate:command-center-brain-runtime": "tsx scripts/validate-command-center-brain-runtime.ts",
+    "validate:command-center-ux-stabilization": "tsx scripts/validate-command-center-ux-stabilization.ts",
     "dev": "tsx server/founder-reality-server.ts",
     "start": "tsx server/founder-reality-server.ts",
     "typecheck": "tsc --noEmit"

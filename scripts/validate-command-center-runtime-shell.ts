@@ -83,7 +83,7 @@ async function main(): Promise<void> {
   assert('20. center title Command Center', html.includes('DevPulse V2 Command Center'), 'title');
 
   assert('21. welcome message in manifest', WELCOME_MESSAGES[0]!.includes('Command Center Runtime Shell'), WELCOME_MESSAGES[0]!);
-  assert('22. phase 11 not connected message', WELCOME_MESSAGES[1]!.includes('Phase 11 intelligence has not been connected'), WELCOME_MESSAGES[1]!);
+  assert('22. brain connected welcome', WELCOME_MESSAGES[1]!.includes('Unified Command Center Brain is connected'), WELCOME_MESSAGES[1]!);
   assert('23. operator feed title in html', html.includes('Operator Feed'), 'Operator Feed');
   assert('24. nav Command Center', html.includes('data-view="command-center"'), 'nav');
   assert('25. nav Founder Reality', html.includes('data-view="founder-reality"'), 'nav');
@@ -97,7 +97,7 @@ async function main(): Promise<void> {
   assert('32. section-checklist preserved', html.includes('id="section-checklist"'), 'checklist');
   assert('33. section-warnings preserved', html.includes('id="section-warnings"'), 'warnings');
   assert('34. app.js no fetch to AI', !appJs.includes('/api/chat') && !appJs.includes('/api/execute'), 'no ai api');
-  assert('35. app.js local append only', appJs.includes('appendChatMessage') && appJs.includes('No backend call'), 'local');
+  assert('35. app.js brain chat integration', appJs.includes('appendChatMessage') && appJs.includes('/api/brain/respond'), 'brain api');
   assert('36. app.js no eval', !appJs.includes('eval('), 'clean');
   assert('37. app.js switchView founder', appJs.includes("switchView('founder-reality')"), 'founder nav');
   assert('38. app.js operator feed render', appJs.includes('renderOperatorFeed'), 'feed');
@@ -110,7 +110,7 @@ async function main(): Promise<void> {
   assert('44. server no eval', !serverSrc.includes('eval('), 'clean');
   assert('45. server no writeFileSync', !serverSrc.includes('writeFileSync'), 'clean');
   assert('46. server uses node:http', serverSrc.includes("from 'node:http'"), 'http');
-  assert('47. server shell phase header', serverSrc.includes('10.3.1'), '10.3.1');
+  assert('47. server brain phase header', serverSrc.includes('11.1'), '11.1');
   assert('48. css turquoise accent', css.includes('--turquoise'), 'turquoise');
   assert('49. css app-shell grid', css.includes('.app-shell'), 'grid');
   assert('50. css chat dominates', css.includes('.chat-surface') && css.includes('flex: 1'), 'chat');
@@ -135,14 +135,13 @@ async function main(): Promise<void> {
     assert(`${68 + i}. notification ${i}`, shell.staticNotifications.includes(n), n);
   }
 
-  assert('71. status shell active', STATUS_BAR_ITEMS[0]!.includes('10.3.1'), STATUS_BAR_ITEMS[0]!);
+  assert('71. status shell active', STATUS_BAR_ITEMS[0]!.includes('11.1'), STATUS_BAR_ITEMS[0]!);
   assert('72. status founder connected', STATUS_BAR_ITEMS[1]!.includes('Founder Reality'), STATUS_BAR_ITEMS[1]!);
-  assert('73. status phase 11 not connected', STATUS_BAR_ITEMS[2]!.includes('Phase 11 Intelligence Not Connected'), STATUS_BAR_ITEMS[2]!);
-  assert('74. status world2 not connected', STATUS_BAR_ITEMS[3]!.includes('World 2 Runtime Not Connected'), STATUS_BAR_ITEMS[3]!);
-  assert('75. status execution not connected', STATUS_BAR_ITEMS[4]!.includes('Execution Runtime Not Connected'), STATUS_BAR_ITEMS[4]!);
+  assert('73. status world2 not connected', STATUS_BAR_ITEMS[2]!.includes('World 2 Runtime Not Connected'), STATUS_BAR_ITEMS[2]!);
+  assert('74. status execution not connected', STATUS_BAR_ITEMS[3]!.includes('Execution Runtime Not Connected'), STATUS_BAR_ITEMS[3]!);
 
   assert('76. no AI response in app.js', !appJs.includes('AI response') || appJs.includes('No AI response'), 'no ai');
-  assert('77. no persistence in app.js', appJs.includes('No persistence') || appJs.includes('local shell only'), 'no persist');
+  assert('77. no persistence in app.js', !appJs.includes('localStorage') && appJs.includes('persistence'), 'no persist');
   assert('78. form preventDefault', appJs.includes('preventDefault'), 'prevent');
   assert('79. manifest stacks include 10.3.1', manifest.completedStacks.some((s) => s.phase.includes('10.3.1')), '10.3.1 stack');
   assert('80. founder checklist preserved', manifest.founderChecklist.length === FOUNDER_CHECKLIST.length, String(manifest.founderChecklist.length));
@@ -157,8 +156,8 @@ async function main(): Promise<void> {
   assert('85. distinct from founder reality', getDevPulseV2Owner('founder_reality_surface').ownerModule !== COMMAND_CENTER_RUNTIME_SHELL_OWNER_MODULE, 'distinct');
   assert('86. distinct from experience layer', getDevPulseV2Owner('experience_layer_foundation').ownerModule !== COMMAND_CENTER_RUNTIME_SHELL_OWNER_MODULE, 'distinct');
   assert('87. shell confirmation runtime only', shell.confirmation.runtimeShellOnly === true, 'confirmed');
-  assert('88. shell no intelligence', shell.confirmation.noIntelligenceConnected === true, 'confirmed');
-  assert('89. shell no backend chat', shell.confirmation.noBackendChatProcessing === true, 'confirmed');
+  assert('88. shell local brain connected', shell.confirmation.localBrainConnected === true, 'confirmed');
+  assert('89. shell brain api local only', shell.confirmation.brainApiLocalOnly === true, 'confirmed');
   assert('90. shell no execution', shell.confirmation.noExecutionPerformed === true, 'confirmed');
 
   const json1 = getFounderRealityManifestJson();
@@ -187,7 +186,7 @@ async function main(): Promise<void> {
     });
   });
   assert('92. api returns runtimeShell', httpResult.body.includes('"runtimeShell"'), 'runtimeShell');
-  assert('93. api phase header 10.3.1', httpResult.phase === '10.3.1', httpResult.phase ?? 'missing');
+  assert('93. api phase header 11.1', httpResult.phase === '11.1', httpResult.phase ?? 'missing');
 
   assert('94. reality warnings in manifest', manifest.realityWarnings.length === REALITY_WARNINGS.length, String(manifest.realityWarnings.length));
   assert('95. validators in manifest', manifest.validators.length >= 50, String(manifest.validators.length));
@@ -206,7 +205,7 @@ async function main(): Promise<void> {
   assert('110. no cloud runtime complete', !html.includes('cloud runtime is complete'), 'safe');
   assert('111. no mobile app complete', !html.includes('mobile app is complete'), 'safe');
   assert('112. no execution runtime complete', !html.includes('execution runtime is complete'), 'safe');
-  assert('113. waiting for intelligence in app', appJs.includes('Waiting for future intelligence systems'), 'waiting');
+  assert('113. feed stream in app', appJs.includes('streamOperatorFeedEvents'), 'stream');
   assert('114. shell manifest owner module', shellManifestSrc.includes(COMMAND_CENTER_RUNTIME_SHELL_OWNER_MODULE), 'owner');
   assert('115. founder reality scroll class', html.includes('founder-reality-scroll'), 'scroll');
   assert('116. chat message user class', css.includes('.chat-message.user'), 'user msg');
@@ -225,7 +224,7 @@ async function main(): Promise<void> {
     assert(`${151 + i}. founder manifest stable ${i}`, m.runtimeShell.ownerModule === COMMAND_CENTER_RUNTIME_SHELL_OWNER_MODULE, 'stable');
   }
 
-  assert('171. POST blocked on server', serverSrc.includes('405'), '405');
+  assert('171. brain POST endpoint on server', serverSrc.includes('/api/brain/respond'), 'brain api');
   assert('172. forbidden command path', serverSrc.includes('command'), 'guard');
   assert('173. forbidden write path', serverSrc.includes('write'), 'guard');
   assert('174. no deployment in app.js', !appJs.includes('deploy('), 'clean');

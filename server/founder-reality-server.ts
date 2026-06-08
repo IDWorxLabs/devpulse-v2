@@ -1,6 +1,6 @@
 /**
- * DevPulse V2 Phase 10.3 — Founder Reality Surface HTTP server.
- * Serves static visibility surface only. No execution, no file writes, no command endpoints.
+ * DevPulse V2 Phase 10.3+ — Founder Reality Surface + Command Center Brain HTTP server.
+ * Serves static surface and local brain API. No execution, no file writes.
  */
 
 import { readFileSync, statSync } from 'node:fs';
@@ -14,6 +14,7 @@ import {
   FOUNDER_REALITY_PORT,
   FOUNDER_REALITY_URL,
 } from './founder-reality-manifest.js';
+import { handleBrainRespondRequest, sendBrainHealth } from './brain-api-handler.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = join(__dirname, '..');
@@ -44,7 +45,7 @@ function sendJson(res: ServerResponse, status: number, body: string): void {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
     'X-DevPulse-Surface': 'founder-reality',
-    'X-DevPulse-Phase': '10.3.1',
+    'X-DevPulse-Phase': '11.1',
     'X-DevPulse-Shell': 'command-center-runtime',
   });
   res.end(body);
@@ -55,7 +56,7 @@ function sendText(res: ServerResponse, status: number, contentType: string, body
     'Content-Type': contentType,
     'Cache-Control': 'no-store',
     'X-DevPulse-Surface': 'founder-reality',
-    'X-DevPulse-Phase': '10.3.1',
+    'X-DevPulse-Phase': '11.1',
     'X-DevPulse-Shell': 'command-center-runtime',
   });
   res.end(body);
@@ -80,15 +81,39 @@ async function serveStaticFile(res: ServerResponse, filePath: string): Promise<v
 
 export function createFounderRealityServer() {
   return createServer(async (req: IncomingMessage, res: ServerResponse) => {
-    if (req.method !== 'GET' && req.method !== 'HEAD') {
-      sendJson(res, 405, JSON.stringify({ error: 'Method not allowed — Founder Reality Surface is read-only' }));
+    const urlPath = (req.url ?? '/').split('?')[0] ?? '/';
+
+    const forbiddenPaths = ['/api/exec', '/api/run-command', '/api/write', '/api/deploy', '/api/auto-fix'];
+    if (forbiddenPaths.some((p) => urlPath.startsWith(p))) {
+      sendJson(res, 403, JSON.stringify({ error: 'Forbidden endpoint — no command or write access' }));
       return;
     }
 
-    const urlPath = (req.url ?? '/').split('?')[0] ?? '/';
+    if (urlPath === '/api/brain/health' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendBrainHealth(res);
+      return;
+    }
 
-    if (urlPath.includes('exec') || urlPath.includes('write') || urlPath.includes('command') || urlPath.includes('deploy')) {
-      sendJson(res, 403, JSON.stringify({ error: 'Forbidden endpoint — no command or write access' }));
+    if (urlPath === '/api/brain/respond' && req.method === 'POST') {
+      await handleBrainRespondRequest(req, res);
+      return;
+    }
+
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      sendJson(res, 405, JSON.stringify({
+        error: 'Method not allowed — only GET and POST /api/brain/* endpoints are supported',
+        hint: 'Restart DevPulse with npm run dev if Brain POST returns read-only errors',
+      }));
+      return;
+    }
+
+    if (urlPath.includes('exec') || urlPath.includes('/write') || urlPath.includes('deploy')) {
+      sendJson(res, 403, JSON.stringify({ error: 'Forbidden endpoint' }));
       return;
     }
 
@@ -140,12 +165,14 @@ export function startFounderRealityServer(port = FOUNDER_REALITY_PORT, host = FO
   const server = createFounderRealityServer();
   server.listen(port, host, () => {
     console.log('');
-    console.log('DevPulse V2 — Command Center Runtime Shell');
-    console.log('==========================================');
+    console.log('DevPulse V2 — Command Center + Unified Brain');
+    console.log('============================================');
     console.log('');
     console.log(`Open: ${FOUNDER_REALITY_URL}`);
     console.log('');
-    console.log('Visibility only — no execution, no validator auto-run.');
+    console.log('Phase 11.1A Brain Runtime — POST /api/brain/respond + GET /api/brain/health');
+    console.log('If Brain fails with 405, stop stale servers on port 4321 and restart.');
+    console.log('No execution, no external AI, no file modification.');
     console.log('');
   });
   return server;

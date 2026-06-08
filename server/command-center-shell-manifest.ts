@@ -25,14 +25,14 @@ export const OPERATOR_FEED_SECTIONS = [
 ] as const;
 
 export const STATUS_BAR_ITEMS = [
-  'Phase 10.3.1 Runtime Shell Active',
+  'Phase 11.1 Command Center Brain Connected',
   'Founder Reality Surface Connected',
-  'Phase 11 Intelligence Not Connected',
   'World 2 Runtime Not Connected',
   'Execution Runtime Not Connected',
 ] as const;
 
 export const STATIC_NOTIFICATIONS = [
+  'Unified Command Center Brain Connected',
   'Founder Reality Surface Ready',
   'Phase 10.3 Complete',
   'Phase 10.3.1 Runtime Shell Ready',
@@ -40,8 +40,8 @@ export const STATIC_NOTIFICATIONS = [
 
 export const WELCOME_MESSAGES = [
   'DevPulse V2 Command Center Runtime Shell',
-  'Phase 11 intelligence has not been connected yet.',
-  'Use this surface to host future Command Center intelligence.',
+  'Phase 11.1 Unified Command Center Brain is connected — local intelligence only.',
+  'Ask: "What should we build next?" or "Explain the Trust Engine"',
 ] as const;
 
 export const DUPLICATE_SHELL_PATTERNS = [
@@ -62,12 +62,12 @@ export interface CommandCenterShellManifest {
   welcomeMessages: readonly string[];
   confirmation: {
     runtimeShellOnly: true;
-    noIntelligenceConnected: true;
+    localBrainConnected: true;
     noExecutionPerformed: true;
     noPersistence: true;
     noFileModification: true;
     noCodeGeneration: true;
-    noBackendChatProcessing: true;
+    brainApiLocalOnly: true;
   };
 }
 
@@ -83,12 +83,12 @@ export function buildCommandCenterShellManifest(): CommandCenterShellManifest {
     welcomeMessages: WELCOME_MESSAGES,
     confirmation: {
       runtimeShellOnly: true,
-      noIntelligenceConnected: true,
+      localBrainConnected: true,
       noExecutionPerformed: true,
       noPersistence: true,
       noFileModification: true,
       noCodeGeneration: true,
-      noBackendChatProcessing: true,
+      brainApiLocalOnly: true,
     },
   };
 }
