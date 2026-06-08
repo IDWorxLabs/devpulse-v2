@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevPulse V2 — Command Center</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell" id="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-brand">
+        <span class="brand-mark">DP</span>
+        <div>
+          <h1 id="page-title">DevPulse V2</h1>
+          <p class="brand-sub" id="page-subtitle">Command Center</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <button type="button" class="nav-item active" data-view="command-center">Command Center</button>
+        <button type="button" class="nav-item" data-view="placeholder" data-label="Projects">Projects</button>
+        <button type="button" class="nav-item" data-view="placeholder" data-label="World 2">World 2</button>
+        <button type="button" class="nav-item" data-view="placeholder" data-label="Project Vault">Project Vault</button>
+        <button type="button" class="nav-item" data-view="placeholder" data-label="Notifications">Notifications</button>
+        <button type="button" class="nav-item" data-view="placeholder" data-label="Validators">Validators</button>
+        <button type="button" class="nav-item" data-view="founder-reality">Founder Reality</button>
+      </nav>
+      <p class="sidebar-note">Navigation placeholders — no functionality behind inactive items.</p>
+    </aside>
+
+    <main class="center-area" id="center-area">
+      <header class="center-header">
+        <h2 id="center-title">DevPulse V2 Command Center</h2>
+        <button type="button" class="notif-btn" id="notif-toggle" aria-expanded="false" aria-controls="notification-drawer">
+          Notifications
+        </button>
+      </header>
+
+      <div class="notification-drawer" id="notification-drawer" hidden>
+        <h3>Notifications</h3>
+        <ul id="notification-list" class="notification-list"></ul>
+      </div>
+
+      <div class="center-view" id="view-command-center">
+        <div class="chat-surface" id="chat-surface">
+          <div class="chat-history" id="chat-history" aria-live="polite"></div>
+          <form class="chat-input-row" id="chat-form">
+            <input
+              type="text"
+              id="chat-input"
+              class="chat-input"
+              placeholder="Message DevPulse… (local shell only — no intelligence connected)"
+              autocomplete="off"
+            />
+            <button type="submit" class="send-btn" id="chat-send">Send</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="center-view hidden" id="view-founder-reality">
+        <div class="founder-reality-scroll">
+          <p class="phase-badge" id="phase-badge">Phase 10.3.1 — Runtime Shell</p>
+
+          <section class="card" id="section-status">
+            <h2>1. Current Status</h2>
+            <p id="current-status">Loading…</p>
+          </section>
+
+          <section class="card" id="section-stacks">
+            <h2>2. Completed Foundation Stacks</h2>
+            <ul id="completed-stacks" class="stack-list"></ul>
+          </section>
+
+          <section class="card" id="section-validators">
+            <h2>3. Available Validators</h2>
+            <p class="hint">Run manually via npm — this surface does not auto-run validators.</p>
+            <ul id="validator-list" class="validator-list"></ul>
+          </section>
+
+          <section class="card two-col" id="section-exists">
+            <h2>4. What Exists vs What Does Not Exist Yet</h2>
+            <div class="col">
+              <h3>What Exists</h3>
+              <ul id="exists-list"></ul>
+            </div>
+            <div class="col">
+              <h3>Not Yet</h3>
+              <ul id="not-yet-list"></ul>
+            </div>
+          </section>
+
+          <section class="card" id="section-warnings">
+            <h2>Reality Warnings</h2>
+            <ul id="reality-warnings" class="warning-list"></ul>
+          </section>
+
+          <section class="card" id="section-placeholders">
+            <h2>Experience &amp; Trust Placeholders</h2>
+            <p id="experience-placeholder"></p>
+            <p id="trust-placeholder"></p>
+          </section>
+
+          <section class="card" id="section-checklist">
+            <h2>5. Founder Reality Checklist</h2>
+            <ul id="founder-checklist" class="checklist"></ul>
+          </section>
+
+          <section class="card highlight" id="section-next">
+            <h2>6. Next Recommended Build Step</h2>
+            <p id="next-step"></p>
+          </section>
+
+          <p class="founder-footer" id="confirmation-text">Founder Reality Surface — visibility only.</p>
+        </div>
+      </div>
+
+      <div class="center-view hidden" id="view-placeholder">
+        <div class="placeholder-panel">
+          <h3 id="placeholder-title">Navigation Placeholder</h3>
+          <p id="placeholder-message">This navigation item is a placeholder. No functionality is connected yet.</p>
+        </div>
+      </div>
+    </main>
+
+    <aside class="operator-feed" id="operator-feed" aria-label="Operator Feed">
+      <h2 class="feed-title">Operator Feed</h2>
+      <div class="feed-sections" id="feed-sections"></div>
+    </aside>
+
+    <footer class="status-bar" id="status-bar">
+      <ul id="status-items" class="status-items"></ul>
+    </footer>
+  </div>
+
+  <noscript>
+    <div class="noscript">
+      <p>DevPulse V2 Command Center requires JavaScript.</p>
+      <p>Founder Reality Surface — foundation architecture exists.</p>
+    </div>
+  </noscript>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -510,6 +510,34 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 9.6,
     description: 'Phase 9.6 future problem prediction foundation — predicts likely future failures and produces prevention recommendations only, no auto-fix, execution, or modification',
   },
+  experience_layer_foundation: {
+    domain: 'experience_layer_foundation',
+    ownerModule: 'devpulse_v2_experience_layer_foundation',
+    ownerFunction: 'createDevPulseV2ExperienceLayerFoundation',
+    phase: 10.1,
+    description: 'Phase 10.1 experience layer foundation — exposes existing DevPulse systems via founder experience map only, no execution, UI rendering, file modification, or governance changes',
+  },
+  trust_engine_expansion: {
+    domain: 'trust_engine_expansion',
+    ownerModule: 'devpulse_v2_trust_engine_expansion',
+    ownerFunction: 'createDevPulseV2TrustEngineExpansion',
+    phase: 10.2,
+    description: 'Phase 10.2 trust engine expansion foundation — aggregates trust signals from existing systems into unified founder-readable trust assessment only, no execution, auto-fix, or replacement of verification/evidence/completion systems',
+  },
+  founder_reality_surface: {
+    domain: 'founder_reality_surface',
+    ownerModule: 'devpulse_v2_founder_reality_surface',
+    ownerFunction: 'startFounderRealityServer',
+    phase: 10.3,
+    description: 'Phase 10.3 founder reality surface foundation — minimal runnable visibility surface exposing foundation status only, no execution, validator auto-run, file modification, or autonomous building claims',
+  },
+  command_center_runtime_shell: {
+    domain: 'command_center_runtime_shell',
+    ownerModule: 'devpulse_v2_command_center_runtime_shell',
+    ownerFunction: 'startFounderRealityServer',
+    phase: 10.31,
+    description: 'Phase 10.3.1 command center runtime shell foundation — three-zone UI shell for future Command Center intelligence, local chat append only, no execution, persistence, or intelligence connection',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {

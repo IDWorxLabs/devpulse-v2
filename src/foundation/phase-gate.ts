@@ -18,7 +18,7 @@ function buildPhaseViolation(
     recommendedAction:
       phase === 1
         ? `Remove "${systemId}" from the build. Phase 1 allows only: ${DEV_PULSE_V2_LAWS.phase1AllowedSystems.join(', ')}. Prove Phase 1 stability before introducing deferred systems.`
-        : `Verify Phase ${phase - 1} stability gate passed before adding "${systemId}".`,
+        : `Verify prior phase stability gate passed before adding "${systemId}".`,
     riskLevel: 'critical',
   };
 }

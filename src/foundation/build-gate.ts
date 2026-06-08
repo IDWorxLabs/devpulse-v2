@@ -2,6 +2,7 @@
  * DevPulse V2 build gate — unified pre-build approval checkpoint.
  */
 
+import { devPulsePhaseOrder } from './phase-order.js';
 import { runDevPulseV2ConstitutionalValidation } from './constitutional-validator.js';
 import { assertSingleOwner, listDevPulseV2Owners } from './ownership-registry.js';
 import { assertAllSystemsAllowedInPhase } from './phase-gate.js';
@@ -22,7 +23,7 @@ export function runDevPulseV2BuildGate(buildPacket: BuildPacket): BuildGateResul
 
   // 2. Ownership registry integrity — all domains must have single owner
   for (const owner of listDevPulseV2Owners()) {
-    if (owner.phase > phase) {
+    if (devPulsePhaseOrder(owner.phase) > devPulsePhaseOrder(phase)) {
       continue;
     }
     const check = assertSingleOwner(owner.domain);

@@ -73,6 +73,12 @@
     "validate:complexity-score-foundation": "tsx scripts/validate-complexity-score-foundation.ts",
     "validate:future-problem-prediction": "tsx scripts/validate-future-problem-prediction.ts",
     "validate:phase9-governance-stack-checkpoint": "tsx scripts/validate-phase9-governance-stack-checkpoint.ts",
+    "validate:experience-layer-foundation": "tsx scripts/validate-experience-layer-foundation.ts",
+    "validate:trust-engine-expansion": "tsx scripts/validate-trust-engine-expansion.ts",
+    "validate:founder-reality-surface": "tsx scripts/validate-founder-reality-surface.ts",
+    "validate:command-center-runtime-shell": "tsx scripts/validate-command-center-runtime-shell.ts",
+    "dev": "tsx server/founder-reality-server.ts",
+    "start": "tsx server/founder-reality-server.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
