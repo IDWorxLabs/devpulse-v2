@@ -40,6 +40,18 @@
     "validate:failure-prediction": "tsx scripts/validate-failure-prediction-foundation.ts",
     "validate:root-cause-attribution": "tsx scripts/validate-root-cause-attribution-foundation.ts",
     "validate:observability-stack": "tsx scripts/validate-observability-stack-reality.ts",
+    "validate:execution-authority": "tsx scripts/validate-execution-authority-foundation.ts",
+    "validate:execution-runtime": "tsx scripts/validate-execution-package-runtime.ts",
+    "validate:execution-verification": "tsx scripts/validate-execution-verification-loop.ts",
+    "validate:recovery-execution": "tsx scripts/validate-recovery-execution-engine.ts",
+    "validate:founder-approval": "tsx scripts/validate-founder-approval-execution-gate.ts",
+    "validate:execution-reality": "tsx scripts/validate-execution-reality-validation.ts",
+    "validate:execution-evidence": "tsx scripts/validate-execution-evidence-ledger.ts",
+    "validate:recovery-chains": "tsx scripts/validate-recovery-chains.ts",
+    "validate:auto-fix-control": "tsx scripts/validate-auto-fix-control.ts",
+    "validate:rollback-retry": "tsx scripts/validate-rollback-retry-engine.ts",
+    "validate:verification-gated-apply": "tsx scripts/validate-verification-gated-apply.ts",
+    "validate:phase6-checkpoint": "tsx scripts/validate-phase6-governance-stack-checkpoint.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 /** Shared types for DevPulse V2 foundation enforcement. */
 
-export type DevPulseV2Phase = 1 | 2 | 3 | 4 | 4.5 | 5 | 5.5;
+export type DevPulseV2Phase = 1 | 2 | 3 | 4 | 4.5 | 5 | 5.5 | 6.1 | 6.2 | 6.3 | 6.4 | 6.5 | 6.6 | 6.7 | 6.8 | 6.9 | 6.10 | 6.11;
 
 export type DevPulseV2SystemId =
   | 'foundation_enforcement'
@@ -42,6 +42,17 @@ export type DevPulseV2SystemId =
   | 'failure_prediction'
   | 'root_cause_attribution'
   | 'observability_stack_reality_validation'
+  | 'execution_authority'
+  | 'execution_package_runtime'
+  | 'execution_verification_loop'
+  | 'recovery_execution_engine'
+  | 'founder_approval_execution_gate'
+  | 'execution_reality_validation'
+  | 'execution_evidence_ledger'
+  | 'recovery_chains'
+  | 'auto_fix_control_panel'
+  | 'rollback_retry_engine'
+  | 'verification_gated_apply'
   | 'mobile_command'
   | 'world2_builder'
   | 'autonomous_execution'
@@ -84,6 +95,17 @@ export type OwnershipDomain =
   | 'failure_prediction'
   | 'root_cause_attribution'
   | 'observability_stack_reality_validation'
+  | 'execution_authority'
+  | 'execution_package_runtime'
+  | 'execution_verification_loop'
+  | 'recovery_execution_engine'
+  | 'founder_approval_execution_gate'
+  | 'execution_reality_validation'
+  | 'execution_evidence_ledger'
+  | 'recovery_chains'
+  | 'auto_fix_control_panel'
+  | 'rollback_retry_engine'
+  | 'verification_gated_apply'
   | 'background_task_budgeting'
   | 'law_enforcement'
   | 'phase_gate'
