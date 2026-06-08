@@ -1,0 +1,344 @@
+/**
+ * DevPulse V2 ownership registry — one owner per domain.
+ */
+
+import type { OwnershipDomain, Violation } from './types.js';
+
+export interface OwnerRecord {
+  domain: OwnershipDomain;
+  ownerModule: string;
+  ownerFunction: string;
+  phase: number;
+  description: string;
+}
+
+const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
+  shell_authority: {
+    domain: 'shell_authority',
+    ownerModule: 'devpulse_v2_shell_authority',
+    ownerFunction: 'createDevPulseV2ShellAuthority',
+    phase: 1,
+    description: 'Shell readiness, clickability, status, and startup timing',
+  },
+  startup_scheduling: {
+    domain: 'startup_scheduling',
+    ownerModule: 'devpulse_v2_task_governor',
+    ownerFunction: 'scheduleStartupWork',
+    phase: 1,
+    description: 'All startup and background scheduling',
+  },
+  chat_authority: {
+    domain: 'chat_authority',
+    ownerModule: 'devpulse_v2_chat_authority',
+    ownerFunction: 'createDevPulseV2ChatAuthority',
+    phase: 1,
+    description: 'User message intake, response creation, answer contract, chat state',
+  },
+  chat_answer_authority: {
+    domain: 'chat_answer_authority',
+    ownerModule: 'devpulse_v2_chat_authority',
+    ownerFunction: 'createDevPulseV2ChatAuthority',
+    phase: 1,
+    description: 'Final answer authority for user messages — same owner as chat_authority',
+  },
+  chat_rendering: {
+    domain: 'chat_rendering',
+    ownerModule: 'devpulse_v2_chat_surface',
+    ownerFunction: 'renderChatSurface',
+    phase: 1,
+    description: 'Chat display and turn rendering',
+  },
+  inline_operator_feed: {
+    domain: 'inline_operator_feed',
+    ownerModule: 'devpulse_v2_inline_operator_feed_authority',
+    ownerFunction: 'createDevPulseV2InlineOperatorFeedAuthority',
+    phase: 1,
+    description: 'Inline feed event creation, ordering, visibility, turn attachment',
+  },
+  background_task_budgeting: {
+    domain: 'background_task_budgeting',
+    ownerModule: 'devpulse_v2_task_governor',
+    ownerFunction: 'registerBackgroundTask',
+    phase: 1,
+    description: 'Background work budgets and queue tiers',
+  },
+  browser_verification_harness: {
+    domain: 'browser_verification_harness',
+    ownerModule: 'devpulse_v2_browser_verification_harness',
+    ownerFunction: 'createDevPulseV2BrowserVerificationHarness',
+    phase: 1,
+    description: 'Browser reality checks — visible, clickable, chat, feed verification',
+  },
+  phase_1_stability_soak: {
+    domain: 'phase_1_stability_soak',
+    ownerModule: 'devpulse_v2_phase_1_stability_soak_authority',
+    ownerFunction: 'createDevPulseV2Phase1StabilitySoakAuthority',
+    phase: 1,
+    description: 'Repeated Phase 1 validation cycles and Phase 2 readiness summary',
+  },
+  real_browser_runner_attachment: {
+    domain: 'real_browser_runner_attachment',
+    ownerModule: 'devpulse_v2_real_browser_runner_adapter',
+    ownerFunction: 'createRealBrowserRunnerAdapter',
+    phase: 1,
+    description: 'Playwright real browser runner attachment for Browser Verification Harness',
+  },
+  trust_engine: {
+    domain: 'trust_engine',
+    ownerModule: 'devpulse_v2_trust_engine_authority',
+    ownerFunction: 'createDevPulseV2TrustEngineAuthority',
+    phase: 2,
+    description: 'Trust scoring and evidence-based trust recommendations — observes only',
+  },
+  project_vault: {
+    domain: 'project_vault',
+    ownerModule: 'devpulse_v2_project_vault_authority',
+    ownerFunction: 'createDevPulseV2ProjectVaultAuthority',
+    phase: 2,
+    description: 'Lightweight in-memory project identity, metadata, facts, and snapshots',
+  },
+  evidence_registry: {
+    domain: 'evidence_registry',
+    ownerModule: 'devpulse_v2_evidence_registry_authority',
+    ownerFunction: 'createDevPulseV2EvidenceRegistryAuthority',
+    phase: 2,
+    description: 'Single source of truth for proof references — stores evidence only',
+  },
+  validation_budget_policy: {
+    domain: 'validation_budget_policy',
+    ownerModule: 'devpulse_v2_validation_budget_policy_authority',
+    ownerFunction: 'createDevPulseV2ValidationBudgetPolicyAuthority',
+    phase: 2,
+    description: 'Fast-check vs full-stack validation governance and nested validator detection',
+  },
+  timeline_event_ledger: {
+    domain: 'timeline_event_ledger',
+    ownerModule: 'devpulse_v2_timeline_ledger_authority',
+    ownerFunction: 'createDevPulseV2TimelineLedgerAuthority',
+    phase: 2,
+    description: 'Chronological timeline of DevPulse events with evidence and project references',
+  },
+  omega_prompt_safety_policy: {
+    domain: 'omega_prompt_safety_policy',
+    ownerModule: 'devpulse_v2_omega_prompt_safety_authority',
+    ownerFunction: 'createDevPulseV2OmegaPromptSafetyAuthority',
+    phase: 2,
+    description: 'Classifies OMEGA build prompts for authority scope and validation safety',
+  },
+  central_brain: {
+    domain: 'central_brain',
+    ownerModule: 'devpulse_v2_central_brain_authority',
+    ownerFunction: 'createDevPulseV2CentralBrainAuthority',
+    phase: 3,
+    description: 'Shared awareness and coordination — read-only, does not answer or execute',
+  },
+  intent_architecture: {
+    domain: 'intent_architecture',
+    ownerModule: 'devpulse_v2_intent_architecture_authority',
+    ownerFunction: 'createDevPulseV2IntentArchitectureAuthority',
+    phase: 3,
+    description: 'Structured intent understanding — does not answer, execute, or generate code',
+  },
+  context_arbitration: {
+    domain: 'context_arbitration',
+    ownerModule: 'devpulse_v2_context_arbitration_authority',
+    ownerFunction: 'createDevPulseV2ContextArbitrationAuthority',
+    phase: 3,
+    description: 'Context selection and prioritization — read-only, does not answer or execute',
+  },
+  answer_authority_protection_policy: {
+    domain: 'answer_authority_protection_policy',
+    ownerModule: 'devpulse_v2_answer_authority_protection_authority',
+    ownerFunction: 'createDevPulseV2AnswerAuthorityProtectionAuthority',
+    phase: 3,
+    description: 'Permanent answer ownership protection — validates Chat Authority as sole visible answer owner',
+  },
+  answer_quality_judge: {
+    domain: 'answer_quality_judge',
+    ownerModule: 'devpulse_v2_answer_quality_judge_authority',
+    ownerFunction: 'createDevPulseV2AnswerQualityJudgeAuthority',
+    phase: 3,
+    description: 'Post-answer quality review — does not create, modify, or replace answers',
+  },
+  verification_loop: {
+    domain: 'verification_loop',
+    ownerModule: 'devpulse_v2_verification_loop_authority',
+    ownerFunction: 'createDevPulseV2VerificationLoopAuthority',
+    phase: 3,
+    description: 'Claim verification against evidence — read-only, does not answer or execute',
+  },
+  visible_ui_clickability_guard: {
+    domain: 'visible_ui_clickability_guard',
+    ownerModule: 'devpulse_v2_visible_ui_guard_authority',
+    ownerFunction: 'createDevPulseV2VisibleUiGuardAuthority',
+    phase: 3,
+    description: 'Visible UI registration and clickability proof — guardrail only, does not build UI',
+  },
+  aidev_engine: {
+    domain: 'aidev_engine',
+    ownerModule: 'devpulse_v2_aidev_engine_authority',
+    ownerFunction: 'createDevPulseV2AiDevEngineAuthority',
+    phase: 4,
+    description: 'AiDev build request intake and reporting — no code generation or execution in Foundation V1',
+  },
+  requirement_extractor: {
+    domain: 'requirement_extractor',
+    ownerModule: 'devpulse_v2_requirement_extractor_authority',
+    ownerFunction: 'createDevPulseV2RequirementExtractorAuthority',
+    phase: 4,
+    description: 'Structured requirement discovery from build requests — extraction only',
+  },
+  product_architect: {
+    domain: 'product_architect',
+    ownerModule: 'devpulse_v2_product_architect_authority',
+    ownerFunction: 'createDevPulseV2ProductArchitectAuthority',
+    phase: 4,
+    description: 'Product architecture blueprint design from requirements — design only',
+  },
+  build_package_generator: {
+    domain: 'build_package_generator',
+    ownerModule: 'devpulse_v2_build_package_generator_authority',
+    ownerFunction: 'createDevPulseV2BuildPackageGeneratorAuthority',
+    phase: 4,
+    description: 'Structured implementation package generation from blueprints — package generation only',
+  },
+  implementation_strategy_engine: {
+    domain: 'implementation_strategy_engine',
+    ownerModule: 'devpulse_v2_implementation_strategy_authority',
+    ownerFunction: 'createDevPulseV2ImplementationStrategyAuthority',
+    phase: 4,
+    description: 'Implementation sequencing and rollback planning from build packages — strategy only',
+  },
+  code_generation_planner: {
+    domain: 'code_generation_planner',
+    ownerModule: 'devpulse_v2_code_generation_planner_authority',
+    ownerFunction: 'createDevPulseV2CodeGenerationPlannerAuthority',
+    phase: 4,
+    description: 'Code generation planning from implementation strategies — planning only',
+  },
+  recovery_strategy_planner: {
+    domain: 'recovery_strategy_planner',
+    ownerModule: 'devpulse_v2_recovery_strategy_authority',
+    ownerFunction: 'createDevPulseV2RecoveryStrategyAuthority',
+    phase: 4,
+    description: 'Recovery and rollback planning from code plans — planning only, no execution',
+  },
+  planning_stack_reality_validation: {
+    domain: 'planning_stack_reality_validation',
+    ownerModule: 'devpulse_v2_planning_stack_validation_authority',
+    ownerFunction: 'createDevPulseV2PlanningStackValidationAuthority',
+    phase: 4.5,
+    description: 'End-to-end planning stack handoff validation — validation layer only',
+  },
+  law_enforcement: {
+    domain: 'law_enforcement',
+    ownerModule: 'devpulse_v2_foundation_enforcement',
+    ownerFunction: 'runDevPulseV2ConstitutionalValidation',
+    phase: 1,
+    description: 'Constitutional and law enforcement layer',
+  },
+  phase_gate: {
+    domain: 'phase_gate',
+    ownerModule: 'devpulse_v2_phase_gate',
+    ownerFunction: 'assertSystemAllowedInCurrentPhase',
+    phase: 1,
+    description: 'Phase boundary enforcement',
+  },
+  performance_gate: {
+    domain: 'performance_gate',
+    ownerModule: 'devpulse_v2_task_governor',
+    ownerFunction: 'enforcePerformanceBudget',
+    phase: 1,
+    description: 'Main-thread and render budget enforcement',
+  },
+  growth_protection: {
+    domain: 'growth_protection',
+    ownerModule: 'devpulse_v2_foundation_enforcement',
+    ownerFunction: 'runDevPulseV2ConstitutionalValidation',
+    phase: 1,
+    description: 'Module size, connect-module, and drift detection',
+  },
+  world2_isolation: {
+    domain: 'world2_isolation',
+    ownerModule: 'devpulse_v2_world2_isolation_gate',
+    ownerFunction: 'assertWorld2Isolation',
+    phase: 5,
+    description: 'World 2 sandbox isolation (deferred until Phase 5)',
+  },
+};
+
+export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
+  return OWNERSHIP_REGISTRY[domain];
+}
+
+export function listDevPulseV2Owners(): OwnerRecord[] {
+  return Object.values(OWNERSHIP_REGISTRY);
+}
+
+export interface SingleOwnerAssertionResult {
+  ok: boolean;
+  domain: OwnershipDomain;
+  violation?: Violation;
+}
+
+/**
+ * Assert that a domain has exactly one registered owner.
+ * Fails if competing owners are supplied for the same domain.
+ */
+export function assertSingleOwner(
+  domain: OwnershipDomain,
+  competingOwners?: string[],
+): SingleOwnerAssertionResult {
+  const registered = OWNERSHIP_REGISTRY[domain];
+
+  if (!registered) {
+    return {
+      ok: false,
+      domain,
+      violation: {
+        code: 'OWNERSHIP_DOMAIN_UNKNOWN',
+        message: `Unknown ownership domain: ${domain}`,
+        lawReference: 'DEVPULSE_V2_OWNERSHIP_LAWS',
+        recommendedAction: 'Register domain in ownership-registry.ts before use.',
+        riskLevel: 'high',
+      },
+    };
+  }
+
+  if (competingOwners && competingOwners.length > 1) {
+    return {
+      ok: false,
+      domain,
+      violation: {
+        code: 'DUPLICATE_DOMAIN_OWNER',
+        message: `Domain "${domain}" has ${competingOwners.length} competing owners: ${competingOwners.join(', ')}`,
+        lawReference: 'DEVPULSE_V2_OWNERSHIP_LAWS',
+        recommendedAction: `Assign single owner. Registered owner: ${registered.ownerModule}.${registered.ownerFunction}`,
+        riskLevel: 'critical',
+      },
+    };
+  }
+
+  return { ok: true, domain };
+}
+
+/** Validate truth-source map: each domain may have at most one owner. */
+export function assertSingleSourceOfTruth(
+  truthSources: Record<string, string[]>,
+): Violation[] {
+  const violations: Violation[] = [];
+
+  for (const [domain, owners] of Object.entries(truthSources)) {
+    if (owners.length > 1) {
+      violations.push({
+        code: 'DUPLICATE_TRUTH_SOURCE',
+        message: `Domain "${domain}" has ${owners.length} truth sources: ${owners.join(', ')}`,
+        lawReference: 'DEVPULSE_V2_OWNERSHIP_LAWS',
+        recommendedAction: 'Remove duplicate writers. One source of truth per domain.',
+        riskLevel: 'critical',
+      });
+    }
+  }
+
+  return violations;
+}
