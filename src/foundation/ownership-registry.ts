@@ -440,6 +440,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 8.1,
     description: 'Phase 8.1 mobile command foundation — remote command center session establishment only, no execution or file modification',
   },
+  mobile_chat_interface: {
+    domain: 'mobile_chat_interface',
+    ownerModule: 'devpulse_v2_mobile_chat_interface',
+    ownerFunction: 'createDevPulseV2MobileChatInterface',
+    phase: 8.2,
+    description: 'Phase 8.2 mobile chat interface foundation — project-aware chat command interface only, no execution or file modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {

@@ -61,6 +61,7 @@
     "validate:governance-stack-checkpoint": "tsx scripts/validate-governance-stack-checkpoint.ts",
     "validate:controlled-execution-bridge": "tsx scripts/validate-controlled-execution-bridge.ts",
     "validate:mobile-command-foundation": "tsx scripts/validate-mobile-command-foundation.ts",
+    "validate:mobile-chat-interface": "tsx scripts/validate-mobile-chat-interface.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
