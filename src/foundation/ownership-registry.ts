@@ -475,6 +475,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 9.1,
     description: 'Phase 9.1 missing capability detector foundation — detects capability gaps only, no acquisition, execution, or modification',
   },
+  safe_capability_acquisition: {
+    domain: 'safe_capability_acquisition',
+    ownerModule: 'devpulse_v2_safe_capability_acquisition',
+    ownerFunction: 'createDevPulseV2SafeCapabilityAcquisition',
+    phase: 9.2,
+    description: 'Phase 9.2 safe capability acquisition foundation — plans safe acquisition only, no execution, download, install, or modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
