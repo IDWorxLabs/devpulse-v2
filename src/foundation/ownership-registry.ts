@@ -496,6 +496,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 9.4,
     description: 'Phase 9.4 architecture drift detection foundation — detects architectural drift and produces review recommendations only, no refactoring, auto-fix, or modification',
   },
+  complexity_score_foundation: {
+    domain: 'complexity_score_foundation',
+    ownerModule: 'devpulse_v2_complexity_score_foundation',
+    ownerFunction: 'createDevPulseV2ComplexityScoreFoundation',
+    phase: 9.5,
+    description: 'Phase 9.5 complexity score foundation — measures system complexity and produces review recommendations only, no refactoring, auto-optimization, or modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
