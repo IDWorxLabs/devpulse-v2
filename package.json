@@ -71,6 +71,7 @@
     "validate:self-learning-engine": "tsx scripts/validate-self-learning-engine.ts",
     "validate:architecture-drift-detection": "tsx scripts/validate-architecture-drift-detection.ts",
     "validate:complexity-score-foundation": "tsx scripts/validate-complexity-score-foundation.ts",
+    "validate:future-problem-prediction": "tsx scripts/validate-future-problem-prediction.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

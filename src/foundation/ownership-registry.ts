@@ -503,6 +503,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 9.5,
     description: 'Phase 9.5 complexity score foundation — measures system complexity and produces review recommendations only, no refactoring, auto-optimization, or modification',
   },
+  future_problem_prediction: {
+    domain: 'future_problem_prediction',
+    ownerModule: 'devpulse_v2_future_problem_prediction',
+    ownerFunction: 'createDevPulseV2FutureProblemPrediction',
+    phase: 9.6,
+    description: 'Phase 9.6 future problem prediction foundation — predicts likely future failures and produces prevention recommendations only, no auto-fix, execution, or modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
