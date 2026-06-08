@@ -54,6 +54,7 @@
     "validate:phase6-checkpoint": "tsx scripts/validate-phase6-governance-stack-checkpoint.ts",
     "validate:world2-workspace-foundation": "tsx scripts/validate-world2-workspace-foundation.ts",
     "validate:world2-execution-planner": "tsx scripts/validate-world2-execution-planner.ts",
+    "validate:world2-simulation-runtime": "tsx scripts/validate-world2-simulation-runtime.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

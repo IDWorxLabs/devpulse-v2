@@ -113,7 +113,8 @@ export type OwnershipDomain =
   | 'growth_protection'
   | 'world2_isolation'
   | 'world2_workspace_foundation'
-  | 'world2_execution_planner';
+  | 'world2_execution_planner'
+  | 'world2_simulation_runtime';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

@@ -398,6 +398,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 7.2,
     description: 'World 2 execution planner — creates execution plans only, no execution or code generation',
   },
+  world2_simulation_runtime: {
+    domain: 'world2_simulation_runtime',
+    ownerModule: 'devpulse_v2_world2_simulation_runtime',
+    ownerFunction: 'createDevPulseV2World2SimulationRuntime',
+    phase: 7.3,
+    description: 'World 2 simulation runtime — simulates execution plans only, no execution or file modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
