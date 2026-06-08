@@ -412,6 +412,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 7.4,
     description: 'World 2 autonomous builder foundation — prepares dry-run build packets only, no execution or file modification',
   },
+  world2_completion_verifier: {
+    domain: 'world2_completion_verifier',
+    ownerModule: 'devpulse_v2_world2_completion_verifier',
+    ownerFunction: 'createDevPulseV2World2CompletionVerifier',
+    phase: 7.5,
+    description: 'World 2 completion verifier foundation — determines completion truth only, no execution or file modification',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
