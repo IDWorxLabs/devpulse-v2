@@ -9,7 +9,7 @@ const DEFAULT_PROFILE: ProjectProfile = {
   name: 'DevPulse V2',
   summary:
     'Chat-first intelligent development command center with governance, World 2 foundations, mobile command foundations, self-evolution foundations, runtime shell, Command Center Brain, cross-system awareness, and shared memory.',
-  currentPhase: '11.5 — Timeline Intelligence Foundation',
+  currentPhase: '11.6 — Unified Decision Layer Foundation',
   goal: 'Build a governed, chat-first intelligent development command center with honest foundation maturity and no fake execution claims.',
   status: 'FOUNDATION_BUILDING',
   completedMilestones: [
@@ -29,6 +29,7 @@ const DEFAULT_PROFILE: ProjectProfile = {
     'Project Understanding Engine',
     'Project Knowledge Reasoning',
     'General Question Understanding Router',
+    'Timeline Intelligence',
   ],
   missingCapabilities: [
     'Project execution runtime',
@@ -37,7 +38,9 @@ const DEFAULT_PROFILE: ProjectProfile = {
     'Persistent project storage',
     'Cloud runtime',
     'World 2 execution',
-    'Unified Decision Layer',
+    'Development Reasoning',
+    'Debugging Reasoning',
+    'Execution Reasoning',
   ],
   blockedItems: [
     'Execution must not start until intelligence layers are complete.',
@@ -60,7 +63,7 @@ const DEFAULT_PROFILE: ProjectProfile = {
     'Over-claiming maturity before runtime connection erodes founder trust.',
   ],
   nextRecommendedStep:
-    'Complete Timeline Intelligence validation, then advance toward Unified Decision Layer — intelligence only, no execution.',
+    'Complete Unified Decision Layer validation, then advance toward Development Reasoning Foundation — intelligence only, no execution.',
   createdAt: Date.now(),
   updatedAt: Date.now(),
 };

@@ -1,0 +1,167 @@
+/**
+ * Failure record builder — assembles visible failures from intelligence sources.
+ */
+
+import { buildProjectHistorySnapshot } from '../project-history-intelligence/index.js';
+import { analyzeProgressBlockers } from '../progress-intelligence/progress-blocker-analyzer.js';
+import { buildDecisionContext } from '../unified-decision-layer/decision-context-builder.js';
+import { getCurrentProjectProfile } from '../project-understanding/project-profile-store.js';
+import { buildActionCandidates } from '../action-visibility-engine/action-candidate-builder.js';
+import { analyzeReasoningBlockers } from '../reasoning-visibility-engine/reasoning-blocker-analyzer.js';
+import { analyzeFailureDependencyImpacts } from './failure-dependency-analyzer.js';
+import { collectBlockedCapabilities } from './failure-impact-analyzer.js';
+import { classifyFailureSeverity } from './failure-severity-analyzer.js';
+import {
+  buildRecommendedNextStep,
+  confidenceForSeverity,
+} from './failure-next-step-builder.js';
+import type { FailureRecord } from './failure-visibility-types.js';
+
+let failureCounter = 0;
+
+function nextFailureId(): string {
+  failureCounter += 1;
+  return `fail-${failureCounter.toString().padStart(4, '0')}`;
+}
+
+function buildRecord(opts: {
+  title: string;
+  description: string;
+  sourceSystem: string;
+  affectedSystems: string[];
+  blockedCapabilities: string[];
+  dependencyImpacts: ReturnType<typeof analyzeFailureDependencyImpacts>;
+}): FailureRecord {
+  const severity = classifyFailureSeverity({
+    title: opts.title,
+    description: opts.description,
+    sourceSystem: opts.sourceSystem,
+    blockedCapabilities: opts.blockedCapabilities,
+  });
+
+  const record: FailureRecord = {
+    failureId: nextFailureId(),
+    title: opts.title,
+    description: opts.description,
+    severity,
+    sourceSystem: opts.sourceSystem,
+    affectedSystems: opts.affectedSystems,
+    blockedCapabilities: opts.blockedCapabilities,
+    dependencyImpact: opts.dependencyImpacts.slice(0, 3),
+    recommendedNextStep: '',
+    confidence: confidenceForSeverity(severity),
+    visibilityOnly: true,
+  };
+
+  record.recommendedNextStep = buildRecommendedNextStep(record);
+  return record;
+}
+
+export function buildFailureRecords(query: string): FailureRecord[] {
+  buildProjectHistorySnapshot(query);
+  const profile = getCurrentProjectProfile();
+  const context = buildDecisionContext(query);
+  const progressBlockers = analyzeProgressBlockers(query);
+  const reasoningBlockers = analyzeReasoningBlockers(query);
+  const blockedCaps = collectBlockedCapabilities(query);
+  const depImpacts = analyzeFailureDependencyImpacts(query);
+  const records: FailureRecord[] = [];
+
+  for (const item of profile.blockedItems) {
+    records.push(
+      buildRecord({
+        title: `Governance blocker: ${item}`,
+        description: `Project profile reports blocked item affecting DevPulse V2 foundations.`,
+        sourceSystem: 'project_understanding',
+        affectedSystems: [profile.projectId, 'command_center_brain'],
+        blockedCapabilities: [item],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const blocker of context.dependencyBlockers.slice(0, 5)) {
+    records.push(
+      buildRecord({
+        title: `Dependency failure: ${blocker.slice(0, 60)}`,
+        description: blocker,
+        sourceSystem: 'dependency_intelligence',
+        affectedSystems: context.relatedSystems.slice(0, 3),
+        blockedCapabilities: blockedCaps.slice(0, 3),
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const pb of progressBlockers.slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: `Progress blocker: ${pb.summary}`,
+        description: `Blocked progress detected for project ${pb.projectId}.`,
+        sourceSystem: 'progress_intelligence',
+        affectedSystems: [pb.projectId, 'progress_intelligence'],
+        blockedCapabilities: blockedCaps.slice(0, 2),
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const rb of reasoningBlockers.slice(0, 3)) {
+    records.push(
+      buildRecord({
+        title: `Reasoning blocker: ${rb.summary}`,
+        description: `Visible reasoning identified blocker from ${rb.sourceSystem}.`,
+        sourceSystem: 'reasoning_visibility_engine',
+        affectedSystems: [rb.sourceSystem, 'unified_decision_layer'],
+        blockedCapabilities: [],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  const blockedActions = buildActionCandidates(query).filter((a) => a.blocked || a.status === 'Blocked');
+  for (const action of blockedActions.slice(0, 3)) {
+    records.push(
+      buildRecord({
+        title: `Blocked action: ${action.title}`,
+        description: action.reason,
+        sourceSystem: 'action_visibility_engine',
+        affectedSystems: [action.sourceSystem],
+        blockedCapabilities: [action.title],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const risk of context.riskFacts.slice(0, 2)) {
+    records.push(
+      buildRecord({
+        title: `Risk failure signal: ${risk.slice(0, 50)}`,
+        description: risk,
+        sourceSystem: 'unified_decision_layer',
+        affectedSystems: context.relatedSystems.slice(0, 2),
+        blockedCapabilities: [],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  if (records.length === 0) {
+    records.push(
+      buildRecord({
+        title: 'No active failures detected',
+        description: 'Intelligence sources report no blocked governance paths at this time.',
+        sourceSystem: 'failure_visibility_engine',
+        affectedSystems: [],
+        blockedCapabilities: [],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  return records;
+}
+
+export function resetFailureRecordCounterForTests(): void {
+  failureCounter = 0;
+}

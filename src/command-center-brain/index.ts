@@ -24,6 +24,7 @@ export {
   PROJECT_UNDERSTANDING_FEED,
   GENERAL_QUESTION_UNDERSTANDING_FEED,
   TIMELINE_INTELLIGENCE_FEED,
+  UNIFIED_DECISION_LAYER_FEED,
   SHARED_MEMORY_OPERATOR_FEED_STAGES,
   withSharedMemoryFeedStages,
   COMMAND_CENTER_BRAIN_OWNER_MODULE,
@@ -85,6 +86,8 @@ export type {
   GeneralQuestionRoutingDiagnostics,
   QuestionRoutingPlan,
   TimelineIntelligenceDiagnostics,
+  UnifiedDecisionLayerDiagnostics,
+  ProjectVaultIntelligenceDiagnostics,
 } from './brain-types.js';
 
 export {
@@ -114,6 +117,33 @@ export {
   timelineIntelligenceKey,
   isTimelineQuestion,
 } from '../timeline-intelligence/index.js';
+
+export {
+  UNIFIED_DECISION_LAYER_PASS_TOKEN,
+  UNIFIED_DECISION_LAYER_OWNER_MODULE,
+  answerDecisionQuestion,
+  reasonOverDecision,
+  buildDecisionContext,
+  createDecisionOptions,
+  generateDecisionRecommendation,
+  composeDecisionAnswer,
+  getUnifiedDecisionLayerDiagnostics,
+  processUnifiedDecisionLayerRequest,
+  resetUnifiedDecisionLayerForTests,
+  unifiedDecisionLayerKey,
+  isDecisionQuestion,
+} from '../unified-decision-layer/index.js';
+
+export {
+  PROJECT_VAULT_INTELLIGENCE_PASS_TOKEN,
+  PROJECT_VAULT_INTELLIGENCE_OWNER_MODULE,
+  bridgeVaultFactsIntoUnderstanding,
+  getProjectVaultIntelligenceDiagnostics,
+  isVaultAwareQuestion,
+  resetProjectVaultIntelligenceBridgeForTests,
+  resetProjectVaultIntelligenceDiagnostics,
+  projectVaultIntelligenceKey,
+} from '../project-vault-intelligence/index.js';
 
 export {
   CROSS_SYSTEM_AWARENESS_PASS_TOKEN,

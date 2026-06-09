@@ -67,6 +67,288 @@
     renderNotifications(runtimeNotifications);
   }
 
+  function renderLearningVisibilityDiagnostics(diag) {
+    if (!diag) return;
+    if (el('learning-visibility-active')) {
+      el('learning-visibility-active').textContent = diag.learningVisibilityActive ? 'YES' : 'NO';
+    }
+    if (el('learning-count')) {
+      el('learning-count').textContent = String(diag.learningCount ?? 0);
+    }
+    if (el('pattern-count')) {
+      el('pattern-count').textContent = String(diag.patternCount ?? 0);
+    }
+    if (el('recurring-failure-count')) {
+      el('recurring-failure-count').textContent = String(diag.recurringFailureCount ?? 0);
+    }
+    if (el('recurring-blocker-count')) {
+      el('recurring-blocker-count').textContent = String(diag.recurringBlockerCount ?? 0);
+    }
+    if (el('last-learning-query')) {
+      el('last-learning-query').textContent = diag.lastLearningQuery || 'None';
+    }
+  }
+
+  function renderFailureVisibilityDiagnostics(diag) {
+    if (!diag) return;
+    if (el('failure-visibility-active')) {
+      el('failure-visibility-active').textContent = diag.failureVisibilityActive ? 'YES' : 'NO';
+    }
+    if (el('failure-count')) {
+      el('failure-count').textContent = String(diag.failureCount ?? 0);
+    }
+    if (el('critical-failure-count')) {
+      el('critical-failure-count').textContent = String(diag.criticalFailureCount ?? 0);
+    }
+    if (el('blocked-capability-count')) {
+      el('blocked-capability-count').textContent = String(diag.blockedCapabilityCount ?? 0);
+    }
+    if (el('most-severe-failure')) {
+      el('most-severe-failure').textContent = diag.mostSevereFailure || 'None';
+    }
+    if (el('last-failure-query')) {
+      el('last-failure-query').textContent = diag.lastFailureQuery || 'None';
+    }
+  }
+
+  function renderProgressIntelligenceDiagnostics(diag) {
+    if (!diag) return;
+    if (el('progress-intelligence-active')) {
+      el('progress-intelligence-active').textContent = diag.progressIntelligenceActive ? 'YES' : 'NO';
+    }
+    if (el('project-progress-count')) {
+      el('project-progress-count').textContent = String(diag.projectProgressCount ?? 0);
+    }
+    if (el('average-completion')) {
+      el('average-completion').textContent = String(diag.averageCompletion ?? 0);
+    }
+    if (el('highest-completion')) {
+      el('highest-completion').textContent = String(diag.highestCompletion ?? 0);
+    }
+    if (el('lowest-completion')) {
+      el('lowest-completion').textContent = String(diag.lowestCompletion ?? 0);
+    }
+    if (el('last-progress-query')) {
+      el('last-progress-query').textContent = diag.lastProgressQuery || 'None';
+    }
+  }
+
+  function renderReasoningVisibilityDiagnostics(diag) {
+    if (!diag) return;
+    if (el('reasoning-visibility-active')) {
+      el('reasoning-visibility-active').textContent = diag.reasoningVisibilityActive ? 'YES' : 'NO';
+    }
+    if (el('reasoning-count')) {
+      el('reasoning-count').textContent = String(diag.reasoningCount ?? 0);
+    }
+    if (el('evidence-count')) {
+      el('evidence-count').textContent = String(diag.evidenceCount ?? 0);
+    }
+    if (el('reasoning-blocker-count')) {
+      el('reasoning-blocker-count').textContent = String(diag.blockerCount ?? 0);
+    }
+    if (el('reasoning-risk-count')) {
+      el('reasoning-risk-count').textContent = String(diag.riskCount ?? 0);
+    }
+    if (el('last-reasoning-source')) {
+      el('last-reasoning-source').textContent = diag.lastReasoningSource || 'None';
+    }
+  }
+
+  function renderActionVisibilityDiagnostics(diag) {
+    if (!diag) return;
+    if (el('action-visibility-active')) {
+      el('action-visibility-active').textContent = diag.actionVisibilityActive ? 'YES' : 'NO';
+    }
+    if (el('action-count')) {
+      el('action-count').textContent = String(diag.actionCount ?? 0);
+    }
+    if (el('recommended-action-count')) {
+      el('recommended-action-count').textContent = String(diag.recommendedCount ?? 0);
+    }
+    if (el('blocked-action-count')) {
+      el('blocked-action-count').textContent = String(diag.blockedCount ?? 0);
+    }
+    if (el('deferred-action-count')) {
+      el('deferred-action-count').textContent = String(diag.deferredCount ?? 0);
+    }
+    if (el('last-action-title')) {
+      el('last-action-title').textContent = diag.lastAction || 'None';
+    }
+    if (el('last-action-source')) {
+      el('last-action-source').textContent = diag.lastActionSource || 'None';
+    }
+  }
+
+  function renderOperatorFeedDiagnostics(diag) {
+    if (!diag) return;
+    if (el('operator-feed-active')) {
+      el('operator-feed-active').textContent = diag.operatorFeedActive ? 'YES' : 'NO';
+    }
+    if (el('feed-event-count')) {
+      el('feed-event-count').textContent = String(diag.eventCount ?? 0);
+    }
+    if (el('feed-stage-count')) {
+      el('feed-stage-count').textContent = String(diag.stageCount ?? 0);
+    }
+    if (el('feed-response-ready')) {
+      el('feed-response-ready').textContent = diag.responseReadyEmitted ? 'YES' : 'NO';
+    }
+    if (el('last-feed-capability')) {
+      el('last-feed-capability').textContent = diag.lastPrimaryCapability || 'None';
+    }
+  }
+
+  function renderPortfolioIntelligenceDiagnostics(diag) {
+    if (!diag) return;
+    if (el('portfolio-intelligence-active')) {
+      el('portfolio-intelligence-active').textContent = diag.portfolioIntelligenceActive ? 'YES' : 'NO';
+    }
+    if (el('portfolio-project-count')) {
+      el('portfolio-project-count').textContent = String(diag.projectCount ?? 0);
+    }
+    if (el('portfolio-active-project-count')) {
+      el('portfolio-active-project-count').textContent = String(diag.activeProjectCount ?? 0);
+    }
+    if (el('portfolio-health-level')) {
+      el('portfolio-health-level').textContent = diag.portfolioHealth || 'FAIR';
+    }
+    if (el('highest-risk-project')) {
+      el('highest-risk-project').textContent = diag.highestRiskProject || 'None';
+    }
+    if (el('highest-priority-project')) {
+      el('highest-priority-project').textContent = diag.highestPriorityProject || 'None';
+    }
+    if (el('last-portfolio-query')) {
+      el('last-portfolio-query').textContent = diag.lastPortfolioQuery || 'None';
+    }
+  }
+
+  function renderProjectSummarizationDiagnostics(diag) {
+    if (!diag) return;
+    if (el('project-summarization-active')) {
+      el('project-summarization-active').textContent = diag.projectSummarizationActive ? 'YES' : 'NO';
+    }
+    if (el('summary-count')) {
+      el('summary-count').textContent = String(diag.summaryCount ?? 0);
+    }
+    if (el('last-summary-type')) {
+      el('last-summary-type').textContent = diag.lastSummaryType || 'None';
+    }
+    if (el('last-summary-confidence')) {
+      el('last-summary-confidence').textContent = diag.lastSummaryConfidence || 'LOW';
+    }
+    if (el('summary-source-count')) {
+      el('summary-source-count').textContent = String(diag.summarySourceCount ?? 0);
+    }
+  }
+
+  function renderProjectHistoryIntelligenceDiagnostics(diag) {
+    if (!diag) return;
+    if (el('project-history-intelligence-active')) {
+      el('project-history-intelligence-active').textContent = diag.projectHistoryIntelligenceActive ? 'YES' : 'NO';
+    }
+    if (el('history-event-count')) {
+      el('history-event-count').textContent = String(diag.historyEventCount ?? 0);
+    }
+    if (el('history-checkpoint-count')) {
+      el('history-checkpoint-count').textContent = String(diag.checkpointCount ?? 0);
+    }
+    if (el('history-rollback-count')) {
+      el('history-rollback-count').textContent = String(diag.rollbackCount ?? 0);
+    }
+    if (el('last-history-query')) {
+      el('last-history-query').textContent = diag.lastHistoryQuery || 'None';
+    }
+    if (el('history-confidence')) {
+      el('history-confidence').textContent = diag.historyConfidence || 'LOW';
+    }
+    if (el('phase-transition-count')) {
+      el('phase-transition-count').textContent = String(diag.phaseTransitionCount ?? 0);
+    }
+  }
+
+  function renderWorkspaceIntelligenceDiagnostics(diag) {
+    if (!diag) return;
+    if (el('workspace-intelligence-active')) {
+      el('workspace-intelligence-active').textContent = diag.workspaceIntelligenceActive ? 'YES' : 'NO';
+    }
+    if (el('workspace-count')) {
+      el('workspace-count').textContent = String(diag.workspaceCount ?? 0);
+    }
+    if (el('active-workspace-name')) {
+      el('active-workspace-name').textContent = diag.activeWorkspace || 'None';
+    }
+    if (el('active-project-name')) {
+      el('active-project-name').textContent = diag.activeProject || 'None';
+    }
+    if (el('workspace-ownership-confidence')) {
+      el('workspace-ownership-confidence').textContent = diag.workspaceOwnershipConfidence || 'LOW';
+    }
+    if (el('workspace-risk-count')) {
+      el('workspace-risk-count').textContent = String(diag.workspaceRiskCount ?? 0);
+    }
+    if (el('context-leakage-risk')) {
+      el('context-leakage-risk').textContent = diag.contextLeakageRisk || 'clear';
+    }
+    if (el('last-workspace-query')) {
+      el('last-workspace-query').textContent = diag.lastWorkspaceQuery || 'None';
+    }
+    if (el('duplicate-workspace-risk')) {
+      el('duplicate-workspace-risk').textContent = diag.duplicateWorkspaceRisk || 'clear';
+    }
+  }
+
+  function renderDependencyIntelligenceDiagnostics(diag) {
+    if (!diag) return;
+    if (el('dependency-intelligence-active')) {
+      el('dependency-intelligence-active').textContent = diag.dependencyIntelligenceActive ? 'YES' : 'NO';
+    }
+    if (el('dependency-count')) {
+      el('dependency-count').textContent = String(diag.dependencyCount ?? 0);
+    }
+    if (el('blocked-dependency-count')) {
+      el('blocked-dependency-count').textContent = String(diag.blockedDependencyCount ?? 0);
+    }
+    if (el('highest-risk-dependency')) {
+      el('highest-risk-dependency').textContent = diag.highestRiskDependency || 'None';
+    }
+    if (el('last-dependency-query')) {
+      el('last-dependency-query').textContent = diag.lastDependencyQuery || 'None';
+    }
+    if (el('duplicate-dependency-risk')) {
+      el('duplicate-dependency-risk').textContent = diag.duplicateDependencyRisk || 'clear';
+    }
+    if (el('dependency-graph-health')) {
+      el('dependency-graph-health').textContent = diag.dependencyGraphHealth || 'healthy';
+    }
+  }
+
+  function renderVaultIntelligenceDiagnostics(diag) {
+    if (!diag) return;
+    if (el('vault-intelligence-active')) {
+      el('vault-intelligence-active').textContent = diag.projectVaultIntelligenceActive ? 'YES' : 'NO';
+    }
+    if (el('vault-records-read')) {
+      el('vault-records-read').textContent = String(diag.vaultRecordsRead ?? 0);
+    }
+    if (el('vault-facts-added')) {
+      el('vault-facts-added').textContent = String(diag.vaultFactsAdded ?? 0);
+    }
+    if (el('last-vault-aware-question')) {
+      el('last-vault-aware-question').textContent = diag.lastVaultAwareQuestion || 'None';
+    }
+    if (el('last-vault-fact-count')) {
+      el('last-vault-fact-count').textContent = String(diag.lastVaultFactCount ?? 0);
+    }
+    if (el('vault-bridge-target')) {
+      el('vault-bridge-target').textContent = diag.bridgeTarget || 'None';
+    }
+    if (el('vault-duplicate-risk')) {
+      el('vault-duplicate-risk').textContent = diag.duplicateRisk || 'clear';
+    }
+  }
+
   function renderProjectUnderstandingDiagnostics(diag) {
     if (!diag) return;
     if (el('project-understanding-active')) {
@@ -141,6 +423,28 @@
     }
     if (el('last-timeline-query')) {
       el('last-timeline-query').textContent = diag.lastTimelineQuery || 'None';
+    }
+  }
+
+  function renderDecisionLayerDiagnostics(diag) {
+    if (!diag) return;
+    if (el('decision-layer-active')) {
+      el('decision-layer-active').textContent = diag.decisionLayerActive ? 'YES' : 'NO';
+    }
+    if (el('last-decision-question')) {
+      el('last-decision-question').textContent = diag.lastDecisionQuestion || 'None';
+    }
+    if (el('last-recommendation')) {
+      el('last-recommendation').textContent = diag.lastRecommendation || 'None';
+    }
+    if (el('last-decision-risk-level')) {
+      el('last-decision-risk-level').textContent = diag.lastRiskLevel || 'None';
+    }
+    if (el('last-decision-confidence')) {
+      el('last-decision-confidence').textContent = diag.lastConfidence || 'None';
+    }
+    if (el('last-decision-blocker-count')) {
+      el('last-decision-blocker-count').textContent = String(diag.lastBlockerCount ?? 0);
     }
   }
 
@@ -309,6 +613,11 @@
     if (eventType === 'Checking Milestones') return 'Verification';
     if (eventType === 'Checking Blockers') return 'Approvals';
     if (eventType === 'Generating Timeline Conclusions') return 'Learning';
+    if (eventType === 'Loading Decision Context') return 'Planning';
+    if (eventType === 'Evaluating Options') return 'Execution';
+    if (eventType === 'Checking Risks') return 'Verification';
+    if (eventType === 'Ranking Priorities') return 'Approvals';
+    if (eventType === 'Generating Recommendation') return 'Learning';
     return 'Planning';
   }
 
@@ -634,11 +943,50 @@
           if (result.projectUnderstandingDiagnostics) {
             renderProjectUnderstandingDiagnostics(result.projectUnderstandingDiagnostics);
           }
+          if (result.projectVaultIntelligenceDiagnostics) {
+            renderVaultIntelligenceDiagnostics(result.projectVaultIntelligenceDiagnostics);
+          }
+          if (result.dependencyIntelligenceDiagnostics) {
+            renderDependencyIntelligenceDiagnostics(result.dependencyIntelligenceDiagnostics);
+          }
+          if (result.workspaceIntelligenceDiagnostics) {
+            renderWorkspaceIntelligenceDiagnostics(result.workspaceIntelligenceDiagnostics);
+          }
+          if (result.projectHistoryIntelligenceDiagnostics) {
+            renderProjectHistoryIntelligenceDiagnostics(result.projectHistoryIntelligenceDiagnostics);
+          }
+          if (result.projectSummarizationDiagnostics) {
+            renderProjectSummarizationDiagnostics(result.projectSummarizationDiagnostics);
+          }
+          if (result.portfolioIntelligenceDiagnostics) {
+            renderPortfolioIntelligenceDiagnostics(result.portfolioIntelligenceDiagnostics);
+          }
+          if (result.operatorFeedFoundationDiagnostics) {
+            renderOperatorFeedDiagnostics(result.operatorFeedFoundationDiagnostics);
+          }
+          if (result.actionVisibilityDiagnostics) {
+            renderActionVisibilityDiagnostics(result.actionVisibilityDiagnostics);
+          }
+          if (result.reasoningVisibilityDiagnostics) {
+            renderReasoningVisibilityDiagnostics(result.reasoningVisibilityDiagnostics);
+          }
+          if (result.progressIntelligenceDiagnostics) {
+            renderProgressIntelligenceDiagnostics(result.progressIntelligenceDiagnostics);
+          }
+          if (result.failureVisibilityDiagnostics) {
+            renderFailureVisibilityDiagnostics(result.failureVisibilityDiagnostics);
+          }
+          if (result.learningVisibilityDiagnostics) {
+            renderLearningVisibilityDiagnostics(result.learningVisibilityDiagnostics);
+          }
           if (result.generalQuestionDiagnostics) {
             renderGeneralQuestionDiagnostics(result.generalQuestionDiagnostics);
           }
           if (result.timelineIntelligenceDiagnostics) {
             renderTimelineIntelligenceDiagnostics(result.timelineIntelligenceDiagnostics);
+          }
+          if (result.unifiedDecisionLayerDiagnostics) {
+            renderDecisionLayerDiagnostics(result.unifiedDecisionLayerDiagnostics);
           }
         });
       })

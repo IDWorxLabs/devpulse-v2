@@ -48,6 +48,10 @@ export interface ProjectReasoningContext {
   snapshot: ProjectKnowledgeSnapshot;
   memoryFactCount: number;
   crossSystemFactCount: number;
+  vaultFactCount: number;
+  dependencyFactCount: number;
+  workspaceFactCount: number;
+  historyFactCount: number;
   roadmapPhase: string;
   roadmapNextPhase: string;
 }

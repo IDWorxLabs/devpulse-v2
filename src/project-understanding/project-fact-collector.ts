@@ -5,6 +5,21 @@
 import { getBrainRoadmapContext } from '../command-center-brain/brain-roadmap-awareness.js';
 import { getRelationshipEdges } from '../command-center-brain/cross-system-awareness/system-relationship-registry.js';
 import { recallRelevantMemories } from '../shared-memory/shared-memory-recall.js';
+import { bridgeVaultFactsIntoUnderstanding } from '../project-vault-intelligence/project-vault-understanding-bridge.js';
+import {
+  analyzeDependencies,
+  buildDependencyGraph,
+  dependencyFactsFromAnalysis,
+} from '../dependency-intelligence/index.js';
+import {
+  analyzeWorkspace,
+  workspaceFactsFromAnalysis,
+} from '../workspace-intelligence/index.js';
+import {
+  buildProjectHistorySnapshot,
+  historyFactsFromAnalysis,
+  analyzeProjectHistory,
+} from '../project-history-intelligence/index.js';
 import { getCurrentProjectProfile } from './project-profile-store.js';
 import {
   getProjectKnowledgeModel,
@@ -105,6 +120,59 @@ export function collectProjectFacts(query: string): ProjectReasoningContext {
     );
   }
 
+  const vaultBridge = bridgeVaultFactsIntoUnderstanding(query);
+  let vaultFactCount = 0;
+  for (const vaultFact of vaultBridge.normalizedFacts) {
+    const duplicate = facts.some(
+      (f) => f.statement === vaultFact.statement && f.source === 'project_vault',
+    );
+    if (!duplicate) {
+      facts.push(vaultFact);
+      vaultFactCount += 1;
+    }
+  }
+
+  buildDependencyGraph();
+  const depAnalysis = analyzeDependencies(query);
+  const depFacts = dependencyFactsFromAnalysis(depAnalysis);
+  let dependencyFactCount = 0;
+  for (const dep of depFacts) {
+    const duplicate = facts.some((f) => f.statement === dep.statement);
+    if (!duplicate) {
+      facts.push(
+        fact('relationship', dep.title, dep.statement, 'dependency_intelligence', 0.75, dep.tags),
+      );
+      dependencyFactCount += 1;
+    }
+  }
+
+  const wsAnalysis = analyzeWorkspace(query);
+  const wsFacts = workspaceFactsFromAnalysis(wsAnalysis);
+  let workspaceFactCount = 0;
+  for (const ws of wsFacts) {
+    const duplicate = facts.some((f) => f.statement === ws.statement);
+    if (!duplicate) {
+      facts.push(
+        fact('system', ws.title, ws.statement, 'workspace_intelligence', 0.8, ws.tags),
+      );
+      workspaceFactCount += 1;
+    }
+  }
+
+  const histSnapshot = buildProjectHistorySnapshot(query);
+  const histAnalysis = analyzeProjectHistory(query, histSnapshot);
+  const histFacts = historyFactsFromAnalysis(histAnalysis);
+  let historyFactCount = 0;
+  for (const hf of histFacts) {
+    const duplicate = facts.some((f) => f.statement === hf.statement);
+    if (!duplicate) {
+      facts.push(
+        fact('milestone', hf.title, hf.statement, 'project_history_intelligence', 0.78, hf.tags),
+      );
+      historyFactCount += 1;
+    }
+  }
+
   const model = getProjectKnowledgeModel();
   model.loadFacts(facts);
 
@@ -113,6 +181,10 @@ export function collectProjectFacts(query: string): ProjectReasoningContext {
     snapshot: model.snapshot(profile.projectId, profile.name),
     memoryFactCount,
     crossSystemFactCount,
+    vaultFactCount,
+    dependencyFactCount,
+    workspaceFactCount,
+    historyFactCount,
     roadmapPhase: roadmap.currentPhase,
     roadmapNextPhase: roadmap.nextPhase,
   };

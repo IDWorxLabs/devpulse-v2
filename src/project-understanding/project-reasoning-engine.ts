@@ -10,6 +10,7 @@ import type {
   ProjectReasoningContext,
   ReasoningResult,
 } from './project-knowledge-model.js';
+import { isDuplicateProjectUnderstandingQuestion } from '../project-vault-intelligence/project-vault-intelligence-types.js';
 import { getCurrentProjectProfile } from './project-profile-store.js';
 
 const INTENT_CATEGORY_PRIORITY: Record<ProjectBroadIntent, ProjectFactCategory[]> = {
@@ -118,6 +119,29 @@ export function reasonOverProjectFacts(
   context: ProjectReasoningContext,
   intent: ProjectBroadIntent,
 ): ReasoningResult {
+  if (isDuplicateProjectUnderstandingQuestion(query)) {
+    return {
+      intent: 'GENERAL_PROJECT',
+      selectedFacts: context.snapshot.facts.filter((f) => f.source === 'project_vault').slice(0, 6),
+      conclusions: [
+        'Recommendation: No.',
+        '11.4 Project Understanding Engine already owns project comprehension and reasoning.',
+        'Phase 12.1 Project Vault Intelligence only adds read-only vault-backed facts into the existing engine.',
+        'Creating a second Project Understanding system would duplicate ownership and fragment answers.',
+      ],
+      supportingEvidence: [
+        'Bridge target: project_understanding_engine',
+        'Vault facts are read-only supplements — not a replacement brain',
+        `Vault facts in context: ${context.vaultFactCount}`,
+      ],
+      recommendedNextStep:
+        'Extend Project Vault Intelligence bridge into existing Project Understanding — do not create project_understanding_v2.',
+      warnings: ['Risk level: High if duplicated.', 'Duplicate Risk: warning'],
+      relatedSystems: ['Project Understanding Engine', 'Project Vault', 'Project Vault Intelligence'],
+      confidence: 'HIGH',
+    };
+  }
+
   const profile = getCurrentProjectProfile();
   const selectedFacts = rankFacts(context.snapshot.facts, intent, query);
   const conclusions = buildConclusions(intent, selectedFacts);

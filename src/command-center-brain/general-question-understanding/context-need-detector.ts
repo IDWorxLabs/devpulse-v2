@@ -25,11 +25,22 @@ const QUESTION_CONTEXT_SIGNALS: Array<[readonly string[], ContextNeed]> = [
   [['blocker', 'holding back'], 'BLOCKERS'],
   [['execution not connected', 'runtime', 'not connected'], 'RUNTIME_STATUS'],
   [['remember', 'recall', 'last time'], 'SHARED_MEMORY'],
-  [['depend', 'dependency'], 'CROSS_SYSTEM_RELATIONSHIPS'],
+  [['depend', 'dependency', 'upstream', 'downstream', 'what breaks if', 'missing dependency'], 'DEPENDENCY_FACTS'],
+  [['depend', 'dependency', 'relationship', 'connected to'], 'CROSS_SYSTEM_RELATIONSHIPS'],
   [['roadmap', 'phase', 'cloud runtime'], 'ROADMAP_STATE'],
   [['timeline', 'came before', 'most recently', 'milestone'], 'TIMELINE_STATE'],
   [['debug', 'bug', 'error'], 'DEBUG_CONTEXT'],
   [['implement', 'code', 'refactor'], 'DEVELOPMENT_KNOWLEDGE'],
+  [['project vault', 'saved project', 'stored project', 'vault facts', 'from vault'], 'VAULT_FACTS'],
+  [['workspace', 'active workspace', 'active project', 'workspace boundary', 'workspace mismatch', 'context leakage'], 'WORKSPACE_FACTS'],
+  [['history', 'evolution', 'checkpoint', 'rollback', 'restored', 'milestone', 'introduced', 'evolved', 'what changed recently', 'what changed during'], 'HISTORY_FACTS'],
+  [['summary', 'summarize', 'overview', 'executive summary', 'technical summary', 'founder summary', 'onboarding', 'project health'], 'SUMMARIZATION_FACTS'],
+  [['portfolio', 'what projects exist', 'healthiest project', 'riskiest project', 'compare project', 'active projects', 'portfolio summary', 'projects need attention'], 'PORTFOLIO_FACTS'],
+  [['recommended action', 'blocked action', 'deferred action', 'what should we do', 'what is recommended', 'next action', 'action comes from', 'highest priority action'], 'ACTION_VISIBILITY_FACTS'],
+  [['why recommended', 'why blocked', 'why deferred', 'why confidence', 'what evidence', 'systems contributed', 'risks were considered', 'blockers were considered', 'reasoning'], 'REASONING_VISIBILITY_FACTS'],
+  [['how far', 'percentage complete', 'what remains', 'what is blocked', 'next milestone', 'furthest along', 'behind schedule', 'progress', 'completion', 'remaining'], 'PROGRESS_INTELLIGENCE_FACTS'],
+  [['what failed', 'failures exist', 'most severe failure', 'capabilities are blocked', 'dependency chains are impacted', 'failure', 'failed', 'error', 'problem', 'issue', 'severity', 'impact'], 'FAILURE_VISIBILITY_FACTS'],
+  [['what did we learn', 'recurring blockers', 'recurring failures', 'recurring recommendations', 'what should we remember', 'what should improve', 'learned', 'learning', 'patterns', 'recurring', 'remember', 'improve', 'observed', 'lessons'], 'LEARNING_VISIBILITY_FACTS'],
 ];
 
 export function detectContextNeeds(

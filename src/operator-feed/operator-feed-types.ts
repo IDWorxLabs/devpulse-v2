@@ -1,0 +1,144 @@
+/**
+ * DevPulse V2 Phase 13.1 — Operator Feed Foundation types.
+ * Visibility authority only — describes intelligence activity, does not perform it.
+ */
+
+export const OPERATOR_FEED_FOUNDATION_PASS_TOKEN =
+  'DEVPULSE_V2_OPERATOR_FEED_FOUNDATION_V1_PASS';
+export const OPERATOR_FEED_FOUNDATION_OWNER_MODULE = 'devpulse_v2_operator_feed';
+
+export type OperatorFeedStage =
+  | 'Loading Context'
+  | 'Reading Shared Memory'
+  | 'Reading Project Understanding'
+  | 'Reading Project Facts'
+  | 'Reading Vault Facts'
+  | 'Reading Vault Intelligence'
+  | 'Reading Dependency Intelligence'
+  | 'Reading Workspace Intelligence'
+  | 'Reading History Intelligence'
+  | 'Reading Summaries'
+  | 'Reading Portfolio Intelligence'
+  | 'Loading Portfolio'
+  | 'Reading Project Inventory'
+  | 'Computing Health'
+  | 'Generating Portfolio Summary'
+  | 'Evaluating Risks'
+  | 'Generating Recommendation'
+  | 'Generating Project Answer'
+  | 'Generating Response'
+  | 'Action Identified'
+  | 'Action Evaluated'
+  | 'Action Recommended'
+  | 'Action Deferred'
+  | 'Action Blocked'
+  | 'Action Completed'
+  | 'Reasoning Started'
+  | 'Evidence Collected'
+  | 'Risks Evaluated'
+  | 'Blockers Evaluated'
+  | 'Confidence Calculated'
+  | 'Reasoning Ready'
+  | 'Progress Evaluation Started'
+  | 'Milestones Evaluated'
+  | 'Progress Calculated'
+  | 'Progress Ready'
+  | 'Failure Detected'
+  | 'Failure Evaluated'
+  | 'Severity Calculated'
+  | 'Impact Evaluated'
+  | 'Next Step Generated'
+  | 'Failure Ready'
+  | 'Learning Analysis Started'
+  | 'Patterns Evaluated'
+  | 'Failures Evaluated'
+  | 'Recommendations Evaluated'
+  | 'Learning Ready'
+  | 'Response Ready';
+
+export type OperatorFeedEventStatus = 'PENDING' | 'ACTIVE' | 'COMPLETE';
+export type OperatorFeedConfidence = 'LOW' | 'MEDIUM' | 'HIGH';
+
+export interface OperatorFeedEvent {
+  eventId: string;
+  timestamp: number;
+  sourceSystem: string;
+  stage: OperatorFeedStage;
+  status: OperatorFeedEventStatus;
+  summary: string;
+  confidence: OperatorFeedConfidence;
+  relatedProject: string | null;
+  relatedWorkspace: string | null;
+  visibilityOnly: true;
+}
+
+export interface OperatorFeedContext {
+  query: string;
+  primaryCapability: string | null;
+  sourceSystems: string[];
+  relatedProject: string | null;
+  relatedWorkspace: string | null;
+  stagesPlanned: OperatorFeedStage[];
+}
+
+export interface OperatorFeedTimeline {
+  timelineId: string;
+  query: string;
+  events: OperatorFeedEvent[];
+  stageCount: number;
+  sourceSystems: string[];
+  primaryCapability: string | null;
+  finalStage: OperatorFeedStage;
+  responseReady: boolean;
+  startedAt: number;
+  completedAt: number;
+}
+
+export interface OperatorFeedDiagnostics {
+  operatorFeedActive: boolean;
+  eventCount: number;
+  stageCount: number;
+  lastQuery: string | null;
+  lastPrimaryCapability: string | null;
+  lastSourceSystem: string | null;
+  responseReadyEmitted: boolean;
+  timelineOrdered: boolean;
+}
+
+export const STANDARD_VISIBILITY_STAGES: readonly OperatorFeedStage[] = [
+  'Loading Context',
+  'Reading Shared Memory',
+  'Reading Project Understanding',
+  'Reading Vault Intelligence',
+  'Reading Dependency Intelligence',
+  'Reading Workspace Intelligence',
+  'Reading History Intelligence',
+  'Reading Summaries',
+  'Reading Portfolio Intelligence',
+  'Generating Recommendation',
+  'Generating Response',
+  'Response Ready',
+] as const;
+
+export const FORBIDDEN_OPERATOR_FEED_DUPLICATES = [
+  'operator_feed_v2',
+  'feed_brain',
+  'visibility_brain',
+  'brain_v2',
+  'memory_brain',
+  'visibility_layer',
+  'activity_feed',
+  'feed_runtime',
+  'second_operator_feed',
+] as const;
+
+export function isDuplicateOperatorFeedBrainQuestion(question: string): boolean {
+  const lower = question.toLowerCase();
+  return (
+    lower.includes('create operator feed v2') ||
+    lower.includes('operator feed v2') ||
+    lower.includes('feed brain') ||
+    lower.includes('visibility brain') ||
+    lower.includes('replace operator feed')
+  );
+}

@@ -56,6 +56,7 @@ export {
   resetProjectUnderstandingForTests,
   processProjectUnderstandingRequest,
   getProjectUnderstandingDiagnostics,
+  getProjectVaultIntelligenceDiagnostics,
   projectUnderstandingKey,
   DevPulseV2ProjectUnderstandingEngine,
   getDevPulseV2ProjectUnderstandingEngine,

@@ -9,6 +9,28 @@ import { formatMemoryRecallResponse, recallRelevantMemories } from '../../shared
 import { answerProjectQuestionWithTrace, processProjectUnderstandingRequest } from '../../project-understanding/index.js';
 import { isTimelineQuestion } from '../../timeline-intelligence/timeline-types.js';
 import { processTimelineIntelligenceRequest } from '../../timeline-intelligence/index.js';
+import { processUnifiedDecisionLayerRequest } from '../../unified-decision-layer/index.js';
+import { isVaultAwareQuestion } from '../../project-vault-intelligence/project-vault-intelligence-types.js';
+import { processDependencyIntelligenceRequest } from '../../dependency-intelligence/index.js';
+import { isDependencyIntelligenceQuestion } from '../../dependency-intelligence/dependency-intelligence-types.js';
+import { processWorkspaceIntelligenceRequest } from '../../workspace-intelligence/index.js';
+import { isWorkspaceIntelligenceQuestion } from '../../workspace-intelligence/workspace-intelligence-types.js';
+import { processProjectHistoryIntelligenceRequest } from '../../project-history-intelligence/index.js';
+import { isProjectHistoryIntelligenceQuestion } from '../../project-history-intelligence/project-history-intelligence-types.js';
+import { processProjectSummarizationRequest } from '../../project-summarization-engine/index.js';
+import { isProjectSummarizationQuestion } from '../../project-summarization-engine/project-summarization-types.js';
+import { processPortfolioIntelligenceRequest } from '../../portfolio-intelligence/index.js';
+import { isPortfolioIntelligenceQuestion } from '../../portfolio-intelligence/portfolio-intelligence-types.js';
+import { processActionVisibilityRequest } from '../../action-visibility-engine/index.js';
+import { isActionVisibilityQuestion } from '../../action-visibility-engine/action-visibility-types.js';
+import { processReasoningVisibilityRequest } from '../../reasoning-visibility-engine/index.js';
+import { isReasoningVisibilityQuestion } from '../../reasoning-visibility-engine/reasoning-visibility-types.js';
+import { processProgressIntelligenceRequest } from '../../progress-intelligence/index.js';
+import { isProgressIntelligenceQuestion } from '../../progress-intelligence/progress-intelligence-types.js';
+import { processFailureVisibilityRequest } from '../../failure-visibility-engine/index.js';
+import { isFailureVisibilityQuestion } from '../../failure-visibility-engine/failure-visibility-types.js';
+import { processLearningVisibilityRequest } from '../../learning-visibility-engine/index.js';
+import { isLearningVisibilityQuestion } from '../../learning-visibility-engine/learning-visibility-types.js';
 import { detectContextNeeds, needsUnavailableDevelopmentContext } from './context-need-detector.js';
 import {
   GENERAL_QUESTION_UNDERSTANDING_OWNER_MODULE,
@@ -149,6 +171,196 @@ export function executeGeneralQuestionRouting(
   }
 
   if (
+    plan.primaryCapability === 'PORTFOLIO_INTELLIGENCE' ||
+    (plan.selectedCapabilities.includes('PORTFOLIO_INTELLIGENCE') && isPortfolioIntelligenceQuestion(deps.message))
+  ) {
+    const port = processPortfolioIntelligenceRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: port.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['PORTFOLIO_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'LEARNING_VISIBILITY_ENGINE' ||
+    (plan.selectedCapabilities.includes('LEARNING_VISIBILITY_ENGINE') && isLearningVisibilityQuestion(deps.message))
+  ) {
+    const learning = processLearningVisibilityRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: learning.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['LEARNING_VISIBILITY_ENGINE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'FAILURE_VISIBILITY_ENGINE' ||
+    (plan.selectedCapabilities.includes('FAILURE_VISIBILITY_ENGINE') && isFailureVisibilityQuestion(deps.message))
+  ) {
+    const failure = processFailureVisibilityRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: failure.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['FAILURE_VISIBILITY_ENGINE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'PROGRESS_INTELLIGENCE' ||
+    (plan.selectedCapabilities.includes('PROGRESS_INTELLIGENCE') && isProgressIntelligenceQuestion(deps.message))
+  ) {
+    const progress = processProgressIntelligenceRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: progress.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['PROGRESS_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'REASONING_VISIBILITY_ENGINE' ||
+    (plan.selectedCapabilities.includes('REASONING_VISIBILITY_ENGINE') && isReasoningVisibilityQuestion(deps.message))
+  ) {
+    const reasoning = processReasoningVisibilityRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: reasoning.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['REASONING_VISIBILITY_ENGINE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'ACTION_VISIBILITY_ENGINE' ||
+    (plan.selectedCapabilities.includes('ACTION_VISIBILITY_ENGINE') && isActionVisibilityQuestion(deps.message))
+  ) {
+    const action = processActionVisibilityRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: action.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['ACTION_VISIBILITY_ENGINE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (plan.primaryCapability === 'UNIFIED_DECISION_LAYER' || plan.selectedCapabilities.includes('UNIFIED_DECISION_LAYER')) {
+    const decision = processUnifiedDecisionLayerRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: decision.responseText,
+      usedCapabilities: ['UNIFIED_DECISION_LAYER', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'PROJECT_SUMMARIZATION_ENGINE' ||
+    (plan.selectedCapabilities.includes('PROJECT_SUMMARIZATION_ENGINE') && isProjectSummarizationQuestion(deps.message))
+  ) {
+    const sum = processProjectSummarizationRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: sum.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['PROJECT_SUMMARIZATION_ENGINE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'PROJECT_HISTORY_INTELLIGENCE' ||
+    (plan.selectedCapabilities.includes('PROJECT_HISTORY_INTELLIGENCE') && isProjectHistoryIntelligenceQuestion(deps.message))
+  ) {
+    const hist = processProjectHistoryIntelligenceRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: hist.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['PROJECT_HISTORY_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'WORKSPACE_INTELLIGENCE' ||
+    (plan.selectedCapabilities.includes('WORKSPACE_INTELLIGENCE') && isWorkspaceIntelligenceQuestion(deps.message))
+  ) {
+    const ws = processWorkspaceIntelligenceRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: ws.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['WORKSPACE_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'DEPENDENCY_INTELLIGENCE' ||
+    (plan.selectedCapabilities.includes('DEPENDENCY_INTELLIGENCE') && isDependencyIntelligenceQuestion(deps.message))
+  ) {
+    const dep = processDependencyIntelligenceRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: dep.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['DEPENDENCY_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
     !isPlanningNotImpactQuestion(deps.message) &&
     (plan.primaryCapability === 'TIMELINE_INTELLIGENCE' ||
       (plan.selectedCapabilities.includes('TIMELINE_INTELLIGENCE') && isTimelineQuestion(deps.message)))
@@ -188,6 +400,9 @@ export function executeGeneralQuestionRouting(
   ) {
     const trace = answerProjectQuestionWithTrace(deps.message);
     processProjectUnderstandingRequest(deps.message);
+    const vaultCaps = isVaultAwareQuestion(deps.message) || plan.selectedCapabilities.includes('PROJECT_VAULT_INTELLIGENCE')
+      ? (['PROJECT_VAULT_INTELLIGENCE'] as const)
+      : [];
     return {
       ownsResponse: true,
       responseText: composeGeneralAnswer({
@@ -197,7 +412,7 @@ export function executeGeneralQuestionRouting(
         recommendedNextStep: trace.reasoning.recommendedNextStep,
         limitationMessage: limitationMessage ?? undefined,
       }),
-      usedCapabilities: ['PROJECT_KNOWLEDGE_REASONING', 'PROJECT_UNDERSTANDING', ...usedCapabilities],
+      usedCapabilities: ['PROJECT_KNOWLEDGE_REASONING', 'PROJECT_UNDERSTANDING', ...vaultCaps, ...usedCapabilities],
       routingPlan: plan,
     };
   }

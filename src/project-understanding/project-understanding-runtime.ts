@@ -6,6 +6,12 @@ import { getSharedMemoryStore } from '../shared-memory/shared-memory-store.js';
 import { ensureSharedMemorySeeded } from '../shared-memory/shared-memory-runtime.js';
 import { getCurrentProjectProfile, profileKey, resetProjectProfileForTests } from './project-profile-store.js';
 import { resetProjectKnowledgeModelForTests, resetProjectFactIdCounterForTests } from './project-knowledge-model.js';
+import {
+  getProjectVaultIntelligenceDiagnostics,
+  resetProjectVaultIntelligenceDiagnostics,
+  resetProjectVaultIntelligenceBridgeForTests,
+} from '../project-vault-intelligence/index.js';
+import { publishOperatorFeedStage } from '../operator-feed/index.js';
 import { processProjectUnderstanding } from './project-understanding-engine.js';
 import type { ProjectUnderstandingDiagnostics } from './project-understanding-types.js';
 
@@ -37,12 +43,15 @@ export function resetProjectUnderstandingForTests(): void {
   resetProjectProfileForTests();
   resetProjectKnowledgeModelForTests();
   resetProjectFactIdCounterForTests();
+  resetProjectVaultIntelligenceDiagnostics();
+  resetProjectVaultIntelligenceBridgeForTests();
   observationStored = false;
   lastProjectQuery = null;
 }
 
 export function processProjectUnderstandingRequest(message: string) {
   ensureProjectUnderstandingObservation();
+  publishOperatorFeedStage('Reading Project Facts', 'project_understanding_engine', { query: message });
   lastProjectQuery = message;
   return processProjectUnderstanding(message);
 }
@@ -62,6 +71,8 @@ export function getProjectUnderstandingDiagnostics(): ProjectUnderstandingDiagno
 export function projectUnderstandingKey(): string {
   return profileKey();
 }
+
+export { getProjectVaultIntelligenceDiagnostics } from '../project-vault-intelligence/index.js';
 
 let singleton: DevPulseV2ProjectUnderstandingEngine | null = null;
 

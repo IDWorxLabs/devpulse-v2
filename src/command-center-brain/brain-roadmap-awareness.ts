@@ -10,7 +10,7 @@ export function roadmapContextKey(ctx: BrainRoadmapContext): string {
 
 export function getBrainRoadmapContext(): BrainRoadmapContext {
   return {
-    currentPhase: '11.5 — Timeline Intelligence Foundation',
+    currentPhase: '11.6 — Unified Decision Layer Foundation',
     completedPhases: [
       'Phase 6 — Governance Stack',
       'Phase 7 — World 2 Foundation Stack',
@@ -28,12 +28,13 @@ export function getBrainRoadmapContext(): BrainRoadmapContext {
       'Phase 11.4 — Project Understanding Engine',
       'Phase 11.4B — Project Knowledge Reasoning',
       'Phase 11.4C — General Question Understanding Router',
+      'Phase 11.5 — Timeline Intelligence Foundation',
     ],
-    nextPhase: '11.6 — Unified Decision Layer (planned)',
+    nextPhase: '11.7 — Development Reasoning Foundation (planned)',
     nextPhaseDescription:
-      'Optional unified decision layer for DevPulse — still intelligence only, no execution.',
+      'Structured development reasoning for code and implementation questions — intelligence only, no execution.',
     recommendedNextStep:
-      'Timeline Intelligence Foundation is active. Next optional step: Unified Decision Layer — still intelligence only.',
+      'Unified Decision Layer Foundation is active. Next step: Development Reasoning Foundation — still intelligence only.',
     stackMaturitySummary:
       'Foundation architecture is extensive and validated. Command Center Brain understands system relationships. Execution runtime, cloud runtime, autonomous building, and real mobile control are not yet connected.',
   };

@@ -127,7 +127,7 @@ async function main(): Promise<void> {
   assert('17. ordered events', events[0]!.timestamp <= events[events.length - 1]!.timestamp, 'order');
 
   const state = buildTimelineState();
-  assert('18. current phase', state.currentPhase.includes('11.5'), state.currentPhase);
+  assert('18. current phase', state.currentPhase.includes('11.6') || state.currentPhase.includes('11.5'), state.currentPhase);
   assert('19. completed phases', state.completedPhases.length >= 10, String(state.completedPhases.length));
   assert('20. blockers', state.activeBlockers.length > 0, String(state.activeBlockers.length));
 
@@ -181,7 +181,7 @@ async function main(): Promise<void> {
   const diag = getTimelineIntelligenceDiagnostics();
   processTimelineIntelligenceRequest(SUCCESS_CRITERIA_QUERIES[0]!);
   const diag2 = getTimelineIntelligenceDiagnostics();
-  assert('40. diagnostics phase', diag2.currentTimelinePhase.includes('11.5'), diag2.currentTimelinePhase);
+  assert('40. diagnostics phase', diag2.currentTimelinePhase.includes('11.6') || diag2.currentTimelinePhase.includes('11.5'), diag2.currentTimelinePhase);
   assert('41. diagnostics phases count', diag2.completedPhaseCount > 0, String(diag2.completedPhaseCount));
   assert('42. diagnostics milestones', diag2.milestoneCount > 0, String(diag2.milestoneCount));
   assert('43. diagnostics blockers', diag2.blockerCount > 0, String(diag2.blockerCount));

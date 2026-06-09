@@ -11,6 +11,18 @@ import type {
 import { UNAVAILABLE_CAPABILITIES } from './general-question-types.js';
 import { isBroadProjectQuestion, isPlanningNotImpactQuestion } from './question-understanding-engine.js';
 import { isTimelineQuestion } from '../../timeline-intelligence/timeline-types.js';
+import { isDecisionQuestion } from '../../unified-decision-layer/decision-types.js';
+import { isVaultAwareQuestion } from '../../project-vault-intelligence/project-vault-intelligence-types.js';
+import { isDependencyIntelligenceQuestion } from '../../dependency-intelligence/dependency-intelligence-types.js';
+import { isWorkspaceIntelligenceQuestion } from '../../workspace-intelligence/workspace-intelligence-types.js';
+import { isProjectHistoryIntelligenceQuestion } from '../../project-history-intelligence/project-history-intelligence-types.js';
+import { isProjectSummarizationQuestion } from '../../project-summarization-engine/project-summarization-types.js';
+import { isPortfolioIntelligenceQuestion } from '../../portfolio-intelligence/portfolio-intelligence-types.js';
+import { isActionVisibilityQuestion } from '../../action-visibility-engine/action-visibility-types.js';
+import { isReasoningVisibilityQuestion } from '../../reasoning-visibility-engine/reasoning-visibility-types.js';
+import { isProgressIntelligenceQuestion } from '../../progress-intelligence/progress-intelligence-types.js';
+import { isFailureVisibilityQuestion } from '../../failure-visibility-engine/failure-visibility-types.js';
+import { isLearningVisibilityQuestion } from '../../learning-visibility-engine/learning-visibility-types.js';
 
 const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> = {
   PROJECT_PROFILE: 'PROJECT_UNDERSTANDING',
@@ -26,6 +38,16 @@ const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> =
   DEVELOPMENT_KNOWLEDGE: 'DEVELOPMENT_REASONING',
   DEBUG_CONTEXT: 'DEBUGGING_REASONING',
   TIMELINE_STATE: 'TIMELINE_INTELLIGENCE',
+  DEPENDENCY_FACTS: 'DEPENDENCY_INTELLIGENCE',
+  WORKSPACE_FACTS: 'WORKSPACE_INTELLIGENCE',
+  HISTORY_FACTS: 'PROJECT_HISTORY_INTELLIGENCE',
+  SUMMARIZATION_FACTS: 'PROJECT_SUMMARIZATION_ENGINE',
+  PORTFOLIO_FACTS: 'PORTFOLIO_INTELLIGENCE',
+  ACTION_VISIBILITY_FACTS: 'ACTION_VISIBILITY_ENGINE',
+  REASONING_VISIBILITY_FACTS: 'REASONING_VISIBILITY_ENGINE',
+  PROGRESS_INTELLIGENCE_FACTS: 'PROGRESS_INTELLIGENCE',
+  FAILURE_VISIBILITY_FACTS: 'FAILURE_VISIBILITY_ENGINE',
+  LEARNING_VISIBILITY_FACTS: 'LEARNING_VISIBILITY_ENGINE',
 };
 
 export interface CapabilitySelectionResult {
@@ -81,7 +103,90 @@ export function selectCapabilities(
     selected.add('ROADMAP_AWARENESS');
   }
 
-  if (isTimelineQuestion(question) && !isPlanningNotImpactQuestion(question)) {
+  if (isVaultAwareQuestion(question)) {
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('PROJECT_UNDERSTANDING');
+  }
+
+  if (isDependencyIntelligenceQuestion(question)) {
+    selected.add('DEPENDENCY_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+  }
+
+  if (isWorkspaceIntelligenceQuestion(question)) {
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('PROJECT_UNDERSTANDING');
+  }
+
+  if (isProjectHistoryIntelligenceQuestion(question)) {
+    selected.add('PROJECT_HISTORY_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('PROJECT_UNDERSTANDING');
+  }
+
+  if (isPortfolioIntelligenceQuestion(question)) {
+    selected.add('PORTFOLIO_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('PROJECT_UNDERSTANDING');
+    selected.add('WORKSPACE_INTELLIGENCE');
+  }
+
+  if (isActionVisibilityQuestion(question)) {
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+  }
+
+  if (isReasoningVisibilityQuestion(question)) {
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+  }
+
+  if (isLearningVisibilityQuestion(question)) {
+    selected.add('LEARNING_VISIBILITY_ENGINE');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('PROJECT_HISTORY_INTELLIGENCE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isFailureVisibilityQuestion(question)) {
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('DEPENDENCY_INTELLIGENCE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+  }
+
+  if (isProgressIntelligenceQuestion(question)) {
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('PROJECT_HISTORY_INTELLIGENCE');
+    selected.add('PORTFOLIO_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+  }
+
+  if (isProjectSummarizationQuestion(question)) {
+    selected.add('PROJECT_SUMMARIZATION_ENGINE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('PROJECT_UNDERSTANDING');
+  }
+
+  if (isDecisionQuestion(question)) {
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (
+    isTimelineQuestion(question) &&
+    !isProjectHistoryIntelligenceQuestion(question) &&
+    !isPlanningNotImpactQuestion(question) &&
+    !isDecisionQuestion(question)
+  ) {
     selected.add('TIMELINE_INTELLIGENCE');
   }
 
@@ -95,15 +200,205 @@ export function selectCapabilities(
 
   if (reasoningModes.includes('RISK_ASSESSMENT') || reasoningModes.includes('PRIORITIZATION')) {
     selected.add('PROJECT_KNOWLEDGE_REASONING');
+    if (isDecisionQuestion(question)) {
+      selected.add('UNIFIED_DECISION_LAYER');
+    }
   }
 
   if (reasoningModes.includes('PLANNING')) {
     selected.add('PROJECT_KNOWLEDGE_REASONING');
+    if (isDecisionQuestion(question)) {
+      selected.add('UNIFIED_DECISION_LAYER');
+    }
   }
 
   const selectedList = [...selected];
   let primary: SelectedCapability | null = null;
   let secondary: SelectedCapability[] = [];
+
+  if (isPortfolioIntelligenceQuestion(question)) {
+    primary = 'PORTFOLIO_INTELLIGENCE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Portfolio-oriented question — PORTFOLIO_INTELLIGENCE aggregates multi-project health, risk, priority, and comparison across all Phase 12 sources.',
+    };
+  }
+
+  const lowerQuestion = question.toLowerCase();
+
+  if (isFailureVisibilityQuestion(question) && lowerQuestion.includes('dependency chains are impacted')) {
+    primary = 'FAILURE_VISIBILITY_ENGINE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Failure impact question — FAILURE_VISIBILITY_ENGINE shows impacted dependency chains from visible failures without auto-fix.',
+    };
+  }
+
+  if (isDependencyIntelligenceQuestion(question) && lowerQuestion.includes('capabilities are blocked')) {
+    primary = 'DEPENDENCY_INTELLIGENCE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Blocked capabilities question — DEPENDENCY_INTELLIGENCE owns dependency-graph blocked capability advisory.',
+    };
+  }
+
+  if (isLearningVisibilityQuestion(question)) {
+    primary = 'LEARNING_VISIBILITY_ENGINE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Learning question — LEARNING_VISIBILITY_ENGINE shows observed patterns, recurring blockers/failures/recommendations, and memory lessons without self-learning or model modification.',
+    };
+  }
+
+  if (isFailureVisibilityQuestion(question)) {
+    primary = 'FAILURE_VISIBILITY_ENGINE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Failure question — FAILURE_VISIBILITY_ENGINE shows failures, severity, impact, and advisory next steps without auto-fix or execution.',
+    };
+  }
+
+  if (isProgressIntelligenceQuestion(question)) {
+    primary = 'PROGRESS_INTELLIGENCE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Progress question — PROGRESS_INTELLIGENCE shows completion, milestones, blockers, and portfolio progress without execution.',
+    };
+  }
+
+  if (isReasoningVisibilityQuestion(question)) {
+    primary = 'REASONING_VISIBILITY_ENGINE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Reasoning visibility question — REASONING_VISIBILITY_ENGINE explains evidence, sources, blockers, risks, and confidence basis without chain-of-thought.',
+    };
+  }
+
+  if (isActionVisibilityQuestion(question)) {
+    primary = 'ACTION_VISIBILITY_ENGINE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Action visibility question — ACTION_VISIBILITY_ENGINE explains considered actions, status, priority, and source without execution.',
+    };
+  }
+
+  if (isDecisionQuestion(question)) {
+    primary = 'UNIFIED_DECISION_LAYER';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Decision-oriented question — route through Unified Decision Layer for advisory build/defer/block/priority recommendations.',
+    };
+  }
+
+  if (isProjectSummarizationQuestion(question)) {
+    primary = 'PROJECT_SUMMARIZATION_ENGINE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Summarization-oriented question — PROJECT_SUMMARIZATION_ENGINE compresses all intelligence sources into unified summaries.',
+    };
+  }
+
+  if (isProjectHistoryIntelligenceQuestion(question)) {
+    primary = 'PROJECT_HISTORY_INTELLIGENCE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'History-oriented question — PROJECT_HISTORY_INTELLIGENCE is answer authority; Timeline Intelligence owns current phase separately.',
+    };
+  }
+
+  if (isWorkspaceIntelligenceQuestion(question)) {
+    primary = 'WORKSPACE_INTELLIGENCE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Workspace-oriented question — WORKSPACE_INTELLIGENCE is answer authority; Project Understanding supplements with enriched facts.',
+    };
+  }
+
+  if (isDependencyIntelligenceQuestion(question)) {
+    primary = 'DEPENDENCY_INTELLIGENCE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Dependency-oriented question — DEPENDENCY_INTELLIGENCE is answer authority; Unified Decision Layer supplements when decision signals also match.',
+    };
+  }
+
+  if (isVaultAwareQuestion(question)) {
+    primary = 'PROJECT_KNOWLEDGE_REASONING';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Vault-aware project question — PROJECT_VAULT_INTELLIGENCE supplements Project Knowledge Reasoning; 11.4 remains answer authority.',
+    };
+  }
 
   if (isTimelineQuestion(question) && !isPlanningNotImpactQuestion(question)) {
     primary = 'TIMELINE_INTELLIGENCE';

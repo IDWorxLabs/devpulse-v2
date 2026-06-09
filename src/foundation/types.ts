@@ -1,6 +1,6 @@
 /** Shared types for DevPulse V2 foundation enforcement. */
 
-export type DevPulseV2Phase = 1 | 2 | 3 | 4 | 4.5 | 5 | 5.5 | 6.1 | 6.2 | 6.3 | 6.4 | 6.5 | 6.6 | 6.7 | 6.8 | 6.9 | 6.10 | 6.11 | 7.1 | 7.2 | 7.3 | 7.4 | 7.5 | 7.6 | 7.7 | 8.1 | 8.2 | 8.3 | 8.4 | 8.5 | 9.1 | 9.2 | 9.3 | 9.4 | 9.5 | 9.6 | 10.1 | 10.2 | 10.3 | 10.31 | 11.1 | 11.2;
+export type DevPulseV2Phase = 1 | 2 | 3 | 4 | 4.5 | 5 | 5.5 | 6.1 | 6.2 | 6.3 | 6.4 | 6.5 | 6.6 | 6.7 | 6.8 | 6.9 | 6.10 | 6.11 | 7.1 | 7.2 | 7.3 | 7.4 | 7.5 | 7.6 | 7.7 | 8.1 | 8.2 | 8.3 | 8.4 | 8.5 | 9.1 | 9.2 | 9.3 | 9.4 | 9.5 | 9.6 | 10.1 | 10.2 | 10.3 | 10.31 | 11.1 | 11.2 | 11.6 | 12.1 | 12.2 | 12.3 | 12.4 | 12.5;
 
 export type DevPulseV2SystemId =
   | 'foundation_enforcement'
@@ -139,7 +139,20 @@ export type OwnershipDomain =
   | 'shared_memory_layer'
   | 'project_understanding_engine'
   | 'general_question_understanding'
-  | 'timeline_intelligence';
+  | 'timeline_intelligence'
+  | 'unified_decision_layer'
+  | 'project_vault_intelligence'
+  | 'dependency_intelligence'
+  | 'workspace_intelligence'
+  | 'project_history_intelligence'
+  | 'project_summarization_engine'
+  | 'portfolio_intelligence'
+  | 'operator_feed'
+  | 'action_visibility_engine'
+  | 'reasoning_visibility_engine'
+  | 'progress_intelligence'
+  | 'failure_visibility_engine'
+  | 'learning_visibility_engine';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

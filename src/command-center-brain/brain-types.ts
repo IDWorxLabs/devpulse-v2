@@ -8,12 +8,53 @@ import type {
   QuestionRoutingPlan,
 } from './general-question-understanding/general-question-types.js';
 import type { TimelineIntelligenceDiagnostics } from '../timeline-intelligence/timeline-types.js';
+import type { UnifiedDecisionLayerDiagnostics } from '../unified-decision-layer/decision-types.js';
+import type { ProjectVaultIntelligenceDiagnostics } from '../project-vault-intelligence/project-vault-intelligence-types.js';
+import type { DependencyIntelligenceDiagnostics } from '../dependency-intelligence/dependency-intelligence-types.js';
+import type { WorkspaceIntelligenceDiagnostics } from '../workspace-intelligence/workspace-intelligence-types.js';
+import type { ProjectHistoryIntelligenceDiagnostics } from '../project-history-intelligence/project-history-intelligence-types.js';
+import type { ProjectSummarizationDiagnostics } from '../project-summarization-engine/project-summarization-types.js';
+import type { PortfolioIntelligenceDiagnostics } from '../portfolio-intelligence/portfolio-intelligence-types.js';
+import type {
+  OperatorFeedDiagnostics,
+  OperatorFeedTimeline,
+} from '../operator-feed/operator-feed-types.js';
+import type {
+  ActionVisibilityDiagnostics,
+  ActionVisibilityRecord,
+} from '../action-visibility-engine/action-visibility-types.js';
+import type {
+  ReasoningVisibilityDiagnostics,
+  ReasoningVisibilityRecord,
+} from '../reasoning-visibility-engine/reasoning-visibility-types.js';
+import type {
+  ProgressIntelligenceDiagnostics,
+  ProgressRecord,
+} from '../progress-intelligence/progress-intelligence-types.js';
+import type {
+  FailureVisibilityDiagnostics,
+  FailureRecord,
+} from '../failure-visibility-engine/failure-visibility-types.js';
+import type {
+  LearningVisibilityDiagnostics,
+  LearningRecord,
+} from '../learning-visibility-engine/learning-visibility-types.js';
 
 export type { CrossSystemAwarenessSnapshot };
 export type { SharedMemoryContext };
 export type { ProjectUnderstandingContext, ProjectUnderstandingDiagnostics };
 export type { GeneralQuestionRoutingDiagnostics, QuestionRoutingPlan };
 export type { TimelineIntelligenceDiagnostics };
+export type { UnifiedDecisionLayerDiagnostics };
+export type { ProjectVaultIntelligenceDiagnostics };
+export type { DependencyIntelligenceDiagnostics };
+export type { WorkspaceIntelligenceDiagnostics };
+export type { ProjectHistoryIntelligenceDiagnostics };
+export type { ProjectSummarizationDiagnostics };
+export type { PortfolioIntelligenceDiagnostics };
+export type { OperatorFeedTimeline, OperatorFeedDiagnostics };
+export type { ActionVisibilityDiagnostics, ActionVisibilityRecord };
+export type { ReasoningVisibilityDiagnostics, ReasoningVisibilityRecord };
 
 export type BrainRequestCategory =
   | 'ROADMAP'
@@ -74,7 +115,12 @@ export type OperatorFeedEventType =
   | 'Analyzing Timeline'
   | 'Checking Milestones'
   | 'Checking Blockers'
-  | 'Generating Timeline Conclusions';
+  | 'Generating Timeline Conclusions'
+  | 'Loading Decision Context'
+  | 'Evaluating Options'
+  | 'Checking Risks'
+  | 'Ranking Priorities'
+  | 'Generating Recommendation';
 
 export interface BrainRequestInput {
   message: string;
@@ -144,6 +190,25 @@ export interface BrainResponseResult {
   generalQuestionRoutingPlan?: QuestionRoutingPlan;
   generalQuestionDiagnostics?: GeneralQuestionRoutingDiagnostics;
   timelineIntelligenceDiagnostics?: TimelineIntelligenceDiagnostics;
+  unifiedDecisionLayerDiagnostics?: UnifiedDecisionLayerDiagnostics;
+  projectVaultIntelligenceDiagnostics?: ProjectVaultIntelligenceDiagnostics;
+  dependencyIntelligenceDiagnostics?: DependencyIntelligenceDiagnostics;
+  workspaceIntelligenceDiagnostics?: WorkspaceIntelligenceDiagnostics;
+  projectHistoryIntelligenceDiagnostics?: ProjectHistoryIntelligenceDiagnostics;
+  projectSummarizationDiagnostics?: ProjectSummarizationDiagnostics;
+  portfolioIntelligenceDiagnostics?: PortfolioIntelligenceDiagnostics;
+  operatorFeedTimeline?: OperatorFeedTimeline;
+  operatorFeedFoundationDiagnostics?: OperatorFeedDiagnostics;
+  actionVisibilityDiagnostics?: ActionVisibilityDiagnostics;
+  actionVisibilityRecords?: ActionVisibilityRecord[];
+  reasoningVisibilityDiagnostics?: ReasoningVisibilityDiagnostics;
+  reasoningVisibilityRecords?: ReasoningVisibilityRecord[];
+  progressIntelligenceDiagnostics?: ProgressIntelligenceDiagnostics;
+  progressRecords?: ProgressRecord[];
+  failureVisibilityDiagnostics?: FailureVisibilityDiagnostics;
+  failureRecords?: FailureRecord[];
+  learningVisibilityDiagnostics?: LearningVisibilityDiagnostics;
+  learningRecords?: LearningRecord[];
   pipelineStages: BrainPipelineStage[];
   operatorFeedEvents: OperatorFeedEvent[];
   confirmation: BrainConfirmation;
@@ -279,6 +344,16 @@ export const TIMELINE_INTELLIGENCE_FEED: readonly OperatorFeedEventType[] = [
   'Checking Milestones',
   'Checking Blockers',
   'Generating Timeline Conclusions',
+  'Response Ready',
+] as const;
+
+export const UNIFIED_DECISION_LAYER_FEED: readonly OperatorFeedEventType[] = [
+  'Loading Decision Context',
+  'Evaluating Options',
+  'Checking Risks',
+  'Checking Blockers',
+  'Ranking Priorities',
+  'Generating Recommendation',
   'Response Ready',
 ] as const;
 

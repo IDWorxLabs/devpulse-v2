@@ -37,15 +37,127 @@ import {
 } from '../shared-memory/index.js';
 import {
   getProjectUnderstandingDiagnostics,
+  getProjectVaultIntelligenceDiagnostics,
   processProjectUnderstandingRequest,
   projectUnderstandingKey,
   resetProjectUnderstandingForTests,
 } from '../project-understanding/index.js';
 import {
+  projectVaultIntelligenceKey,
+  resetProjectVaultIntelligenceDiagnostics,
+  resetProjectVaultIntelligenceBridgeForTests,
+} from '../project-vault-intelligence/index.js';
+import {
+  dependencyIntelligenceKey,
+  getDependencyIntelligenceDiagnostics,
+  resetDependencyIntelligenceDiagnostics,
+  resetDependencyGraphForTests,
+} from '../dependency-intelligence/index.js';
+import {
+  getWorkspaceIntelligenceDiagnostics,
+  resetWorkspaceIntelligenceDiagnostics,
+  resetWorkspaceRiskCounterForTests,
+  resetWorkspaceSnapshotForTests,
+  workspaceIntelligenceKey,
+} from '../workspace-intelligence/index.js';
+import {
+  getProjectHistoryIntelligenceDiagnostics,
+  projectHistoryIntelligenceKey,
+  resetHistoryEventReaderForTests,
+  resetProjectHistoryIntelligenceDiagnostics,
+  resetProjectHistorySnapshotForTests,
+} from '../project-history-intelligence/index.js';
+import {
+  getProjectSummarizationDiagnostics,
+  projectSummarizationKey,
+  resetExecutiveSummaryCounterForTests,
+  resetProjectHealthCounterForTests,
+  resetProjectStatusCounterForTests,
+  resetProjectSummarizationDiagnostics,
+  resetTechnicalSummaryCounterForTests,
+} from '../project-summarization-engine/index.js';
+import {
+  getPortfolioIntelligenceDiagnostics,
+  portfolioIntelligenceKey,
+  resetPortfolioComparisonCounterForTests,
+  resetPortfolioIntelligenceDiagnostics,
+  resetPortfolioPriorityCounterForTests,
+  resetPortfolioRiskCounterForTests,
+  resetPortfolioSummaryCounterForTests,
+} from '../portfolio-intelligence/index.js';
+import type { PortfolioIntelligenceDiagnostics } from '../portfolio-intelligence/portfolio-intelligence-types.js';
+import {
+  buildOperatorFeedVisibility,
+  getOperatorFeedDiagnostics,
+  operatorFeedFoundationKey,
+  resetOperatorFeedDiagnostics,
+  resetOperatorFeedEventCounterForTests,
+  resetOperatorFeedTimelineCounterForTests,
+} from '../operator-feed/index.js';
+import type { OperatorFeedDiagnostics } from '../operator-feed/operator-feed-types.js';
+import {
+  getActionVisibilityContext,
+  getActionVisibilityDiagnostics,
+  actionVisibilityKey,
+  resetActionVisibilityDiagnostics,
+  resetActionCandidateCounterForTests,
+} from '../action-visibility-engine/index.js';
+import type { ActionVisibilityDiagnostics, ActionVisibilityRecord } from '../action-visibility-engine/action-visibility-types.js';
+import {
+  getReasoningVisibilityContext,
+  getReasoningVisibilityDiagnostics,
+  reasoningVisibilityKey,
+  resetReasoningVisibilityDiagnostics,
+  resetReasoningEvidenceCounterForTests,
+  resetReasoningSourceCounterForTests,
+  resetReasoningRiskCounterForTests,
+  resetReasoningBlockerCounterForTests,
+  resetReasoningVisibilityCounterForTests,
+} from '../reasoning-visibility-engine/index.js';
+import type { ReasoningVisibilityDiagnostics, ReasoningVisibilityRecord } from '../reasoning-visibility-engine/reasoning-visibility-types.js';
+import {
+  getProgressIntelligenceContext,
+  getProgressIntelligenceDiagnostics,
+  progressIntelligenceKey,
+  resetProgressIntelligenceDiagnostics,
+  resetProgressRecordCounterForTests,
+  resetProgressMilestoneCounterForTests,
+  resetProgressBlockerCounterForTests,
+  resetProgressStatusCounterForTests,
+} from '../progress-intelligence/index.js';
+import type { ProgressIntelligenceDiagnostics, ProgressRecord } from '../progress-intelligence/progress-intelligence-types.js';
+import {
+  getFailureVisibilityContext,
+  getFailureVisibilityDiagnostics,
+  failureVisibilityKey,
+  resetFailureVisibilityDiagnostics,
+  resetFailureRecordCounterForTests,
+  resetFailureImpactCounterForTests,
+  resetFailureDependencyCounterForTests,
+} from '../failure-visibility-engine/index.js';
+import type { FailureVisibilityDiagnostics, FailureRecord } from '../failure-visibility-engine/failure-visibility-types.js';
+import {
+  getLearningVisibilityContext,
+  getLearningVisibilityDiagnostics,
+  learningVisibilityKey,
+  resetLearningVisibilityDiagnostics,
+  resetLearningBlockerCounterForTests,
+  resetLearningFailureCounterForTests,
+  resetLearningRecommendationCounterForTests,
+  resetLearningPatternCounterForTests,
+  resetLearningMemoryCounterForTests,
+} from '../learning-visibility-engine/index.js';
+import type { LearningVisibilityDiagnostics, LearningRecord } from '../learning-visibility-engine/learning-visibility-types.js';
+import {
   getTimelineIntelligenceDiagnostics,
   resetTimelineIntelligenceForTests,
   timelineIntelligenceKey,
 } from '../timeline-intelligence/index.js';
+import {
+  getUnifiedDecisionLayerDiagnostics,
+  resetUnifiedDecisionLayerForTests,
+  unifiedDecisionLayerKey,
+} from '../unified-decision-layer/index.js';
 import {
   executeGeneralQuestionRouting,
   generalQuestionUnderstandingKey,
@@ -64,6 +176,12 @@ import type {
   CrossSystemDiagnostics,
   GeneralQuestionRoutingDiagnostics,
   TimelineIntelligenceDiagnostics,
+  UnifiedDecisionLayerDiagnostics,
+  ProjectVaultIntelligenceDiagnostics,
+  DependencyIntelligenceDiagnostics,
+  WorkspaceIntelligenceDiagnostics,
+  ProjectHistoryIntelligenceDiagnostics,
+  ProjectSummarizationDiagnostics,
   OperatorFeedEvent,
   OperatorFeedEventType,
   QuestionRoutingPlan,
@@ -83,6 +201,7 @@ import {
   PROJECT_UNDERSTANDING_FEED,
   GENERAL_QUESTION_UNDERSTANDING_FEED,
   TIMELINE_INTELLIGENCE_FEED,
+  UNIFIED_DECISION_LAYER_FEED,
   SHARED_MEMORY_OPERATOR_FEED_STAGES,
   withSharedMemoryFeedStages,
   nextBrainResponseId,
@@ -167,7 +286,9 @@ function feedSequenceForCategory(
   category: BrainRequestCategory,
   generalRouterOwns: boolean,
   timelineRouterOwns: boolean,
+  decisionRouterOwns: boolean,
 ): readonly OperatorFeedEventType[] {
+  if (decisionRouterOwns) return UNIFIED_DECISION_LAYER_FEED;
   if (timelineRouterOwns) return TIMELINE_INTELLIGENCE_FEED;
   if (generalRouterOwns) return GENERAL_QUESTION_UNDERSTANDING_FEED;
   if (category === 'DEPENDENCY') return CROSS_SYSTEM_FEED_DEPENDENCY;
@@ -183,8 +304,9 @@ function buildOperatorFeedEvents(
   memoryLookup: boolean,
   generalRouterOwns: boolean,
   timelineRouterOwns: boolean,
+  decisionRouterOwns: boolean,
 ): OperatorFeedEvent[] {
-  const base = feedSequenceForCategory(category, generalRouterOwns, timelineRouterOwns);
+  const base = feedSequenceForCategory(category, generalRouterOwns, timelineRouterOwns, decisionRouterOwns);
   const sequence = memoryLookup ? withSharedMemoryFeedStages(base) : base;
   return sequence.map((eventType, index) => ({
     eventId: `feed-${(index + 1).toString().padStart(2, '0')}`,
@@ -277,8 +399,12 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
       ? executeGeneralQuestionRouting(routingPlan, { message, classification, systems, roadmap })
       : null;
   const generalRouterOwns = Boolean(generalRouting?.ownsResponse);
+  const decisionRouterOwns =
+    generalRouterOwns && routingPlan?.primaryCapability === 'UNIFIED_DECISION_LAYER';
   const timelineRouterOwns =
-    generalRouterOwns && routingPlan?.primaryCapability === 'TIMELINE_INTELLIGENCE';
+    generalRouterOwns &&
+    !decisionRouterOwns &&
+    routingPlan?.primaryCapability === 'TIMELINE_INTELLIGENCE';
 
   const memoryContext = blocked ? undefined : processMemoryForRequest(message);
   const isMemoryRecall =
@@ -315,6 +441,7 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
         Boolean(memoryContext?.lookupPerformed),
         generalRouterOwns,
         timelineRouterOwns,
+        decisionRouterOwns,
       );
   const feedStages = operatorFeedEvents.map((e) => e.eventType);
 
@@ -366,6 +493,81 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
   const timelineIntelligenceDiagnostics: TimelineIntelligenceDiagnostics | undefined =
     blocked || !timelineRouterOwns ? undefined : getTimelineIntelligenceDiagnostics();
 
+  const unifiedDecisionLayerDiagnostics: UnifiedDecisionLayerDiagnostics | undefined =
+    blocked || !decisionRouterOwns ? undefined : getUnifiedDecisionLayerDiagnostics();
+
+  const vaultDiag = getProjectVaultIntelligenceDiagnostics();
+  const projectVaultIntelligenceDiagnostics: ProjectVaultIntelligenceDiagnostics | undefined =
+    blocked || !vaultDiag.projectVaultIntelligenceActive ? undefined : vaultDiag;
+
+  const depDiag = getDependencyIntelligenceDiagnostics();
+  const dependencyIntelligenceDiagnostics: DependencyIntelligenceDiagnostics | undefined =
+    blocked || !depDiag.dependencyIntelligenceActive ? undefined : depDiag;
+
+  const wsDiag = getWorkspaceIntelligenceDiagnostics();
+  const workspaceIntelligenceDiagnostics: WorkspaceIntelligenceDiagnostics | undefined =
+    blocked || !wsDiag.workspaceIntelligenceActive ? undefined : wsDiag;
+
+  const histDiag = getProjectHistoryIntelligenceDiagnostics();
+  const projectHistoryIntelligenceDiagnostics: ProjectHistoryIntelligenceDiagnostics | undefined =
+    blocked || !histDiag.projectHistoryIntelligenceActive ? undefined : histDiag;
+
+  const sumDiag = getProjectSummarizationDiagnostics();
+  const projectSummarizationDiagnostics: ProjectSummarizationDiagnostics | undefined =
+    blocked || !sumDiag.projectSummarizationActive ? undefined : sumDiag;
+
+  const portDiag = getPortfolioIntelligenceDiagnostics();
+  const portfolioIntelligenceDiagnostics: PortfolioIntelligenceDiagnostics | undefined =
+    blocked || !portDiag.portfolioIntelligenceActive ? undefined : portDiag;
+
+  const operatorFeedTimeline = blocked
+    ? undefined
+    : buildOperatorFeedVisibility({
+        query: message,
+        routingPlan,
+        memoryLookup: Boolean(memoryContext?.lookupPerformed),
+        timestamp,
+      });
+
+  const feedFoundationDiag = getOperatorFeedDiagnostics();
+  const operatorFeedFoundationDiagnostics: OperatorFeedDiagnostics | undefined =
+    blocked || !feedFoundationDiag.operatorFeedActive ? undefined : feedFoundationDiag;
+
+  const actionCtx = blocked ? null : getActionVisibilityContext(message);
+  const actionDiag = getActionVisibilityDiagnostics();
+  const actionVisibilityDiagnostics: ActionVisibilityDiagnostics | undefined =
+    blocked || !actionDiag.actionVisibilityActive ? undefined : actionDiag;
+  const actionVisibilityRecords: ActionVisibilityRecord[] | undefined =
+    blocked || !actionCtx ? undefined : actionCtx.records;
+
+  const reasoningCtx = blocked ? null : getReasoningVisibilityContext(message);
+  const reasoningDiag = getReasoningVisibilityDiagnostics();
+  const reasoningVisibilityDiagnostics: ReasoningVisibilityDiagnostics | undefined =
+    blocked || !reasoningDiag.reasoningVisibilityActive ? undefined : reasoningDiag;
+  const reasoningVisibilityRecords: ReasoningVisibilityRecord[] | undefined =
+    blocked || !reasoningCtx ? undefined : reasoningCtx.result.records;
+
+  const progressCtx = blocked ? null : getProgressIntelligenceContext(message);
+  const progressDiag = getProgressIntelligenceDiagnostics();
+  const progressIntelligenceDiagnostics: ProgressIntelligenceDiagnostics | undefined =
+    blocked || !progressDiag.progressIntelligenceActive ? undefined : progressDiag;
+  const progressRecords: ProgressRecord[] | undefined =
+    blocked || !progressCtx ? undefined : progressCtx.result.analysis.records;
+
+  const failureCtx = blocked ? null : getFailureVisibilityContext(message);
+  const failureDiag = getFailureVisibilityDiagnostics();
+  const failureVisibilityDiagnostics: FailureVisibilityDiagnostics | undefined =
+    blocked || !failureDiag.failureVisibilityActive ? undefined : failureDiag;
+  const failureRecords: FailureRecord[] | undefined =
+    blocked || !failureCtx ? undefined : failureCtx.result.analysis.records;
+
+  const learningCtx = blocked ? null : getLearningVisibilityContext(message);
+  const learningDiag = getLearningVisibilityDiagnostics();
+  const learningVisibilityDiagnostics: LearningVisibilityDiagnostics | undefined =
+    blocked || !learningDiag.learningVisibilityActive ? undefined : learningDiag;
+  const learningRecords: LearningRecord[] | undefined =
+    blocked || !learningCtx ? undefined : learningCtx.result.analysis.records;
+
   return {
     responseId: nextBrainResponseId(),
     userMessage: message,
@@ -387,6 +589,25 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
     generalQuestionRoutingPlan: routingPlan,
     generalQuestionDiagnostics,
     timelineIntelligenceDiagnostics,
+    unifiedDecisionLayerDiagnostics,
+    projectVaultIntelligenceDiagnostics,
+    dependencyIntelligenceDiagnostics,
+    workspaceIntelligenceDiagnostics,
+    projectHistoryIntelligenceDiagnostics,
+    projectSummarizationDiagnostics,
+    portfolioIntelligenceDiagnostics,
+    operatorFeedTimeline,
+    operatorFeedFoundationDiagnostics,
+    actionVisibilityDiagnostics,
+    actionVisibilityRecords,
+    reasoningVisibilityDiagnostics,
+    reasoningVisibilityRecords,
+    progressIntelligenceDiagnostics,
+    progressRecords,
+    failureVisibilityDiagnostics,
+    failureRecords,
+    learningVisibilityDiagnostics,
+    learningRecords,
     pipelineStages,
     operatorFeedEvents,
     confirmation: {
@@ -417,6 +638,19 @@ export function brainStructuralKey(result: BrainResponseResult): string {
     projectUnderstandingKey(),
     generalQuestionUnderstandingKey(),
     timelineIntelligenceKey(),
+    unifiedDecisionLayerKey(),
+    projectVaultIntelligenceKey(),
+    dependencyIntelligenceKey(),
+    workspaceIntelligenceKey(),
+    projectHistoryIntelligenceKey(),
+    projectSummarizationKey(),
+    portfolioIntelligenceKey(),
+    operatorFeedFoundationKey(),
+    actionVisibilityKey(),
+    reasoningVisibilityKey(),
+    progressIntelligenceKey(),
+    failureVisibilityKey(),
+    learningVisibilityKey(),
     roadmapContextKey(result.roadmapContext),
     result.pipelineStages.join('→'),
   ].join('|');
@@ -504,6 +738,53 @@ export function resetDevPulseV2CommandCenterBrainForTests(): DevPulseV2CommandCe
   resetProjectUnderstandingForTests();
   resetGeneralQuestionUnderstandingForTests();
   resetTimelineIntelligenceForTests();
+  resetUnifiedDecisionLayerForTests();
+  resetProjectVaultIntelligenceDiagnostics();
+  resetProjectVaultIntelligenceBridgeForTests();
+  resetDependencyIntelligenceDiagnostics();
+  resetDependencyGraphForTests();
+  resetWorkspaceIntelligenceDiagnostics();
+  resetWorkspaceSnapshotForTests();
+  resetWorkspaceRiskCounterForTests();
+  resetProjectHistoryIntelligenceDiagnostics();
+  resetProjectHistorySnapshotForTests();
+  resetHistoryEventReaderForTests();
+  resetProjectSummarizationDiagnostics();
+  resetExecutiveSummaryCounterForTests();
+  resetTechnicalSummaryCounterForTests();
+  resetProjectHealthCounterForTests();
+  resetProjectStatusCounterForTests();
+  resetPortfolioIntelligenceDiagnostics();
+  resetPortfolioRiskCounterForTests();
+  resetPortfolioPriorityCounterForTests();
+  resetPortfolioComparisonCounterForTests();
+  resetPortfolioSummaryCounterForTests();
+  resetOperatorFeedDiagnostics();
+  resetOperatorFeedEventCounterForTests();
+  resetOperatorFeedTimelineCounterForTests();
+  resetActionVisibilityDiagnostics();
+  resetActionCandidateCounterForTests();
+  resetReasoningVisibilityDiagnostics();
+  resetReasoningEvidenceCounterForTests();
+  resetReasoningSourceCounterForTests();
+  resetReasoningRiskCounterForTests();
+  resetReasoningBlockerCounterForTests();
+  resetReasoningVisibilityCounterForTests();
+  resetProgressIntelligenceDiagnostics();
+  resetProgressRecordCounterForTests();
+  resetProgressMilestoneCounterForTests();
+  resetProgressBlockerCounterForTests();
+  resetProgressStatusCounterForTests();
+  resetFailureVisibilityDiagnostics();
+  resetFailureRecordCounterForTests();
+  resetFailureImpactCounterForTests();
+  resetFailureDependencyCounterForTests();
+  resetLearningVisibilityDiagnostics();
+  resetLearningBlockerCounterForTests();
+  resetLearningFailureCounterForTests();
+  resetLearningRecommendationCounterForTests();
+  resetLearningPatternCounterForTests();
+  resetLearningMemoryCounterForTests();
   return singleton;
 }
 
@@ -521,6 +802,7 @@ export {
   PROJECT_UNDERSTANDING_FEED,
   GENERAL_QUESTION_UNDERSTANDING_FEED,
   TIMELINE_INTELLIGENCE_FEED,
+  UNIFIED_DECISION_LAYER_FEED,
   SHARED_MEMORY_OPERATOR_FEED_STAGES,
   withSharedMemoryFeedStages,
   COMMAND_CENTER_BRAIN_OWNER_MODULE,

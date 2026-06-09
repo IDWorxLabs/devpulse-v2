@@ -120,6 +120,25 @@ export function composeProjectAnswer(result: ReasoningResult): string {
     blocks.push('');
   }
 
+  const vaultFacts = result.selectedFacts.filter((f) => f.source === 'project_vault');
+  if (vaultFacts.length > 0) {
+    blocks.push('Vault Context (read-only):');
+    for (const v of vaultFacts.slice(0, 8)) {
+      blocks.push(`• ${v.statement}`);
+    }
+    blocks.push(`Vault Facts Used: ${vaultFacts.length}`);
+    blocks.push('');
+  }
+
+  if (result.conclusions[0]?.startsWith('Recommendation: No.')) {
+    blocks.push('Why:');
+    blocks.push('11.4 already owns project understanding; Phase 12.1 only adds vault-backed facts.');
+    blocks.push('Risk level: High if duplicated.');
+    blocks.push('Next safe action:');
+    blocks.push(result.recommendedNextStep);
+    blocks.push('');
+  }
+
   blocks.push('Project knowledge reasoning only — no execution, file modification, or persistence.');
 
   return blocks.join('\n');
