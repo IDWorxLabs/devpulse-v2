@@ -44,6 +44,9 @@ import { isVisualVerificationQuestion } from '../../visual-verification-engine/t
 import { isUvlRuntimeQuestion } from '../../unified-verification-lab/types.js';
 import { isVerificationRegistryQuestion } from '../../verification-registry/types.js';
 import { isVerificationOrchestratorQuestion } from '../../verification-orchestrator/types.js';
+import { isVerificationEvidenceQuestion } from '../../verification-evidence-engine/verification-evidence-types.js';
+import { isVerificationReportingQuestion } from '../../verification-reporting-engine/verification-report-types.js';
+import { isUnifiedVerificationQuestion } from '../../unified-verification-entry/unified-verification-types.js';
 
 const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> = {
   PROJECT_PROFILE: 'PROJECT_UNDERSTANDING',
@@ -90,6 +93,9 @@ const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> =
   UNIFIED_VERIFICATION_LAB_RUNTIME_FACTS: 'UNIFIED_VERIFICATION_LAB_RUNTIME',
   VERIFICATION_REGISTRY_FACTS: 'VERIFICATION_REGISTRY',
   VERIFICATION_ORCHESTRATOR_FACTS: 'VERIFICATION_ORCHESTRATOR',
+  VERIFICATION_EVIDENCE_ENGINE_FACTS: 'VERIFICATION_EVIDENCE_ENGINE',
+  VERIFICATION_REPORTING_ENGINE_FACTS: 'VERIFICATION_REPORTING_ENGINE',
+  UNIFIED_VERIFICATION_ENTRY_FACTS: 'UNIFIED_VERIFICATION_ENTRY',
 };
 
 export interface CapabilitySelectionResult {
@@ -186,6 +192,54 @@ export function selectCapabilities(
     selected.add('UNIFIED_DECISION_LAYER');
     selected.add('ACTION_VISIBILITY_ENGINE');
     selected.add('PROJECT_KNOWLEDGE_REASONING');
+  }
+
+  if (isUnifiedVerificationQuestion(question)) {
+    selected.add('UNIFIED_VERIFICATION_ENTRY');
+    selected.add('VERIFICATION_REPORTING_ENGINE');
+    selected.add('VERIFICATION_EVIDENCE_ENGINE');
+    selected.add('VERIFICATION_ORCHESTRATOR');
+    selected.add('VERIFICATION_REGISTRY');
+    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isVerificationReportingQuestion(question)) {
+    selected.add('VERIFICATION_REPORTING_ENGINE');
+    selected.add('VERIFICATION_EVIDENCE_ENGINE');
+    selected.add('VERIFICATION_ORCHESTRATOR');
+    selected.add('VERIFICATION_REGISTRY');
+    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isVerificationEvidenceQuestion(question)) {
+    selected.add('VERIFICATION_EVIDENCE_ENGINE');
+    selected.add('VERIFICATION_ORCHESTRATOR');
+    selected.add('VERIFICATION_REGISTRY');
+    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
   }
 
   if (isVerificationOrchestratorQuestion(question)) {
@@ -590,6 +644,45 @@ export function selectCapabilities(
   }
 
   const lowerQuestion = question.toLowerCase();
+
+  if (isUnifiedVerificationQuestion(question)) {
+    primary = 'UNIFIED_VERIFICATION_ENTRY';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Unified verification question — UNIFIED_VERIFICATION_ENTRY is the single authority surface; routes to registry, orchestrator, evidence, and reporting without direct subsystem access.',
+    };
+  }
+
+  if (isVerificationReportingQuestion(question)) {
+    primary = 'VERIFICATION_REPORTING_ENGINE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Verification reporting question — VERIFICATION_REPORTING_ENGINE transforms evidence and orchestration into structured reports; no verification execution, trust decisions, or auto-fix.',
+    };
+  }
+
+  if (isVerificationEvidenceQuestion(question)) {
+    primary = 'VERIFICATION_EVIDENCE_ENGINE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Verification evidence question — VERIFICATION_EVIDENCE_ENGINE provides evidence authority for registration, ownership, lineage, and traceability; no verification execution, trust decisions, or auto-fix.',
+    };
+  }
 
   if (isVerificationOrchestratorQuestion(question)) {
     primary = 'VERIFICATION_ORCHESTRATOR';

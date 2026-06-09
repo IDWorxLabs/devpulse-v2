@@ -371,6 +371,45 @@ export function buildReasoningVisibilityRecord(query: string): ReasoningVisibili
       'SELF_VISION_TARGET — waiting on PREVIEW_TARGET',
       'INTERACTION_TARGET — waiting on UI_INSPECTION_TARGET',
     ],
+    evidenceAuthorityBasis: `Verification evidence engine advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 16.10 evidence authority only, no provider execution or trust decisions.`,
+    evidenceInventory: [
+      'vevid-0001 — VERIFICATION_RESULT',
+      'vevid-0002 — WORLD2_REPORT',
+      'vevid-0012 — COMPLETION_REPORT',
+      'vevid-0013 — SCREENSHOT',
+    ],
+    evidenceLineage: [
+      'vevid-0002 → vevid-0012 (parent/child)',
+      'vevid-0007 → vevid-0013 (parent/child)',
+    ],
+    evidenceTraceability: [
+      'verificationTarget: 11 keys',
+      'project: 1 key',
+      'orchestration: 1 key',
+    ],
+    reportingAuthorityBasis: `Verification reporting engine advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 16.11 structured reporting only, no provider execution or trust decisions.`,
+    verificationReports: [
+      'VERIFICATION_SUMMARY_REPORT — targets and evidence summary',
+      'VERIFICATION_FAILURE_REPORT — blocked targets and reasons',
+      'VERIFICATION_EVIDENCE_REPORT — evidence-backed findings',
+      'FOUNDER_VERIFICATION_REPORT — Founder Reality export',
+    ],
+    verificationTrends: [
+      'Verification volume: historical report count',
+      'Evidence growth: registered evidence records',
+      'Failure frequency: blocked target count',
+    ],
+    unifiedVerificationBasis: `Unified verification entry advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 16.12 single authority surface, routes all verification through requestVerification().`,
+    verificationEntryChain: [
+      'vreq-0001 → uvent-0001 → vchain-0001',
+      'registry → orchestrator → evidence → reporting',
+      'state: COMPLETED — evidence and reports available',
+    ],
+    verificationEntryState: [
+      'REQUESTED → PREPARING → COMPLETED',
+      'REPORT_AVAILABLE — 10 reports linked',
+      'EVIDENCE_AVAILABLE — 13 evidence records linked',
+    ],
     visibilityOnly: true,
   };
 }

@@ -143,6 +143,16 @@ export interface ReasoningVisibilityRecord {
   parallelGroups: string[];
   blockedTargets: string[];
   waitingTargets: string[];
+  evidenceAuthorityBasis: string;
+  evidenceInventory: string[];
+  evidenceLineage: string[];
+  evidenceTraceability: string[];
+  reportingAuthorityBasis: string;
+  verificationReports: string[];
+  verificationTrends: string[];
+  unifiedVerificationBasis: string;
+  verificationEntryChain: string[];
+  verificationEntryState: string[];
   visibilityOnly: true;
 }
 

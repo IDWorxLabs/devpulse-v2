@@ -818,6 +818,27 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 16.9,
     description: 'Phase 16.9 Verification Orchestrator — coordinates verification execution planning, scheduling, and readiness; no verification execution, evidence generation, or auto-fix',
   },
+  verification_evidence_engine: {
+    domain: 'verification_evidence_engine',
+    ownerModule: 'devpulse_v2_verification_evidence_engine',
+    ownerFunction: 'getDevPulseV2VerificationEvidenceEngine',
+    phase: 16.10,
+    description: 'Phase 16.10 Verification Evidence Engine — evidence authority layer for registration, ownership, lineage, traceability, and validation; no verification execution, trust decisions, or auto-fix',
+  },
+  verification_reporting_engine: {
+    domain: 'verification_reporting_engine',
+    ownerModule: 'devpulse_v2_verification_reporting_engine',
+    ownerFunction: 'getDevPulseV2VerificationReportingEngine',
+    phase: 16.11,
+    description: 'Phase 16.11 Verification Reporting Engine — structured reporting authority from evidence, orchestration, and UVL outputs; no verification execution, trust decisions, or auto-fix',
+  },
+  unified_verification_entry: {
+    domain: 'unified_verification_entry',
+    ownerModule: 'devpulse_v2_unified_verification_entry',
+    ownerFunction: 'getDevPulseV2UnifiedVerificationEntry',
+    phase: 16.12,
+    description: 'Phase 16.12 Unified Verification Entry Point — single verification authority surface routing registry, orchestrator, evidence, and reporting; no provider execution, trust decisions, or auto-fix',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {

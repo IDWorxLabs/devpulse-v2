@@ -468,6 +468,38 @@ import type {
   VerificationOrchestrationReport,
 } from '../verification-orchestrator/types.js';
 import {
+  getVerificationEvidenceContext,
+  getVerificationEvidenceDiagnostics,
+  resetVerificationEvidenceDiagnostics,
+  resetVerificationEvidenceReportCounterForTests,
+  resetVerificationEvidenceStoreForTests,
+} from '../verification-evidence-engine/index.js';
+import { isVerificationEvidenceQuestion } from '../verification-evidence-engine/verification-evidence-types.js';
+import type {
+  VerificationEvidenceDiagnostics,
+  EvidenceSummaryReport,
+} from '../verification-evidence-engine/verification-evidence-types.js';
+import {
+  getVerificationReportingContext,
+  getVerificationReportingDiagnostics,
+  resetVerificationReportingDiagnostics,
+  resetVerificationReportingAuthorityCounterForTests,
+  resetVerificationReportStoreForTests,
+  resetVerificationHistoryForTests,
+} from '../verification-reporting-engine/index.js';
+import { isVerificationReportingQuestion } from '../verification-reporting-engine/verification-report-types.js';
+import type { VerificationReportingDiagnostics } from '../verification-reporting-engine/verification-report-types.js';
+import {
+  getUnifiedVerificationContext,
+  getVerificationEntryDiagnostics,
+  resetVerificationEntryDiagnostics,
+  resetVerificationEntryReportCounterForTests,
+  resetUnifiedVerificationEntryForTests,
+  resetVerificationEntrySessionsForTests,
+} from '../unified-verification-entry/index.js';
+import { isUnifiedVerificationQuestion } from '../unified-verification-entry/unified-verification-types.js';
+import type { UnifiedVerificationEntryDiagnostics } from '../unified-verification-entry/unified-verification-types.js';
+import {
   getTimelineIntelligenceDiagnostics,
   resetTimelineIntelligenceForTests,
   timelineIntelligenceKey,
@@ -1078,6 +1110,28 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
   const verificationOrchestratorReports: VerificationOrchestrationReport[] | undefined =
     blocked || !vorchCtx ? undefined : [vorchCtx.orchestrationReport];
 
+  const vevidCtx =
+    blocked || !isVerificationEvidenceQuestion(message) ? null : getVerificationEvidenceContext(message);
+  const vevidDiag = getVerificationEvidenceDiagnostics();
+  const verificationEvidenceDiagnostics: VerificationEvidenceDiagnostics | undefined =
+    blocked || !vevidDiag.evidenceAuthorityActive ? undefined : vevidDiag;
+  const verificationEvidenceReports: EvidenceSummaryReport[] | undefined =
+    blocked || !vevidCtx ? undefined : [vevidCtx.evidenceSummaryReport];
+
+  const vrptCtx =
+    blocked || !isVerificationReportingQuestion(message) ? null : getVerificationReportingContext(message);
+  const vrptDiag = getVerificationReportingDiagnostics();
+  const verificationReportingDiagnostics: VerificationReportingDiagnostics | undefined =
+    blocked || !vrptDiag.reportingAuthorityActive ? undefined : vrptDiag;
+  const verificationReportingReports = blocked || !vrptCtx ? undefined : vrptCtx.reports;
+
+  const uventCtx =
+    blocked || !isUnifiedVerificationQuestion(message) ? null : getUnifiedVerificationContext(message);
+  const uventDiag = getVerificationEntryDiagnostics();
+  const unifiedVerificationEntryDiagnostics: UnifiedVerificationEntryDiagnostics | undefined =
+    blocked || !uventDiag.entryAuthorityActive ? undefined : uventDiag;
+  const unifiedVerificationResponses = blocked || !uventCtx ? undefined : [uventCtx.response];
+
   const vregCtx =
     blocked || !isVerificationRegistryQuestion(message) ? null : getVerificationRegistryContext(message);
   const vregDiag = getVerificationRegistryDiagnostics();
@@ -1179,6 +1233,12 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
     visualVerificationReports,
     verificationOrchestratorDiagnostics,
     verificationOrchestratorReports,
+    verificationEvidenceDiagnostics,
+    verificationEvidenceReports,
+    verificationReportingDiagnostics,
+    verificationReportingReports,
+    unifiedVerificationEntryDiagnostics,
+    unifiedVerificationResponses,
     verificationRegistryDiagnostics,
     verificationRegistryReports,
     verificationRuntimeDiagnostics,
@@ -1459,6 +1519,17 @@ export function resetDevPulseV2CommandCenterBrainForTests(): DevPulseV2CommandCe
   resetVerificationOrchestratorReportCounterForTests();
   resetVerificationPlanCounterForTests();
   resetParallelGroupCounterForTests();
+  resetVerificationEvidenceDiagnostics();
+  resetVerificationEvidenceReportCounterForTests();
+  resetVerificationEvidenceStoreForTests();
+  resetVerificationReportingDiagnostics();
+  resetVerificationReportingAuthorityCounterForTests();
+  resetVerificationReportStoreForTests();
+  resetVerificationHistoryForTests();
+  resetVerificationEntryDiagnostics();
+  resetVerificationEntryReportCounterForTests();
+  resetUnifiedVerificationEntryForTests();
+  resetVerificationEntrySessionsForTests();
   resetVerificationRegistryDiagnostics();
   resetVerificationRegistryReportCounterForTests();
   resetVerificationTargetRegistryForTests();

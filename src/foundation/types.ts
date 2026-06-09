@@ -173,7 +173,10 @@ export type OwnershipDomain =
   | 'visual_verification_engine'
   | 'unified_verification_lab_runtime'
   | 'verification_registry'
-  | 'verification_orchestrator';
+  | 'verification_orchestrator'
+  | 'verification_evidence_engine'
+  | 'verification_reporting_engine'
+  | 'unified_verification_entry';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

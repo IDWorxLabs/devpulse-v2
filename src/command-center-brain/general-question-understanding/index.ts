@@ -73,6 +73,12 @@ import { processVerificationRegistryRequest } from '../../verification-registry/
 import { isVerificationRegistryQuestion } from '../../verification-registry/types.js';
 import { processVerificationOrchestratorRequest } from '../../verification-orchestrator/index.js';
 import { isVerificationOrchestratorQuestion } from '../../verification-orchestrator/types.js';
+import { processVerificationEvidenceRequest } from '../../verification-evidence-engine/index.js';
+import { isVerificationEvidenceQuestion } from '../../verification-evidence-engine/verification-evidence-types.js';
+import { processUnifiedVerificationRequest } from '../../unified-verification-entry/index.js';
+import { isUnifiedVerificationQuestion } from '../../unified-verification-entry/unified-verification-types.js';
+import { processVerificationReportingRequest } from '../../verification-reporting-engine/index.js';
+import { isVerificationReportingQuestion } from '../../verification-reporting-engine/verification-report-types.js';
 import { detectContextNeeds, needsUnavailableDevelopmentContext } from './context-need-detector.js';
 import {
   GENERAL_QUESTION_UNDERSTANDING_OWNER_MODULE,
@@ -226,6 +232,63 @@ export function executeGeneralQuestionRouting(
         limitationMessage: limitationMessage ?? undefined,
       }),
       usedCapabilities: ['PORTFOLIO_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'UNIFIED_VERIFICATION_ENTRY' ||
+    (plan.selectedCapabilities.includes('UNIFIED_VERIFICATION_ENTRY') &&
+      isUnifiedVerificationQuestion(deps.message))
+  ) {
+    const uvent = processUnifiedVerificationRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: uvent.response.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['UNIFIED_VERIFICATION_ENTRY', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'VERIFICATION_REPORTING_ENGINE' ||
+    (plan.selectedCapabilities.includes('VERIFICATION_REPORTING_ENGINE') &&
+      isVerificationReportingQuestion(deps.message))
+  ) {
+    const vrpt = processVerificationReportingRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: vrpt.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['VERIFICATION_REPORTING_ENGINE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'VERIFICATION_EVIDENCE_ENGINE' ||
+    (plan.selectedCapabilities.includes('VERIFICATION_EVIDENCE_ENGINE') &&
+      isVerificationEvidenceQuestion(deps.message))
+  ) {
+    const vevid = processVerificationEvidenceRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: vevid.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['VERIFICATION_EVIDENCE_ENGINE', ...usedCapabilities],
       routingPlan: plan,
     };
   }

@@ -86,6 +86,16 @@ export interface ActionCandidate {
   verificationPlanCount: number;
   readyTargetCount: number;
   blockedTargetCount: number;
+  evidenceAuthorityId: string;
+  evidenceCount: number;
+  evidenceCategoryCount: number;
+  lineageLinkCount: number;
+  reportingAuthorityId: string;
+  verificationReportCount: number;
+  verificationReportTypeCount: number;
+  unifiedVerificationEntryId: string;
+  verificationRequestCount: number;
+  verificationEntrySessionCount: number;
   applyAllowed: false;
   executionAllowed: false;
   visibilityOnly: true;

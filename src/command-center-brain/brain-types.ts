@@ -282,6 +282,12 @@ export interface BrainResponseResult {
   verificationRegistryReports?: import('../verification-registry/types.js').VerificationRegistryReport[];
   verificationOrchestratorDiagnostics?: import('../verification-orchestrator/types.js').VerificationOrchestratorDiagnostics;
   verificationOrchestratorReports?: import('../verification-orchestrator/types.js').VerificationOrchestrationReport[];
+  verificationEvidenceDiagnostics?: import('../verification-evidence-engine/verification-evidence-types.js').VerificationEvidenceDiagnostics;
+  verificationEvidenceReports?: import('../verification-evidence-engine/verification-evidence-types.js').EvidenceSummaryReport[];
+  verificationReportingDiagnostics?: import('../verification-reporting-engine/verification-report-types.js').VerificationReportingDiagnostics;
+  verificationReportingReports?: import('../verification-reporting-engine/verification-report-types.js').VerificationReport[];
+  unifiedVerificationEntryDiagnostics?: import('../unified-verification-entry/unified-verification-types.js').UnifiedVerificationEntryDiagnostics;
+  unifiedVerificationResponses?: import('../unified-verification-entry/unified-verification-types.js').VerificationResponse[];
   pipelineStages: BrainPipelineStage[];
   operatorFeedEvents: OperatorFeedEvent[];
   confirmation: BrainConfirmation;

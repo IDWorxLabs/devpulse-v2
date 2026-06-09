@@ -32,6 +32,9 @@ import { buildVisualVerificationFailureContext } from '../visual-verification-en
 import { buildVerificationRuntimeFailureContext } from '../unified-verification-lab/verification-failure-bridge.js';
 import { buildVerificationRegistryFailureContext } from '../verification-registry/verification-registry-failure-bridge.js';
 import { buildVerificationOrchestratorFailureContext } from '../verification-orchestrator/verification-orchestrator-failure-bridge.js';
+import { buildVerificationEvidenceFailureContext } from '../verification-evidence-engine/verification-evidence-failure-bridge.js';
+import { buildVerificationReportingFailureContext } from '../verification-reporting-engine/verification-report-builder.js';
+import { buildUnifiedVerificationFailureContext } from '../unified-verification-entry/verification-entry-report.js';
 import type { FailureRecord } from './failure-visibility-types.js';
 
 let failureCounter = 0;
@@ -379,6 +382,45 @@ export function buildFailureRecords(query: string): FailureRecord[] {
         sourceSystem: vorchf.sourceSystem,
         affectedSystems: ['verification_orchestrator', 'failure_visibility_engine'],
         blockedCapabilities: ['VERIFICATION_ORCHESTRATOR'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const vevidf of buildVerificationEvidenceFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: vevidf.title,
+        description: vevidf.description,
+        sourceSystem: vevidf.sourceSystem,
+        affectedSystems: ['verification_evidence_engine', 'failure_visibility_engine'],
+        blockedCapabilities: ['VERIFICATION_EVIDENCE_ENGINE'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const vrptf of buildVerificationReportingFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: vrptf.title,
+        description: vrptf.description,
+        sourceSystem: vrptf.sourceSystem,
+        affectedSystems: ['verification_reporting_engine', 'failure_visibility_engine'],
+        blockedCapabilities: ['VERIFICATION_REPORTING_ENGINE'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const uventf of buildUnifiedVerificationFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: uventf.title,
+        description: uventf.description,
+        sourceSystem: uventf.sourceSystem,
+        affectedSystems: ['unified_verification_entry', 'failure_visibility_engine'],
+        blockedCapabilities: ['UNIFIED_VERIFICATION_ENTRY'],
         dependencyImpacts: depImpacts,
       }),
     );

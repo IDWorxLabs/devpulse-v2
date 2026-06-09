@@ -274,6 +274,56 @@ export const VERIFICATION_ORCHESTRATOR_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_ORCHESTRATOR_OPERATOR_FEED', module: 'verification_orchestrator', phase: 16.9, description: 'Operator feed stages for verification orchestrator', extensionOnly: true },
 ] as const;
 
+export const VERIFICATION_EVIDENCE_ENGINE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'VERIFICATION_EVIDENCE_TYPES', module: 'verification_evidence_engine', phase: 16.10, description: 'Verification evidence engine types and models', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_STORE', module: 'verification_evidence_engine', phase: 16.10, description: 'Evidence authority store without execution', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_OWNERSHIP', module: 'verification_evidence_engine', phase: 16.10, description: 'Evidence ownership registry metadata', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_LINEAGE', module: 'verification_evidence_engine', phase: 16.10, description: 'Evidence lineage and relationship tracking', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_TRACEABILITY', module: 'verification_evidence_engine', phase: 16.10, description: 'Evidence traceability index and lookup', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_QUERY', module: 'verification_evidence_engine', phase: 16.10, description: 'Evidence query and filtering', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_VALIDATOR', module: 'verification_evidence_engine', phase: 16.10, description: 'Evidence integrity validation gates', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_REPORT_BUILDER', module: 'verification_evidence_engine', phase: 16.10, description: 'Evidence report composition', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_DIAGNOSTICS', module: 'verification_evidence_engine', phase: 16.10, description: 'Evidence engine diagnostics tracker', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_FAILURE_BRIDGE', module: 'verification_evidence_engine', phase: 16.10, description: 'Evidence failure context bridge', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_ROUTING', module: 'verification_evidence_engine', phase: 16.10, description: 'Command Center routing for evidence questions', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_OPERATOR_FEED', module: 'verification_evidence_engine', phase: 16.10, description: 'Operator feed stages for verification evidence', extensionOnly: true },
+] as const;
+
+export const VERIFICATION_REPORTING_ENGINE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'VERIFICATION_REPORT_TYPES', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification reporting engine types and models', extensionOnly: true },
+  { rowId: 'VERIFICATION_REPORT_STORE', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification report authority store', extensionOnly: true },
+  { rowId: 'VERIFICATION_REPORT_BUILDER', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification report builder orchestrator', extensionOnly: true },
+  { rowId: 'VERIFICATION_SUMMARY_BUILDER', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification summary report builder', extensionOnly: true },
+  { rowId: 'VERIFICATION_FAILURE_REPORT_BUILDER', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification failure report builder', extensionOnly: true },
+  { rowId: 'VERIFICATION_EVIDENCE_REPORT_BUILDER', module: 'verification_reporting_engine', phase: 16.11, description: 'Evidence-backed verification report builder', extensionOnly: true },
+  { rowId: 'VERIFICATION_SESSION_REPORT_BUILDER', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification session report builder', extensionOnly: true },
+  { rowId: 'VERIFICATION_HISTORY_REPORT_BUILDER', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification history report builder', extensionOnly: true },
+  { rowId: 'VERIFICATION_TREND_REPORT_BUILDER', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification trend report builder', extensionOnly: true },
+  { rowId: 'VERIFICATION_REPORT_QUERY', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification report query and filtering', extensionOnly: true },
+  { rowId: 'VERIFICATION_REPORT_DIAGNOSTICS', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification reporting diagnostics tracker', extensionOnly: true },
+  { rowId: 'VERIFICATION_REPORT_VALIDATOR', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification report validation gates', extensionOnly: true },
+  { rowId: 'VERIFICATION_REPORT_EXPORT', module: 'verification_reporting_engine', phase: 16.11, description: 'Verification report export layer', extensionOnly: true },
+  { rowId: 'VERIFICATION_REPORTING_ROUTING', module: 'verification_reporting_engine', phase: 16.11, description: 'Command Center routing for reporting questions', extensionOnly: true },
+  { rowId: 'VERIFICATION_REPORTING_OPERATOR_FEED', module: 'verification_reporting_engine', phase: 16.11, description: 'Operator feed stages for verification reporting', extensionOnly: true },
+] as const;
+
+export const UNIFIED_VERIFICATION_ENTRY_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'UNIFIED_VERIFICATION_TYPES', module: 'unified_verification_entry', phase: 16.12, description: 'Unified verification entry types and models', extensionOnly: true },
+  { rowId: 'UNIFIED_VERIFICATION_ENTRY', module: 'unified_verification_entry', phase: 16.12, description: 'Unified verification entry point orchestrator', extensionOnly: true },
+  { rowId: 'VERIFICATION_REQUEST_ROUTER', module: 'unified_verification_entry', phase: 16.12, description: 'Verification request router to subsystems', extensionOnly: true },
+  { rowId: 'VERIFICATION_SCOPE_BUILDER', module: 'unified_verification_entry', phase: 16.12, description: 'Verification scope builder', extensionOnly: true },
+  { rowId: 'VERIFICATION_CONTEXT_BUILDER', module: 'unified_verification_entry', phase: 16.12, description: 'Verification context aggregation builder', extensionOnly: true },
+  { rowId: 'VERIFICATION_SESSION_BUILDER', module: 'unified_verification_entry', phase: 16.12, description: 'Verification session builder without execution', extensionOnly: true },
+  { rowId: 'VERIFICATION_STATE_MANAGER', module: 'unified_verification_entry', phase: 16.12, description: 'Verification state manager', extensionOnly: true },
+  { rowId: 'VERIFICATION_HISTORY_MANAGER', module: 'unified_verification_entry', phase: 16.12, description: 'Verification history manager', extensionOnly: true },
+  { rowId: 'VERIFICATION_RESPONSE_BUILDER', module: 'unified_verification_entry', phase: 16.12, description: 'Unified verification response builder', extensionOnly: true },
+  { rowId: 'VERIFICATION_ENTRY_VALIDATOR', module: 'unified_verification_entry', phase: 16.12, description: 'Verification entry validation gates', extensionOnly: true },
+  { rowId: 'VERIFICATION_ENTRY_DIAGNOSTICS', module: 'unified_verification_entry', phase: 16.12, description: 'Verification entry diagnostics tracker', extensionOnly: true },
+  { rowId: 'VERIFICATION_ENTRY_REPORT', module: 'unified_verification_entry', phase: 16.12, description: 'Verification entry report composition', extensionOnly: true },
+  { rowId: 'UNIFIED_VERIFICATION_ENTRY_ROUTING', module: 'unified_verification_entry', phase: 16.12, description: 'Command Center routing for unified verification questions', extensionOnly: true },
+  { rowId: 'UNIFIED_VERIFICATION_ENTRY_OPERATOR_FEED', module: 'unified_verification_entry', phase: 16.12, description: 'Operator feed stages for unified verification entry', extensionOnly: true },
+] as const;
+
 export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   ...WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
@@ -289,6 +339,9 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...UNIFIED_VERIFICATION_LAB_RUNTIME_UVL_ROWS,
   ...VERIFICATION_REGISTRY_UVL_ROWS,
   ...VERIFICATION_ORCHESTRATOR_UVL_ROWS,
+  ...VERIFICATION_EVIDENCE_ENGINE_UVL_ROWS,
+  ...VERIFICATION_REPORTING_ENGINE_UVL_ROWS,
+  ...UNIFIED_VERIFICATION_ENTRY_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -345,6 +398,18 @@ export function listVerificationRegistryUvlRows(): UvlRow[] {
 
 export function listVerificationOrchestratorUvlRows(): UvlRow[] {
   return [...VERIFICATION_ORCHESTRATOR_UVL_ROWS];
+}
+
+export function listVerificationEvidenceEngineUvlRows(): UvlRow[] {
+  return [...VERIFICATION_EVIDENCE_ENGINE_UVL_ROWS];
+}
+
+export function listVerificationReportingEngineUvlRows(): UvlRow[] {
+  return [...VERIFICATION_REPORTING_ENGINE_UVL_ROWS];
+}
+
+export function listUnifiedVerificationEntryUvlRows(): UvlRow[] {
+  return [...UNIFIED_VERIFICATION_ENTRY_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

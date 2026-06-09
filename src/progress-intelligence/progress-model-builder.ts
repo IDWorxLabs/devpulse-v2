@@ -23,6 +23,9 @@ import { isVisualVerificationQuestion } from '../visual-verification-engine/type
 import { isUvlRuntimeQuestion } from '../unified-verification-lab/types.js';
 import { isVerificationRegistryQuestion } from '../verification-registry/types.js';
 import { isVerificationOrchestratorQuestion } from '../verification-orchestrator/types.js';
+import { isVerificationEvidenceQuestion } from '../verification-evidence-engine/verification-evidence-types.js';
+import { isVerificationReportingQuestion } from '../verification-reporting-engine/verification-report-types.js';
+import { isUnifiedVerificationQuestion } from '../unified-verification-entry/unified-verification-types.js';
 import type { ProgressRecord } from './progress-intelligence-types.js';
 
 let progressCounter = 0;
@@ -225,6 +228,30 @@ export function buildProgressRecords(query: string): ProgressRecord[] {
       ...records[0],
       verificationOrchestrationState: 'READY',
       verificationOrchestrationNote: 'Verification Orchestration Ready — execution plan and schedule defined; no provider execution',
+    };
+  }
+
+  if (isVerificationEvidenceQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      verificationEvidenceState: 'READY',
+      verificationEvidenceNote: 'Verification Evidence Ready — evidence registered, ownership assigned, lineage and traceability linked; no provider execution',
+    };
+  }
+
+  if (isVerificationReportingQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      verificationReportingState: 'READY',
+      verificationReportingNote: 'Verification Reporting Ready — structured reports generated from evidence and orchestration; no provider execution',
+    };
+  }
+
+  if (isUnifiedVerificationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      unifiedVerificationEntryState: 'READY',
+      unifiedVerificationEntryNote: 'Unified Verification Entry Ready — single authority surface via requestVerification(); no direct subsystem access',
     };
   }
 

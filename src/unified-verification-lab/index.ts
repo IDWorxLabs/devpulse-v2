@@ -97,9 +97,15 @@ export {
   buildUvlPanelSnapshot,
   buildVerificationRegistryPanelSnapshot,
   buildVerificationOrchestratorPanelSnapshot,
+  buildVerificationEvidencePanelSnapshot,
+  buildVerificationReportingPanelSnapshot,
+  buildUnifiedVerificationEntryPanelSnapshot,
   type UvlPanelSnapshot,
   type VerificationRegistryPanelSnapshot,
   type VerificationOrchestratorPanelSnapshot,
+  type VerificationEvidencePanelSnapshot,
+  type VerificationReportingPanelSnapshot,
+  type UnifiedVerificationEntryPanelSnapshot,
 } from './uvl-panel-registry.js';
 
 export function getDevPulseV2UnifiedVerificationLabRuntime(): {
@@ -131,6 +137,9 @@ export {
   UNIFIED_VERIFICATION_LAB_RUNTIME_UVL_ROWS,
   VERIFICATION_REGISTRY_UVL_ROWS,
   VERIFICATION_ORCHESTRATOR_UVL_ROWS,
+  VERIFICATION_EVIDENCE_ENGINE_UVL_ROWS,
+  VERIFICATION_REPORTING_ENGINE_UVL_ROWS,
+  UNIFIED_VERIFICATION_ENTRY_UVL_ROWS,
   ALL_UVL_ROWS,
   listWorld2BuilderPacketExecutionUvlRows,
   listWorld2ControlledApplyRuntimeUvlRows,
@@ -146,6 +155,9 @@ export {
   listUnifiedVerificationLabRuntimeUvlRows,
   listVerificationRegistryUvlRows,
   listVerificationOrchestratorUvlRows,
+  listVerificationEvidenceEngineUvlRows,
+  listVerificationReportingEngineUvlRows,
+  listUnifiedVerificationEntryUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

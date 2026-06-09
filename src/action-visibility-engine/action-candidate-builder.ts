@@ -86,6 +86,16 @@ function executionFieldsForAction(
   verificationPlanCount: number;
   readyTargetCount: number;
   blockedTargetCount: number;
+  evidenceAuthorityId: string;
+  evidenceCount: number;
+  evidenceCategoryCount: number;
+  lineageLinkCount: number;
+  reportingAuthorityId: string;
+  verificationReportCount: number;
+  verificationReportTypeCount: number;
+  unifiedVerificationEntryId: string;
+  verificationRequestCount: number;
+  verificationEntrySessionCount: number;
   applyAllowed: false;
   executionAllowed: false;
 } {
@@ -157,6 +167,16 @@ function executionFieldsForAction(
   const verificationPlanCount = blocked ? 0 : 11;
   const readyTargetCount = blocked ? 0 : 3;
   const blockedTargetCount = blocked ? 11 : 0;
+  const evidenceAuthorityId = `vevauth-${actionId.replace('act-', '')}`;
+  const evidenceCount = blocked ? 0 : 13;
+  const evidenceCategoryCount = blocked ? 0 : 10;
+  const lineageLinkCount = blocked ? 0 : 4;
+  const reportingAuthorityId = `vrptauth-${actionId.replace('act-', '')}`;
+  const verificationReportCount = blocked ? 0 : 10;
+  const verificationReportTypeCount = blocked ? 0 : 10;
+  const unifiedVerificationEntryId = `uventauth-${actionId.replace('act-', '')}`;
+  const verificationRequestCount = blocked ? 0 : 1;
+  const verificationEntrySessionCount = blocked ? 0 : 1;
   return {
     executionReadiness: `${level} (${score}) — ${blockerCount} visible blockers; Phase 14.1 readiness-only, no execution.`,
     executionReady: !blocked && score >= 45 && blockerCount < 4,
@@ -222,6 +242,16 @@ function executionFieldsForAction(
     verificationPlanCount,
     readyTargetCount,
     blockedTargetCount,
+    evidenceAuthorityId,
+    evidenceCount,
+    evidenceCategoryCount,
+    lineageLinkCount,
+    reportingAuthorityId,
+    verificationReportCount,
+    verificationReportTypeCount,
+    unifiedVerificationEntryId,
+    verificationRequestCount,
+    verificationEntrySessionCount,
     applyAllowed: false,
     executionAllowed: false,
   };
