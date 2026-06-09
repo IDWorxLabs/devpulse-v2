@@ -136,7 +136,10 @@ export type OwnershipDomain =
   | 'command_center_runtime_shell'
   | 'command_center_brain'
   | 'cross_system_awareness'
-  | 'shared_memory_layer';
+  | 'shared_memory_layer'
+  | 'project_understanding_engine'
+  | 'general_question_understanding'
+  | 'timeline_intelligence';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

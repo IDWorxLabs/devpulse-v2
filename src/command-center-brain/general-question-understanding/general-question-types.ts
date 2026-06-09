@@ -1,0 +1,134 @@
+/**
+ * General Question Understanding — types for Phase 11.4C routing.
+ */
+
+export const GENERAL_QUESTION_UNDERSTANDING_PASS_TOKEN =
+  'DEVPULSE_V2_GENERAL_QUESTION_UNDERSTANDING_ROUTER_V1_PASS';
+export const GENERAL_QUESTION_UNDERSTANDING_OWNER_MODULE =
+  'devpulse_v2_general_question_understanding';
+
+export type QuestionDimension =
+  | 'PROJECT'
+  | 'SYSTEM'
+  | 'ROADMAP'
+  | 'RISK'
+  | 'DEPENDENCY'
+  | 'IMPACT'
+  | 'MEMORY'
+  | 'ARCHITECTURE'
+  | 'PLANNING'
+  | 'DEVELOPMENT'
+  | 'DEBUGGING'
+  | 'EXECUTION'
+  | 'UNKNOWN';
+
+export type ContextNeed =
+  | 'PROJECT_PROFILE'
+  | 'PROJECT_FACTS'
+  | 'SHARED_MEMORY'
+  | 'CROSS_SYSTEM_RELATIONSHIPS'
+  | 'ROADMAP_STATE'
+  | 'OWNERSHIP_REGISTRY'
+  | 'RISK_FACTS'
+  | 'MISSING_CAPABILITIES'
+  | 'BLOCKERS'
+  | 'RUNTIME_STATUS'
+  | 'DEVELOPMENT_KNOWLEDGE'
+  | 'DEBUG_CONTEXT'
+  | 'TIMELINE_STATE';
+
+export type ReasoningMode =
+  | 'DESCRIPTIVE'
+  | 'DIAGNOSTIC'
+  | 'PLANNING'
+  | 'RISK_ASSESSMENT'
+  | 'DEPENDENCY_ANALYSIS'
+  | 'IMPACT_ANALYSIS'
+  | 'COMPARISON'
+  | 'PRIORITIZATION'
+  | 'EXPLANATION'
+  | 'LIMITATION_DISCLOSURE';
+
+export type SelectedCapability =
+  | 'PROJECT_UNDERSTANDING'
+  | 'PROJECT_KNOWLEDGE_REASONING'
+  | 'SHARED_MEMORY_RECALL'
+  | 'CROSS_SYSTEM_AWARENESS'
+  | 'ROADMAP_AWARENESS'
+  | 'SYSTEM_AWARENESS'
+  | 'TRUST_CONTEXT'
+  | 'GOVERNANCE_CONTEXT'
+  | 'DEVELOPMENT_REASONING'
+  | 'DEBUGGING_REASONING'
+  | 'EXECUTION_REASONING'
+  | 'TIMELINE_INTELLIGENCE';
+
+export interface QuestionRoutingPlan {
+  question: string;
+  dimensions: QuestionDimension[];
+  contextNeeds: ContextNeed[];
+  reasoningModes: ReasoningMode[];
+  selectedCapabilities: SelectedCapability[];
+  unavailableCapabilities: SelectedCapability[];
+  primaryCapability: SelectedCapability | null;
+  secondaryCapabilities: SelectedCapability[];
+  confidence: 'HIGH' | 'MEDIUM' | 'LOW';
+  routingReason: string;
+  timestamp: number;
+}
+
+export interface GeneralQuestionRoutingDiagnostics {
+  lastQuestionDimensions: string[];
+  lastContextNeeds: string[];
+  lastReasoningModes: string[];
+  lastCapabilitiesSelected: string[];
+  unavailableCapabilities: string[];
+  routingConfidence: string;
+  routingReason: string;
+}
+
+export interface GeneralRoutingExecutionResult {
+  ownsResponse: boolean;
+  responseText: string;
+  usedCapabilities: SelectedCapability[];
+  routingPlan: QuestionRoutingPlan;
+}
+
+export const GENERAL_QUESTION_FEED_STAGES = [
+  'Understanding Question',
+  'Detecting Context Needs',
+  'Selecting Reasoning Mode',
+  'Selecting Capabilities',
+  'Gathering Relevant Facts',
+  'Composing Answer',
+] as const;
+
+export const UNAVAILABLE_CAPABILITIES: SelectedCapability[] = [
+  'DEVELOPMENT_REASONING',
+  'DEBUGGING_REASONING',
+  'EXECUTION_REASONING',
+];
+
+export const PROJECT_SEMANTIC_SIGNALS = [
+  'devpulse',
+  'this project',
+  'weakness',
+  'weak at',
+  'strong at',
+  'holding back',
+  'furthest behind',
+  'focus before',
+  'execution not connected',
+  'missing capability',
+  'most important',
+  'six months',
+  'autonomous building',
+  'fail as a product',
+  'riskiest',
+  'not be built yet',
+  'maturity',
+  'readiness',
+  'blocker',
+  'cloud runtime',
+  'foundation is most important',
+] as const;

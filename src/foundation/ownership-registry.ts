@@ -559,6 +559,27 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 11.3,
     description: 'Phase 11.3 shared memory layer — in-memory structured DevPulse memory for Command Center Brain, read/store/recall only, no persistence, execution, or file modification',
   },
+  project_understanding_engine: {
+    domain: 'project_understanding_engine',
+    ownerModule: 'devpulse_v2_project_understanding_engine',
+    ownerFunction: 'getDevPulseV2ProjectUnderstandingEngine',
+    phase: 11.4,
+    description: 'Phase 11.4 project understanding engine — structured DevPulse project comprehension for Command Center Brain, intelligence only, no execution or project modification',
+  },
+  general_question_understanding: {
+    domain: 'general_question_understanding',
+    ownerModule: 'devpulse_v2_general_question_understanding',
+    ownerFunction: 'understandGeneralQuestion',
+    phase: 11.4,
+    description: 'Phase 11.4C general question understanding and reasoning router — orchestrates existing intelligence engines above legacy classifier routing, no duplicate brain or execution',
+  },
+  timeline_intelligence: {
+    domain: 'timeline_intelligence',
+    ownerModule: 'devpulse_v2_timeline_intelligence',
+    ownerFunction: 'getDevPulseV2TimelineIntelligence',
+    phase: 11.5,
+    description: 'Phase 11.5 timeline intelligence foundation — past/present/future understanding for phases, milestones, blockers, and roadmap sequence, intelligence only',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {

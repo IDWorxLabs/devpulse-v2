@@ -2,9 +2,18 @@
 
 import type { CrossSystemAwarenessSnapshot } from './cross-system-awareness/relationship-types.js';
 import type { SharedMemoryContext } from '../shared-memory/shared-memory-types.js';
+import type { ProjectUnderstandingContext, ProjectUnderstandingDiagnostics } from '../project-understanding/project-understanding-types.js';
+import type {
+  GeneralQuestionRoutingDiagnostics,
+  QuestionRoutingPlan,
+} from './general-question-understanding/general-question-types.js';
+import type { TimelineIntelligenceDiagnostics } from '../timeline-intelligence/timeline-types.js';
 
 export type { CrossSystemAwarenessSnapshot };
 export type { SharedMemoryContext };
+export type { ProjectUnderstandingContext, ProjectUnderstandingDiagnostics };
+export type { GeneralQuestionRoutingDiagnostics, QuestionRoutingPlan };
+export type { TimelineIntelligenceDiagnostics };
 
 export type BrainRequestCategory =
   | 'ROADMAP'
@@ -17,6 +26,7 @@ export type BrainRequestCategory =
   | 'IMPACT'
   | 'RELATIONSHIP'
   | 'MEMORY'
+  | 'PROJECT_UNDERSTANDING'
   | 'GENERAL';
 
 export type BrainPipelineStage =
@@ -25,6 +35,8 @@ export type BrainPipelineStage =
   | 'SYSTEM_AWARENESS_CHECKED'
   | 'CROSS_SYSTEM_AWARENESS_CHECKED'
   | 'SHARED_MEMORY_CHECKED'
+  | 'PROJECT_UNDERSTANDING_CHECKED'
+  | 'GENERAL_QUESTION_UNDERSTANDING_CHECKED'
   | 'ROADMAP_AWARENESS_CHECKED'
   | 'RESPONSE_GENERATED'
   | 'BRAIN_RESPONSE_READY'
@@ -35,13 +47,34 @@ export type OperatorFeedEventType =
   | 'Loading Memory'
   | 'Searching Memory'
   | 'Memory Context Ready'
+  | 'Understanding Project'
+  | 'Gathering Facts'
+  | 'Evaluating Risks'
+  | 'Analyzing Dependencies'
+  | 'Generating Conclusions'
+  | 'Loading Project Context'
+  | 'Analyzing Project Status'
+  | 'Checking Project Gaps'
+  | 'Checking Project Risks'
+  | 'Project Recommendation Ready'
   | 'Checking Systems'
   | 'Checking Roadmap'
   | 'Loading Relationships'
   | 'Checking Dependencies'
   | 'Performing Impact Analysis'
   | 'Generating Response'
-  | 'Response Ready';
+  | 'Response Ready'
+  | 'Understanding Question'
+  | 'Detecting Context Needs'
+  | 'Selecting Reasoning Mode'
+  | 'Selecting Capabilities'
+  | 'Gathering Relevant Facts'
+  | 'Composing Answer'
+  | 'Loading Timeline Context'
+  | 'Analyzing Timeline'
+  | 'Checking Milestones'
+  | 'Checking Blockers'
+  | 'Generating Timeline Conclusions';
 
 export interface BrainRequestInput {
   message: string;
@@ -106,6 +139,11 @@ export interface BrainResponseResult {
   crossSystemDiagnostics?: CrossSystemDiagnostics;
   crossSystemRoutingReport?: CrossSystemRoutingReport;
   sharedMemoryContext?: SharedMemoryContext;
+  projectUnderstandingContext?: ProjectUnderstandingContext;
+  projectUnderstandingDiagnostics?: ProjectUnderstandingDiagnostics;
+  generalQuestionRoutingPlan?: QuestionRoutingPlan;
+  generalQuestionDiagnostics?: GeneralQuestionRoutingDiagnostics;
+  timelineIntelligenceDiagnostics?: TimelineIntelligenceDiagnostics;
   pipelineStages: BrainPipelineStage[];
   operatorFeedEvents: OperatorFeedEvent[];
   confirmation: BrainConfirmation;
@@ -148,6 +186,7 @@ export const BRAIN_REQUEST_CATEGORIES: readonly BrainRequestCategory[] = [
   'IMPACT',
   'RELATIONSHIP',
   'MEMORY',
+  'PROJECT_UNDERSTANDING',
   'GENERAL',
 ] as const;
 
@@ -157,6 +196,8 @@ export const BRAIN_PIPELINE_SEQUENCE: readonly BrainPipelineStage[] = [
   'SYSTEM_AWARENESS_CHECKED',
   'CROSS_SYSTEM_AWARENESS_CHECKED',
   'SHARED_MEMORY_CHECKED',
+  'PROJECT_UNDERSTANDING_CHECKED',
+  'GENERAL_QUESTION_UNDERSTANDING_CHECKED',
   'ROADMAP_AWARENESS_CHECKED',
   'RESPONSE_GENERATED',
   'BRAIN_RESPONSE_READY',
@@ -179,6 +220,17 @@ export function withSharedMemoryFeedStages(
     ...sequence.slice(insertAt),
   ];
 }
+
+export const PROJECT_UNDERSTANDING_FEED: readonly OperatorFeedEventType[] = [
+  'Classifying Request',
+  'Understanding Project',
+  'Gathering Facts',
+  'Evaluating Risks',
+  'Analyzing Dependencies',
+  'Generating Conclusions',
+  'Generating Response',
+  'Response Ready',
+] as const;
 
 export const OPERATOR_FEED_EVENT_SEQUENCE: readonly OperatorFeedEventType[] = [
   'Classifying Request',
@@ -208,6 +260,25 @@ export const CROSS_SYSTEM_FEED_RELATIONSHIP: readonly OperatorFeedEventType[] = 
   'Classifying Request',
   'Loading Relationships',
   'Generating Response',
+  'Response Ready',
+] as const;
+
+export const GENERAL_QUESTION_UNDERSTANDING_FEED: readonly OperatorFeedEventType[] = [
+  'Understanding Question',
+  'Detecting Context Needs',
+  'Selecting Reasoning Mode',
+  'Selecting Capabilities',
+  'Gathering Relevant Facts',
+  'Composing Answer',
+  'Response Ready',
+] as const;
+
+export const TIMELINE_INTELLIGENCE_FEED: readonly OperatorFeedEventType[] = [
+  'Loading Timeline Context',
+  'Analyzing Timeline',
+  'Checking Milestones',
+  'Checking Blockers',
+  'Generating Timeline Conclusions',
   'Response Ready',
 ] as const;
 

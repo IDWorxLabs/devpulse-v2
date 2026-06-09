@@ -10,7 +10,7 @@ export function roadmapContextKey(ctx: BrainRoadmapContext): string {
 
 export function getBrainRoadmapContext(): BrainRoadmapContext {
   return {
-    currentPhase: '11.3 — Shared Memory Layer',
+    currentPhase: '11.5 — Timeline Intelligence Foundation',
     completedPhases: [
       'Phase 6 — Governance Stack',
       'Phase 7 — World 2 Foundation Stack',
@@ -25,12 +25,15 @@ export function getBrainRoadmapContext(): BrainRoadmapContext {
       'Phase 11.1B — Command Center UX Stabilization',
       'Phase 11.2 — Cross-System Awareness Foundation',
       'Phase 11.3 — Shared Memory Layer',
+      'Phase 11.4 — Project Understanding Engine',
+      'Phase 11.4B — Project Knowledge Reasoning',
+      'Phase 11.4C — General Question Understanding Router',
     ],
-    nextPhase: '11.4 — Project Understanding Layer',
+    nextPhase: '11.6 — Unified Decision Layer (planned)',
     nextPhaseDescription:
-      'Optional project-scoped understanding for Brain responses — still intelligence only, no execution.',
+      'Optional unified decision layer for DevPulse — still intelligence only, no execution.',
     recommendedNextStep:
-      'Shared Memory Layer is active. Next optional step: Phase 11.4 Project Understanding — still intelligence only.',
+      'Timeline Intelligence Foundation is active. Next optional step: Unified Decision Layer — still intelligence only.',
     stackMaturitySummary:
       'Foundation architecture is extensive and validated. Command Center Brain understands system relationships. Execution runtime, cloud runtime, autonomous building, and real mobile control are not yet connected.',
   };

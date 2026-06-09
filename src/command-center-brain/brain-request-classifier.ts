@@ -6,10 +6,11 @@ import type { BrainClassification, BrainRequestCategory, BrainRequestInput } fro
 import { BRAIN_REQUEST_CATEGORIES } from './brain-types.js';
 
 const CATEGORY_PATTERNS: Array<{ category: BrainRequestCategory; patterns: string[] }> = [
-  { category: 'IMPACT', patterns: ['what breaks if', 'what would break', 'what happens if', 'disappeared', 'disappear', 'if trust engine', 'if operator feed', 'if world 2'] },
+  { category: 'PROJECT_UNDERSTANDING', patterns: ['what project are we working on', 'what is devpulse v2', 'what is devpulse', 'what is missing in this project', 'what is blocked', 'what should this project do next', 'project status', 'project risks', 'what systems relate to this project', 'what has been completed', 'what phase is the project', 'trying to become', 'what is this project', 'how mature is this project', 'biggest risk', 'holding us back', 'weakest area', 'six months', 'systems matter', 'furthest behind', 'execution not connected', 'missing capability', 'what should be built next', 'this project', 'stop world 2', 'why is execution'] },
+  { category: 'IMPACT', patterns: ['what breaks if', 'what would break', 'what happens if', ' disappeared', ' disappears', 'if trust engine', 'if operator feed', 'if world 2'] },
   { category: 'DEPENDENCY', patterns: ['what systems depend', 'systems depend on', 'what depends on', 'depends on', 'depend on', 'what relies on', 'relies on', 'rely on', 'downstream of'] },
-  { category: 'RELATIONSHIP', patterns: ['how does', 'connect to', 'connects to', 'relationship between', 'relate to', 'link between', 'how do'] },
   { category: 'MEMORY', patterns: ['what do you remember', 'what decisions have been recorded', 'what observations exist', 'remember about', 'memory about', 'what do we remember'] },
+  { category: 'RELATIONSHIP', patterns: ['how does', 'connect to', 'connects to', 'relationship between', 'relate to', 'link between', 'how do'] },
   { category: 'ROADMAP', patterns: ['what should we build', 'build next', 'next phase', 'roadmap', 'what next', 'what should we do next'] },
   { category: 'STATUS', patterns: ['how mature', 'maturity', 'status', 'complete', 'ready', 'what exists', 'what phase'] },
   { category: 'RISK', patterns: ['risk', 'danger', 'unsafe', 'will this break', 'concern'] },
@@ -83,4 +84,8 @@ export function isCrossSystemQuestion(message: string): boolean {
 
 export function isMemoryQuestion(message: string): boolean {
   return classifyBrainRequest({ message }).category === 'MEMORY';
+}
+
+export function isProjectUnderstandingQuestion(message: string): boolean {
+  return classifyBrainRequest({ message }).category === 'PROJECT_UNDERSTANDING';
 }

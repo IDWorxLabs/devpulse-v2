@@ -21,6 +21,9 @@ export {
   CROSS_SYSTEM_FEED_DEPENDENCY,
   CROSS_SYSTEM_FEED_IMPACT,
   CROSS_SYSTEM_FEED_RELATIONSHIP,
+  PROJECT_UNDERSTANDING_FEED,
+  GENERAL_QUESTION_UNDERSTANDING_FEED,
+  TIMELINE_INTELLIGENCE_FEED,
   SHARED_MEMORY_OPERATOR_FEED_STAGES,
   withSharedMemoryFeedStages,
   COMMAND_CENTER_BRAIN_OWNER_MODULE,
@@ -38,6 +41,7 @@ export {
   isImpactQuestion,
   isCrossSystemQuestion,
   isMemoryQuestion,
+  isProjectUnderstandingQuestion,
 } from './brain-request-classifier.js';
 
 export {
@@ -76,7 +80,40 @@ export type {
   CrossSystemDiagnostics,
   CrossSystemRoutingReport,
   SharedMemoryContext,
+  ProjectUnderstandingContext,
+  ProjectUnderstandingDiagnostics,
+  GeneralQuestionRoutingDiagnostics,
+  QuestionRoutingPlan,
+  TimelineIntelligenceDiagnostics,
 } from './brain-types.js';
+
+export {
+  GENERAL_QUESTION_UNDERSTANDING_PASS_TOKEN,
+  GENERAL_QUESTION_UNDERSTANDING_OWNER_MODULE,
+  understandGeneralQuestion,
+  buildQuestionRoutingPlan,
+  executeGeneralQuestionRouting,
+  getLastGeneralQuestionDiagnostics,
+  resetGeneralQuestionUnderstandingForTests,
+  detectQuestionDimensions,
+  detectContextNeeds,
+  selectReasoningModes,
+  selectCapabilities,
+} from './general-question-understanding/index.js';
+
+export {
+  TIMELINE_INTELLIGENCE_PASS_TOKEN,
+  TIMELINE_INTELLIGENCE_OWNER_MODULE,
+  answerTimelineQuestion,
+  answerTimelineQuestionWithTrace,
+  buildTimelineState,
+  buildTimelineContext,
+  getTimelineIntelligenceDiagnostics,
+  processTimelineIntelligenceRequest,
+  resetTimelineIntelligenceForTests,
+  timelineIntelligenceKey,
+  isTimelineQuestion,
+} from '../timeline-intelligence/index.js';
 
 export {
   CROSS_SYSTEM_AWARENESS_PASS_TOKEN,

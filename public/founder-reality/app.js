@@ -67,6 +67,83 @@
     renderNotifications(runtimeNotifications);
   }
 
+  function renderProjectUnderstandingDiagnostics(diag) {
+    if (!diag) return;
+    if (el('project-understanding-active')) {
+      el('project-understanding-active').textContent = diag.projectUnderstandingActive ? 'YES' : 'NO';
+    }
+    if (el('current-project-name')) {
+      el('current-project-name').textContent = diag.currentProject || 'None';
+    }
+    if (el('project-status-value')) {
+      el('project-status-value').textContent = diag.projectStatus || 'None';
+    }
+    if (el('missing-capability-count')) {
+      el('missing-capability-count').textContent = String(diag.missingCapabilityCount ?? 0);
+    }
+    if (el('project-risk-count')) {
+      el('project-risk-count').textContent = String(diag.riskCount ?? 0);
+    }
+    if (el('last-project-query')) {
+      el('last-project-query').textContent = diag.lastProjectQuery || 'None';
+    }
+  }
+
+  function renderGeneralQuestionDiagnostics(diag) {
+    if (!diag) return;
+    if (el('last-question-dimensions')) {
+      el('last-question-dimensions').textContent =
+        diag.lastQuestionDimensions && diag.lastQuestionDimensions.length
+          ? diag.lastQuestionDimensions.join(', ')
+          : 'None';
+    }
+    if (el('last-context-needs')) {
+      el('last-context-needs').textContent =
+        diag.lastContextNeeds && diag.lastContextNeeds.length ? diag.lastContextNeeds.join(', ') : 'None';
+    }
+    if (el('last-reasoning-modes')) {
+      el('last-reasoning-modes').textContent =
+        diag.lastReasoningModes && diag.lastReasoningModes.length ? diag.lastReasoningModes.join(', ') : 'None';
+    }
+    if (el('last-capabilities-selected')) {
+      el('last-capabilities-selected').textContent =
+        diag.lastCapabilitiesSelected && diag.lastCapabilitiesSelected.length
+          ? diag.lastCapabilitiesSelected.join(', ')
+          : 'None';
+    }
+    if (el('unavailable-capabilities')) {
+      el('unavailable-capabilities').textContent =
+        diag.unavailableCapabilities && diag.unavailableCapabilities.length
+          ? diag.unavailableCapabilities.join(', ')
+          : 'None';
+    }
+    if (el('routing-confidence')) {
+      el('routing-confidence').textContent = diag.routingConfidence || 'None';
+    }
+    if (el('routing-reason')) {
+      el('routing-reason').textContent = diag.routingReason || 'None';
+    }
+  }
+
+  function renderTimelineIntelligenceDiagnostics(diag) {
+    if (!diag) return;
+    if (el('current-timeline-phase')) {
+      el('current-timeline-phase').textContent = diag.currentTimelinePhase || 'None';
+    }
+    if (el('completed-phase-count')) {
+      el('completed-phase-count').textContent = String(diag.completedPhaseCount ?? 0);
+    }
+    if (el('milestone-count')) {
+      el('milestone-count').textContent = String(diag.milestoneCount ?? 0);
+    }
+    if (el('timeline-blocker-count')) {
+      el('timeline-blocker-count').textContent = String(diag.blockerCount ?? 0);
+    }
+    if (el('last-timeline-query')) {
+      el('last-timeline-query').textContent = diag.lastTimelineQuery || 'None';
+    }
+  }
+
   function renderCrossSystemDiagnostics(diag) {
     var list = el('cross-system-diagnostics-list');
     if (!list || !diag) return;
@@ -204,6 +281,16 @@
     if (eventType === 'Loading Memory') return 'Verification';
     if (eventType === 'Searching Memory') return 'Verification';
     if (eventType === 'Memory Context Ready') return 'Verification';
+    if (eventType === 'Understanding Project') return 'Planning';
+    if (eventType === 'Gathering Facts') return 'Execution';
+    if (eventType === 'Evaluating Risks') return 'Verification';
+    if (eventType === 'Analyzing Dependencies') return 'Approvals';
+    if (eventType === 'Generating Conclusions') return 'Learning';
+    if (eventType === 'Loading Project Context') return 'Planning';
+    if (eventType === 'Analyzing Project Status') return 'Execution';
+    if (eventType === 'Checking Project Gaps') return 'Verification';
+    if (eventType === 'Checking Project Risks') return 'Approvals';
+    if (eventType === 'Project Recommendation Ready') return 'Learning';
     if (eventType === 'Checking Systems') return 'Execution';
     if (eventType === 'Loading Relationships') return 'Verification';
     if (eventType === 'Checking Roadmap') return 'Verification';
@@ -211,6 +298,17 @@
     if (eventType === 'Performing Impact Analysis') return 'Approvals';
     if (eventType === 'Generating Response') return 'Learning';
     if (eventType === 'Response Ready') return 'Learning';
+    if (eventType === 'Understanding Question') return 'Planning';
+    if (eventType === 'Detecting Context Needs') return 'Verification';
+    if (eventType === 'Selecting Reasoning Mode') return 'Planning';
+    if (eventType === 'Selecting Capabilities') return 'Approvals';
+    if (eventType === 'Gathering Relevant Facts') return 'Execution';
+    if (eventType === 'Composing Answer') return 'Learning';
+    if (eventType === 'Loading Timeline Context') return 'Planning';
+    if (eventType === 'Analyzing Timeline') return 'Execution';
+    if (eventType === 'Checking Milestones') return 'Verification';
+    if (eventType === 'Checking Blockers') return 'Approvals';
+    if (eventType === 'Generating Timeline Conclusions') return 'Learning';
     return 'Planning';
   }
 
@@ -532,6 +630,15 @@
           renderRuntimeDiagnostics();
           if (result.crossSystemDiagnostics) {
             renderCrossSystemDiagnostics(result.crossSystemDiagnostics);
+          }
+          if (result.projectUnderstandingDiagnostics) {
+            renderProjectUnderstandingDiagnostics(result.projectUnderstandingDiagnostics);
+          }
+          if (result.generalQuestionDiagnostics) {
+            renderGeneralQuestionDiagnostics(result.generalQuestionDiagnostics);
+          }
+          if (result.timelineIntelligenceDiagnostics) {
+            renderTimelineIntelligenceDiagnostics(result.timelineIntelligenceDiagnostics);
           }
         });
       })

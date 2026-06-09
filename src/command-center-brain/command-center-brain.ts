@@ -35,14 +35,38 @@ import {
   resetSharedMemoryForTests,
   sharedMemoryKey,
 } from '../shared-memory/index.js';
+import {
+  getProjectUnderstandingDiagnostics,
+  processProjectUnderstandingRequest,
+  projectUnderstandingKey,
+  resetProjectUnderstandingForTests,
+} from '../project-understanding/index.js';
+import {
+  getTimelineIntelligenceDiagnostics,
+  resetTimelineIntelligenceForTests,
+  timelineIntelligenceKey,
+} from '../timeline-intelligence/index.js';
+import {
+  executeGeneralQuestionRouting,
+  generalQuestionUnderstandingKey,
+  getLastGeneralQuestionDiagnostics,
+  isPlanningNotImpactQuestion,
+  resetGeneralQuestionUnderstandingForTests,
+  shouldGeneralRouterOwnRequest,
+  understandGeneralQuestion,
+} from './general-question-understanding/index.js';
 import type {
   BrainPipelineStage,
   BrainRequestCategory,
   BrainRequestInput,
+  BrainClassification,
   BrainResponseResult,
   CrossSystemDiagnostics,
+  GeneralQuestionRoutingDiagnostics,
+  TimelineIntelligenceDiagnostics,
   OperatorFeedEvent,
   OperatorFeedEventType,
+  QuestionRoutingPlan,
 } from './brain-types.js';
 import {
   BRAIN_PIPELINE_SEQUENCE,
@@ -56,6 +80,9 @@ import {
   EXECUTION_BLOCKED_PATTERNS,
   FILE_MOD_BLOCKED_PATTERNS,
   OPERATOR_FEED_EVENT_SEQUENCE,
+  PROJECT_UNDERSTANDING_FEED,
+  GENERAL_QUESTION_UNDERSTANDING_FEED,
+  TIMELINE_INTELLIGENCE_FEED,
   SHARED_MEMORY_OPERATOR_FEED_STAGES,
   withSharedMemoryFeedStages,
   nextBrainResponseId,
@@ -99,10 +126,54 @@ function detectBlockedIntent(message: string): string | null {
   return null;
 }
 
-function feedSequenceForCategory(category: BrainRequestCategory): readonly OperatorFeedEventType[] {
+const LEGACY_PROJECT_UNDERSTANDING_QUERIES = [
+  'what project are we working on',
+  'what is missing in this project',
+  'what is blocked',
+  'what should this project do next',
+  'what systems relate to this project',
+] as const;
+
+function isLegacyProjectUnderstandingQuery(message: string): boolean {
+  const lower = message.toLowerCase().trim().replace(/[?!.]+$/, '');
+  return LEGACY_PROJECT_UNDERSTANDING_QUERIES.some((q) => lower === q);
+}
+
+function shouldUseGeneralRouter(
+  blocked: boolean,
+  classification: BrainClassification,
+  message: string,
+  plan: QuestionRoutingPlan | undefined,
+): boolean {
+  if (blocked || !plan) return false;
+  if (classification.category === 'MEMORY') return false;
+  if (classification.category === 'PROJECT_UNDERSTANDING' && isLegacyProjectUnderstandingQuery(message)) {
+    return false;
+  }
+  if (isCrossSystemCategory(classification.category)) {
+    if (isPlanningNotImpactQuestion(message)) return shouldGeneralRouterOwnRequest(plan);
+    if (
+      plan.unavailableCapabilities.length > 0 &&
+      (plan.dimensions.includes('DEBUGGING') || plan.dimensions.includes('DEVELOPMENT'))
+    ) {
+      return shouldGeneralRouterOwnRequest(plan);
+    }
+    return false;
+  }
+  return shouldGeneralRouterOwnRequest(plan);
+}
+
+function feedSequenceForCategory(
+  category: BrainRequestCategory,
+  generalRouterOwns: boolean,
+  timelineRouterOwns: boolean,
+): readonly OperatorFeedEventType[] {
+  if (timelineRouterOwns) return TIMELINE_INTELLIGENCE_FEED;
+  if (generalRouterOwns) return GENERAL_QUESTION_UNDERSTANDING_FEED;
   if (category === 'DEPENDENCY') return CROSS_SYSTEM_FEED_DEPENDENCY;
   if (category === 'IMPACT') return CROSS_SYSTEM_FEED_IMPACT;
   if (category === 'RELATIONSHIP') return CROSS_SYSTEM_FEED_RELATIONSHIP;
+  if (category === 'PROJECT_UNDERSTANDING') return PROJECT_UNDERSTANDING_FEED;
   return OPERATOR_FEED_EVENT_SEQUENCE;
 }
 
@@ -110,8 +181,10 @@ function buildOperatorFeedEvents(
   timestamp: number,
   category: BrainRequestCategory,
   memoryLookup: boolean,
+  generalRouterOwns: boolean,
+  timelineRouterOwns: boolean,
 ): OperatorFeedEvent[] {
-  const base = feedSequenceForCategory(category);
+  const base = feedSequenceForCategory(category, generalRouterOwns, timelineRouterOwns);
   const sequence = memoryLookup ? withSharedMemoryFeedStages(base) : base;
   return sequence.map((eventType, index) => ({
     eventId: `feed-${(index + 1).toString().padStart(2, '0')}`,
@@ -121,12 +194,17 @@ function buildOperatorFeedEvents(
   }));
 }
 
-function buildPipelineStages(blocked: boolean, memoryChecked: boolean): BrainPipelineStage[] {
+function buildPipelineStages(
+  blocked: boolean,
+  memoryChecked: boolean,
+  projectChecked: boolean,
+  generalChecked: boolean,
+): BrainPipelineStage[] {
   if (blocked) return ['BRAIN_REQUEST_RECEIVED', 'BRAIN_REQUEST_BLOCKED'];
-  const stages = [...BRAIN_PIPELINE_SEQUENCE];
-  if (!memoryChecked) {
-    return stages.filter((s) => s !== 'SHARED_MEMORY_CHECKED');
-  }
+  let stages = [...BRAIN_PIPELINE_SEQUENCE];
+  if (!memoryChecked) stages = stages.filter((s) => s !== 'SHARED_MEMORY_CHECKED');
+  if (!projectChecked) stages = stages.filter((s) => s !== 'PROJECT_UNDERSTANDING_CHECKED');
+  if (!generalChecked) stages = stages.filter((s) => s !== 'GENERAL_QUESTION_UNDERSTANDING_CHECKED');
   return stages;
 }
 
@@ -192,10 +270,35 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
   const referenced = blocked ? [] : findSystemByKeyword(message).map((s) => s.systemId);
   const roadmap = getBrainRoadmapContext();
 
-  const memoryContext = blocked ? undefined : processMemoryForRequest(message);
-  const isMemoryRecall = !blocked && classification.category === 'MEMORY';
+  const routingPlan: QuestionRoutingPlan | undefined = blocked ? undefined : understandGeneralQuestion(message);
+  const useGeneralRouter = shouldUseGeneralRouter(blocked, classification, message, routingPlan);
+  const generalRouting =
+    routingPlan && useGeneralRouter
+      ? executeGeneralQuestionRouting(routingPlan, { message, classification, systems, roadmap })
+      : null;
+  const generalRouterOwns = Boolean(generalRouting?.ownsResponse);
+  const timelineRouterOwns =
+    generalRouterOwns && routingPlan?.primaryCapability === 'TIMELINE_INTELLIGENCE';
 
-  const isCrossSystem = !blocked && !isMemoryRecall && isCrossSystemCategory(classification.category);
+  const memoryContext = blocked ? undefined : processMemoryForRequest(message);
+  const isMemoryRecall =
+    !blocked && !generalRouterOwns && classification.category === 'MEMORY';
+  const isProjectUnderstanding =
+    !blocked && !generalRouterOwns && !isMemoryRecall && classification.category === 'PROJECT_UNDERSTANDING';
+
+  let projectUnderstandingResult = null;
+  if (isProjectUnderstanding) {
+    projectUnderstandingResult = processProjectUnderstandingRequest(message);
+  } else if (generalRouterOwns && generalRouting!.usedCapabilities.includes('PROJECT_KNOWLEDGE_REASONING')) {
+    projectUnderstandingResult = processProjectUnderstandingRequest(message);
+  }
+
+  const isCrossSystem =
+    !blocked &&
+    !generalRouterOwns &&
+    !isMemoryRecall &&
+    !isProjectUnderstanding &&
+    isCrossSystemCategory(classification.category);
   let crossSystemResult = null;
   if (isCrossSystem) {
     crossSystemResult = processCrossSystemAwareness(
@@ -206,7 +309,13 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
 
   const operatorFeedEvents = blocked
     ? []
-    : buildOperatorFeedEvents(timestamp, classification.category, Boolean(memoryContext?.lookupPerformed));
+    : buildOperatorFeedEvents(
+        timestamp,
+        classification.category,
+        Boolean(memoryContext?.lookupPerformed),
+        generalRouterOwns,
+        timelineRouterOwns,
+      );
   const feedStages = operatorFeedEvents.map((e) => e.eventType);
 
   const routingReport = isCrossSystem
@@ -224,13 +333,22 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
 
   const brainResponse = blocked
     ? generateBlockedResponse(blockedReason!)
-    : isMemoryRecall
-      ? formatMemoryRecallResponse(message, recallRelevantMemories(message))
-      : isCrossSystem
-        ? crossSystemResult!.responseText
-        : generateBrainResponse(message, classification, systems, roadmap);
+    : generalRouterOwns
+      ? generalRouting!.responseText
+      : isMemoryRecall
+        ? formatMemoryRecallResponse(message, recallRelevantMemories(message))
+        : isProjectUnderstanding
+          ? projectUnderstandingResult!.responseText
+          : isCrossSystem
+            ? crossSystemResult!.responseText
+            : generateBrainResponse(message, classification, systems, roadmap);
 
-  const pipelineStages = buildPipelineStages(blocked, Boolean(memoryContext?.lookupPerformed));
+  const pipelineStages = buildPipelineStages(
+    blocked,
+    Boolean(memoryContext?.lookupPerformed),
+    Boolean(projectUnderstandingResult),
+    Boolean(routingPlan),
+  );
 
   const crossSystemDiagnostics = blocked
     ? undefined
@@ -240,6 +358,13 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
         crossSystemResult?.snapshot ?? buildCrossSystemSnapshot('NONE', null),
         routingReport,
       );
+
+  const generalQuestionDiagnostics: GeneralQuestionRoutingDiagnostics | undefined = blocked
+    ? undefined
+    : getLastGeneralQuestionDiagnostics();
+
+  const timelineIntelligenceDiagnostics: TimelineIntelligenceDiagnostics | undefined =
+    blocked || !timelineRouterOwns ? undefined : getTimelineIntelligenceDiagnostics();
 
   return {
     responseId: nextBrainResponseId(),
@@ -253,6 +378,15 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
     crossSystemDiagnostics,
     crossSystemRoutingReport: routingReport,
     sharedMemoryContext: memoryContext,
+    projectUnderstandingContext: projectUnderstandingResult?.context,
+    projectUnderstandingDiagnostics: blocked
+      ? undefined
+      : projectUnderstandingResult
+        ? getProjectUnderstandingDiagnostics()
+        : undefined,
+    generalQuestionRoutingPlan: routingPlan,
+    generalQuestionDiagnostics,
+    timelineIntelligenceDiagnostics,
     pipelineStages,
     operatorFeedEvents,
     confirmation: {
@@ -280,6 +414,9 @@ export function brainStructuralKey(result: BrainResponseResult): string {
     systemsAwarenessKey(getCommandCenterAwareSystems()),
     crossSystemAwarenessKey(),
     sharedMemoryKey(),
+    projectUnderstandingKey(),
+    generalQuestionUnderstandingKey(),
+    timelineIntelligenceKey(),
     roadmapContextKey(result.roadmapContext),
     result.pipelineStages.join('→'),
   ].join('|');
@@ -364,6 +501,9 @@ export function resetDevPulseV2CommandCenterBrainForTests(): DevPulseV2CommandCe
   singleton = new DevPulseV2CommandCenterBrain();
   resetCrossSystemDiagnosticsForTests();
   resetSharedMemoryForTests();
+  resetProjectUnderstandingForTests();
+  resetGeneralQuestionUnderstandingForTests();
+  resetTimelineIntelligenceForTests();
   return singleton;
 }
 
@@ -378,6 +518,9 @@ export {
   CROSS_SYSTEM_FEED_DEPENDENCY,
   CROSS_SYSTEM_FEED_IMPACT,
   CROSS_SYSTEM_FEED_RELATIONSHIP,
+  PROJECT_UNDERSTANDING_FEED,
+  GENERAL_QUESTION_UNDERSTANDING_FEED,
+  TIMELINE_INTELLIGENCE_FEED,
   SHARED_MEMORY_OPERATOR_FEED_STAGES,
   withSharedMemoryFeedStages,
   COMMAND_CENTER_BRAIN_OWNER_MODULE,

@@ -83,6 +83,10 @@
     "validate:cross-system-awareness": "tsx scripts/validate-cross-system-awareness.ts",
     "validate:cross-system-routing": "tsx scripts/validate-cross-system-routing.ts",
     "validate:shared-memory-layer": "tsx scripts/validate-shared-memory-layer.ts",
+    "validate:project-understanding-engine": "tsx scripts/validate-project-understanding-engine.ts",
+    "validate:project-knowledge-reasoning": "tsx scripts/validate-project-knowledge-reasoning.ts",
+    "validate:general-question-understanding": "tsx scripts/validate-general-question-understanding.ts",
+    "validate:timeline-intelligence": "tsx scripts/validate-timeline-intelligence.ts",
     "dev": "tsx server/founder-reality-server.ts",
     "start": "tsx server/founder-reality-server.ts",
     "typecheck": "tsc --noEmit"
