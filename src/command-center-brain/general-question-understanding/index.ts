@@ -67,6 +67,12 @@ import { processInteractionTestingRequest } from '../../interaction-testing-engi
 import { isInteractionTestingQuestion } from '../../interaction-testing-engine/types.js';
 import { processVisualVerificationRequest } from '../../visual-verification-engine/index.js';
 import { isVisualVerificationQuestion } from '../../visual-verification-engine/types.js';
+import { processVerificationRuntimeRequest } from '../../unified-verification-lab/index.js';
+import { isUvlRuntimeQuestion } from '../../unified-verification-lab/types.js';
+import { processVerificationRegistryRequest } from '../../verification-registry/index.js';
+import { isVerificationRegistryQuestion } from '../../verification-registry/types.js';
+import { processVerificationOrchestratorRequest } from '../../verification-orchestrator/index.js';
+import { isVerificationOrchestratorQuestion } from '../../verification-orchestrator/types.js';
 import { detectContextNeeds, needsUnavailableDevelopmentContext } from './context-need-detector.js';
 import {
   GENERAL_QUESTION_UNDERSTANDING_OWNER_MODULE,
@@ -220,6 +226,63 @@ export function executeGeneralQuestionRouting(
         limitationMessage: limitationMessage ?? undefined,
       }),
       usedCapabilities: ['PORTFOLIO_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'VERIFICATION_ORCHESTRATOR' ||
+    (plan.selectedCapabilities.includes('VERIFICATION_ORCHESTRATOR') &&
+      isVerificationOrchestratorQuestion(deps.message))
+  ) {
+    const vorch = processVerificationOrchestratorRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: vorch.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['VERIFICATION_ORCHESTRATOR', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'VERIFICATION_REGISTRY' ||
+    (plan.selectedCapabilities.includes('VERIFICATION_REGISTRY') &&
+      isVerificationRegistryQuestion(deps.message))
+  ) {
+    const vreg = processVerificationRegistryRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: vreg.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['VERIFICATION_REGISTRY', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'UNIFIED_VERIFICATION_LAB_RUNTIME' ||
+    (plan.selectedCapabilities.includes('UNIFIED_VERIFICATION_LAB_RUNTIME') &&
+      isUvlRuntimeQuestion(deps.message))
+  ) {
+    const uvlRuntime = processVerificationRuntimeRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: uvlRuntime.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['UNIFIED_VERIFICATION_LAB_RUNTIME', ...usedCapabilities],
       routingPlan: plan,
     };
   }

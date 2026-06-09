@@ -293,6 +293,35 @@ const CAPABILITY_STAGE_MAP: Partial<Record<SelectedCapability, OperatorFeedStage
     'Visual Verification Blocked',
     'Response Ready',
   ],
+  UNIFIED_VERIFICATION_LAB_RUNTIME: [
+    'Verification Provider Registered',
+    'Verification Session Created',
+    'Verification Session Started',
+    'Verification Session Completed',
+    'Verification Session Failed',
+    'Verification Runtime Ready',
+    'Verification Runtime Blocked',
+    'Response Ready',
+  ],
+  VERIFICATION_REGISTRY: [
+    'Verification Target Registered',
+    'Verification Dependency Registered',
+    'Verification Requirement Registered',
+    'Verification Capability Registered',
+    'Verification Registry Ready',
+    'Verification Registry Blocked',
+    'Response Ready',
+  ],
+  VERIFICATION_ORCHESTRATOR: [
+    'Verification Plan Created',
+    'Verification Dependencies Resolved',
+    'Verification Schedule Prepared',
+    'Verification Parallel Groups Identified',
+    'Verification Targets Blocked',
+    'Verification Orchestration Ready',
+    'Verification Orchestration Blocked',
+    'Response Ready',
+  ],
 };
 
 const DEFAULT_STAGES: OperatorFeedStage[] = [

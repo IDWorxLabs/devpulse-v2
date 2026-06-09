@@ -422,6 +422,52 @@ import type {
   VisualVerificationReport,
 } from '../visual-verification-engine/types.js';
 import {
+  getVerificationRuntimeContext,
+  getVerificationRuntimeDiagnostics,
+  resetVerificationRuntimeDiagnostics,
+  resetVerificationRuntimeRequestCounterForTests,
+  resetVerificationRuntimeReportCounterForTests,
+  resetVerificationProviderRegistryForTests,
+  resetVerificationSessionManagerForTests,
+} from '../unified-verification-lab/index.js';
+import {
+  isUvlRuntimeQuestion,
+  isUvlRuntimeAdvisoryQuestion,
+} from '../unified-verification-lab/types.js';
+import type {
+  VerificationRuntimeDiagnostics,
+  VerificationRuntimeReport,
+} from '../unified-verification-lab/types.js';
+import {
+  getVerificationRegistryContext,
+  getVerificationRegistryDiagnostics,
+  resetVerificationRegistryDiagnostics,
+  resetVerificationRegistryReportCounterForTests,
+  resetVerificationTargetRegistryForTests,
+  resetVerificationOwnerRegistryForTests,
+  resetVerificationDependencyRegistryForTests,
+  resetVerificationRequirementRegistryForTests,
+  resetVerificationCapabilityRegistryForTests,
+} from '../verification-registry/index.js';
+import { isVerificationRegistryQuestion } from '../verification-registry/types.js';
+import type {
+  VerificationRegistryDiagnostics,
+  VerificationRegistryReport,
+} from '../verification-registry/types.js';
+import {
+  getVerificationOrchestratorContext,
+  getVerificationOrchestratorDiagnostics,
+  resetVerificationOrchestratorDiagnostics,
+  resetVerificationOrchestratorReportCounterForTests,
+  resetVerificationPlanCounterForTests,
+  resetParallelGroupCounterForTests,
+} from '../verification-orchestrator/index.js';
+import { isVerificationOrchestratorQuestion } from '../verification-orchestrator/types.js';
+import type {
+  VerificationOrchestratorDiagnostics,
+  VerificationOrchestrationReport,
+} from '../verification-orchestrator/types.js';
+import {
   getTimelineIntelligenceDiagnostics,
   resetTimelineIntelligenceForTests,
   timelineIntelligenceKey,
@@ -522,7 +568,8 @@ function detectBlockedIntent(message: string): string | null {
     isSelfVisionRuntimeAdvisoryQuestion(message) ||
     isUiInspectionAdvisoryQuestion(message) ||
     isInteractionTestingAdvisoryQuestion(message) ||
-    isVisualVerificationAdvisoryQuestion(message)
+    isVisualVerificationAdvisoryQuestion(message) ||
+    isUvlRuntimeAdvisoryQuestion(message)
   ) {
     return null;
   }
@@ -1023,6 +1070,30 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
   const visualVerificationReports: VisualVerificationReport[] | undefined =
     blocked || !visualVerificationCtx ? undefined : [visualVerificationCtx.visualVerificationReport];
 
+  const vorchCtx =
+    blocked || !isVerificationOrchestratorQuestion(message) ? null : getVerificationOrchestratorContext(message);
+  const vorchDiag = getVerificationOrchestratorDiagnostics();
+  const verificationOrchestratorDiagnostics: VerificationOrchestratorDiagnostics | undefined =
+    blocked || !vorchDiag.orchestrationActive ? undefined : vorchDiag;
+  const verificationOrchestratorReports: VerificationOrchestrationReport[] | undefined =
+    blocked || !vorchCtx ? undefined : [vorchCtx.orchestrationReport];
+
+  const vregCtx =
+    blocked || !isVerificationRegistryQuestion(message) ? null : getVerificationRegistryContext(message);
+  const vregDiag = getVerificationRegistryDiagnostics();
+  const verificationRegistryDiagnostics: VerificationRegistryDiagnostics | undefined =
+    blocked || !vregDiag.verificationRegistryActive ? undefined : vregDiag;
+  const verificationRegistryReports: VerificationRegistryReport[] | undefined =
+    blocked || !vregCtx ? undefined : [vregCtx.registryReport];
+
+  const uvlRuntimeCtx =
+    blocked || !isUvlRuntimeQuestion(message) ? null : getVerificationRuntimeContext(message);
+  const uvlRuntimeDiag = getVerificationRuntimeDiagnostics();
+  const verificationRuntimeDiagnostics: VerificationRuntimeDiagnostics | undefined =
+    blocked || !uvlRuntimeDiag.uvlRuntimeActive ? undefined : uvlRuntimeDiag;
+  const verificationRuntimeReports: VerificationRuntimeReport[] | undefined =
+    blocked || !uvlRuntimeCtx ? undefined : [uvlRuntimeCtx.runtimeReport];
+
   return {
     responseId: nextBrainResponseId(),
     userMessage: message,
@@ -1106,6 +1177,12 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
     interactionTestingReports,
     visualVerificationDiagnostics,
     visualVerificationReports,
+    verificationOrchestratorDiagnostics,
+    verificationOrchestratorReports,
+    verificationRegistryDiagnostics,
+    verificationRegistryReports,
+    verificationRuntimeDiagnostics,
+    verificationRuntimeReports,
     pipelineStages,
     operatorFeedEvents,
     confirmation: {
@@ -1373,6 +1450,22 @@ export function resetDevPulseV2CommandCenterBrainForTests(): DevPulseV2CommandCe
   resetVisualVerificationDiagnostics();
   resetVisualVerificationRequestCounterForTests();
   resetVisualVerificationReportCounterForTests();
+  resetVerificationRuntimeDiagnostics();
+  resetVerificationRuntimeRequestCounterForTests();
+  resetVerificationRuntimeReportCounterForTests();
+  resetVerificationProviderRegistryForTests();
+  resetVerificationSessionManagerForTests();
+  resetVerificationOrchestratorDiagnostics();
+  resetVerificationOrchestratorReportCounterForTests();
+  resetVerificationPlanCounterForTests();
+  resetParallelGroupCounterForTests();
+  resetVerificationRegistryDiagnostics();
+  resetVerificationRegistryReportCounterForTests();
+  resetVerificationTargetRegistryForTests();
+  resetVerificationOwnerRegistryForTests();
+  resetVerificationDependencyRegistryForTests();
+  resetVerificationRequirementRegistryForTests();
+  resetVerificationCapabilityRegistryForTests();
   return singleton;
 }
 

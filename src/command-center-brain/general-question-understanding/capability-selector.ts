@@ -41,6 +41,9 @@ import { isSelfVisionRuntimeQuestion } from '../../self-vision-runtime/types.js'
 import { isUiInspectionQuestion } from '../../ui-inspection-engine/types.js';
 import { isInteractionTestingQuestion } from '../../interaction-testing-engine/types.js';
 import { isVisualVerificationQuestion } from '../../visual-verification-engine/types.js';
+import { isUvlRuntimeQuestion } from '../../unified-verification-lab/types.js';
+import { isVerificationRegistryQuestion } from '../../verification-registry/types.js';
+import { isVerificationOrchestratorQuestion } from '../../verification-orchestrator/types.js';
 
 const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> = {
   PROJECT_PROFILE: 'PROJECT_UNDERSTANDING',
@@ -84,6 +87,9 @@ const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> =
   UI_INSPECTION_ENGINE_FACTS: 'UI_INSPECTION_ENGINE',
   INTERACTION_TESTING_ENGINE_FACTS: 'INTERACTION_TESTING_ENGINE',
   VISUAL_VERIFICATION_ENGINE_FACTS: 'VISUAL_VERIFICATION_ENGINE',
+  UNIFIED_VERIFICATION_LAB_RUNTIME_FACTS: 'UNIFIED_VERIFICATION_LAB_RUNTIME',
+  VERIFICATION_REGISTRY_FACTS: 'VERIFICATION_REGISTRY',
+  VERIFICATION_ORCHESTRATOR_FACTS: 'VERIFICATION_ORCHESTRATOR',
 };
 
 export interface CapabilitySelectionResult {
@@ -180,6 +186,52 @@ export function selectCapabilities(
     selected.add('UNIFIED_DECISION_LAYER');
     selected.add('ACTION_VISIBILITY_ENGINE');
     selected.add('PROJECT_KNOWLEDGE_REASONING');
+  }
+
+  if (isVerificationOrchestratorQuestion(question)) {
+    selected.add('VERIFICATION_ORCHESTRATOR');
+    selected.add('VERIFICATION_REGISTRY');
+    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isVerificationRegistryQuestion(question)) {
+    selected.add('VERIFICATION_REGISTRY');
+    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
+    selected.add('VISUAL_VERIFICATION_ENGINE');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isUvlRuntimeQuestion(question)) {
+    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
+    selected.add('VISUAL_VERIFICATION_ENGINE');
+    selected.add('INTERACTION_TESTING_ENGINE');
+    selected.add('UI_INSPECTION_ENGINE');
+    selected.add('SELF_VISION_RUNTIME');
+    selected.add('LIVE_PREVIEW_RUNTIME');
+    selected.add('PREVIEW_INTELLIGENCE');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
   }
 
   if (isVisualVerificationQuestion(question)) {
@@ -538,6 +590,45 @@ export function selectCapabilities(
   }
 
   const lowerQuestion = question.toLowerCase();
+
+  if (isVerificationOrchestratorQuestion(question)) {
+    primary = 'VERIFICATION_ORCHESTRATOR';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Verification orchestrator question — VERIFICATION_ORCHESTRATOR coordinates execution planning, scheduling, and readiness; no verification execution, evidence generation, or auto-fix.',
+    };
+  }
+
+  if (isVerificationRegistryQuestion(question)) {
+    primary = 'VERIFICATION_REGISTRY';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Verification registry question — VERIFICATION_REGISTRY defines targets, ownership, dependencies, and requirements; no verification execution, orchestration, or auto-fix.',
+    };
+  }
+
+  if (isUvlRuntimeQuestion(question)) {
+    primary = 'UNIFIED_VERIFICATION_LAB_RUNTIME';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'UVL runtime question — UNIFIED_VERIFICATION_LAB_RUNTIME registers providers and manages verification sessions; no verification execution, evidence generation, or auto-fix.',
+    };
+  }
 
   if (isVisualVerificationQuestion(question)) {
     primary = 'VISUAL_VERIFICATION_ENGINE';

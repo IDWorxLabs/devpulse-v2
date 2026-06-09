@@ -81,6 +81,12 @@ export interface ProgressRecord {
     | 'FAILED_VERIFICATION'
     | 'VERIFICATION_BLOCKED';
   visualVerificationNote?: string;
+  uvlRuntimeState?: 'REGISTERED' | 'READY' | 'RUNNING' | 'COMPLETED' | 'BLOCKED';
+  uvlRuntimeNote?: string;
+  verificationRegistryState?: 'REGISTERED' | 'READY' | 'BLOCKED';
+  verificationRegistryNote?: string;
+  verificationOrchestrationState?: 'REGISTERED' | 'READY' | 'WAITING' | 'BLOCKED' | 'PLANNED';
+  verificationOrchestrationNote?: string;
   visibilityOnly: true;
 }
 

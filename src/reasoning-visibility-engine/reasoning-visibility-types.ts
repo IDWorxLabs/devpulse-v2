@@ -130,6 +130,19 @@ export interface ReasoningVisibilityRecord {
   visualVerificationEvidence: string[];
   visualVerificationRisks: string[];
   visualVerificationWarnings: string[];
+  verificationRuntimeBasis: string;
+  registeredProviders: string[];
+  verificationLifecycle: string[];
+  verificationWarnings: string[];
+  verificationRegistryBasis: string;
+  verificationTargets: string[];
+  verificationDependencies: string[];
+  verificationRequirements: string[];
+  orchestrationBasis: string;
+  executionOrder: string[];
+  parallelGroups: string[];
+  blockedTargets: string[];
+  waitingTargets: string[];
   visibilityOnly: true;
 }
 

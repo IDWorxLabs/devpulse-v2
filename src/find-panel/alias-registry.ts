@@ -77,6 +77,21 @@ export const WORLD2_BUILDER_PACKET_FIND_ALIASES: readonly FindPanelAlias[] = [
   { alias: 'Verification Risks', capabilityId: 'VISUAL_VERIFICATION_ENGINE', ownerModule: 'devpulse_v2_visual_verification_engine' },
   { alias: 'Verification Ready', capabilityId: 'VISUAL_VERIFICATION_ENGINE', ownerModule: 'devpulse_v2_visual_verification_engine' },
   { alias: 'Verification Failed', capabilityId: 'VISUAL_VERIFICATION_ENGINE', ownerModule: 'devpulse_v2_visual_verification_engine' },
+  { alias: 'UVL Runtime', capabilityId: 'UNIFIED_VERIFICATION_LAB_RUNTIME', ownerModule: 'devpulse_v2_unified_verification_lab_runtime' },
+  { alias: 'Unified Verification Lab', capabilityId: 'UNIFIED_VERIFICATION_LAB_RUNTIME', ownerModule: 'devpulse_v2_unified_verification_lab_runtime' },
+  { alias: 'Verification Runtime', capabilityId: 'UNIFIED_VERIFICATION_LAB_RUNTIME', ownerModule: 'devpulse_v2_unified_verification_lab_runtime' },
+  { alias: 'Verification Providers', capabilityId: 'UNIFIED_VERIFICATION_LAB_RUNTIME', ownerModule: 'devpulse_v2_unified_verification_lab_runtime' },
+  { alias: 'Verification Sessions', capabilityId: 'UNIFIED_VERIFICATION_LAB_RUNTIME', ownerModule: 'devpulse_v2_unified_verification_lab_runtime' },
+  { alias: 'Verification Registry', capabilityId: 'VERIFICATION_REGISTRY', ownerModule: 'devpulse_v2_verification_registry' },
+  { alias: 'Verification Targets', capabilityId: 'VERIFICATION_REGISTRY', ownerModule: 'devpulse_v2_verification_registry' },
+  { alias: 'Verification Dependencies', capabilityId: 'VERIFICATION_REGISTRY', ownerModule: 'devpulse_v2_verification_registry' },
+  { alias: 'Verification Requirements', capabilityId: 'VERIFICATION_REGISTRY', ownerModule: 'devpulse_v2_verification_registry' },
+  { alias: 'Verification Owners', capabilityId: 'VERIFICATION_REGISTRY', ownerModule: 'devpulse_v2_verification_registry' },
+  { alias: 'Verification Orchestrator', capabilityId: 'VERIFICATION_ORCHESTRATOR', ownerModule: 'devpulse_v2_verification_orchestrator' },
+  { alias: 'Verification Plan', capabilityId: 'VERIFICATION_ORCHESTRATOR', ownerModule: 'devpulse_v2_verification_orchestrator' },
+  { alias: 'Execution Order', capabilityId: 'VERIFICATION_ORCHESTRATOR', ownerModule: 'devpulse_v2_verification_orchestrator' },
+  { alias: 'Parallel Verification', capabilityId: 'VERIFICATION_ORCHESTRATOR', ownerModule: 'devpulse_v2_verification_orchestrator' },
+  { alias: 'Blocked Verification', capabilityId: 'VERIFICATION_ORCHESTRATOR', ownerModule: 'devpulse_v2_verification_orchestrator' },
 ] as const;
 
 export function resolveFindPanelAlias(query: string): FindPanelAlias | null {

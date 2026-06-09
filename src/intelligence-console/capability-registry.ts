@@ -88,6 +88,27 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     ownerModule: 'devpulse_v2_visual_verification_engine',
     extensionOnly: true,
   },
+  {
+    capabilityId: 'UNIFIED_VERIFICATION_LAB_RUNTIME',
+    label: 'Unified Verification Lab Runtime',
+    phase: 16.7,
+    ownerModule: 'devpulse_v2_unified_verification_lab_runtime',
+    extensionOnly: true,
+  },
+  {
+    capabilityId: 'VERIFICATION_REGISTRY',
+    label: 'Verification Registry',
+    phase: 16.8,
+    ownerModule: 'devpulse_v2_verification_registry',
+    extensionOnly: true,
+  },
+  {
+    capabilityId: 'VERIFICATION_ORCHESTRATOR',
+    label: 'Verification Orchestrator',
+    phase: 16.9,
+    ownerModule: 'devpulse_v2_verification_orchestrator',
+    extensionOnly: true,
+  },
 ] as const;
 
 export function isIntelligenceConsoleCapability(capabilityId: string): boolean {

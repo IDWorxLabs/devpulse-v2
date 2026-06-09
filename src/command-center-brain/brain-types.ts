@@ -276,6 +276,12 @@ export interface BrainResponseResult {
   interactionTestingReports?: import('../interaction-testing-engine/types.js').InteractionTestingReport[];
   visualVerificationDiagnostics?: import('../visual-verification-engine/types.js').VisualVerificationDiagnostics;
   visualVerificationReports?: import('../visual-verification-engine/types.js').VisualVerificationReport[];
+  verificationRuntimeDiagnostics?: import('../unified-verification-lab/types.js').VerificationRuntimeDiagnostics;
+  verificationRuntimeReports?: import('../unified-verification-lab/types.js').VerificationRuntimeReport[];
+  verificationRegistryDiagnostics?: import('../verification-registry/types.js').VerificationRegistryDiagnostics;
+  verificationRegistryReports?: import('../verification-registry/types.js').VerificationRegistryReport[];
+  verificationOrchestratorDiagnostics?: import('../verification-orchestrator/types.js').VerificationOrchestratorDiagnostics;
+  verificationOrchestratorReports?: import('../verification-orchestrator/types.js').VerificationOrchestrationReport[];
   pipelineStages: BrainPipelineStage[];
   operatorFeedEvents: OperatorFeedEvent[];
   confirmation: BrainConfirmation;

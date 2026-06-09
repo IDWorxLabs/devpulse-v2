@@ -76,6 +76,16 @@ function executionFieldsForAction(
   visualVerificationId: string;
   visualVerificationStatus: string;
   visualVerificationTargetCount: number;
+  verificationSessionId: string;
+  verificationRuntimeState: string;
+  providerCount: number;
+  verificationTargetCount: number;
+  verificationDependencyCount: number;
+  verificationRequirementCount: number;
+  orchestrationId: string;
+  verificationPlanCount: number;
+  readyTargetCount: number;
+  blockedTargetCount: number;
   applyAllowed: false;
   executionAllowed: false;
 } {
@@ -137,6 +147,16 @@ function executionFieldsForAction(
   const vverId = `vver-${actionId.replace('act-', '')}`;
   const vverStatus = blocked ? 'VERIFICATION_BLOCKED' : score >= 45 ? 'PARTIALLY_VERIFIED' : 'VERIFICATION_REQUIRED';
   const vverTargetCount = blocked ? 0 : Math.max(5, Math.min(14, 8 + Math.floor(score / 12)));
+  const vvsessId = `vvsess-${actionId.replace('act-', '')}`;
+  const vvsessState = blocked ? 'BLOCKED' : score >= 45 ? 'COMPLETED' : 'READY';
+  const providerCount = blocked ? 0 : Math.max(7, Math.min(7, 7));
+  const verificationTargetCount = blocked ? 0 : 11;
+  const verificationDependencyCount = blocked ? 0 : 11;
+  const verificationRequirementCount = blocked ? 0 : 11;
+  const orchestrationId = `vorch-${actionId.replace('act-', '')}`;
+  const verificationPlanCount = blocked ? 0 : 11;
+  const readyTargetCount = blocked ? 0 : 3;
+  const blockedTargetCount = blocked ? 11 : 0;
   return {
     executionReadiness: `${level} (${score}) — ${blockerCount} visible blockers; Phase 14.1 readiness-only, no execution.`,
     executionReady: !blocked && score >= 45 && blockerCount < 4,
@@ -192,6 +212,16 @@ function executionFieldsForAction(
     visualVerificationId: vverId,
     visualVerificationStatus: vverStatus,
     visualVerificationTargetCount: vverTargetCount,
+    verificationSessionId: vvsessId,
+    verificationRuntimeState: vvsessState,
+    providerCount,
+    verificationTargetCount,
+    verificationDependencyCount,
+    verificationRequirementCount,
+    orchestrationId,
+    verificationPlanCount,
+    readyTargetCount,
+    blockedTargetCount,
     applyAllowed: false,
     executionAllowed: false,
   };

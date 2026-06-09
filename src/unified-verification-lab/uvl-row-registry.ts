@@ -236,6 +236,44 @@ export const VISUAL_VERIFICATION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VISUAL_VERIFICATION_OPERATOR_FEED', module: 'visual_verification_engine', phase: 16.6, description: 'Operator feed stages for visual verification', extensionOnly: true },
 ] as const;
 
+export const UNIFIED_VERIFICATION_LAB_RUNTIME_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'UNIFIED_VERIFICATION_LAB_RUNTIME_TYPES', module: 'unified_verification_lab_runtime', phase: 16.7, description: 'Unified Verification Lab Runtime types and models', extensionOnly: true },
+  { rowId: 'VERIFICATION_PROVIDER_REGISTRY', module: 'unified_verification_lab_runtime', phase: 16.7, description: 'Verification provider registration registry', extensionOnly: true },
+  { rowId: 'VERIFICATION_SESSION_MANAGER', module: 'unified_verification_lab_runtime', phase: 16.7, description: 'Verification session manager without execution', extensionOnly: true },
+  { rowId: 'VERIFICATION_LIFECYCLE_MANAGER', module: 'unified_verification_lab_runtime', phase: 16.7, description: 'Verification lifecycle transitions only', extensionOnly: true },
+  { rowId: 'VERIFICATION_RUNTIME_VALIDATOR', module: 'unified_verification_lab_runtime', phase: 16.7, description: 'Verification runtime validation gates', extensionOnly: true },
+  { rowId: 'VERIFICATION_RUNTIME_REPORT', module: 'unified_verification_lab_runtime', phase: 16.7, description: 'Verification runtime report composition', extensionOnly: true },
+  { rowId: 'UNIFIED_VERIFICATION_LAB_RUNTIME_ROUTING', module: 'unified_verification_lab_runtime', phase: 16.7, description: 'Command Center routing for UVL runtime questions', extensionOnly: true },
+  { rowId: 'UNIFIED_VERIFICATION_LAB_RUNTIME_OPERATOR_FEED', module: 'unified_verification_lab_runtime', phase: 16.7, description: 'Operator feed stages for UVL runtime', extensionOnly: true },
+] as const;
+
+export const VERIFICATION_REGISTRY_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'VERIFICATION_REGISTRY_TYPES', module: 'verification_registry', phase: 16.8, description: 'Verification registry types and models', extensionOnly: true },
+  { rowId: 'VERIFICATION_TARGET_REGISTRY', module: 'verification_registry', phase: 16.8, description: 'Verification target registry without execution', extensionOnly: true },
+  { rowId: 'VERIFICATION_OWNER_REGISTRY', module: 'verification_registry', phase: 16.8, description: 'Verification owner registry metadata', extensionOnly: true },
+  { rowId: 'VERIFICATION_DEPENDENCY_REGISTRY', module: 'verification_registry', phase: 16.8, description: 'Verification dependency registry', extensionOnly: true },
+  { rowId: 'VERIFICATION_REQUIREMENT_REGISTRY', module: 'verification_registry', phase: 16.8, description: 'Verification requirement registry', extensionOnly: true },
+  { rowId: 'VERIFICATION_CAPABILITY_REGISTRY', module: 'verification_registry', phase: 16.8, description: 'Verification capability registry', extensionOnly: true },
+  { rowId: 'VERIFICATION_REGISTRY_VALIDATOR', module: 'verification_registry', phase: 16.8, description: 'Verification registry validation gates', extensionOnly: true },
+  { rowId: 'VERIFICATION_REGISTRY_REPORT', module: 'verification_registry', phase: 16.8, description: 'Verification registry report composition', extensionOnly: true },
+  { rowId: 'VERIFICATION_REGISTRY_ROUTING', module: 'verification_registry', phase: 16.8, description: 'Command Center routing for verification registry questions', extensionOnly: true },
+  { rowId: 'VERIFICATION_REGISTRY_OPERATOR_FEED', module: 'verification_registry', phase: 16.8, description: 'Operator feed stages for verification registry', extensionOnly: true },
+] as const;
+
+export const VERIFICATION_ORCHESTRATOR_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'VERIFICATION_ORCHESTRATOR_TYPES', module: 'verification_orchestrator', phase: 16.9, description: 'Verification orchestrator types and models', extensionOnly: true },
+  { rowId: 'VERIFICATION_PLAN_BUILDER', module: 'verification_orchestrator', phase: 16.9, description: 'Verification execution plan builder without execution', extensionOnly: true },
+  { rowId: 'VERIFICATION_DEPENDENCY_RESOLVER', module: 'verification_orchestrator', phase: 16.9, description: 'Verification dependency resolver and cycle detection', extensionOnly: true },
+  { rowId: 'VERIFICATION_SCHEDULER', module: 'verification_orchestrator', phase: 16.9, description: 'Verification execution scheduler', extensionOnly: true },
+  { rowId: 'VERIFICATION_READINESS_EVALUATOR', module: 'verification_orchestrator', phase: 16.9, description: 'Verification readiness evaluator', extensionOnly: true },
+  { rowId: 'VERIFICATION_PARALLELIZATION_ENGINE', module: 'verification_orchestrator', phase: 16.9, description: 'Verification parallelization engine', extensionOnly: true },
+  { rowId: 'VERIFICATION_BLOCKER_ANALYZER', module: 'verification_orchestrator', phase: 16.9, description: 'Verification blocker analyzer', extensionOnly: true },
+  { rowId: 'VERIFICATION_ORCHESTRATOR_VALIDATOR', module: 'verification_orchestrator', phase: 16.9, description: 'Verification orchestrator validation gates', extensionOnly: true },
+  { rowId: 'VERIFICATION_ORCHESTRATOR_REPORT', module: 'verification_orchestrator', phase: 16.9, description: 'Verification orchestration report composition', extensionOnly: true },
+  { rowId: 'VERIFICATION_ORCHESTRATOR_ROUTING', module: 'verification_orchestrator', phase: 16.9, description: 'Command Center routing for orchestration questions', extensionOnly: true },
+  { rowId: 'VERIFICATION_ORCHESTRATOR_OPERATOR_FEED', module: 'verification_orchestrator', phase: 16.9, description: 'Operator feed stages for verification orchestrator', extensionOnly: true },
+] as const;
+
 export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   ...WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
@@ -248,6 +286,9 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...UI_INSPECTION_ENGINE_UVL_ROWS,
   ...INTERACTION_TESTING_ENGINE_UVL_ROWS,
   ...VISUAL_VERIFICATION_ENGINE_UVL_ROWS,
+  ...UNIFIED_VERIFICATION_LAB_RUNTIME_UVL_ROWS,
+  ...VERIFICATION_REGISTRY_UVL_ROWS,
+  ...VERIFICATION_ORCHESTRATOR_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -292,6 +333,18 @@ export function listInteractionTestingEngineUvlRows(): UvlRow[] {
 
 export function listVisualVerificationEngineUvlRows(): UvlRow[] {
   return [...VISUAL_VERIFICATION_ENGINE_UVL_ROWS];
+}
+
+export function listUnifiedVerificationLabRuntimeUvlRows(): UvlRow[] {
+  return [...UNIFIED_VERIFICATION_LAB_RUNTIME_UVL_ROWS];
+}
+
+export function listVerificationRegistryUvlRows(): UvlRow[] {
+  return [...VERIFICATION_REGISTRY_UVL_ROWS];
+}
+
+export function listVerificationOrchestratorUvlRows(): UvlRow[] {
+  return [...VERIFICATION_ORCHESTRATOR_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

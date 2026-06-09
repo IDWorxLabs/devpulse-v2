@@ -797,6 +797,27 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 16.6,
     description: 'Phase 16.6 Visual Verification Engine — evaluates visual outcomes, compares expected vs observed states, and produces verification evidence; no UI modification, interaction execution, or repairs',
   },
+  unified_verification_lab_runtime: {
+    domain: 'unified_verification_lab_runtime',
+    ownerModule: 'devpulse_v2_unified_verification_lab_runtime',
+    ownerFunction: 'getDevPulseV2UnifiedVerificationLabRuntime',
+    phase: 16.7,
+    description: 'Phase 16.7 Unified Verification Lab Runtime — provider registration and verification session lifecycle; no verification execution, evidence generation, report orchestration, or auto-fix',
+  },
+  verification_registry: {
+    domain: 'verification_registry',
+    ownerModule: 'devpulse_v2_verification_registry',
+    ownerFunction: 'getDevPulseV2VerificationRegistry',
+    phase: 16.8,
+    description: 'Phase 16.8 Verification Registry — central registry of verification targets, ownership, dependencies, and requirements; no verification execution, orchestration, or auto-fix',
+  },
+  verification_orchestrator: {
+    domain: 'verification_orchestrator',
+    ownerModule: 'devpulse_v2_verification_orchestrator',
+    ownerFunction: 'getDevPulseV2VerificationOrchestrator',
+    phase: 16.9,
+    description: 'Phase 16.9 Verification Orchestrator — coordinates verification execution planning, scheduling, and readiness; no verification execution, evidence generation, or auto-fix',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {

@@ -76,6 +76,16 @@ export interface ActionCandidate {
   visualVerificationId: string;
   visualVerificationStatus: string;
   visualVerificationTargetCount: number;
+  verificationSessionId: string;
+  verificationRuntimeState: string;
+  providerCount: number;
+  verificationTargetCount: number;
+  verificationDependencyCount: number;
+  verificationRequirementCount: number;
+  orchestrationId: string;
+  verificationPlanCount: number;
+  readyTargetCount: number;
+  blockedTargetCount: number;
   applyAllowed: false;
   executionAllowed: false;
   visibilityOnly: true;

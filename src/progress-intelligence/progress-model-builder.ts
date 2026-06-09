@@ -20,6 +20,9 @@ import { isSelfVisionRuntimeQuestion } from '../self-vision-runtime/types.js';
 import { isUiInspectionQuestion } from '../ui-inspection-engine/types.js';
 import { isInteractionTestingQuestion } from '../interaction-testing-engine/types.js';
 import { isVisualVerificationQuestion } from '../visual-verification-engine/types.js';
+import { isUvlRuntimeQuestion } from '../unified-verification-lab/types.js';
+import { isVerificationRegistryQuestion } from '../verification-registry/types.js';
+import { isVerificationOrchestratorQuestion } from '../verification-orchestrator/types.js';
 import type { ProgressRecord } from './progress-intelligence-types.js';
 
 let progressCounter = 0;
@@ -198,6 +201,30 @@ export function buildProgressRecords(query: string): ProgressRecord[] {
       ...records[0],
       visualVerificationState: 'VERIFIED',
       visualVerificationNote: 'Visual Verification Ready — outcome verification only, no UI modification or repairs',
+    };
+  }
+
+  if (isUvlRuntimeQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      uvlRuntimeState: 'COMPLETED',
+      uvlRuntimeNote: 'Unified Verification Lab Runtime Ready — provider registration and session lifecycle only',
+    };
+  }
+
+  if (isVerificationRegistryQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      verificationRegistryState: 'READY',
+      verificationRegistryNote: 'Verification Registry Ready — targets, ownership, dependencies, and requirements defined; no execution',
+    };
+  }
+
+  if (isVerificationOrchestratorQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      verificationOrchestrationState: 'READY',
+      verificationOrchestrationNote: 'Verification Orchestration Ready — execution plan and schedule defined; no provider execution',
     };
   }
 
