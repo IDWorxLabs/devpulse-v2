@@ -221,6 +221,8 @@ export {
   listAutonomousBuilderFoundationUvlRows,
   BUILD_STRATEGY_ENGINE_UVL_ROWS,
   listBuildStrategyEngineUvlRows,
+  VERIFICATION_STRATEGY_CORE_UVL_ROWS,
+  listVerificationStrategyCoreUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

@@ -236,6 +236,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'VERIFICATION_STRATEGY_CORE',
+    label: 'Verification Strategy Core',
+    phase: 19.3,
+    ownerModule: 'devpulse_v2_verification_strategy_core',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'BUILD_STRATEGY_ENGINE',
     label: 'Build Strategy Engine',
     phase: 19.2,

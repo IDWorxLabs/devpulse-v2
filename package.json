@@ -141,6 +141,7 @@
     "validate:founder-inbox-foundation": "tsx scripts/validate-founder-inbox-foundation.ts",
     "validate:notification-delivery-foundation": "tsx scripts/validate-notification-delivery-foundation.ts",
     "validate:mobile-push-foundation": "tsx scripts/validate-mobile-push-foundation.ts",
+    "validate:verification-strategy-core": "tsx scripts/validate-verification-strategy-core.ts",
     "validate:build-strategy-engine": "tsx scripts/validate-build-strategy-engine.ts",
     "validate:autonomous-builder-foundation": "tsx scripts/validate-autonomous-builder-foundation.ts",
     "validate:brain-routing-performance-hardening": "tsx scripts/validate-brain-routing-performance-hardening.ts",

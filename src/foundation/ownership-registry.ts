@@ -959,6 +959,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 19.2,
     description: 'Phase 19.2 Build Strategy Engine — strategy classification, mode/autonomy/depth selection, risk/confidence evaluation, stage recommendation, and readiness authority referencing Autonomous Builder Foundation; strategy/planning only, no code modification or execution',
   },
+  verification_strategy_core: {
+    domain: 'verification_strategy_core',
+    ownerModule: 'devpulse_v2_verification_strategy_core',
+    ownerFunction: 'getDevPulseV2VerificationStrategyCore',
+    phase: 19.3,
+    description: 'Phase 19.3A Verification Strategy Core — verification depth, evidence requirements, escalation, and validator path selection; decision-making only, no validator execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

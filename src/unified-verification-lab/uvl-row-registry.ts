@@ -825,6 +825,17 @@ export const BUILD_STRATEGY_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'BUILD_STRATEGY_ENGINE_PANEL', module: 'build_strategy_engine', phase: 19.2, description: 'Unified Verification Lab panel snapshot for build strategy engine', extensionOnly: true },
 ];
 
+export const VERIFICATION_STRATEGY_CORE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'VERIFICATION_STRATEGY_TYPES', module: 'verification_strategy_core', phase: 19.3, description: 'Verification strategy types and decision models', extensionOnly: true },
+  { rowId: 'VERIFICATION_STRATEGY_SELECTOR', module: 'verification_strategy_core', phase: 19.3, description: 'Verification strategy selection rules', extensionOnly: true },
+  { rowId: 'VERIFICATION_STRATEGY_BUILDER', module: 'verification_strategy_core', phase: 19.3, description: 'Verification strategy decision pipeline builder', extensionOnly: true },
+  { rowId: 'VERIFICATION_STRATEGY_REGISTRY', module: 'verification_strategy_core', phase: 19.3, description: 'Verification strategy registry metadata', extensionOnly: true },
+  { rowId: 'VERIFICATION_ESCALATION_POLICY', module: 'verification_strategy_core', phase: 19.3, description: 'Verification escalation policy', extensionOnly: true },
+  { rowId: 'VERIFICATION_CONFIDENCE_POLICY', module: 'verification_strategy_core', phase: 19.3, description: 'Verification confidence calculation policy', extensionOnly: true },
+  { rowId: 'VERIFICATION_REQUIREMENT_EVALUATOR', module: 'verification_strategy_core', phase: 19.3, description: 'Validator requirement evaluator', extensionOnly: true },
+  { rowId: 'VERIFICATION_STRATEGY_CORE', module: 'verification_strategy_core', phase: 19.3, description: 'Verification strategy core orchestration and read-only registration', extensionOnly: true },
+];
+
 export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   ...WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
@@ -860,6 +871,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...MOBILE_PUSH_FOUNDATION_UVL_ROWS,
   ...AUTONOMOUS_BUILDER_FOUNDATION_UVL_ROWS,
   ...BUILD_STRATEGY_ENGINE_UVL_ROWS,
+  ...VERIFICATION_STRATEGY_CORE_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -996,6 +1008,10 @@ export function listAutonomousBuilderFoundationUvlRows(): UvlRow[] {
 
 export function listBuildStrategyEngineUvlRows(): UvlRow[] {
   return [...BUILD_STRATEGY_ENGINE_UVL_ROWS];
+}
+
+export function listVerificationStrategyCoreUvlRows(): UvlRow[] {
+  return [...VERIFICATION_STRATEGY_CORE_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

@@ -193,7 +193,8 @@ export type OwnershipDomain =
   | 'notification_delivery_foundation'
   | 'mobile_push_foundation'
   | 'autonomous_builder_foundation'
-  | 'build_strategy_engine';
+  | 'build_strategy_engine'
+  | 'verification_strategy_core';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 
