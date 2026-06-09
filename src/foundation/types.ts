@@ -191,7 +191,8 @@ export type OwnershipDomain =
   | 'founder_notification_runtime_foundation'
   | 'founder_inbox_foundation'
   | 'notification_delivery_foundation'
-  | 'mobile_push_foundation';
+  | 'mobile_push_foundation'
+  | 'autonomous_builder_foundation';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

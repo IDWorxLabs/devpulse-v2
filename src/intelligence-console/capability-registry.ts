@@ -235,6 +235,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     ownerModule: 'devpulse_v2_mobile_push_foundation',
     extensionOnly: true,
   },
+  {
+    capabilityId: 'AUTONOMOUS_BUILDER_FOUNDATION',
+    label: 'Autonomous Builder Foundation',
+    phase: 19.1,
+    ownerModule: 'devpulse_v2_autonomous_builder_foundation',
+    extensionOnly: true,
+  },
 ] as const;
 
 export function isIntelligenceConsoleCapability(capabilityId: string): boolean {

@@ -2,6 +2,8 @@
  * Unified Verification Lab row registry — extension rows for phase validation.
  */
 
+import { hasCachedUvlRow } from './uvl-lookup-cache.js';
+
 export interface UvlRow {
   rowId: string;
   module: string;
@@ -748,6 +750,40 @@ export const MOBILE_PUSH_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'MOBILE_PUSH_FOUNDATION_PANEL', module: 'mobile_push_foundation', phase: 18.9, description: 'Unified Verification Lab panel snapshot for mobile push foundation', extensionOnly: true },
 ];
 
+export const AUTONOMOUS_BUILDER_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'AUTONOMOUS_BUILDER_TYPES', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous builder types and models', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_STORE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous builder in-memory store', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_REGISTRY', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous builder registry and orchestrator', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_MANAGER', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous builder manager without code execution', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_STATE_MANAGER', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous build state manager', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_LIFECYCLE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous build lifecycle events', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_OWNERSHIP', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous build ownership tracking', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_CONTEXT', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous build context aggregation', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_GOAL', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous build goal metadata', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_PLAN', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous build plan metadata', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_STAGE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous build stage metadata', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_READINESS', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous build readiness evaluation', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_CONSTRAINT', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous build constraint metadata', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_CAPABILITY', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous build capability metadata', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_CLOUD_BRIDGE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Cloud Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_WORLD2_BRIDGE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'World2 bridge', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_AIDEV_BRIDGE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'AiDev bridge', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_PROJECT_VAULT_BRIDGE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Project Vault bridge', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_OPERATOR_FEED_BRIDGE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Operator Feed bridge', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_NOTIFICATION_BRIDGE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Founder Notification Runtime bridge', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_INBOX_BRIDGE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Founder Inbox bridge', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_DELIVERY_BRIDGE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Notification Delivery Foundation bridge (primary)', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_PUSH_BRIDGE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Mobile Push Foundation bridge', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_QUERY', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous builder query layer', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_HISTORY', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous build history tracking', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_REPORT_BUILDER', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous builder report builder', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_VALIDATOR', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous builder validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_DIAGNOSTICS', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous builder diagnostics tracker', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_READ_CACHE', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Autonomous builder bounded read cache', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_FOUNDATION_ROUTING', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Command Center routing for autonomous builder questions', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_BUILDER_FOUNDATION_PANEL', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Unified Verification Lab panel snapshot for autonomous builder foundation', extensionOnly: true },
+];
+
 export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   ...WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
@@ -781,6 +817,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...FOUNDER_INBOX_FOUNDATION_UVL_ROWS,
   ...NOTIFICATION_DELIVERY_FOUNDATION_UVL_ROWS,
   ...MOBILE_PUSH_FOUNDATION_UVL_ROWS,
+  ...AUTONOMOUS_BUILDER_FOUNDATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -911,6 +948,10 @@ export function listMobilePushFoundationUvlRows(): UvlRow[] {
   return [...MOBILE_PUSH_FOUNDATION_UVL_ROWS];
 }
 
+export function listAutonomousBuilderFoundationUvlRows(): UvlRow[] {
+  return [...AUTONOMOUS_BUILDER_FOUNDATION_UVL_ROWS];
+}
+
 export function hasUvlRow(rowId: string): boolean {
-  return ALL_UVL_ROWS.some((r) => r.rowId === rowId);
+  return hasCachedUvlRow(rowId);
 }

@@ -102,6 +102,8 @@ export {
   detectContextNeeds,
   selectReasoningModes,
   selectCapabilities,
+  runBrainRoutingPerformanceDiagnostics,
+  buildAllBrainRoutingPerformanceReports,
 } from './general-question-understanding/index.js';
 
 export {

@@ -195,6 +195,9 @@ export interface ReasoningVisibilityRecord {
   notificationDeliveryBasis: string;
   notificationDeliveryChain: string[];
   notificationDeliveryState: string[];
+  autonomousBuilderBasis: string;
+  autonomousBuilderChain: string[];
+  autonomousBuilderState: string[];
   mobilePushBasis: string;
   mobilePushChain: string[];
   mobilePushState: string[];

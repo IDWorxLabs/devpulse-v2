@@ -549,6 +549,20 @@ const CAPABILITY_STAGE_MAP: Partial<Record<SelectedCapability, OperatorFeedStage
     'Inbox Entry Failed',
     'Response Ready',
   ],
+  AUTONOMOUS_BUILDER_FOUNDATION: [
+    'Autonomous Build Created',
+    'Autonomous Goal Created',
+    'Autonomous Plan Created',
+    'Autonomous Stage Created',
+    'Autonomous Readiness Evaluated',
+    'Autonomous Build Ready',
+    'Autonomous Build Blocked',
+    'Autonomous Build Paused',
+    'Autonomous Build Completed',
+    'Autonomous Build Failed',
+    'Autonomous Build Archived',
+    'Response Ready',
+  ],
   MOBILE_PUSH_FOUNDATION: [
     'Mobile Push Created',
     'Mobile Push Planned',
@@ -654,6 +668,9 @@ export function sourceSystemForCapability(capability: SelectedCapability | null)
     CROSS_DEVICE_RUNTIME_FOUNDATION: 'cross_device_runtime_foundation',
     FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION: 'founder_notification_runtime_foundation',
     FOUNDER_INBOX_FOUNDATION: 'founder_inbox_foundation',
+    NOTIFICATION_DELIVERY_FOUNDATION: 'notification_delivery_foundation',
+    MOBILE_PUSH_FOUNDATION: 'mobile_push_foundation',
+    AUTONOMOUS_BUILDER_FOUNDATION: 'autonomous_builder_foundation',
   };
   return map[capability] ?? 'command_center_brain';
 }

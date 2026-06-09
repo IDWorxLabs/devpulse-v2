@@ -396,6 +396,17 @@ export type OperatorFeedStage =
   | 'Mobile Push Completed'
   | 'Mobile Push Failed'
   | 'Mobile Push Archived'
+  | 'Autonomous Build Created'
+  | 'Autonomous Goal Created'
+  | 'Autonomous Plan Created'
+  | 'Autonomous Stage Created'
+  | 'Autonomous Readiness Evaluated'
+  | 'Autonomous Build Ready'
+  | 'Autonomous Build Blocked'
+  | 'Autonomous Build Paused'
+  | 'Autonomous Build Completed'
+  | 'Autonomous Build Failed'
+  | 'Autonomous Build Archived'
   | 'Response Ready';
 
 export type OperatorFeedEventStatus = 'PENDING' | 'ACTIVE' | 'COMPLETE';

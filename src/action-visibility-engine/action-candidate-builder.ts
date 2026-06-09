@@ -141,6 +141,9 @@ function executionFieldsForAction(
   mobilePushFoundationId: string;
   mobilePushCount: number;
   mobilePushState: string;
+  autonomousBuilderFoundationId: string;
+  autonomousBuilderCount: number;
+  autonomousBuilderState: string;
   applyAllowed: false;
   executionAllowed: false;
 } {
@@ -267,6 +270,9 @@ function executionFieldsForAction(
   const mobilePushFoundationId = `mpushtfnd-${actionId.replace('act-', '')}`;
   const mobilePushCount = blocked ? 0 : 14;
   const mobilePushState = blocked ? 'BLOCKED' : 'READY';
+  const autonomousBuilderFoundationId = `abuildtfnd-${actionId.replace('act-', '')}`;
+  const autonomousBuilderCount = blocked ? 0 : 10;
+  const autonomousBuilderState = blocked ? 'BLOCKED' : 'READY';
   return {
     executionReadiness: `${level} (${score}) — ${blockerCount} visible blockers; Phase 14.1 readiness-only, no execution.`,
     executionReady: !blocked && score >= 45 && blockerCount < 4,
@@ -387,6 +393,9 @@ function executionFieldsForAction(
     mobilePushFoundationId,
     mobilePushCount,
     mobilePushState,
+    autonomousBuilderFoundationId,
+    autonomousBuilderCount,
+    autonomousBuilderState,
     applyAllowed: false,
     executionAllowed: false,
   };

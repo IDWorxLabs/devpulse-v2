@@ -49,6 +49,7 @@ import { buildCrossDeviceFailureContext } from '../cross-device-runtime/cross-de
 import { buildNotificationFailureContext } from '../founder-notification-runtime/founder-notification-report-builder.js';
 import { buildInboxFailureContext } from '../founder-inbox/founder-inbox-report-builder.js';
 import { buildDeliveryFailureContext } from '../notification-delivery/notification-delivery-report-builder.js';
+import { buildAutonomousBuilderFailureContext } from '../autonomous-builder/autonomous-builder-report-builder.js';
 import { buildMobilePushFailureContext } from '../mobile-push/mobile-push-report-builder.js';
 import type { FailureRecord } from './failure-visibility-types.js';
 
@@ -618,6 +619,19 @@ export function buildFailureRecords(query: string): FailureRecord[] {
         sourceSystem: ndf.sourceSystem,
         affectedSystems: ['notification_delivery_foundation', 'failure_visibility_engine'],
         blockedCapabilities: ['NOTIFICATION_DELIVERY_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const abf of buildAutonomousBuilderFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: abf.title,
+        description: abf.description,
+        sourceSystem: abf.sourceSystem,
+        affectedSystems: ['autonomous_builder_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['AUTONOMOUS_BUILDER_FOUNDATION'],
         dependencyImpacts: depImpacts,
       }),
     );

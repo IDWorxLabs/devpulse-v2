@@ -115,6 +115,7 @@ export {
   buildFounderInboxFoundationPanelSnapshot,
   buildNotificationDeliveryFoundationPanelSnapshot,
   buildMobilePushFoundationPanelSnapshot,
+  buildAutonomousBuilderFoundationPanelSnapshot,
   type UvlPanelSnapshot,
   type VerificationRegistryPanelSnapshot,
   type VerificationOrchestratorPanelSnapshot,
@@ -133,6 +134,7 @@ export {
   type MobileApprovalRuntimeFoundationPanelSnapshot,
   type CrossDeviceRuntimeFoundationPanelSnapshot,
   type FounderNotificationRuntimeFoundationPanelSnapshot,
+  type AutonomousBuilderFoundationPanelSnapshot,
 } from './uvl-panel-registry.js';
 
 export function getDevPulseV2UnifiedVerificationLabRuntime(): {
@@ -215,6 +217,18 @@ export {
   listNotificationDeliveryFoundationUvlRows,
   MOBILE_PUSH_FOUNDATION_UVL_ROWS,
   listMobilePushFoundationUvlRows,
+  AUTONOMOUS_BUILDER_FOUNDATION_UVL_ROWS,
+  listAutonomousBuilderFoundationUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';
+
+export {
+  hasCachedUvlRow,
+  getCachedUvlRow,
+  getCachedUvlRowsByPhase,
+  getCachedUvlPanel,
+  getUvlLookupCacheStats,
+  clearUvlLookupCache,
+  MAX_UVL_CACHE_SIZE,
+} from './uvl-lookup-cache.js';

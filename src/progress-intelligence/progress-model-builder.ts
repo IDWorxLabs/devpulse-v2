@@ -39,6 +39,7 @@ import { isMobileApprovalRuntimeFoundationQuestion } from '../mobile-approval-ru
 import { isCrossDeviceRuntimeFoundationQuestion } from '../cross-device-runtime/cross-device-types.js';
 import { isFounderNotificationRuntimeFoundationQuestion } from '../founder-notification-runtime/founder-notification-types.js';
 import { isFounderInboxFoundationQuestion } from '../founder-inbox/founder-inbox-types.js';
+import { isAutonomousBuilderFoundationQuestion } from '../autonomous-builder/autonomous-builder-types.js';
 import { isMobilePushFoundationQuestion } from '../mobile-push/mobile-push-types.js';
 import { isNotificationDeliveryFoundationQuestion } from '../notification-delivery/notification-delivery-types.js';
 import type { ProgressRecord } from './progress-intelligence-types.js';
@@ -371,6 +372,15 @@ export function buildProgressRecords(query: string): ProgressRecord[] {
       ...records[0],
       founderInboxFoundationState: 'READY',
       founderInboxFoundationNote: 'Founder Inbox Foundation Ready — founder inbox visualization and organization layer referencing Founder Notification Runtime; no notification authority',
+    };
+  }
+
+  if (isAutonomousBuilderFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      autonomousBuilderFoundationState: 'READY',
+      autonomousBuilderFoundationNote:
+        'Autonomous Builder Foundation Ready — build planning, goal/plan/stage metadata, and readiness evaluation authority; planning only, no code execution',
     };
   }
 

@@ -3,6 +3,7 @@
  */
 
 import type { OwnershipDomain, Violation } from './types.js';
+import { getCachedOwnershipRecord } from './ownership-lookup-cache.js';
 
 export interface OwnerRecord {
   domain: OwnershipDomain;
@@ -944,10 +945,21 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 18.9,
     description: 'Phase 18.9 Mobile Push Foundation — push planning, token metadata, payload planning, and platform targeting authority referencing Notification Delivery Foundation; no real push, FCM, APNS, or raw token storage',
   },
+  autonomous_builder_foundation: {
+    domain: 'autonomous_builder_foundation',
+    ownerModule: 'devpulse_v2_autonomous_builder_foundation',
+    ownerFunction: 'getDevPulseV2AutonomousBuilderFoundation',
+    phase: 19.1,
+    description: 'Phase 19.1 Autonomous Builder Foundation — build planning, goal/plan/stage metadata, and readiness evaluation authority referencing Mobile Push Foundation; planning only, no code execution',
+  },
 };
 
-export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
+export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {
   return OWNERSHIP_REGISTRY[domain];
+}
+
+export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {
+  return getCachedOwnershipRecord(domain) as OwnerRecord;
 }
 
 export function listDevPulseV2Owners(): OwnerRecord[] {

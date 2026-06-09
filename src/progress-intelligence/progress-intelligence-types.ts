@@ -123,6 +123,8 @@ export interface ProgressRecord {
   notificationDeliveryFoundationNote?: string;
   mobilePushFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
   mobilePushFoundationNote?: string;
+  autonomousBuilderFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  autonomousBuilderFoundationNote?: string;
   visibilityOnly: true;
 }
 

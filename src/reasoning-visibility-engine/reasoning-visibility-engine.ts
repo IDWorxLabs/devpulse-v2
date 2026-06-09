@@ -553,6 +553,17 @@ export function buildReasoningVisibilityRecord(query: string): ReasoningVisibili
       'ACKNOWLEDGED / ARCHIVED / RESTORED — visualization only, no notification authority',
       'FILTER_SEARCH_GROUP — organization layer metadata',
     ],
+    autonomousBuilderBasis: `Autonomous builder foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 19.1 build planning, goal/plan/stage metadata, and readiness evaluation authority; planning only, no code execution.`,
+    autonomousBuilderChain: [
+      'abuild-0001 → push and delivery reference metadata',
+      'CREATED → GOAL_CREATED → PLAN_CREATED → STAGE_CREATED → READINESS_EVALUATED → READY → COMPLETED',
+      'autonomous builder → push/delivery/notification/inbox/cloud/world2/aidev/project vault/operator feed bridges',
+    ],
+    autonomousBuilderState: [
+      'PLANNING → GOAL_CREATED → PLAN_CREATED → STAGE_CREATED',
+      'READY / COMPLETED — planning metadata only, no code execution',
+      'AUTONOMOUS_EXECUTOR_BLOCKED — duplicate executor policy enforced',
+    ],
     mobilePushBasis: `Mobile push foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 18.9 push planning, token metadata, payload planning, and platform targeting authority; no real push, FCM, APNS, or raw token storage.`,
     mobilePushChain: [
       'mpush-0001 → delivery and notification reference metadata',

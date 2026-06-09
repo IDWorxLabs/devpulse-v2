@@ -9,131 +9,66 @@ import type {
   SelectedCapability,
 } from './general-question-types.js';
 import { UNAVAILABLE_CAPABILITIES } from './general-question-types.js';
-import { isBroadProjectQuestion, isPlanningNotImpactQuestion } from './question-understanding-engine.js';
-import { isTimelineQuestion } from '../../timeline-intelligence/timeline-types.js';
-import { isDecisionQuestion } from '../../unified-decision-layer/decision-types.js';
-import { isVaultAwareQuestion } from '../../project-vault-intelligence/project-vault-intelligence-types.js';
-import { isDependencyIntelligenceQuestion } from '../../dependency-intelligence/dependency-intelligence-types.js';
-import { isWorkspaceIntelligenceQuestion } from '../../workspace-intelligence/workspace-intelligence-types.js';
-import { isProjectHistoryIntelligenceQuestion } from '../../project-history-intelligence/project-history-intelligence-types.js';
-import { isProjectSummarizationQuestion } from '../../project-summarization-engine/project-summarization-types.js';
-import { isPortfolioIntelligenceQuestion } from '../../portfolio-intelligence/portfolio-intelligence-types.js';
-import { isActionVisibilityQuestion } from '../../action-visibility-engine/action-visibility-types.js';
-import { isReasoningVisibilityQuestion } from '../../reasoning-visibility-engine/reasoning-visibility-types.js';
-import { isProgressIntelligenceQuestion } from '../../progress-intelligence/progress-intelligence-types.js';
-import { isFailureVisibilityQuestion } from '../../failure-visibility-engine/failure-visibility-types.js';
-import { isLearningVisibilityQuestion } from '../../learning-visibility-engine/learning-visibility-types.js';
-import { isExecutionRuntimeFoundationQuestion } from '../../execution-runtime/execution-runtime-types.js';
-import { isBuildTaskRuntimeFoundationQuestion } from '../../build-task-runtime/build-task-runtime-types.js';
-import { isCodeGenerationRuntimeFoundationQuestion } from '../../code-generation-runtime/code-generation-runtime-types.js';
-import { isTestingRuntimeFoundationQuestion } from '../../testing-runtime/testing-runtime-types.js';
-import { isAutoFixRuntimeFoundationQuestion } from '../../auto-fix-runtime/auto-fix-runtime-types.js';
-import { isRuntimeVerificationLayerQuestion } from '../../runtime-verification-layer/runtime-verification-types.js';
-import { isWorld2ExecutionActivationQuestion } from '../../world2-execution-activation/world2-execution-activation-types.js';
-import { isWorld2BuilderPacketExecutionQuestion } from '../../world2-builder-packet-execution/types.js';
-import { isWorld2ControlledApplyQuestion } from '../../world2-controlled-apply-runtime/types.js';
-import { isWorld2RollbackQuestion } from '../../world2-rollback-runtime/types.js';
-import { isWorld2RecoveryQuestion } from '../../world2-recovery-runtime/types.js';
-import { isWorld2CompletionQuestion } from '../../world2-completion-runtime/types.js';
-import { isLivePreviewQuestion } from '../../live-preview-runtime/types.js';
-import { isPreviewIntelligenceQuestion } from '../../preview-intelligence/types.js';
-import { isSelfVisionRuntimeQuestion } from '../../self-vision-runtime/types.js';
-import { isUiInspectionQuestion } from '../../ui-inspection-engine/types.js';
-import { isInteractionTestingQuestion } from '../../interaction-testing-engine/types.js';
-import { isVisualVerificationQuestion } from '../../visual-verification-engine/types.js';
-import { isUvlRuntimeQuestion } from '../../unified-verification-lab/types.js';
-import { isVerificationRegistryQuestion } from '../../verification-registry/types.js';
-import { isVerificationOrchestratorQuestion } from '../../verification-orchestrator/types.js';
-import { isVerificationEvidenceQuestion } from '../../verification-evidence-engine/verification-evidence-types.js';
-import { isVerificationReportingQuestion } from '../../verification-reporting-engine/verification-report-types.js';
-import { isUnifiedVerificationQuestion } from '../../unified-verification-entry/unified-verification-types.js';
-import { isCloudRuntimeFoundationQuestion } from '../../cloud-runtime/cloud-runtime-types.js';
-import { isWorkspaceHostingFoundationQuestion } from '../../workspace-hosting/workspace-hosting-types.js';
-import { isPersistentBuildRuntimeFoundationQuestion } from '../../persistent-build-runtime/persistent-build-types.js';
-import { isCloudVerificationFoundationQuestion } from '../../cloud-verification/cloud-verification-types.js';
-import { isCloudRecoveryFoundationQuestion } from '../../cloud-recovery/cloud-recovery-types.js';
-import { isCloudMonitoringFoundationQuestion } from '../../cloud-monitoring/cloud-monitoring-types.js';
-import { isMobileCommandRuntimeFoundationQuestion } from '../../mobile-command-runtime/mobile-command-types.js';
-import { isMobileChatRuntimeFoundationQuestion } from '../../mobile-chat-runtime/mobile-chat-types.js';
-import { isMobilePreviewRuntimeFoundationQuestion } from '../../mobile-preview-runtime/mobile-preview-types.js';
-import { isMobileApprovalRuntimeFoundationQuestion } from '../../mobile-approval-runtime/mobile-approval-types.js';
-import { isCrossDeviceRuntimeFoundationQuestion } from '../../cross-device-runtime/cross-device-types.js';
-import { isFounderNotificationRuntimeFoundationQuestion } from '../../founder-notification-runtime/founder-notification-types.js';
-import { isFounderInboxFoundationQuestion } from '../../founder-inbox/founder-inbox-types.js';
-import { isMobilePushFoundationQuestion } from '../../mobile-push/mobile-push-types.js';
-import { isNotificationDeliveryFoundationQuestion } from '../../notification-delivery/notification-delivery-types.js';
+import {
+  isBroadProjectQuestion,
+  isPlanningNotImpactQuestion,
+} from './question-understanding-engine.js';
+import {
+  getCapabilityDetector,
+  isDecisionQuestion,
+  isTimelineQuestion,
+} from './capability-routing-detectors.js';
+import { CONTEXT_CAPABILITY_MAP, COMPANION_ROUTE_ENTRIES } from './capability-routing-table.js';
+import { queryCapabilityRouteIndex } from './capability-route-index.js';
+import {
+  clearRoutingPerformanceCache,
+  getCachedRoutingDecision,
+  setCachedRoutingDecision,
+  type CachedRoutingDecision,
+} from './routing-performance-cache.js';
 
-const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> = {
-  PROJECT_PROFILE: 'PROJECT_UNDERSTANDING',
-  PROJECT_FACTS: 'PROJECT_KNOWLEDGE_REASONING',
-  RISK_FACTS: 'PROJECT_KNOWLEDGE_REASONING',
-  MISSING_CAPABILITIES: 'PROJECT_KNOWLEDGE_REASONING',
-  BLOCKERS: 'PROJECT_KNOWLEDGE_REASONING',
-  SHARED_MEMORY: 'SHARED_MEMORY_RECALL',
-  CROSS_SYSTEM_RELATIONSHIPS: 'CROSS_SYSTEM_AWARENESS',
-  ROADMAP_STATE: 'ROADMAP_AWARENESS',
-  OWNERSHIP_REGISTRY: 'SYSTEM_AWARENESS',
-  RUNTIME_STATUS: 'PROJECT_KNOWLEDGE_REASONING',
-  DEVELOPMENT_KNOWLEDGE: 'DEVELOPMENT_REASONING',
-  DEBUG_CONTEXT: 'DEBUGGING_REASONING',
-  TIMELINE_STATE: 'TIMELINE_INTELLIGENCE',
-  DEPENDENCY_FACTS: 'DEPENDENCY_INTELLIGENCE',
-  WORKSPACE_FACTS: 'WORKSPACE_INTELLIGENCE',
-  HISTORY_FACTS: 'PROJECT_HISTORY_INTELLIGENCE',
-  SUMMARIZATION_FACTS: 'PROJECT_SUMMARIZATION_ENGINE',
-  PORTFOLIO_FACTS: 'PORTFOLIO_INTELLIGENCE',
-  ACTION_VISIBILITY_FACTS: 'ACTION_VISIBILITY_ENGINE',
-  REASONING_VISIBILITY_FACTS: 'REASONING_VISIBILITY_ENGINE',
-  PROGRESS_INTELLIGENCE_FACTS: 'PROGRESS_INTELLIGENCE',
-  FAILURE_VISIBILITY_FACTS: 'FAILURE_VISIBILITY_ENGINE',
-  LEARNING_VISIBILITY_FACTS: 'LEARNING_VISIBILITY_ENGINE',
-  EXECUTION_RUNTIME_FACTS: 'EXECUTION_RUNTIME_FOUNDATION',
-  BUILD_TASK_RUNTIME_FACTS: 'BUILD_TASK_RUNTIME_FOUNDATION',
-  CODE_GENERATION_RUNTIME_FACTS: 'CODE_GENERATION_RUNTIME_FOUNDATION',
-  TESTING_RUNTIME_FACTS: 'TESTING_RUNTIME_FOUNDATION',
-  AUTO_FIX_RUNTIME_FACTS: 'AUTO_FIX_RUNTIME_FOUNDATION',
-  RUNTIME_VERIFICATION_FACTS: 'RUNTIME_VERIFICATION_LAYER',
-  WORLD2_EXECUTION_ACTIVATION_FACTS: 'WORLD2_EXECUTION_ACTIVATION',
-  WORLD2_BUILDER_PACKET_EXECUTION_FACTS: 'WORLD2_BUILDER_PACKET_EXECUTION',
-  WORLD2_CONTROLLED_APPLY_RUNTIME_FACTS: 'WORLD2_CONTROLLED_APPLY_RUNTIME',
-  WORLD2_ROLLBACK_RUNTIME_FACTS: 'WORLD2_ROLLBACK_RUNTIME',
-  WORLD2_RECOVERY_RUNTIME_FACTS: 'WORLD2_RECOVERY_RUNTIME',
-  WORLD2_COMPLETION_RUNTIME_FACTS: 'WORLD2_COMPLETION_RUNTIME',
-  LIVE_PREVIEW_RUNTIME_FACTS: 'LIVE_PREVIEW_RUNTIME',
-  PREVIEW_INTELLIGENCE_FACTS: 'PREVIEW_INTELLIGENCE',
-  SELF_VISION_RUNTIME_FACTS: 'SELF_VISION_RUNTIME',
-  UI_INSPECTION_ENGINE_FACTS: 'UI_INSPECTION_ENGINE',
-  INTERACTION_TESTING_ENGINE_FACTS: 'INTERACTION_TESTING_ENGINE',
-  VISUAL_VERIFICATION_ENGINE_FACTS: 'VISUAL_VERIFICATION_ENGINE',
-  UNIFIED_VERIFICATION_LAB_RUNTIME_FACTS: 'UNIFIED_VERIFICATION_LAB_RUNTIME',
-  VERIFICATION_REGISTRY_FACTS: 'VERIFICATION_REGISTRY',
-  VERIFICATION_ORCHESTRATOR_FACTS: 'VERIFICATION_ORCHESTRATOR',
-  VERIFICATION_EVIDENCE_ENGINE_FACTS: 'VERIFICATION_EVIDENCE_ENGINE',
-  VERIFICATION_REPORTING_ENGINE_FACTS: 'VERIFICATION_REPORTING_ENGINE',
-  UNIFIED_VERIFICATION_ENTRY_FACTS: 'UNIFIED_VERIFICATION_ENTRY',
-  CLOUD_RUNTIME_FOUNDATION_FACTS: 'CLOUD_RUNTIME_FOUNDATION',
-  WORKSPACE_HOSTING_FOUNDATION_FACTS: 'WORKSPACE_HOSTING_FOUNDATION',
-  PERSISTENT_BUILD_RUNTIME_FOUNDATION_FACTS: 'PERSISTENT_BUILD_RUNTIME_FOUNDATION',
-  CLOUD_VERIFICATION_FOUNDATION_FACTS: 'CLOUD_VERIFICATION_FOUNDATION',
-  CLOUD_RECOVERY_FOUNDATION_FACTS: 'CLOUD_RECOVERY_FOUNDATION',
-  CLOUD_MONITORING_FOUNDATION_FACTS: 'CLOUD_MONITORING_FOUNDATION',
-  MOBILE_COMMAND_RUNTIME_FOUNDATION_FACTS: 'MOBILE_COMMAND_RUNTIME_FOUNDATION',
-  MOBILE_CHAT_RUNTIME_FOUNDATION_FACTS: 'MOBILE_CHAT_RUNTIME_FOUNDATION',
-  MOBILE_PREVIEW_RUNTIME_FOUNDATION_FACTS: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION',
-  MOBILE_APPROVAL_RUNTIME_FOUNDATION_FACTS: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION',
-  CROSS_DEVICE_RUNTIME_FOUNDATION_FACTS: 'CROSS_DEVICE_RUNTIME_FOUNDATION',
-  FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION_FACTS: 'FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION',
-  FOUNDER_INBOX_FOUNDATION_FACTS: 'FOUNDER_INBOX_FOUNDATION',
-  NOTIFICATION_DELIVERY_FOUNDATION_FACTS: 'NOTIFICATION_DELIVERY_FOUNDATION',
-  MOBILE_PUSH_FOUNDATION_FACTS: 'MOBILE_PUSH_FOUNDATION',
-};
+export interface CapabilitySelectionResult extends CachedRoutingDecision {}
 
-export interface CapabilitySelectionResult {
-  selectedCapabilities: SelectedCapability[];
-  unavailableCapabilities: SelectedCapability[];
-  primaryCapability: SelectedCapability | null;
-  secondaryCapabilities: SelectedCapability[];
-  routingReason: string;
+function buildRoutingCacheKey(
+  question: string,
+  dimensions: QuestionDimension[],
+  contextNeeds: ContextNeed[],
+  reasoningModes: ReasoningMode[],
+): string {
+  const normalizedQuestion = question.trim().toLowerCase().replace(/\s+/g, ' ');
+  const sortedContext = [...contextNeeds].sort().join(',');
+  const sortedDimensions = [...dimensions].sort().join(',');
+  const sortedModes = [...reasoningModes].sort().join(',');
+  return `${normalizedQuestion}|${sortedContext}|${sortedDimensions}|${sortedModes}`;
+}
+
+function applyCompanionRoutes(question: string, selected: Set<SelectedCapability>): void {
+  for (const entry of COMPANION_ROUTE_ENTRIES) {
+    const detector = getCapabilityDetector(entry.detectorKey);
+    if (!detector(question)) continue;
+    for (const cap of entry.companions) {
+      selected.add(cap);
+    }
+  }
+}
+
+function resolvePrimaryRoute(
+  question: string,
+  selectedList: SelectedCapability[],
+  unavailable: Set<SelectedCapability>,
+): Pick<CapabilitySelectionResult, 'primaryCapability' | 'secondaryCapabilities' | 'routingReason'> | null {
+  for (const route of queryCapabilityRouteIndex({ kind: 'priorityOrder' })) {
+    const detector = getCapabilityDetector(route.detectorKey);
+    if (!detector(question)) continue;
+
+    const primary = route.capabilityId;
+    return {
+      primaryCapability: primary,
+      secondaryCapabilities: selectedList.filter((c) => c !== primary),
+      routingReason: route.routingReason,
+    };
+  }
+  return null;
 }
 
 export function selectCapabilities(
@@ -142,6 +77,10 @@ export function selectCapabilities(
   contextNeeds: ContextNeed[],
   reasoningModes: ReasoningMode[],
 ): CapabilitySelectionResult {
+  const cacheKey = buildRoutingCacheKey(question, dimensions, contextNeeds, reasoningModes);
+  const cached = getCachedRoutingDecision(cacheKey);
+  if (cached) return cached;
+
   const lower = question.toLowerCase();
   const selected = new Set<SelectedCapability>();
   const unavailable = new Set<SelectedCapability>();
@@ -181,734 +120,7 @@ export function selectCapabilities(
     selected.add('ROADMAP_AWARENESS');
   }
 
-  if (isVaultAwareQuestion(question)) {
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('PROJECT_UNDERSTANDING');
-  }
-
-  if (isDependencyIntelligenceQuestion(question)) {
-    selected.add('DEPENDENCY_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-  }
-
-  if (isWorkspaceIntelligenceQuestion(question)) {
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('PROJECT_UNDERSTANDING');
-  }
-
-  if (isProjectHistoryIntelligenceQuestion(question)) {
-    selected.add('PROJECT_HISTORY_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('PROJECT_UNDERSTANDING');
-  }
-
-  if (isPortfolioIntelligenceQuestion(question)) {
-    selected.add('PORTFOLIO_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('PROJECT_UNDERSTANDING');
-    selected.add('WORKSPACE_INTELLIGENCE');
-  }
-
-  if (isActionVisibilityQuestion(question)) {
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-  }
-
-  if (isReasoningVisibilityQuestion(question)) {
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-  }
-
-  if (isCloudRuntimeFoundationQuestion(question)) {
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('EXECUTION_RUNTIME_FOUNDATION');
-    selected.add('WORLD2_EXECUTION_ACTIVATION');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isWorkspaceHostingFoundationQuestion(question)) {
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('UNIFIED_VERIFICATION_ENTRY');
-    selected.add('VERIFICATION_EVIDENCE_ENGINE');
-    selected.add('VERIFICATION_REPORTING_ENGINE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isPersistentBuildRuntimeFoundationQuestion(question)) {
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('UNIFIED_VERIFICATION_ENTRY');
-    selected.add('VERIFICATION_EVIDENCE_ENGINE');
-    selected.add('VERIFICATION_REPORTING_ENGINE');
-    selected.add('EXECUTION_RUNTIME_FOUNDATION');
-    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isMobileApprovalRuntimeFoundationQuestion(question)) {
-    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isMobilePushFoundationQuestion(question)) {
-    selected.add('MOBILE_PUSH_FOUNDATION');
-    selected.add('NOTIFICATION_DELIVERY_FOUNDATION');
-    selected.add('FOUNDER_INBOX_FOUNDATION');
-    selected.add('FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION');
-    selected.add('CROSS_DEVICE_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isNotificationDeliveryFoundationQuestion(question)) {
-    selected.add('NOTIFICATION_DELIVERY_FOUNDATION');
-    selected.add('FOUNDER_INBOX_FOUNDATION');
-    selected.add('FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION');
-    selected.add('CROSS_DEVICE_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isFounderInboxFoundationQuestion(question)) {
-    selected.add('FOUNDER_INBOX_FOUNDATION');
-    selected.add('FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION');
-    selected.add('CROSS_DEVICE_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isFounderNotificationRuntimeFoundationQuestion(question)) {
-    selected.add('FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION');
-    selected.add('CROSS_DEVICE_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isCrossDeviceRuntimeFoundationQuestion(question)) {
-    selected.add('CROSS_DEVICE_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isMobilePreviewRuntimeFoundationQuestion(question)) {
-    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
-    selected.add('LIVE_PREVIEW_RUNTIME');
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isMobileChatRuntimeFoundationQuestion(question)) {
-    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
-    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
-    selected.add('CLOUD_MONITORING_FOUNDATION');
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isMobileCommandRuntimeFoundationQuestion(question)) {
-    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
-    selected.add('CLOUD_MONITORING_FOUNDATION');
-    selected.add('CLOUD_RECOVERY_FOUNDATION');
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isCloudMonitoringFoundationQuestion(question)) {
-    selected.add('CLOUD_MONITORING_FOUNDATION');
-    selected.add('CLOUD_RECOVERY_FOUNDATION');
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isCloudRecoveryFoundationQuestion(question)) {
-    selected.add('CLOUD_RECOVERY_FOUNDATION');
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isCloudVerificationFoundationQuestion(question)) {
-    selected.add('CLOUD_VERIFICATION_FOUNDATION');
-    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
-    selected.add('WORKSPACE_HOSTING_FOUNDATION');
-    selected.add('CLOUD_RUNTIME_FOUNDATION');
-    selected.add('UNIFIED_VERIFICATION_ENTRY');
-    selected.add('VERIFICATION_EVIDENCE_ENGINE');
-    selected.add('VERIFICATION_REPORTING_ENGINE');
-    selected.add('VERIFICATION_ORCHESTRATOR');
-    selected.add('VERIFICATION_REGISTRY');
-    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
-    selected.add('PROJECT_VAULT_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isUnifiedVerificationQuestion(question)) {
-    selected.add('UNIFIED_VERIFICATION_ENTRY');
-    selected.add('VERIFICATION_REPORTING_ENGINE');
-    selected.add('VERIFICATION_EVIDENCE_ENGINE');
-    selected.add('VERIFICATION_ORCHESTRATOR');
-    selected.add('VERIFICATION_REGISTRY');
-    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isVerificationReportingQuestion(question)) {
-    selected.add('VERIFICATION_REPORTING_ENGINE');
-    selected.add('VERIFICATION_EVIDENCE_ENGINE');
-    selected.add('VERIFICATION_ORCHESTRATOR');
-    selected.add('VERIFICATION_REGISTRY');
-    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isVerificationEvidenceQuestion(question)) {
-    selected.add('VERIFICATION_EVIDENCE_ENGINE');
-    selected.add('VERIFICATION_ORCHESTRATOR');
-    selected.add('VERIFICATION_REGISTRY');
-    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isVerificationOrchestratorQuestion(question)) {
-    selected.add('VERIFICATION_ORCHESTRATOR');
-    selected.add('VERIFICATION_REGISTRY');
-    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isVerificationRegistryQuestion(question)) {
-    selected.add('VERIFICATION_REGISTRY');
-    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
-    selected.add('VISUAL_VERIFICATION_ENGINE');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isUvlRuntimeQuestion(question)) {
-    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
-    selected.add('VISUAL_VERIFICATION_ENGINE');
-    selected.add('INTERACTION_TESTING_ENGINE');
-    selected.add('UI_INSPECTION_ENGINE');
-    selected.add('SELF_VISION_RUNTIME');
-    selected.add('LIVE_PREVIEW_RUNTIME');
-    selected.add('PREVIEW_INTELLIGENCE');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isVisualVerificationQuestion(question)) {
-    selected.add('VISUAL_VERIFICATION_ENGINE');
-    selected.add('INTERACTION_TESTING_ENGINE');
-    selected.add('UI_INSPECTION_ENGINE');
-    selected.add('SELF_VISION_RUNTIME');
-    selected.add('LIVE_PREVIEW_RUNTIME');
-    selected.add('PREVIEW_INTELLIGENCE');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isInteractionTestingQuestion(question)) {
-    selected.add('INTERACTION_TESTING_ENGINE');
-    selected.add('UI_INSPECTION_ENGINE');
-    selected.add('SELF_VISION_RUNTIME');
-    selected.add('LIVE_PREVIEW_RUNTIME');
-    selected.add('PREVIEW_INTELLIGENCE');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isUiInspectionQuestion(question)) {
-    selected.add('UI_INSPECTION_ENGINE');
-    selected.add('SELF_VISION_RUNTIME');
-    selected.add('LIVE_PREVIEW_RUNTIME');
-    selected.add('PREVIEW_INTELLIGENCE');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isSelfVisionRuntimeQuestion(question)) {
-    selected.add('SELF_VISION_RUNTIME');
-    selected.add('LIVE_PREVIEW_RUNTIME');
-    selected.add('PREVIEW_INTELLIGENCE');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isPreviewIntelligenceQuestion(question)) {
-    selected.add('PREVIEW_INTELLIGENCE');
-    selected.add('LIVE_PREVIEW_RUNTIME');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isLivePreviewQuestion(question)) {
-    selected.add('LIVE_PREVIEW_RUNTIME');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isWorld2CompletionQuestion(question)) {
-    selected.add('WORLD2_COMPLETION_RUNTIME');
-    selected.add('WORLD2_RECOVERY_RUNTIME');
-    selected.add('WORLD2_ROLLBACK_RUNTIME');
-    selected.add('WORLD2_CONTROLLED_APPLY_RUNTIME');
-    selected.add('WORLD2_BUILDER_PACKET_EXECUTION');
-    selected.add('WORLD2_EXECUTION_ACTIVATION');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-  }
-
-  if (isWorld2RecoveryQuestion(question)) {
-    selected.add('WORLD2_RECOVERY_RUNTIME');
-    selected.add('WORLD2_ROLLBACK_RUNTIME');
-    selected.add('WORLD2_CONTROLLED_APPLY_RUNTIME');
-    selected.add('WORLD2_BUILDER_PACKET_EXECUTION');
-    selected.add('WORLD2_EXECUTION_ACTIVATION');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-  }
-
-  if (isWorld2RollbackQuestion(question)) {
-    selected.add('WORLD2_ROLLBACK_RUNTIME');
-    selected.add('WORLD2_CONTROLLED_APPLY_RUNTIME');
-    selected.add('WORLD2_BUILDER_PACKET_EXECUTION');
-    selected.add('WORLD2_EXECUTION_ACTIVATION');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-  }
-
-  if (isWorld2ControlledApplyQuestion(question)) {
-    selected.add('WORLD2_CONTROLLED_APPLY_RUNTIME');
-    selected.add('WORLD2_BUILDER_PACKET_EXECUTION');
-    selected.add('WORLD2_EXECUTION_ACTIVATION');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-  }
-
-  if (isWorld2BuilderPacketExecutionQuestion(question)) {
-    selected.add('WORLD2_BUILDER_PACKET_EXECUTION');
-    selected.add('WORLD2_EXECUTION_ACTIVATION');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
-    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
-    selected.add('TESTING_RUNTIME_FOUNDATION');
-    selected.add('EXECUTION_RUNTIME_FOUNDATION');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-  }
-
-  if (isWorld2ExecutionActivationQuestion(question)) {
-    selected.add('WORLD2_EXECUTION_ACTIVATION');
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('AUTO_FIX_RUNTIME_FOUNDATION');
-    selected.add('TESTING_RUNTIME_FOUNDATION');
-    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
-    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
-    selected.add('EXECUTION_RUNTIME_FOUNDATION');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('LEARNING_VISIBILITY_ENGINE');
-    selected.add('DEPENDENCY_INTELLIGENCE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-  }
-
-  if (isRuntimeVerificationLayerQuestion(question)) {
-    selected.add('RUNTIME_VERIFICATION_LAYER');
-    selected.add('AUTO_FIX_RUNTIME_FOUNDATION');
-    selected.add('TESTING_RUNTIME_FOUNDATION');
-    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
-    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
-    selected.add('EXECUTION_RUNTIME_FOUNDATION');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('LEARNING_VISIBILITY_ENGINE');
-    selected.add('DEPENDENCY_INTELLIGENCE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-  }
-
-  if (isAutoFixRuntimeFoundationQuestion(question)) {
-    selected.add('AUTO_FIX_RUNTIME_FOUNDATION');
-    selected.add('TESTING_RUNTIME_FOUNDATION');
-    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
-    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
-    selected.add('EXECUTION_RUNTIME_FOUNDATION');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('LEARNING_VISIBILITY_ENGINE');
-    selected.add('DEPENDENCY_INTELLIGENCE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-  }
-
-  if (isTestingRuntimeFoundationQuestion(question)) {
-    selected.add('TESTING_RUNTIME_FOUNDATION');
-    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
-    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
-    selected.add('EXECUTION_RUNTIME_FOUNDATION');
-    selected.add('DEPENDENCY_INTELLIGENCE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('LEARNING_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-  }
-
-  if (isCodeGenerationRuntimeFoundationQuestion(question)) {
-    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
-    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
-    selected.add('EXECUTION_RUNTIME_FOUNDATION');
-    selected.add('DEPENDENCY_INTELLIGENCE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('LEARNING_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-  }
-
-  if (isBuildTaskRuntimeFoundationQuestion(question)) {
-    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
-    selected.add('EXECUTION_RUNTIME_FOUNDATION');
-    selected.add('DEPENDENCY_INTELLIGENCE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('LEARNING_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-  }
-
-  if (isExecutionRuntimeFoundationQuestion(question)) {
-    selected.add('EXECUTION_RUNTIME_FOUNDATION');
-    selected.add('DEPENDENCY_INTELLIGENCE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('WORKSPACE_INTELLIGENCE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('LEARNING_VISIBILITY_ENGINE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-  }
-
-  if (isLearningVisibilityQuestion(question)) {
-    selected.add('LEARNING_VISIBILITY_ENGINE');
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('REASONING_VISIBILITY_ENGINE');
-    selected.add('ACTION_VISIBILITY_ENGINE');
-    selected.add('PROJECT_HISTORY_INTELLIGENCE');
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (isFailureVisibilityQuestion(question)) {
-    selected.add('FAILURE_VISIBILITY_ENGINE');
-    selected.add('DEPENDENCY_INTELLIGENCE');
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('UNIFIED_DECISION_LAYER');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-  }
-
-  if (isProgressIntelligenceQuestion(question)) {
-    selected.add('PROGRESS_INTELLIGENCE');
-    selected.add('PROJECT_HISTORY_INTELLIGENCE');
-    selected.add('PORTFOLIO_INTELLIGENCE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-  }
-
-  if (isProjectSummarizationQuestion(question)) {
-    selected.add('PROJECT_SUMMARIZATION_ENGINE');
-    selected.add('PROJECT_KNOWLEDGE_REASONING');
-    selected.add('PROJECT_UNDERSTANDING');
-  }
-
-  if (isDecisionQuestion(question)) {
-    selected.add('UNIFIED_DECISION_LAYER');
-  }
-
-  if (
-    isTimelineQuestion(question) &&
-    !isProjectHistoryIntelligenceQuestion(question) &&
-    !isPlanningNotImpactQuestion(question) &&
-    !isDecisionQuestion(question)
-  ) {
-    selected.add('TIMELINE_INTELLIGENCE');
-  }
+  applyCompanionRoutes(question, selected);
 
   if (dimensions.includes('SYSTEM') && !isBroadProjectQuestion(question, dimensions)) {
     selected.add('SYSTEM_AWARENESS');
@@ -933,793 +145,106 @@ export function selectCapabilities(
   }
 
   const selectedList = [...selected];
-  let primary: SelectedCapability | null = null;
-  let secondary: SelectedCapability[] = [];
 
-  if (isPortfolioIntelligenceQuestion(question)) {
-    primary = 'PORTFOLIO_INTELLIGENCE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
+  const tablePrimary = resolvePrimaryRoute(question, selectedList, unavailable);
+  if (tablePrimary) {
+    const result: CapabilitySelectionResult = {
       selectedCapabilities: selectedList,
       unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Portfolio-oriented question — PORTFOLIO_INTELLIGENCE aggregates multi-project health, risk, priority, and comparison across all Phase 12 sources.',
+      ...tablePrimary,
     };
-  }
-
-  const lowerQuestion = question.toLowerCase();
-
-  if (isMobileApprovalRuntimeFoundationQuestion(question)) {
-    primary = 'MOBILE_APPROVAL_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Mobile approval question — MOBILE_APPROVAL_RUNTIME_FOUNDATION is the mobile approval session, request, decision, governance, and context authority; no execution, push notifications, or real approvals.',
-    };
-  }
-
-  if (isMobilePushFoundationQuestion(question)) {
-    primary = 'MOBILE_PUSH_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Mobile push question — MOBILE_PUSH_FOUNDATION is the push planning, token metadata, payload planning, and platform targeting authority referencing Notification Delivery Foundation; no real push, FCM, APNS, or raw token storage.',
-    };
-  }
-
-  if (isNotificationDeliveryFoundationQuestion(question)) {
-    primary = 'NOTIFICATION_DELIVERY_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Notification delivery question — NOTIFICATION_DELIVERY_FOUNDATION is the delivery planning, routing, targeting, and channel eligibility authority referencing Founder Inbox and Founder Notification Runtime; no real email, SMS, push, FCM, or APNS.',
-    };
-  }
-
-  if (isFounderInboxFoundationQuestion(question)) {
-    primary = 'FOUNDER_INBOX_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Founder inbox question — FOUNDER_INBOX_FOUNDATION is the founder inbox visualization and organization layer referencing Founder Notification Runtime; no notification authority or delivery.',
-    };
-  }
-
-  if (isFounderNotificationRuntimeFoundationQuestion(question)) {
-    primary = 'FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Founder notification question — FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION is the founder notification routing, visibility, priority, and channel authority; no real delivery, push, email, or SMS.',
-    };
-  }
-
-  if (isCrossDeviceRuntimeFoundationQuestion(question)) {
-    primary = 'CROSS_DEVICE_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Cross device question — CROSS_DEVICE_RUNTIME_FOUNDATION is the cross device session, device link, handoff, and visibility authority; no real sync, connections, or device pairing.',
-    };
-  }
-
-  if (isMobilePreviewRuntimeFoundationQuestion(question)) {
-    primary = 'MOBILE_PREVIEW_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Mobile preview question — MOBILE_PREVIEW_RUNTIME_FOUNDATION is the mobile preview session, eligibility, safety, link, and desktop-recommendation authority; no mobile UI, preview streaming, or preview rendering.',
-    };
-  }
-
-  if (isMobileChatRuntimeFoundationQuestion(question)) {
-    primary = 'MOBILE_CHAT_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Mobile chat question — MOBILE_CHAT_RUNTIME_FOUNDATION is the mobile chat session, prompt, message, routing, and response-state authority; no mobile UI, LLM execution, or cloud execution.',
-    };
-  }
-
-  if (isMobileCommandRuntimeFoundationQuestion(question)) {
-    primary = 'MOBILE_COMMAND_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Mobile command question — MOBILE_COMMAND_RUNTIME_FOUNDATION is the mobile command session and permission authority for cloud runtime, workspace, build, verification, recovery, and monitoring links; no mobile UI, push notifications, or cloud execution.',
-    };
-  }
-
-  if (isCloudMonitoringFoundationQuestion(question)) {
-    primary = 'CLOUD_MONITORING_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Cloud monitoring question — CLOUD_MONITORING_FOUNDATION is the cloud monitoring authority for health metadata, alerts, ownership, state, lifecycle, and context; no real infrastructure monitoring, cloud provider connections, or notifications.',
-    };
-  }
-
-  if (isCloudRecoveryFoundationQuestion(question)) {
-    primary = 'CLOUD_RECOVERY_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Cloud recovery question — CLOUD_RECOVERY_FOUNDATION is the cloud recovery coordination authority for failure metadata, recovery candidates, plans, ownership, state, lifecycle, scope, and context; no recovery execution, rollback, or file mutation.',
-    };
-  }
-
-  if (isCloudVerificationFoundationQuestion(question)) {
-    primary = 'CLOUD_VERIFICATION_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Cloud verification question — CLOUD_VERIFICATION_FOUNDATION is the cloud-specific verification coordination authority for registration, ownership, state, lifecycle, scope, and context; routes global verification through Unified Verification Entry; no provider execution.',
-    };
-  }
-
-  if (isPersistentBuildRuntimeFoundationQuestion(question)) {
-    primary = 'PERSISTENT_BUILD_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Persistent build question — PERSISTENT_BUILD_RUNTIME_FOUNDATION is the long-running build session authority for registration, ownership, state, lifecycle, context, progress, and resume metadata; Cloud Runtime Foundation remains runtime source of truth; Workspace Hosting Foundation remains workspace source of truth; no real builds or file mutation.',
-    };
-  }
-
-  if (isWorkspaceHostingFoundationQuestion(question)) {
-    primary = 'WORKSPACE_HOSTING_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Workspace hosting question — WORKSPACE_HOSTING_FOUNDATION is the hosted workspace authority for registration, ownership, state, lifecycle, isolation, and runtime links; Cloud Runtime Foundation remains runtime source of truth; no cloud workers or builds.',
-    };
-  }
-
-  if (isCloudRuntimeFoundationQuestion(question)) {
-    primary = 'CLOUD_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Cloud runtime question — CLOUD_RUNTIME_FOUNDATION is the cloud runtime authority for registration, ownership, state, lifecycle, and history; no builds or cloud execution.',
-    };
-  }
-
-  if (isUnifiedVerificationQuestion(question)) {
-    primary = 'UNIFIED_VERIFICATION_ENTRY';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Unified verification question — UNIFIED_VERIFICATION_ENTRY is the single authority surface; routes to registry, orchestrator, evidence, and reporting without direct subsystem access.',
-    };
-  }
-
-  if (isVerificationReportingQuestion(question)) {
-    primary = 'VERIFICATION_REPORTING_ENGINE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Verification reporting question — VERIFICATION_REPORTING_ENGINE transforms evidence and orchestration into structured reports; no verification execution, trust decisions, or auto-fix.',
-    };
-  }
-
-  if (isVerificationEvidenceQuestion(question)) {
-    primary = 'VERIFICATION_EVIDENCE_ENGINE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Verification evidence question — VERIFICATION_EVIDENCE_ENGINE provides evidence authority for registration, ownership, lineage, and traceability; no verification execution, trust decisions, or auto-fix.',
-    };
-  }
-
-  if (isVerificationOrchestratorQuestion(question)) {
-    primary = 'VERIFICATION_ORCHESTRATOR';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Verification orchestrator question — VERIFICATION_ORCHESTRATOR coordinates execution planning, scheduling, and readiness; no verification execution, evidence generation, or auto-fix.',
-    };
-  }
-
-  if (isVerificationRegistryQuestion(question)) {
-    primary = 'VERIFICATION_REGISTRY';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Verification registry question — VERIFICATION_REGISTRY defines targets, ownership, dependencies, and requirements; no verification execution, orchestration, or auto-fix.',
-    };
-  }
-
-  if (isUvlRuntimeQuestion(question)) {
-    primary = 'UNIFIED_VERIFICATION_LAB_RUNTIME';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'UVL runtime question — UNIFIED_VERIFICATION_LAB_RUNTIME registers providers and manages verification sessions; no verification execution, evidence generation, or auto-fix.',
-    };
-  }
-
-  if (isVisualVerificationQuestion(question)) {
-    primary = 'VISUAL_VERIFICATION_ENGINE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Visual verification question — VISUAL_VERIFICATION_ENGINE evaluates visual outcomes and produces verification evidence; no UI modification, interaction execution, or repairs.',
-    };
-  }
-
-  if (isInteractionTestingQuestion(question)) {
-    primary = 'INTERACTION_TESTING_ENGINE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Interaction testing question — INTERACTION_TESTING_ENGINE builds plans, executes simulations, and records outcomes; no correctness verdicts or quality scoring.',
-    };
-  }
-
-  if (isUiInspectionQuestion(question)) {
-    primary = 'UI_INSPECTION_ENGINE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'UI inspection question — UI_INSPECTION_ENGINE inspects layout, navigation, loading, and responsive structures; no clicking, interaction testing, or visual verification.',
-    };
-  }
-
-  if (isSelfVisionRuntimeQuestion(question)) {
-    primary = 'SELF_VISION_RUNTIME';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Self vision runtime question — SELF_VISION_RUNTIME manages visual observation sessions, capture plans, and observation targets; no screenshot analysis or interaction testing.',
-    };
-  }
-
-  if (isPreviewIntelligenceQuestion(question)) {
-    primary = 'PREVIEW_INTELLIGENCE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Preview intelligence question — PREVIEW_INTELLIGENCE reasons about preview readiness, capabilities, limitations, and future observation plans; no browser launch or visual execution.',
-    };
-  }
-
-  if (isLivePreviewQuestion(question)) {
-    primary = 'LIVE_PREVIEW_RUNTIME';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Live preview question — LIVE_PREVIEW_RUNTIME represents and manages preview targets and sessions with capability tracking; no browser launch or UI inspection.',
-    };
-  }
-
-  if (isWorld2CompletionQuestion(question)) {
-    primary = 'WORLD2_COMPLETION_RUNTIME';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Completion question — WORLD2_COMPLETION_RUNTIME prepares completion safety plans from recovery/rollback/apply context with criteria, evidence, and verification requirements; completionAllowed remains false.',
-    };
-  }
-
-  if (isWorld2RecoveryQuestion(question)) {
-    primary = 'WORLD2_RECOVERY_RUNTIME';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Recovery question — WORLD2_RECOVERY_RUNTIME prepares recovery safety plans from rollback plans and failure context with strategy selection, escalation evaluation, and three-failure rule; recoveryAllowed remains false.',
-    };
-  }
-
-  if (isWorld2RollbackQuestion(question)) {
-    primary = 'WORLD2_ROLLBACK_RUNTIME';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Rollback question — WORLD2_ROLLBACK_RUNTIME prepares rollback safety plans from controlled apply plans with snapshot requirements and gate evaluation; rollbackAllowed remains false.',
-    };
-  }
-
-  if (isWorld2ControlledApplyQuestion(question)) {
-    primary = 'WORLD2_CONTROLLED_APPLY_RUNTIME';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Controlled apply question — WORLD2_CONTROLLED_APPLY_RUNTIME converts execution packets into governed apply plans with gate evaluation, risk classification, and approval recording; applyAllowed remains false.',
-    };
-  }
-
-  if (isWorld2BuilderPacketExecutionQuestion(question)) {
-    primary = 'WORLD2_BUILDER_PACKET_EXECUTION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Builder packet execution question — WORLD2_BUILDER_PACKET_EXECUTION prepares governed execution packets from builder packets with validation, risk classification, and approval recording without apply operations.',
-    };
-  }
-
-  if (isWorld2ExecutionActivationQuestion(question)) {
-    primary = 'WORLD2_EXECUTION_ACTIVATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'World 2 execution activation question — WORLD2_EXECUTION_ACTIVATION evaluates governed, isolated, simulation-first activation plans with workspace isolation, governance gates, and Phase 14 runtime chain linkage without performing real execution.',
-    };
-  }
-
-  if (isRuntimeVerificationLayerQuestion(question)) {
-    primary = 'RUNTIME_VERIFICATION_LAYER';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Runtime verification question — RUNTIME_VERIFICATION_LAYER verifies execution, build, generation, testing, and auto-fix plans with evidence, gaps, trust assessment, and score without executing runtime actions.',
-    };
-  }
-
-  if (isAutoFixRuntimeFoundationQuestion(question)) {
-    primary = 'AUTO_FIX_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Auto-fix planning question — AUTO_FIX_RUNTIME_FOUNDATION plans fix proposals, alternatives, rollback, verification, and simulated results linked to failures, testing, code generation, build tasks, and execution packets without applying fixes.',
-    };
-  }
-
-  if (isTestingRuntimeFoundationQuestion(question)) {
-    primary = 'TESTING_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Testing planning question — TESTING_RUNTIME_FOUNDATION plans test cases, pass/fail criteria, evidence requirements, simulated results, and risks linked to code generation, build tasks, and execution packets without running tests.',
-    };
-  }
-
-  if (isCodeGenerationRuntimeFoundationQuestion(question)) {
-    primary = 'CODE_GENERATION_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Code generation planning question — CODE_GENERATION_RUNTIME_FOUNDATION proposes artifacts, file changes, strategy, risks, and validation linked to build tasks and execution packets without writing project files.',
-    };
-  }
-
-  if (isBuildTaskRuntimeFoundationQuestion(question)) {
-    primary = 'BUILD_TASK_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Build task planning question — BUILD_TASK_RUNTIME_FOUNDATION plans steps, dependencies, safety gates, and verification linked to execution packets without performing execution.',
-    };
-  }
-
-  if (isExecutionRuntimeFoundationQuestion(question)) {
-    primary = 'EXECUTION_RUNTIME_FOUNDATION';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Execution readiness question — EXECUTION_RUNTIME_FOUNDATION evaluates readiness, blockers, dependencies, and safety boundaries without performing execution.',
-    };
-  }
-
-  if (isFailureVisibilityQuestion(question) && lowerQuestion.includes('dependency chains are impacted')) {
-    primary = 'FAILURE_VISIBILITY_ENGINE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Failure impact question — FAILURE_VISIBILITY_ENGINE shows impacted dependency chains from visible failures without auto-fix.',
-    };
-  }
-
-  if (isDependencyIntelligenceQuestion(question) && lowerQuestion.includes('capabilities are blocked')) {
-    primary = 'DEPENDENCY_INTELLIGENCE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Blocked capabilities question — DEPENDENCY_INTELLIGENCE owns dependency-graph blocked capability advisory.',
-    };
-  }
-
-  if (isLearningVisibilityQuestion(question)) {
-    primary = 'LEARNING_VISIBILITY_ENGINE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Learning question — LEARNING_VISIBILITY_ENGINE shows observed patterns, recurring blockers/failures/recommendations, and memory lessons without self-learning or model modification.',
-    };
-  }
-
-  if (isFailureVisibilityQuestion(question)) {
-    primary = 'FAILURE_VISIBILITY_ENGINE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Failure question — FAILURE_VISIBILITY_ENGINE shows failures, severity, impact, and advisory next steps without auto-fix or execution.',
-    };
-  }
-
-  if (isProgressIntelligenceQuestion(question)) {
-    primary = 'PROGRESS_INTELLIGENCE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Progress question — PROGRESS_INTELLIGENCE shows completion, milestones, blockers, and portfolio progress without execution.',
-    };
-  }
-
-  if (isReasoningVisibilityQuestion(question)) {
-    primary = 'REASONING_VISIBILITY_ENGINE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Reasoning visibility question — REASONING_VISIBILITY_ENGINE explains evidence, sources, blockers, risks, and confidence basis without chain-of-thought.',
-    };
-  }
-
-  if (isActionVisibilityQuestion(question)) {
-    primary = 'ACTION_VISIBILITY_ENGINE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Action visibility question — ACTION_VISIBILITY_ENGINE explains considered actions, status, priority, and source without execution.',
-    };
-  }
-
-  if (isDecisionQuestion(question)) {
-    primary = 'UNIFIED_DECISION_LAYER';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Decision-oriented question — route through Unified Decision Layer for advisory build/defer/block/priority recommendations.',
-    };
-  }
-
-  if (isProjectSummarizationQuestion(question)) {
-    primary = 'PROJECT_SUMMARIZATION_ENGINE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Summarization-oriented question — PROJECT_SUMMARIZATION_ENGINE compresses all intelligence sources into unified summaries.',
-    };
-  }
-
-  if (isProjectHistoryIntelligenceQuestion(question)) {
-    primary = 'PROJECT_HISTORY_INTELLIGENCE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'History-oriented question — PROJECT_HISTORY_INTELLIGENCE is answer authority; Timeline Intelligence owns current phase separately.',
-    };
-  }
-
-  if (isWorkspaceIntelligenceQuestion(question)) {
-    primary = 'WORKSPACE_INTELLIGENCE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Workspace-oriented question — WORKSPACE_INTELLIGENCE is answer authority; Project Understanding supplements with enriched facts.',
-    };
-  }
-
-  if (isDependencyIntelligenceQuestion(question)) {
-    primary = 'DEPENDENCY_INTELLIGENCE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Dependency-oriented question — DEPENDENCY_INTELLIGENCE is answer authority; Unified Decision Layer supplements when decision signals also match.',
-    };
-  }
-
-  if (isVaultAwareQuestion(question)) {
-    primary = 'PROJECT_KNOWLEDGE_REASONING';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Vault-aware project question — PROJECT_VAULT_INTELLIGENCE supplements Project Knowledge Reasoning; 11.4 remains answer authority.',
-    };
-  }
-
-  if (isTimelineQuestion(question) && !isPlanningNotImpactQuestion(question)) {
-    primary = 'TIMELINE_INTELLIGENCE';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
-      selectedCapabilities: selectedList,
-      unavailableCapabilities: [...unavailable],
-      primaryCapability: primary,
-      secondaryCapabilities: secondary,
-      routingReason:
-        'Timeline-oriented question — route through Timeline Intelligence for past/present/future understanding.',
-    };
+    setCachedRoutingDecision(cacheKey, result);
+    return result;
   }
 
   if (isBroadProjectQuestion(question, dimensions)) {
-    primary = 'PROJECT_KNOWLEDGE_REASONING';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
+    const primary: SelectedCapability = 'PROJECT_KNOWLEDGE_REASONING';
+    const result: CapabilitySelectionResult = {
       selectedCapabilities: selectedList,
       unavailableCapabilities: [...unavailable],
       primaryCapability: primary,
-      secondaryCapabilities: secondary,
+      secondaryCapabilities: selectedList.filter((c) => c !== primary),
       routingReason:
         'Broad project understanding question — route through Project Knowledge Reasoning with available facts.',
     };
+    setCachedRoutingDecision(cacheKey, result);
+    return result;
   }
 
   if (selected.has('SHARED_MEMORY_RECALL') && dimensions.includes('MEMORY')) {
-    primary = 'SHARED_MEMORY_RECALL';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
+    const primary: SelectedCapability = 'SHARED_MEMORY_RECALL';
+    const result: CapabilitySelectionResult = {
       selectedCapabilities: selectedList,
       unavailableCapabilities: [...unavailable],
       primaryCapability: primary,
-      secondaryCapabilities: secondary,
+      secondaryCapabilities: selectedList.filter((c) => c !== primary),
       routingReason: 'Memory recall question — route through Shared Memory layer.',
     };
+    setCachedRoutingDecision(cacheKey, result);
+    return result;
   }
 
   if (selected.has('CROSS_SYSTEM_AWARENESS') && crossSystemExplicit) {
-    primary = 'CROSS_SYSTEM_AWARENESS';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
+    const primary: SelectedCapability = 'CROSS_SYSTEM_AWARENESS';
+    const result: CapabilitySelectionResult = {
       selectedCapabilities: selectedList,
       unavailableCapabilities: [...unavailable],
       primaryCapability: primary,
-      secondaryCapabilities: secondary,
+      secondaryCapabilities: selectedList.filter((c) => c !== primary),
       routingReason: 'Cross-system relationship/dependency/impact — route through Cross-System Awareness.',
     };
+    setCachedRoutingDecision(cacheKey, result);
+    return result;
   }
 
   if (selected.has('PROJECT_KNOWLEDGE_REASONING')) {
-    primary = 'PROJECT_KNOWLEDGE_REASONING';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
+    const primary: SelectedCapability = 'PROJECT_KNOWLEDGE_REASONING';
+    const result: CapabilitySelectionResult = {
       selectedCapabilities: selectedList,
       unavailableCapabilities: [...unavailable],
       primaryCapability: primary,
-      secondaryCapabilities: secondary,
+      secondaryCapabilities: selectedList.filter((c) => c !== primary),
       routingReason: 'Project facts can answer this question — Project Knowledge Reasoning primary.',
     };
+    setCachedRoutingDecision(cacheKey, result);
+    return result;
   }
 
   if (selected.has('ROADMAP_AWARENESS')) {
-    primary = 'ROADMAP_AWARENESS';
-    secondary = selectedList.filter((c) => c !== primary);
-    return {
+    const primary: SelectedCapability = 'ROADMAP_AWARENESS';
+    const result: CapabilitySelectionResult = {
       selectedCapabilities: selectedList,
       unavailableCapabilities: [...unavailable],
       primaryCapability: primary,
-      secondaryCapabilities: secondary,
+      secondaryCapabilities: selectedList.filter((c) => c !== primary),
       routingReason: 'Roadmap-oriented question — combine roadmap awareness with project facts.',
     };
+    setCachedRoutingDecision(cacheKey, result);
+    return result;
   }
 
   if (selectedList.length > 0) {
-    primary = selectedList[0] ?? null;
-    secondary = selectedList.slice(1);
-    return {
+    const primary = selectedList[0] ?? null;
+    const result: CapabilitySelectionResult = {
       selectedCapabilities: selectedList,
       unavailableCapabilities: [...unavailable],
       primaryCapability: primary,
-      secondaryCapabilities: secondary,
+      secondaryCapabilities: selectedList.slice(1),
       routingReason: 'Selected capabilities from context needs and dimensions.',
     };
+    setCachedRoutingDecision(cacheKey, result);
+    return result;
   }
 
-  return {
+  const fallback: CapabilitySelectionResult = {
     selectedCapabilities: [],
     unavailableCapabilities: [...unavailable],
     primaryCapability: null,
     secondaryCapabilities: [],
     routingReason: 'No capability selected — generic fallback may apply if no facts apply.',
   };
+  setCachedRoutingDecision(cacheKey, fallback);
+  return fallback;
 }
 
 export function computeRoutingConfidence(
@@ -1731,4 +256,8 @@ export function computeRoutingConfidence(
   if (selectedCapabilities.length >= 2) return 'MEDIUM';
   if (selectedCapabilities.length === 1) return 'MEDIUM';
   return 'LOW';
+}
+
+export function clearCapabilitySelectionCacheForTests(): void {
+  clearRoutingPerformanceCache();
 }

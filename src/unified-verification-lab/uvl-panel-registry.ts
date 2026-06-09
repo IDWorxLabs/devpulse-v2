@@ -30,9 +30,11 @@ import { getFounderNotificationContext } from '../founder-notification-runtime/i
 import { getFounderInboxContext } from '../founder-inbox/index.js';
 import { getNotificationDeliveryContext } from '../notification-delivery/index.js';
 import { getMobilePushContext } from '../mobile-push/index.js';
+import { getAutonomousBuilderContext } from '../autonomous-builder/index.js';
 import type { PrepareFounderInboxFoundationResult } from '../founder-inbox/founder-inbox-types.js';
 import type { PrepareNotificationDeliveryFoundationResult } from '../notification-delivery/notification-delivery-types.js';
 import type { PrepareMobilePushFoundationResult } from '../mobile-push/mobile-push-types.js';
+import type { PrepareAutonomousBuilderFoundationResult } from '../autonomous-builder/autonomous-builder-types.js';
 import type { PrepareMobilePreviewRuntimeFoundationResult } from '../mobile-preview-runtime/mobile-preview-types.js';
 import type { PrepareMobileApprovalRuntimeFoundationResult } from '../mobile-approval-runtime/mobile-approval-types.js';
 import type { PrepareCrossDeviceRuntimeFoundationResult } from '../cross-device-runtime/cross-device-types.js';
@@ -1207,6 +1209,88 @@ export function buildNotificationDeliveryFoundationPanelSnapshot(
       ctx.reports.find((r) => r.reportType === 'DELIVERY_HISTORY_REPORT')?.findings.slice(-6) ?? [],
     reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
     deliveryRecordCount: ctx.diagnostics.registeredDeliveryCount,
+    temporary: true,
+  };
+}
+
+export interface AutonomousBuilderFoundationPanelSnapshot {
+  panelId: 'AUTONOMOUS_BUILDER_FOUNDATION';
+  panelTitle: string;
+  navigationPath: string;
+  buildRecords: string[];
+  goalFindings: string[];
+  planFindings: string[];
+  stageFindings: string[];
+  readinessFindings: string[];
+  constraintFindings: string[];
+  capabilityFindings: string[];
+  ownershipFindings: string[];
+  contextFindings: string[];
+  deliveryLinks: string[];
+  pushLinks: string[];
+  notificationLinks: string[];
+  inboxLinks: string[];
+  cloudLinks: string[];
+  world2Links: string[];
+  aidevLinks: string[];
+  operatorFeedLinks: string[];
+  projectVaultLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  buildRecordCount: number;
+  temporary: true;
+}
+
+export function buildAutonomousBuilderFoundationPanelSnapshot(
+  query = 'Show autonomous builder inventory',
+  existingContext?: PrepareAutonomousBuilderFoundationResult,
+): AutonomousBuilderFoundationPanelSnapshot {
+  const ctx = existingContext ?? getAutonomousBuilderContext(query);
+
+  return {
+    panelId: 'AUTONOMOUS_BUILDER_FOUNDATION',
+    panelTitle: 'Autonomous Builder Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    buildRecords:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_INVENTORY_REPORT')?.findings.slice(0, 14) ?? [],
+    goalFindings:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_GOAL_REPORT')?.findings.slice(0, 6) ?? [],
+    planFindings:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_PLAN_REPORT')?.findings.slice(0, 6) ?? [],
+    stageFindings:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_STAGE_REPORT')?.findings.slice(0, 6) ?? [],
+    readinessFindings:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_READINESS_REPORT')?.findings.slice(0, 6) ?? [],
+    constraintFindings:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_CONSTRAINT_REPORT')?.findings.slice(0, 6) ?? [],
+    capabilityFindings:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_CAPABILITY_REPORT')?.findings.slice(0, 6) ?? [],
+    ownershipFindings:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_OWNERSHIP_REPORT')?.findings.slice(0, 6) ?? [],
+    contextFindings:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_CONTEXT_REPORT')?.findings.slice(0, 6) ?? [],
+    deliveryLinks:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_DELIVERY_REPORT')?.findings.slice(0, 6) ?? [],
+    pushLinks:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_PUSH_REPORT')?.findings.slice(0, 6) ?? [],
+    notificationLinks:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_NOTIFICATION_REPORT')?.findings.slice(0, 6) ?? [],
+    inboxLinks:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_INBOX_REPORT')?.findings.slice(0, 6) ?? [],
+    cloudLinks:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_CLOUD_REPORT')?.findings.slice(0, 6) ?? [],
+    world2Links:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_WORLD2_REPORT')?.findings.slice(0, 6) ?? [],
+    aidevLinks:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_AIDEV_REPORT')?.findings.slice(0, 6) ?? [],
+    operatorFeedLinks:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_OPERATOR_FEED_REPORT')?.findings.slice(0, 6) ?? [],
+    projectVaultLinks:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_PROJECT_VAULT_REPORT')?.findings.slice(0, 6) ?? [],
+    historyEntries:
+      ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_HISTORY_REPORT')?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    buildRecordCount: ctx.diagnostics.registeredBuildCount,
     temporary: true,
   };
 }
