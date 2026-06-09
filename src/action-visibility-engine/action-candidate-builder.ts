@@ -42,6 +42,42 @@ function executionFieldsForAction(
   fixReadiness: string;
   verificationId: string;
   verificationScore: number;
+  world2ActivationId: string;
+  world2ActivationReadiness: string;
+  builderPacketExecutionId: string;
+  builderPacketExecutionReadiness: string;
+  controlledApplyId: string;
+  controlledApplyReadiness: string;
+  rollbackPlanId: string;
+  rollbackReadiness: string;
+  rollbackAllowed: false;
+  recoveryPlanId: string;
+  recoveryReadiness: string;
+  recoveryAllowed: false;
+  escalationLevel: string;
+  completionPlanId: string;
+  completionReadiness: string;
+  completionAllowed: false;
+  previewSessionId: string;
+  previewReadiness: string;
+  previewState: string;
+  previewIntelligenceId: string;
+  previewReadinessLevel: string;
+  previewReadinessScore: number;
+  selfVisionSessionId: string;
+  selfVisionReadiness: string;
+  observationState: string;
+  inspectionId: string;
+  inspectionReadiness: string;
+  inspectedSurfaceCount: number;
+  interactionTestId: string;
+  interactionReadiness: string;
+  interactionCount: number;
+  visualVerificationId: string;
+  visualVerificationStatus: string;
+  visualVerificationTargetCount: number;
+  applyAllowed: false;
+  executionAllowed: false;
 } {
   const blockerCount = context.blockedItems.length + context.dependencyBlockers.length;
   const score = Math.max(0, Math.min(100, 55 - blockerCount * 4));
@@ -52,6 +88,55 @@ function executionFieldsForAction(
   const fixId = `fix-${actionId.replace('act-', '')}`;
   const vrfyId = `vrfy-${actionId.replace('act-', '')}`;
   const vrfyScore = Math.max(0, Math.min(100, score + 10));
+  const w2Id = `w2act-${actionId.replace('act-', '')}`;
+  const w2Readiness = blocked
+    ? `BLOCKED — ${w2Id} Phase 15.1 simulation-only, no World 2 execution`
+    : `${level} — ${w2Id} activation foundation only, World 1 protected`;
+  const bpeId = `bpe-${actionId.replace('act-', '')}`;
+  const bpeReadiness = blocked
+    ? `BLOCKED — ${bpeId} Phase 15.2 preparation only`
+    : `${level} — ${bpeId} builder packet execution packet prepared, no apply`;
+  const capId = `cap-${actionId.replace('act-', '')}`;
+  const capReadiness = blocked
+    ? `BLOCKED — ${capId} Phase 15.3 apply plan only`
+    : `${level} — ${capId} controlled apply plan prepared, applyAllowed false`;
+  const rbId = `rb-${actionId.replace('act-', '')}`;
+  const rbReadiness = blocked
+    ? `BLOCKED — ${rbId} Phase 15.4 rollback plan only`
+    : `${level} — ${rbId} rollback plan prepared, rollbackAllowed false`;
+  const rcId = `rc-${actionId.replace('act-', '')}`;
+  const rcReadiness = blocked
+    ? `BLOCKED — ${rcId} Phase 15.5 recovery plan only`
+    : `${level} — ${rcId} recovery plan prepared, recoveryAllowed false`;
+  const cmId = `cm-${actionId.replace('act-', '')}`;
+  const cmReadiness = blocked
+    ? `BLOCKED — ${cmId} Phase 15.6 completion plan only`
+    : `${level} — ${cmId} completion plan prepared, completionAllowed false`;
+  const pvId = `pv-${actionId.replace('act-', '')}`;
+  const pvReadiness = blocked
+    ? `BLOCKED — ${pvId} Phase 16.1 preview management only`
+    : `${level} — ${pvId} preview session registered, no browser launch`;
+  const pviId = `pvi-${actionId.replace('act-', '')}`;
+  const pviLevel = blocked ? 'BLOCKED' : level === 'MEDIUM' ? 'PARTIALLY_READY' : 'NOT_READY';
+  const pviScore = blocked ? 0 : Math.max(0, Math.min(100, score));
+  const svId = `sv-${actionId.replace('act-', '')}`;
+  const svReadiness = blocked
+    ? `BLOCKED — ${svId} Phase 16.3 observation runtime only`
+    : `${level} — ${svId} capture plan prepared, no capture execution`;
+  const obsState = blocked ? 'OBSERVATION_BLOCKED' : 'PLANNED';
+  const inspId = `insp-${actionId.replace('act-', '')}`;
+  const inspReadiness = blocked
+    ? `BLOCKED — ${inspId} Phase 16.4 structure inspection only`
+    : `${level} — ${inspId} layout/navigation/loading structures identified`;
+  const surfaceCount = blocked ? 0 : Math.max(3, Math.min(7, 4 + Math.floor(score / 20)));
+  const itestId = `itest-${actionId.replace('act-', '')}`;
+  const itestReadiness = blocked
+    ? `BLOCKED — ${itestId} Phase 16.5 interaction simulation only`
+    : `${level} — ${itestId} interaction outcomes recorded, no verdict`;
+  const interactionCount = blocked ? 0 : Math.max(4, Math.min(12, 6 + Math.floor(score / 15)));
+  const vverId = `vver-${actionId.replace('act-', '')}`;
+  const vverStatus = blocked ? 'VERIFICATION_BLOCKED' : score >= 45 ? 'PARTIALLY_VERIFIED' : 'VERIFICATION_REQUIRED';
+  const vverTargetCount = blocked ? 0 : Math.max(5, Math.min(14, 8 + Math.floor(score / 12)));
   return {
     executionReadiness: `${level} (${score}) — ${blockerCount} visible blockers; Phase 14.1 readiness-only, no execution.`,
     executionReady: !blocked && score >= 45 && blockerCount < 4,
@@ -73,6 +158,42 @@ function executionFieldsForAction(
       : `${level} — ${fixId} Phase 14.5 simulation-only, no fix application`,
     verificationId: vrfyId,
     verificationScore: blocked ? 0 : vrfyScore,
+    world2ActivationId: w2Id,
+    world2ActivationReadiness: w2Readiness,
+    builderPacketExecutionId: bpeId,
+    builderPacketExecutionReadiness: bpeReadiness,
+    controlledApplyId: capId,
+    controlledApplyReadiness: capReadiness,
+    rollbackPlanId: rbId,
+    rollbackReadiness: rbReadiness,
+    rollbackAllowed: false,
+    recoveryPlanId: rcId,
+    recoveryReadiness: rcReadiness,
+    recoveryAllowed: false,
+    escalationLevel: blocked ? 'BLOCKED' : 'NONE',
+    completionPlanId: cmId,
+    completionReadiness: cmReadiness,
+    completionAllowed: false,
+    previewSessionId: pvId,
+    previewReadiness: pvReadiness,
+    previewState: blocked ? 'PREVIEW_BLOCKED' : 'REGISTERED',
+    previewIntelligenceId: pviId,
+    previewReadinessLevel: pviLevel,
+    previewReadinessScore: pviScore,
+    selfVisionSessionId: svId,
+    selfVisionReadiness: svReadiness,
+    observationState: obsState,
+    inspectionId: inspId,
+    inspectionReadiness: inspReadiness,
+    inspectedSurfaceCount: surfaceCount,
+    interactionTestId: itestId,
+    interactionReadiness: itestReadiness,
+    interactionCount,
+    visualVerificationId: vverId,
+    visualVerificationStatus: vverStatus,
+    visualVerificationTargetCount: vverTargetCount,
+    applyAllowed: false,
+    executionAllowed: false,
   };
 }
 

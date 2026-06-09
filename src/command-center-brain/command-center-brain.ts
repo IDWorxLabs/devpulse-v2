@@ -239,10 +239,188 @@ import {
   resetVerificationTrustCounterForTests,
 } from '../runtime-verification-layer/index.js';
 import { isRuntimeVerificationAdvisoryQuestion } from '../runtime-verification-layer/runtime-verification-types.js';
+import { isWorld2ExecutionActivationAdvisoryQuestion } from '../world2-execution-activation/world2-execution-activation-types.js';
+import { isWorld2BuilderPacketExecutionAdvisoryQuestion } from '../world2-builder-packet-execution/types.js';
+import { isWorld2ControlledApplyAdvisoryQuestion } from '../world2-controlled-apply-runtime/types.js';
+import { isWorld2RollbackAdvisoryQuestion } from '../world2-rollback-runtime/types.js';
+import { isWorld2RecoveryAdvisoryQuestion } from '../world2-recovery-runtime/types.js';
+import { isWorld2CompletionAdvisoryQuestion } from '../world2-completion-runtime/types.js';
+import { isLivePreviewAdvisoryQuestion } from '../live-preview-runtime/types.js';
+import { isPreviewIntelligenceAdvisoryQuestion } from '../preview-intelligence/types.js';
+import { isSelfVisionRuntimeAdvisoryQuestion } from '../self-vision-runtime/types.js';
+import { isUiInspectionAdvisoryQuestion } from '../ui-inspection-engine/types.js';
+import { isInteractionTestingAdvisoryQuestion } from '../interaction-testing-engine/types.js';
 import type {
   RuntimeVerificationDiagnostics,
   RuntimeVerificationReport,
 } from '../runtime-verification-layer/runtime-verification-types.js';
+import {
+  getWorld2ExecutionActivationContext,
+  getWorld2ExecutionActivationDiagnostics,
+  resetWorld2ExecutionActivationDiagnostics,
+  resetWorld2ActivationRequestCounterForTests,
+  resetWorld2IsolationReportCounterForTests,
+  resetWorld2GovernanceCounterForTests,
+  resetWorld2RuntimeChainLinkCounterForTests,
+  resetWorld2ActivationReadinessCounterForTests,
+  resetWorld2ActivationPlanCounterForTests,
+} from '../world2-execution-activation/index.js';
+import { isWorld2ExecutionActivationQuestion } from '../world2-execution-activation/world2-execution-activation-types.js';
+import type {
+  World2ExecutionActivationDiagnostics,
+  World2ActivationPlan,
+} from '../world2-execution-activation/world2-execution-activation-types.js';
+import {
+  getBuilderPacketExecutionContext,
+  getBuilderPacketExecutionDiagnostics,
+  resetBuilderPacketExecutionDiagnostics,
+  resetBuilderPacketExecutionRequestCounterForTests,
+  resetBuilderPacketStepCounterForTests,
+  resetBuilderPacketExecutionReportCounterForTests,
+} from '../world2-builder-packet-execution/index.js';
+import { isWorld2BuilderPacketExecutionQuestion } from '../world2-builder-packet-execution/types.js';
+import type {
+  BuilderPacketExecutionDiagnostics,
+  BuilderPacketExecutionPacket,
+  BuilderPacketExecutionReport,
+} from '../world2-builder-packet-execution/types.js';
+import {
+  getControlledApplyContext,
+  getControlledApplyDiagnostics,
+  resetControlledApplyDiagnostics,
+  resetControlledApplyRequestCounterForTests,
+  resetControlledApplyGateCounterForTests,
+  resetControlledApplyStepCounterForTests,
+  resetControlledApplyPlanCounterForTests,
+} from '../world2-controlled-apply-runtime/index.js';
+import { isWorld2ControlledApplyQuestion } from '../world2-controlled-apply-runtime/types.js';
+import type {
+  ControlledApplyDiagnostics,
+  ControlledApplyPlan,
+  ControlledApplyReport,
+} from '../world2-controlled-apply-runtime/types.js';
+import {
+  getRollbackContext,
+  getRollbackDiagnostics,
+  resetRollbackDiagnostics,
+  resetRollbackRequestCounterForTests,
+  resetRollbackStepCounterForTests,
+  resetRollbackPlanCounterForTests,
+} from '../world2-rollback-runtime/index.js';
+import { isWorld2RollbackQuestion } from '../world2-rollback-runtime/types.js';
+import type {
+  RollbackDiagnostics,
+  RollbackPlan,
+  RollbackReport,
+} from '../world2-rollback-runtime/types.js';
+import {
+  getRecoveryContext,
+  getRecoveryDiagnostics,
+  resetRecoveryDiagnostics,
+  resetRecoveryRequestCounterForTests,
+  resetRecoveryStepCounterForTests,
+  resetRecoveryPlanCounterForTests,
+} from '../world2-recovery-runtime/index.js';
+import { isWorld2RecoveryQuestion } from '../world2-recovery-runtime/types.js';
+import type {
+  RecoveryDiagnostics,
+  RecoveryPlan,
+  RecoveryReport,
+} from '../world2-recovery-runtime/types.js';
+import {
+  getCompletionContext,
+  getCompletionDiagnostics,
+  resetCompletionDiagnostics,
+  resetCompletionRequestCounterForTests,
+  resetCompletionEvidenceCounterForTests,
+  resetCompletionPlanCounterForTests,
+} from '../world2-completion-runtime/index.js';
+import { isWorld2CompletionQuestion } from '../world2-completion-runtime/types.js';
+import type {
+  CompletionDiagnostics,
+  CompletionPlan,
+  CompletionReport,
+} from '../world2-completion-runtime/types.js';
+import {
+  getLivePreviewContext,
+  getPreviewRuntimeDiagnostics,
+  resetPreviewRuntimeDiagnostics,
+  resetPreviewRequestCounterForTests,
+  resetPreviewTargetRegistryForTests,
+  resetPreviewSessionManagerForTests,
+  resetPreviewReportCounterForTests,
+} from '../live-preview-runtime/index.js';
+import { isLivePreviewQuestion } from '../live-preview-runtime/types.js';
+import type {
+  PreviewRuntimeDiagnostics,
+  PreviewSession,
+  PreviewRuntimeReport,
+} from '../live-preview-runtime/types.js';
+import {
+  getPreviewIntelligenceContext,
+  getPreviewIntelligenceDiagnostics,
+  resetPreviewIntelligenceDiagnostics,
+  resetPreviewIntelligenceRequestCounterForTests,
+  resetPreviewIntelligenceReportCounterForTests,
+} from '../preview-intelligence/index.js';
+import { isPreviewIntelligenceQuestion } from '../preview-intelligence/types.js';
+import type {
+  PreviewIntelligenceDiagnostics,
+  PreviewIntelligenceReport,
+} from '../preview-intelligence/types.js';
+import {
+  getSelfVisionRuntimeContext,
+  getSelfVisionRuntimeDiagnostics,
+  resetSelfVisionRuntimeDiagnostics,
+  resetSelfVisionRequestCounterForTests,
+  resetSelfVisionSessionRegistryForTests,
+  resetSelfVisionReportCounterForTests,
+} from '../self-vision-runtime/index.js';
+import { isSelfVisionRuntimeQuestion } from '../self-vision-runtime/types.js';
+import type {
+  SelfVisionRuntimeDiagnostics,
+  SelfVisionSession,
+  SelfVisionRuntimeReport,
+} from '../self-vision-runtime/types.js';
+import {
+  getUiInspectionContext,
+  getUiInspectionDiagnostics,
+  resetUiInspectionDiagnostics,
+  resetUiInspectionRequestCounterForTests,
+  resetUiInspectionReportCounterForTests,
+} from '../ui-inspection-engine/index.js';
+import { isUiInspectionQuestion } from '../ui-inspection-engine/types.js';
+import type {
+  UiInspectionDiagnostics,
+  UiInspectionReport,
+} from '../ui-inspection-engine/types.js';
+import {
+  getInteractionTestingContext,
+  getInteractionTestingDiagnostics,
+  resetInteractionTestingDiagnostics,
+  resetInteractionTestingRequestCounterForTests,
+  resetInteractionTestingReportCounterForTests,
+} from '../interaction-testing-engine/index.js';
+import { isInteractionTestingQuestion } from '../interaction-testing-engine/types.js';
+import type {
+  InteractionTestingDiagnostics,
+  InteractionTestingReport,
+} from '../interaction-testing-engine/types.js';
+import {
+  getVisualVerificationContext,
+  getVisualVerificationDiagnostics,
+  resetVisualVerificationDiagnostics,
+  resetVisualVerificationRequestCounterForTests,
+  resetVisualVerificationReportCounterForTests,
+} from '../visual-verification-engine/index.js';
+import {
+  isVisualVerificationQuestion,
+  isVisualVerificationAdvisoryQuestion,
+} from '../visual-verification-engine/types.js';
+import type {
+  VisualVerificationDiagnostics,
+  VisualVerificationReport,
+} from '../visual-verification-engine/types.js';
 import {
   getTimelineIntelligenceDiagnostics,
   resetTimelineIntelligenceForTests,
@@ -332,7 +510,19 @@ function detectBlockedIntent(message: string): string | null {
     isCodeGenerationPlanningAdvisoryQuestion(message) ||
     isTestingPlanningAdvisoryQuestion(message) ||
     isAutoFixPlanningAdvisoryQuestion(message) ||
-    isRuntimeVerificationAdvisoryQuestion(message)
+    isRuntimeVerificationAdvisoryQuestion(message) ||
+    isWorld2ExecutionActivationAdvisoryQuestion(message) ||
+    isWorld2BuilderPacketExecutionAdvisoryQuestion(message) ||
+    isWorld2ControlledApplyAdvisoryQuestion(message) ||
+    isWorld2RollbackAdvisoryQuestion(message) ||
+    isWorld2RecoveryAdvisoryQuestion(message) ||
+    isWorld2CompletionAdvisoryQuestion(message) ||
+    isLivePreviewAdvisoryQuestion(message) ||
+    isPreviewIntelligenceAdvisoryQuestion(message) ||
+    isSelfVisionRuntimeAdvisoryQuestion(message) ||
+    isUiInspectionAdvisoryQuestion(message) ||
+    isInteractionTestingAdvisoryQuestion(message) ||
+    isVisualVerificationAdvisoryQuestion(message)
   ) {
     return null;
   }
@@ -715,6 +905,124 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
   const runtimeVerificationReports: RuntimeVerificationReport[] | undefined =
     blocked || !verificationCtx ? undefined : [verificationCtx.result.report];
 
+  const activationCtx =
+    blocked || !isWorld2ExecutionActivationQuestion(message)
+      ? null
+      : getWorld2ExecutionActivationContext(message);
+  const activationDiag = getWorld2ExecutionActivationDiagnostics();
+  const world2ExecutionActivationDiagnostics: World2ExecutionActivationDiagnostics | undefined =
+    blocked || !activationDiag.world2ExecutionActivationActive ? undefined : activationDiag;
+  const world2ActivationPlans: World2ActivationPlan[] | undefined =
+    blocked || !activationCtx ? undefined : [activationCtx.result.plan];
+
+  const packetExecCtx =
+    blocked || !isWorld2BuilderPacketExecutionQuestion(message)
+      ? null
+      : getBuilderPacketExecutionContext(message);
+  const packetExecDiag = getBuilderPacketExecutionDiagnostics();
+  const builderPacketExecutionDiagnostics: BuilderPacketExecutionDiagnostics | undefined =
+    blocked || !packetExecDiag.builderPacketExecutionActive ? undefined : packetExecDiag;
+  const builderPacketExecutionPackets: BuilderPacketExecutionPacket[] | undefined =
+    blocked || !packetExecCtx?.executionPacket ? undefined : [packetExecCtx.executionPacket];
+  const builderPacketExecutionReports: BuilderPacketExecutionReport[] | undefined =
+    blocked || !packetExecCtx ? undefined : [packetExecCtx.executionReport];
+
+  const controlledApplyCtx =
+    blocked || !isWorld2ControlledApplyQuestion(message)
+      ? null
+      : getControlledApplyContext(message);
+  const controlledApplyDiag = getControlledApplyDiagnostics();
+  const controlledApplyRuntimeDiagnostics: ControlledApplyDiagnostics | undefined =
+    blocked || !controlledApplyDiag.controlledApplyRuntimeActive ? undefined : controlledApplyDiag;
+  const controlledApplyPlans: ControlledApplyPlan[] | undefined =
+    blocked || !controlledApplyCtx?.controlledApplyPlan
+      ? undefined
+      : [controlledApplyCtx.controlledApplyPlan];
+  const controlledApplyReports: ControlledApplyReport[] | undefined =
+    blocked || !controlledApplyCtx ? undefined : [controlledApplyCtx.controlledApplyReport];
+
+  const rollbackCtx =
+    blocked || !isWorld2RollbackQuestion(message) ? null : getRollbackContext(message);
+  const rollbackDiag = getRollbackDiagnostics();
+  const rollbackRuntimeDiagnostics: RollbackDiagnostics | undefined =
+    blocked || !rollbackDiag.rollbackRuntimeActive ? undefined : rollbackDiag;
+  const rollbackPlans: RollbackPlan[] | undefined =
+    blocked || !rollbackCtx?.rollbackPlan ? undefined : [rollbackCtx.rollbackPlan];
+  const rollbackReports: RollbackReport[] | undefined =
+    blocked || !rollbackCtx ? undefined : [rollbackCtx.rollbackReport];
+
+  const recoveryCtx =
+    blocked || !isWorld2RecoveryQuestion(message) ? null : getRecoveryContext(message);
+  const recoveryDiag = getRecoveryDiagnostics();
+  const recoveryRuntimeDiagnostics: RecoveryDiagnostics | undefined =
+    blocked || !recoveryDiag.recoveryRuntimeActive ? undefined : recoveryDiag;
+  const recoveryPlans: RecoveryPlan[] | undefined =
+    blocked || !recoveryCtx?.recoveryPlan ? undefined : [recoveryCtx.recoveryPlan];
+  const recoveryReports: RecoveryReport[] | undefined =
+    blocked || !recoveryCtx ? undefined : [recoveryCtx.recoveryReport];
+
+  const completionCtx =
+    blocked || !isWorld2CompletionQuestion(message) ? null : getCompletionContext(message);
+  const completionDiag = getCompletionDiagnostics();
+  const completionRuntimeDiagnostics: CompletionDiagnostics | undefined =
+    blocked || !completionDiag.completionRuntimeActive ? undefined : completionDiag;
+  const completionPlans: CompletionPlan[] | undefined =
+    blocked || !completionCtx?.completionPlan ? undefined : [completionCtx.completionPlan];
+  const completionReports: CompletionReport[] | undefined =
+    blocked || !completionCtx ? undefined : [completionCtx.completionReport];
+
+  const previewCtx =
+    blocked || !isLivePreviewQuestion(message) ? null : getLivePreviewContext(message);
+  const previewDiag = getPreviewRuntimeDiagnostics();
+  const livePreviewRuntimeDiagnostics: PreviewRuntimeDiagnostics | undefined =
+    blocked || !previewDiag.previewRuntimeActive ? undefined : previewDiag;
+  const previewSessions: PreviewSession[] | undefined =
+    blocked || !previewCtx?.previewSession ? undefined : [previewCtx.previewSession];
+  const previewRuntimeReports: PreviewRuntimeReport[] | undefined =
+    blocked || !previewCtx ? undefined : [previewCtx.runtimeReport];
+
+  const previewIntelCtx =
+    blocked || !isPreviewIntelligenceQuestion(message) ? null : getPreviewIntelligenceContext(message);
+  const previewIntelDiag = getPreviewIntelligenceDiagnostics();
+  const previewIntelligenceDiagnostics: PreviewIntelligenceDiagnostics | undefined =
+    blocked || !previewIntelDiag.previewIntelligenceActive ? undefined : previewIntelDiag;
+  const previewIntelligenceReports: PreviewIntelligenceReport[] | undefined =
+    blocked || !previewIntelCtx ? undefined : [previewIntelCtx.previewIntelligenceReport];
+
+  const selfVisionCtx =
+    blocked || !isSelfVisionRuntimeQuestion(message) ? null : getSelfVisionRuntimeContext(message);
+  const selfVisionDiag = getSelfVisionRuntimeDiagnostics();
+  const selfVisionRuntimeDiagnostics: SelfVisionRuntimeDiagnostics | undefined =
+    blocked || !selfVisionDiag.selfVisionRuntimeActive ? undefined : selfVisionDiag;
+  const selfVisionSessions: SelfVisionSession[] | undefined =
+    blocked || !selfVisionCtx?.selfVisionSession ? undefined : [selfVisionCtx.selfVisionSession];
+  const selfVisionRuntimeReports: SelfVisionRuntimeReport[] | undefined =
+    blocked || !selfVisionCtx ? undefined : [selfVisionCtx.runtimeReport];
+
+  const uiInspectionCtx =
+    blocked || !isUiInspectionQuestion(message) ? null : getUiInspectionContext(message);
+  const uiInspectionDiag = getUiInspectionDiagnostics();
+  const uiInspectionDiagnostics: UiInspectionDiagnostics | undefined =
+    blocked || !uiInspectionDiag.uiInspectionActive ? undefined : uiInspectionDiag;
+  const uiInspectionReports: UiInspectionReport[] | undefined =
+    blocked || !uiInspectionCtx ? undefined : [uiInspectionCtx.inspectionReport];
+
+  const interactionCtx =
+    blocked || !isInteractionTestingQuestion(message) ? null : getInteractionTestingContext(message);
+  const interactionDiag = getInteractionTestingDiagnostics();
+  const interactionTestingDiagnostics: InteractionTestingDiagnostics | undefined =
+    blocked || !interactionDiag.interactionTestingActive ? undefined : interactionDiag;
+  const interactionTestingReports: InteractionTestingReport[] | undefined =
+    blocked || !interactionCtx ? undefined : [interactionCtx.interactionTestingReport];
+
+  const visualVerificationCtx =
+    blocked || !isVisualVerificationQuestion(message) ? null : getVisualVerificationContext(message);
+  const visualVerificationDiag = getVisualVerificationDiagnostics();
+  const visualVerificationDiagnostics: VisualVerificationDiagnostics | undefined =
+    blocked || !visualVerificationDiag.visualVerificationActive ? undefined : visualVerificationDiag;
+  const visualVerificationReports: VisualVerificationReport[] | undefined =
+    blocked || !visualVerificationCtx ? undefined : [visualVerificationCtx.visualVerificationReport];
+
   return {
     responseId: nextBrainResponseId(),
     userMessage: message,
@@ -767,6 +1075,37 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
     autoFixPlans,
     runtimeVerificationDiagnostics,
     runtimeVerificationReports,
+    world2ExecutionActivationDiagnostics,
+    world2ActivationPlans,
+    builderPacketExecutionDiagnostics,
+    builderPacketExecutionPackets,
+    builderPacketExecutionReports,
+    controlledApplyRuntimeDiagnostics,
+    controlledApplyPlans,
+    controlledApplyReports,
+    rollbackRuntimeDiagnostics,
+    rollbackPlans,
+    rollbackReports,
+    recoveryRuntimeDiagnostics,
+    recoveryPlans,
+    recoveryReports,
+    completionRuntimeDiagnostics,
+    completionPlans,
+    completionReports,
+    livePreviewRuntimeDiagnostics,
+    previewSessions,
+    previewRuntimeReports,
+    previewIntelligenceDiagnostics,
+    previewIntelligenceReports,
+    selfVisionRuntimeDiagnostics,
+    selfVisionSessions,
+    selfVisionRuntimeReports,
+    uiInspectionDiagnostics,
+    uiInspectionReports,
+    interactionTestingDiagnostics,
+    interactionTestingReports,
+    visualVerificationDiagnostics,
+    visualVerificationReports,
     pipelineStages,
     operatorFeedEvents,
     confirmation: {
@@ -985,6 +1324,55 @@ export function resetDevPulseV2CommandCenterBrainForTests(): DevPulseV2CommandCe
   resetVerificationEvidenceCounterForTests();
   resetVerificationGapCounterForTests();
   resetVerificationTrustCounterForTests();
+  resetWorld2ExecutionActivationDiagnostics();
+  resetWorld2ActivationRequestCounterForTests();
+  resetWorld2IsolationReportCounterForTests();
+  resetWorld2GovernanceCounterForTests();
+  resetWorld2RuntimeChainLinkCounterForTests();
+  resetWorld2ActivationReadinessCounterForTests();
+  resetWorld2ActivationPlanCounterForTests();
+  resetBuilderPacketExecutionDiagnostics();
+  resetBuilderPacketExecutionRequestCounterForTests();
+  resetBuilderPacketStepCounterForTests();
+  resetBuilderPacketExecutionReportCounterForTests();
+  resetControlledApplyDiagnostics();
+  resetControlledApplyRequestCounterForTests();
+  resetControlledApplyGateCounterForTests();
+  resetControlledApplyStepCounterForTests();
+  resetControlledApplyPlanCounterForTests();
+  resetRollbackDiagnostics();
+  resetRollbackRequestCounterForTests();
+  resetRollbackStepCounterForTests();
+  resetRollbackPlanCounterForTests();
+  resetRecoveryDiagnostics();
+  resetRecoveryRequestCounterForTests();
+  resetRecoveryStepCounterForTests();
+  resetRecoveryPlanCounterForTests();
+  resetCompletionDiagnostics();
+  resetCompletionRequestCounterForTests();
+  resetCompletionEvidenceCounterForTests();
+  resetCompletionPlanCounterForTests();
+  resetPreviewRuntimeDiagnostics();
+  resetPreviewRequestCounterForTests();
+  resetPreviewTargetRegistryForTests();
+  resetPreviewSessionManagerForTests();
+  resetPreviewReportCounterForTests();
+  resetPreviewIntelligenceDiagnostics();
+  resetPreviewIntelligenceRequestCounterForTests();
+  resetPreviewIntelligenceReportCounterForTests();
+  resetSelfVisionRuntimeDiagnostics();
+  resetSelfVisionRequestCounterForTests();
+  resetSelfVisionSessionRegistryForTests();
+  resetSelfVisionReportCounterForTests();
+  resetUiInspectionDiagnostics();
+  resetUiInspectionRequestCounterForTests();
+  resetUiInspectionReportCounterForTests();
+  resetInteractionTestingDiagnostics();
+  resetInteractionTestingRequestCounterForTests();
+  resetInteractionTestingReportCounterForTests();
+  resetVisualVerificationDiagnostics();
+  resetVisualVerificationRequestCounterForTests();
+  resetVisualVerificationReportCounterForTests();
   return singleton;
 }
 

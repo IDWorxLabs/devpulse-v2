@@ -43,6 +43,30 @@ import { processAutoFixRuntimeRequest } from '../../auto-fix-runtime/index.js';
 import { isAutoFixRuntimeFoundationQuestion } from '../../auto-fix-runtime/auto-fix-runtime-types.js';
 import { processRuntimeVerificationRequest } from '../../runtime-verification-layer/index.js';
 import { isRuntimeVerificationLayerQuestion } from '../../runtime-verification-layer/runtime-verification-types.js';
+import { processWorld2ExecutionActivationRequest } from '../../world2-execution-activation/index.js';
+import { isWorld2ExecutionActivationQuestion } from '../../world2-execution-activation/world2-execution-activation-types.js';
+import { processBuilderPacketExecutionRequest } from '../../world2-builder-packet-execution/index.js';
+import { isWorld2BuilderPacketExecutionQuestion } from '../../world2-builder-packet-execution/types.js';
+import { processControlledApplyRequest } from '../../world2-controlled-apply-runtime/index.js';
+import { isWorld2ControlledApplyQuestion } from '../../world2-controlled-apply-runtime/types.js';
+import { processRollbackRequest } from '../../world2-rollback-runtime/index.js';
+import { isWorld2RollbackQuestion } from '../../world2-rollback-runtime/types.js';
+import { processRecoveryRequest } from '../../world2-recovery-runtime/index.js';
+import { isWorld2RecoveryQuestion } from '../../world2-recovery-runtime/types.js';
+import { processCompletionRequest } from '../../world2-completion-runtime/index.js';
+import { isWorld2CompletionQuestion } from '../../world2-completion-runtime/types.js';
+import { processLivePreviewRequest } from '../../live-preview-runtime/index.js';
+import { isLivePreviewQuestion } from '../../live-preview-runtime/types.js';
+import { processPreviewIntelligenceRequest } from '../../preview-intelligence/index.js';
+import { isPreviewIntelligenceQuestion } from '../../preview-intelligence/types.js';
+import { processSelfVisionRuntimeRequest } from '../../self-vision-runtime/index.js';
+import { isSelfVisionRuntimeQuestion } from '../../self-vision-runtime/types.js';
+import { processUiInspectionRequest } from '../../ui-inspection-engine/index.js';
+import { isUiInspectionQuestion } from '../../ui-inspection-engine/types.js';
+import { processInteractionTestingRequest } from '../../interaction-testing-engine/index.js';
+import { isInteractionTestingQuestion } from '../../interaction-testing-engine/types.js';
+import { processVisualVerificationRequest } from '../../visual-verification-engine/index.js';
+import { isVisualVerificationQuestion } from '../../visual-verification-engine/types.js';
 import { detectContextNeeds, needsUnavailableDevelopmentContext } from './context-need-detector.js';
 import {
   GENERAL_QUESTION_UNDERSTANDING_OWNER_MODULE,
@@ -196,6 +220,234 @@ export function executeGeneralQuestionRouting(
         limitationMessage: limitationMessage ?? undefined,
       }),
       usedCapabilities: ['PORTFOLIO_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'VISUAL_VERIFICATION_ENGINE' ||
+    (plan.selectedCapabilities.includes('VISUAL_VERIFICATION_ENGINE') &&
+      isVisualVerificationQuestion(deps.message))
+  ) {
+    const verification = processVisualVerificationRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: verification.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['VISUAL_VERIFICATION_ENGINE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'INTERACTION_TESTING_ENGINE' ||
+    (plan.selectedCapabilities.includes('INTERACTION_TESTING_ENGINE') &&
+      isInteractionTestingQuestion(deps.message))
+  ) {
+    const interaction = processInteractionTestingRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: interaction.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['INTERACTION_TESTING_ENGINE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'UI_INSPECTION_ENGINE' ||
+    (plan.selectedCapabilities.includes('UI_INSPECTION_ENGINE') &&
+      isUiInspectionQuestion(deps.message))
+  ) {
+    const inspection = processUiInspectionRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: inspection.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['UI_INSPECTION_ENGINE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'SELF_VISION_RUNTIME' ||
+    (plan.selectedCapabilities.includes('SELF_VISION_RUNTIME') &&
+      isSelfVisionRuntimeQuestion(deps.message))
+  ) {
+    const selfVision = processSelfVisionRuntimeRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: selfVision.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['SELF_VISION_RUNTIME', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'PREVIEW_INTELLIGENCE' ||
+    (plan.selectedCapabilities.includes('PREVIEW_INTELLIGENCE') &&
+      isPreviewIntelligenceQuestion(deps.message))
+  ) {
+    const intelligence = processPreviewIntelligenceRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: intelligence.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['PREVIEW_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'LIVE_PREVIEW_RUNTIME' ||
+    (plan.selectedCapabilities.includes('LIVE_PREVIEW_RUNTIME') &&
+      isLivePreviewQuestion(deps.message))
+  ) {
+    const preview = processLivePreviewRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: preview.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['LIVE_PREVIEW_RUNTIME', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'WORLD2_COMPLETION_RUNTIME' ||
+    (plan.selectedCapabilities.includes('WORLD2_COMPLETION_RUNTIME') &&
+      isWorld2CompletionQuestion(deps.message))
+  ) {
+    const completion = processCompletionRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: completion.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['WORLD2_COMPLETION_RUNTIME', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'WORLD2_RECOVERY_RUNTIME' ||
+    (plan.selectedCapabilities.includes('WORLD2_RECOVERY_RUNTIME') &&
+      isWorld2RecoveryQuestion(deps.message))
+  ) {
+    const recovery = processRecoveryRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: recovery.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['WORLD2_RECOVERY_RUNTIME', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'WORLD2_ROLLBACK_RUNTIME' ||
+    (plan.selectedCapabilities.includes('WORLD2_ROLLBACK_RUNTIME') &&
+      isWorld2RollbackQuestion(deps.message))
+  ) {
+    const rollback = processRollbackRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: rollback.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['WORLD2_ROLLBACK_RUNTIME', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'WORLD2_CONTROLLED_APPLY_RUNTIME' ||
+    (plan.selectedCapabilities.includes('WORLD2_CONTROLLED_APPLY_RUNTIME') &&
+      isWorld2ControlledApplyQuestion(deps.message))
+  ) {
+    const controlledApply = processControlledApplyRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: controlledApply.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['WORLD2_CONTROLLED_APPLY_RUNTIME', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'WORLD2_BUILDER_PACKET_EXECUTION' ||
+    (plan.selectedCapabilities.includes('WORLD2_BUILDER_PACKET_EXECUTION') &&
+      isWorld2BuilderPacketExecutionQuestion(deps.message))
+  ) {
+    const packetExec = processBuilderPacketExecutionRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: packetExec.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['WORLD2_BUILDER_PACKET_EXECUTION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'WORLD2_EXECUTION_ACTIVATION' ||
+    (plan.selectedCapabilities.includes('WORLD2_EXECUTION_ACTIVATION') &&
+      isWorld2ExecutionActivationQuestion(deps.message))
+  ) {
+    const activation = processWorld2ExecutionActivationRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: activation.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['WORLD2_EXECUTION_ACTIVATION', ...usedCapabilities],
       routingPlan: plan,
     };
   }

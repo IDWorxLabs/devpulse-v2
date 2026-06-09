@@ -29,6 +29,18 @@ import { isCodeGenerationRuntimeFoundationQuestion } from '../../code-generation
 import { isTestingRuntimeFoundationQuestion } from '../../testing-runtime/testing-runtime-types.js';
 import { isAutoFixRuntimeFoundationQuestion } from '../../auto-fix-runtime/auto-fix-runtime-types.js';
 import { isRuntimeVerificationLayerQuestion } from '../../runtime-verification-layer/runtime-verification-types.js';
+import { isWorld2ExecutionActivationQuestion } from '../../world2-execution-activation/world2-execution-activation-types.js';
+import { isWorld2BuilderPacketExecutionQuestion } from '../../world2-builder-packet-execution/types.js';
+import { isWorld2ControlledApplyQuestion } from '../../world2-controlled-apply-runtime/types.js';
+import { isWorld2RollbackQuestion } from '../../world2-rollback-runtime/types.js';
+import { isWorld2RecoveryQuestion } from '../../world2-recovery-runtime/types.js';
+import { isWorld2CompletionQuestion } from '../../world2-completion-runtime/types.js';
+import { isLivePreviewQuestion } from '../../live-preview-runtime/types.js';
+import { isPreviewIntelligenceQuestion } from '../../preview-intelligence/types.js';
+import { isSelfVisionRuntimeQuestion } from '../../self-vision-runtime/types.js';
+import { isUiInspectionQuestion } from '../../ui-inspection-engine/types.js';
+import { isInteractionTestingQuestion } from '../../interaction-testing-engine/types.js';
+import { isVisualVerificationQuestion } from '../../visual-verification-engine/types.js';
 
 const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> = {
   PROJECT_PROFILE: 'PROJECT_UNDERSTANDING',
@@ -60,6 +72,18 @@ const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> =
   TESTING_RUNTIME_FACTS: 'TESTING_RUNTIME_FOUNDATION',
   AUTO_FIX_RUNTIME_FACTS: 'AUTO_FIX_RUNTIME_FOUNDATION',
   RUNTIME_VERIFICATION_FACTS: 'RUNTIME_VERIFICATION_LAYER',
+  WORLD2_EXECUTION_ACTIVATION_FACTS: 'WORLD2_EXECUTION_ACTIVATION',
+  WORLD2_BUILDER_PACKET_EXECUTION_FACTS: 'WORLD2_BUILDER_PACKET_EXECUTION',
+  WORLD2_CONTROLLED_APPLY_RUNTIME_FACTS: 'WORLD2_CONTROLLED_APPLY_RUNTIME',
+  WORLD2_ROLLBACK_RUNTIME_FACTS: 'WORLD2_ROLLBACK_RUNTIME',
+  WORLD2_RECOVERY_RUNTIME_FACTS: 'WORLD2_RECOVERY_RUNTIME',
+  WORLD2_COMPLETION_RUNTIME_FACTS: 'WORLD2_COMPLETION_RUNTIME',
+  LIVE_PREVIEW_RUNTIME_FACTS: 'LIVE_PREVIEW_RUNTIME',
+  PREVIEW_INTELLIGENCE_FACTS: 'PREVIEW_INTELLIGENCE',
+  SELF_VISION_RUNTIME_FACTS: 'SELF_VISION_RUNTIME',
+  UI_INSPECTION_ENGINE_FACTS: 'UI_INSPECTION_ENGINE',
+  INTERACTION_TESTING_ENGINE_FACTS: 'INTERACTION_TESTING_ENGINE',
+  VISUAL_VERIFICATION_ENGINE_FACTS: 'VISUAL_VERIFICATION_ENGINE',
 };
 
 export interface CapabilitySelectionResult {
@@ -156,6 +180,191 @@ export function selectCapabilities(
     selected.add('UNIFIED_DECISION_LAYER');
     selected.add('ACTION_VISIBILITY_ENGINE');
     selected.add('PROJECT_KNOWLEDGE_REASONING');
+  }
+
+  if (isVisualVerificationQuestion(question)) {
+    selected.add('VISUAL_VERIFICATION_ENGINE');
+    selected.add('INTERACTION_TESTING_ENGINE');
+    selected.add('UI_INSPECTION_ENGINE');
+    selected.add('SELF_VISION_RUNTIME');
+    selected.add('LIVE_PREVIEW_RUNTIME');
+    selected.add('PREVIEW_INTELLIGENCE');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isInteractionTestingQuestion(question)) {
+    selected.add('INTERACTION_TESTING_ENGINE');
+    selected.add('UI_INSPECTION_ENGINE');
+    selected.add('SELF_VISION_RUNTIME');
+    selected.add('LIVE_PREVIEW_RUNTIME');
+    selected.add('PREVIEW_INTELLIGENCE');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isUiInspectionQuestion(question)) {
+    selected.add('UI_INSPECTION_ENGINE');
+    selected.add('SELF_VISION_RUNTIME');
+    selected.add('LIVE_PREVIEW_RUNTIME');
+    selected.add('PREVIEW_INTELLIGENCE');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isSelfVisionRuntimeQuestion(question)) {
+    selected.add('SELF_VISION_RUNTIME');
+    selected.add('LIVE_PREVIEW_RUNTIME');
+    selected.add('PREVIEW_INTELLIGENCE');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isPreviewIntelligenceQuestion(question)) {
+    selected.add('PREVIEW_INTELLIGENCE');
+    selected.add('LIVE_PREVIEW_RUNTIME');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isLivePreviewQuestion(question)) {
+    selected.add('LIVE_PREVIEW_RUNTIME');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isWorld2CompletionQuestion(question)) {
+    selected.add('WORLD2_COMPLETION_RUNTIME');
+    selected.add('WORLD2_RECOVERY_RUNTIME');
+    selected.add('WORLD2_ROLLBACK_RUNTIME');
+    selected.add('WORLD2_CONTROLLED_APPLY_RUNTIME');
+    selected.add('WORLD2_BUILDER_PACKET_EXECUTION');
+    selected.add('WORLD2_EXECUTION_ACTIVATION');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+  }
+
+  if (isWorld2RecoveryQuestion(question)) {
+    selected.add('WORLD2_RECOVERY_RUNTIME');
+    selected.add('WORLD2_ROLLBACK_RUNTIME');
+    selected.add('WORLD2_CONTROLLED_APPLY_RUNTIME');
+    selected.add('WORLD2_BUILDER_PACKET_EXECUTION');
+    selected.add('WORLD2_EXECUTION_ACTIVATION');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+  }
+
+  if (isWorld2RollbackQuestion(question)) {
+    selected.add('WORLD2_ROLLBACK_RUNTIME');
+    selected.add('WORLD2_CONTROLLED_APPLY_RUNTIME');
+    selected.add('WORLD2_BUILDER_PACKET_EXECUTION');
+    selected.add('WORLD2_EXECUTION_ACTIVATION');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+  }
+
+  if (isWorld2ControlledApplyQuestion(question)) {
+    selected.add('WORLD2_CONTROLLED_APPLY_RUNTIME');
+    selected.add('WORLD2_BUILDER_PACKET_EXECUTION');
+    selected.add('WORLD2_EXECUTION_ACTIVATION');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+  }
+
+  if (isWorld2BuilderPacketExecutionQuestion(question)) {
+    selected.add('WORLD2_BUILDER_PACKET_EXECUTION');
+    selected.add('WORLD2_EXECUTION_ACTIVATION');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
+    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
+    selected.add('TESTING_RUNTIME_FOUNDATION');
+    selected.add('EXECUTION_RUNTIME_FOUNDATION');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+  }
+
+  if (isWorld2ExecutionActivationQuestion(question)) {
+    selected.add('WORLD2_EXECUTION_ACTIVATION');
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('AUTO_FIX_RUNTIME_FOUNDATION');
+    selected.add('TESTING_RUNTIME_FOUNDATION');
+    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
+    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
+    selected.add('EXECUTION_RUNTIME_FOUNDATION');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('LEARNING_VISIBILITY_ENGINE');
+    selected.add('DEPENDENCY_INTELLIGENCE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
   }
 
   if (isRuntimeVerificationLayerQuestion(question)) {
@@ -329,6 +538,162 @@ export function selectCapabilities(
   }
 
   const lowerQuestion = question.toLowerCase();
+
+  if (isVisualVerificationQuestion(question)) {
+    primary = 'VISUAL_VERIFICATION_ENGINE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Visual verification question — VISUAL_VERIFICATION_ENGINE evaluates visual outcomes and produces verification evidence; no UI modification, interaction execution, or repairs.',
+    };
+  }
+
+  if (isInteractionTestingQuestion(question)) {
+    primary = 'INTERACTION_TESTING_ENGINE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Interaction testing question — INTERACTION_TESTING_ENGINE builds plans, executes simulations, and records outcomes; no correctness verdicts or quality scoring.',
+    };
+  }
+
+  if (isUiInspectionQuestion(question)) {
+    primary = 'UI_INSPECTION_ENGINE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'UI inspection question — UI_INSPECTION_ENGINE inspects layout, navigation, loading, and responsive structures; no clicking, interaction testing, or visual verification.',
+    };
+  }
+
+  if (isSelfVisionRuntimeQuestion(question)) {
+    primary = 'SELF_VISION_RUNTIME';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Self vision runtime question — SELF_VISION_RUNTIME manages visual observation sessions, capture plans, and observation targets; no screenshot analysis or interaction testing.',
+    };
+  }
+
+  if (isPreviewIntelligenceQuestion(question)) {
+    primary = 'PREVIEW_INTELLIGENCE';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Preview intelligence question — PREVIEW_INTELLIGENCE reasons about preview readiness, capabilities, limitations, and future observation plans; no browser launch or visual execution.',
+    };
+  }
+
+  if (isLivePreviewQuestion(question)) {
+    primary = 'LIVE_PREVIEW_RUNTIME';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Live preview question — LIVE_PREVIEW_RUNTIME represents and manages preview targets and sessions with capability tracking; no browser launch or UI inspection.',
+    };
+  }
+
+  if (isWorld2CompletionQuestion(question)) {
+    primary = 'WORLD2_COMPLETION_RUNTIME';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Completion question — WORLD2_COMPLETION_RUNTIME prepares completion safety plans from recovery/rollback/apply context with criteria, evidence, and verification requirements; completionAllowed remains false.',
+    };
+  }
+
+  if (isWorld2RecoveryQuestion(question)) {
+    primary = 'WORLD2_RECOVERY_RUNTIME';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Recovery question — WORLD2_RECOVERY_RUNTIME prepares recovery safety plans from rollback plans and failure context with strategy selection, escalation evaluation, and three-failure rule; recoveryAllowed remains false.',
+    };
+  }
+
+  if (isWorld2RollbackQuestion(question)) {
+    primary = 'WORLD2_ROLLBACK_RUNTIME';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Rollback question — WORLD2_ROLLBACK_RUNTIME prepares rollback safety plans from controlled apply plans with snapshot requirements and gate evaluation; rollbackAllowed remains false.',
+    };
+  }
+
+  if (isWorld2ControlledApplyQuestion(question)) {
+    primary = 'WORLD2_CONTROLLED_APPLY_RUNTIME';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Controlled apply question — WORLD2_CONTROLLED_APPLY_RUNTIME converts execution packets into governed apply plans with gate evaluation, risk classification, and approval recording; applyAllowed remains false.',
+    };
+  }
+
+  if (isWorld2BuilderPacketExecutionQuestion(question)) {
+    primary = 'WORLD2_BUILDER_PACKET_EXECUTION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Builder packet execution question — WORLD2_BUILDER_PACKET_EXECUTION prepares governed execution packets from builder packets with validation, risk classification, and approval recording without apply operations.',
+    };
+  }
+
+  if (isWorld2ExecutionActivationQuestion(question)) {
+    primary = 'WORLD2_EXECUTION_ACTIVATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'World 2 execution activation question — WORLD2_EXECUTION_ACTIVATION evaluates governed, isolated, simulation-first activation plans with workspace isolation, governance gates, and Phase 14 runtime chain linkage without performing real execution.',
+    };
+  }
 
   if (isRuntimeVerificationLayerQuestion(question)) {
     primary = 'RUNTIME_VERIFICATION_LAYER';

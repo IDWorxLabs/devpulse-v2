@@ -17,6 +17,18 @@ import {
 } from './failure-next-step-builder.js';
 import { buildTestingFailureContext } from '../testing-runtime/testing-failure-bridge.js';
 import { buildVerificationFailureContext } from '../runtime-verification-layer/verification-failure-bridge.js';
+import { buildWorld2ActivationFailureContext } from '../world2-execution-activation/world2-activation-failure-bridge.js';
+import { buildBuilderPacketExecutionFailureContext } from '../world2-builder-packet-execution/builder-packet-execution-failure-bridge.js';
+import { buildControlledApplyFailureContext } from '../world2-controlled-apply-runtime/controlled-apply-failure-bridge.js';
+import { buildRollbackFailureContext } from '../world2-rollback-runtime/rollback-failure-bridge.js';
+import { buildRecoveryFailureContext } from '../world2-recovery-runtime/recovery-failure-bridge.js';
+import { buildCompletionFailureContext } from '../world2-completion-runtime/completion-failure-bridge.js';
+import { buildPreviewFailureContext } from '../live-preview-runtime/preview-runtime-report.js';
+import { buildPreviewIntelligenceFailureContext } from '../preview-intelligence/preview-intelligence-failure-bridge.js';
+import { buildSelfVisionFailureContext } from '../self-vision-runtime/self-vision-failure-bridge.js';
+import { buildUiInspectionFailureContext } from '../ui-inspection-engine/ui-inspection-failure-bridge.js';
+import { buildInteractionTestingFailureContext } from '../interaction-testing-engine/interaction-testing-failure-bridge.js';
+import { buildVisualVerificationFailureContext } from '../visual-verification-engine/visual-verification-failure-bridge.js';
 import type { FailureRecord } from './failure-visibility-types.js';
 
 let failureCounter = 0;
@@ -169,6 +181,162 @@ export function buildFailureRecords(query: string): FailureRecord[] {
         sourceSystem: vf.sourceSystem,
         affectedSystems: ['runtime_verification_layer', 'failure_visibility_engine'],
         blockedCapabilities: ['RUNTIME_VERIFICATION_LAYER'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const wf of buildWorld2ActivationFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: wf.title,
+        description: wf.description,
+        sourceSystem: wf.sourceSystem,
+        affectedSystems: ['world2_execution_activation', 'failure_visibility_engine'],
+        blockedCapabilities: ['WORLD2_EXECUTION_ACTIVATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const bf of buildBuilderPacketExecutionFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: bf.title,
+        description: bf.description,
+        sourceSystem: bf.sourceSystem,
+        affectedSystems: ['world2_builder_packet_execution', 'failure_visibility_engine'],
+        blockedCapabilities: ['WORLD2_BUILDER_PACKET_EXECUTION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const cf of buildControlledApplyFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: cf.title,
+        description: cf.description,
+        sourceSystem: cf.sourceSystem,
+        affectedSystems: ['world2_controlled_apply_runtime', 'failure_visibility_engine'],
+        blockedCapabilities: ['WORLD2_CONTROLLED_APPLY_RUNTIME'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const rf of buildRollbackFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: rf.title,
+        description: rf.description,
+        sourceSystem: rf.sourceSystem,
+        affectedSystems: ['world2_rollback_runtime', 'failure_visibility_engine'],
+        blockedCapabilities: ['WORLD2_ROLLBACK_RUNTIME'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const rcf of buildRecoveryFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: rcf.title,
+        description: rcf.description,
+        sourceSystem: rcf.sourceSystem,
+        affectedSystems: ['world2_recovery_runtime', 'failure_visibility_engine'],
+        blockedCapabilities: ['WORLD2_RECOVERY_RUNTIME'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const cmf of buildCompletionFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: cmf.title,
+        description: cmf.description,
+        sourceSystem: cmf.sourceSystem,
+        affectedSystems: ['world2_completion_runtime', 'failure_visibility_engine'],
+        blockedCapabilities: ['WORLD2_COMPLETION_RUNTIME'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const pvf of buildPreviewFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: pvf.title,
+        description: pvf.description,
+        sourceSystem: pvf.sourceSystem,
+        affectedSystems: ['live_preview_runtime', 'failure_visibility_engine'],
+        blockedCapabilities: ['LIVE_PREVIEW_RUNTIME'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const pvif of buildPreviewIntelligenceFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: pvif.title,
+        description: pvif.description,
+        sourceSystem: pvif.sourceSystem,
+        affectedSystems: ['preview_intelligence', 'failure_visibility_engine'],
+        blockedCapabilities: ['PREVIEW_INTELLIGENCE'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const svf of buildSelfVisionFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: svf.title,
+        description: svf.description,
+        sourceSystem: svf.sourceSystem,
+        affectedSystems: ['self_vision_runtime', 'failure_visibility_engine'],
+        blockedCapabilities: ['SELF_VISION_RUNTIME'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const uif of buildUiInspectionFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: uif.title,
+        description: uif.description,
+        sourceSystem: uif.sourceSystem,
+        affectedSystems: ['ui_inspection_engine', 'failure_visibility_engine'],
+        blockedCapabilities: ['UI_INSPECTION_ENGINE'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const itf of buildInteractionTestingFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: itf.title,
+        description: itf.description,
+        sourceSystem: itf.sourceSystem,
+        affectedSystems: ['interaction_testing_engine', 'failure_visibility_engine'],
+        blockedCapabilities: ['INTERACTION_TESTING_ENGINE'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const vvf of buildVisualVerificationFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: vvf.title,
+        description: vvf.description,
+        sourceSystem: vvf.sourceSystem,
+        affectedSystems: ['visual_verification_engine', 'failure_visibility_engine'],
+        blockedCapabilities: ['VISUAL_VERIFICATION_ENGINE'],
         dependencyImpacts: depImpacts,
       }),
     );

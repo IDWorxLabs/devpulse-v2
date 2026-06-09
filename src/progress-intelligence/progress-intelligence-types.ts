@@ -47,6 +47,40 @@ export interface ProgressRecord {
   summary: string;
   aheadOfSchedule: boolean;
   behindSchedule: boolean;
+  world2ActivationReadiness?: string;
+  builderPacketExecutionState?: 'BLOCKED' | 'WAITING_APPROVAL' | 'READY_FOR_CONTROLLED_APPLY';
+  builderPacketExecutionNote?: string;
+  controlledApplyState?: 'BLOCKED' | 'WAITING_APPROVAL' | 'READY_FOR_FUTURE_APPLY';
+  controlledApplyNote?: string;
+  rollbackState?: 'BLOCKED' | 'WAITING_APPROVAL' | 'READY_FOR_FUTURE_ROLLBACK';
+  rollbackNote?: string;
+  recoveryState?: 'BLOCKED' | 'WAITING_APPROVAL' | 'READY_FOR_FUTURE_RECOVERY' | 'ESCALATION_REQUIRED';
+  recoveryNote?: string;
+  completionState?: 'BLOCKED' | 'WAITING_APPROVAL' | 'READY_FOR_FUTURE_COMPLETION' | 'VERIFICATION_REQUIRED';
+  completionNote?: string;
+  previewState?: 'DISCOVERED' | 'REGISTERED' | 'PREVIEW_READY' | 'PREVIEW_BLOCKED';
+  previewNote?: string;
+  previewIntelligenceState?:
+    | 'NOT_READY'
+    | 'PARTIALLY_READY'
+    | 'READY_FOR_OBSERVATION'
+    | 'READY_FOR_FUTURE_SELF_VISION'
+    | 'BLOCKED';
+  previewIntelligenceNote?: string;
+  selfVisionState?: 'DISCOVERED' | 'PLANNED' | 'READY_FOR_OBSERVATION' | 'OBSERVATION_BLOCKED';
+  selfVisionNote?: string;
+  uiInspectionState?: 'DISCOVERED' | 'INSPECTING' | 'INSPECTION_READY' | 'INSPECTION_BLOCKED';
+  uiInspectionNote?: string;
+  interactionTestingState?: 'DISCOVERED' | 'PLANNED' | 'EXECUTING' | 'COMPLETED' | 'BLOCKED';
+  interactionTestingNote?: string;
+  visualVerificationState?:
+    | 'DISCOVERED'
+    | 'VERIFYING'
+    | 'VERIFIED'
+    | 'PARTIALLY_VERIFIED'
+    | 'FAILED_VERIFICATION'
+    | 'VERIFICATION_BLOCKED';
+  visualVerificationNote?: string;
   visibilityOnly: true;
 }
 
