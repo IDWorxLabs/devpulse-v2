@@ -149,6 +149,101 @@ import {
 } from '../learning-visibility-engine/index.js';
 import type { LearningVisibilityDiagnostics, LearningRecord } from '../learning-visibility-engine/learning-visibility-types.js';
 import {
+  getExecutionRuntimeContext,
+  getExecutionRuntimeDiagnostics,
+  executionRuntimeKey,
+  resetExecutionRuntimeDiagnostics,
+  resetExecutionPacketCounterForTests,
+} from '../execution-runtime/index.js';
+import { isExecutionReadinessAdvisoryQuestion } from '../execution-runtime/execution-runtime-types.js';
+import type {
+  ExecutionRuntimeDiagnostics,
+  ExecutionPacket,
+} from '../execution-runtime/execution-runtime-types.js';
+import {
+  getBuildTaskRuntimeContext,
+  getBuildTaskRuntimeDiagnostics,
+  buildTaskRuntimeKey,
+  resetBuildTaskRuntimeDiagnostics,
+  resetBuildTaskRequestCounterForTests,
+  resetBuildTaskPlanCounterForTests,
+  resetBuildTaskDependencyCounterForTests,
+  resetBuildTaskSafetyGateCounterForTests,
+} from '../build-task-runtime/index.js';
+import { isBuildTaskPlanningAdvisoryQuestion } from '../build-task-runtime/build-task-runtime-types.js';
+import type {
+  BuildTaskRuntimeDiagnostics,
+  BuildTaskPlan,
+} from '../build-task-runtime/build-task-runtime-types.js';
+import {
+  getCodeGenerationRuntimeContext,
+  getCodeGenerationRuntimeDiagnostics,
+  codeGenerationRuntimeKey,
+  resetCodeGenerationRuntimeDiagnostics,
+  resetCodeGenerationRequestCounterForTests,
+  resetCodeGenerationPlanCounterForTests,
+  resetCodeArtifactCounterForTests,
+  resetCodeChangeProposalCounterForTests,
+  resetCodeGenerationRiskCounterForTests,
+} from '../code-generation-runtime/index.js';
+import { isCodeGenerationPlanningAdvisoryQuestion } from '../code-generation-runtime/code-generation-runtime-types.js';
+import type {
+  CodeGenerationRuntimeDiagnostics,
+  CodeGenerationPlan,
+} from '../code-generation-runtime/code-generation-runtime-types.js';
+import {
+  getTestingRuntimeContext,
+  getTestingRuntimeDiagnostics,
+  testingRuntimeKey,
+  resetTestingRuntimeDiagnostics,
+  resetTestingRequestCounterForTests,
+  resetTestingPlanCounterForTests,
+  resetTestCaseCounterForTests,
+  resetTestEvidenceCounterForTests,
+  resetTestRiskCounterForTests,
+  resetSimulatedTestResultCounterForTests,
+} from '../testing-runtime/index.js';
+import { isTestingPlanningAdvisoryQuestion } from '../testing-runtime/testing-runtime-types.js';
+import type {
+  TestingRuntimeDiagnostics,
+  TestingPlan,
+} from '../testing-runtime/testing-runtime-types.js';
+import {
+  getAutoFixRuntimeContext,
+  getAutoFixRuntimeDiagnostics,
+  autoFixRuntimeKey,
+  resetAutoFixRuntimeDiagnostics,
+  resetFixRequestCounterForTests,
+  resetAutoFixPlanCounterForTests,
+  resetFixProposalCounterForTests,
+  resetFixAlternativeCounterForTests,
+  resetFixRiskCounterForTests,
+  resetFixRollbackCounterForTests,
+  resetFixVerificationCounterForTests,
+  resetSimulatedFixResultCounterForTests,
+} from '../auto-fix-runtime/index.js';
+import { isAutoFixPlanningAdvisoryQuestion } from '../auto-fix-runtime/auto-fix-runtime-types.js';
+import type {
+  AutoFixRuntimeDiagnostics,
+  AutoFixPlan,
+} from '../auto-fix-runtime/auto-fix-runtime-types.js';
+import {
+  getRuntimeVerificationContext,
+  getRuntimeVerificationDiagnostics,
+  runtimeVerificationKey,
+  resetRuntimeVerificationDiagnostics,
+  resetVerificationRequestCounterForTests,
+  resetVerificationReportCounterForTests,
+  resetVerificationEvidenceCounterForTests,
+  resetVerificationGapCounterForTests,
+  resetVerificationTrustCounterForTests,
+} from '../runtime-verification-layer/index.js';
+import { isRuntimeVerificationAdvisoryQuestion } from '../runtime-verification-layer/runtime-verification-types.js';
+import type {
+  RuntimeVerificationDiagnostics,
+  RuntimeVerificationReport,
+} from '../runtime-verification-layer/runtime-verification-types.js';
+import {
   getTimelineIntelligenceDiagnostics,
   resetTimelineIntelligenceForTests,
   timelineIntelligenceKey,
@@ -231,6 +326,16 @@ function getForbiddenPatterns(): string[] {
 }
 
 function detectBlockedIntent(message: string): string | null {
+  if (
+    isExecutionReadinessAdvisoryQuestion(message) ||
+    isBuildTaskPlanningAdvisoryQuestion(message) ||
+    isCodeGenerationPlanningAdvisoryQuestion(message) ||
+    isTestingPlanningAdvisoryQuestion(message) ||
+    isAutoFixPlanningAdvisoryQuestion(message) ||
+    isRuntimeVerificationAdvisoryQuestion(message)
+  ) {
+    return null;
+  }
   const lower = message.toLowerCase();
   const checks: Array<[readonly string[], string]> = [
     [EXECUTION_BLOCKED_PATTERNS, 'execution requests are blocked — intelligence only'],
@@ -568,6 +673,48 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
   const learningRecords: LearningRecord[] | undefined =
     blocked || !learningCtx ? undefined : learningCtx.result.analysis.records;
 
+  const executionCtx = blocked ? null : getExecutionRuntimeContext(message);
+  const executionDiag = getExecutionRuntimeDiagnostics();
+  const executionRuntimeDiagnostics: ExecutionRuntimeDiagnostics | undefined =
+    blocked || !executionDiag.executionRuntimeActive ? undefined : executionDiag;
+  const executionPackets: ExecutionPacket[] | undefined =
+    blocked || !executionCtx ? undefined : executionCtx.result.packets;
+
+  const buildTaskCtx = blocked ? null : getBuildTaskRuntimeContext(message);
+  const buildTaskDiag = getBuildTaskRuntimeDiagnostics();
+  const buildTaskRuntimeDiagnostics: BuildTaskRuntimeDiagnostics | undefined =
+    blocked || !buildTaskDiag.buildTaskRuntimeActive ? undefined : buildTaskDiag;
+  const buildTaskPlans: BuildTaskPlan[] | undefined =
+    blocked || !buildTaskCtx ? undefined : [buildTaskCtx.result.plan];
+
+  const codeGenCtx = blocked ? null : getCodeGenerationRuntimeContext(message);
+  const codeGenDiag = getCodeGenerationRuntimeDiagnostics();
+  const codeGenerationRuntimeDiagnostics: CodeGenerationRuntimeDiagnostics | undefined =
+    blocked || !codeGenDiag.codeGenerationRuntimeActive ? undefined : codeGenDiag;
+  const codeGenerationPlans: CodeGenerationPlan[] | undefined =
+    blocked || !codeGenCtx ? undefined : [codeGenCtx.result.plan];
+
+  const testingCtx = blocked ? null : getTestingRuntimeContext(message);
+  const testingDiag = getTestingRuntimeDiagnostics();
+  const testingRuntimeDiagnostics: TestingRuntimeDiagnostics | undefined =
+    blocked || !testingDiag.testingRuntimeActive ? undefined : testingDiag;
+  const testingPlans: TestingPlan[] | undefined =
+    blocked || !testingCtx ? undefined : [testingCtx.result.plan];
+
+  const autoFixCtx = blocked ? null : getAutoFixRuntimeContext(message);
+  const autoFixDiag = getAutoFixRuntimeDiagnostics();
+  const autoFixRuntimeDiagnostics: AutoFixRuntimeDiagnostics | undefined =
+    blocked || !autoFixDiag.autoFixRuntimeActive ? undefined : autoFixDiag;
+  const autoFixPlans: AutoFixPlan[] | undefined =
+    blocked || !autoFixCtx ? undefined : [autoFixCtx.result.plan];
+
+  const verificationCtx = blocked ? null : getRuntimeVerificationContext(message);
+  const verificationDiag = getRuntimeVerificationDiagnostics();
+  const runtimeVerificationDiagnostics: RuntimeVerificationDiagnostics | undefined =
+    blocked || !verificationDiag.runtimeVerificationActive ? undefined : verificationDiag;
+  const runtimeVerificationReports: RuntimeVerificationReport[] | undefined =
+    blocked || !verificationCtx ? undefined : [verificationCtx.result.report];
+
   return {
     responseId: nextBrainResponseId(),
     userMessage: message,
@@ -608,6 +755,18 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
     failureRecords,
     learningVisibilityDiagnostics,
     learningRecords,
+    executionRuntimeDiagnostics,
+    executionPackets,
+    buildTaskRuntimeDiagnostics,
+    buildTaskPlans,
+    codeGenerationRuntimeDiagnostics,
+    codeGenerationPlans,
+    testingRuntimeDiagnostics,
+    testingPlans,
+    autoFixRuntimeDiagnostics,
+    autoFixPlans,
+    runtimeVerificationDiagnostics,
+    runtimeVerificationReports,
     pipelineStages,
     operatorFeedEvents,
     confirmation: {
@@ -651,6 +810,12 @@ export function brainStructuralKey(result: BrainResponseResult): string {
     progressIntelligenceKey(),
     failureVisibilityKey(),
     learningVisibilityKey(),
+    executionRuntimeKey(),
+    buildTaskRuntimeKey(),
+    codeGenerationRuntimeKey(),
+    testingRuntimeKey(),
+    autoFixRuntimeKey(),
+    runtimeVerificationKey(),
     roadmapContextKey(result.roadmapContext),
     result.pipelineStages.join('→'),
   ].join('|');
@@ -785,6 +950,41 @@ export function resetDevPulseV2CommandCenterBrainForTests(): DevPulseV2CommandCe
   resetLearningRecommendationCounterForTests();
   resetLearningPatternCounterForTests();
   resetLearningMemoryCounterForTests();
+  resetExecutionRuntimeDiagnostics();
+  resetExecutionPacketCounterForTests();
+  resetBuildTaskRuntimeDiagnostics();
+  resetBuildTaskRequestCounterForTests();
+  resetBuildTaskPlanCounterForTests();
+  resetBuildTaskDependencyCounterForTests();
+  resetBuildTaskSafetyGateCounterForTests();
+  resetCodeGenerationRuntimeDiagnostics();
+  resetCodeGenerationRequestCounterForTests();
+  resetCodeGenerationPlanCounterForTests();
+  resetCodeArtifactCounterForTests();
+  resetCodeChangeProposalCounterForTests();
+  resetCodeGenerationRiskCounterForTests();
+  resetTestingRuntimeDiagnostics();
+  resetTestingRequestCounterForTests();
+  resetTestingPlanCounterForTests();
+  resetTestCaseCounterForTests();
+  resetTestEvidenceCounterForTests();
+  resetTestRiskCounterForTests();
+  resetSimulatedTestResultCounterForTests();
+  resetAutoFixRuntimeDiagnostics();
+  resetFixRequestCounterForTests();
+  resetAutoFixPlanCounterForTests();
+  resetFixProposalCounterForTests();
+  resetFixAlternativeCounterForTests();
+  resetFixRiskCounterForTests();
+  resetFixRollbackCounterForTests();
+  resetFixVerificationCounterForTests();
+  resetSimulatedFixResultCounterForTests();
+  resetRuntimeVerificationDiagnostics();
+  resetVerificationRequestCounterForTests();
+  resetVerificationReportCounterForTests();
+  resetVerificationEvidenceCounterForTests();
+  resetVerificationGapCounterForTests();
+  resetVerificationTrustCounterForTests();
   return singleton;
 }
 

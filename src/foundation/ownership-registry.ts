@@ -671,6 +671,48 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 13.6,
     description: 'Phase 13.6 learning visibility engine — observed patterns, recurring blockers/failures/recommendations, and memory lessons without self-learning or model modification',
   },
+  execution_runtime: {
+    domain: 'execution_runtime',
+    ownerModule: 'devpulse_v2_execution_runtime',
+    ownerFunction: 'getDevPulseV2ExecutionRuntime',
+    phase: 14.1,
+    description: 'Phase 14.1 execution runtime foundation — execution models, packets, states, governance, readiness evaluation, and safety boundaries for Command Center Brain; readiness only, no execution',
+  },
+  build_task_runtime: {
+    domain: 'build_task_runtime',
+    ownerModule: 'devpulse_v2_build_task_runtime',
+    ownerFunction: 'getDevPulseV2BuildTaskRuntime',
+    phase: 14.2,
+    description: 'Phase 14.2 build task runtime foundation — build task plans, steps, dependencies, safety gates, verification plans linked to execution packets; planning only, no execution',
+  },
+  code_generation_runtime: {
+    domain: 'code_generation_runtime',
+    ownerModule: 'devpulse_v2_code_generation_runtime',
+    ownerFunction: 'getDevPulseV2CodeGenerationRuntime',
+    phase: 14.3,
+    description: 'Phase 14.3 code generation runtime foundation — code artifact proposals, change proposals, generation strategy, risks, and validation plans linked to build tasks and execution packets; proposal only, no file writes',
+  },
+  testing_runtime: {
+    domain: 'testing_runtime',
+    ownerModule: 'devpulse_v2_testing_runtime',
+    ownerFunction: 'getDevPulseV2TestingRuntime',
+    phase: 14.4,
+    description: 'Phase 14.4 testing runtime foundation — test plans, cases, evidence requirements, simulated results, and risks linked to code generation, build tasks, and execution packets; planning only, no test execution',
+  },
+  auto_fix_runtime: {
+    domain: 'auto_fix_runtime',
+    ownerModule: 'devpulse_v2_auto_fix_runtime',
+    ownerFunction: 'getDevPulseV2AutoFixRuntime',
+    phase: 14.5,
+    description: 'Phase 14.5 auto-fix runtime foundation — fix proposals, alternatives, rollback plans, verification plans, and simulated results linked to failures, testing, code generation, build tasks, and execution packets; planning only, no fix application',
+  },
+  runtime_verification_layer: {
+    domain: 'runtime_verification_layer',
+    ownerModule: 'devpulse_v2_runtime_verification_layer',
+    ownerFunction: 'getDevPulseV2RuntimeVerificationLayer',
+    phase: 14.6,
+    description: 'Phase 14.6 runtime verification layer foundation — verification reports, evidence, gaps, trust assessments, and scores across execution, build, generation, testing, and auto-fix runtimes; verification only, no execution',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {

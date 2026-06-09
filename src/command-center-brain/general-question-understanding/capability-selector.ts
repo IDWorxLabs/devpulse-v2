@@ -23,6 +23,12 @@ import { isReasoningVisibilityQuestion } from '../../reasoning-visibility-engine
 import { isProgressIntelligenceQuestion } from '../../progress-intelligence/progress-intelligence-types.js';
 import { isFailureVisibilityQuestion } from '../../failure-visibility-engine/failure-visibility-types.js';
 import { isLearningVisibilityQuestion } from '../../learning-visibility-engine/learning-visibility-types.js';
+import { isExecutionRuntimeFoundationQuestion } from '../../execution-runtime/execution-runtime-types.js';
+import { isBuildTaskRuntimeFoundationQuestion } from '../../build-task-runtime/build-task-runtime-types.js';
+import { isCodeGenerationRuntimeFoundationQuestion } from '../../code-generation-runtime/code-generation-runtime-types.js';
+import { isTestingRuntimeFoundationQuestion } from '../../testing-runtime/testing-runtime-types.js';
+import { isAutoFixRuntimeFoundationQuestion } from '../../auto-fix-runtime/auto-fix-runtime-types.js';
+import { isRuntimeVerificationLayerQuestion } from '../../runtime-verification-layer/runtime-verification-types.js';
 
 const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> = {
   PROJECT_PROFILE: 'PROJECT_UNDERSTANDING',
@@ -48,6 +54,12 @@ const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> =
   PROGRESS_INTELLIGENCE_FACTS: 'PROGRESS_INTELLIGENCE',
   FAILURE_VISIBILITY_FACTS: 'FAILURE_VISIBILITY_ENGINE',
   LEARNING_VISIBILITY_FACTS: 'LEARNING_VISIBILITY_ENGINE',
+  EXECUTION_RUNTIME_FACTS: 'EXECUTION_RUNTIME_FOUNDATION',
+  BUILD_TASK_RUNTIME_FACTS: 'BUILD_TASK_RUNTIME_FOUNDATION',
+  CODE_GENERATION_RUNTIME_FACTS: 'CODE_GENERATION_RUNTIME_FOUNDATION',
+  TESTING_RUNTIME_FACTS: 'TESTING_RUNTIME_FOUNDATION',
+  AUTO_FIX_RUNTIME_FACTS: 'AUTO_FIX_RUNTIME_FOUNDATION',
+  RUNTIME_VERIFICATION_FACTS: 'RUNTIME_VERIFICATION_LAYER',
 };
 
 export interface CapabilitySelectionResult {
@@ -146,6 +158,93 @@ export function selectCapabilities(
     selected.add('PROJECT_KNOWLEDGE_REASONING');
   }
 
+  if (isRuntimeVerificationLayerQuestion(question)) {
+    selected.add('RUNTIME_VERIFICATION_LAYER');
+    selected.add('AUTO_FIX_RUNTIME_FOUNDATION');
+    selected.add('TESTING_RUNTIME_FOUNDATION');
+    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
+    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
+    selected.add('EXECUTION_RUNTIME_FOUNDATION');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('LEARNING_VISIBILITY_ENGINE');
+    selected.add('DEPENDENCY_INTELLIGENCE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+  }
+
+  if (isAutoFixRuntimeFoundationQuestion(question)) {
+    selected.add('AUTO_FIX_RUNTIME_FOUNDATION');
+    selected.add('TESTING_RUNTIME_FOUNDATION');
+    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
+    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
+    selected.add('EXECUTION_RUNTIME_FOUNDATION');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('LEARNING_VISIBILITY_ENGINE');
+    selected.add('DEPENDENCY_INTELLIGENCE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+  }
+
+  if (isTestingRuntimeFoundationQuestion(question)) {
+    selected.add('TESTING_RUNTIME_FOUNDATION');
+    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
+    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
+    selected.add('EXECUTION_RUNTIME_FOUNDATION');
+    selected.add('DEPENDENCY_INTELLIGENCE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('LEARNING_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+  }
+
+  if (isCodeGenerationRuntimeFoundationQuestion(question)) {
+    selected.add('CODE_GENERATION_RUNTIME_FOUNDATION');
+    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
+    selected.add('EXECUTION_RUNTIME_FOUNDATION');
+    selected.add('DEPENDENCY_INTELLIGENCE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('LEARNING_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+  }
+
+  if (isBuildTaskRuntimeFoundationQuestion(question)) {
+    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
+    selected.add('EXECUTION_RUNTIME_FOUNDATION');
+    selected.add('DEPENDENCY_INTELLIGENCE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('LEARNING_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+  }
+
+  if (isExecutionRuntimeFoundationQuestion(question)) {
+    selected.add('EXECUTION_RUNTIME_FOUNDATION');
+    selected.add('DEPENDENCY_INTELLIGENCE');
+    selected.add('UNIFIED_DECISION_LAYER');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('LEARNING_VISIBILITY_ENGINE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+  }
+
   if (isLearningVisibilityQuestion(question)) {
     selected.add('LEARNING_VISIBILITY_ENGINE');
     selected.add('FAILURE_VISIBILITY_ENGINE');
@@ -230,6 +329,84 @@ export function selectCapabilities(
   }
 
   const lowerQuestion = question.toLowerCase();
+
+  if (isRuntimeVerificationLayerQuestion(question)) {
+    primary = 'RUNTIME_VERIFICATION_LAYER';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Runtime verification question — RUNTIME_VERIFICATION_LAYER verifies execution, build, generation, testing, and auto-fix plans with evidence, gaps, trust assessment, and score without executing runtime actions.',
+    };
+  }
+
+  if (isAutoFixRuntimeFoundationQuestion(question)) {
+    primary = 'AUTO_FIX_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Auto-fix planning question — AUTO_FIX_RUNTIME_FOUNDATION plans fix proposals, alternatives, rollback, verification, and simulated results linked to failures, testing, code generation, build tasks, and execution packets without applying fixes.',
+    };
+  }
+
+  if (isTestingRuntimeFoundationQuestion(question)) {
+    primary = 'TESTING_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Testing planning question — TESTING_RUNTIME_FOUNDATION plans test cases, pass/fail criteria, evidence requirements, simulated results, and risks linked to code generation, build tasks, and execution packets without running tests.',
+    };
+  }
+
+  if (isCodeGenerationRuntimeFoundationQuestion(question)) {
+    primary = 'CODE_GENERATION_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Code generation planning question — CODE_GENERATION_RUNTIME_FOUNDATION proposes artifacts, file changes, strategy, risks, and validation linked to build tasks and execution packets without writing project files.',
+    };
+  }
+
+  if (isBuildTaskRuntimeFoundationQuestion(question)) {
+    primary = 'BUILD_TASK_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Build task planning question — BUILD_TASK_RUNTIME_FOUNDATION plans steps, dependencies, safety gates, and verification linked to execution packets without performing execution.',
+    };
+  }
+
+  if (isExecutionRuntimeFoundationQuestion(question)) {
+    primary = 'EXECUTION_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Execution readiness question — EXECUTION_RUNTIME_FOUNDATION evaluates readiness, blockers, dependencies, and safety boundaries without performing execution.',
+    };
+  }
 
   if (isFailureVisibilityQuestion(question) && lowerQuestion.includes('dependency chains are impacted')) {
     primary = 'FAILURE_VISIBILITY_ENGINE';

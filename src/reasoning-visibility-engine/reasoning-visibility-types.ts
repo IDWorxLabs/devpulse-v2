@@ -57,6 +57,21 @@ export interface ReasoningVisibilityRecord {
   progressBasis: string;
   failureEvidence: string[];
   learningObservations: string[];
+  executionReadinessBasis: string;
+  executionBlockers: string[];
+  buildTaskPlanBasis: string;
+  codeGenerationBasis: string;
+  codeGenerationRisks: string[];
+  testingBasis: string;
+  testingRisks: string[];
+  fixBasis: string;
+  fixRisks: string[];
+  fixAlternatives: string[];
+  fixRollbackReasoning: string;
+  verificationBasis: string;
+  verificationGaps: string[];
+  trustFactors: string[];
+  verificationConfidenceBasis: string;
   visibilityOnly: true;
 }
 

@@ -39,6 +39,30 @@ import type {
   LearningVisibilityDiagnostics,
   LearningRecord,
 } from '../learning-visibility-engine/learning-visibility-types.js';
+import type {
+  ExecutionRuntimeDiagnostics,
+  ExecutionPacket,
+} from '../execution-runtime/execution-runtime-types.js';
+import type {
+  BuildTaskRuntimeDiagnostics,
+  BuildTaskPlan,
+} from '../build-task-runtime/build-task-runtime-types.js';
+import type {
+  CodeGenerationRuntimeDiagnostics,
+  CodeGenerationPlan,
+} from '../code-generation-runtime/code-generation-runtime-types.js';
+import type {
+  TestingRuntimeDiagnostics,
+  TestingPlan,
+} from '../testing-runtime/testing-runtime-types.js';
+import type {
+  AutoFixRuntimeDiagnostics,
+  AutoFixPlan,
+} from '../auto-fix-runtime/auto-fix-runtime-types.js';
+import type {
+  RuntimeVerificationDiagnostics,
+  RuntimeVerificationReport,
+} from '../runtime-verification-layer/runtime-verification-types.js';
 
 export type { CrossSystemAwarenessSnapshot };
 export type { SharedMemoryContext };
@@ -209,6 +233,18 @@ export interface BrainResponseResult {
   failureRecords?: FailureRecord[];
   learningVisibilityDiagnostics?: LearningVisibilityDiagnostics;
   learningRecords?: LearningRecord[];
+  executionRuntimeDiagnostics?: ExecutionRuntimeDiagnostics;
+  executionPackets?: ExecutionPacket[];
+  buildTaskRuntimeDiagnostics?: BuildTaskRuntimeDiagnostics;
+  buildTaskPlans?: BuildTaskPlan[];
+  codeGenerationRuntimeDiagnostics?: CodeGenerationRuntimeDiagnostics;
+  codeGenerationPlans?: CodeGenerationPlan[];
+  testingRuntimeDiagnostics?: TestingRuntimeDiagnostics;
+  testingPlans?: TestingPlan[];
+  autoFixRuntimeDiagnostics?: AutoFixRuntimeDiagnostics;
+  autoFixPlans?: AutoFixPlan[];
+  runtimeVerificationDiagnostics?: RuntimeVerificationDiagnostics;
+  runtimeVerificationReports?: RuntimeVerificationReport[];
   pipelineStages: BrainPipelineStage[];
   operatorFeedEvents: OperatorFeedEvent[];
   confirmation: BrainConfirmation;

@@ -16,7 +16,7 @@ const DIMENSION_CONTEXT_MAP: Partial<Record<QuestionDimension, ContextNeed[]>> =
   PLANNING: ['PROJECT_FACTS', 'ROADMAP_STATE', 'RISK_FACTS', 'MISSING_CAPABILITIES'],
   DEVELOPMENT: ['DEVELOPMENT_KNOWLEDGE', 'PROJECT_FACTS'],
   DEBUGGING: ['DEBUG_CONTEXT', 'PROJECT_FACTS'],
-  EXECUTION: ['RUNTIME_STATUS', 'PROJECT_FACTS', 'ROADMAP_STATE'],
+  EXECUTION: ['RUNTIME_STATUS', 'PROJECT_FACTS', 'ROADMAP_STATE', 'EXECUTION_RUNTIME_FACTS'],
 };
 
 const QUESTION_CONTEXT_SIGNALS: Array<[readonly string[], ContextNeed]> = [
@@ -41,6 +41,12 @@ const QUESTION_CONTEXT_SIGNALS: Array<[readonly string[], ContextNeed]> = [
   [['how far', 'percentage complete', 'what remains', 'what is blocked', 'next milestone', 'furthest along', 'behind schedule', 'progress', 'completion', 'remaining'], 'PROGRESS_INTELLIGENCE_FACTS'],
   [['what failed', 'failures exist', 'most severe failure', 'capabilities are blocked', 'dependency chains are impacted', 'failure', 'failed', 'error', 'problem', 'issue', 'severity', 'impact'], 'FAILURE_VISIBILITY_FACTS'],
   [['what did we learn', 'recurring blockers', 'recurring failures', 'recurring recommendations', 'what should we remember', 'what should improve', 'learned', 'learning', 'patterns', 'recurring', 'remember', 'improve', 'observed', 'lessons'], 'LEARNING_VISIBILITY_FACTS'],
+  [['execution readiness', 'is execution allowed', 'can we execute', 'execution blocked', 'execution blockers', 'execution status', 'approval would be required', 'capabilities must exist first', 'readiness evaluation', 'execution foundation'], 'EXECUTION_RUNTIME_FACTS'],
+  [['build task', 'task plan', 'plan the build', 'what steps would', 'how would you build', 'build sequence', 'implementation plan', 'safety gates are required', 'verification would prove', 'blocking this task'], 'BUILD_TASK_RUNTIME_FACTS'],
+  [['code generation', 'generate code', 'what code would be generated', 'what files would change', 'what changes are proposed', 'code artifact', 'implementation proposal', 'blocking code generation'], 'CODE_GENERATION_RUNTIME_FACTS'],
+  [['test plan', 'testing runtime', 'how would we test', 'how would you test', 'what tests are required', 'pass fail criteria', 'pass or fail', 'test evidence', 'validation evidence', 'simulated test result', 'simulated failures', 'what would prove', 'what evidence is required', 'can testing run', 'blocking testing', 'count as pass', 'count as fail', 'prove this works'], 'TESTING_RUNTIME_FACTS'],
+  [['auto fix', 'auto-fix', 'recommended fix', 'how would you fix', 'how would we fix', 'repair plan', 'rollback plan', 'alternative fixes', 'alternatives exist', 'what alternatives', 'fix proposal', 'what fix is recommended', 'what rollback', 'can auto-fix run', 'can auto fix run', 'blocking auto-fix', 'blocking auto fix', 'prove the fix'], 'AUTO_FIX_RUNTIME_FACTS'],
+  [['runtime verification', 'verification report', 'verification score', 'verification evidence', 'verification gaps', 'trust assessment', 'runtime chain verified', 'what verification exists', 'how trustworthy is the runtime', 'what prevents verification', 'what should be verified next', 'build plan valid', 'testing plan valid'], 'RUNTIME_VERIFICATION_FACTS'],
 ];
 
 export function detectContextNeeds(

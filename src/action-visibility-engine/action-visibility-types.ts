@@ -30,6 +30,18 @@ export interface ActionCandidate {
   deferred: boolean;
   recommended: boolean;
   reason: string;
+  executionReadiness: string;
+  executionReady: boolean;
+  buildTaskId: string;
+  buildTaskReadiness: string;
+  codeGenerationId: string;
+  codeGenerationReadiness: string;
+  testingId: string;
+  testingReadiness: string;
+  fixId: string;
+  fixReadiness: string;
+  verificationId: string;
+  verificationScore: number;
   visibilityOnly: true;
 }
 

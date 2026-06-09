@@ -31,6 +31,18 @@ import { processFailureVisibilityRequest } from '../../failure-visibility-engine
 import { isFailureVisibilityQuestion } from '../../failure-visibility-engine/failure-visibility-types.js';
 import { processLearningVisibilityRequest } from '../../learning-visibility-engine/index.js';
 import { isLearningVisibilityQuestion } from '../../learning-visibility-engine/learning-visibility-types.js';
+import { processExecutionRuntimeRequest } from '../../execution-runtime/index.js';
+import { isExecutionRuntimeFoundationQuestion } from '../../execution-runtime/execution-runtime-types.js';
+import { processBuildTaskRuntimeRequest } from '../../build-task-runtime/index.js';
+import { isBuildTaskRuntimeFoundationQuestion } from '../../build-task-runtime/build-task-runtime-types.js';
+import { processCodeGenerationRuntimeRequest } from '../../code-generation-runtime/index.js';
+import { isCodeGenerationRuntimeFoundationQuestion } from '../../code-generation-runtime/code-generation-runtime-types.js';
+import { processTestingRuntimeRequest } from '../../testing-runtime/index.js';
+import { isTestingRuntimeFoundationQuestion } from '../../testing-runtime/testing-runtime-types.js';
+import { processAutoFixRuntimeRequest } from '../../auto-fix-runtime/index.js';
+import { isAutoFixRuntimeFoundationQuestion } from '../../auto-fix-runtime/auto-fix-runtime-types.js';
+import { processRuntimeVerificationRequest } from '../../runtime-verification-layer/index.js';
+import { isRuntimeVerificationLayerQuestion } from '../../runtime-verification-layer/runtime-verification-types.js';
 import { detectContextNeeds, needsUnavailableDevelopmentContext } from './context-need-detector.js';
 import {
   GENERAL_QUESTION_UNDERSTANDING_OWNER_MODULE,
@@ -184,6 +196,120 @@ export function executeGeneralQuestionRouting(
         limitationMessage: limitationMessage ?? undefined,
       }),
       usedCapabilities: ['PORTFOLIO_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'RUNTIME_VERIFICATION_LAYER' ||
+    (plan.selectedCapabilities.includes('RUNTIME_VERIFICATION_LAYER') &&
+      isRuntimeVerificationLayerQuestion(deps.message))
+  ) {
+    const verification = processRuntimeVerificationRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: verification.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['RUNTIME_VERIFICATION_LAYER', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'AUTO_FIX_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('AUTO_FIX_RUNTIME_FOUNDATION') &&
+      isAutoFixRuntimeFoundationQuestion(deps.message))
+  ) {
+    const autoFix = processAutoFixRuntimeRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: autoFix.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['AUTO_FIX_RUNTIME_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'TESTING_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('TESTING_RUNTIME_FOUNDATION') &&
+      isTestingRuntimeFoundationQuestion(deps.message))
+  ) {
+    const testing = processTestingRuntimeRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: testing.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['TESTING_RUNTIME_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'CODE_GENERATION_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('CODE_GENERATION_RUNTIME_FOUNDATION') &&
+      isCodeGenerationRuntimeFoundationQuestion(deps.message))
+  ) {
+    const codeGen = processCodeGenerationRuntimeRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: codeGen.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['CODE_GENERATION_RUNTIME_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'BUILD_TASK_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('BUILD_TASK_RUNTIME_FOUNDATION') &&
+      isBuildTaskRuntimeFoundationQuestion(deps.message))
+  ) {
+    const buildTask = processBuildTaskRuntimeRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: buildTask.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['BUILD_TASK_RUNTIME_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'EXECUTION_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('EXECUTION_RUNTIME_FOUNDATION') &&
+      isExecutionRuntimeFoundationQuestion(deps.message))
+  ) {
+    const execution = processExecutionRuntimeRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: execution.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['EXECUTION_RUNTIME_FOUNDATION', ...usedCapabilities],
       routingPlan: plan,
     };
   }

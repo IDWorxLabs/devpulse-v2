@@ -15,6 +15,8 @@ import {
   buildRecommendedNextStep,
   confidenceForSeverity,
 } from './failure-next-step-builder.js';
+import { buildTestingFailureContext } from '../testing-runtime/testing-failure-bridge.js';
+import { buildVerificationFailureContext } from '../runtime-verification-layer/verification-failure-bridge.js';
 import type { FailureRecord } from './failure-visibility-types.js';
 
 let failureCounter = 0;
@@ -141,6 +143,32 @@ export function buildFailureRecords(query: string): FailureRecord[] {
         sourceSystem: 'unified_decision_layer',
         affectedSystems: context.relatedSystems.slice(0, 2),
         blockedCapabilities: [],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const tf of buildTestingFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: tf.title,
+        description: tf.description,
+        sourceSystem: tf.sourceSystem,
+        affectedSystems: ['testing_runtime', 'failure_visibility_engine'],
+        blockedCapabilities: ['TESTING_RUNTIME_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const vf of buildVerificationFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: vf.title,
+        description: vf.description,
+        sourceSystem: vf.sourceSystem,
+        affectedSystems: ['runtime_verification_layer', 'failure_visibility_engine'],
+        blockedCapabilities: ['RUNTIME_VERIFICATION_LAYER'],
         dependencyImpacts: depImpacts,
       }),
     );

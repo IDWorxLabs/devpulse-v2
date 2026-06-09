@@ -62,6 +62,12 @@ export function buildReasoningVisibilityRecord(query: string): ReasoningVisibili
     ...recLearn.observations.slice(0, 2).map((o) => o.text),
   ];
 
+  const executionBlockers = [
+    ...blockers.map((b) => b.summary),
+    ...failureEvidence.slice(0, 2),
+    'Phase 14.1 Execution Runtime Foundation — real execution is not connected',
+  ];
+
   return {
     reasoningId: nextReasoningId(),
     query,
@@ -79,6 +85,30 @@ export function buildReasoningVisibilityRecord(query: string): ReasoningVisibili
     progressBasis,
     failureEvidence,
     learningObservations,
+    executionReadinessBasis: `Readiness advisory from ${evidence.length} evidence items, ${blockers.length} blockers, and ${failureEvidence.length} failure signals — Phase 14.1 simulation only.`,
+    executionBlockers,
+    buildTaskPlanBasis: `Build task planning advisory from ${sources.length} consulted systems and ${blockers.length} blockers — Phase 14.2 planning only, 6 standard steps, execution blocked.`,
+    codeGenerationBasis: `Code generation proposal advisory from ${evidence.length} evidence items and ${risks.length} risks — Phase 14.3 proposal-only, no file writes.`,
+    codeGenerationRisks: risks.slice(0, 6).map((r) => r.summary),
+    testingBasis: `Testing planning advisory from ${evidence.length} evidence items and ${risks.length} risks — Phase 14.4 simulation-only, no test execution.`,
+    testingRisks: risks.slice(0, 6).map((r) => r.summary),
+    fixBasis: `Auto-fix planning advisory from ${evidence.length} evidence items and ${risks.length} risks — Phase 14.5 simulation-only, no fix application.`,
+    fixRisks: risks.slice(0, 6).map((r) => r.summary),
+    fixAlternatives: [
+      'Incremental foundation extension',
+      'Defer fix until approval gate',
+      'Rollback-first remediation',
+    ],
+    fixRollbackReasoning: 'Rollback required before any future fix — capture pass tokens, revert applied proposals, reset diagnostics, keep executionAllowed false.',
+    verificationBasis: `Runtime verification advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 14.6 verification-only, no runtime actions.`,
+    verificationGaps: blockers.slice(0, 6).map((b) => b.summary),
+    trustFactors: [
+      'Execution blocked — executionAllowed false',
+      'Generation proposal-only — applied: false',
+      'Testing simulation-only — no test execution',
+      'Auto-fix simulation-only — no fix application',
+    ],
+    verificationConfidenceBasis: `Confidence from ${evidence.length} evidence items, ${risks.length} risks, and ${failureEvidence.length} failure signals — Phase 14.6 chain verification advisory.`,
     visibilityOnly: true,
   };
 }
