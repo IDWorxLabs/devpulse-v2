@@ -324,6 +324,228 @@ export const UNIFIED_VERIFICATION_ENTRY_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'UNIFIED_VERIFICATION_ENTRY_OPERATOR_FEED', module: 'unified_verification_entry', phase: 16.12, description: 'Operator feed stages for unified verification entry', extensionOnly: true },
 ] as const;
 
+export const CLOUD_RUNTIME_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'CLOUD_RUNTIME_TYPES', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime types and models', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_REGISTRY', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime registry and orchestrator', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_STORE', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime in-memory store', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_SESSION_MANAGER', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime session manager without execution', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_STATE_MANAGER', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime state manager', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_LIFECYCLE', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime lifecycle tracking', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_OWNERSHIP', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime ownership tracking', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_QUERY', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime query layer', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_HISTORY', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime history tracking', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_REPORT_BUILDER', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime report builder', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_VALIDATOR', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_DIAGNOSTICS', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Cloud runtime diagnostics tracker', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_FOUNDATION_ROUTING', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Command Center routing for cloud runtime questions', extensionOnly: true },
+  { rowId: 'CLOUD_RUNTIME_FOUNDATION_OPERATOR_FEED', module: 'cloud_runtime_foundation', phase: 17.1, description: 'Operator feed stages for cloud runtime foundation', extensionOnly: true },
+] as const;
+
+export const WORKSPACE_HOSTING_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'WORKSPACE_HOSTING_TYPES', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace hosting types and models', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_REGISTRY', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace hosting registry and orchestrator', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_STORE', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace hosting in-memory store', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_SESSION_MANAGER', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace session manager without execution', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_STATE_MANAGER', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace state manager', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_LIFECYCLE', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace lifecycle tracking', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_OWNERSHIP', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace ownership tracking', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_ISOLATION', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace isolation metadata without containers', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_QUERY', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace query layer', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_HISTORY', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace history tracking', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_RUNTIME_BRIDGE', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Cloud Runtime Foundation bridge — no parallel runtime authority', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_REPORT_BUILDER', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace hosting report builder', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_VALIDATOR', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_DIAGNOSTICS', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Workspace hosting diagnostics tracker', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_FOUNDATION_ROUTING', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Command Center routing for workspace hosting questions', extensionOnly: true },
+  { rowId: 'WORKSPACE_HOSTING_FOUNDATION_OPERATOR_FEED', module: 'workspace_hosting_foundation', phase: 17.2, description: 'Operator feed stages for workspace hosting foundation', extensionOnly: true },
+] as const;
+
+export const PERSISTENT_BUILD_RUNTIME_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'PERSISTENT_BUILD_TYPES', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build types and models', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_REGISTRY', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build registry and orchestrator', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_STORE', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build in-memory store', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_SESSION_MANAGER', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build session manager without execution', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_STATE_MANAGER', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build state manager', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_LIFECYCLE', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build lifecycle tracking', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_OWNERSHIP', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build ownership tracking', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_CONTEXT', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build context metadata without code generation', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_PROGRESS', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build progress metadata without task execution', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_RESUME', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build resume metadata without rollback execution', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_QUERY', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build query layer', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_HISTORY', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build history tracking', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_CLOUD_BRIDGE', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Cloud Runtime Foundation bridge — no parallel runtime authority', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_WORKSPACE_BRIDGE', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Workspace Hosting Foundation bridge — no parallel workspace authority', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_REPORT_BUILDER', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build report builder', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_VALIDATOR', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_DIAGNOSTICS', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Persistent build diagnostics tracker', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_FOUNDATION_ROUTING', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Command Center routing for persistent build questions', extensionOnly: true },
+  { rowId: 'PERSISTENT_BUILD_FOUNDATION_OPERATOR_FEED', module: 'persistent_build_runtime_foundation', phase: 17.3, description: 'Operator feed stages for persistent build runtime foundation', extensionOnly: true },
+] as const;
+
+export const CLOUD_VERIFICATION_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'CLOUD_VERIFICATION_TYPES', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification types and models', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_REGISTRY', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification registry and orchestrator', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_STORE', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification in-memory store', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_SESSION_MANAGER', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification session manager without execution', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_STATE_MANAGER', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification state manager', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_LIFECYCLE', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification lifecycle tracking', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_OWNERSHIP', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification ownership tracking', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_SCOPE', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification scope metadata without provider execution', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_CONTEXT', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification context aggregation', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_UNIFIED_ENTRY_BRIDGE', module: 'cloud_verification_foundation', phase: 17.4, description: 'Unified Verification Entry bridge — no parallel global verification authority', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_EVIDENCE_BRIDGE', module: 'cloud_verification_foundation', phase: 17.4, description: 'Verification Evidence Engine bridge — no parallel evidence authority', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_REPORT_BRIDGE', module: 'cloud_verification_foundation', phase: 17.4, description: 'Verification Reporting Engine bridge — no parallel reporting authority', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_RUNTIME_BRIDGE', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud Runtime Foundation bridge — no parallel runtime authority', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_WORKSPACE_BRIDGE', module: 'cloud_verification_foundation', phase: 17.4, description: 'Workspace Hosting Foundation bridge — no parallel workspace authority', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_BUILD_BRIDGE', module: 'cloud_verification_foundation', phase: 17.4, description: 'Persistent Build Runtime Foundation bridge — no parallel build authority', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_QUERY', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification query layer', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_HISTORY', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification history tracking', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_REPORT_BUILDER', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification report builder', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_VALIDATOR', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_DIAGNOSTICS', module: 'cloud_verification_foundation', phase: 17.4, description: 'Cloud verification diagnostics tracker', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_FOUNDATION_ROUTING', module: 'cloud_verification_foundation', phase: 17.4, description: 'Command Center routing for cloud verification questions', extensionOnly: true },
+  { rowId: 'CLOUD_VERIFICATION_FOUNDATION_OPERATOR_FEED', module: 'cloud_verification_foundation', phase: 17.4, description: 'Operator feed stages for cloud verification foundation', extensionOnly: true },
+] as const;
+
+export const CLOUD_RECOVERY_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'CLOUD_RECOVERY_TYPES', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery types and models', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_REGISTRY', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery registry and orchestrator', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_STORE', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery in-memory store', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_SESSION_MANAGER', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery session manager without execution', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_STATE_MANAGER', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery state manager', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_LIFECYCLE', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery lifecycle tracking', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_OWNERSHIP', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery ownership tracking', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_SCOPE', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery scope metadata without execution', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_CONTEXT', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery context aggregation', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_RUNTIME_BRIDGE', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud Runtime Foundation bridge — no parallel runtime authority', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_WORKSPACE_BRIDGE', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Workspace Hosting Foundation bridge — no parallel workspace authority', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_BUILD_BRIDGE', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Persistent Build Runtime Foundation bridge — no parallel build authority', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_VERIFICATION_BRIDGE', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud Verification Foundation bridge — no parallel verification authority', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_QUERY', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery query layer', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_HISTORY', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery history tracking', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_REPORT_BUILDER', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery report builder', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_VALIDATOR', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_DIAGNOSTICS', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Cloud recovery diagnostics tracker', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_FOUNDATION_ROUTING', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Command Center routing for cloud recovery questions', extensionOnly: true },
+  { rowId: 'CLOUD_RECOVERY_FOUNDATION_OPERATOR_FEED', module: 'cloud_recovery_foundation', phase: 17.5, description: 'Operator feed stages for cloud recovery foundation', extensionOnly: true },
+] as const;
+
+export const CLOUD_MONITORING_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'CLOUD_MONITORING_TYPES', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring types and models', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_REGISTRY', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring registry and orchestrator', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_STORE', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring in-memory store', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_SESSION_MANAGER', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring session manager without execution', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_STATE_MANAGER', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring state manager', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_HEALTH', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring health metadata without infrastructure polling', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_ALERTS', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring alert metadata without notifications', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_LIFECYCLE', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring lifecycle tracking', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_OWNERSHIP', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring ownership tracking', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_CONTEXT', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring context aggregation', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_RUNTIME_BRIDGE', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud Runtime Foundation bridge — no parallel runtime authority', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_WORKSPACE_BRIDGE', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Workspace Hosting Foundation bridge — no parallel workspace authority', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_BUILD_BRIDGE', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Persistent Build Runtime Foundation bridge — no parallel build authority', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_VERIFICATION_BRIDGE', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud Verification Foundation bridge — no parallel verification authority', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_RECOVERY_BRIDGE', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud Recovery Foundation bridge — no parallel recovery authority', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_QUERY', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring query layer', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_HISTORY', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring history tracking', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_REPORT_BUILDER', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring report builder', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_VALIDATOR', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_DIAGNOSTICS', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Cloud monitoring diagnostics tracker', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_FOUNDATION_ROUTING', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Command Center routing for cloud monitoring questions', extensionOnly: true },
+  { rowId: 'CLOUD_MONITORING_FOUNDATION_OPERATOR_FEED', module: 'cloud_monitoring_foundation', phase: 17.6, description: 'Operator feed stages for cloud monitoring foundation', extensionOnly: true },
+] as const;
+
+export const MOBILE_COMMAND_RUNTIME_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'MOBILE_COMMAND_TYPES', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command types and models', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_REGISTRY', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command registry and orchestrator', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_STORE', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command in-memory store', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_SESSION_MANAGER', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command session manager without execution', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_STATE_MANAGER', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command state manager', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_LIFECYCLE', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command lifecycle tracking', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_OWNERSHIP', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command ownership tracking', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_CONTEXT', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command context aggregation', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_PERMISSIONS', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command permissions metadata', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_ACTION_GATE', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command action gate decision metadata', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_CLOUD_BRIDGE', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Cloud Runtime Foundation bridge — no parallel runtime authority', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_WORKSPACE_BRIDGE', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Workspace Hosting Foundation bridge — no parallel workspace authority', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_BUILD_BRIDGE', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Persistent Build Runtime Foundation bridge — no parallel build authority', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_VERIFICATION_BRIDGE', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Cloud Verification Foundation bridge — no parallel verification authority', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_RECOVERY_BRIDGE', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Cloud Recovery Foundation bridge — no parallel recovery authority', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_MONITORING_BRIDGE', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Cloud Monitoring Foundation bridge — no parallel monitoring authority', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_OPERATOR_FEED_BRIDGE', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Operator Feed bridge — no parallel feed authority', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_PROJECT_VAULT_BRIDGE', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Project Vault bridge — no parallel project memory authority', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_QUERY', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command query layer', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_HISTORY', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command history tracking', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_REPORT_BUILDER', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command report builder', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_VALIDATOR', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_DIAGNOSTICS', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Mobile command diagnostics tracker', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_RUNTIME_FOUNDATION_ROUTING', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Command Center routing for mobile command questions', extensionOnly: true },
+  { rowId: 'MOBILE_COMMAND_RUNTIME_FOUNDATION_OPERATOR_FEED', module: 'mobile_command_runtime_foundation', phase: 18.1, description: 'Operator feed stages for mobile command runtime foundation', extensionOnly: true },
+] as const;
+
+export const MOBILE_CHAT_RUNTIME_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'MOBILE_CHAT_TYPES', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat types and models', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_REGISTRY', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat registry and orchestrator', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_STORE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat in-memory store', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_SESSION_MANAGER', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat session manager without execution', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_STATE_MANAGER', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat state manager', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_LIFECYCLE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat lifecycle tracking', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_OWNERSHIP', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat ownership tracking', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_CONTEXT', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat context aggregation', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_MESSAGE_STORE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat message metadata store', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_PROMPT_INTAKE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat prompt intake metadata', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_RESPONSE_STATE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat response state metadata', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_COMMAND_ROUTER', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat command routing metadata', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_ACTION_GATE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat action gate decision metadata', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_COMMAND_BRIDGE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile Command Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_CLOUD_BRIDGE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Cloud Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_WORKSPACE_BRIDGE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Workspace Hosting Foundation bridge', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_BUILD_BRIDGE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Persistent Build Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_VERIFICATION_BRIDGE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Cloud Verification Foundation bridge', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_MONITORING_BRIDGE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Cloud Monitoring Foundation bridge', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_OPERATOR_FEED_BRIDGE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Operator Feed bridge', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_PROJECT_VAULT_BRIDGE', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Project Vault bridge', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_QUERY', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat query layer', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_HISTORY', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat history tracking', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_REPORT_BUILDER', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat report builder', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_VALIDATOR', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_DIAGNOSTICS', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Mobile chat diagnostics tracker', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_RUNTIME_FOUNDATION_ROUTING', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Command Center routing for mobile chat questions', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_RUNTIME_FOUNDATION_OPERATOR_FEED', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Operator feed stages for mobile chat runtime foundation', extensionOnly: true },
+  { rowId: 'MOBILE_CHAT_RUNTIME_FOUNDATION_PANEL', module: 'mobile_chat_runtime_foundation', phase: 18.2, description: 'Unified Verification Lab panel snapshot for mobile chat runtime foundation', extensionOnly: true },
+] as const;
+
+export const MOBILE_PREVIEW_RUNTIME_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'MOBILE_PREVIEW_TYPES', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview types and models', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_REGISTRY', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview registry and orchestrator', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_STORE', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview in-memory store', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_SESSION_MANAGER', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview session manager without execution', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_STATE_MANAGER', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview state manager', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_LIFECYCLE', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview lifecycle tracking', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_OWNERSHIP', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview ownership tracking', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_CONTEXT', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview context aggregation', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_ELIGIBILITY', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview eligibility metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_SAFETY', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview safety metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_DEVICE_POLICY', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview device policy metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_DESKTOP_RECOMMENDATION', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview desktop recommendation metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_LINK_MANAGER', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview link metadata manager', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_COMMAND_BRIDGE', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile Command Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_CHAT_BRIDGE', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile Chat Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_CLOUD_BRIDGE', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Cloud Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_WORKSPACE_BRIDGE', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Workspace Hosting Foundation bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_BUILD_BRIDGE', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Persistent Build Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_VERIFICATION_BRIDGE', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Cloud Verification Foundation bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_OPERATOR_FEED_BRIDGE', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Operator Feed bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_QUERY', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview query layer', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_HISTORY', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview history tracking', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_REPORT_BUILDER', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview report builder', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_VALIDATOR', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_DIAGNOSTICS', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Mobile preview diagnostics tracker', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION_ROUTING', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Command Center routing for mobile preview questions', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION_OPERATOR_FEED', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Operator feed stages for mobile preview runtime foundation', extensionOnly: true },
+  { rowId: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION_PANEL', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Unified Verification Lab panel snapshot for mobile preview runtime foundation', extensionOnly: true },
+];
+
 export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   ...WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
@@ -342,6 +564,15 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...VERIFICATION_EVIDENCE_ENGINE_UVL_ROWS,
   ...VERIFICATION_REPORTING_ENGINE_UVL_ROWS,
   ...UNIFIED_VERIFICATION_ENTRY_UVL_ROWS,
+  ...CLOUD_RUNTIME_FOUNDATION_UVL_ROWS,
+  ...WORKSPACE_HOSTING_FOUNDATION_UVL_ROWS,
+  ...PERSISTENT_BUILD_RUNTIME_FOUNDATION_UVL_ROWS,
+  ...CLOUD_VERIFICATION_FOUNDATION_UVL_ROWS,
+  ...CLOUD_RECOVERY_FOUNDATION_UVL_ROWS,
+  ...CLOUD_MONITORING_FOUNDATION_UVL_ROWS,
+  ...MOBILE_COMMAND_RUNTIME_FOUNDATION_UVL_ROWS,
+  ...MOBILE_CHAT_RUNTIME_FOUNDATION_UVL_ROWS,
+  ...MOBILE_PREVIEW_RUNTIME_FOUNDATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -410,6 +641,42 @@ export function listVerificationReportingEngineUvlRows(): UvlRow[] {
 
 export function listUnifiedVerificationEntryUvlRows(): UvlRow[] {
   return [...UNIFIED_VERIFICATION_ENTRY_UVL_ROWS];
+}
+
+export function listCloudRuntimeFoundationUvlRows(): UvlRow[] {
+  return [...CLOUD_RUNTIME_FOUNDATION_UVL_ROWS];
+}
+
+export function listWorkspaceHostingFoundationUvlRows(): UvlRow[] {
+  return [...WORKSPACE_HOSTING_FOUNDATION_UVL_ROWS];
+}
+
+export function listPersistentBuildRuntimeFoundationUvlRows(): UvlRow[] {
+  return [...PERSISTENT_BUILD_RUNTIME_FOUNDATION_UVL_ROWS];
+}
+
+export function listCloudVerificationFoundationUvlRows(): UvlRow[] {
+  return [...CLOUD_VERIFICATION_FOUNDATION_UVL_ROWS];
+}
+
+export function listCloudRecoveryFoundationUvlRows(): UvlRow[] {
+  return [...CLOUD_RECOVERY_FOUNDATION_UVL_ROWS];
+}
+
+export function listCloudMonitoringFoundationUvlRows(): UvlRow[] {
+  return [...CLOUD_MONITORING_FOUNDATION_UVL_ROWS];
+}
+
+export function listMobileCommandRuntimeFoundationUvlRows(): UvlRow[] {
+  return [...MOBILE_COMMAND_RUNTIME_FOUNDATION_UVL_ROWS];
+}
+
+export function listMobileChatRuntimeFoundationUvlRows(): UvlRow[] {
+  return [...MOBILE_CHAT_RUNTIME_FOUNDATION_UVL_ROWS];
+}
+
+export function listMobilePreviewRuntimeFoundationUvlRows(): UvlRow[] {
+  return [...MOBILE_PREVIEW_RUNTIME_FOUNDATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

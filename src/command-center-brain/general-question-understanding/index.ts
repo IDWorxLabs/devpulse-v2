@@ -77,6 +77,24 @@ import { processVerificationEvidenceRequest } from '../../verification-evidence-
 import { isVerificationEvidenceQuestion } from '../../verification-evidence-engine/verification-evidence-types.js';
 import { processUnifiedVerificationRequest } from '../../unified-verification-entry/index.js';
 import { isUnifiedVerificationQuestion } from '../../unified-verification-entry/unified-verification-types.js';
+import { processCloudRuntimeRequest } from '../../cloud-runtime/index.js';
+import { isCloudRuntimeFoundationQuestion } from '../../cloud-runtime/cloud-runtime-types.js';
+import { processWorkspaceHostingRequest } from '../../workspace-hosting/index.js';
+import { isWorkspaceHostingFoundationQuestion } from '../../workspace-hosting/workspace-hosting-types.js';
+import { processPersistentBuildRequest } from '../../persistent-build-runtime/index.js';
+import { isPersistentBuildRuntimeFoundationQuestion } from '../../persistent-build-runtime/persistent-build-types.js';
+import { processCloudVerificationRequest } from '../../cloud-verification/index.js';
+import { isCloudVerificationFoundationQuestion } from '../../cloud-verification/cloud-verification-types.js';
+import { processCloudRecoveryRequest } from '../../cloud-recovery/index.js';
+import { isCloudRecoveryFoundationQuestion } from '../../cloud-recovery/cloud-recovery-types.js';
+import { processCloudMonitoringRequest } from '../../cloud-monitoring/index.js';
+import { isCloudMonitoringFoundationQuestion } from '../../cloud-monitoring/cloud-monitoring-types.js';
+import { processMobileCommandRequest } from '../../mobile-command-runtime/index.js';
+import { isMobileCommandRuntimeFoundationQuestion } from '../../mobile-command-runtime/mobile-command-types.js';
+import { processMobileChatRequest } from '../../mobile-chat-runtime/index.js';
+import { isMobileChatRuntimeFoundationQuestion } from '../../mobile-chat-runtime/mobile-chat-types.js';
+import { processMobilePreviewRequest } from '../../mobile-preview-runtime/index.js';
+import { isMobilePreviewRuntimeFoundationQuestion } from '../../mobile-preview-runtime/mobile-preview-types.js';
 import { processVerificationReportingRequest } from '../../verification-reporting-engine/index.js';
 import { isVerificationReportingQuestion } from '../../verification-reporting-engine/verification-report-types.js';
 import { detectContextNeeds, needsUnavailableDevelopmentContext } from './context-need-detector.js';
@@ -232,6 +250,177 @@ export function executeGeneralQuestionRouting(
         limitationMessage: limitationMessage ?? undefined,
       }),
       usedCapabilities: ['PORTFOLIO_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'MOBILE_PREVIEW_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('MOBILE_PREVIEW_RUNTIME_FOUNDATION') &&
+      isMobilePreviewRuntimeFoundationQuestion(deps.message))
+  ) {
+    const mobilePreview = processMobilePreviewRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: mobilePreview.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['MOBILE_PREVIEW_RUNTIME_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'MOBILE_CHAT_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('MOBILE_CHAT_RUNTIME_FOUNDATION') &&
+      isMobileChatRuntimeFoundationQuestion(deps.message))
+  ) {
+    const mobileChat = processMobileChatRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: mobileChat.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['MOBILE_CHAT_RUNTIME_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'MOBILE_COMMAND_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('MOBILE_COMMAND_RUNTIME_FOUNDATION') &&
+      isMobileCommandRuntimeFoundationQuestion(deps.message))
+  ) {
+    const mobileCommand = processMobileCommandRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: mobileCommand.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['MOBILE_COMMAND_RUNTIME_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'CLOUD_MONITORING_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('CLOUD_MONITORING_FOUNDATION') &&
+      isCloudMonitoringFoundationQuestion(deps.message))
+  ) {
+    const cloudMonitoring = processCloudMonitoringRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: cloudMonitoring.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['CLOUD_MONITORING_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'CLOUD_RECOVERY_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('CLOUD_RECOVERY_FOUNDATION') &&
+      isCloudRecoveryFoundationQuestion(deps.message))
+  ) {
+    const cloudRecovery = processCloudRecoveryRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: cloudRecovery.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['CLOUD_RECOVERY_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'CLOUD_VERIFICATION_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('CLOUD_VERIFICATION_FOUNDATION') &&
+      isCloudVerificationFoundationQuestion(deps.message))
+  ) {
+    const cloudVerification = processCloudVerificationRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: cloudVerification.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['CLOUD_VERIFICATION_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'PERSISTENT_BUILD_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('PERSISTENT_BUILD_RUNTIME_FOUNDATION') &&
+      isPersistentBuildRuntimeFoundationQuestion(deps.message))
+  ) {
+    const persistentBuild = processPersistentBuildRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: persistentBuild.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['PERSISTENT_BUILD_RUNTIME_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'WORKSPACE_HOSTING_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('WORKSPACE_HOSTING_FOUNDATION') &&
+      isWorkspaceHostingFoundationQuestion(deps.message))
+  ) {
+    const hosting = processWorkspaceHostingRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: hosting.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['WORKSPACE_HOSTING_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'CLOUD_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('CLOUD_RUNTIME_FOUNDATION') &&
+      isCloudRuntimeFoundationQuestion(deps.message))
+  ) {
+    const cloud = processCloudRuntimeRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: cloud.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['CLOUD_RUNTIME_FOUNDATION', ...usedCapabilities],
       routingPlan: plan,
     };
   }

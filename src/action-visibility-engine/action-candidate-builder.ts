@@ -96,6 +96,33 @@ function executionFieldsForAction(
   unifiedVerificationEntryId: string;
   verificationRequestCount: number;
   verificationEntrySessionCount: number;
+  cloudRuntimeFoundationId: string;
+  cloudRuntimeCount: number;
+  cloudRuntimeState: string;
+  workspaceHostingFoundationId: string;
+  hostedWorkspaceCount: number;
+  workspaceHostingState: string;
+  persistentBuildRuntimeFoundationId: string;
+  persistentBuildCount: number;
+  persistentBuildState: string;
+  cloudVerificationFoundationId: string;
+  cloudVerificationCount: number;
+  cloudVerificationState: string;
+  cloudRecoveryFoundationId: string;
+  cloudRecoveryCount: number;
+  cloudRecoveryState: string;
+  cloudMonitoringFoundationId: string;
+  cloudMonitoringCount: number;
+  cloudMonitoringState: string;
+  mobileCommandRuntimeFoundationId: string;
+  mobileCommandCount: number;
+  mobileCommandState: string;
+  mobileChatRuntimeFoundationId: string;
+  mobileChatCount: number;
+  mobileChatState: string;
+  mobilePreviewRuntimeFoundationId: string;
+  mobilePreviewCount: number;
+  mobilePreviewState: string;
   applyAllowed: false;
   executionAllowed: false;
 } {
@@ -177,6 +204,33 @@ function executionFieldsForAction(
   const unifiedVerificationEntryId = `uventauth-${actionId.replace('act-', '')}`;
   const verificationRequestCount = blocked ? 0 : 1;
   const verificationEntrySessionCount = blocked ? 0 : 1;
+  const cloudRuntimeFoundationId = `crrtfnd-${actionId.replace('act-', '')}`;
+  const cloudRuntimeCount = blocked ? 0 : 8;
+  const cloudRuntimeState = blocked ? 'BLOCKED' : 'READY';
+  const workspaceHostingFoundationId = `whstfnd-${actionId.replace('act-', '')}`;
+  const hostedWorkspaceCount = blocked ? 0 : 8;
+  const workspaceHostingState = blocked ? 'BLOCKED' : 'READY';
+  const persistentBuildRuntimeFoundationId = `pbldfnd-${actionId.replace('act-', '')}`;
+  const persistentBuildCount = blocked ? 0 : 8;
+  const persistentBuildState = blocked ? 'BLOCKED' : 'READY';
+  const cloudVerificationFoundationId = `cvrfnd-${actionId.replace('act-', '')}`;
+  const cloudVerificationCount = blocked ? 0 : 9;
+  const cloudVerificationState = blocked ? 'BLOCKED' : 'READY';
+  const cloudRecoveryFoundationId = `crrfnd-${actionId.replace('act-', '')}`;
+  const cloudRecoveryCount = blocked ? 0 : 9;
+  const cloudRecoveryState = blocked ? 'BLOCKED' : 'READY';
+  const cloudMonitoringFoundationId = `cmonfnd-${actionId.replace('act-', '')}`;
+  const cloudMonitoringCount = blocked ? 0 : 9;
+  const cloudMonitoringState = blocked ? 'BLOCKED' : 'READY';
+  const mobileCommandRuntimeFoundationId = `mcrtfnd-${actionId.replace('act-', '')}`;
+  const mobileCommandCount = blocked ? 0 : 9;
+  const mobileCommandState = blocked ? 'BLOCKED' : 'READY';
+  const mobileChatRuntimeFoundationId = `mchtfnd-${actionId.replace('act-', '')}`;
+  const mobileChatCount = blocked ? 0 : 9;
+  const mobileChatState = blocked ? 'BLOCKED' : 'READY';
+  const mobilePreviewRuntimeFoundationId = `mpvtfnd-${actionId.replace('act-', '')}`;
+  const mobilePreviewCount = blocked ? 0 : 9;
+  const mobilePreviewState = blocked ? 'BLOCKED' : 'READY';
   return {
     executionReadiness: `${level} (${score}) — ${blockerCount} visible blockers; Phase 14.1 readiness-only, no execution.`,
     executionReady: !blocked && score >= 45 && blockerCount < 4,
@@ -252,6 +306,33 @@ function executionFieldsForAction(
     unifiedVerificationEntryId,
     verificationRequestCount,
     verificationEntrySessionCount,
+    cloudRuntimeFoundationId,
+    cloudRuntimeCount,
+    cloudRuntimeState,
+    workspaceHostingFoundationId,
+    hostedWorkspaceCount,
+    workspaceHostingState,
+    persistentBuildRuntimeFoundationId,
+    persistentBuildCount,
+    persistentBuildState,
+    cloudVerificationFoundationId,
+    cloudVerificationCount,
+    cloudVerificationState,
+    cloudRecoveryFoundationId,
+    cloudRecoveryCount,
+    cloudRecoveryState,
+    cloudMonitoringFoundationId,
+    cloudMonitoringCount,
+    cloudMonitoringState,
+    mobileCommandRuntimeFoundationId,
+    mobileCommandCount,
+    mobileCommandState,
+    mobileChatRuntimeFoundationId,
+    mobileChatCount,
+    mobileChatState,
+    mobilePreviewRuntimeFoundationId,
+    mobilePreviewCount,
+    mobilePreviewState,
     applyAllowed: false,
     executionAllowed: false,
   };

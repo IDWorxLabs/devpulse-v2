@@ -176,7 +176,16 @@ export type OwnershipDomain =
   | 'verification_orchestrator'
   | 'verification_evidence_engine'
   | 'verification_reporting_engine'
-  | 'unified_verification_entry';
+  | 'unified_verification_entry'
+  | 'cloud_runtime_foundation'
+  | 'workspace_hosting_foundation'
+  | 'persistent_build_runtime_foundation'
+  | 'cloud_verification_foundation'
+  | 'cloud_recovery_foundation'
+  | 'cloud_monitoring_foundation'
+  | 'mobile_command_runtime_foundation'
+  | 'mobile_chat_runtime_foundation'
+  | 'mobile_preview_runtime_foundation';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

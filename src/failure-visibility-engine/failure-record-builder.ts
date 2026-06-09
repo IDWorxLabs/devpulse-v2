@@ -35,6 +35,15 @@ import { buildVerificationOrchestratorFailureContext } from '../verification-orc
 import { buildVerificationEvidenceFailureContext } from '../verification-evidence-engine/verification-evidence-failure-bridge.js';
 import { buildVerificationReportingFailureContext } from '../verification-reporting-engine/verification-report-builder.js';
 import { buildUnifiedVerificationFailureContext } from '../unified-verification-entry/verification-entry-report.js';
+import { buildCloudRuntimeFailureContext } from '../cloud-runtime/cloud-runtime-report-builder.js';
+import { buildWorkspaceHostingFailureContext } from '../workspace-hosting/workspace-hosting-report-builder.js';
+import { buildPersistentBuildFailureContext } from '../persistent-build-runtime/persistent-build-report-builder.js';
+import { buildCloudVerificationFailureContext } from '../cloud-verification/cloud-verification-report-builder.js';
+import { buildCloudRecoveryFailureContext } from '../cloud-recovery/cloud-recovery-report-builder.js';
+import { buildCloudMonitoringFailureContext } from '../cloud-monitoring/cloud-monitoring-report-builder.js';
+import { buildMobileCommandFailureContext } from '../mobile-command-runtime/mobile-command-report-builder.js';
+import { buildMobileChatFailureContext } from '../mobile-chat-runtime/mobile-chat-report-builder.js';
+import { buildMobilePreviewFailureContext } from '../mobile-preview-runtime/mobile-preview-report-builder.js';
 import type { FailureRecord } from './failure-visibility-types.js';
 
 let failureCounter = 0;
@@ -421,6 +430,123 @@ export function buildFailureRecords(query: string): FailureRecord[] {
         sourceSystem: uventf.sourceSystem,
         affectedSystems: ['unified_verification_entry', 'failure_visibility_engine'],
         blockedCapabilities: ['UNIFIED_VERIFICATION_ENTRY'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const crf of buildCloudRuntimeFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: crf.title,
+        description: crf.description,
+        sourceSystem: crf.sourceSystem,
+        affectedSystems: ['cloud_runtime_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['CLOUD_RUNTIME_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const whf of buildWorkspaceHostingFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: whf.title,
+        description: whf.description,
+        sourceSystem: whf.sourceSystem,
+        affectedSystems: ['workspace_hosting_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['WORKSPACE_HOSTING_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const pbf of buildPersistentBuildFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: pbf.title,
+        description: pbf.description,
+        sourceSystem: pbf.sourceSystem,
+        affectedSystems: ['persistent_build_runtime_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['PERSISTENT_BUILD_RUNTIME_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const cvf of buildCloudVerificationFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: cvf.title,
+        description: cvf.description,
+        sourceSystem: cvf.sourceSystem,
+        affectedSystems: ['cloud_verification_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['CLOUD_VERIFICATION_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const crf of buildCloudRecoveryFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: crf.title,
+        description: crf.description,
+        sourceSystem: crf.sourceSystem,
+        affectedSystems: ['cloud_recovery_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['CLOUD_RECOVERY_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const cmf of buildCloudMonitoringFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: cmf.title,
+        description: cmf.description,
+        sourceSystem: cmf.sourceSystem,
+        affectedSystems: ['cloud_monitoring_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['CLOUD_MONITORING_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const mcf of buildMobileCommandFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: mcf.title,
+        description: mcf.description,
+        sourceSystem: mcf.sourceSystem,
+        affectedSystems: ['mobile_command_runtime_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['MOBILE_COMMAND_RUNTIME_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const mcf of buildMobileChatFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: mcf.title,
+        description: mcf.description,
+        sourceSystem: mcf.sourceSystem,
+        affectedSystems: ['mobile_chat_runtime_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['MOBILE_CHAT_RUNTIME_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const mpf of buildMobilePreviewFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: mpf.title,
+        description: mpf.description,
+        sourceSystem: mpf.sourceSystem,
+        affectedSystems: ['mobile_preview_runtime_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['MOBILE_PREVIEW_RUNTIME_FOUNDATION'],
         dependencyImpacts: depImpacts,
       }),
     );

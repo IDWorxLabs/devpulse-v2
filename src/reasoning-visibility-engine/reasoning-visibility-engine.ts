@@ -410,6 +410,105 @@ export function buildReasoningVisibilityRecord(query: string): ReasoningVisibili
       'REPORT_AVAILABLE — 10 reports linked',
       'EVIDENCE_AVAILABLE — 13 evidence records linked',
     ],
+    cloudRuntimeBasis: `Cloud runtime foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 17.1 cloud runtime authority only, no builds or cloud execution.`,
+    cloudRuntimeChain: [
+      'crrt-0001 → crss-0001 → devpulse_v2_cloud_runtime_foundation',
+      'CREATED → INITIALIZING → READY → ACTIVE → COMPLETED',
+      'ownership → lifecycle → history → reports',
+    ],
+    cloudRuntimeState: [
+      'CREATED → INITIALIZING → READY',
+      'ACTIVE — authority activation only',
+      'COMPLETED — lifecycle tracking without execution',
+    ],
+    workspaceHostingBasis: `Workspace hosting foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 17.2 hosted workspace authority with Cloud Runtime Foundation runtime links; no cloud workers or builds.`,
+    workspaceHostingChain: [
+      'hws-0001 → hwss-0001 → crrt-0001',
+      'CREATED → INITIALIZING → READY → ACTIVE → COMPLETED',
+      'workspace hosting → runtime bridge → isolation metadata',
+    ],
+    workspaceHostingState: [
+      'CREATED → INITIALIZING → READY',
+      'ISOLATED — metadata only, no containers',
+      'LINKED_TO_RUNTIME — Cloud Runtime Foundation source of truth',
+    ],
+    persistentBuildBasis: `Persistent build runtime foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 17.3 long-running build session authority with Cloud Runtime and Workspace Hosting links; no real builds or file mutation.`,
+    persistentBuildChain: [
+      'pbuild-0001 → pbsess-0001 → hws-0001 → crrt-0001',
+      'CREATED → INITIALIZING → READY → ACTIVE → COMPLETED',
+      'persistent build → workspace bridge → runtime bridge',
+    ],
+    persistentBuildState: [
+      'CREATED → INITIALIZING → READY',
+      'PAUSED / RESUMABLE — metadata only, no execution',
+      'LINKED_TO_RUNTIME / LINKED_TO_WORKSPACE — upstream authorities remain source of truth',
+    ],
+    cloudVerificationBasis: `Cloud verification foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 17.4 cloud-specific verification coordination with Unified Verification Entry, Evidence Engine, and Reporting Engine links; no provider execution.`,
+    cloudVerificationChain: [
+      'cver-0001 → cvsess-0001 → uvent session → vevid/vrpt links',
+      'CREATED → INITIALIZING → READY → REQUESTED → COMPLETED',
+      'cloud verification → runtime/workspace/build bridges → unified entry',
+    ],
+    cloudVerificationState: [
+      'CREATED → INITIALIZING → READY',
+      'EVIDENCE_LINKED / REPORT_LINKED — upstream engines remain source of truth',
+      'UNIFIED_ENTRY — global verification authority via requestVerification()',
+    ],
+    cloudRecoveryBasis: `Cloud recovery foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 17.5 recovery coordination with runtime, workspace, build, and verification links; no recovery execution or rollback.`,
+    cloudRecoveryChain: [
+      'crec-0001 → crsess-0001 → failure/candidate/plan metadata',
+      'CREATED → FAILURE_IDENTIFIED → RECOVERY_READY → COMPLETED',
+      'cloud recovery → runtime/workspace/build/verification bridges',
+    ],
+    cloudRecoveryState: [
+      'FAILURE_IDENTIFIED → RECOVERY_CANDIDATE_IDENTIFIED → RECOVERY_PLAN_REGISTERED',
+      'RECOVERY_READY — metadata only, no execution',
+      'UPSTREAM_AUTHORITIES — runtime, workspace, build, verification remain source of truth',
+    ],
+    cloudMonitoringBasis: `Cloud monitoring foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 17.6 monitoring coordination with health, alerts, and upstream links; no infrastructure polling or notifications.`,
+    cloudMonitoringChain: [
+      'cmon-0001 → cmsess-0001 → health/alert metadata',
+      'CREATED → MONITORING_ACTIVE → HEALTH_UPDATED → COMPLETED',
+      'cloud monitoring → runtime/workspace/build/verification/recovery bridges',
+    ],
+    cloudMonitoringState: [
+      'MONITORING_ACTIVE → HEALTH_UPDATED → ALERT_CREATED',
+      'ALERT_ACKNOWLEDGED — metadata only, no notifications',
+      'UPSTREAM_AUTHORITIES — all cloud foundations remain source of truth',
+    ],
+    mobileCommandBasis: `Mobile command runtime foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 18.1 mobile command session and permission authority with upstream cloud foundation links; no mobile UI, push notifications, or cloud execution.`,
+    mobileCommandChain: [
+      'mcmd-0001 → mcsess-0001 → permission/action gate metadata',
+      'CREATED → CONNECTED_TO_MONITORING → ACTION_ALLOWED → COMPLETED',
+      'mobile command → cloud/workspace/build/verification/recovery/monitoring bridges',
+    ],
+    mobileCommandState: [
+      'CONNECTED_TO_CLOUD → CONNECTED_TO_WORKSPACE → CONNECTED_TO_BUILD',
+      'ACTION_GATE — ALLOW / BLOCK / REQUIRES_APPROVAL metadata only',
+      'UPSTREAM_AUTHORITIES — cloud foundations remain source of truth',
+    ],
+    mobileChatBasis: `Mobile chat runtime foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 18.2 chat session, prompt, routing, and response-state authority; no mobile UI, LLM execution, or cloud execution.`,
+    mobileChatChain: [
+      'mchat-0001 → mchsess-0001 → prompt/routing/response metadata',
+      'CREATED → PROMPT_RECEIVED → ROUTED_TO_COMMAND → RESPONSE_READY → COMPLETED',
+      'mobile chat → mobile command/cloud/workspace/build bridges',
+    ],
+    mobileChatState: [
+      'PROMPT_RECEIVED → CONTEXT_READY → ROUTED_TO_COMMAND',
+      'RESPONSE_PENDING → RESPONSE_READY — metadata only, no LLM generation',
+      'ACTION_GATE — ALLOW / BLOCK / CONTEXT_REQUIRED metadata only',
+    ],
+    mobilePreviewBasis: `Mobile preview runtime foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 18.3 preview session, eligibility, safety, link, and desktop-recommendation authority; no mobile UI, preview streaming, or preview rendering.`,
+    mobilePreviewChain: [
+      'mpview-0001 → mpvsess-0001 → eligibility/safety/desktop metadata',
+      'CREATED → ELIGIBILITY_CHECKED → SAFETY_CHECKED → PREVIEW_READY → COMPLETED',
+      'mobile preview → mobile chat/command/cloud/workspace/build bridges',
+    ],
+    mobilePreviewState: [
+      'ELIGIBILITY_CHECKED → SAFETY_CHECKED → MOBILE_PREVIEW_ALLOWED',
+      'DESKTOP_RECOMMENDED — metadata only, no preview rendering',
+      'PREVIEW_LINK_REGISTERED → PREVIEW_PENDING → PREVIEW_READY',
+    ],
     visibilityOnly: true,
   };
 }

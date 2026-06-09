@@ -153,6 +153,33 @@ export interface ReasoningVisibilityRecord {
   unifiedVerificationBasis: string;
   verificationEntryChain: string[];
   verificationEntryState: string[];
+  cloudRuntimeBasis: string;
+  cloudRuntimeChain: string[];
+  cloudRuntimeState: string[];
+  workspaceHostingBasis: string;
+  workspaceHostingChain: string[];
+  workspaceHostingState: string[];
+  persistentBuildBasis: string;
+  persistentBuildChain: string[];
+  persistentBuildState: string[];
+  cloudVerificationBasis: string;
+  cloudVerificationChain: string[];
+  cloudVerificationState: string[];
+  cloudRecoveryBasis: string;
+  cloudRecoveryChain: string[];
+  cloudRecoveryState: string[];
+  cloudMonitoringBasis: string;
+  cloudMonitoringChain: string[];
+  cloudMonitoringState: string[];
+  mobileCommandBasis: string;
+  mobileCommandChain: string[];
+  mobileCommandState: string[];
+  mobileChatBasis: string;
+  mobileChatChain: string[];
+  mobileChatState: string[];
+  mobilePreviewBasis: string;
+  mobilePreviewChain: string[];
+  mobilePreviewState: string[];
   visibilityOnly: true;
 }
 

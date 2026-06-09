@@ -47,6 +47,15 @@ import { isVerificationOrchestratorQuestion } from '../../verification-orchestra
 import { isVerificationEvidenceQuestion } from '../../verification-evidence-engine/verification-evidence-types.js';
 import { isVerificationReportingQuestion } from '../../verification-reporting-engine/verification-report-types.js';
 import { isUnifiedVerificationQuestion } from '../../unified-verification-entry/unified-verification-types.js';
+import { isCloudRuntimeFoundationQuestion } from '../../cloud-runtime/cloud-runtime-types.js';
+import { isWorkspaceHostingFoundationQuestion } from '../../workspace-hosting/workspace-hosting-types.js';
+import { isPersistentBuildRuntimeFoundationQuestion } from '../../persistent-build-runtime/persistent-build-types.js';
+import { isCloudVerificationFoundationQuestion } from '../../cloud-verification/cloud-verification-types.js';
+import { isCloudRecoveryFoundationQuestion } from '../../cloud-recovery/cloud-recovery-types.js';
+import { isCloudMonitoringFoundationQuestion } from '../../cloud-monitoring/cloud-monitoring-types.js';
+import { isMobileCommandRuntimeFoundationQuestion } from '../../mobile-command-runtime/mobile-command-types.js';
+import { isMobileChatRuntimeFoundationQuestion } from '../../mobile-chat-runtime/mobile-chat-types.js';
+import { isMobilePreviewRuntimeFoundationQuestion } from '../../mobile-preview-runtime/mobile-preview-types.js';
 
 const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> = {
   PROJECT_PROFILE: 'PROJECT_UNDERSTANDING',
@@ -96,6 +105,15 @@ const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> =
   VERIFICATION_EVIDENCE_ENGINE_FACTS: 'VERIFICATION_EVIDENCE_ENGINE',
   VERIFICATION_REPORTING_ENGINE_FACTS: 'VERIFICATION_REPORTING_ENGINE',
   UNIFIED_VERIFICATION_ENTRY_FACTS: 'UNIFIED_VERIFICATION_ENTRY',
+  CLOUD_RUNTIME_FOUNDATION_FACTS: 'CLOUD_RUNTIME_FOUNDATION',
+  WORKSPACE_HOSTING_FOUNDATION_FACTS: 'WORKSPACE_HOSTING_FOUNDATION',
+  PERSISTENT_BUILD_RUNTIME_FOUNDATION_FACTS: 'PERSISTENT_BUILD_RUNTIME_FOUNDATION',
+  CLOUD_VERIFICATION_FOUNDATION_FACTS: 'CLOUD_VERIFICATION_FOUNDATION',
+  CLOUD_RECOVERY_FOUNDATION_FACTS: 'CLOUD_RECOVERY_FOUNDATION',
+  CLOUD_MONITORING_FOUNDATION_FACTS: 'CLOUD_MONITORING_FOUNDATION',
+  MOBILE_COMMAND_RUNTIME_FOUNDATION_FACTS: 'MOBILE_COMMAND_RUNTIME_FOUNDATION',
+  MOBILE_CHAT_RUNTIME_FOUNDATION_FACTS: 'MOBILE_CHAT_RUNTIME_FOUNDATION',
+  MOBILE_PREVIEW_RUNTIME_FOUNDATION_FACTS: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION',
 };
 
 export interface CapabilitySelectionResult {
@@ -192,6 +210,159 @@ export function selectCapabilities(
     selected.add('UNIFIED_DECISION_LAYER');
     selected.add('ACTION_VISIBILITY_ENGINE');
     selected.add('PROJECT_KNOWLEDGE_REASONING');
+  }
+
+  if (isCloudRuntimeFoundationQuestion(question)) {
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('EXECUTION_RUNTIME_FOUNDATION');
+    selected.add('WORLD2_EXECUTION_ACTIVATION');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isWorkspaceHostingFoundationQuestion(question)) {
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('UNIFIED_VERIFICATION_ENTRY');
+    selected.add('VERIFICATION_EVIDENCE_ENGINE');
+    selected.add('VERIFICATION_REPORTING_ENGINE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isPersistentBuildRuntimeFoundationQuestion(question)) {
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_INTELLIGENCE');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('UNIFIED_VERIFICATION_ENTRY');
+    selected.add('VERIFICATION_EVIDENCE_ENGINE');
+    selected.add('VERIFICATION_REPORTING_ENGINE');
+    selected.add('EXECUTION_RUNTIME_FOUNDATION');
+    selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isMobilePreviewRuntimeFoundationQuestion(question)) {
+    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
+    selected.add('LIVE_PREVIEW_RUNTIME');
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isMobileChatRuntimeFoundationQuestion(question)) {
+    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
+    selected.add('CLOUD_MONITORING_FOUNDATION');
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isMobileCommandRuntimeFoundationQuestion(question)) {
+    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
+    selected.add('CLOUD_MONITORING_FOUNDATION');
+    selected.add('CLOUD_RECOVERY_FOUNDATION');
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isCloudMonitoringFoundationQuestion(question)) {
+    selected.add('CLOUD_MONITORING_FOUNDATION');
+    selected.add('CLOUD_RECOVERY_FOUNDATION');
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isCloudRecoveryFoundationQuestion(question)) {
+    selected.add('CLOUD_RECOVERY_FOUNDATION');
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isCloudVerificationFoundationQuestion(question)) {
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('UNIFIED_VERIFICATION_ENTRY');
+    selected.add('VERIFICATION_EVIDENCE_ENGINE');
+    selected.add('VERIFICATION_REPORTING_ENGINE');
+    selected.add('VERIFICATION_ORCHESTRATOR');
+    selected.add('VERIFICATION_REGISTRY');
+    selected.add('UNIFIED_VERIFICATION_LAB_RUNTIME');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
   }
 
   if (isUnifiedVerificationQuestion(question)) {
@@ -644,6 +815,123 @@ export function selectCapabilities(
   }
 
   const lowerQuestion = question.toLowerCase();
+
+  if (isMobilePreviewRuntimeFoundationQuestion(question)) {
+    primary = 'MOBILE_PREVIEW_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Mobile preview question — MOBILE_PREVIEW_RUNTIME_FOUNDATION is the mobile preview session, eligibility, safety, link, and desktop-recommendation authority; no mobile UI, preview streaming, or preview rendering.',
+    };
+  }
+
+  if (isMobileChatRuntimeFoundationQuestion(question)) {
+    primary = 'MOBILE_CHAT_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Mobile chat question — MOBILE_CHAT_RUNTIME_FOUNDATION is the mobile chat session, prompt, message, routing, and response-state authority; no mobile UI, LLM execution, or cloud execution.',
+    };
+  }
+
+  if (isMobileCommandRuntimeFoundationQuestion(question)) {
+    primary = 'MOBILE_COMMAND_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Mobile command question — MOBILE_COMMAND_RUNTIME_FOUNDATION is the mobile command session and permission authority for cloud runtime, workspace, build, verification, recovery, and monitoring links; no mobile UI, push notifications, or cloud execution.',
+    };
+  }
+
+  if (isCloudMonitoringFoundationQuestion(question)) {
+    primary = 'CLOUD_MONITORING_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Cloud monitoring question — CLOUD_MONITORING_FOUNDATION is the cloud monitoring authority for health metadata, alerts, ownership, state, lifecycle, and context; no real infrastructure monitoring, cloud provider connections, or notifications.',
+    };
+  }
+
+  if (isCloudRecoveryFoundationQuestion(question)) {
+    primary = 'CLOUD_RECOVERY_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Cloud recovery question — CLOUD_RECOVERY_FOUNDATION is the cloud recovery coordination authority for failure metadata, recovery candidates, plans, ownership, state, lifecycle, scope, and context; no recovery execution, rollback, or file mutation.',
+    };
+  }
+
+  if (isCloudVerificationFoundationQuestion(question)) {
+    primary = 'CLOUD_VERIFICATION_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Cloud verification question — CLOUD_VERIFICATION_FOUNDATION is the cloud-specific verification coordination authority for registration, ownership, state, lifecycle, scope, and context; routes global verification through Unified Verification Entry; no provider execution.',
+    };
+  }
+
+  if (isPersistentBuildRuntimeFoundationQuestion(question)) {
+    primary = 'PERSISTENT_BUILD_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Persistent build question — PERSISTENT_BUILD_RUNTIME_FOUNDATION is the long-running build session authority for registration, ownership, state, lifecycle, context, progress, and resume metadata; Cloud Runtime Foundation remains runtime source of truth; Workspace Hosting Foundation remains workspace source of truth; no real builds or file mutation.',
+    };
+  }
+
+  if (isWorkspaceHostingFoundationQuestion(question)) {
+    primary = 'WORKSPACE_HOSTING_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Workspace hosting question — WORKSPACE_HOSTING_FOUNDATION is the hosted workspace authority for registration, ownership, state, lifecycle, isolation, and runtime links; Cloud Runtime Foundation remains runtime source of truth; no cloud workers or builds.',
+    };
+  }
+
+  if (isCloudRuntimeFoundationQuestion(question)) {
+    primary = 'CLOUD_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Cloud runtime question — CLOUD_RUNTIME_FOUNDATION is the cloud runtime authority for registration, ownership, state, lifecycle, and history; no builds or cloud execution.',
+    };
+  }
 
   if (isUnifiedVerificationQuestion(question)) {
     primary = 'UNIFIED_VERIFICATION_ENTRY';

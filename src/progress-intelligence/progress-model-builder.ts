@@ -26,6 +26,15 @@ import { isVerificationOrchestratorQuestion } from '../verification-orchestrator
 import { isVerificationEvidenceQuestion } from '../verification-evidence-engine/verification-evidence-types.js';
 import { isVerificationReportingQuestion } from '../verification-reporting-engine/verification-report-types.js';
 import { isUnifiedVerificationQuestion } from '../unified-verification-entry/unified-verification-types.js';
+import { isCloudRuntimeFoundationQuestion } from '../cloud-runtime/cloud-runtime-types.js';
+import { isWorkspaceHostingFoundationQuestion } from '../workspace-hosting/workspace-hosting-types.js';
+import { isPersistentBuildRuntimeFoundationQuestion } from '../persistent-build-runtime/persistent-build-types.js';
+import { isCloudVerificationFoundationQuestion } from '../cloud-verification/cloud-verification-types.js';
+import { isCloudRecoveryFoundationQuestion } from '../cloud-recovery/cloud-recovery-types.js';
+import { isCloudMonitoringFoundationQuestion } from '../cloud-monitoring/cloud-monitoring-types.js';
+import { isMobileCommandRuntimeFoundationQuestion } from '../mobile-command-runtime/mobile-command-types.js';
+import { isMobileChatRuntimeFoundationQuestion } from '../mobile-chat-runtime/mobile-chat-types.js';
+import { isMobilePreviewRuntimeFoundationQuestion } from '../mobile-preview-runtime/mobile-preview-types.js';
 import type { ProgressRecord } from './progress-intelligence-types.js';
 
 let progressCounter = 0;
@@ -252,6 +261,78 @@ export function buildProgressRecords(query: string): ProgressRecord[] {
       ...records[0],
       unifiedVerificationEntryState: 'READY',
       unifiedVerificationEntryNote: 'Unified Verification Entry Ready — single authority surface via requestVerification(); no direct subsystem access',
+    };
+  }
+
+  if (isCloudRuntimeFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      cloudRuntimeFoundationState: 'READY',
+      cloudRuntimeFoundationNote: 'Cloud Runtime Foundation Ready — authority surface for registration, ownership, state, lifecycle, and history; no builds or cloud execution',
+    };
+  }
+
+  if (isWorkspaceHostingFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      workspaceHostingFoundationState: 'READY',
+      workspaceHostingFoundationNote: 'Workspace Hosting Foundation Ready — hosted workspace authority with runtime links via Cloud Runtime Foundation; no cloud workers or builds',
+    };
+  }
+
+  if (isPersistentBuildRuntimeFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      persistentBuildRuntimeFoundationState: 'READY',
+      persistentBuildRuntimeFoundationNote: 'Persistent Build Runtime Foundation Ready — long-running build session authority with runtime and workspace links; no real builds or file mutation',
+    };
+  }
+
+  if (isCloudVerificationFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      cloudVerificationFoundationState: 'READY',
+      cloudVerificationFoundationNote: 'Cloud Verification Foundation Ready — cloud-specific verification coordination via Unified Verification Entry; no provider execution',
+    };
+  }
+
+  if (isCloudRecoveryFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      cloudRecoveryFoundationState: 'READY',
+      cloudRecoveryFoundationNote: 'Cloud Recovery Foundation Ready — recovery coordination metadata with upstream runtime, workspace, build, and verification links; no recovery execution',
+    };
+  }
+
+  if (isCloudMonitoringFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      cloudMonitoringFoundationState: 'READY',
+      cloudMonitoringFoundationNote: 'Cloud Monitoring Foundation Ready — health and alert metadata with upstream cloud foundation links; no infrastructure polling or notifications',
+    };
+  }
+
+  if (isMobileCommandRuntimeFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      mobileCommandRuntimeFoundationState: 'READY',
+      mobileCommandRuntimeFoundationNote: 'Mobile Command Runtime Foundation Ready — mobile command session and permission authority with upstream cloud foundation links; no mobile UI, push notifications, or cloud execution',
+    };
+  }
+
+  if (isMobileChatRuntimeFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      mobileChatRuntimeFoundationState: 'READY',
+      mobileChatRuntimeFoundationNote: 'Mobile Chat Runtime Foundation Ready — mobile chat session, prompt, routing, and response-state authority; no mobile UI, LLM execution, or cloud execution',
+    };
+  }
+
+  if (isMobilePreviewRuntimeFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      mobilePreviewRuntimeFoundationState: 'READY',
+      mobilePreviewRuntimeFoundationNote: 'Mobile Preview Runtime Foundation Ready — mobile preview session, eligibility, safety, link, and desktop-recommendation authority; no mobile UI, preview streaming, or preview rendering',
     };
   }
 

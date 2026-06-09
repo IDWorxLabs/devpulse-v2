@@ -93,6 +93,24 @@ export interface ProgressRecord {
   verificationReportingNote?: string;
   unifiedVerificationEntryState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
   unifiedVerificationEntryNote?: string;
+  cloudRuntimeFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  cloudRuntimeFoundationNote?: string;
+  workspaceHostingFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  workspaceHostingFoundationNote?: string;
+  persistentBuildRuntimeFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  persistentBuildRuntimeFoundationNote?: string;
+  cloudVerificationFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  cloudVerificationFoundationNote?: string;
+  cloudRecoveryFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  cloudRecoveryFoundationNote?: string;
+  cloudMonitoringFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  cloudMonitoringFoundationNote?: string;
+  mobileCommandRuntimeFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  mobileCommandRuntimeFoundationNote?: string;
+  mobileChatRuntimeFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  mobileChatRuntimeFoundationNote?: string;
+  mobilePreviewRuntimeFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  mobilePreviewRuntimeFoundationNote?: string;
   visibilityOnly: true;
 }
 

@@ -15,6 +15,19 @@ import { getVerificationOrchestratorContext } from '../verification-orchestrator
 import { getVerificationEvidenceContext } from '../verification-evidence-engine/index.js';
 import { getVerificationReportingContext } from '../verification-reporting-engine/index.js';
 import { getUnifiedVerificationContext } from '../unified-verification-entry/index.js';
+import { getCloudRuntimeContext } from '../cloud-runtime/index.js';
+import { getWorkspaceHostingContext } from '../workspace-hosting/index.js';
+import { getPersistentBuildContext } from '../persistent-build-runtime/index.js';
+import { getCloudVerificationContext } from '../cloud-verification/index.js';
+import { getCloudRecoveryContext } from '../cloud-recovery/index.js';
+import { getCloudMonitoringContext } from '../cloud-monitoring/index.js';
+import { getMobileCommandContext } from '../mobile-command-runtime/index.js';
+import { getMobileChatContext } from '../mobile-chat-runtime/index.js';
+import { getMobilePreviewContext } from '../mobile-preview-runtime/index.js';
+import type { PrepareMobilePreviewRuntimeFoundationResult } from '../mobile-preview-runtime/mobile-preview-types.js';
+import type { PrepareMobileCommandRuntimeFoundationResult } from '../mobile-command-runtime/mobile-command-types.js';
+import type { PrepareMobileChatRuntimeFoundationResult } from '../mobile-chat-runtime/mobile-chat-types.js';
+import type { PrepareCloudMonitoringFoundationResult } from '../cloud-monitoring/cloud-monitoring-types.js';
 import type { VerificationRuntimeState } from './types.js';
 
 export interface UvlPanelSnapshot {
@@ -237,6 +250,597 @@ export function buildUnifiedVerificationEntryPanelSnapshot(
     reportRefs: response.reportReferences.slice(0, 8),
     historyEntries: response.historyReferences.slice(-6),
     requestCount: 1,
+    temporary: true,
+  };
+}
+
+export interface CloudRuntimeFoundationPanelSnapshot {
+  panelId: string;
+  panelTitle: string;
+  navigationPath: string;
+  runtimes: string[];
+  sessions: string[];
+  states: string[];
+  lifecycleEvents: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  runtimeCount: number;
+  temporary: true;
+}
+
+export function buildCloudRuntimeFoundationPanelSnapshot(
+  query = 'Show cloud runtime inventory',
+): CloudRuntimeFoundationPanelSnapshot {
+  const ctx = getCloudRuntimeContext(query);
+
+  return {
+    panelId: 'CLOUD_RUNTIME_FOUNDATION',
+    panelTitle: 'Cloud Runtime Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    runtimes:
+      ctx.reports
+        .find((r) => r.reportType === 'RUNTIME_INVENTORY_REPORT')
+        ?.findings.slice(0, 8) ?? [],
+    sessions: ctx.session ? [`${ctx.session.sessionId} — ${ctx.session.sessionState}`] : [],
+    states: ctx.runtime ? [`${ctx.runtime.runtimeId} — ${ctx.runtime.runtimeState}`] : [],
+    lifecycleEvents:
+      ctx.reports
+        .find((r) => r.reportType === 'RUNTIME_LIFECYCLE_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    historyEntries:
+      ctx.reports
+        .find((r) => r.reportType === 'RUNTIME_HISTORY_REPORT')
+        ?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    runtimeCount: ctx.diagnostics.registeredRuntimeCount,
+    temporary: true,
+  };
+}
+
+export interface WorkspaceHostingFoundationPanelSnapshot {
+  panelId: string;
+  panelTitle: string;
+  navigationPath: string;
+  workspaces: string[];
+  sessions: string[];
+  states: string[];
+  isolationFindings: string[];
+  runtimeLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  workspaceCount: number;
+  temporary: true;
+}
+
+export function buildWorkspaceHostingFoundationPanelSnapshot(
+  query = 'Show hosted workspace inventory',
+): WorkspaceHostingFoundationPanelSnapshot {
+  const ctx = getWorkspaceHostingContext(query);
+
+  return {
+    panelId: 'WORKSPACE_HOSTING_FOUNDATION',
+    panelTitle: 'Workspace Hosting Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    workspaces:
+      ctx.reports
+        .find((r) => r.reportType === 'WORKSPACE_INVENTORY_REPORT')
+        ?.findings.slice(0, 8) ?? [],
+    sessions: ctx.session ? [`${ctx.session.sessionId} — ${ctx.session.sessionState}`] : [],
+    states: ctx.workspace ? [`${ctx.workspace.workspaceId} — ${ctx.workspace.workspaceState}`] : [],
+    isolationFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'WORKSPACE_ISOLATION_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    runtimeLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'WORKSPACE_RUNTIME_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    historyEntries:
+      ctx.reports
+        .find((r) => r.reportType === 'WORKSPACE_HISTORY_REPORT')
+        ?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    workspaceCount: ctx.diagnostics.registeredWorkspaceCount,
+    temporary: true,
+  };
+}
+
+export interface PersistentBuildRuntimeFoundationPanelSnapshot {
+  panelId: string;
+  panelTitle: string;
+  navigationPath: string;
+  builds: string[];
+  sessions: string[];
+  states: string[];
+  progressFindings: string[];
+  contextFindings: string[];
+  resumeFindings: string[];
+  runtimeLinks: string[];
+  workspaceLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  buildCount: number;
+  temporary: true;
+}
+
+export function buildPersistentBuildRuntimeFoundationPanelSnapshot(
+  query = 'Show persistent build inventory',
+): PersistentBuildRuntimeFoundationPanelSnapshot {
+  const ctx = getPersistentBuildContext(query);
+
+  return {
+    panelId: 'PERSISTENT_BUILD_RUNTIME_FOUNDATION',
+    panelTitle: 'Persistent Build Runtime Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    builds:
+      ctx.reports
+        .find((r) => r.reportType === 'PERSISTENT_BUILD_INVENTORY_REPORT')
+        ?.findings.slice(0, 8) ?? [],
+    sessions: ctx.session ? [`${ctx.session.sessionId} — ${ctx.session.sessionState}`] : [],
+    states: ctx.build ? [`${ctx.build.buildId} — ${ctx.build.buildState}`] : [],
+    progressFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'PERSISTENT_BUILD_PROGRESS_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    contextFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'PERSISTENT_BUILD_CONTEXT_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    resumeFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'PERSISTENT_BUILD_RESUME_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    runtimeLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'PERSISTENT_BUILD_CLOUD_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    workspaceLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'PERSISTENT_BUILD_WORKSPACE_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    historyEntries:
+      ctx.reports
+        .find((r) => r.reportType === 'PERSISTENT_BUILD_HISTORY_REPORT')
+        ?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    buildCount: ctx.diagnostics.registeredBuildCount,
+    temporary: true,
+  };
+}
+
+export interface CloudVerificationFoundationPanelSnapshot {
+  panelId: string;
+  panelTitle: string;
+  navigationPath: string;
+  verifications: string[];
+  sessions: string[];
+  states: string[];
+  scopeFindings: string[];
+  contextFindings: string[];
+  evidenceLinks: string[];
+  reportLinks: string[];
+  runtimeLinks: string[];
+  workspaceLinks: string[];
+  buildLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  verificationCount: number;
+  temporary: true;
+}
+
+export function buildCloudVerificationFoundationPanelSnapshot(
+  query = 'Show cloud verification inventory',
+): CloudVerificationFoundationPanelSnapshot {
+  const ctx = getCloudVerificationContext(query);
+
+  return {
+    panelId: 'CLOUD_VERIFICATION_FOUNDATION',
+    panelTitle: 'Cloud Verification Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    verifications:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_VERIFICATION_INVENTORY_REPORT')
+        ?.findings.slice(0, 9) ?? [],
+    sessions: ctx.session ? [`${ctx.session.sessionId} — ${ctx.session.sessionState}`] : [],
+    states: ctx.verification ? [`${ctx.verification.verificationId} — ${ctx.verification.verificationState}`] : [],
+    scopeFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_VERIFICATION_SCOPE_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    contextFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_VERIFICATION_CONTEXT_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    evidenceLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_VERIFICATION_EVIDENCE_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    reportLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_VERIFICATION_REPORT_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    runtimeLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_VERIFICATION_RUNTIME_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    workspaceLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_VERIFICATION_WORKSPACE_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    buildLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_VERIFICATION_PERSISTENT_BUILD_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    historyEntries:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_VERIFICATION_HISTORY_REPORT')
+        ?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    verificationCount: ctx.diagnostics.registeredVerificationCount,
+    temporary: true,
+  };
+}
+
+export interface CloudRecoveryFoundationPanelSnapshot {
+  panelId: string;
+  panelTitle: string;
+  navigationPath: string;
+  recoveries: string[];
+  sessions: string[];
+  states: string[];
+  scopeFindings: string[];
+  contextFindings: string[];
+  runtimeLinks: string[];
+  workspaceLinks: string[];
+  buildLinks: string[];
+  verificationLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  recoveryCount: number;
+  temporary: true;
+}
+
+export function buildCloudRecoveryFoundationPanelSnapshot(
+  query = 'Show cloud recovery inventory',
+): CloudRecoveryFoundationPanelSnapshot {
+  const ctx = getCloudRecoveryContext(query);
+
+  return {
+    panelId: 'CLOUD_RECOVERY_FOUNDATION',
+    panelTitle: 'Cloud Recovery Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    recoveries:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_RECOVERY_INVENTORY_REPORT')
+        ?.findings.slice(0, 9) ?? [],
+    sessions: ctx.session ? [`${ctx.session.sessionId} — ${ctx.session.sessionState}`] : [],
+    states: ctx.recovery ? [`${ctx.recovery.recoveryId} — ${ctx.recovery.recoveryState}`] : [],
+    scopeFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_RECOVERY_SCOPE_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    contextFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_RECOVERY_CONTEXT_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    runtimeLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_RECOVERY_RUNTIME_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    workspaceLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_RECOVERY_WORKSPACE_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    buildLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_RECOVERY_BUILD_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    verificationLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_RECOVERY_VERIFICATION_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    historyEntries:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_RECOVERY_HISTORY_REPORT')
+        ?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    recoveryCount: ctx.diagnostics.registeredRecoveryCount,
+    temporary: true,
+  };
+}
+
+export interface CloudMonitoringFoundationPanelSnapshot {
+  panelId: string;
+  panelTitle: string;
+  navigationPath: string;
+  monitoringRecords: string[];
+  sessions: string[];
+  states: string[];
+  healthFindings: string[];
+  alertFindings: string[];
+  contextFindings: string[];
+  runtimeLinks: string[];
+  workspaceLinks: string[];
+  buildLinks: string[];
+  verificationLinks: string[];
+  recoveryLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  monitoringCount: number;
+  temporary: true;
+}
+
+export function buildCloudMonitoringFoundationPanelSnapshot(
+  query = 'Show cloud monitoring inventory',
+  existingContext?: PrepareCloudMonitoringFoundationResult,
+): CloudMonitoringFoundationPanelSnapshot {
+  const ctx = existingContext ?? getCloudMonitoringContext(query);
+
+  return {
+    panelId: 'CLOUD_MONITORING_FOUNDATION',
+    panelTitle: 'Cloud Monitoring Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    monitoringRecords:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_MONITORING_INVENTORY_REPORT')
+        ?.findings.slice(0, 9) ?? [],
+    sessions: ctx.session ? [`${ctx.session.sessionId} — ${ctx.session.sessionState}`] : [],
+    states: ctx.record ? [`${ctx.record.monitoringId} — ${ctx.record.monitoringState}`] : [],
+    healthFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_MONITORING_HEALTH_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    alertFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_MONITORING_ALERT_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    contextFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_MONITORING_CONTEXT_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    runtimeLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_MONITORING_RUNTIME_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    workspaceLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_MONITORING_WORKSPACE_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    buildLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_MONITORING_BUILD_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    verificationLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_MONITORING_VERIFICATION_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    recoveryLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_MONITORING_RECOVERY_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    historyEntries:
+      ctx.reports
+        .find((r) => r.reportType === 'CLOUD_MONITORING_HISTORY_REPORT')
+        ?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    monitoringCount: ctx.diagnostics.registeredMonitoringCount,
+    temporary: true,
+  };
+}
+
+export interface MobileCommandRuntimeFoundationPanelSnapshot {
+  panelId: string;
+  panelTitle: string;
+  navigationPath: string;
+  mobileCommands: string[];
+  sessions: string[];
+  states: string[];
+  contextFindings: string[];
+  permissionsFindings: string[];
+  actionGateFindings: string[];
+  cloudLinks: string[];
+  workspaceLinks: string[];
+  buildLinks: string[];
+  verificationLinks: string[];
+  recoveryLinks: string[];
+  monitoringLinks: string[];
+  operatorFeedLinks: string[];
+  projectVaultLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  mobileCommandCount: number;
+  temporary: true;
+}
+
+export function buildMobileCommandRuntimeFoundationPanelSnapshot(
+  query = 'Show mobile command inventory',
+  existingContext?: PrepareMobileCommandRuntimeFoundationResult,
+): MobileCommandRuntimeFoundationPanelSnapshot {
+  const ctx = existingContext ?? getMobileCommandContext(query);
+
+  return {
+    panelId: 'MOBILE_COMMAND_RUNTIME_FOUNDATION',
+    panelTitle: 'Mobile Command Runtime Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    mobileCommands:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_INVENTORY_REPORT')
+        ?.findings.slice(0, 9) ?? [],
+    sessions: ctx.trackedSession ? [`${ctx.trackedSession.sessionId} — ${ctx.trackedSession.sessionState}`] : [],
+    states: ctx.session ? [`${ctx.session.mobileCommandId} — ${ctx.session.mobileCommandState}`] : [],
+    contextFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_CONTEXT_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    permissionsFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_PERMISSIONS_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    actionGateFindings:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_ACTION_GATE_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    cloudLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_CLOUD_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    workspaceLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_WORKSPACE_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    buildLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_BUILD_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    verificationLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_VERIFICATION_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    recoveryLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_RECOVERY_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    monitoringLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_MONITORING_LINK_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    operatorFeedLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_OPERATOR_FEED_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    projectVaultLinks:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_PROJECT_VAULT_REPORT')
+        ?.findings.slice(0, 6) ?? [],
+    historyEntries:
+      ctx.reports
+        .find((r) => r.reportType === 'MOBILE_COMMAND_HISTORY_REPORT')
+        ?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    mobileCommandCount: ctx.diagnostics.registeredMobileCommandCount,
+    temporary: true,
+  };
+}
+
+export interface MobileChatRuntimeFoundationPanelSnapshot {
+  panelId: string;
+  panelTitle: string;
+  navigationPath: string;
+  mobileChats: string[];
+  sessions: string[];
+  messages: string[];
+  prompts: string[];
+  responses: string[];
+  routingFindings: string[];
+  actionGateFindings: string[];
+  contextFindings: string[];
+  cloudLinks: string[];
+  workspaceLinks: string[];
+  buildLinks: string[];
+  verificationLinks: string[];
+  monitoringLinks: string[];
+  operatorFeedLinks: string[];
+  projectVaultLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  mobileChatCount: number;
+  temporary: true;
+}
+
+export function buildMobileChatRuntimeFoundationPanelSnapshot(
+  query = 'Show mobile chat inventory',
+  existingContext?: PrepareMobileChatRuntimeFoundationResult,
+): MobileChatRuntimeFoundationPanelSnapshot {
+  const ctx = existingContext ?? getMobileChatContext(query);
+
+  return {
+    panelId: 'MOBILE_CHAT_RUNTIME_FOUNDATION',
+    panelTitle: 'Mobile Chat Runtime Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    mobileChats:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_INVENTORY_REPORT')?.findings.slice(0, 9) ?? [],
+    sessions: ctx.trackedSession ? [`${ctx.trackedSession.sessionId} — ${ctx.trackedSession.sessionState}`] : [],
+    messages: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_MESSAGE_REPORT')?.findings.slice(0, 6) ?? [],
+    prompts: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_PROMPT_REPORT')?.findings.slice(0, 6) ?? [],
+    responses: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_RESPONSE_STATE_REPORT')?.findings.slice(0, 6) ?? [],
+    routingFindings: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_COMMAND_ROUTING_REPORT')?.findings.slice(0, 6) ?? [],
+    actionGateFindings: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_ACTION_GATE_REPORT')?.findings.slice(0, 6) ?? [],
+    contextFindings: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_CONTEXT_REPORT')?.findings.slice(0, 6) ?? [],
+    cloudLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_CLOUD_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    workspaceLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_WORKSPACE_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    buildLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_BUILD_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    verificationLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_VERIFICATION_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    monitoringLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_MONITORING_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    operatorFeedLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_OPERATOR_FEED_REPORT')?.findings.slice(0, 6) ?? [],
+    projectVaultLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_PROJECT_VAULT_REPORT')?.findings.slice(0, 6) ?? [],
+    historyEntries: ctx.reports.find((r) => r.reportType === 'MOBILE_CHAT_HISTORY_REPORT')?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    mobileChatCount: ctx.diagnostics.registeredMobileChatCount,
+    temporary: true,
+  };
+}
+
+export interface MobilePreviewRuntimeFoundationPanelSnapshot {
+  panelId: string;
+  panelTitle: string;
+  navigationPath: string;
+  mobilePreviews: string[];
+  sessions: string[];
+  eligibilityFindings: string[];
+  safetyFindings: string[];
+  devicePolicyFindings: string[];
+  desktopRecommendationFindings: string[];
+  previewLinks: string[];
+  commandLinks: string[];
+  chatLinks: string[];
+  cloudLinks: string[];
+  workspaceLinks: string[];
+  buildLinks: string[];
+  verificationLinks: string[];
+  operatorFeedLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  mobilePreviewCount: number;
+  temporary: true;
+}
+
+export function buildMobilePreviewRuntimeFoundationPanelSnapshot(
+  query = 'Show mobile preview inventory',
+  existingContext?: PrepareMobilePreviewRuntimeFoundationResult,
+): MobilePreviewRuntimeFoundationPanelSnapshot {
+  const ctx = existingContext ?? getMobilePreviewContext(query);
+
+  return {
+    panelId: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION',
+    panelTitle: 'Mobile Preview Runtime Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    mobilePreviews:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_INVENTORY_REPORT')?.findings.slice(0, 9) ?? [],
+    sessions: ctx.trackedSession ? [`${ctx.trackedSession.sessionId} — ${ctx.trackedSession.sessionState}`] : [],
+    eligibilityFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_ELIGIBILITY_REPORT')?.findings.slice(0, 6) ?? [],
+    safetyFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_SAFETY_REPORT')?.findings.slice(0, 6) ?? [],
+    devicePolicyFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_DEVICE_POLICY_REPORT')?.findings.slice(0, 6) ?? [],
+    desktopRecommendationFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_DESKTOP_RECOMMENDATION_REPORT')?.findings.slice(0, 6) ??
+      [],
+    previewLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    commandLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_COMMAND_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    chatLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_CHAT_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    cloudLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_CLOUD_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    workspaceLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_WORKSPACE_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    buildLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_BUILD_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    verificationLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_VERIFICATION_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    operatorFeedLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_OPERATOR_FEED_REPORT')?.findings.slice(0, 6) ?? [],
+    historyEntries: ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_HISTORY_REPORT')?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    mobilePreviewCount: ctx.diagnostics.registeredMobilePreviewCount,
     temporary: true,
   };
 }
