@@ -909,6 +909,41 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 18.4,
     description: 'Phase 18.4 Mobile Approval Runtime Foundation — mobile approval session, request, decision, governance, and context authority; no execution, push notifications, or real approvals',
   },
+  cross_device_runtime_foundation: {
+    domain: 'cross_device_runtime_foundation',
+    ownerModule: 'devpulse_v2_cross_device_runtime_foundation',
+    ownerFunction: 'getDevPulseV2CrossDeviceRuntimeFoundation',
+    phase: 18.5,
+    description: 'Phase 18.5 Cross Device Runtime Foundation — cross device session, device link, handoff, and visibility authority; no real sync, connections, or device pairing',
+  },
+  founder_notification_runtime_foundation: {
+    domain: 'founder_notification_runtime_foundation',
+    ownerModule: 'devpulse_v2_founder_notification_runtime_foundation',
+    ownerFunction: 'getDevPulseV2FounderNotificationRuntimeFoundation',
+    phase: 18.6,
+    description: 'Phase 18.6 Founder Notification Runtime Foundation — founder notification routing, visibility, priority, and channel authority; no real delivery, push, email, or SMS',
+  },
+  founder_inbox_foundation: {
+    domain: 'founder_inbox_foundation',
+    ownerModule: 'devpulse_v2_founder_inbox_foundation',
+    ownerFunction: 'getDevPulseV2FounderInboxFoundation',
+    phase: 18.7,
+    description: 'Phase 18.7 Founder Inbox Foundation — founder inbox visualization and organization layer referencing Founder Notification Runtime; no notification authority or delivery',
+  },
+  notification_delivery_foundation: {
+    domain: 'notification_delivery_foundation',
+    ownerModule: 'devpulse_v2_notification_delivery_foundation',
+    ownerFunction: 'getDevPulseV2NotificationDeliveryFoundation',
+    phase: 18.8,
+    description: 'Phase 18.8 Notification Delivery Foundation — delivery planning, routing, targeting, and channel eligibility authority referencing Founder Inbox and Founder Notification Runtime; no real email, SMS, push, FCM, or APNS',
+  },
+  mobile_push_foundation: {
+    domain: 'mobile_push_foundation',
+    ownerModule: 'devpulse_v2_mobile_push_foundation',
+    ownerFunction: 'getDevPulseV2MobilePushFoundation',
+    phase: 18.9,
+    description: 'Phase 18.9 Mobile Push Foundation — push planning, token metadata, payload planning, and platform targeting authority referencing Notification Delivery Foundation; no real push, FCM, APNS, or raw token storage',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {

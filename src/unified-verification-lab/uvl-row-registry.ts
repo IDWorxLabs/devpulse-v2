@@ -577,6 +577,177 @@ export const MOBILE_APPROVAL_RUNTIME_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION_PANEL', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Unified Verification Lab panel snapshot for mobile approval runtime foundation', extensionOnly: true },
 ];
 
+export const CROSS_DEVICE_RUNTIME_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'CROSS_DEVICE_TYPES', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device types and models', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_REGISTRY', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device registry and orchestrator', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_STORE', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device in-memory store', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_SESSION_MANAGER', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device session manager without sync', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_STATE_MANAGER', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device state manager', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_LIFECYCLE', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device lifecycle tracking', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_OWNERSHIP', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device ownership tracking', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_CONTEXT', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device context aggregation', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_DEVICE_LINK', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Device link metadata manager', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_HANDOFF', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Device handoff metadata manager', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_VISIBILITY', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Device visibility metadata', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_COMMAND_BRIDGE', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Mobile Command Runtime bridge', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_CHAT_BRIDGE', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Mobile Chat Runtime bridge', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_PREVIEW_BRIDGE', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Mobile Preview Runtime bridge', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_APPROVAL_BRIDGE', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Mobile Approval Runtime bridge', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_CLOUD_BRIDGE', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cloud Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_WORKSPACE_BRIDGE', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Workspace Hosting bridge', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_BUILD_BRIDGE', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Persistent Build bridge', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_OPERATOR_FEED_BRIDGE', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Operator Feed bridge', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_PROJECT_VAULT_BRIDGE', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Project Vault bridge', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_QUERY', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device query layer', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_HISTORY', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device history tracking', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_REPORT_BUILDER', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device report builder', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_VALIDATOR', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_DIAGNOSTICS', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Cross device diagnostics tracker', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_RUNTIME_FOUNDATION_ROUTING', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Command Center routing for cross device questions', extensionOnly: true },
+  { rowId: 'CROSS_DEVICE_RUNTIME_FOUNDATION_PANEL', module: 'cross_device_runtime_foundation', phase: 18.5, description: 'Unified Verification Lab panel snapshot for cross device runtime foundation', extensionOnly: true },
+];
+
+export const FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FOUNDER_NOTIFICATION_TYPES', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification types and models', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_REGISTRY', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification registry and orchestrator', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_STORE', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification in-memory store', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_MANAGER', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification manager without delivery', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_STATE_MANAGER', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification state manager', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_LIFECYCLE', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification lifecycle tracking', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_OWNERSHIP', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification ownership tracking', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_CONTEXT', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification context aggregation', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_ROUTING', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Notification routing metadata manager', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_PRIORITY', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Notification priority metadata', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_VISIBILITY', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Notification visibility metadata', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_CHANNEL', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Notification channel metadata', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_MOBILE_BRIDGE', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Cross Device mobile visibility bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_CROSS_DEVICE_BRIDGE', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Cross Device Runtime bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_CLOUD_BRIDGE', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Cloud Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_COMMAND_BRIDGE', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Mobile Command Runtime bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_CHAT_BRIDGE', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Mobile Chat Runtime bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_PREVIEW_BRIDGE', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Mobile Preview Runtime bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_APPROVAL_BRIDGE', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Mobile Approval Runtime bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_OPERATOR_FEED_BRIDGE', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Operator Feed bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_PROJECT_VAULT_BRIDGE', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Project Vault bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_QUERY', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification query layer', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_HISTORY', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification history tracking', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_REPORT_BUILDER', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification report builder', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_VALIDATOR', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_DIAGNOSTICS', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Founder notification diagnostics tracker', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION_ROUTING', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Command Center routing for founder notification questions', extensionOnly: true },
+  { rowId: 'FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION_PANEL', module: 'founder_notification_runtime_foundation', phase: 18.6, description: 'Unified Verification Lab panel snapshot for founder notification runtime foundation', extensionOnly: true },
+];
+
+export const FOUNDER_INBOX_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FOUNDER_INBOX_TYPES', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox types and models', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_REGISTRY', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox registry and orchestrator', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_STORE', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox in-memory store', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_MANAGER', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox manager without notification authority', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_STATE_MANAGER', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox state manager', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_OWNERSHIP', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox ownership tracking', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_CONTEXT', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox context aggregation', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_VISIBILITY', module: 'founder_inbox_foundation', phase: 18.7, description: 'Inbox visibility metadata', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_FILTERING', module: 'founder_inbox_foundation', phase: 18.7, description: 'Inbox filtering layer', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_SEARCH', module: 'founder_inbox_foundation', phase: 18.7, description: 'Inbox search layer', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_GROUPING', module: 'founder_inbox_foundation', phase: 18.7, description: 'Inbox grouping layer', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_PRIORITY', module: 'founder_inbox_foundation', phase: 18.7, description: 'Inbox priority metadata', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_ACKNOWLEDGEMENT', module: 'founder_inbox_foundation', phase: 18.7, description: 'Inbox acknowledgement metadata', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_ARCHIVE', module: 'founder_inbox_foundation', phase: 18.7, description: 'Inbox archive metadata', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_NOTIFICATION_BRIDGE', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder Notification Runtime bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_CROSS_DEVICE_BRIDGE', module: 'founder_inbox_foundation', phase: 18.7, description: 'Cross Device Runtime bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_CLOUD_BRIDGE', module: 'founder_inbox_foundation', phase: 18.7, description: 'Cloud Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_COMMAND_BRIDGE', module: 'founder_inbox_foundation', phase: 18.7, description: 'Mobile Command Runtime bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_CHAT_BRIDGE', module: 'founder_inbox_foundation', phase: 18.7, description: 'Mobile Chat Runtime bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_PREVIEW_BRIDGE', module: 'founder_inbox_foundation', phase: 18.7, description: 'Mobile Preview Runtime bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_APPROVAL_BRIDGE', module: 'founder_inbox_foundation', phase: 18.7, description: 'Mobile Approval Runtime bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_OPERATOR_FEED_BRIDGE', module: 'founder_inbox_foundation', phase: 18.7, description: 'Operator Feed bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_PROJECT_VAULT_BRIDGE', module: 'founder_inbox_foundation', phase: 18.7, description: 'Project Vault bridge', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_QUERY', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox query layer', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_HISTORY', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox history tracking', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_REPORT_BUILDER', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox report builder', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_VALIDATOR', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_DIAGNOSTICS', module: 'founder_inbox_foundation', phase: 18.7, description: 'Founder inbox diagnostics tracker', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_FOUNDATION_ROUTING', module: 'founder_inbox_foundation', phase: 18.7, description: 'Command Center routing for founder inbox questions', extensionOnly: true },
+  { rowId: 'FOUNDER_INBOX_FOUNDATION_PANEL', module: 'founder_inbox_foundation', phase: 18.7, description: 'Unified Verification Lab panel snapshot for founder inbox foundation', extensionOnly: true },
+];
+
+export const NOTIFICATION_DELIVERY_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'NOTIFICATION_DELIVERY_TYPES', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery types and models', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_STORE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery in-memory store', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_REGISTRY', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery registry and orchestrator', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_MANAGER', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery manager without real delivery', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_STATE_MANAGER', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery state manager', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_LIFECYCLE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery lifecycle events', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_OWNERSHIP', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery ownership tracking', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_CONTEXT', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery context aggregation', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_ROUTING', module: 'notification_delivery_foundation', phase: 18.8, description: 'Delivery routing metadata', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_TARGETING', module: 'notification_delivery_foundation', phase: 18.8, description: 'Delivery targeting metadata', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_CHANNEL_ELIGIBILITY', module: 'notification_delivery_foundation', phase: 18.8, description: 'Channel eligibility metadata', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_PRIORITY', module: 'notification_delivery_foundation', phase: 18.8, description: 'Delivery priority metadata', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_INTENT', module: 'notification_delivery_foundation', phase: 18.8, description: 'Delivery intent metadata', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_POLICY', module: 'notification_delivery_foundation', phase: 18.8, description: 'Delivery policy metadata', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_BLOCKING', module: 'notification_delivery_foundation', phase: 18.8, description: 'Delivery blocking metadata', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_DEFERRAL', module: 'notification_delivery_foundation', phase: 18.8, description: 'Delivery deferral metadata', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_VISIBILITY', module: 'notification_delivery_foundation', phase: 18.8, description: 'Delivery visibility metadata', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_NOTIFICATION_BRIDGE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Founder Notification Runtime bridge', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_INBOX_BRIDGE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Founder Inbox bridge', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_CROSS_DEVICE_BRIDGE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Cross Device Runtime bridge', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_CLOUD_BRIDGE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Cloud Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_COMMAND_BRIDGE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Mobile Command Runtime bridge', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_CHAT_BRIDGE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Mobile Chat Runtime bridge', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_PREVIEW_BRIDGE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Mobile Preview Runtime bridge', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_APPROVAL_BRIDGE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Mobile Approval Runtime bridge', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_OPERATOR_FEED_BRIDGE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Operator Feed bridge', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_PROJECT_VAULT_BRIDGE', module: 'notification_delivery_foundation', phase: 18.8, description: 'Project Vault bridge', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_QUERY', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery query layer', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_HISTORY', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery history tracking', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_REPORT_BUILDER', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery report builder', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_VALIDATOR', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_DIAGNOSTICS', module: 'notification_delivery_foundation', phase: 18.8, description: 'Notification delivery diagnostics tracker', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_FOUNDATION_ROUTING', module: 'notification_delivery_foundation', phase: 18.8, description: 'Command Center routing for notification delivery questions', extensionOnly: true },
+  { rowId: 'NOTIFICATION_DELIVERY_FOUNDATION_PANEL', module: 'notification_delivery_foundation', phase: 18.8, description: 'Unified Verification Lab panel snapshot for notification delivery foundation', extensionOnly: true },
+];
+
+export const MOBILE_PUSH_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'MOBILE_PUSH_TYPES', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push types and models', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_STORE', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push in-memory store', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_REGISTRY', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push registry and orchestrator', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_MANAGER', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push manager without real push', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_STATE_MANAGER', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push state manager', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_LIFECYCLE', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push lifecycle events', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_OWNERSHIP', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push ownership tracking', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_CONTEXT', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push context aggregation', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_TOKEN', module: 'mobile_push_foundation', phase: 18.9, description: 'Token metadata — alias and fingerprint only', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_PLATFORM', module: 'mobile_push_foundation', phase: 18.9, description: 'Push platform metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_PAYLOAD', module: 'mobile_push_foundation', phase: 18.9, description: 'Push payload planning metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_DEVICE_TARGETING', module: 'mobile_push_foundation', phase: 18.9, description: 'Push device targeting metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_ROUTING', module: 'mobile_push_foundation', phase: 18.9, description: 'Push routing metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_ELIGIBILITY', module: 'mobile_push_foundation', phase: 18.9, description: 'Push eligibility metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_POLICY', module: 'mobile_push_foundation', phase: 18.9, description: 'Push policy metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_BLOCKING', module: 'mobile_push_foundation', phase: 18.9, description: 'Push blocking metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_DEFERRAL', module: 'mobile_push_foundation', phase: 18.9, description: 'Push deferral metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_VISIBILITY', module: 'mobile_push_foundation', phase: 18.9, description: 'Push visibility metadata', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_DELIVERY_BRIDGE', module: 'mobile_push_foundation', phase: 18.9, description: 'Notification Delivery Foundation bridge (primary)', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_NOTIFICATION_BRIDGE', module: 'mobile_push_foundation', phase: 18.9, description: 'Founder Notification Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_INBOX_BRIDGE', module: 'mobile_push_foundation', phase: 18.9, description: 'Founder Inbox bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_CROSS_DEVICE_BRIDGE', module: 'mobile_push_foundation', phase: 18.9, description: 'Cross Device Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_CLOUD_BRIDGE', module: 'mobile_push_foundation', phase: 18.9, description: 'Cloud Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_COMMAND_BRIDGE', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile Command Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_CHAT_BRIDGE', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile Chat Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_PREVIEW_BRIDGE', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile Preview Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_APPROVAL_BRIDGE', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile Approval Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_OPERATOR_FEED_BRIDGE', module: 'mobile_push_foundation', phase: 18.9, description: 'Operator Feed bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_PROJECT_VAULT_BRIDGE', module: 'mobile_push_foundation', phase: 18.9, description: 'Project Vault bridge', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_QUERY', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push query layer', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_HISTORY', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push history tracking', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_REPORT_BUILDER', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push report builder', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_VALIDATOR', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push validation and raw token risk safeguards', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_DIAGNOSTICS', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push diagnostics tracker', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_READ_CACHE', module: 'mobile_push_foundation', phase: 18.9, description: 'Mobile push bounded read cache', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_FOUNDATION_ROUTING', module: 'mobile_push_foundation', phase: 18.9, description: 'Command Center routing for mobile push questions', extensionOnly: true },
+  { rowId: 'MOBILE_PUSH_FOUNDATION_PANEL', module: 'mobile_push_foundation', phase: 18.9, description: 'Unified Verification Lab panel snapshot for mobile push foundation', extensionOnly: true },
+];
+
 export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   ...WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
@@ -605,6 +776,11 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...MOBILE_CHAT_RUNTIME_FOUNDATION_UVL_ROWS,
   ...MOBILE_PREVIEW_RUNTIME_FOUNDATION_UVL_ROWS,
   ...MOBILE_APPROVAL_RUNTIME_FOUNDATION_UVL_ROWS,
+  ...CROSS_DEVICE_RUNTIME_FOUNDATION_UVL_ROWS,
+  ...FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION_UVL_ROWS,
+  ...FOUNDER_INBOX_FOUNDATION_UVL_ROWS,
+  ...NOTIFICATION_DELIVERY_FOUNDATION_UVL_ROWS,
+  ...MOBILE_PUSH_FOUNDATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -713,6 +889,26 @@ export function listMobilePreviewRuntimeFoundationUvlRows(): UvlRow[] {
 
 export function listMobileApprovalRuntimeFoundationUvlRows(): UvlRow[] {
   return [...MOBILE_APPROVAL_RUNTIME_FOUNDATION_UVL_ROWS];
+}
+
+export function listCrossDeviceRuntimeFoundationUvlRows(): UvlRow[] {
+  return [...CROSS_DEVICE_RUNTIME_FOUNDATION_UVL_ROWS];
+}
+
+export function listFounderNotificationRuntimeFoundationUvlRows(): UvlRow[] {
+  return [...FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION_UVL_ROWS];
+}
+
+export function listFounderInboxFoundationUvlRows(): UvlRow[] {
+  return [...FOUNDER_INBOX_FOUNDATION_UVL_ROWS];
+}
+
+export function listNotificationDeliveryFoundationUvlRows(): UvlRow[] {
+  return [...NOTIFICATION_DELIVERY_FOUNDATION_UVL_ROWS];
+}
+
+export function listMobilePushFoundationUvlRows(): UvlRow[] {
+  return [...MOBILE_PUSH_FOUNDATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

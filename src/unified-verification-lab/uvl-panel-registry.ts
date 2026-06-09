@@ -25,8 +25,18 @@ import { getMobileCommandContext } from '../mobile-command-runtime/index.js';
 import { getMobileChatContext } from '../mobile-chat-runtime/index.js';
 import { getMobilePreviewContext } from '../mobile-preview-runtime/index.js';
 import { getMobileApprovalContext } from '../mobile-approval-runtime/index.js';
+import { getCrossDeviceContext } from '../cross-device-runtime/index.js';
+import { getFounderNotificationContext } from '../founder-notification-runtime/index.js';
+import { getFounderInboxContext } from '../founder-inbox/index.js';
+import { getNotificationDeliveryContext } from '../notification-delivery/index.js';
+import { getMobilePushContext } from '../mobile-push/index.js';
+import type { PrepareFounderInboxFoundationResult } from '../founder-inbox/founder-inbox-types.js';
+import type { PrepareNotificationDeliveryFoundationResult } from '../notification-delivery/notification-delivery-types.js';
+import type { PrepareMobilePushFoundationResult } from '../mobile-push/mobile-push-types.js';
 import type { PrepareMobilePreviewRuntimeFoundationResult } from '../mobile-preview-runtime/mobile-preview-types.js';
 import type { PrepareMobileApprovalRuntimeFoundationResult } from '../mobile-approval-runtime/mobile-approval-types.js';
+import type { PrepareCrossDeviceRuntimeFoundationResult } from '../cross-device-runtime/cross-device-types.js';
+import type { PrepareFounderNotificationRuntimeFoundationResult } from '../founder-notification-runtime/founder-notification-types.js';
 import type { PrepareMobileCommandRuntimeFoundationResult } from '../mobile-command-runtime/mobile-command-types.js';
 import type { PrepareMobileChatRuntimeFoundationResult } from '../mobile-chat-runtime/mobile-chat-types.js';
 import type { PrepareCloudMonitoringFoundationResult } from '../cloud-monitoring/cloud-monitoring-types.js';
@@ -907,6 +917,390 @@ export function buildMobileApprovalRuntimeFoundationPanelSnapshot(
     historyEntries: ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_HISTORY_REPORT')?.findings.slice(-6) ?? [],
     reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
     mobileApprovalCount: ctx.diagnostics.registeredMobileApprovalCount,
+    temporary: true,
+  };
+}
+
+export interface CrossDeviceRuntimeFoundationPanelSnapshot {
+  panelId: string;
+  panelTitle: string;
+  navigationPath: string;
+  crossDevices: string[];
+  sessions: string[];
+  deviceRegistrationFindings: string[];
+  deviceLinkFindings: string[];
+  deviceHandoffFindings: string[];
+  visibilityFindings: string[];
+  commandLinks: string[];
+  chatLinks: string[];
+  previewLinks: string[];
+  approvalLinks: string[];
+  cloudLinks: string[];
+  workspaceLinks: string[];
+  buildLinks: string[];
+  operatorFeedLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  crossDeviceCount: number;
+  temporary: true;
+}
+
+export function buildCrossDeviceRuntimeFoundationPanelSnapshot(
+  query = 'Show cross device inventory',
+  existingContext?: PrepareCrossDeviceRuntimeFoundationResult,
+): CrossDeviceRuntimeFoundationPanelSnapshot {
+  const ctx = existingContext ?? getCrossDeviceContext(query);
+
+  return {
+    panelId: 'CROSS_DEVICE_RUNTIME_FOUNDATION',
+    panelTitle: 'Cross Device Runtime Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    crossDevices:
+      ctx.reports.find((r) => r.reportType === 'CROSS_DEVICE_INVENTORY_REPORT')?.findings.slice(0, 9) ?? [],
+    sessions: ctx.trackedSession ? [`${ctx.trackedSession.sessionId} — ${ctx.trackedSession.sessionState}`] : [],
+    deviceRegistrationFindings:
+      ctx.reports.find((r) => r.reportType === 'DEVICE_REGISTRATION_REPORT')?.findings.slice(0, 6) ?? [],
+    deviceLinkFindings:
+      ctx.reports.find((r) => r.reportType === 'DEVICE_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    deviceHandoffFindings:
+      ctx.reports.find((r) => r.reportType === 'DEVICE_HANDOFF_REPORT')?.findings.slice(0, 6) ?? [],
+    visibilityFindings:
+      ctx.reports.find((r) => r.reportType === 'DEVICE_VISIBILITY_REPORT')?.findings.slice(0, 6) ?? [],
+    commandLinks:
+      ctx.reports.find((r) => r.reportType === 'CROSS_DEVICE_COMMAND_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    chatLinks: ctx.reports.find((r) => r.reportType === 'CROSS_DEVICE_CHAT_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    previewLinks:
+      ctx.reports.find((r) => r.reportType === 'CROSS_DEVICE_PREVIEW_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    approvalLinks:
+      ctx.reports.find((r) => r.reportType === 'CROSS_DEVICE_APPROVAL_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    cloudLinks: ctx.reports.find((r) => r.reportType === 'CROSS_DEVICE_CLOUD_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    workspaceLinks:
+      ctx.reports.find((r) => r.reportType === 'CROSS_DEVICE_WORKSPACE_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    buildLinks: ctx.reports.find((r) => r.reportType === 'CROSS_DEVICE_BUILD_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    operatorFeedLinks:
+      ctx.reports.find((r) => r.reportType === 'CROSS_DEVICE_OPERATOR_FEED_REPORT')?.findings.slice(0, 6) ?? [],
+    historyEntries: ctx.reports.find((r) => r.reportType === 'CROSS_DEVICE_HISTORY_REPORT')?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    crossDeviceCount: ctx.diagnostics.registeredCrossDeviceCount,
+    temporary: true,
+  };
+}
+
+export interface FounderNotificationRuntimeFoundationPanelSnapshot {
+  panelId: 'FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION';
+  panelTitle: string;
+  navigationPath: string;
+  notifications: string[];
+  routingFindings: string[];
+  visibilityFindings: string[];
+  priorityFindings: string[];
+  channelFindings: string[];
+  mobileLinks: string[];
+  crossDeviceLinks: string[];
+  cloudLinks: string[];
+  commandLinks: string[];
+  chatLinks: string[];
+  previewLinks: string[];
+  approvalLinks: string[];
+  operatorFeedLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  notificationCount: number;
+  temporary: true;
+}
+
+export function buildFounderNotificationRuntimeFoundationPanelSnapshot(
+  query = 'Show founder notification inventory',
+  existingContext?: PrepareFounderNotificationRuntimeFoundationResult,
+): FounderNotificationRuntimeFoundationPanelSnapshot {
+  const ctx = existingContext ?? getFounderNotificationContext(query);
+
+  return {
+    panelId: 'FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION',
+    panelTitle: 'Founder Notification Runtime Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    notifications:
+      ctx.reports.find((r) => r.reportType === 'NOTIFICATION_INVENTORY_REPORT')?.findings.slice(0, 13) ?? [],
+    routingFindings:
+      ctx.reports.find((r) => r.reportType === 'NOTIFICATION_ROUTING_REPORT')?.findings.slice(0, 6) ?? [],
+    visibilityFindings:
+      ctx.reports.find((r) => r.reportType === 'NOTIFICATION_VISIBILITY_REPORT')?.findings.slice(0, 6) ?? [],
+    priorityFindings:
+      ctx.reports.find((r) => r.reportType === 'NOTIFICATION_PRIORITY_REPORT')?.findings.slice(0, 6) ?? [],
+    channelFindings:
+      ctx.reports.find((r) => r.reportType === 'NOTIFICATION_CHANNEL_REPORT')?.findings.slice(0, 6) ?? [],
+    mobileLinks:
+      ctx.reports.find((r) => r.reportType === 'NOTIFICATION_MOBILE_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    crossDeviceLinks:
+      ctx.reports.find((r) => r.reportType === 'NOTIFICATION_CROSS_DEVICE_REPORT')?.findings.slice(0, 6) ?? [],
+    cloudLinks: ctx.reports.find((r) => r.reportType === 'NOTIFICATION_CLOUD_REPORT')?.findings.slice(0, 6) ?? [],
+    commandLinks:
+      ctx.reports.find((r) => r.reportType === 'NOTIFICATION_COMMAND_REPORT')?.findings.slice(0, 6) ?? [],
+    chatLinks: ctx.reports.find((r) => r.reportType === 'NOTIFICATION_CHAT_REPORT')?.findings.slice(0, 6) ?? [],
+    previewLinks:
+      ctx.reports.find((r) => r.reportType === 'NOTIFICATION_PREVIEW_REPORT')?.findings.slice(0, 6) ?? [],
+    approvalLinks:
+      ctx.reports.find((r) => r.reportType === 'NOTIFICATION_APPROVAL_REPORT')?.findings.slice(0, 6) ?? [],
+    operatorFeedLinks:
+      ctx.reports.find((r) => r.reportType === 'NOTIFICATION_OPERATOR_FEED_REPORT')?.findings.slice(0, 6) ?? [],
+    historyEntries: ctx.reports.find((r) => r.reportType === 'NOTIFICATION_HISTORY_REPORT')?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    notificationCount: ctx.diagnostics.registeredNotificationCount,
+    temporary: true,
+  };
+}
+
+export interface FounderInboxFoundationPanelSnapshot {
+  panelId: 'FOUNDER_INBOX_FOUNDATION';
+  panelTitle: string;
+  navigationPath: string;
+  inboxEntries: string[];
+  visibilityFindings: string[];
+  ownershipFindings: string[];
+  priorityFindings: string[];
+  filteringFindings: string[];
+  searchFindings: string[];
+  groupingFindings: string[];
+  acknowledgementFindings: string[];
+  archiveFindings: string[];
+  notificationLinks: string[];
+  crossDeviceLinks: string[];
+  cloudLinks: string[];
+  commandLinks: string[];
+  chatLinks: string[];
+  previewLinks: string[];
+  approvalLinks: string[];
+  operatorFeedLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  inboxEntryCount: number;
+  temporary: true;
+}
+
+export function buildFounderInboxFoundationPanelSnapshot(
+  query = 'Show founder inbox inventory',
+  existingContext?: PrepareFounderInboxFoundationResult,
+): FounderInboxFoundationPanelSnapshot {
+  const ctx = existingContext ?? getFounderInboxContext(query);
+
+  return {
+    panelId: 'FOUNDER_INBOX_FOUNDATION',
+    panelTitle: 'Founder Inbox Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    inboxEntries:
+      ctx.reports.find((r) => r.reportType === 'INBOX_INVENTORY_REPORT')?.findings.slice(0, 12) ?? [],
+    visibilityFindings:
+      ctx.reports.find((r) => r.reportType === 'INBOX_VISIBILITY_REPORT')?.findings.slice(0, 6) ?? [],
+    ownershipFindings:
+      ctx.reports.find((r) => r.reportType === 'INBOX_OWNERSHIP_REPORT')?.findings.slice(0, 6) ?? [],
+    priorityFindings:
+      ctx.reports.find((r) => r.reportType === 'INBOX_STATE_REPORT')?.findings.slice(0, 6) ?? [],
+    filteringFindings:
+      ctx.reports.find((r) => r.reportType === 'INBOX_FILTERING_REPORT')?.findings.slice(0, 6) ?? [],
+    searchFindings:
+      ctx.reports.find((r) => r.reportType === 'INBOX_SEARCH_REPORT')?.findings.slice(0, 6) ?? [],
+    groupingFindings:
+      ctx.reports.find((r) => r.reportType === 'INBOX_GROUPING_REPORT')?.findings.slice(0, 6) ?? [],
+    acknowledgementFindings:
+      ctx.reports.find((r) => r.reportType === 'INBOX_ACKNOWLEDGEMENT_REPORT')?.findings.slice(0, 6) ?? [],
+    archiveFindings:
+      ctx.reports.find((r) => r.reportType === 'INBOX_ARCHIVE_REPORT')?.findings.slice(0, 6) ?? [],
+    notificationLinks:
+      ctx.reports.find((r) => r.reportType === 'INBOX_NOTIFICATION_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    crossDeviceLinks:
+      ctx.reports.find((r) => r.reportType === 'INBOX_CROSS_DEVICE_REPORT')?.findings.slice(0, 6) ?? [],
+    cloudLinks: ctx.reports.find((r) => r.reportType === 'INBOX_CLOUD_REPORT')?.findings.slice(0, 6) ?? [],
+    commandLinks:
+      ctx.reports.find((r) => r.reportType === 'INBOX_COMMAND_REPORT')?.findings.slice(0, 6) ?? [],
+    chatLinks: ctx.reports.find((r) => r.reportType === 'INBOX_CHAT_REPORT')?.findings.slice(0, 6) ?? [],
+    previewLinks:
+      ctx.reports.find((r) => r.reportType === 'INBOX_PREVIEW_REPORT')?.findings.slice(0, 6) ?? [],
+    approvalLinks:
+      ctx.reports.find((r) => r.reportType === 'INBOX_APPROVAL_REPORT')?.findings.slice(0, 6) ?? [],
+    operatorFeedLinks:
+      ctx.reports.find((r) => r.reportType === 'INBOX_OPERATOR_FEED_REPORT')?.findings.slice(0, 6) ?? [],
+    historyEntries: ctx.reports.find((r) => r.reportType === 'INBOX_HISTORY_REPORT')?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    inboxEntryCount: ctx.diagnostics.registeredInboxEntryCount,
+    temporary: true,
+  };
+}
+
+export interface NotificationDeliveryFoundationPanelSnapshot {
+  panelId: 'NOTIFICATION_DELIVERY_FOUNDATION';
+  panelTitle: string;
+  navigationPath: string;
+  deliveryRecords: string[];
+  intentFindings: string[];
+  routingFindings: string[];
+  targetingFindings: string[];
+  eligibilityFindings: string[];
+  policyFindings: string[];
+  blockingFindings: string[];
+  deferralFindings: string[];
+  visibilityFindings: string[];
+  ownershipFindings: string[];
+  notificationLinks: string[];
+  inboxLinks: string[];
+  crossDeviceLinks: string[];
+  cloudLinks: string[];
+  commandLinks: string[];
+  chatLinks: string[];
+  previewLinks: string[];
+  approvalLinks: string[];
+  operatorFeedLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  deliveryRecordCount: number;
+  temporary: true;
+}
+
+export function buildNotificationDeliveryFoundationPanelSnapshot(
+  query = 'Show notification delivery inventory',
+  existingContext?: PrepareNotificationDeliveryFoundationResult,
+): NotificationDeliveryFoundationPanelSnapshot {
+  const ctx = existingContext ?? getNotificationDeliveryContext(query);
+
+  return {
+    panelId: 'NOTIFICATION_DELIVERY_FOUNDATION',
+    panelTitle: 'Notification Delivery Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    deliveryRecords:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_INVENTORY_REPORT')?.findings.slice(0, 14) ?? [],
+    intentFindings:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_INTENT_REPORT')?.findings.slice(0, 6) ?? [],
+    routingFindings:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_ROUTING_REPORT')?.findings.slice(0, 6) ?? [],
+    targetingFindings:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_TARGETING_REPORT')?.findings.slice(0, 6) ?? [],
+    eligibilityFindings:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_CHANNEL_ELIGIBILITY_REPORT')?.findings.slice(0, 6) ?? [],
+    policyFindings:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_POLICY_REPORT')?.findings.slice(0, 6) ?? [],
+    blockingFindings:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_BLOCKING_REPORT')?.findings.slice(0, 6) ?? [],
+    deferralFindings:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_DEFERRAL_REPORT')?.findings.slice(0, 6) ?? [],
+    visibilityFindings:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_VISIBILITY_REPORT')?.findings.slice(0, 6) ?? [],
+    ownershipFindings:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_OWNERSHIP_REPORT')?.findings.slice(0, 6) ?? [],
+    notificationLinks:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_NOTIFICATION_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    inboxLinks:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_INBOX_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    crossDeviceLinks:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_CROSS_DEVICE_REPORT')?.findings.slice(0, 6) ?? [],
+    cloudLinks:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_CLOUD_REPORT')?.findings.slice(0, 6) ?? [],
+    commandLinks:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_COMMAND_REPORT')?.findings.slice(0, 6) ?? [],
+    chatLinks:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_CHAT_REPORT')?.findings.slice(0, 6) ?? [],
+    previewLinks:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_PREVIEW_REPORT')?.findings.slice(0, 6) ?? [],
+    approvalLinks:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_APPROVAL_REPORT')?.findings.slice(0, 6) ?? [],
+    operatorFeedLinks:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_OPERATOR_FEED_REPORT')?.findings.slice(0, 6) ?? [],
+    historyEntries:
+      ctx.reports.find((r) => r.reportType === 'DELIVERY_HISTORY_REPORT')?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    deliveryRecordCount: ctx.diagnostics.registeredDeliveryCount,
+    temporary: true,
+  };
+}
+
+export interface MobilePushFoundationPanelSnapshot {
+  panelId: 'MOBILE_PUSH_FOUNDATION';
+  panelTitle: string;
+  navigationPath: string;
+  pushRecords: string[];
+  tokenFindings: string[];
+  platformFindings: string[];
+  payloadFindings: string[];
+  targetingFindings: string[];
+  eligibilityFindings: string[];
+  routingFindings: string[];
+  policyFindings: string[];
+  blockingFindings: string[];
+  deferralFindings: string[];
+  visibilityFindings: string[];
+  ownershipFindings: string[];
+  deliveryLinks: string[];
+  notificationLinks: string[];
+  inboxLinks: string[];
+  crossDeviceLinks: string[];
+  cloudLinks: string[];
+  commandLinks: string[];
+  chatLinks: string[];
+  previewLinks: string[];
+  approvalLinks: string[];
+  operatorFeedLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  pushRecordCount: number;
+  temporary: true;
+}
+
+export function buildMobilePushFoundationPanelSnapshot(
+  query = 'Show mobile push inventory',
+  existingContext?: PrepareMobilePushFoundationResult,
+): MobilePushFoundationPanelSnapshot {
+  const ctx = existingContext ?? getMobilePushContext(query);
+
+  return {
+    panelId: 'MOBILE_PUSH_FOUNDATION',
+    panelTitle: 'Mobile Push Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    pushRecords:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_INVENTORY_REPORT')?.findings.slice(0, 14) ?? [],
+    tokenFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_TOKEN_METADATA_REPORT')?.findings.slice(0, 6) ?? [],
+    platformFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_PLATFORM_REPORT')?.findings.slice(0, 6) ?? [],
+    payloadFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_PAYLOAD_REPORT')?.findings.slice(0, 6) ?? [],
+    targetingFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_TARGETING_REPORT')?.findings.slice(0, 6) ?? [],
+    eligibilityFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_ELIGIBILITY_REPORT')?.findings.slice(0, 6) ?? [],
+    routingFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_ROUTING_REPORT')?.findings.slice(0, 6) ?? [],
+    policyFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_POLICY_REPORT')?.findings.slice(0, 6) ?? [],
+    blockingFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_BLOCKING_REPORT')?.findings.slice(0, 6) ?? [],
+    deferralFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_DEFERRAL_REPORT')?.findings.slice(0, 6) ?? [],
+    visibilityFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_VISIBILITY_REPORT')?.findings.slice(0, 6) ?? [],
+    ownershipFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_OWNERSHIP_REPORT')?.findings.slice(0, 6) ?? [],
+    deliveryLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_DELIVERY_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    notificationLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_NOTIFICATION_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    inboxLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_INBOX_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    crossDeviceLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_CROSS_DEVICE_REPORT')?.findings.slice(0, 6) ?? [],
+    cloudLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_CLOUD_REPORT')?.findings.slice(0, 6) ?? [],
+    commandLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_COMMAND_REPORT')?.findings.slice(0, 6) ?? [],
+    chatLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_CHAT_REPORT')?.findings.slice(0, 6) ?? [],
+    previewLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_PREVIEW_REPORT')?.findings.slice(0, 6) ?? [],
+    approvalLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_APPROVAL_REPORT')?.findings.slice(0, 6) ?? [],
+    operatorFeedLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_OPERATOR_FEED_REPORT')?.findings.slice(0, 6) ?? [],
+    historyEntries:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_PUSH_HISTORY_REPORT')?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    pushRecordCount: ctx.diagnostics.registeredPushCount,
     temporary: true,
   };
 }

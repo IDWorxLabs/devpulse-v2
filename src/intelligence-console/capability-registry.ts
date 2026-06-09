@@ -200,6 +200,41 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation',
     extensionOnly: true,
   },
+  {
+    capabilityId: 'CROSS_DEVICE_RUNTIME_FOUNDATION',
+    label: 'Cross Device Runtime Foundation',
+    phase: 18.5,
+    ownerModule: 'devpulse_v2_cross_device_runtime_foundation',
+    extensionOnly: true,
+  },
+  {
+    capabilityId: 'FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION',
+    label: 'Founder Notification Runtime Foundation',
+    phase: 18.6,
+    ownerModule: 'devpulse_v2_founder_notification_runtime_foundation',
+    extensionOnly: true,
+  },
+  {
+    capabilityId: 'FOUNDER_INBOX_FOUNDATION',
+    label: 'Founder Inbox Foundation',
+    phase: 18.7,
+    ownerModule: 'devpulse_v2_founder_inbox_foundation',
+    extensionOnly: true,
+  },
+  {
+    capabilityId: 'NOTIFICATION_DELIVERY_FOUNDATION',
+    label: 'Notification Delivery Foundation',
+    phase: 18.8,
+    ownerModule: 'devpulse_v2_notification_delivery_foundation',
+    extensionOnly: true,
+  },
+  {
+    capabilityId: 'MOBILE_PUSH_FOUNDATION',
+    label: 'Mobile Push Foundation',
+    phase: 18.9,
+    ownerModule: 'devpulse_v2_mobile_push_foundation',
+    extensionOnly: true,
+  },
 ] as const;
 
 export function isIntelligenceConsoleCapability(capabilityId: string): boolean {

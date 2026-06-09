@@ -36,6 +36,11 @@ import { isMobileCommandRuntimeFoundationQuestion } from '../mobile-command-runt
 import { isMobileChatRuntimeFoundationQuestion } from '../mobile-chat-runtime/mobile-chat-types.js';
 import { isMobilePreviewRuntimeFoundationQuestion } from '../mobile-preview-runtime/mobile-preview-types.js';
 import { isMobileApprovalRuntimeFoundationQuestion } from '../mobile-approval-runtime/mobile-approval-types.js';
+import { isCrossDeviceRuntimeFoundationQuestion } from '../cross-device-runtime/cross-device-types.js';
+import { isFounderNotificationRuntimeFoundationQuestion } from '../founder-notification-runtime/founder-notification-types.js';
+import { isFounderInboxFoundationQuestion } from '../founder-inbox/founder-inbox-types.js';
+import { isMobilePushFoundationQuestion } from '../mobile-push/mobile-push-types.js';
+import { isNotificationDeliveryFoundationQuestion } from '../notification-delivery/notification-delivery-types.js';
 import type { ProgressRecord } from './progress-intelligence-types.js';
 
 let progressCounter = 0;
@@ -342,6 +347,46 @@ export function buildProgressRecords(query: string): ProgressRecord[] {
       ...records[0],
       mobileApprovalRuntimeFoundationState: 'READY',
       mobileApprovalRuntimeFoundationNote: 'Mobile Approval Runtime Foundation Ready — mobile approval session, request, decision, governance, and context authority; no execution, push notifications, or real approvals',
+    };
+  }
+
+  if (isCrossDeviceRuntimeFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      crossDeviceRuntimeFoundationState: 'READY',
+      crossDeviceRuntimeFoundationNote: 'Cross Device Runtime Foundation Ready — cross device session, device link, handoff, and visibility authority; no real sync, connections, or device pairing',
+    };
+  }
+
+  if (isFounderNotificationRuntimeFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      founderNotificationRuntimeFoundationState: 'READY',
+      founderNotificationRuntimeFoundationNote: 'Founder Notification Runtime Foundation Ready — founder notification routing, visibility, priority, and channel authority; no real delivery, push, email, or SMS',
+    };
+  }
+
+  if (isFounderInboxFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      founderInboxFoundationState: 'READY',
+      founderInboxFoundationNote: 'Founder Inbox Foundation Ready — founder inbox visualization and organization layer referencing Founder Notification Runtime; no notification authority',
+    };
+  }
+
+  if (isMobilePushFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      mobilePushFoundationState: 'READY',
+      mobilePushFoundationNote: 'Mobile Push Foundation Ready — push planning, token metadata, payload planning, and platform targeting authority; no real push, FCM, APNS, or raw token storage',
+    };
+  }
+
+  if (isNotificationDeliveryFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      notificationDeliveryFoundationState: 'READY',
+      notificationDeliveryFoundationNote: 'Notification Delivery Foundation Ready — delivery planning, routing, targeting, and channel eligibility authority; no real email, SMS, push, FCM, or APNS',
     };
   }
 

@@ -186,7 +186,12 @@ export type OwnershipDomain =
   | 'mobile_command_runtime_foundation'
   | 'mobile_chat_runtime_foundation'
   | 'mobile_preview_runtime_foundation'
-  | 'mobile_approval_runtime_foundation';
+  | 'mobile_approval_runtime_foundation'
+  | 'cross_device_runtime_foundation'
+  | 'founder_notification_runtime_foundation'
+  | 'founder_inbox_foundation'
+  | 'notification_delivery_foundation'
+  | 'mobile_push_foundation';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

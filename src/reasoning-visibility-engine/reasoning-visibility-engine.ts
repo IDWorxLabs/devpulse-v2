@@ -520,6 +520,61 @@ export function buildReasoningVisibilityRecord(query: string): ReasoningVisibili
       'APPROVED / REJECTED / PENDING / FOUNDER_ONLY — metadata only, no execution',
       'GOVERNANCE_ALIGNED — authority only, no real approvals',
     ],
+    crossDeviceBasis: `Cross device runtime foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 18.5 cross device session, device link, handoff, and visibility authority; no real sync, connections, or device pairing.`,
+    crossDeviceChain: [
+      'mxdev-0001 → mxdevsess-0001 → device/link/handoff metadata',
+      'CREATED → DEVICE_REGISTERED → DEVICE_LINKED → HANDOFF_COMPLETED → COMPLETED',
+      'cross device → mobile approval/preview/chat/command/cloud/workspace/build bridges',
+    ],
+    crossDeviceState: [
+      'DEVICE_REGISTERED → DEVICE_LINKED → HANDOFF_AVAILABLE',
+      'HANDOFF_REQUESTED → HANDOFF_READY → HANDOFF_COMPLETED',
+      'VISIBILITY_UPDATED — authority only, no real sync',
+    ],
+    founderNotificationBasis: `Founder notification runtime foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 18.6 founder notification routing, visibility, priority, and channel authority; no real delivery, push, email, or SMS.`,
+    founderNotificationChain: [
+      'fnotif-0001 → routing/visibility/priority metadata',
+      'CREATED → ROUTED → VISIBLE → VIEWED → ACKNOWLEDGED',
+      'founder notification → cross device/mobile/command/chat/preview/approval/cloud bridges',
+    ],
+    founderNotificationState: [
+      'ROUTED → VISIBLE → VIEWED',
+      'ACKNOWLEDGED / DISMISSED / ARCHIVED — metadata only, no delivery',
+      'CHANNEL_BLOCKED — authority only, no push, email, or SMS',
+    ],
+    founderInboxBasis: `Founder inbox foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 18.7 founder inbox visualization and organization layer referencing Founder Notification Runtime; no notification authority.`,
+    founderInboxChain: [
+      'finbox-0001 → notification reference metadata',
+      'CREATED → VISIBLE → UNREAD → READ → ACKNOWLEDGED',
+      'founder inbox → notification/cross device/command/chat/preview/approval/cloud bridges',
+    ],
+    founderInboxState: [
+      'VISIBLE → UNREAD → READ',
+      'ACKNOWLEDGED / ARCHIVED / RESTORED — visualization only, no notification authority',
+      'FILTER_SEARCH_GROUP — organization layer metadata',
+    ],
+    mobilePushBasis: `Mobile push foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 18.9 push planning, token metadata, payload planning, and platform targeting authority; no real push, FCM, APNS, or raw token storage.`,
+    mobilePushChain: [
+      'mpush-0001 → delivery and notification reference metadata',
+      'CREATED → PLANNED → ELIGIBILITY_CHECKED → TOKEN_METADATA_CHECKED → PAYLOAD_PLANNED → ROUTED → TARGET_SELECTED → READY → COMPLETED',
+      'mobile push → delivery/notification/inbox/cross device/command/chat/preview/approval/cloud bridges',
+    ],
+    mobilePushState: [
+      'PLANNED → TOKEN_METADATA_CHECKED → PAYLOAD_PLANNED → ROUTED',
+      'READY / COMPLETED — planning metadata only, no real push',
+      'FCM_APNS_RAW_TOKEN_BLOCKED — push policy enforced',
+    ],
+    notificationDeliveryBasis: `Notification delivery foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 18.8 delivery planning, routing, targeting, and channel eligibility authority; no real email, SMS, push, FCM, or APNS.`,
+    notificationDeliveryChain: [
+      'ndeliv-0001 → notification and inbox reference metadata',
+      'CREATED → PLANNED → ELIGIBILITY_CHECKED → ROUTED → TARGET_SELECTED → READY → COMPLETED',
+      'notification delivery → notification/inbox/cross device/command/chat/preview/approval/cloud bridges',
+    ],
+    notificationDeliveryState: [
+      'PLANNED → ROUTED → TARGET_SELECTED',
+      'READY / COMPLETED — planning metadata only, no real delivery',
+      'EMAIL_SMS_PUSH_BLOCKED — channel eligibility policy enforced',
+    ],
     visibilityOnly: true,
   };
 }

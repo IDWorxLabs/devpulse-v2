@@ -45,6 +45,11 @@ import { buildMobileCommandFailureContext } from '../mobile-command-runtime/mobi
 import { buildMobileChatFailureContext } from '../mobile-chat-runtime/mobile-chat-report-builder.js';
 import { buildMobilePreviewFailureContext } from '../mobile-preview-runtime/mobile-preview-report-builder.js';
 import { buildMobileApprovalFailureContext } from '../mobile-approval-runtime/mobile-approval-report-builder.js';
+import { buildCrossDeviceFailureContext } from '../cross-device-runtime/cross-device-report-builder.js';
+import { buildNotificationFailureContext } from '../founder-notification-runtime/founder-notification-report-builder.js';
+import { buildInboxFailureContext } from '../founder-inbox/founder-inbox-report-builder.js';
+import { buildDeliveryFailureContext } from '../notification-delivery/notification-delivery-report-builder.js';
+import { buildMobilePushFailureContext } from '../mobile-push/mobile-push-report-builder.js';
 import type { FailureRecord } from './failure-visibility-types.js';
 
 let failureCounter = 0;
@@ -561,6 +566,71 @@ export function buildFailureRecords(query: string): FailureRecord[] {
         sourceSystem: maf.sourceSystem,
         affectedSystems: ['mobile_approval_runtime_foundation', 'failure_visibility_engine'],
         blockedCapabilities: ['MOBILE_APPROVAL_RUNTIME_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const cdf of buildCrossDeviceFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: cdf.title,
+        description: cdf.description,
+        sourceSystem: cdf.sourceSystem,
+        affectedSystems: ['cross_device_runtime_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['CROSS_DEVICE_RUNTIME_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const fnf of buildNotificationFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: fnf.title,
+        description: fnf.description,
+        sourceSystem: fnf.sourceSystem,
+        affectedSystems: ['founder_notification_runtime_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const fif of buildInboxFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: fif.title,
+        description: fif.description,
+        sourceSystem: fif.sourceSystem,
+        affectedSystems: ['founder_inbox_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['FOUNDER_INBOX_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const ndf of buildDeliveryFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: ndf.title,
+        description: ndf.description,
+        sourceSystem: ndf.sourceSystem,
+        affectedSystems: ['notification_delivery_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['NOTIFICATION_DELIVERY_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const mpf of buildMobilePushFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: mpf.title,
+        description: mpf.description,
+        sourceSystem: mpf.sourceSystem,
+        affectedSystems: ['mobile_push_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['MOBILE_PUSH_FOUNDATION'],
         dependencyImpacts: depImpacts,
       }),
     );

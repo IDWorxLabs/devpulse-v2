@@ -126,6 +126,21 @@ function executionFieldsForAction(
   mobileApprovalRuntimeFoundationId: string;
   mobileApprovalCount: number;
   mobileApprovalState: string;
+  crossDeviceRuntimeFoundationId: string;
+  crossDeviceCount: number;
+  crossDeviceState: string;
+  founderNotificationRuntimeFoundationId: string;
+  founderNotificationCount: number;
+  founderNotificationState: string;
+  founderInboxFoundationId: string;
+  founderInboxCount: number;
+  founderInboxState: string;
+  notificationDeliveryFoundationId: string;
+  notificationDeliveryCount: number;
+  notificationDeliveryState: string;
+  mobilePushFoundationId: string;
+  mobilePushCount: number;
+  mobilePushState: string;
   applyAllowed: false;
   executionAllowed: false;
 } {
@@ -237,6 +252,21 @@ function executionFieldsForAction(
   const mobileApprovalRuntimeFoundationId = `mapprtfnd-${actionId.replace('act-', '')}`;
   const mobileApprovalCount = blocked ? 0 : 9;
   const mobileApprovalState = blocked ? 'BLOCKED' : 'READY';
+  const crossDeviceRuntimeFoundationId = `mxdevtfnd-${actionId.replace('act-', '')}`;
+  const crossDeviceCount = blocked ? 0 : 9;
+  const crossDeviceState = blocked ? 'BLOCKED' : 'READY';
+  const founderNotificationRuntimeFoundationId = `fnotiftfnd-${actionId.replace('act-', '')}`;
+  const founderNotificationCount = blocked ? 0 : 13;
+  const founderNotificationState = blocked ? 'BLOCKED' : 'READY';
+  const founderInboxFoundationId = `finboxtfnd-${actionId.replace('act-', '')}`;
+  const founderInboxCount = blocked ? 0 : 12;
+  const founderInboxState = blocked ? 'BLOCKED' : 'READY';
+  const notificationDeliveryFoundationId = `ndelivtfnd-${actionId.replace('act-', '')}`;
+  const notificationDeliveryCount = blocked ? 0 : 14;
+  const notificationDeliveryState = blocked ? 'BLOCKED' : 'READY';
+  const mobilePushFoundationId = `mpushtfnd-${actionId.replace('act-', '')}`;
+  const mobilePushCount = blocked ? 0 : 14;
+  const mobilePushState = blocked ? 'BLOCKED' : 'READY';
   return {
     executionReadiness: `${level} (${score}) — ${blockerCount} visible blockers; Phase 14.1 readiness-only, no execution.`,
     executionReady: !blocked && score >= 45 && blockerCount < 4,
@@ -342,6 +372,21 @@ function executionFieldsForAction(
     mobileApprovalRuntimeFoundationId,
     mobileApprovalCount,
     mobileApprovalState,
+    crossDeviceRuntimeFoundationId,
+    crossDeviceCount,
+    crossDeviceState,
+    founderNotificationRuntimeFoundationId,
+    founderNotificationCount,
+    founderNotificationState,
+    founderInboxFoundationId,
+    founderInboxCount,
+    founderInboxState,
+    notificationDeliveryFoundationId,
+    notificationDeliveryCount,
+    notificationDeliveryState,
+    mobilePushFoundationId,
+    mobilePushCount,
+    mobilePushState,
     applyAllowed: false,
     executionAllowed: false,
   };

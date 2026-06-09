@@ -57,6 +57,11 @@ import { isMobileCommandRuntimeFoundationQuestion } from '../../mobile-command-r
 import { isMobileChatRuntimeFoundationQuestion } from '../../mobile-chat-runtime/mobile-chat-types.js';
 import { isMobilePreviewRuntimeFoundationQuestion } from '../../mobile-preview-runtime/mobile-preview-types.js';
 import { isMobileApprovalRuntimeFoundationQuestion } from '../../mobile-approval-runtime/mobile-approval-types.js';
+import { isCrossDeviceRuntimeFoundationQuestion } from '../../cross-device-runtime/cross-device-types.js';
+import { isFounderNotificationRuntimeFoundationQuestion } from '../../founder-notification-runtime/founder-notification-types.js';
+import { isFounderInboxFoundationQuestion } from '../../founder-inbox/founder-inbox-types.js';
+import { isMobilePushFoundationQuestion } from '../../mobile-push/mobile-push-types.js';
+import { isNotificationDeliveryFoundationQuestion } from '../../notification-delivery/notification-delivery-types.js';
 
 const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> = {
   PROJECT_PROFILE: 'PROJECT_UNDERSTANDING',
@@ -116,6 +121,11 @@ const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> =
   MOBILE_CHAT_RUNTIME_FOUNDATION_FACTS: 'MOBILE_CHAT_RUNTIME_FOUNDATION',
   MOBILE_PREVIEW_RUNTIME_FOUNDATION_FACTS: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION',
   MOBILE_APPROVAL_RUNTIME_FOUNDATION_FACTS: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION',
+  CROSS_DEVICE_RUNTIME_FOUNDATION_FACTS: 'CROSS_DEVICE_RUNTIME_FOUNDATION',
+  FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION_FACTS: 'FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION',
+  FOUNDER_INBOX_FOUNDATION_FACTS: 'FOUNDER_INBOX_FOUNDATION',
+  NOTIFICATION_DELIVERY_FOUNDATION_FACTS: 'NOTIFICATION_DELIVERY_FOUNDATION',
+  MOBILE_PUSH_FOUNDATION_FACTS: 'MOBILE_PUSH_FOUNDATION',
 };
 
 export interface CapabilitySelectionResult {
@@ -265,6 +275,111 @@ export function selectCapabilities(
   }
 
   if (isMobileApprovalRuntimeFoundationQuestion(question)) {
+    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isMobilePushFoundationQuestion(question)) {
+    selected.add('MOBILE_PUSH_FOUNDATION');
+    selected.add('NOTIFICATION_DELIVERY_FOUNDATION');
+    selected.add('FOUNDER_INBOX_FOUNDATION');
+    selected.add('FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION');
+    selected.add('CROSS_DEVICE_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isNotificationDeliveryFoundationQuestion(question)) {
+    selected.add('NOTIFICATION_DELIVERY_FOUNDATION');
+    selected.add('FOUNDER_INBOX_FOUNDATION');
+    selected.add('FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION');
+    selected.add('CROSS_DEVICE_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isFounderInboxFoundationQuestion(question)) {
+    selected.add('FOUNDER_INBOX_FOUNDATION');
+    selected.add('FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION');
+    selected.add('CROSS_DEVICE_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isFounderNotificationRuntimeFoundationQuestion(question)) {
+    selected.add('FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION');
+    selected.add('CROSS_DEVICE_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isCrossDeviceRuntimeFoundationQuestion(question)) {
+    selected.add('CROSS_DEVICE_RUNTIME_FOUNDATION');
     selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
     selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
     selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
@@ -846,6 +961,71 @@ export function selectCapabilities(
       secondaryCapabilities: secondary,
       routingReason:
         'Mobile approval question — MOBILE_APPROVAL_RUNTIME_FOUNDATION is the mobile approval session, request, decision, governance, and context authority; no execution, push notifications, or real approvals.',
+    };
+  }
+
+  if (isMobilePushFoundationQuestion(question)) {
+    primary = 'MOBILE_PUSH_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Mobile push question — MOBILE_PUSH_FOUNDATION is the push planning, token metadata, payload planning, and platform targeting authority referencing Notification Delivery Foundation; no real push, FCM, APNS, or raw token storage.',
+    };
+  }
+
+  if (isNotificationDeliveryFoundationQuestion(question)) {
+    primary = 'NOTIFICATION_DELIVERY_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Notification delivery question — NOTIFICATION_DELIVERY_FOUNDATION is the delivery planning, routing, targeting, and channel eligibility authority referencing Founder Inbox and Founder Notification Runtime; no real email, SMS, push, FCM, or APNS.',
+    };
+  }
+
+  if (isFounderInboxFoundationQuestion(question)) {
+    primary = 'FOUNDER_INBOX_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Founder inbox question — FOUNDER_INBOX_FOUNDATION is the founder inbox visualization and organization layer referencing Founder Notification Runtime; no notification authority or delivery.',
+    };
+  }
+
+  if (isFounderNotificationRuntimeFoundationQuestion(question)) {
+    primary = 'FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Founder notification question — FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION is the founder notification routing, visibility, priority, and channel authority; no real delivery, push, email, or SMS.',
+    };
+  }
+
+  if (isCrossDeviceRuntimeFoundationQuestion(question)) {
+    primary = 'CROSS_DEVICE_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Cross device question — CROSS_DEVICE_RUNTIME_FOUNDATION is the cross device session, device link, handoff, and visibility authority; no real sync, connections, or device pairing.',
     };
   }
 

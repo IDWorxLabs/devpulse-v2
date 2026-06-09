@@ -97,6 +97,14 @@ import { processMobilePreviewRequest } from '../../mobile-preview-runtime/index.
 import { isMobilePreviewRuntimeFoundationQuestion } from '../../mobile-preview-runtime/mobile-preview-types.js';
 import { isMobileApprovalRuntimeFoundationQuestion } from '../../mobile-approval-runtime/mobile-approval-types.js';
 import { processMobileApprovalRequest } from '../../mobile-approval-runtime/index.js';
+import { isCrossDeviceRuntimeFoundationQuestion } from '../../cross-device-runtime/cross-device-types.js';
+import { processCrossDeviceRequest } from '../../cross-device-runtime/index.js';
+import { isFounderNotificationRuntimeFoundationQuestion } from '../../founder-notification-runtime/founder-notification-types.js';
+import { processFounderNotificationRequest } from '../../founder-notification-runtime/index.js';
+import { isFounderInboxFoundationQuestion } from '../../founder-inbox/founder-inbox-types.js';
+import { processFounderInboxRequest } from '../../founder-inbox/index.js';
+import { isNotificationDeliveryFoundationQuestion } from '../../notification-delivery/notification-delivery-types.js';
+import { processNotificationDeliveryRequest } from '../../notification-delivery/index.js';
 import { processVerificationReportingRequest } from '../../verification-reporting-engine/index.js';
 import { isVerificationReportingQuestion } from '../../verification-reporting-engine/verification-report-types.js';
 import { detectContextNeeds, needsUnavailableDevelopmentContext } from './context-need-detector.js';
@@ -271,6 +279,82 @@ export function executeGeneralQuestionRouting(
         limitationMessage: limitationMessage ?? undefined,
       }),
       usedCapabilities: ['MOBILE_APPROVAL_RUNTIME_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'NOTIFICATION_DELIVERY_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('NOTIFICATION_DELIVERY_FOUNDATION') &&
+      isNotificationDeliveryFoundationQuestion(deps.message))
+  ) {
+    const notificationDelivery = processNotificationDeliveryRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: notificationDelivery.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['NOTIFICATION_DELIVERY_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'FOUNDER_INBOX_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('FOUNDER_INBOX_FOUNDATION') &&
+      isFounderInboxFoundationQuestion(deps.message))
+  ) {
+    const founderInbox = processFounderInboxRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: founderInbox.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['FOUNDER_INBOX_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION') &&
+      isFounderNotificationRuntimeFoundationQuestion(deps.message))
+  ) {
+    const founderNotification = processFounderNotificationRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: founderNotification.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['FOUNDER_NOTIFICATION_RUNTIME_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'CROSS_DEVICE_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('CROSS_DEVICE_RUNTIME_FOUNDATION') &&
+      isCrossDeviceRuntimeFoundationQuestion(deps.message))
+  ) {
+    const crossDevice = processCrossDeviceRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: crossDevice.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['CROSS_DEVICE_RUNTIME_FOUNDATION', ...usedCapabilities],
       routingPlan: plan,
     };
   }

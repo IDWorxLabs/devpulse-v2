@@ -113,6 +113,16 @@ export interface ProgressRecord {
   mobilePreviewRuntimeFoundationNote?: string;
   mobileApprovalRuntimeFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
   mobileApprovalRuntimeFoundationNote?: string;
+  crossDeviceRuntimeFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  crossDeviceRuntimeFoundationNote?: string;
+  founderNotificationRuntimeFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  founderNotificationRuntimeFoundationNote?: string;
+  founderInboxFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  founderInboxFoundationNote?: string;
+  notificationDeliveryFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  notificationDeliveryFoundationNote?: string;
+  mobilePushFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  mobilePushFoundationNote?: string;
   visibilityOnly: true;
 }
 

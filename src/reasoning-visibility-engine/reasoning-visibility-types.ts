@@ -183,6 +183,21 @@ export interface ReasoningVisibilityRecord {
   mobileApprovalBasis: string;
   mobileApprovalChain: string[];
   mobileApprovalState: string[];
+  crossDeviceBasis: string;
+  crossDeviceChain: string[];
+  crossDeviceState: string[];
+  founderNotificationBasis: string;
+  founderNotificationChain: string[];
+  founderNotificationState: string[];
+  founderInboxBasis: string;
+  founderInboxChain: string[];
+  founderInboxState: string[];
+  notificationDeliveryBasis: string;
+  notificationDeliveryChain: string[];
+  notificationDeliveryState: string[];
+  mobilePushBasis: string;
+  mobilePushChain: string[];
+  mobilePushState: string[];
   visibilityOnly: true;
 }
 
