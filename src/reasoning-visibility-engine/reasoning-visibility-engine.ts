@@ -553,6 +553,17 @@ export function buildReasoningVisibilityRecord(query: string): ReasoningVisibili
       'ACKNOWLEDGED / ARCHIVED / RESTORED — visualization only, no notification authority',
       'FILTER_SEARCH_GROUP — organization layer metadata',
     ],
+    buildStrategyBasis: `Build strategy engine advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 19.2 strategy classification, mode/autonomy/depth selection, risk/confidence evaluation, and stage recommendation authority; strategy/planning only, no code modification.`,
+    buildStrategyChain: [
+      'bstrat-0001 → autonomous builder reference metadata',
+      'CREATED → CLASSIFIED → MODE_SELECTED → AUTONOMY_SELECTED → RISK_EVALUATED → CONFIDENCE_EVALUATED → DEPTH_SELECTED → STAGES_RECOMMENDED → READY → COMPLETED',
+      'build strategy → autonomous builder/push/delivery/notification/inbox/cloud/world2/aidev/project vault/operator feed bridges',
+    ],
+    buildStrategyState: [
+      'CLASSIFIED → MODE_SELECTED → AUTONOMY_SELECTED → DEPTH_SELECTED',
+      'READY / COMPLETED — strategy metadata only, no code modification',
+      'BUILD_EXECUTOR_BLOCKED — duplicate executor policy enforced',
+    ],
     autonomousBuilderBasis: `Autonomous builder foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 19.1 build planning, goal/plan/stage metadata, and readiness evaluation authority; planning only, no code execution.`,
     autonomousBuilderChain: [
       'abuild-0001 → push and delivery reference metadata',

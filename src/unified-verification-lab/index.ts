@@ -219,6 +219,8 @@ export {
   listMobilePushFoundationUvlRows,
   AUTONOMOUS_BUILDER_FOUNDATION_UVL_ROWS,
   listAutonomousBuilderFoundationUvlRows,
+  BUILD_STRATEGY_ENGINE_UVL_ROWS,
+  listBuildStrategyEngineUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

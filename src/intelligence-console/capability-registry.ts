@@ -236,6 +236,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'BUILD_STRATEGY_ENGINE',
+    label: 'Build Strategy Engine',
+    phase: 19.2,
+    ownerModule: 'devpulse_v2_build_strategy_engine',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'AUTONOMOUS_BUILDER_FOUNDATION',
     label: 'Autonomous Builder Foundation',
     phase: 19.1,

@@ -141,6 +141,9 @@ export interface ActionCandidate {
   mobilePushFoundationId: string;
   mobilePushCount: number;
   mobilePushState: string;
+  buildStrategyEngineId: string;
+  buildStrategyCount: number;
+  buildStrategyState: string;
   autonomousBuilderFoundationId: string;
   autonomousBuilderCount: number;
   autonomousBuilderState: string;

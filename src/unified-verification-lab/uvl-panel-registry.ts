@@ -30,10 +30,12 @@ import { getFounderNotificationContext } from '../founder-notification-runtime/i
 import { getFounderInboxContext } from '../founder-inbox/index.js';
 import { getNotificationDeliveryContext } from '../notification-delivery/index.js';
 import { getMobilePushContext } from '../mobile-push/index.js';
+import { getBuildStrategyEngineContext } from '../build-strategy-engine/index.js';
 import { getAutonomousBuilderContext } from '../autonomous-builder/index.js';
 import type { PrepareFounderInboxFoundationResult } from '../founder-inbox/founder-inbox-types.js';
 import type { PrepareNotificationDeliveryFoundationResult } from '../notification-delivery/notification-delivery-types.js';
 import type { PrepareMobilePushFoundationResult } from '../mobile-push/mobile-push-types.js';
+import type { PrepareBuildStrategyEngineResult } from '../build-strategy-engine/build-strategy-types.js';
 import type { PrepareAutonomousBuilderFoundationResult } from '../autonomous-builder/autonomous-builder-types.js';
 import type { PrepareMobilePreviewRuntimeFoundationResult } from '../mobile-preview-runtime/mobile-preview-types.js';
 import type { PrepareMobileApprovalRuntimeFoundationResult } from '../mobile-approval-runtime/mobile-approval-types.js';
@@ -1291,6 +1293,106 @@ export function buildAutonomousBuilderFoundationPanelSnapshot(
       ctx.reports.find((r) => r.reportType === 'AUTONOMOUS_BUILD_HISTORY_REPORT')?.findings.slice(-6) ?? [],
     reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
     buildRecordCount: ctx.diagnostics.registeredBuildCount,
+    temporary: true,
+  };
+}
+
+export interface BuildStrategyEnginePanelSnapshot {
+  panelId: 'BUILD_STRATEGY_ENGINE';
+  panelTitle: string;
+  navigationPath: string;
+  strategyRecords: string[];
+  classificationFindings: string[];
+  modeFindings: string[];
+  autonomyFindings: string[];
+  riskFindings: string[];
+  confidenceFindings: string[];
+  depthFindings: string[];
+  stageFindings: string[];
+  readinessFindings: string[];
+  constraintFindings: string[];
+  dependencyFindings: string[];
+  policyFindings: string[];
+  ownershipFindings: string[];
+  contextFindings: string[];
+  autonomousBuilderLinks: string[];
+  deliveryLinks: string[];
+  pushLinks: string[];
+  notificationLinks: string[];
+  inboxLinks: string[];
+  cloudLinks: string[];
+  world2Links: string[];
+  aidevLinks: string[];
+  operatorFeedLinks: string[];
+  projectVaultLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  strategyRecordCount: number;
+  temporary: true;
+}
+
+export function buildBuildStrategyEnginePanelSnapshot(
+  query = 'Show build strategy inventory',
+  existingContext?: PrepareBuildStrategyEngineResult,
+): BuildStrategyEnginePanelSnapshot {
+  const ctx = existingContext ?? getBuildStrategyEngineContext(query);
+
+  return {
+    panelId: 'BUILD_STRATEGY_ENGINE',
+    panelTitle: 'Build Strategy Engine',
+    navigationPath: 'Left Navigation → Validators',
+    strategyRecords:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_INVENTORY_REPORT')?.findings.slice(0, 14) ?? [],
+    classificationFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_CLASSIFICATION_REPORT')?.findings.slice(0, 6) ?? [],
+    modeFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_MODE_REPORT')?.findings.slice(0, 6) ?? [],
+    autonomyFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_AUTONOMY_REPORT')?.findings.slice(0, 6) ?? [],
+    riskFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_RISK_REPORT')?.findings.slice(0, 6) ?? [],
+    confidenceFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_CONFIDENCE_REPORT')?.findings.slice(0, 6) ?? [],
+    depthFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_DEPTH_REPORT')?.findings.slice(0, 6) ?? [],
+    stageFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_STAGES_REPORT')?.findings.slice(0, 6) ?? [],
+    readinessFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_READINESS_REPORT')?.findings.slice(0, 6) ?? [],
+    constraintFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_CONSTRAINT_REPORT')?.findings.slice(0, 6) ?? [],
+    dependencyFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_DEPENDENCY_REPORT')?.findings.slice(0, 6) ?? [],
+    policyFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_POLICY_REPORT')?.findings.slice(0, 6) ?? [],
+    ownershipFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_OWNERSHIP_REPORT')?.findings.slice(0, 6) ?? [],
+    contextFindings:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_CONTEXT_REPORT')?.findings.slice(0, 6) ?? [],
+    autonomousBuilderLinks:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_AUTONOMOUS_BUILDER_REPORT')?.findings.slice(0, 6) ?? [],
+    deliveryLinks:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_DELIVERY_REPORT')?.findings.slice(0, 6) ?? [],
+    pushLinks:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_PUSH_REPORT')?.findings.slice(0, 6) ?? [],
+    notificationLinks:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_NOTIFICATION_REPORT')?.findings.slice(0, 6) ?? [],
+    inboxLinks:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_INBOX_REPORT')?.findings.slice(0, 6) ?? [],
+    cloudLinks:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_CLOUD_REPORT')?.findings.slice(0, 6) ?? [],
+    world2Links:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_WORLD2_REPORT')?.findings.slice(0, 6) ?? [],
+    aidevLinks:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_AIDEV_REPORT')?.findings.slice(0, 6) ?? [],
+    operatorFeedLinks:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_OPERATOR_FEED_REPORT')?.findings.slice(0, 6) ?? [],
+    projectVaultLinks:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_PROJECT_VAULT_REPORT')?.findings.slice(0, 6) ?? [],
+    historyEntries:
+      ctx.reports.find((r) => r.reportType === 'BUILD_STRATEGY_HISTORY_REPORT')?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    strategyRecordCount: ctx.diagnostics.registeredStrategyCount,
     temporary: true,
   };
 }

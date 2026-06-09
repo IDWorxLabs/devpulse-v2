@@ -141,6 +141,9 @@ function executionFieldsForAction(
   mobilePushFoundationId: string;
   mobilePushCount: number;
   mobilePushState: string;
+  buildStrategyEngineId: string;
+  buildStrategyCount: number;
+  buildStrategyState: string;
   autonomousBuilderFoundationId: string;
   autonomousBuilderCount: number;
   autonomousBuilderState: string;
@@ -270,6 +273,9 @@ function executionFieldsForAction(
   const mobilePushFoundationId = `mpushtfnd-${actionId.replace('act-', '')}`;
   const mobilePushCount = blocked ? 0 : 14;
   const mobilePushState = blocked ? 'BLOCKED' : 'READY';
+  const buildStrategyEngineId = `bstrattfnd-${actionId.replace('act-', '')}`;
+  const buildStrategyCount = blocked ? 0 : 14;
+  const buildStrategyState = blocked ? 'BLOCKED' : 'READY';
   const autonomousBuilderFoundationId = `abuildtfnd-${actionId.replace('act-', '')}`;
   const autonomousBuilderCount = blocked ? 0 : 10;
   const autonomousBuilderState = blocked ? 'BLOCKED' : 'READY';
@@ -393,6 +399,9 @@ function executionFieldsForAction(
     mobilePushFoundationId,
     mobilePushCount,
     mobilePushState,
+    buildStrategyEngineId,
+    buildStrategyCount,
+    buildStrategyState,
     autonomousBuilderFoundationId,
     autonomousBuilderCount,
     autonomousBuilderState,

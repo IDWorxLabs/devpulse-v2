@@ -45,7 +45,7 @@ export const BRAIN_ROUTING_PERFORMANCE_HARDENING_PASS_TOKEN = 'BRAIN_ROUTING_PER
 
 const MIN_SCENARIOS = 120;
 const MIN_UVL_ROW_COUNT = 580;
-const MIN_PRIMARY_ROUTES = 55;
+const MIN_PRIMARY_ROUTES = 56;
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 const readText = createSourceTextCache(ROOT);
 const routingCache = createNormalizedQueryCache<ReturnType<typeof selectCapabilities>>(normalizeBatchRoutingQuery);
@@ -83,6 +83,10 @@ const CANONICAL_SNAPSHOTS: Record<string, { primary: SelectedCapability; reasonI
     primary: 'CROSS_DEVICE_RUNTIME_FOUNDATION',
     reasonIncludes: 'Cross device question',
   },
+  'Show build strategy inventory': {
+    primary: 'BUILD_STRATEGY_ENGINE',
+    reasonIncludes: 'Build strategy question',
+  },
   'Show autonomous builder inventory': {
     primary: 'AUTONOMOUS_BUILDER_FOUNDATION',
     reasonIncludes: 'Autonomous builder question',
@@ -102,6 +106,7 @@ const CANONICAL_SNAPSHOTS: Record<string, { primary: SelectedCapability; reasonI
 };
 
 const PHASE_19_ROUTES = [
+  'build-strategy-engine',
   'autonomous-builder',
   'mobile-push',
   'notification-delivery',
@@ -227,6 +232,7 @@ async function main(): Promise<void> {
   assert('I-SOURCE', 'index imports reduced', indexImports < 70, String(indexImports));
   assert('I-SOURCE', 'selector shrunk', selectorSource.split('\n').length < 400, String(selectorSource.split('\n').length));
   assert('I-SOURCE', 'lazy loader referenced', indexSource.includes('invokeRouteHandler'), 'invoke');
+  assert('I-SOURCE', 'build strategy handler block', indexSource.includes('build-strategy-engine'), 'build-strategy');
   assert('I-SOURCE', 'autonomous handler block', indexSource.includes('autonomous-builder'), 'autonomous');
   harness.endGroup('I-SOURCE', g);
 

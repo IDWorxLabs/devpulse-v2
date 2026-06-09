@@ -784,6 +784,47 @@ export const AUTONOMOUS_BUILDER_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'AUTONOMOUS_BUILDER_FOUNDATION_PANEL', module: 'autonomous_builder_foundation', phase: 19.1, description: 'Unified Verification Lab panel snapshot for autonomous builder foundation', extensionOnly: true },
 ];
 
+export const BUILD_STRATEGY_ENGINE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'BUILD_STRATEGY_TYPES', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy types and models', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_STORE', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy in-memory store', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_REGISTRY', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy registry and orchestrator', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_MANAGER', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy manager without code modification', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_STATE_MANAGER', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy state manager', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_LIFECYCLE', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy lifecycle events', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_OWNERSHIP', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy ownership tracking', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_CONTEXT', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy context aggregation', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_CLASSIFIER', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy classification metadata', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_SELECTOR', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy category selector', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_MODE', module: 'build_strategy_engine', phase: 19.2, description: 'Build mode selection metadata', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_AUTONOMY', module: 'build_strategy_engine', phase: 19.2, description: 'Autonomy level selection metadata', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_RISK', module: 'build_strategy_engine', phase: 19.2, description: 'Build risk evaluation metadata', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_CONFIDENCE', module: 'build_strategy_engine', phase: 19.2, description: 'Build confidence evaluation metadata', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_DEPTH', module: 'build_strategy_engine', phase: 19.2, description: 'Build depth selection metadata', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_STAGE_RECOMMENDER', module: 'build_strategy_engine', phase: 19.2, description: 'Build stage recommendation metadata', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_READINESS', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy readiness evaluation', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_CONSTRAINT', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy constraint metadata', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_DEPENDENCY', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy dependency metadata', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_POLICY', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy policy metadata', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_AUTONOMOUS_BUILDER_BRIDGE', module: 'build_strategy_engine', phase: 19.2, description: 'Autonomous Builder Foundation bridge (primary)', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_CLOUD_BRIDGE', module: 'build_strategy_engine', phase: 19.2, description: 'Cloud Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_WORLD2_BRIDGE', module: 'build_strategy_engine', phase: 19.2, description: 'World2 bridge', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_AIDEV_BRIDGE', module: 'build_strategy_engine', phase: 19.2, description: 'AiDev bridge', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_PROJECT_VAULT_BRIDGE', module: 'build_strategy_engine', phase: 19.2, description: 'Project Vault bridge', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_OPERATOR_FEED_BRIDGE', module: 'build_strategy_engine', phase: 19.2, description: 'Operator Feed bridge', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_NOTIFICATION_BRIDGE', module: 'build_strategy_engine', phase: 19.2, description: 'Founder Notification Runtime bridge', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_INBOX_BRIDGE', module: 'build_strategy_engine', phase: 19.2, description: 'Founder Inbox bridge', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_DELIVERY_BRIDGE', module: 'build_strategy_engine', phase: 19.2, description: 'Notification Delivery Foundation bridge', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_PUSH_BRIDGE', module: 'build_strategy_engine', phase: 19.2, description: 'Mobile Push Foundation bridge', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_QUERY', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy query layer', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_HISTORY', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy history tracking', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_REPORT_BUILDER', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy report builder', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_VALIDATOR', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_DIAGNOSTICS', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy diagnostics tracker', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_READ_CACHE', module: 'build_strategy_engine', phase: 19.2, description: 'Build strategy bounded read cache', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_ENGINE_ROUTING', module: 'build_strategy_engine', phase: 19.2, description: 'Command Center routing for build strategy questions', extensionOnly: true },
+  { rowId: 'BUILD_STRATEGY_ENGINE_PANEL', module: 'build_strategy_engine', phase: 19.2, description: 'Unified Verification Lab panel snapshot for build strategy engine', extensionOnly: true },
+];
+
 export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   ...WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
@@ -818,6 +859,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...NOTIFICATION_DELIVERY_FOUNDATION_UVL_ROWS,
   ...MOBILE_PUSH_FOUNDATION_UVL_ROWS,
   ...AUTONOMOUS_BUILDER_FOUNDATION_UVL_ROWS,
+  ...BUILD_STRATEGY_ENGINE_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -950,6 +992,10 @@ export function listMobilePushFoundationUvlRows(): UvlRow[] {
 
 export function listAutonomousBuilderFoundationUvlRows(): UvlRow[] {
   return [...AUTONOMOUS_BUILDER_FOUNDATION_UVL_ROWS];
+}
+
+export function listBuildStrategyEngineUvlRows(): UvlRow[] {
+  return [...BUILD_STRATEGY_ENGINE_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

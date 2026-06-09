@@ -55,6 +55,7 @@ import { isMobileApprovalRuntimeFoundationQuestion } from '../../mobile-approval
 import { isCrossDeviceRuntimeFoundationQuestion } from '../../cross-device-runtime/cross-device-types.js';
 import { isFounderNotificationRuntimeFoundationQuestion } from '../../founder-notification-runtime/founder-notification-types.js';
 import { isFounderInboxFoundationQuestion } from '../../founder-inbox/founder-inbox-types.js';
+import { isBuildStrategyEngineQuestion } from '../../build-strategy-engine/build-strategy-types.js';
 import { isAutonomousBuilderFoundationQuestion } from '../../autonomous-builder/autonomous-builder-types.js';
 import { isMobilePushFoundationQuestion } from '../../mobile-push/mobile-push-types.js';
 import { isNotificationDeliveryFoundationQuestion } from '../../notification-delivery/notification-delivery-types.js';
@@ -261,6 +262,25 @@ export function executeGeneralQuestionRouting(
         limitationMessage: limitationMessage ?? undefined,
       }),
       usedCapabilities: ['MOBILE_APPROVAL_RUNTIME_FOUNDATION', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'BUILD_STRATEGY_ENGINE' ||
+    (plan.selectedCapabilities.includes('BUILD_STRATEGY_ENGINE') &&
+      isBuildStrategyEngineQuestion(deps.message))
+  ) {
+    const buildStrategy = invokeRouteHandler('build-strategy-engine', deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: buildStrategy,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['BUILD_STRATEGY_ENGINE', ...usedCapabilities],
       routingPlan: plan,
     };
   }

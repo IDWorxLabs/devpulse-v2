@@ -19,6 +19,7 @@ export type RouteGroup =
   | 'cross-system-awareness'
   | 'portfolio-intelligence'
   | 'mobile-approval'
+  | 'build-strategy-engine'
   | 'autonomous-builder'
   | 'mobile-push'
   | 'notification-delivery'
@@ -146,6 +147,7 @@ const ROUTE_SPECS: Record<RouteGroup, RouteSpec | 'hot'> = {
   'cross-system-awareness': 'hot',
   'portfolio-intelligence': { modulePath: '../../portfolio-intelligence/index.js', exportName: 'processPortfolioIntelligenceRequest' },
   'mobile-approval': { modulePath: '../../mobile-approval-runtime/index.js', exportName: 'processMobileApprovalRequest' },
+  'build-strategy-engine': { modulePath: '../../build-strategy-engine/index.js', exportName: 'processBuildStrategyRequest' },
   'autonomous-builder': { modulePath: '../../autonomous-builder/index.js', exportName: 'processAutonomousBuilderRequest' },
   'mobile-push': { modulePath: '../../mobile-push/index.js', exportName: 'processMobilePushRequest' },
   'notification-delivery': { modulePath: '../../notification-delivery/index.js', exportName: 'processNotificationDeliveryRequest' },

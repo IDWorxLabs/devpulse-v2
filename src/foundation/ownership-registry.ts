@@ -952,6 +952,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 19.1,
     description: 'Phase 19.1 Autonomous Builder Foundation — build planning, goal/plan/stage metadata, and readiness evaluation authority referencing Mobile Push Foundation; planning only, no code execution',
   },
+  build_strategy_engine: {
+    domain: 'build_strategy_engine',
+    ownerModule: 'devpulse_v2_build_strategy_engine',
+    ownerFunction: 'getDevPulseV2BuildStrategyEngine',
+    phase: 19.2,
+    description: 'Phase 19.2 Build Strategy Engine — strategy classification, mode/autonomy/depth selection, risk/confidence evaluation, stage recommendation, and readiness authority referencing Autonomous Builder Foundation; strategy/planning only, no code modification or execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

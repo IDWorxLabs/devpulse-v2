@@ -39,6 +39,7 @@ import { isMobileApprovalRuntimeFoundationQuestion } from '../mobile-approval-ru
 import { isCrossDeviceRuntimeFoundationQuestion } from '../cross-device-runtime/cross-device-types.js';
 import { isFounderNotificationRuntimeFoundationQuestion } from '../founder-notification-runtime/founder-notification-types.js';
 import { isFounderInboxFoundationQuestion } from '../founder-inbox/founder-inbox-types.js';
+import { isBuildStrategyEngineQuestion } from '../build-strategy-engine/build-strategy-types.js';
 import { isAutonomousBuilderFoundationQuestion } from '../autonomous-builder/autonomous-builder-types.js';
 import { isMobilePushFoundationQuestion } from '../mobile-push/mobile-push-types.js';
 import { isNotificationDeliveryFoundationQuestion } from '../notification-delivery/notification-delivery-types.js';
@@ -372,6 +373,15 @@ export function buildProgressRecords(query: string): ProgressRecord[] {
       ...records[0],
       founderInboxFoundationState: 'READY',
       founderInboxFoundationNote: 'Founder Inbox Foundation Ready — founder inbox visualization and organization layer referencing Founder Notification Runtime; no notification authority',
+    };
+  }
+
+  if (isBuildStrategyEngineQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      buildStrategyEngineState: 'READY',
+      buildStrategyEngineNote:
+        'Build Strategy Engine Ready — strategy classification, mode/autonomy/depth selection, risk/confidence evaluation, and stage recommendation authority; strategy/planning only, no code modification',
     };
   }
 

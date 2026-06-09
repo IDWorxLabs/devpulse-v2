@@ -549,6 +549,21 @@ const CAPABILITY_STAGE_MAP: Partial<Record<SelectedCapability, OperatorFeedStage
     'Inbox Entry Failed',
     'Response Ready',
   ],
+  BUILD_STRATEGY_ENGINE: [
+    'Build Strategy Created',
+    'Build Strategy Classified',
+    'Build Mode Selected',
+    'Autonomy Level Selected',
+    'Build Risk Evaluated',
+    'Build Confidence Evaluated',
+    'Build Depth Selected',
+    'Build Stages Recommended',
+    'Build Strategy Ready',
+    'Build Strategy Blocked',
+    'Build Strategy Completed',
+    'Build Strategy Failed',
+    'Response Ready',
+  ],
   AUTONOMOUS_BUILDER_FOUNDATION: [
     'Autonomous Build Created',
     'Autonomous Goal Created',
@@ -670,6 +685,7 @@ export function sourceSystemForCapability(capability: SelectedCapability | null)
     FOUNDER_INBOX_FOUNDATION: 'founder_inbox_foundation',
     NOTIFICATION_DELIVERY_FOUNDATION: 'notification_delivery_foundation',
     MOBILE_PUSH_FOUNDATION: 'mobile_push_foundation',
+    BUILD_STRATEGY_ENGINE: 'build_strategy_engine',
     AUTONOMOUS_BUILDER_FOUNDATION: 'autonomous_builder_foundation',
   };
   return map[capability] ?? 'command_center_brain';
