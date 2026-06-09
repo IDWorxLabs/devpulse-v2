@@ -347,6 +347,15 @@ const STAGE_SUMMARIES: Record<OperatorFeedStage, string> = {
   'Completed': 'Mobile preview session completed — authority lifecycle closed.',
   'Failed': 'Mobile preview failed — inspect ownership and bridge links.',
   'Archived': 'Mobile preview archived — historical record preserved.',
+  'Mobile Approval Session Created': 'Mobile approval session registered — authority only, no execution or push notifications.',
+  'Approval Request Registered': 'Approval request metadata registered — awaiting governed decision interface.',
+  'Waiting For Decision': 'Mobile approval waiting for decision — metadata only, no real approvals performed.',
+  'Decision Recorded': 'Approval decision metadata recorded — authority only, no execution performed.',
+  'Approval Approved': 'Approval approved metadata recorded — defer execution to governed systems.',
+  'Approval Rejected': 'Approval rejected metadata recorded — no execution performed.',
+  'Approval Completed': 'Mobile approval session completed — authority lifecycle closed.',
+  'Approval Failed': 'Mobile approval failed — inspect ownership and bridge links.',
+  'Approval Archived': 'Mobile approval archived — historical record preserved.',
 };
 
 export function createOperatorFeedEvent(

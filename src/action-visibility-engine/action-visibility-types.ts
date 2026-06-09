@@ -123,6 +123,9 @@ export interface ActionCandidate {
   mobilePreviewRuntimeFoundationId: string;
   mobilePreviewCount: number;
   mobilePreviewState: string;
+  mobileApprovalRuntimeFoundationId: string;
+  mobileApprovalCount: number;
+  mobileApprovalState: string;
   applyAllowed: false;
   executionAllowed: false;
   visibilityOnly: true;

@@ -24,7 +24,9 @@ import { getCloudMonitoringContext } from '../cloud-monitoring/index.js';
 import { getMobileCommandContext } from '../mobile-command-runtime/index.js';
 import { getMobileChatContext } from '../mobile-chat-runtime/index.js';
 import { getMobilePreviewContext } from '../mobile-preview-runtime/index.js';
+import { getMobileApprovalContext } from '../mobile-approval-runtime/index.js';
 import type { PrepareMobilePreviewRuntimeFoundationResult } from '../mobile-preview-runtime/mobile-preview-types.js';
+import type { PrepareMobileApprovalRuntimeFoundationResult } from '../mobile-approval-runtime/mobile-approval-types.js';
 import type { PrepareMobileCommandRuntimeFoundationResult } from '../mobile-command-runtime/mobile-command-types.js';
 import type { PrepareMobileChatRuntimeFoundationResult } from '../mobile-chat-runtime/mobile-chat-types.js';
 import type { PrepareCloudMonitoringFoundationResult } from '../cloud-monitoring/cloud-monitoring-types.js';
@@ -841,6 +843,70 @@ export function buildMobilePreviewRuntimeFoundationPanelSnapshot(
     historyEntries: ctx.reports.find((r) => r.reportType === 'MOBILE_PREVIEW_HISTORY_REPORT')?.findings.slice(-6) ?? [],
     reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
     mobilePreviewCount: ctx.diagnostics.registeredMobilePreviewCount,
+    temporary: true,
+  };
+}
+
+export interface MobileApprovalRuntimeFoundationPanelSnapshot {
+  panelId: string;
+  panelTitle: string;
+  navigationPath: string;
+  mobileApprovals: string[];
+  sessions: string[];
+  requestFindings: string[];
+  decisionFindings: string[];
+  governanceFindings: string[];
+  visibilityFindings: string[];
+  commandLinks: string[];
+  chatLinks: string[];
+  previewLinks: string[];
+  cloudLinks: string[];
+  workspaceLinks: string[];
+  buildLinks: string[];
+  flowLinks: string[];
+  operatorFeedLinks: string[];
+  historyEntries: string[];
+  reportSummaries: string[];
+  mobileApprovalCount: number;
+  temporary: true;
+}
+
+export function buildMobileApprovalRuntimeFoundationPanelSnapshot(
+  query = 'Show mobile approval inventory',
+  existingContext?: PrepareMobileApprovalRuntimeFoundationResult,
+): MobileApprovalRuntimeFoundationPanelSnapshot {
+  const ctx = existingContext ?? getMobileApprovalContext(query);
+
+  return {
+    panelId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION',
+    panelTitle: 'Mobile Approval Runtime Foundation',
+    navigationPath: 'Left Navigation → Validators',
+    mobileApprovals:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_INVENTORY_REPORT')?.findings.slice(0, 9) ?? [],
+    sessions: ctx.trackedSession ? [`${ctx.trackedSession.sessionId} — ${ctx.trackedSession.sessionState}`] : [],
+    requestFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_REQUEST_REPORT')?.findings.slice(0, 6) ?? [],
+    decisionFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_DECISION_REPORT')?.findings.slice(0, 6) ?? [],
+    governanceFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_GOVERNANCE_REPORT')?.findings.slice(0, 6) ?? [],
+    visibilityFindings:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_CONTEXT_REPORT')?.findings.slice(0, 6) ?? [],
+    commandLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_COMMAND_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    chatLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_CHAT_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    previewLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_PREVIEW_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    cloudLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_CLOUD_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    workspaceLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_WORKSPACE_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    buildLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_BUILD_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    flowLinks: ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_FLOW_LINK_REPORT')?.findings.slice(0, 6) ?? [],
+    operatorFeedLinks:
+      ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_OPERATOR_FEED_REPORT')?.findings.slice(0, 6) ?? [],
+    historyEntries: ctx.reports.find((r) => r.reportType === 'MOBILE_APPROVAL_HISTORY_REPORT')?.findings.slice(-6) ?? [],
+    reportSummaries: ctx.reports.map((r) => `${r.reportType}: ${r.summary}`),
+    mobileApprovalCount: ctx.diagnostics.registeredMobileApprovalCount,
     temporary: true,
   };
 }

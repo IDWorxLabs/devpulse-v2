@@ -902,6 +902,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 18.3,
     description: 'Phase 18.3 Mobile Preview Runtime Foundation — mobile preview session, eligibility, safety, device policy, desktop recommendation, and preview link authority; no mobile UI, preview streaming, or preview rendering',
   },
+  mobile_approval_runtime_foundation: {
+    domain: 'mobile_approval_runtime_foundation',
+    ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation',
+    ownerFunction: 'getDevPulseV2MobileApprovalRuntimeFoundation',
+    phase: 18.4,
+    description: 'Phase 18.4 Mobile Approval Runtime Foundation — mobile approval session, request, decision, governance, and context authority; no execution, push notifications, or real approvals',
+  },
 };
 
 export function getDevPulseV2Owner(domain: OwnershipDomain): OwnerRecord {

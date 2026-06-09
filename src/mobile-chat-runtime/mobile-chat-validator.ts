@@ -86,6 +86,7 @@ export function evaluateDuplicateMobileChatRisk(context: DuplicateMobileChatRisk
     'mobile_chat_runtime_foundation',
     'mobile_command_runtime_foundation',
     'mobile_preview_runtime_foundation',
+    'mobile_approval_runtime_foundation',
   ]);
   for (const domain of context.ownershipDomains) {
     if (companionDomains.has(domain)) continue;

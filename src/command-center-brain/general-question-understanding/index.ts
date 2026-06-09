@@ -95,6 +95,8 @@ import { processMobileChatRequest } from '../../mobile-chat-runtime/index.js';
 import { isMobileChatRuntimeFoundationQuestion } from '../../mobile-chat-runtime/mobile-chat-types.js';
 import { processMobilePreviewRequest } from '../../mobile-preview-runtime/index.js';
 import { isMobilePreviewRuntimeFoundationQuestion } from '../../mobile-preview-runtime/mobile-preview-types.js';
+import { isMobileApprovalRuntimeFoundationQuestion } from '../../mobile-approval-runtime/mobile-approval-types.js';
+import { processMobileApprovalRequest } from '../../mobile-approval-runtime/index.js';
 import { processVerificationReportingRequest } from '../../verification-reporting-engine/index.js';
 import { isVerificationReportingQuestion } from '../../verification-reporting-engine/verification-report-types.js';
 import { detectContextNeeds, needsUnavailableDevelopmentContext } from './context-need-detector.js';
@@ -250,6 +252,25 @@ export function executeGeneralQuestionRouting(
         limitationMessage: limitationMessage ?? undefined,
       }),
       usedCapabilities: ['PORTFOLIO_INTELLIGENCE', ...usedCapabilities],
+      routingPlan: plan,
+    };
+  }
+
+  if (
+    plan.primaryCapability === 'MOBILE_APPROVAL_RUNTIME_FOUNDATION' ||
+    (plan.selectedCapabilities.includes('MOBILE_APPROVAL_RUNTIME_FOUNDATION') &&
+      isMobileApprovalRuntimeFoundationQuestion(deps.message))
+  ) {
+    const mobileApproval = processMobileApprovalRequest(deps.message);
+    return {
+      ownsResponse: true,
+      responseText: composeGeneralAnswer({
+        question: deps.message,
+        routingPlan: plan,
+        supplementalResponse: mobileApproval.responseText,
+        limitationMessage: limitationMessage ?? undefined,
+      }),
+      usedCapabilities: ['MOBILE_APPROVAL_RUNTIME_FOUNDATION', ...usedCapabilities],
       routingPlan: plan,
     };
   }

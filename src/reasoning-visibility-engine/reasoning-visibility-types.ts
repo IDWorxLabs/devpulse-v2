@@ -180,6 +180,9 @@ export interface ReasoningVisibilityRecord {
   mobilePreviewBasis: string;
   mobilePreviewChain: string[];
   mobilePreviewState: string[];
+  mobileApprovalBasis: string;
+  mobileApprovalChain: string[];
+  mobileApprovalState: string[];
   visibilityOnly: true;
 }
 

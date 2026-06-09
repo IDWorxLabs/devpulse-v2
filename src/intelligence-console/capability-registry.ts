@@ -193,6 +193,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     ownerModule: 'devpulse_v2_mobile_preview_runtime_foundation',
     extensionOnly: true,
   },
+  {
+    capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION',
+    label: 'Mobile Approval Runtime Foundation',
+    phase: 18.4,
+    ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation',
+    extensionOnly: true,
+  },
 ] as const;
 
 export function isIntelligenceConsoleCapability(capabilityId: string): boolean {

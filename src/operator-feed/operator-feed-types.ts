@@ -337,6 +337,15 @@ export type OperatorFeedStage =
   | 'Completed'
   | 'Failed'
   | 'Archived'
+  | 'Mobile Approval Session Created'
+  | 'Approval Request Registered'
+  | 'Waiting For Decision'
+  | 'Decision Recorded'
+  | 'Approval Approved'
+  | 'Approval Rejected'
+  | 'Approval Completed'
+  | 'Approval Failed'
+  | 'Approval Archived'
   | 'Response Ready';
 
 export type OperatorFeedEventStatus = 'PENDING' | 'ACTIVE' | 'COMPLETE';

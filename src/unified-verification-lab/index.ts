@@ -109,6 +109,7 @@ export {
   buildMobileCommandRuntimeFoundationPanelSnapshot,
   buildMobileChatRuntimeFoundationPanelSnapshot,
   buildMobilePreviewRuntimeFoundationPanelSnapshot,
+  buildMobileApprovalRuntimeFoundationPanelSnapshot,
   type UvlPanelSnapshot,
   type VerificationRegistryPanelSnapshot,
   type VerificationOrchestratorPanelSnapshot,
@@ -124,6 +125,7 @@ export {
   type MobileCommandRuntimeFoundationPanelSnapshot,
   type MobileChatRuntimeFoundationPanelSnapshot,
   type MobilePreviewRuntimeFoundationPanelSnapshot,
+  type MobileApprovalRuntimeFoundationPanelSnapshot,
 } from './uvl-panel-registry.js';
 
 export function getDevPulseV2UnifiedVerificationLabRuntime(): {
@@ -167,6 +169,7 @@ export {
   MOBILE_COMMAND_RUNTIME_FOUNDATION_UVL_ROWS,
   MOBILE_CHAT_RUNTIME_FOUNDATION_UVL_ROWS,
   MOBILE_PREVIEW_RUNTIME_FOUNDATION_UVL_ROWS,
+  MOBILE_APPROVAL_RUNTIME_FOUNDATION_UVL_ROWS,
   ALL_UVL_ROWS,
   listWorld2BuilderPacketExecutionUvlRows,
   listWorld2ControlledApplyRuntimeUvlRows,
@@ -194,6 +197,7 @@ export {
   listMobileCommandRuntimeFoundationUvlRows,
   listMobileChatRuntimeFoundationUvlRows,
   listMobilePreviewRuntimeFoundationUvlRows,
+  listMobileApprovalRuntimeFoundationUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

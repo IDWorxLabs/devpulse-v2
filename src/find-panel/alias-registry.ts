@@ -222,6 +222,20 @@ export const WORLD2_BUILDER_PACKET_FIND_ALIASES: readonly FindPanelAlias[] = [
   { alias: 'Mobile Preview Build Links', capabilityId: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_preview_runtime_foundation' },
   { alias: 'Mobile Preview Verification Links', capabilityId: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_preview_runtime_foundation' },
   { alias: 'Mobile Preview Diagnostics', capabilityId: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_preview_runtime_foundation' },
+  { alias: 'Mobile Approval Runtime', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval Sessions', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval Requests', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval Decisions', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval Visibility', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval State', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval Command Links', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval Chat Links', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval Preview Links', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval World2 Links', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval AiDev Links', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval Cloud Links', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval Project Vault Links', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
+  { alias: 'Mobile Approval Diagnostics', capabilityId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION', ownerModule: 'devpulse_v2_mobile_approval_runtime_foundation' },
 ] as const;
 
 export function resolveFindPanelAlias(query: string): FindPanelAlias | null {

@@ -102,6 +102,7 @@ export const MOBILE_COMMAND_COMPANION_DOMAINS = [
   'mobile_command_runtime_foundation',
   'mobile_chat_runtime_foundation',
   'mobile_preview_runtime_foundation',
+  'mobile_approval_runtime_foundation',
 ] as const;
 
 export const MOBILE_COMMAND_QUESTION_SIGNALS = [

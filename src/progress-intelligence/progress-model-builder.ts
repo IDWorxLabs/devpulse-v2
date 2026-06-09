@@ -35,6 +35,7 @@ import { isCloudMonitoringFoundationQuestion } from '../cloud-monitoring/cloud-m
 import { isMobileCommandRuntimeFoundationQuestion } from '../mobile-command-runtime/mobile-command-types.js';
 import { isMobileChatRuntimeFoundationQuestion } from '../mobile-chat-runtime/mobile-chat-types.js';
 import { isMobilePreviewRuntimeFoundationQuestion } from '../mobile-preview-runtime/mobile-preview-types.js';
+import { isMobileApprovalRuntimeFoundationQuestion } from '../mobile-approval-runtime/mobile-approval-types.js';
 import type { ProgressRecord } from './progress-intelligence-types.js';
 
 let progressCounter = 0;
@@ -333,6 +334,14 @@ export function buildProgressRecords(query: string): ProgressRecord[] {
       ...records[0],
       mobilePreviewRuntimeFoundationState: 'READY',
       mobilePreviewRuntimeFoundationNote: 'Mobile Preview Runtime Foundation Ready — mobile preview session, eligibility, safety, link, and desktop-recommendation authority; no mobile UI, preview streaming, or preview rendering',
+    };
+  }
+
+  if (isMobileApprovalRuntimeFoundationQuestion(query) && records.length > 0) {
+    records[0] = {
+      ...records[0],
+      mobileApprovalRuntimeFoundationState: 'READY',
+      mobileApprovalRuntimeFoundationNote: 'Mobile Approval Runtime Foundation Ready — mobile approval session, request, decision, governance, and context authority; no execution, push notifications, or real approvals',
     };
   }
 

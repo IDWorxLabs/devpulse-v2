@@ -135,6 +135,7 @@
     "validate:mobile-command-runtime-foundation": "tsx scripts/validate-mobile-command-runtime-foundation.ts",
     "validate:mobile-chat-runtime-foundation": "tsx scripts/validate-mobile-chat-runtime-foundation.ts",
     "validate:mobile-preview-runtime-foundation": "tsx scripts/validate-mobile-preview-runtime-foundation.ts",
+    "validate:mobile-approval-runtime-foundation": "tsx scripts/validate-mobile-approval-runtime-foundation.ts",
     "validate:brain-memory-visibility-stack": "tsx scripts/validate-brain-memory-visibility-stack.ts",
     "dev": "tsx server/founder-reality-server.ts",
     "start": "tsx server/founder-reality-server.ts",

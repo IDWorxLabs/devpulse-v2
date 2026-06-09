@@ -185,7 +185,8 @@ export type OwnershipDomain =
   | 'cloud_monitoring_foundation'
   | 'mobile_command_runtime_foundation'
   | 'mobile_chat_runtime_foundation'
-  | 'mobile_preview_runtime_foundation';
+  | 'mobile_preview_runtime_foundation'
+  | 'mobile_approval_runtime_foundation';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

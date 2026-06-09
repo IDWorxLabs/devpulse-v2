@@ -123,6 +123,9 @@ function executionFieldsForAction(
   mobilePreviewRuntimeFoundationId: string;
   mobilePreviewCount: number;
   mobilePreviewState: string;
+  mobileApprovalRuntimeFoundationId: string;
+  mobileApprovalCount: number;
+  mobileApprovalState: string;
   applyAllowed: false;
   executionAllowed: false;
 } {
@@ -231,6 +234,9 @@ function executionFieldsForAction(
   const mobilePreviewRuntimeFoundationId = `mpvtfnd-${actionId.replace('act-', '')}`;
   const mobilePreviewCount = blocked ? 0 : 9;
   const mobilePreviewState = blocked ? 'BLOCKED' : 'READY';
+  const mobileApprovalRuntimeFoundationId = `mapprtfnd-${actionId.replace('act-', '')}`;
+  const mobileApprovalCount = blocked ? 0 : 9;
+  const mobileApprovalState = blocked ? 'BLOCKED' : 'READY';
   return {
     executionReadiness: `${level} (${score}) — ${blockerCount} visible blockers; Phase 14.1 readiness-only, no execution.`,
     executionReady: !blocked && score >= 45 && blockerCount < 4,
@@ -333,6 +339,9 @@ function executionFieldsForAction(
     mobilePreviewRuntimeFoundationId,
     mobilePreviewCount,
     mobilePreviewState,
+    mobileApprovalRuntimeFoundationId,
+    mobileApprovalCount,
+    mobileApprovalState,
     applyAllowed: false,
     executionAllowed: false,
   };

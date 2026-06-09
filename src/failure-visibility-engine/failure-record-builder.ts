@@ -44,6 +44,7 @@ import { buildCloudMonitoringFailureContext } from '../cloud-monitoring/cloud-mo
 import { buildMobileCommandFailureContext } from '../mobile-command-runtime/mobile-command-report-builder.js';
 import { buildMobileChatFailureContext } from '../mobile-chat-runtime/mobile-chat-report-builder.js';
 import { buildMobilePreviewFailureContext } from '../mobile-preview-runtime/mobile-preview-report-builder.js';
+import { buildMobileApprovalFailureContext } from '../mobile-approval-runtime/mobile-approval-report-builder.js';
 import type { FailureRecord } from './failure-visibility-types.js';
 
 let failureCounter = 0;
@@ -547,6 +548,19 @@ export function buildFailureRecords(query: string): FailureRecord[] {
         sourceSystem: mpf.sourceSystem,
         affectedSystems: ['mobile_preview_runtime_foundation', 'failure_visibility_engine'],
         blockedCapabilities: ['MOBILE_PREVIEW_RUNTIME_FOUNDATION'],
+        dependencyImpacts: depImpacts,
+      }),
+    );
+  }
+
+  for (const maf of buildMobileApprovalFailureContext(query).slice(0, 4)) {
+    records.push(
+      buildRecord({
+        title: maf.title,
+        description: maf.description,
+        sourceSystem: maf.sourceSystem,
+        affectedSystems: ['mobile_approval_runtime_foundation', 'failure_visibility_engine'],
+        blockedCapabilities: ['MOBILE_APPROVAL_RUNTIME_FOUNDATION'],
         dependencyImpacts: depImpacts,
       }),
     );

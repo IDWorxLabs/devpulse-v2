@@ -114,6 +114,7 @@ export const MOBILE_PREVIEW_COMPANION_DOMAINS = [
   'mobile_preview_runtime_foundation',
   'mobile_chat_runtime_foundation',
   'mobile_command_runtime_foundation',
+  'mobile_approval_runtime_foundation',
   'mobile_live_preview_foundation',
   'live_preview_runtime',
 ] as const;

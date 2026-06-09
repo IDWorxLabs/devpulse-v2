@@ -111,6 +111,8 @@ export interface ProgressRecord {
   mobileChatRuntimeFoundationNote?: string;
   mobilePreviewRuntimeFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
   mobilePreviewRuntimeFoundationNote?: string;
+  mobileApprovalRuntimeFoundationState?: 'REGISTERED' | 'READY' | 'BLOCKED' | 'INVALID';
+  mobileApprovalRuntimeFoundationNote?: string;
   visibilityOnly: true;
 }
 

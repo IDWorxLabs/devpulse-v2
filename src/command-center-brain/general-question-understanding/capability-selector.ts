@@ -56,6 +56,7 @@ import { isCloudMonitoringFoundationQuestion } from '../../cloud-monitoring/clou
 import { isMobileCommandRuntimeFoundationQuestion } from '../../mobile-command-runtime/mobile-command-types.js';
 import { isMobileChatRuntimeFoundationQuestion } from '../../mobile-chat-runtime/mobile-chat-types.js';
 import { isMobilePreviewRuntimeFoundationQuestion } from '../../mobile-preview-runtime/mobile-preview-types.js';
+import { isMobileApprovalRuntimeFoundationQuestion } from '../../mobile-approval-runtime/mobile-approval-types.js';
 
 const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> = {
   PROJECT_PROFILE: 'PROJECT_UNDERSTANDING',
@@ -114,6 +115,7 @@ const CONTEXT_CAPABILITY_MAP: Partial<Record<ContextNeed, SelectedCapability>> =
   MOBILE_COMMAND_RUNTIME_FOUNDATION_FACTS: 'MOBILE_COMMAND_RUNTIME_FOUNDATION',
   MOBILE_CHAT_RUNTIME_FOUNDATION_FACTS: 'MOBILE_CHAT_RUNTIME_FOUNDATION',
   MOBILE_PREVIEW_RUNTIME_FOUNDATION_FACTS: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION',
+  MOBILE_APPROVAL_RUNTIME_FOUNDATION_FACTS: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION',
 };
 
 export interface CapabilitySelectionResult {
@@ -254,6 +256,24 @@ export function selectCapabilities(
     selected.add('VERIFICATION_REPORTING_ENGINE');
     selected.add('EXECUTION_RUNTIME_FOUNDATION');
     selected.add('BUILD_TASK_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_KNOWLEDGE_REASONING');
+    selected.add('FAILURE_VISIBILITY_ENGINE');
+    selected.add('PROGRESS_INTELLIGENCE');
+    selected.add('ACTION_VISIBILITY_ENGINE');
+    selected.add('REASONING_VISIBILITY_ENGINE');
+    selected.add('UNIFIED_DECISION_LAYER');
+  }
+
+  if (isMobileApprovalRuntimeFoundationQuestion(question)) {
+    selected.add('MOBILE_APPROVAL_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_PREVIEW_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_CHAT_RUNTIME_FOUNDATION');
+    selected.add('MOBILE_COMMAND_RUNTIME_FOUNDATION');
+    selected.add('CLOUD_VERIFICATION_FOUNDATION');
+    selected.add('PERSISTENT_BUILD_RUNTIME_FOUNDATION');
+    selected.add('WORKSPACE_HOSTING_FOUNDATION');
+    selected.add('CLOUD_RUNTIME_FOUNDATION');
+    selected.add('PROJECT_VAULT_INTELLIGENCE');
     selected.add('PROJECT_KNOWLEDGE_REASONING');
     selected.add('FAILURE_VISIBILITY_ENGINE');
     selected.add('PROGRESS_INTELLIGENCE');
@@ -815,6 +835,19 @@ export function selectCapabilities(
   }
 
   const lowerQuestion = question.toLowerCase();
+
+  if (isMobileApprovalRuntimeFoundationQuestion(question)) {
+    primary = 'MOBILE_APPROVAL_RUNTIME_FOUNDATION';
+    secondary = selectedList.filter((c) => c !== primary);
+    return {
+      selectedCapabilities: selectedList,
+      unavailableCapabilities: [...unavailable],
+      primaryCapability: primary,
+      secondaryCapabilities: secondary,
+      routingReason:
+        'Mobile approval question — MOBILE_APPROVAL_RUNTIME_FOUNDATION is the mobile approval session, request, decision, governance, and context authority; no execution, push notifications, or real approvals.',
+    };
+  }
 
   if (isMobilePreviewRuntimeFoundationQuestion(question)) {
     primary = 'MOBILE_PREVIEW_RUNTIME_FOUNDATION';

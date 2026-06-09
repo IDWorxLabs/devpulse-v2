@@ -502,6 +502,18 @@ const CAPABILITY_STAGE_MAP: Partial<Record<SelectedCapability, OperatorFeedStage
     'Archived',
     'Response Ready',
   ],
+  MOBILE_APPROVAL_RUNTIME_FOUNDATION: [
+    'Mobile Approval Session Created',
+    'Approval Request Registered',
+    'Waiting For Decision',
+    'Decision Recorded',
+    'Approval Approved',
+    'Approval Rejected',
+    'Approval Completed',
+    'Approval Failed',
+    'Approval Archived',
+    'Response Ready',
+  ],
 };
 
 const DEFAULT_STAGES: OperatorFeedStage[] = [
@@ -573,6 +585,7 @@ export function sourceSystemForCapability(capability: SelectedCapability | null)
     MOBILE_COMMAND_RUNTIME_FOUNDATION: 'mobile_command_runtime_foundation',
     MOBILE_CHAT_RUNTIME_FOUNDATION: 'mobile_chat_runtime_foundation',
     MOBILE_PREVIEW_RUNTIME_FOUNDATION: 'mobile_preview_runtime_foundation',
+    MOBILE_APPROVAL_RUNTIME_FOUNDATION: 'mobile_approval_runtime_foundation',
   };
   return map[capability] ?? 'command_center_brain';
 }

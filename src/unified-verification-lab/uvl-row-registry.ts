@@ -546,6 +546,37 @@ export const MOBILE_PREVIEW_RUNTIME_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'MOBILE_PREVIEW_RUNTIME_FOUNDATION_PANEL', module: 'mobile_preview_runtime_foundation', phase: 18.3, description: 'Unified Verification Lab panel snapshot for mobile preview runtime foundation', extensionOnly: true },
 ];
 
+export const MOBILE_APPROVAL_RUNTIME_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'MOBILE_APPROVAL_TYPES', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval types and models', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_REGISTRY', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval registry and orchestrator', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_STORE', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval in-memory store', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_SESSION_MANAGER', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval session manager without execution', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_STATE_MANAGER', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval state manager', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_LIFECYCLE', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval lifecycle tracking', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_OWNERSHIP', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval ownership tracking', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_CONTEXT', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval context aggregation', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_REQUEST_MANAGER', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval request metadata manager', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_DECISION_MANAGER', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval decision metadata manager', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_VISIBILITY', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval visibility metadata', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_COMMAND_BRIDGE', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile Command Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_CHAT_BRIDGE', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile Chat Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_PREVIEW_BRIDGE', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile Preview Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_WORLD2_BRIDGE', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'World 2 Execution Reality bridge', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_AIDEV_BRIDGE', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'AiDev Execution Runtime bridge', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_CLOUD_BRIDGE', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Cloud Runtime Foundation bridge', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_PROJECT_VAULT_BRIDGE', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Project Vault bridge', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_OPERATOR_FEED_BRIDGE', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Operator Feed bridge', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_QUERY', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval query layer', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_HISTORY', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval history tracking', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_REPORT_BUILDER', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval report builder', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_VALIDATOR', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval validation and duplicate risk safeguards', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_DIAGNOSTICS', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval diagnostics tracker', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_GOVERNANCE', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Mobile approval governance metadata', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION_ROUTING', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Command Center routing for mobile approval questions', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION_OPERATOR_FEED', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Operator feed stages for mobile approval runtime foundation', extensionOnly: true },
+  { rowId: 'MOBILE_APPROVAL_RUNTIME_FOUNDATION_PANEL', module: 'mobile_approval_runtime_foundation', phase: 18.4, description: 'Unified Verification Lab panel snapshot for mobile approval runtime foundation', extensionOnly: true },
+];
+
 export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   ...WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
@@ -573,6 +604,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...MOBILE_COMMAND_RUNTIME_FOUNDATION_UVL_ROWS,
   ...MOBILE_CHAT_RUNTIME_FOUNDATION_UVL_ROWS,
   ...MOBILE_PREVIEW_RUNTIME_FOUNDATION_UVL_ROWS,
+  ...MOBILE_APPROVAL_RUNTIME_FOUNDATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -677,6 +709,10 @@ export function listMobileChatRuntimeFoundationUvlRows(): UvlRow[] {
 
 export function listMobilePreviewRuntimeFoundationUvlRows(): UvlRow[] {
   return [...MOBILE_PREVIEW_RUNTIME_FOUNDATION_UVL_ROWS];
+}
+
+export function listMobileApprovalRuntimeFoundationUvlRows(): UvlRow[] {
+  return [...MOBILE_APPROVAL_RUNTIME_FOUNDATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

@@ -509,6 +509,17 @@ export function buildReasoningVisibilityRecord(query: string): ReasoningVisibili
       'DESKTOP_RECOMMENDED — metadata only, no preview rendering',
       'PREVIEW_LINK_REGISTERED → PREVIEW_PENDING → PREVIEW_READY',
     ],
+    mobileApprovalBasis: `Mobile approval runtime foundation advisory from ${evidence.length} evidence items and ${blockers.length} blockers — Phase 18.4 approval session, request, decision, governance, and context authority; no execution, push notifications, or real approvals.`,
+    mobileApprovalChain: [
+      'mappr-0001 → mapprsess-0001 → request/decision/governance metadata',
+      'CREATED → REQUEST_REGISTERED → WAITING_FOR_DECISION → DECISION_RECORDED → COMPLETED',
+      'mobile approval → mobile preview/chat/command/cloud/workspace/build bridges',
+    ],
+    mobileApprovalState: [
+      'REQUEST_REGISTERED → WAITING_FOR_DECISION → DECISION_RECORDED',
+      'APPROVED / REJECTED / PENDING / FOUNDER_ONLY — metadata only, no execution',
+      'GOVERNANCE_ALIGNED — authority only, no real approvals',
+    ],
     visibilityOnly: true,
   };
 }
