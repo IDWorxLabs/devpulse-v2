@@ -210,7 +210,8 @@ export type OwnershipDomain =
   | 'multi_project_monitoring'
   | 'missing_capability_escalation'
   | 'capability_research_engine'
-  | 'capability_planning_engine';
+  | 'capability_planning_engine'
+  | 'capability_build_engine';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

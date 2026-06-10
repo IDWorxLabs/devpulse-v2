@@ -859,6 +859,23 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const CAPABILITY_BUILD_ENGINE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'CAPABILITY_BUILD_TYPES', module: 'capability_build_engine', phase: 21.4, description: 'Capability build engine types and models', extensionOnly: true },
+  { rowId: 'CAPABILITY_BUILD_REGISTRY', module: 'capability_build_engine', phase: 21.4, description: 'Capability build plan registry', extensionOnly: true },
+  { rowId: 'CAPABILITY_MODULE_BUILDER', module: 'capability_build_engine', phase: 21.4, description: 'Capability module build planning', extensionOnly: true },
+  { rowId: 'CAPABILITY_INTEGRATION_BUILDER', module: 'capability_build_engine', phase: 21.4, description: 'Capability integration build planning', extensionOnly: true },
+  { rowId: 'CAPABILITY_SEQUENCE_BUILDER', module: 'capability_build_engine', phase: 21.4, description: 'Capability build sequence ordering', extensionOnly: true },
+  { rowId: 'CAPABILITY_ROLLOUT_BUILDER', module: 'capability_build_engine', phase: 21.4, description: 'Capability rollout stage planning', extensionOnly: true },
+  { rowId: 'CAPABILITY_ROLLBACK_BUILDER', module: 'capability_build_engine', phase: 21.4, description: 'Capability rollback strategy planning', extensionOnly: true },
+  { rowId: 'CAPABILITY_BUILD_RISK_ANALYZER', module: 'capability_build_engine', phase: 21.4, description: 'Capability build risk analysis', extensionOnly: true },
+  { rowId: 'CAPABILITY_BUILD_VALIDATION_PLANNER', module: 'capability_build_engine', phase: 21.4, description: 'Capability build validation planning', extensionOnly: true },
+  { rowId: 'CAPABILITY_BUILD_PIPELINE', module: 'capability_build_engine', phase: 21.4, description: 'Capability construction plan pipeline', extensionOnly: true },
+  { rowId: 'CAPABILITY_BUILD_HISTORY', module: 'capability_build_engine', phase: 21.4, description: 'Bounded capability build history', extensionOnly: true },
+  { rowId: 'CAPABILITY_BUILD_REPORTING', module: 'capability_build_engine', phase: 21.4, description: 'Capability build report generation', extensionOnly: true },
+  { rowId: 'CAPABILITY_BUILD_CACHE', module: 'capability_build_engine', phase: 21.4, description: 'Capability build lookup cache', extensionOnly: true },
+  { rowId: 'CAPABILITY_BUILD_ENGINE', module: 'capability_build_engine', phase: 21.4, description: 'Capability build engine orchestration and read-only registration', extensionOnly: true },
+];
+
 export const CAPABILITY_PLANNING_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'CAPABILITY_PLANNING_TYPES', module: 'capability_planning_engine', phase: 21.3, description: 'Capability planning engine types and models', extensionOnly: true },
   { rowId: 'CAPABILITY_PLAN_REGISTRY', module: 'capability_planning_engine', phase: 21.3, description: 'Capability plan record registry', extensionOnly: true },
@@ -1134,6 +1151,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...MISSING_CAPABILITY_ESCALATION_UVL_ROWS,
   ...CAPABILITY_RESEARCH_ENGINE_UVL_ROWS,
   ...CAPABILITY_PLANNING_ENGINE_UVL_ROWS,
+  ...CAPABILITY_BUILD_ENGINE_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1338,6 +1356,10 @@ export function listCapabilityResearchEngineUvlRows(): UvlRow[] {
 
 export function listCapabilityPlanningEngineUvlRows(): UvlRow[] {
   return [...CAPABILITY_PLANNING_ENGINE_UVL_ROWS];
+}
+
+export function listCapabilityBuildEngineUvlRows(): UvlRow[] {
+  return [...CAPABILITY_BUILD_ENGINE_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

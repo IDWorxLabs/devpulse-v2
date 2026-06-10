@@ -255,6 +255,8 @@ export {
   listCapabilityResearchEngineUvlRows,
   CAPABILITY_PLANNING_ENGINE_UVL_ROWS,
   listCapabilityPlanningEngineUvlRows,
+  CAPABILITY_BUILD_ENGINE_UVL_ROWS,
+  listCapabilityBuildEngineUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';
