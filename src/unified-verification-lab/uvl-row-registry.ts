@@ -859,6 +859,21 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const AUTONOMOUS_VERIFICATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'AUTONOMOUS_VERIFICATION_TYPES', module: 'autonomous_verification', phase: 19.6, description: 'Autonomous verification types and models', extensionOnly: true },
+  { rowId: 'EVIDENCE_ANALYZER', module: 'autonomous_verification', phase: 19.6, description: 'Verification evidence analysis', extensionOnly: true },
+  { rowId: 'VERIFICATION_TRUST_ANALYZER', module: 'autonomous_verification', phase: 19.6, description: 'Verification trust analysis', extensionOnly: true },
+  { rowId: 'VERIFICATION_RISK_ANALYZER', module: 'autonomous_verification', phase: 19.6, description: 'Verification risk analysis', extensionOnly: true },
+  { rowId: 'VERIFICATION_CONFIDENCE_ANALYZER', module: 'autonomous_verification', phase: 19.6, description: 'Verification confidence analysis', extensionOnly: true },
+  { rowId: 'VERIFICATION_STRATEGY_SELECTOR', module: 'autonomous_verification', phase: 19.6, description: 'Verification decision selection rules', extensionOnly: true },
+  { rowId: 'VERIFICATION_READINESS_EVALUATOR', module: 'autonomous_verification', phase: 19.6, description: 'Verification readiness evaluation', extensionOnly: true },
+  { rowId: 'VERIFICATION_DECISION_BUILDER', module: 'autonomous_verification', phase: 19.6, description: 'Verification decision builder pipeline', extensionOnly: true },
+  { rowId: 'VERIFICATION_REPORTING', module: 'autonomous_verification', phase: 19.6, description: 'Verification report generation', extensionOnly: true },
+  { rowId: 'VERIFICATION_HISTORY', module: 'autonomous_verification', phase: 19.6, description: 'Bounded verification history', extensionOnly: true },
+  { rowId: 'VERIFICATION_REGISTRY', module: 'autonomous_verification', phase: 19.6, description: 'Verification decision registry metadata', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_VERIFICATION', module: 'autonomous_verification', phase: 19.6, description: 'Autonomous verification orchestration and read-only registration', extensionOnly: true },
+];
+
 export const AUTONOMOUS_FIXING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'AUTONOMOUS_FIXING_TYPES', module: 'autonomous_fixing', phase: 19.5, description: 'Autonomous fixing types and models', extensionOnly: true },
   { rowId: 'FAILURE_CLASSIFIER', module: 'autonomous_fixing', phase: 19.5, description: 'Failure classification into subsystem categories', extensionOnly: true },
@@ -932,6 +947,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...VERIFICATION_INTEGRATION_UVL_ROWS,
   ...AUTONOMOUS_TESTING_UVL_ROWS,
   ...AUTONOMOUS_FIXING_UVL_ROWS,
+  ...AUTONOMOUS_VERIFICATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1088,6 +1104,10 @@ export function listAutonomousTestingUvlRows(): UvlRow[] {
 
 export function listAutonomousFixingUvlRows(): UvlRow[] {
   return [...AUTONOMOUS_FIXING_UVL_ROWS];
+}
+
+export function listAutonomousVerificationUvlRows(): UvlRow[] {
+  return [...AUTONOMOUS_VERIFICATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

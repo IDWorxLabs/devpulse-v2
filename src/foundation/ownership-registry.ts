@@ -994,6 +994,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 19.5,
     description: 'Phase 19.5 Autonomous Fixing — failure classification, root cause analysis, repair strategy selection, risk/confidence analysis, rollback planning, fix plans, and reporting; planning only, no code modification',
   },
+  autonomous_verification: {
+    domain: 'autonomous_verification',
+    ownerModule: 'devpulse_v2_autonomous_verification',
+    ownerFunction: 'getDevPulseV2AutonomousVerification',
+    phase: 19.6,
+    description: 'Phase 19.6 Autonomous Verification — evidence analysis, trust evaluation, verification confidence/risk analysis, readiness, decision building, and reporting; analysis only, no code modification',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {
