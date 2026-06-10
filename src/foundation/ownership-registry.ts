@@ -1148,6 +1148,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 23.1,
     description: 'Phase 23.1 Reliability Hardening — failure surface, stability, boundary, recovery readiness, and consistency analysis for product hardening; read-only, no execution or mutations',
   },
+  performance_hardening: {
+    domain: 'performance_hardening',
+    ownerModule: 'devpulse_v2_performance_hardening',
+    ownerFunction: 'getDevPulseV2PerformanceHardening',
+    phase: 23.2,
+    description: 'Phase 23.2 Performance Hardening — startup, validation, cache, UI responsiveness, and bottleneck analysis for performance visibility; read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

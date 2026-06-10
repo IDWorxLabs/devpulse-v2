@@ -972,6 +972,22 @@ export const UNIFIED_TRUST_SCORE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'UNIFIED_TRUST_SCORE_ENGINE', module: 'unified_trust_score', phase: 22.6, description: 'Unified trust score orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const PERFORMANCE_HARDENING_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'PERFORMANCE_HARDENING_TYPES', module: 'performance_hardening', phase: 23.2, description: 'Performance hardening types and models', extensionOnly: true },
+  { rowId: 'PERFORMANCE_HARDENING_REGISTRY', module: 'performance_hardening', phase: 23.2, description: 'Performance hardening record registry and lookup', extensionOnly: true },
+  { rowId: 'STARTUP_PERFORMANCE_ANALYZER', module: 'performance_hardening', phase: 23.2, description: 'Startup performance risk detection and scoring', extensionOnly: true },
+  { rowId: 'VALIDATION_PERFORMANCE_ANALYZER', module: 'performance_hardening', phase: 23.2, description: 'Validation performance risk detection and scoring', extensionOnly: true },
+  { rowId: 'CACHE_EFFICIENCY_ANALYZER', module: 'performance_hardening', phase: 23.2, description: 'Cache and memory efficiency risk analysis', extensionOnly: true },
+  { rowId: 'UI_RESPONSIVENESS_ANALYZER', module: 'performance_hardening', phase: 23.2, description: 'UI and mobile responsiveness risk analysis', extensionOnly: true },
+  { rowId: 'PERFORMANCE_BOTTLENECK_DETECTOR', module: 'performance_hardening', phase: 23.2, description: 'Performance bottleneck detection and prioritization', extensionOnly: true },
+  { rowId: 'PERFORMANCE_AUTHORITY_BUILDER', module: 'performance_hardening', phase: 23.2, description: 'Unified performance hardening authority aggregation', extensionOnly: true },
+  { rowId: 'PERFORMANCE_HARDENING_EVALUATOR', module: 'performance_hardening', phase: 23.2, description: 'Final performance score, state, and risk evaluation', extensionOnly: true },
+  { rowId: 'PERFORMANCE_HARDENING_HISTORY', module: 'performance_hardening', phase: 23.2, description: 'Bounded performance hardening history', extensionOnly: true },
+  { rowId: 'PERFORMANCE_HARDENING_REPORTING', module: 'performance_hardening', phase: 23.2, description: 'Performance hardening report and recommendation generation', extensionOnly: true },
+  { rowId: 'PERFORMANCE_HARDENING_CACHE', module: 'performance_hardening', phase: 23.2, description: 'Performance hardening lookup cache', extensionOnly: true },
+  { rowId: 'PERFORMANCE_HARDENING_ENGINE', module: 'performance_hardening', phase: 23.2, description: 'Performance hardening orchestration and read-only registration', extensionOnly: true },
+];
+
 export const RELIABILITY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'RELIABILITY_HARDENING_TYPES', module: 'reliability_hardening', phase: 23.1, description: 'Reliability hardening types and models', extensionOnly: true },
   { rowId: 'RELIABILITY_HARDENING_REGISTRY', module: 'reliability_hardening', phase: 23.1, description: 'Reliability hardening record registry and lookup', extensionOnly: true },
@@ -1306,6 +1322,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...PREDICTION_TRUST_LAYER_UVL_ROWS,
   ...UNIFIED_TRUST_SCORE_UVL_ROWS,
   ...RELIABILITY_HARDENING_UVL_ROWS,
+  ...PERFORMANCE_HARDENING_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1550,6 +1567,10 @@ export function listUnifiedTrustScoreUvlRows(): UvlRow[] {
 
 export function listReliabilityHardeningUvlRows(): UvlRow[] {
   return [...RELIABILITY_HARDENING_UVL_ROWS];
+}
+
+export function listPerformanceHardeningUvlRows(): UvlRow[] {
+  return [...PERFORMANCE_HARDENING_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {
