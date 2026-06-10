@@ -201,7 +201,8 @@ export type OwnershipDomain =
   | 'autonomous_fixing'
   | 'autonomous_verification'
   | 'autonomous_completion_engine'
-  | 'multi_project_foundation';
+  | 'multi_project_foundation'
+  | 'workspace_isolation_expansion';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

@@ -1015,6 +1015,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 20.1,
     description: 'Phase 20.1 Multi Project Foundation — project registry, identity, state, workspace mapping, context, history, lifecycle, isolation, and coordination; foundation only, no execution',
   },
+  workspace_isolation_expansion: {
+    domain: 'workspace_isolation_expansion',
+    ownerModule: 'devpulse_v2_workspace_isolation_expansion',
+    ownerFunction: 'getDevPulseV2WorkspaceIsolationExpansion',
+    phase: 20.2,
+    description: 'Phase 20.2 Workspace Isolation Expansion — workspace boundaries, ownership, access control, policy, isolation validation, violation detection, and reporting; isolation only, no execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

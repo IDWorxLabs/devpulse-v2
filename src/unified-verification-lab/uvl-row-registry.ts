@@ -859,6 +859,22 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const WORKSPACE_ISOLATION_EXPANSION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'WORKSPACE_ISOLATION_TYPES', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace isolation expansion types and models', extensionOnly: true },
+  { rowId: 'WORKSPACE_REGISTRY', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Scalable workspace registry', extensionOnly: true },
+  { rowId: 'WORKSPACE_BOUNDARY_MANAGER', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace boundary definition and validation', extensionOnly: true },
+  { rowId: 'WORKSPACE_OWNERSHIP_MANAGER', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace ownership assignment', extensionOnly: true },
+  { rowId: 'WORKSPACE_ACCESS_CONTROLLER', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace access control', extensionOnly: true },
+  { rowId: 'WORKSPACE_POLICY_ENGINE', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace policy evaluation', extensionOnly: true },
+  { rowId: 'WORKSPACE_ISOLATION_VALIDATOR', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace isolation validation', extensionOnly: true },
+  { rowId: 'WORKSPACE_VIOLATION_DETECTOR', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace violation detection', extensionOnly: true },
+  { rowId: 'WORKSPACE_STATE_MANAGER', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace state transitions', extensionOnly: true },
+  { rowId: 'WORKSPACE_BOUNDARY_REPORTING', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace boundary reporting', extensionOnly: true },
+  { rowId: 'WORKSPACE_CACHE', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace lookup cache', extensionOnly: true },
+  { rowId: 'WORKSPACE_COORDINATOR', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace coordination pipeline', extensionOnly: true },
+  { rowId: 'WORKSPACE_ISOLATION_EXPANSION', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace isolation expansion orchestration and read-only registration', extensionOnly: true },
+];
+
 export const MULTI_PROJECT_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'MULTI_PROJECT_TYPES', module: 'multi_project_foundation', phase: 20.1, description: 'Multi project foundation types and models', extensionOnly: true },
   { rowId: 'PROJECT_REGISTRY', module: 'multi_project_foundation', phase: 20.1, description: 'Multi project registry with scalable lookup', extensionOnly: true },
@@ -982,6 +998,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...AUTONOMOUS_VERIFICATION_UVL_ROWS,
   ...AUTONOMOUS_COMPLETION_ENGINE_UVL_ROWS,
   ...MULTI_PROJECT_FOUNDATION_UVL_ROWS,
+  ...WORKSPACE_ISOLATION_EXPANSION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1150,6 +1167,10 @@ export function listAutonomousCompletionEngineUvlRows(): UvlRow[] {
 
 export function listMultiProjectFoundationUvlRows(): UvlRow[] {
   return [...MULTI_PROJECT_FOUNDATION_UVL_ROWS];
+}
+
+export function listWorkspaceIsolationExpansionUvlRows(): UvlRow[] {
+  return [...WORKSPACE_ISOLATION_EXPANSION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

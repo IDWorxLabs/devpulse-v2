@@ -237,6 +237,8 @@ export {
   listAutonomousCompletionEngineUvlRows,
   MULTI_PROJECT_FOUNDATION_UVL_ROWS,
   listMultiProjectFoundationUvlRows,
+  WORKSPACE_ISOLATION_EXPANSION_UVL_ROWS,
+  listWorkspaceIsolationExpansionUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

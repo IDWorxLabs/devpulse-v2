@@ -271,6 +271,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'WORKSPACE_ISOLATION_EXPANSION',
+    label: 'Workspace Isolation Expansion',
+    phase: 20.2,
+    ownerModule: 'devpulse_v2_workspace_isolation_expansion',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,
