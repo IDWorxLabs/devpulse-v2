@@ -247,6 +247,8 @@ export {
   listMultiProjectVerificationUvlRows,
   MULTI_PROJECT_VERIFICATION_ORCHESTRATION_UVL_ROWS,
   listMultiProjectVerificationOrchestrationUvlRows,
+  MULTI_PROJECT_MONITORING_UVL_ROWS,
+  listMultiProjectMonitoringUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

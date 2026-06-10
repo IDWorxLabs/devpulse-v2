@@ -306,6 +306,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'MULTI_PROJECT_MONITORING',
+    label: 'Multi Project Monitoring',
+    phase: 20.6,
+    ownerModule: 'devpulse_v2_multi_project_monitoring',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

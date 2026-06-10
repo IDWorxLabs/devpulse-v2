@@ -206,7 +206,8 @@ export type OwnershipDomain =
   | 'resource_allocation'
   | 'parallel_build_orchestration'
   | 'multi_project_verification'
-  | 'multi_project_verification_orchestration';
+  | 'multi_project_verification_orchestration'
+  | 'multi_project_monitoring';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

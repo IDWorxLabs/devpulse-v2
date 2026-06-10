@@ -859,6 +859,23 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const MULTI_PROJECT_MONITORING_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'MULTI_PROJECT_MONITORING_TYPES', module: 'multi_project_monitoring', phase: 20.6, description: 'Multi project monitoring types and models', extensionOnly: true },
+  { rowId: 'PROJECT_MONITOR_REGISTRY', module: 'multi_project_monitoring', phase: 20.6, description: 'Project monitor registry with scalable lookup', extensionOnly: true },
+  { rowId: 'PROJECT_OPERATOR_FEED_MANAGER', module: 'multi_project_monitoring', phase: 20.6, description: 'Isolated operator feed per project', extensionOnly: true },
+  { rowId: 'PROJECT_EVENT_STREAM_MANAGER', module: 'multi_project_monitoring', phase: 20.6, description: 'Isolated project event streams', extensionOnly: true },
+  { rowId: 'PROJECT_TIMELINE_MANAGER', module: 'multi_project_monitoring', phase: 20.6, description: 'Chronological project timelines', extensionOnly: true },
+  { rowId: 'PROJECT_PROGRESS_TRACKER', module: 'multi_project_monitoring', phase: 20.6, description: 'Independent project progress tracking', extensionOnly: true },
+  { rowId: 'PROJECT_LIVE_PREVIEW_MANAGER', module: 'multi_project_monitoring', phase: 20.6, description: 'Isolated live preview per project', extensionOnly: true },
+  { rowId: 'PROJECT_PREVIEW_SESSION_MANAGER', module: 'multi_project_monitoring', phase: 20.6, description: 'Multiple simultaneous preview sessions', extensionOnly: true },
+  { rowId: 'PORTFOLIO_MONITOR_MANAGER', module: 'multi_project_monitoring', phase: 20.6, description: 'Portfolio monitoring health model', extensionOnly: true },
+  { rowId: 'MONITORING_ALERT_MANAGER', module: 'multi_project_monitoring', phase: 20.6, description: 'Monitoring alert generation', extensionOnly: true },
+  { rowId: 'MONITORING_REPORTING', module: 'multi_project_monitoring', phase: 20.6, description: 'Multi project monitoring reporting', extensionOnly: true },
+  { rowId: 'MONITORING_HISTORY', module: 'multi_project_monitoring', phase: 20.6, description: 'Bounded monitoring history', extensionOnly: true },
+  { rowId: 'MONITORING_CACHE', module: 'multi_project_monitoring', phase: 20.6, description: 'Monitoring lookup cache', extensionOnly: true },
+  { rowId: 'MULTI_PROJECT_MONITORING', module: 'multi_project_monitoring', phase: 20.6, description: 'Multi project monitoring orchestration and read-only registration', extensionOnly: true },
+];
+
 export const MULTI_PROJECT_VERIFICATION_ORCHESTRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_ORCHESTRATION_TYPES', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Multi project verification orchestration types and models', extensionOnly: true },
   { rowId: 'VERIFICATION_ORCHESTRATION_REGISTRY', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Verification orchestration plan registry', extensionOnly: true },
@@ -1067,6 +1084,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...PARALLEL_BUILD_ORCHESTRATION_UVL_ROWS,
   ...MULTI_PROJECT_VERIFICATION_UVL_ROWS,
   ...MULTI_PROJECT_VERIFICATION_ORCHESTRATION_UVL_ROWS,
+  ...MULTI_PROJECT_MONITORING_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1255,6 +1273,10 @@ export function listMultiProjectVerificationUvlRows(): UvlRow[] {
 
 export function listMultiProjectVerificationOrchestrationUvlRows(): UvlRow[] {
   return [...MULTI_PROJECT_VERIFICATION_ORCHESTRATION_UVL_ROWS];
+}
+
+export function listMultiProjectMonitoringUvlRows(): UvlRow[] {
+  return [...MULTI_PROJECT_MONITORING_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {
