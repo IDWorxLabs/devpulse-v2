@@ -1218,6 +1218,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 24.5,
     description: 'Phase 24.5 API Documentation — API surface, interface, contract, integration, and command documentation intelligence; read-only, no execution or mutations',
   },
+  interactive_explanations: {
+    domain: 'interactive_explanations',
+    ownerModule: 'devpulse_v2_interactive_explanations',
+    ownerFunction: 'getDevPulseV2InteractiveExplanations',
+    phase: 24.6,
+    description: 'Phase 24.6 Interactive Explanations — system, workflow, reasoning, report, and next-step explanation intelligence; read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

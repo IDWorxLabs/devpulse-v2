@@ -1084,6 +1084,22 @@ export const API_DOCUMENTATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'API_DOCUMENTATION_ENGINE', module: 'api_documentation', phase: 24.5, description: 'API documentation orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const INTERACTIVE_EXPLANATIONS_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'INTERACTIVE_EXPLANATIONS_TYPES', module: 'interactive_explanations', phase: 24.6, description: 'Interactive explanations types and models', extensionOnly: true },
+  { rowId: 'INTERACTIVE_EXPLANATIONS_REGISTRY', module: 'interactive_explanations', phase: 24.6, description: 'Interactive explanation record registry and lookup', extensionOnly: true },
+  { rowId: 'SYSTEM_EXPLANATION_ANALYZER', module: 'interactive_explanations', phase: 24.6, description: 'System explanation coverage analysis', extensionOnly: true },
+  { rowId: 'WORKFLOW_EXPLANATION_ANALYZER', module: 'interactive_explanations', phase: 24.6, description: 'Workflow explanation coverage analysis', extensionOnly: true },
+  { rowId: 'REASONING_EXPLANATION_ANALYZER', module: 'interactive_explanations', phase: 24.6, description: 'Reasoning explanation coverage analysis', extensionOnly: true },
+  { rowId: 'REPORT_INTERPRETATION_ANALYZER', module: 'interactive_explanations', phase: 24.6, description: 'Report interpretation coverage analysis', extensionOnly: true },
+  { rowId: 'NEXT_STEP_GUIDANCE_ANALYZER', module: 'interactive_explanations', phase: 24.6, description: 'Next-step guidance coverage analysis', extensionOnly: true },
+  { rowId: 'INTERACTIVE_EXPLANATIONS_AUTHORITY_BUILDER', module: 'interactive_explanations', phase: 24.6, description: 'Unified interactive explanations authority aggregation', extensionOnly: true },
+  { rowId: 'INTERACTIVE_EXPLANATIONS_EVALUATOR', module: 'interactive_explanations', phase: 24.6, description: 'Final explanation coverage and state evaluation', extensionOnly: true },
+  { rowId: 'INTERACTIVE_EXPLANATIONS_HISTORY', module: 'interactive_explanations', phase: 24.6, description: 'Bounded interactive explanations history', extensionOnly: true },
+  { rowId: 'INTERACTIVE_EXPLANATIONS_REPORTING', module: 'interactive_explanations', phase: 24.6, description: 'Interactive explanations report and recommendation generation', extensionOnly: true },
+  { rowId: 'INTERACTIVE_EXPLANATIONS_CACHE', module: 'interactive_explanations', phase: 24.6, description: 'Interactive explanations lookup cache', extensionOnly: true },
+  { rowId: 'INTERACTIVE_EXPLANATIONS_ENGINE', module: 'interactive_explanations', phase: 24.6, description: 'Interactive explanations orchestration and read-only registration', extensionOnly: true },
+];
+
 export const PRIVACY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'PRIVACY_HARDENING_TYPES', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening types and models', extensionOnly: true },
   { rowId: 'PRIVACY_HARDENING_REGISTRY', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening record registry and lookup', extensionOnly: true },
@@ -1477,6 +1493,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...USER_GUIDES_UVL_ROWS,
   ...ARCHITECTURE_DOCUMENTATION_UVL_ROWS,
   ...API_DOCUMENTATION_UVL_ROWS,
+  ...INTERACTIVE_EXPLANATIONS_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1761,6 +1778,10 @@ export function listArchitectureDocumentationUvlRows(): UvlRow[] {
 
 export function listApiDocumentationUvlRows(): UvlRow[] {
   return [...API_DOCUMENTATION_UVL_ROWS];
+}
+
+export function listInteractiveExplanationsUvlRows(): UvlRow[] {
+  return [...INTERACTIVE_EXPLANATIONS_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

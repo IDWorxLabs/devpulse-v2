@@ -230,7 +230,8 @@ export type OwnershipDomain =
   | 'founder_guides'
   | 'user_guides'
   | 'architecture_documentation'
-  | 'api_documentation';
+  | 'api_documentation'
+  | 'interactive_explanations';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

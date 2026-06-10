@@ -474,6 +474,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'INTERACTIVE_EXPLANATIONS',
+    label: 'Interactive Explanations',
+    phase: 24.6,
+    ownerModule: 'devpulse_v2_interactive_explanations',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,
