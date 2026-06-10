@@ -859,6 +859,22 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const MULTI_PROJECT_FOUNDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'MULTI_PROJECT_TYPES', module: 'multi_project_foundation', phase: 20.1, description: 'Multi project foundation types and models', extensionOnly: true },
+  { rowId: 'PROJECT_REGISTRY', module: 'multi_project_foundation', phase: 20.1, description: 'Multi project registry with scalable lookup', extensionOnly: true },
+  { rowId: 'PROJECT_IDENTITY_MANAGER', module: 'multi_project_foundation', phase: 20.1, description: 'Collision-safe project identity generation', extensionOnly: true },
+  { rowId: 'PROJECT_STATE_MANAGER', module: 'multi_project_foundation', phase: 20.1, description: 'Validated project state transitions', extensionOnly: true },
+  { rowId: 'PROJECT_WORKSPACE_MAPPER', module: 'multi_project_foundation', phase: 20.1, description: 'Isolated project workspace mapping', extensionOnly: true },
+  { rowId: 'PROJECT_CONTEXT_MANAGER', module: 'multi_project_foundation', phase: 20.1, description: 'Isolated per-project context storage', extensionOnly: true },
+  { rowId: 'PROJECT_HISTORY_MANAGER', module: 'multi_project_foundation', phase: 20.1, description: 'Bounded project event history', extensionOnly: true },
+  { rowId: 'PROJECT_LIFECYCLE_MANAGER', module: 'multi_project_foundation', phase: 20.1, description: 'Project lifecycle evaluation', extensionOnly: true },
+  { rowId: 'PROJECT_ISOLATION_POLICY', module: 'multi_project_foundation', phase: 20.1, description: 'Cross-project isolation validation', extensionOnly: true },
+  { rowId: 'PROJECT_COORDINATOR', module: 'multi_project_foundation', phase: 20.1, description: 'Single-project coordination pipeline', extensionOnly: true },
+  { rowId: 'PROJECT_REPORTING', module: 'multi_project_foundation', phase: 20.1, description: 'Project report generation', extensionOnly: true },
+  { rowId: 'PROJECT_REGISTRY_CACHE', module: 'multi_project_foundation', phase: 20.1, description: 'Project registry lookup cache', extensionOnly: true },
+  { rowId: 'MULTI_PROJECT_FOUNDATION', module: 'multi_project_foundation', phase: 20.1, description: 'Multi project foundation orchestration and read-only registration', extensionOnly: true },
+];
+
 export const AUTONOMOUS_COMPLETION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'AUTONOMOUS_COMPLETION_ENGINE_TYPES', module: 'autonomous_completion_engine', phase: 19.7, description: 'Autonomous completion engine types and models', extensionOnly: true },
   { rowId: 'COMPLETION_EVIDENCE_ANALYZER', module: 'autonomous_completion_engine', phase: 19.7, description: 'Completion evidence analysis from autonomous stack', extensionOnly: true },
@@ -965,6 +981,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...AUTONOMOUS_FIXING_UVL_ROWS,
   ...AUTONOMOUS_VERIFICATION_UVL_ROWS,
   ...AUTONOMOUS_COMPLETION_ENGINE_UVL_ROWS,
+  ...MULTI_PROJECT_FOUNDATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1129,6 +1146,10 @@ export function listAutonomousVerificationUvlRows(): UvlRow[] {
 
 export function listAutonomousCompletionEngineUvlRows(): UvlRow[] {
   return [...AUTONOMOUS_COMPLETION_ENGINE_UVL_ROWS];
+}
+
+export function listMultiProjectFoundationUvlRows(): UvlRow[] {
+  return [...MULTI_PROJECT_FOUNDATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

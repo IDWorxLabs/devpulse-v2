@@ -264,6 +264,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'MULTI_PROJECT_FOUNDATION',
+    label: 'Multi Project Foundation',
+    phase: 20.1,
+    ownerModule: 'devpulse_v2_multi_project_foundation',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

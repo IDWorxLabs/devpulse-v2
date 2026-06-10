@@ -200,7 +200,8 @@ export type OwnershipDomain =
   | 'autonomous_testing'
   | 'autonomous_fixing'
   | 'autonomous_verification'
-  | 'autonomous_completion_engine';
+  | 'autonomous_completion_engine'
+  | 'multi_project_foundation';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

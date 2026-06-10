@@ -1008,6 +1008,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 19.7,
     description: 'Phase 19.7 Autonomous Completion Engine — completion evidence analysis, confidence/risk evaluation, readiness, loop guard, decision authority, state model, and reporting; decision only, no code modification',
   },
+  multi_project_foundation: {
+    domain: 'multi_project_foundation',
+    ownerModule: 'devpulse_v2_multi_project_foundation',
+    ownerFunction: 'getDevPulseV2MultiProjectFoundation',
+    phase: 20.1,
+    description: 'Phase 20.1 Multi Project Foundation — project registry, identity, state, workspace mapping, context, history, lifecycle, isolation, and coordination; foundation only, no execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

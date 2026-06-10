@@ -235,6 +235,8 @@ export {
   listAutonomousVerificationUvlRows,
   AUTONOMOUS_COMPLETION_ENGINE_UVL_ROWS,
   listAutonomousCompletionEngineUvlRows,
+  MULTI_PROJECT_FOUNDATION_UVL_ROWS,
+  listMultiProjectFoundationUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';
