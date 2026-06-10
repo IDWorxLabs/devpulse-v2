@@ -972,6 +972,22 @@ export const UNIFIED_TRUST_SCORE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'UNIFIED_TRUST_SCORE_ENGINE', module: 'unified_trust_score', phase: 22.6, description: 'Unified trust score orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const RECOVERY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'RECOVERY_HARDENING_TYPES', module: 'recovery_hardening', phase: 23.5, description: 'Recovery hardening types and models', extensionOnly: true },
+  { rowId: 'RECOVERY_HARDENING_REGISTRY', module: 'recovery_hardening', phase: 23.5, description: 'Recovery hardening record registry and lookup', extensionOnly: true },
+  { rowId: 'ROLLBACK_READINESS_ANALYZER', module: 'recovery_hardening', phase: 23.5, description: 'Rollback readiness detection and scoring', extensionOnly: true },
+  { rowId: 'FAILURE_CONTAINMENT_ANALYZER', module: 'recovery_hardening', phase: 23.5, description: 'Failure containment readiness analysis', extensionOnly: true },
+  { rowId: 'RESET_READINESS_ANALYZER', module: 'recovery_hardening', phase: 23.5, description: 'Reset readiness gap analysis', extensionOnly: true },
+  { rowId: 'ESCALATION_READINESS_ANALYZER', module: 'recovery_hardening', phase: 23.5, description: 'Escalation readiness gap analysis', extensionOnly: true },
+  { rowId: 'DISASTER_RECOVERY_READINESS_ANALYZER', module: 'recovery_hardening', phase: 23.5, description: 'Disaster recovery readiness analysis', extensionOnly: true },
+  { rowId: 'RECOVERY_AUTHORITY_BUILDER', module: 'recovery_hardening', phase: 23.5, description: 'Unified recovery hardening authority aggregation', extensionOnly: true },
+  { rowId: 'RECOVERY_HARDENING_EVALUATOR', module: 'recovery_hardening', phase: 23.5, description: 'Final recovery score, state, and risk evaluation', extensionOnly: true },
+  { rowId: 'RECOVERY_HARDENING_HISTORY', module: 'recovery_hardening', phase: 23.5, description: 'Bounded recovery hardening history', extensionOnly: true },
+  { rowId: 'RECOVERY_HARDENING_REPORTING', module: 'recovery_hardening', phase: 23.5, description: 'Recovery hardening report and recommendation generation', extensionOnly: true },
+  { rowId: 'RECOVERY_HARDENING_CACHE', module: 'recovery_hardening', phase: 23.5, description: 'Recovery hardening lookup cache', extensionOnly: true },
+  { rowId: 'RECOVERY_HARDENING_ENGINE', module: 'recovery_hardening', phase: 23.5, description: 'Recovery hardening orchestration and read-only registration', extensionOnly: true },
+];
+
 export const PRIVACY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'PRIVACY_HARDENING_TYPES', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening types and models', extensionOnly: true },
   { rowId: 'PRIVACY_HARDENING_REGISTRY', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening record registry and lookup', extensionOnly: true },
@@ -1358,6 +1374,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...PERFORMANCE_HARDENING_UVL_ROWS,
   ...SECURITY_HARDENING_UVL_ROWS,
   ...PRIVACY_HARDENING_UVL_ROWS,
+  ...RECOVERY_HARDENING_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1614,6 +1631,10 @@ export function listSecurityHardeningUvlRows(): UvlRow[] {
 
 export function listPrivacyHardeningUvlRows(): UvlRow[] {
   return [...PRIVACY_HARDENING_UVL_ROWS];
+}
+
+export function listRecoveryHardeningUvlRows(): UvlRow[] {
+  return [...RECOVERY_HARDENING_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

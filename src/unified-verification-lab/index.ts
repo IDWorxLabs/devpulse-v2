@@ -281,6 +281,8 @@ export {
   listSecurityHardeningUvlRows,
   PRIVACY_HARDENING_UVL_ROWS,
   listPrivacyHardeningUvlRows,
+  RECOVERY_HARDENING_UVL_ROWS,
+  listRecoveryHardeningUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

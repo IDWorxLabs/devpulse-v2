@@ -425,6 +425,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'RECOVERY_HARDENING',
+    label: 'Recovery Hardening',
+    phase: 23.5,
+    ownerModule: 'devpulse_v2_recovery_hardening',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

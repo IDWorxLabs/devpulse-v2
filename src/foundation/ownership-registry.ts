@@ -1169,6 +1169,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 23.4,
     description: 'Phase 23.4 Privacy Hardening — personal data surfaces, data boundaries, retention, disclosure, redaction readiness, and compliance readiness analysis; read-only, no execution or mutations',
   },
+  recovery_hardening: {
+    domain: 'recovery_hardening',
+    ownerModule: 'devpulse_v2_recovery_hardening',
+    ownerFunction: 'getDevPulseV2RecoveryHardening',
+    phase: 23.5,
+    description: 'Phase 23.5 Recovery Hardening — rollback, containment, reset, escalation, and disaster recovery readiness analysis; read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {
