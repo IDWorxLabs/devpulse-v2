@@ -271,6 +271,8 @@ export {
   listCompletionTruthEngineUvlRows,
   PREDICTION_TRUST_LAYER_UVL_ROWS,
   listPredictionTrustLayerUvlRows,
+  UNIFIED_TRUST_SCORE_UVL_ROWS,
+  listUnifiedTrustScoreUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

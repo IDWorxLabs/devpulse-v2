@@ -1134,6 +1134,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 22.5,
     description: 'Phase 22.5 Prediction Trust Layer — predicts future trust risk before failure happens; prediction only, read-only, no execution or mutations',
   },
+  unified_trust_score: {
+    domain: 'unified_trust_score',
+    ownerModule: 'devpulse_v2_unified_trust_score',
+    ownerFunction: 'getDevPulseV2UnifiedTrustScore',
+    phase: 22.6,
+    description: 'Phase 22.6 Unified Trust Score — single authoritative trust score for project, workspace, verification, and completion state; read-only, scoring only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

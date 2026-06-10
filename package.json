@@ -163,6 +163,7 @@
     "validate:reality-verification-expansion": "tsx scripts/validate-reality-verification-expansion.ts",
     "validate:completion-truth-engine": "tsx scripts/validate-completion-truth-engine.ts",
     "validate:prediction-trust-layer": "tsx scripts/validate-prediction-trust-layer.ts",
+    "validate:unified-trust-score": "tsx scripts/validate-unified-trust-score.ts",
     "validate:verification-integration": "tsx scripts/validate-verification-integration.ts",
     "validate:verification-intelligence": "tsx scripts/validate-verification-intelligence.ts",
     "validate:verification-strategy-core": "tsx scripts/validate-verification-strategy-core.ts",

@@ -956,6 +956,22 @@ export const PREDICTION_TRUST_LAYER_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'PREDICTION_TRUST_LAYER', module: 'prediction_trust_layer', phase: 22.5, description: 'Prediction trust layer orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const UNIFIED_TRUST_SCORE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'UNIFIED_TRUST_SCORE_TYPES', module: 'unified_trust_score', phase: 22.6, description: 'Unified trust score types and models', extensionOnly: true },
+  { rowId: 'UNIFIED_TRUST_SCORE_REGISTRY', module: 'unified_trust_score', phase: 22.6, description: 'Unified trust score record registry and lookup', extensionOnly: true },
+  { rowId: 'TRUST_SCORE_INPUT_COLLECTOR', module: 'unified_trust_score', phase: 22.6, description: 'Trust score input collection from upstream trust modules', extensionOnly: true },
+  { rowId: 'TRUST_SCORE_NORMALIZER', module: 'unified_trust_score', phase: 22.6, description: 'Trust score normalization across domains', extensionOnly: true },
+  { rowId: 'TRUST_WEIGHTING_ENGINE', module: 'unified_trust_score', phase: 22.6, description: 'Weighted trust contribution computation', extensionOnly: true },
+  { rowId: 'TRUST_SCORE_CONSISTENCY_ANALYZER', module: 'unified_trust_score', phase: 22.6, description: 'Cross-domain trust consistency analysis', extensionOnly: true },
+  { rowId: 'TRUST_CONFIDENCE_EVALUATOR', module: 'unified_trust_score', phase: 22.6, description: 'Trust confidence score and level evaluation', extensionOnly: true },
+  { rowId: 'TRUST_SCORE_AUTHORITY_BUILDER', module: 'unified_trust_score', phase: 22.6, description: 'Unified trust score authority aggregation', extensionOnly: true },
+  { rowId: 'UNIFIED_TRUST_SCORE_EVALUATOR', module: 'unified_trust_score', phase: 22.6, description: 'Final trust score, level, decision, and readiness evaluation', extensionOnly: true },
+  { rowId: 'UNIFIED_TRUST_SCORE_HISTORY', module: 'unified_trust_score', phase: 22.6, description: 'Bounded unified trust score history', extensionOnly: true },
+  { rowId: 'UNIFIED_TRUST_SCORE_REPORTING', module: 'unified_trust_score', phase: 22.6, description: 'Unified trust score report generation', extensionOnly: true },
+  { rowId: 'UNIFIED_TRUST_SCORE_CACHE', module: 'unified_trust_score', phase: 22.6, description: 'Unified trust score lookup cache', extensionOnly: true },
+  { rowId: 'UNIFIED_TRUST_SCORE_ENGINE', module: 'unified_trust_score', phase: 22.6, description: 'Unified trust score orchestration and read-only registration', extensionOnly: true },
+];
+
 export const CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'CAPABILITY_VERIFICATION_TYPES', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification engine types and models', extensionOnly: true },
   { rowId: 'CAPABILITY_VERIFICATION_REGISTRY', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification record registry', extensionOnly: true },
@@ -1272,6 +1288,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...REALITY_VERIFICATION_EXPANSION_UVL_ROWS,
   ...COMPLETION_TRUTH_ENGINE_UVL_ROWS,
   ...PREDICTION_TRUST_LAYER_UVL_ROWS,
+  ...UNIFIED_TRUST_SCORE_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1508,6 +1525,10 @@ export function listCompletionTruthEngineUvlRows(): UvlRow[] {
 
 export function listPredictionTrustLayerUvlRows(): UvlRow[] {
   return [...PREDICTION_TRUST_LAYER_UVL_ROWS];
+}
+
+export function listUnifiedTrustScoreUvlRows(): UvlRow[] {
+  return [...UNIFIED_TRUST_SCORE_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {
