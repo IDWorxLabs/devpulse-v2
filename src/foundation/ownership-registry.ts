@@ -1029,6 +1029,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 20.3,
     description: 'Phase 20.3 Resource Allocation — capacity tracking, priority, allocation, reservation, queue, contention, budgeting, and reporting; planning only, no execution',
   },
+  parallel_build_orchestration: {
+    domain: 'parallel_build_orchestration',
+    ownerModule: 'devpulse_v2_parallel_build_orchestration',
+    ownerFunction: 'getDevPulseV2ParallelBuildOrchestration',
+    phase: 20.4,
+    description: 'Phase 20.4 Parallel Build Orchestration — execution groups, dependencies, readiness, capacity, conflicts, scheduling, and reporting; planning only, no execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

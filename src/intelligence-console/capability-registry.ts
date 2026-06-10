@@ -285,6 +285,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'PARALLEL_BUILD_ORCHESTRATION',
+    label: 'Parallel Build Orchestration',
+    phase: 20.4,
+    ownerModule: 'devpulse_v2_parallel_build_orchestration',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

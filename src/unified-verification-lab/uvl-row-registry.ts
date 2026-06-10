@@ -859,6 +859,22 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const PARALLEL_BUILD_ORCHESTRATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'PARALLEL_BUILD_ORCHESTRATION_TYPES', module: 'parallel_build_orchestration', phase: 20.4, description: 'Parallel build orchestration types and models', extensionOnly: true },
+  { rowId: 'ORCHESTRATION_REGISTRY', module: 'parallel_build_orchestration', phase: 20.4, description: 'Orchestration plan registry with lookup', extensionOnly: true },
+  { rowId: 'ORCHESTRATION_GROUP_MANAGER', module: 'parallel_build_orchestration', phase: 20.4, description: 'Execution group management with workspace isolation', extensionOnly: true },
+  { rowId: 'ORCHESTRATION_DEPENDENCY_MANAGER', module: 'parallel_build_orchestration', phase: 20.4, description: 'Dependency chain building and cycle detection', extensionOnly: true },
+  { rowId: 'ORCHESTRATION_READINESS_EVALUATOR', module: 'parallel_build_orchestration', phase: 20.4, description: 'Orchestration readiness evaluation', extensionOnly: true },
+  { rowId: 'ORCHESTRATION_CAPACITY_EVALUATOR', module: 'parallel_build_orchestration', phase: 20.4, description: 'Capacity-aware parallelism evaluation', extensionOnly: true },
+  { rowId: 'ORCHESTRATION_CONFLICT_DETECTOR', module: 'parallel_build_orchestration', phase: 20.4, description: 'Orchestration conflict detection', extensionOnly: true },
+  { rowId: 'ORCHESTRATION_SCHEDULER', module: 'parallel_build_orchestration', phase: 20.4, description: 'Capacity-aware orchestration scheduling', extensionOnly: true },
+  { rowId: 'ORCHESTRATION_PLAN_BUILDER', module: 'parallel_build_orchestration', phase: 20.4, description: 'Orchestration plan builder pipeline', extensionOnly: true },
+  { rowId: 'ORCHESTRATION_HISTORY', module: 'parallel_build_orchestration', phase: 20.4, description: 'Bounded orchestration history', extensionOnly: true },
+  { rowId: 'ORCHESTRATION_REPORTING', module: 'parallel_build_orchestration', phase: 20.4, description: 'Orchestration report generation', extensionOnly: true },
+  { rowId: 'ORCHESTRATION_CACHE', module: 'parallel_build_orchestration', phase: 20.4, description: 'Orchestration lookup cache', extensionOnly: true },
+  { rowId: 'PARALLEL_BUILD_ORCHESTRATION', module: 'parallel_build_orchestration', phase: 20.4, description: 'Parallel build orchestration and read-only registration', extensionOnly: true },
+];
+
 export const RESOURCE_ALLOCATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'RESOURCE_ALLOCATION_TYPES', module: 'resource_allocation', phase: 20.3, description: 'Resource allocation types and models', extensionOnly: true },
   { rowId: 'RESOURCE_REGISTRY', module: 'resource_allocation', phase: 20.3, description: 'Resource registry with capacity tracking', extensionOnly: true },
@@ -1016,6 +1032,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...MULTI_PROJECT_FOUNDATION_UVL_ROWS,
   ...WORKSPACE_ISOLATION_EXPANSION_UVL_ROWS,
   ...RESOURCE_ALLOCATION_UVL_ROWS,
+  ...PARALLEL_BUILD_ORCHESTRATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1192,6 +1209,10 @@ export function listWorkspaceIsolationExpansionUvlRows(): UvlRow[] {
 
 export function listResourceAllocationUvlRows(): UvlRow[] {
   return [...RESOURCE_ALLOCATION_UVL_ROWS];
+}
+
+export function listParallelBuildOrchestrationUvlRows(): UvlRow[] {
+  return [...PARALLEL_BUILD_ORCHESTRATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

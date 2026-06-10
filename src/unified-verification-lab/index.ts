@@ -241,6 +241,8 @@ export {
   listWorkspaceIsolationExpansionUvlRows,
   RESOURCE_ALLOCATION_UVL_ROWS,
   listResourceAllocationUvlRows,
+  PARALLEL_BUILD_ORCHESTRATION_UVL_ROWS,
+  listParallelBuildOrchestrationUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';
