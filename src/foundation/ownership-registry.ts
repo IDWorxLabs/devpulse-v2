@@ -1064,6 +1064,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 21.1,
     description: 'Phase 21.1 Missing Capability Escalation — failure, stall, bottleneck, and blocked state pattern detection with capability gap analysis; analysis only, no capability creation',
   },
+  capability_research_engine: {
+    domain: 'capability_research_engine',
+    ownerModule: 'devpulse_v2_capability_research_engine',
+    ownerFunction: 'getDevPulseV2CapabilityResearchEngine',
+    phase: 21.2,
+    description: 'Phase 21.2 Capability Research Engine — domain classification, evidence analysis, gap research, similarity detection, and root cause research; research only, no capability creation',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

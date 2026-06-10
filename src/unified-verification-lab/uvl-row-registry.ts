@@ -859,6 +859,21 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const CAPABILITY_RESEARCH_ENGINE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'CAPABILITY_RESEARCH_TYPES', module: 'capability_research_engine', phase: 21.2, description: 'Capability research engine types and models', extensionOnly: true },
+  { rowId: 'CAPABILITY_RESEARCH_REGISTRY', module: 'capability_research_engine', phase: 21.2, description: 'Capability research record registry', extensionOnly: true },
+  { rowId: 'CAPABILITY_DOMAIN_CLASSIFIER', module: 'capability_research_engine', phase: 21.2, description: 'Capability domain classification', extensionOnly: true },
+  { rowId: 'CAPABILITY_GAP_RESEARCHER', module: 'capability_research_engine', phase: 21.2, description: 'Capability gap research and findings', extensionOnly: true },
+  { rowId: 'CAPABILITY_EVIDENCE_ANALYZER', module: 'capability_research_engine', phase: 21.2, description: 'Capability evidence quality analysis', extensionOnly: true },
+  { rowId: 'CAPABILITY_SIMILARITY_ANALYZER', module: 'capability_research_engine', phase: 21.2, description: 'Duplicate capability similarity detection', extensionOnly: true },
+  { rowId: 'CAPABILITY_ROOT_CAUSE_RESEARCHER', module: 'capability_research_engine', phase: 21.2, description: 'Capability root cause research', extensionOnly: true },
+  { rowId: 'CAPABILITY_RESEARCH_DECISION_ENGINE', module: 'capability_research_engine', phase: 21.2, description: 'Capability research decision pipeline', extensionOnly: true },
+  { rowId: 'CAPABILITY_RESEARCH_HISTORY', module: 'capability_research_engine', phase: 21.2, description: 'Bounded capability research history', extensionOnly: true },
+  { rowId: 'CAPABILITY_RESEARCH_REPORTING', module: 'capability_research_engine', phase: 21.2, description: 'Capability research report generation', extensionOnly: true },
+  { rowId: 'CAPABILITY_RESEARCH_CACHE', module: 'capability_research_engine', phase: 21.2, description: 'Capability research lookup cache', extensionOnly: true },
+  { rowId: 'CAPABILITY_RESEARCH_ENGINE', module: 'capability_research_engine', phase: 21.2, description: 'Capability research engine orchestration and read-only registration', extensionOnly: true },
+];
+
 export const MISSING_CAPABILITY_ESCALATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'MISSING_CAPABILITY_ESCALATION_TYPES', module: 'missing_capability_escalation', phase: 21.1, description: 'Missing capability escalation types and models', extensionOnly: true },
   { rowId: 'ESCALATION_REGISTRY', module: 'missing_capability_escalation', phase: 21.1, description: 'Escalation record registry', extensionOnly: true },
@@ -1101,6 +1116,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...MULTI_PROJECT_VERIFICATION_ORCHESTRATION_UVL_ROWS,
   ...MULTI_PROJECT_MONITORING_UVL_ROWS,
   ...MISSING_CAPABILITY_ESCALATION_UVL_ROWS,
+  ...CAPABILITY_RESEARCH_ENGINE_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1297,6 +1313,10 @@ export function listMultiProjectMonitoringUvlRows(): UvlRow[] {
 
 export function listMissingCapabilityEscalationUvlRows(): UvlRow[] {
   return [...MISSING_CAPABILITY_ESCALATION_UVL_ROWS];
+}
+
+export function listCapabilityResearchEngineUvlRows(): UvlRow[] {
+  return [...CAPABILITY_RESEARCH_ENGINE_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

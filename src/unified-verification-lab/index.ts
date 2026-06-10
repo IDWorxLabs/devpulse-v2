@@ -251,6 +251,8 @@ export {
   listMultiProjectMonitoringUvlRows,
   MISSING_CAPABILITY_ESCALATION_UVL_ROWS,
   listMissingCapabilityEscalationUvlRows,
+  CAPABILITY_RESEARCH_ENGINE_UVL_ROWS,
+  listCapabilityResearchEngineUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';
