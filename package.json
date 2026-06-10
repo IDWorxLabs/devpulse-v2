@@ -149,6 +149,7 @@
     "validate:workspace-isolation-expansion": "tsx scripts/validate-workspace-isolation-expansion.ts",
     "validate:resource-allocation": "tsx scripts/validate-resource-allocation.ts",
     "validate:parallel-build-orchestration": "tsx scripts/validate-parallel-build-orchestration.ts",
+    "validate:multi-project-verification": "tsx scripts/validate-multi-project-verification.ts",
     "validate:verification-integration": "tsx scripts/validate-verification-integration.ts",
     "validate:verification-intelligence": "tsx scripts/validate-verification-intelligence.ts",
     "validate:verification-strategy-core": "tsx scripts/validate-verification-strategy-core.ts",

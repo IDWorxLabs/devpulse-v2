@@ -292,6 +292,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'MULTI_PROJECT_VERIFICATION',
+    label: 'Multi Project Verification',
+    phase: 20.5,
+    ownerModule: 'devpulse_v2_multi_project_verification',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

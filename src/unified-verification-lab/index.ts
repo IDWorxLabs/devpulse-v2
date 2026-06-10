@@ -243,6 +243,8 @@ export {
   listResourceAllocationUvlRows,
   PARALLEL_BUILD_ORCHESTRATION_UVL_ROWS,
   listParallelBuildOrchestrationUvlRows,
+  MULTI_PROJECT_VERIFICATION_UVL_ROWS,
+  listMultiProjectVerificationUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

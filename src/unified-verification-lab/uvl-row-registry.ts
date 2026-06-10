@@ -859,6 +859,22 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const MULTI_PROJECT_VERIFICATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'MULTI_PROJECT_VERIFICATION_TYPES', module: 'multi_project_verification', phase: 20.5, description: 'Multi project verification types and models', extensionOnly: true },
+  { rowId: 'PROJECT_VERIFICATION_REGISTRY', module: 'multi_project_verification', phase: 20.5, description: 'Project verification registry with scalable lookup', extensionOnly: true },
+  { rowId: 'PROJECT_VERIFICATION_EVIDENCE', module: 'multi_project_verification', phase: 20.5, description: 'Project verification evidence analysis', extensionOnly: true },
+  { rowId: 'PROJECT_VERIFICATION_CONFIDENCE', module: 'multi_project_verification', phase: 20.5, description: 'Project verification confidence analysis', extensionOnly: true },
+  { rowId: 'PROJECT_VERIFICATION_RISK', module: 'multi_project_verification', phase: 20.5, description: 'Project verification risk analysis', extensionOnly: true },
+  { rowId: 'PROJECT_VERIFICATION_READINESS', module: 'multi_project_verification', phase: 20.5, description: 'Project verification readiness evaluation', extensionOnly: true },
+  { rowId: 'PROJECT_VERIFICATION_AGGREGATOR', module: 'multi_project_verification', phase: 20.5, description: 'Project verification record aggregation', extensionOnly: true },
+  { rowId: 'PROJECT_VERIFICATION_PORTFOLIO', module: 'multi_project_verification', phase: 20.5, description: 'Portfolio verification health model', extensionOnly: true },
+  { rowId: 'PROJECT_VERIFICATION_COORDINATOR', module: 'multi_project_verification', phase: 20.5, description: 'Project verification coordination pipeline', extensionOnly: true },
+  { rowId: 'PROJECT_VERIFICATION_HISTORY', module: 'multi_project_verification', phase: 20.5, description: 'Bounded project verification history', extensionOnly: true },
+  { rowId: 'PROJECT_VERIFICATION_REPORTING', module: 'multi_project_verification', phase: 20.5, description: 'Multi project verification reporting', extensionOnly: true },
+  { rowId: 'PROJECT_VERIFICATION_CACHE', module: 'multi_project_verification', phase: 20.5, description: 'Project verification lookup cache', extensionOnly: true },
+  { rowId: 'MULTI_PROJECT_VERIFICATION', module: 'multi_project_verification', phase: 20.5, description: 'Multi project verification orchestration and read-only registration', extensionOnly: true },
+];
+
 export const PARALLEL_BUILD_ORCHESTRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'PARALLEL_BUILD_ORCHESTRATION_TYPES', module: 'parallel_build_orchestration', phase: 20.4, description: 'Parallel build orchestration types and models', extensionOnly: true },
   { rowId: 'ORCHESTRATION_REGISTRY', module: 'parallel_build_orchestration', phase: 20.4, description: 'Orchestration plan registry with lookup', extensionOnly: true },
@@ -1033,6 +1049,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORKSPACE_ISOLATION_EXPANSION_UVL_ROWS,
   ...RESOURCE_ALLOCATION_UVL_ROWS,
   ...PARALLEL_BUILD_ORCHESTRATION_UVL_ROWS,
+  ...MULTI_PROJECT_VERIFICATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1213,6 +1230,10 @@ export function listResourceAllocationUvlRows(): UvlRow[] {
 
 export function listParallelBuildOrchestrationUvlRows(): UvlRow[] {
   return [...PARALLEL_BUILD_ORCHESTRATION_UVL_ROWS];
+}
+
+export function listMultiProjectVerificationUvlRows(): UvlRow[] {
+  return [...MULTI_PROJECT_VERIFICATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {
