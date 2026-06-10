@@ -418,6 +418,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'PRIVACY_HARDENING',
+    label: 'Privacy Hardening',
+    phase: 23.4,
+    ownerModule: 'devpulse_v2_privacy_hardening',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

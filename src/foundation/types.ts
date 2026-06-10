@@ -222,7 +222,8 @@ export type OwnershipDomain =
   | 'unified_trust_score'
   | 'reliability_hardening'
   | 'performance_hardening'
-  | 'security_hardening';
+  | 'security_hardening'
+  | 'privacy_hardening';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

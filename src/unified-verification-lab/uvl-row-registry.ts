@@ -972,6 +972,23 @@ export const UNIFIED_TRUST_SCORE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'UNIFIED_TRUST_SCORE_ENGINE', module: 'unified_trust_score', phase: 22.6, description: 'Unified trust score orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const PRIVACY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'PRIVACY_HARDENING_TYPES', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening types and models', extensionOnly: true },
+  { rowId: 'PRIVACY_HARDENING_REGISTRY', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening record registry and lookup', extensionOnly: true },
+  { rowId: 'PERSONAL_DATA_SURFACE_ANALYZER', module: 'privacy_hardening', phase: 23.4, description: 'Personal data surface detection and scoring', extensionOnly: true },
+  { rowId: 'PROJECT_DATA_BOUNDARY_ANALYZER', module: 'privacy_hardening', phase: 23.4, description: 'Project data boundary risk analysis', extensionOnly: true },
+  { rowId: 'RETENTION_RISK_ANALYZER', module: 'privacy_hardening', phase: 23.4, description: 'Data retention risk analysis', extensionOnly: true },
+  { rowId: 'DISCLOSURE_RISK_ANALYZER', module: 'privacy_hardening', phase: 23.4, description: 'Private data disclosure risk analysis with redaction', extensionOnly: true },
+  { rowId: 'PRIVACY_REDACTION_READINESS_ANALYZER', module: 'privacy_hardening', phase: 23.4, description: 'Privacy redaction readiness gap analysis', extensionOnly: true },
+  { rowId: 'PRIVACY_COMPLIANCE_READINESS_ANALYZER', module: 'privacy_hardening', phase: 23.4, description: 'Future compliance readiness gap analysis', extensionOnly: true },
+  { rowId: 'PRIVACY_AUTHORITY_BUILDER', module: 'privacy_hardening', phase: 23.4, description: 'Unified privacy hardening authority aggregation', extensionOnly: true },
+  { rowId: 'PRIVACY_HARDENING_EVALUATOR', module: 'privacy_hardening', phase: 23.4, description: 'Final privacy score, state, and risk evaluation', extensionOnly: true },
+  { rowId: 'PRIVACY_HARDENING_HISTORY', module: 'privacy_hardening', phase: 23.4, description: 'Bounded privacy hardening history', extensionOnly: true },
+  { rowId: 'PRIVACY_HARDENING_REPORTING', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening report and recommendation generation', extensionOnly: true },
+  { rowId: 'PRIVACY_HARDENING_CACHE', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening lookup cache', extensionOnly: true },
+  { rowId: 'PRIVACY_HARDENING_ENGINE', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening orchestration and read-only registration', extensionOnly: true },
+];
+
 export const SECURITY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'SECURITY_HARDENING_TYPES', module: 'security_hardening', phase: 23.3, description: 'Security hardening types and models', extensionOnly: true },
   { rowId: 'SECURITY_HARDENING_REGISTRY', module: 'security_hardening', phase: 23.3, description: 'Security hardening record registry and lookup', extensionOnly: true },
@@ -1340,6 +1357,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...RELIABILITY_HARDENING_UVL_ROWS,
   ...PERFORMANCE_HARDENING_UVL_ROWS,
   ...SECURITY_HARDENING_UVL_ROWS,
+  ...PRIVACY_HARDENING_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1592,6 +1610,10 @@ export function listPerformanceHardeningUvlRows(): UvlRow[] {
 
 export function listSecurityHardeningUvlRows(): UvlRow[] {
   return [...SECURITY_HARDENING_UVL_ROWS];
+}
+
+export function listPrivacyHardeningUvlRows(): UvlRow[] {
+  return [...PRIVACY_HARDENING_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {
