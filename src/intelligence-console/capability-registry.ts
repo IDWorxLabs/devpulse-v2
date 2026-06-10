@@ -257,6 +257,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'AUTONOMOUS_COMPLETION_ENGINE',
+    label: 'Autonomous Completion Engine',
+    phase: 19.7,
+    ownerModule: 'devpulse_v2_autonomous_completion_engine',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

@@ -144,6 +144,7 @@
     "validate:autonomous-testing": "tsx scripts/validate-autonomous-testing.ts",
     "validate:autonomous-fixing": "tsx scripts/validate-autonomous-fixing.ts",
     "validate:autonomous-verification": "tsx scripts/validate-autonomous-verification.ts",
+    "validate:autonomous-completion-engine": "tsx scripts/validate-autonomous-completion-engine.ts",
     "validate:verification-integration": "tsx scripts/validate-verification-integration.ts",
     "validate:verification-intelligence": "tsx scripts/validate-verification-intelligence.ts",
     "validate:verification-strategy-core": "tsx scripts/validate-verification-strategy-core.ts",

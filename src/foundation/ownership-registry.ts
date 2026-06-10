@@ -1001,6 +1001,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 19.6,
     description: 'Phase 19.6 Autonomous Verification — evidence analysis, trust evaluation, verification confidence/risk analysis, readiness, decision building, and reporting; analysis only, no code modification',
   },
+  autonomous_completion_engine: {
+    domain: 'autonomous_completion_engine',
+    ownerModule: 'devpulse_v2_autonomous_completion_engine',
+    ownerFunction: 'getDevPulseV2AutonomousCompletionEngine',
+    phase: 19.7,
+    description: 'Phase 19.7 Autonomous Completion Engine — completion evidence analysis, confidence/risk evaluation, readiness, loop guard, decision authority, state model, and reporting; decision only, no code modification',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

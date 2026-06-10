@@ -859,6 +859,22 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const AUTONOMOUS_COMPLETION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'AUTONOMOUS_COMPLETION_ENGINE_TYPES', module: 'autonomous_completion_engine', phase: 19.7, description: 'Autonomous completion engine types and models', extensionOnly: true },
+  { rowId: 'COMPLETION_EVIDENCE_ANALYZER', module: 'autonomous_completion_engine', phase: 19.7, description: 'Completion evidence analysis from autonomous stack', extensionOnly: true },
+  { rowId: 'COMPLETION_CONFIDENCE_ANALYZER', module: 'autonomous_completion_engine', phase: 19.7, description: 'Completion confidence analysis', extensionOnly: true },
+  { rowId: 'COMPLETION_RISK_ANALYZER', module: 'autonomous_completion_engine', phase: 19.7, description: 'Completion risk analysis', extensionOnly: true },
+  { rowId: 'COMPLETION_READINESS_EVALUATOR', module: 'autonomous_completion_engine', phase: 19.7, description: 'Completion readiness evaluation', extensionOnly: true },
+  { rowId: 'COMPLETION_DECISION_SELECTOR', module: 'autonomous_completion_engine', phase: 19.7, description: 'Completion decision selection rules', extensionOnly: true },
+  { rowId: 'COMPLETION_STATE_MODEL', module: 'autonomous_completion_engine', phase: 19.7, description: 'Authoritative completion state model', extensionOnly: true },
+  { rowId: 'COMPLETION_LOOP_GUARD', module: 'autonomous_completion_engine', phase: 19.7, description: 'Autonomous loop guard detection', extensionOnly: true },
+  { rowId: 'COMPLETION_DECISION_BUILDER', module: 'autonomous_completion_engine', phase: 19.7, description: 'Completion decision builder pipeline', extensionOnly: true },
+  { rowId: 'COMPLETION_REPORTING', module: 'autonomous_completion_engine', phase: 19.7, description: 'Completion report generation', extensionOnly: true },
+  { rowId: 'COMPLETION_HISTORY', module: 'autonomous_completion_engine', phase: 19.7, description: 'Bounded completion history', extensionOnly: true },
+  { rowId: 'COMPLETION_REGISTRY', module: 'autonomous_completion_engine', phase: 19.7, description: 'Completion decision registry metadata', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_COMPLETION_ENGINE', module: 'autonomous_completion_engine', phase: 19.7, description: 'Autonomous completion engine orchestration and read-only registration', extensionOnly: true },
+];
+
 export const AUTONOMOUS_VERIFICATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'AUTONOMOUS_VERIFICATION_TYPES', module: 'autonomous_verification', phase: 19.6, description: 'Autonomous verification types and models', extensionOnly: true },
   { rowId: 'EVIDENCE_ANALYZER', module: 'autonomous_verification', phase: 19.6, description: 'Verification evidence analysis', extensionOnly: true },
@@ -948,6 +964,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...AUTONOMOUS_TESTING_UVL_ROWS,
   ...AUTONOMOUS_FIXING_UVL_ROWS,
   ...AUTONOMOUS_VERIFICATION_UVL_ROWS,
+  ...AUTONOMOUS_COMPLETION_ENGINE_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1108,6 +1125,10 @@ export function listAutonomousFixingUvlRows(): UvlRow[] {
 
 export function listAutonomousVerificationUvlRows(): UvlRow[] {
   return [...AUTONOMOUS_VERIFICATION_UVL_ROWS];
+}
+
+export function listAutonomousCompletionEngineUvlRows(): UvlRow[] {
+  return [...AUTONOMOUS_COMPLETION_ENGINE_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {
