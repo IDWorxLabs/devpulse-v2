@@ -966,6 +966,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 19.3,
     description: 'Phase 19.3A Verification Strategy Core — verification depth, evidence requirements, escalation, and validator path selection; decision-making only, no validator execution',
   },
+  verification_intelligence: {
+    domain: 'verification_intelligence',
+    ownerModule: 'devpulse_v2_verification_intelligence',
+    ownerFunction: 'getDevPulseV2VerificationIntelligence',
+    phase: 19.31,
+    description: 'Phase 19.3B Verification Intelligence — risk/cost/confidence analysis, intelligent verification plan generation, optimization, and execution order planning; planning only, no validator execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

@@ -236,6 +236,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'VERIFICATION_INTELLIGENCE',
+    label: 'Verification Intelligence',
+    phase: 19.31,
+    ownerModule: 'devpulse_v2_verification_intelligence',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_STRATEGY_CORE',
     label: 'Verification Strategy Core',
     phase: 19.3,

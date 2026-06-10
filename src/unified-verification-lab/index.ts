@@ -223,6 +223,8 @@ export {
   listBuildStrategyEngineUvlRows,
   VERIFICATION_STRATEGY_CORE_UVL_ROWS,
   listVerificationStrategyCoreUvlRows,
+  VERIFICATION_INTELLIGENCE_UVL_ROWS,
+  listVerificationIntelligenceUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';
