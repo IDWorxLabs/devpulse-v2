@@ -439,6 +439,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'SELF_DOCUMENTATION',
+    label: 'Self Documentation',
+    phase: 24.1,
+    ownerModule: 'devpulse_v2_self_documentation',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

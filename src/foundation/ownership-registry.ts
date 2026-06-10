@@ -1183,6 +1183,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 23.6,
     description: 'Phase 23.6 Scale Hardening — capacity, concurrency, cloud usage, queue/load, and multi-project scale readiness analysis; read-only, no execution or mutations',
   },
+  self_documentation: {
+    domain: 'self_documentation',
+    ownerModule: 'devpulse_v2_self_documentation',
+    ownerFunction: 'getDevPulseV2SelfDocumentation',
+    phase: 24.1,
+    description: 'Phase 24.1 Self Documentation — automatic capability, module, dependency, authority chain, and validation documentation intelligence; read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

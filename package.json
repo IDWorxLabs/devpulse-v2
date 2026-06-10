@@ -172,6 +172,7 @@
     "validate:recovery-hardening": "tsx scripts/validate-recovery-hardening.ts",
     "validate:scale-hardening": "tsx scripts/validate-scale-hardening.ts",
     "validate:product-hardening-verification": "tsx scripts/validate-product-hardening-verification.ts",
+    "validate:self-documentation": "tsx scripts/validate-self-documentation.ts",
     "validate:verification-integration": "tsx scripts/validate-verification-integration.ts",
     "validate:verification-intelligence": "tsx scripts/validate-verification-intelligence.ts",
     "validate:verification-strategy-core": "tsx scripts/validate-verification-strategy-core.ts",

@@ -1004,6 +1004,22 @@ export const SCALE_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'SCALE_HARDENING_ENGINE', module: 'scale_hardening', phase: 23.6, description: 'Scale hardening orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const SELF_DOCUMENTATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'SELF_DOCUMENTATION_TYPES', module: 'self_documentation', phase: 24.1, description: 'Self documentation types and models', extensionOnly: true },
+  { rowId: 'SELF_DOCUMENTATION_REGISTRY', module: 'self_documentation', phase: 24.1, description: 'Self documentation record registry and lookup', extensionOnly: true },
+  { rowId: 'CAPABILITY_DOCUMENTATION_ANALYZER', module: 'self_documentation', phase: 24.1, description: 'Capability registry documentation coverage analysis', extensionOnly: true },
+  { rowId: 'MODULE_DOCUMENTATION_ANALYZER', module: 'self_documentation', phase: 24.1, description: 'Module existence and ownership documentation analysis', extensionOnly: true },
+  { rowId: 'DEPENDENCY_DOCUMENTATION_ANALYZER', module: 'self_documentation', phase: 24.1, description: 'Dependency visibility and mapping analysis', extensionOnly: true },
+  { rowId: 'AUTHORITY_CHAIN_DOCUMENTATION_ANALYZER', module: 'self_documentation', phase: 24.1, description: 'Authority chain documentation coverage analysis', extensionOnly: true },
+  { rowId: 'VALIDATION_DOCUMENTATION_ANALYZER', module: 'self_documentation', phase: 24.1, description: 'Validator and checkpoint documentation analysis', extensionOnly: true },
+  { rowId: 'SELF_DOCUMENTATION_AUTHORITY_BUILDER', module: 'self_documentation', phase: 24.1, description: 'Unified self documentation authority aggregation', extensionOnly: true },
+  { rowId: 'SELF_DOCUMENTATION_EVALUATOR', module: 'self_documentation', phase: 24.1, description: 'Final documentation coverage, state, and completeness evaluation', extensionOnly: true },
+  { rowId: 'SELF_DOCUMENTATION_HISTORY', module: 'self_documentation', phase: 24.1, description: 'Bounded self documentation history', extensionOnly: true },
+  { rowId: 'SELF_DOCUMENTATION_REPORTING', module: 'self_documentation', phase: 24.1, description: 'Self documentation report and recommendation generation', extensionOnly: true },
+  { rowId: 'SELF_DOCUMENTATION_CACHE', module: 'self_documentation', phase: 24.1, description: 'Self documentation lookup cache', extensionOnly: true },
+  { rowId: 'SELF_DOCUMENTATION_ENGINE', module: 'self_documentation', phase: 24.1, description: 'Self documentation orchestration and read-only registration', extensionOnly: true },
+];
+
 export const PRIVACY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'PRIVACY_HARDENING_TYPES', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening types and models', extensionOnly: true },
   { rowId: 'PRIVACY_HARDENING_REGISTRY', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening record registry and lookup', extensionOnly: true },
@@ -1392,6 +1408,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...PRIVACY_HARDENING_UVL_ROWS,
   ...RECOVERY_HARDENING_UVL_ROWS,
   ...SCALE_HARDENING_UVL_ROWS,
+  ...SELF_DOCUMENTATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1656,6 +1673,10 @@ export function listRecoveryHardeningUvlRows(): UvlRow[] {
 
 export function listScaleHardeningUvlRows(): UvlRow[] {
   return [...SCALE_HARDENING_UVL_ROWS];
+}
+
+export function listSelfDocumentationUvlRows(): UvlRow[] {
+  return [...SELF_DOCUMENTATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {
