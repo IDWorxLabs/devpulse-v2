@@ -287,6 +287,8 @@ export {
   listScaleHardeningUvlRows,
   SELF_DOCUMENTATION_UVL_ROWS,
   listSelfDocumentationUvlRows,
+  FOUNDER_GUIDES_UVL_ROWS,
+  listFounderGuidesUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

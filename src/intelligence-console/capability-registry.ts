@@ -446,6 +446,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'FOUNDER_GUIDES',
+    label: 'Founder Guides',
+    phase: 24.2,
+    ownerModule: 'devpulse_v2_founder_guides',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

@@ -1020,6 +1020,22 @@ export const SELF_DOCUMENTATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'SELF_DOCUMENTATION_ENGINE', module: 'self_documentation', phase: 24.1, description: 'Self documentation orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const FOUNDER_GUIDES_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FOUNDER_GUIDES_TYPES', module: 'founder_guides', phase: 24.2, description: 'Founder guides types and models', extensionOnly: true },
+  { rowId: 'FOUNDER_GUIDES_REGISTRY', module: 'founder_guides', phase: 24.2, description: 'Founder guide record registry and lookup', extensionOnly: true },
+  { rowId: 'ROADMAP_GUIDE_ANALYZER', module: 'founder_guides', phase: 24.2, description: 'Roadmap coverage and phase guidance analysis', extensionOnly: true },
+  { rowId: 'CHECKPOINT_GUIDE_ANALYZER', module: 'founder_guides', phase: 24.2, description: 'Checkpoint documentation coverage analysis', extensionOnly: true },
+  { rowId: 'SYSTEM_NAVIGATION_GUIDE_ANALYZER', module: 'founder_guides', phase: 24.2, description: 'Founder navigation and discovery guidance analysis', extensionOnly: true },
+  { rowId: 'MODIFICATION_SAFETY_GUIDE_ANALYZER', module: 'founder_guides', phase: 24.2, description: 'Modification safety and protected zone guidance analysis', extensionOnly: true },
+  { rowId: 'EVOLUTION_GUIDE_ANALYZER', module: 'founder_guides', phase: 24.2, description: 'Self-evolution and growth guidance analysis', extensionOnly: true },
+  { rowId: 'FOUNDER_GUIDES_AUTHORITY_BUILDER', module: 'founder_guides', phase: 24.2, description: 'Unified founder guides authority aggregation', extensionOnly: true },
+  { rowId: 'FOUNDER_GUIDES_EVALUATOR', module: 'founder_guides', phase: 24.2, description: 'Final founder guide coverage, state, and completeness evaluation', extensionOnly: true },
+  { rowId: 'FOUNDER_GUIDES_HISTORY', module: 'founder_guides', phase: 24.2, description: 'Bounded founder guides history', extensionOnly: true },
+  { rowId: 'FOUNDER_GUIDES_REPORTING', module: 'founder_guides', phase: 24.2, description: 'Founder guides report and recommendation generation', extensionOnly: true },
+  { rowId: 'FOUNDER_GUIDES_CACHE', module: 'founder_guides', phase: 24.2, description: 'Founder guides lookup cache', extensionOnly: true },
+  { rowId: 'FOUNDER_GUIDES_ENGINE', module: 'founder_guides', phase: 24.2, description: 'Founder guides orchestration and read-only registration', extensionOnly: true },
+];
+
 export const PRIVACY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'PRIVACY_HARDENING_TYPES', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening types and models', extensionOnly: true },
   { rowId: 'PRIVACY_HARDENING_REGISTRY', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening record registry and lookup', extensionOnly: true },
@@ -1409,6 +1425,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...RECOVERY_HARDENING_UVL_ROWS,
   ...SCALE_HARDENING_UVL_ROWS,
   ...SELF_DOCUMENTATION_UVL_ROWS,
+  ...FOUNDER_GUIDES_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1677,6 +1694,10 @@ export function listScaleHardeningUvlRows(): UvlRow[] {
 
 export function listSelfDocumentationUvlRows(): UvlRow[] {
   return [...SELF_DOCUMENTATION_UVL_ROWS];
+}
+
+export function listFounderGuidesUvlRows(): UvlRow[] {
+  return [...FOUNDER_GUIDES_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

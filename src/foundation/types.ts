@@ -226,7 +226,8 @@ export type OwnershipDomain =
   | 'privacy_hardening'
   | 'recovery_hardening'
   | 'scale_hardening'
-  | 'self_documentation';
+  | 'self_documentation'
+  | 'founder_guides';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

@@ -1190,6 +1190,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 24.1,
     description: 'Phase 24.1 Self Documentation — automatic capability, module, dependency, authority chain, and validation documentation intelligence; read-only, no execution or mutations',
   },
+  founder_guides: {
+    domain: 'founder_guides',
+    ownerModule: 'devpulse_v2_founder_guides',
+    ownerFunction: 'getDevPulseV2FounderGuides',
+    phase: 24.2,
+    description: 'Phase 24.2 Founder Guides — roadmap, checkpoint, navigation, modification safety, and evolution guidance intelligence; read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {
