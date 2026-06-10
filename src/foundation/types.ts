@@ -236,7 +236,14 @@ export type OwnershipDomain =
   | 'ux_heuristic_evaluator'
   | 'first_impression_judge'
   | 'live_preview_gatekeeper'
-  | 'auto_polish_loop';
+  | 'auto_polish_loop'
+  | 'product_experience_verification_engine'
+  | 'product_reality_orchestrator'
+  | 'founder_acceptance_framework'
+  | 'founder_workflow_validation'
+  | 'founder_confidence_engine'
+  | 'founder_trust_validation'
+  | 'founder_productivity_validation';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

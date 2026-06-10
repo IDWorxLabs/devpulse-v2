@@ -1108,6 +1108,148 @@ export const AUTO_POLISH_LOOP_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'AUTO_POLISH_LOOP', module: 'auto_polish_loop', phase: 24.76, description: 'Auto-polish orchestration and read-only upstream registration', extensionOnly: true },
 ];
 
+export const PRODUCT_EXPERIENCE_VERIFICATION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'PRODUCT_EXPERIENCE_TYPES', module: 'product_experience_verification_engine', phase: 24.77, description: 'Product experience verification types and models', extensionOnly: true },
+  { rowId: 'PRODUCT_EXPERIENCE_REGISTRY', module: 'product_experience_verification_engine', phase: 24.77, description: 'Product experience record registry and lookup', extensionOnly: true },
+  { rowId: 'EXPERIENCE_CONTEXT_BUILDER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Experience workflow context builder', extensionOnly: true },
+  { rowId: 'PRODUCT_COHERENCE_VERIFIER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Product coherence verification', extensionOnly: true },
+  { rowId: 'EXPERIENCE_CONTINUITY_VERIFIER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Experience continuity verification across surfaces', extensionOnly: true },
+  { rowId: 'INTELLIGENCE_CONTINUITY_VERIFIER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Intelligence visibility continuity verification', extensionOnly: true },
+  { rowId: 'WORKFLOW_CONTINUITY_VERIFIER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Workflow continuity verification', extensionOnly: true },
+  { rowId: 'NAVIGATION_CONTINUITY_VERIFIER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Navigation continuity verification', extensionOnly: true },
+  { rowId: 'VERIFICATION_CONTINUITY_VERIFIER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Verification chain continuity verification', extensionOnly: true },
+  { rowId: 'FOUNDER_EXPERIENCE_VERIFIER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Founder experience continuity verification', extensionOnly: true },
+  { rowId: 'TRUST_CONTINUITY_VERIFIER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Trust continuity verification', extensionOnly: true },
+  { rowId: 'PRODUCT_IDENTITY_CONTINUITY_VERIFIER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Product identity continuity verification', extensionOnly: true },
+  { rowId: 'LAUNCH_READINESS_CONTINUITY_VERIFIER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Launch readiness continuity verification', extensionOnly: true },
+  { rowId: 'EXPERIENCE_GAP_ANALYZER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Cross-system experience gap analysis', extensionOnly: true },
+  { rowId: 'EXPERIENCE_ROADMAP_BUILDER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Product experience roadmap generation', extensionOnly: true },
+  { rowId: 'PRODUCT_EXPERIENCE_AUTHORITY_BUILDER', module: 'product_experience_verification_engine', phase: 24.77, description: 'Unified product experience authority aggregation', extensionOnly: true },
+  { rowId: 'PRODUCT_EXPERIENCE_EVALUATOR', module: 'product_experience_verification_engine', phase: 24.77, description: 'Final product experience result evaluation', extensionOnly: true },
+  { rowId: 'PRODUCT_EXPERIENCE_HISTORY', module: 'product_experience_verification_engine', phase: 24.77, description: 'Bounded product experience evaluation history', extensionOnly: true },
+  { rowId: 'PRODUCT_EXPERIENCE_REPORTING', module: 'product_experience_verification_engine', phase: 24.77, description: 'Product experience report and roadmap output', extensionOnly: true },
+  { rowId: 'PRODUCT_EXPERIENCE_CACHE', module: 'product_experience_verification_engine', phase: 24.77, description: 'Product experience bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'PRODUCT_EXPERIENCE_VERIFICATION_ENGINE', module: 'product_experience_verification_engine', phase: 24.77, description: 'Product experience orchestration and upstream chain', extensionOnly: true },
+];
+
+export const PRODUCT_REALITY_ORCHESTRATOR_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'PRODUCT_REALITY_TYPES', module: 'product_reality_orchestrator', phase: 24.78, description: 'Product reality orchestrator types and models', extensionOnly: true },
+  { rowId: 'PRODUCT_REALITY_REGISTRY', module: 'product_reality_orchestrator', phase: 24.78, description: 'Product reality record registry and lookup', extensionOnly: true },
+  { rowId: 'EXPERIENCE_AGGREGATION_BUILDER', module: 'product_reality_orchestrator', phase: 24.78, description: 'Upstream report aggregation into product reality aggregate', extensionOnly: true },
+  { rowId: 'AUTHORITY_CONFLICT_DETECTOR', module: 'product_reality_orchestrator', phase: 24.78, description: 'Subsystem authority conflict detection', extensionOnly: true },
+  { rowId: 'LAUNCH_BLOCKER_ANALYZER', module: 'product_reality_orchestrator', phase: 24.78, description: 'Launch blocker detection and classification', extensionOnly: true },
+  { rowId: 'RELEASE_READINESS_ANALYZER', module: 'product_reality_orchestrator', phase: 24.78, description: 'Release readiness determination', extensionOnly: true },
+  { rowId: 'FOUNDER_PRIORITY_ANALYZER', module: 'product_reality_orchestrator', phase: 24.78, description: 'Founder priority improvement identification', extensionOnly: true },
+  { rowId: 'PRODUCT_REALITY_ROADMAP_BUILDER', module: 'product_reality_orchestrator', phase: 24.78, description: 'Product reality roadmap generation', extensionOnly: true },
+  { rowId: 'PRODUCT_REALITY_AUTHORITY_BUILDER', module: 'product_reality_orchestrator', phase: 24.78, description: 'Unified product reality authority aggregation', extensionOnly: true },
+  { rowId: 'PRODUCT_REALITY_EVALUATOR', module: 'product_reality_orchestrator', phase: 24.78, description: 'Final product reality verdict evaluation', extensionOnly: true },
+  { rowId: 'PRODUCT_REALITY_HISTORY', module: 'product_reality_orchestrator', phase: 24.78, description: 'Bounded product reality evaluation history', extensionOnly: true },
+  { rowId: 'PRODUCT_REALITY_REPORTING', module: 'product_reality_orchestrator', phase: 24.78, description: 'Product reality report and verdict output', extensionOnly: true },
+  { rowId: 'PRODUCT_REALITY_CACHE', module: 'product_reality_orchestrator', phase: 24.78, description: 'Product reality bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'PRODUCT_REALITY_ORCHESTRATOR', module: 'product_reality_orchestrator', phase: 24.78, description: 'Product reality orchestration and full upstream chain', extensionOnly: true },
+];
+
+export const FOUNDER_ACCEPTANCE_FRAMEWORK_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FOUNDER_ACCEPTANCE_TYPES', module: 'founder_acceptance_framework', phase: 24.81, description: 'Founder acceptance framework types and models', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_REGISTRY', module: 'founder_acceptance_framework', phase: 24.81, description: 'Founder acceptance record registry and lookup', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_DIMENSIONS', module: 'founder_acceptance_framework', phase: 24.81, description: 'Canonical founder acceptance dimensions registry', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_CRITERIA_REGISTRY', module: 'founder_acceptance_framework', phase: 24.81, description: 'Acceptance criteria registry by dimension group', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_CATEGORY_BUILDER', module: 'founder_acceptance_framework', phase: 24.81, description: 'Founder acceptance category builder', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_EVIDENCE_MODEL', module: 'founder_acceptance_framework', phase: 24.81, description: 'Future evidence source model for acceptance validation', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_SCORING_MODEL', module: 'founder_acceptance_framework', phase: 24.81, description: 'Founder acceptance scoring foundation model', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_REPORT_MODEL', module: 'founder_acceptance_framework', phase: 24.81, description: 'Founder acceptance report foundation model', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_AUTHORITY_BUILDER', module: 'founder_acceptance_framework', phase: 24.81, description: 'Unified founder acceptance framework authority', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_EVALUATOR', module: 'founder_acceptance_framework', phase: 24.81, description: 'Framework completeness evaluator', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_HISTORY', module: 'founder_acceptance_framework', phase: 24.81, description: 'Bounded founder acceptance framework history', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_CACHE', module: 'founder_acceptance_framework', phase: 24.81, description: 'Founder acceptance bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_FRAMEWORK', module: 'founder_acceptance_framework', phase: 24.81, description: 'Founder acceptance framework orchestration', extensionOnly: true },
+];
+
+export const FOUNDER_WORKFLOW_VALIDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FOUNDER_WORKFLOW_TYPES', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow validation types and models', extensionOnly: true },
+  { rowId: 'FOUNDER_WORKFLOW_REGISTRY', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow record registry and lookup', extensionOnly: true },
+  { rowId: 'WORKFLOW_CONTEXT_BUILDER', module: 'founder_workflow_validation', phase: 24.82, description: 'Canonical founder workflow context builder', extensionOnly: true },
+  { rowId: 'WORKFLOW_CLARITY_VALIDATOR', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow clarity validation', extensionOnly: true },
+  { rowId: 'WORKFLOW_DISCOVERABILITY_VALIDATOR', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow discoverability validation', extensionOnly: true },
+  { rowId: 'WORKFLOW_CONTINUITY_VALIDATOR', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow continuity validation', extensionOnly: true },
+  { rowId: 'WORKFLOW_FRICTION_VALIDATOR', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow friction validation', extensionOnly: true },
+  { rowId: 'WORKFLOW_RECOVERY_VALIDATOR', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow recovery validation', extensionOnly: true },
+  { rowId: 'WORKFLOW_OUTCOME_VALIDATOR', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow outcome validation', extensionOnly: true },
+  { rowId: 'WORKFLOW_EFFICIENCY_VALIDATOR', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow efficiency validation', extensionOnly: true },
+  { rowId: 'WORKFLOW_GAP_ANALYZER', module: 'founder_workflow_validation', phase: 24.82, description: 'Aggregated workflow gap analysis', extensionOnly: true },
+  { rowId: 'WORKFLOW_ROADMAP_BUILDER', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow roadmap generation', extensionOnly: true },
+  { rowId: 'FOUNDER_WORKFLOW_AUTHORITY_BUILDER', module: 'founder_workflow_validation', phase: 24.82, description: 'Unified founder workflow authority aggregation', extensionOnly: true },
+  { rowId: 'FOUNDER_WORKFLOW_EVALUATOR', module: 'founder_workflow_validation', phase: 24.82, description: 'Final founder workflow result evaluation', extensionOnly: true },
+  { rowId: 'FOUNDER_WORKFLOW_HISTORY', module: 'founder_workflow_validation', phase: 24.82, description: 'Bounded founder workflow evaluation history', extensionOnly: true },
+  { rowId: 'FOUNDER_WORKFLOW_REPORTING', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow report output', extensionOnly: true },
+  { rowId: 'FOUNDER_WORKFLOW_CACHE', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'FOUNDER_WORKFLOW_VALIDATION', module: 'founder_workflow_validation', phase: 24.82, description: 'Founder workflow validation orchestration', extensionOnly: true },
+];
+
+export const FOUNDER_CONFIDENCE_ENGINE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FOUNDER_CONFIDENCE_TYPES', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder confidence engine types and models', extensionOnly: true },
+  { rowId: 'FOUNDER_CONFIDENCE_REGISTRY', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder confidence record registry and lookup', extensionOnly: true },
+  { rowId: 'CONFIDENCE_CONTEXT_BUILDER', module: 'founder_confidence_engine', phase: 24.83, description: 'Canonical founder confidence context builder', extensionOnly: true },
+  { rowId: 'UNDERSTANDING_CONFIDENCE_VALIDATOR', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder project understanding confidence validation', extensionOnly: true },
+  { rowId: 'REASONING_VISIBILITY_VALIDATOR', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder reasoning visibility validation', extensionOnly: true },
+  { rowId: 'PROGRESS_TRUTH_VALIDATOR', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder progress truth validation', extensionOnly: true },
+  { rowId: 'NEXT_STEP_CONFIDENCE_VALIDATOR', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder next-step confidence validation', extensionOnly: true },
+  { rowId: 'DECISION_CONFIDENCE_VALIDATOR', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder decision confidence validation', extensionOnly: true },
+  { rowId: 'UNCERTAINTY_HONESTY_VALIDATOR', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder uncertainty honesty validation', extensionOnly: true },
+  { rowId: 'FOUNDER_CONTROL_CONFIDENCE_VALIDATOR', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder control confidence validation', extensionOnly: true },
+  { rowId: 'CONFIDENCE_GAP_ANALYZER', module: 'founder_confidence_engine', phase: 24.83, description: 'Aggregated confidence gap analysis', extensionOnly: true },
+  { rowId: 'CONFIDENCE_ROADMAP_BUILDER', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder confidence roadmap generation', extensionOnly: true },
+  { rowId: 'FOUNDER_CONFIDENCE_AUTHORITY_BUILDER', module: 'founder_confidence_engine', phase: 24.83, description: 'Unified founder confidence authority aggregation', extensionOnly: true },
+  { rowId: 'FOUNDER_CONFIDENCE_EVALUATOR', module: 'founder_confidence_engine', phase: 24.83, description: 'Final founder confidence result evaluation', extensionOnly: true },
+  { rowId: 'FOUNDER_CONFIDENCE_HISTORY', module: 'founder_confidence_engine', phase: 24.83, description: 'Bounded founder confidence evaluation history', extensionOnly: true },
+  { rowId: 'FOUNDER_CONFIDENCE_REPORTING', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder confidence report output', extensionOnly: true },
+  { rowId: 'FOUNDER_CONFIDENCE_CACHE', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder confidence bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'FOUNDER_CONFIDENCE_ENGINE', module: 'founder_confidence_engine', phase: 24.83, description: 'Founder confidence engine orchestration', extensionOnly: true },
+];
+
+export const FOUNDER_TRUST_VALIDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FOUNDER_TRUST_TYPES', module: 'founder_trust_validation', phase: 24.84, description: 'Founder trust validation types and models', extensionOnly: true },
+  { rowId: 'FOUNDER_TRUST_REGISTRY', module: 'founder_trust_validation', phase: 24.84, description: 'Founder trust record registry and lookup', extensionOnly: true },
+  { rowId: 'TRUST_CONTEXT_BUILDER', module: 'founder_trust_validation', phase: 24.84, description: 'Canonical founder trust context builder', extensionOnly: true },
+  { rowId: 'TRUTHFULNESS_VALIDATOR', module: 'founder_trust_validation', phase: 24.84, description: 'Founder truthfulness trust validation', extensionOnly: true },
+  { rowId: 'TRANSPARENCY_VALIDATOR', module: 'founder_trust_validation', phase: 24.84, description: 'Founder transparency trust validation', extensionOnly: true },
+  { rowId: 'VERIFICATION_INTEGRITY_VALIDATOR', module: 'founder_trust_validation', phase: 24.84, description: 'Founder verification integrity validation', extensionOnly: true },
+  { rowId: 'GOVERNANCE_COMPLIANCE_VALIDATOR', module: 'founder_trust_validation', phase: 24.84, description: 'Founder governance compliance validation', extensionOnly: true },
+  { rowId: 'EXECUTION_PREDICTABILITY_VALIDATOR', module: 'founder_trust_validation', phase: 24.84, description: 'Founder execution predictability validation', extensionOnly: true },
+  { rowId: 'EVIDENCE_VISIBILITY_VALIDATOR', module: 'founder_trust_validation', phase: 24.84, description: 'Founder evidence visibility validation', extensionOnly: true },
+  { rowId: 'ROLLBACK_CONFIDENCE_VALIDATOR', module: 'founder_trust_validation', phase: 24.84, description: 'Founder rollback confidence validation', extensionOnly: true },
+  { rowId: 'SAFETY_BOUNDARY_VALIDATOR', module: 'founder_trust_validation', phase: 24.84, description: 'Founder safety boundary validation', extensionOnly: true },
+  { rowId: 'TRUST_GAP_ANALYZER', module: 'founder_trust_validation', phase: 24.84, description: 'Aggregated trust gap analysis', extensionOnly: true },
+  { rowId: 'TRUST_ROADMAP_BUILDER', module: 'founder_trust_validation', phase: 24.84, description: 'Founder trust roadmap generation', extensionOnly: true },
+  { rowId: 'FOUNDER_TRUST_AUTHORITY_BUILDER', module: 'founder_trust_validation', phase: 24.84, description: 'Unified founder trust authority aggregation', extensionOnly: true },
+  { rowId: 'FOUNDER_TRUST_EVALUATOR', module: 'founder_trust_validation', phase: 24.84, description: 'Final founder trust result evaluation', extensionOnly: true },
+  { rowId: 'FOUNDER_TRUST_HISTORY', module: 'founder_trust_validation', phase: 24.84, description: 'Bounded founder trust evaluation history', extensionOnly: true },
+  { rowId: 'FOUNDER_TRUST_REPORTING', module: 'founder_trust_validation', phase: 24.84, description: 'Founder trust report output', extensionOnly: true },
+  { rowId: 'FOUNDER_TRUST_CACHE', module: 'founder_trust_validation', phase: 24.84, description: 'Founder trust bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'FOUNDER_TRUST_VALIDATION', module: 'founder_trust_validation', phase: 24.84, description: 'Founder trust validation orchestration', extensionOnly: true },
+];
+
+export const FOUNDER_PRODUCTIVITY_VALIDATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FOUNDER_PRODUCTIVITY_TYPES', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder productivity validation types and models', extensionOnly: true },
+  { rowId: 'FOUNDER_PRODUCTIVITY_REGISTRY', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder productivity record registry and lookup', extensionOnly: true },
+  { rowId: 'PRODUCTIVITY_CONTEXT_BUILDER', module: 'founder_productivity_validation', phase: 24.85, description: 'Canonical founder productivity context builder', extensionOnly: true },
+  { rowId: 'WORKFLOW_ACCELERATION_VALIDATOR', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder workflow acceleration validation', extensionOnly: true },
+  { rowId: 'MANUAL_WORK_REDUCTION_VALIDATOR', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder manual work reduction validation', extensionOnly: true },
+  { rowId: 'DECISION_REDUCTION_VALIDATOR', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder decision reduction validation', extensionOnly: true },
+  { rowId: 'CONTEXT_SWITCHING_VALIDATOR', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder context switching validation', extensionOnly: true },
+  { rowId: 'EXECUTION_EFFICIENCY_VALIDATOR', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder execution efficiency validation', extensionOnly: true },
+  { rowId: 'THROUGHPUT_VALIDATOR', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder throughput validation', extensionOnly: true },
+  { rowId: 'WORKFLOW_OVERHEAD_VALIDATOR', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder workflow overhead validation', extensionOnly: true },
+  { rowId: 'PRODUCTIVITY_GAP_ANALYZER', module: 'founder_productivity_validation', phase: 24.85, description: 'Aggregated productivity gap analysis', extensionOnly: true },
+  { rowId: 'PRODUCTIVITY_ROADMAP_BUILDER', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder productivity roadmap generation', extensionOnly: true },
+  { rowId: 'FOUNDER_PRODUCTIVITY_AUTHORITY_BUILDER', module: 'founder_productivity_validation', phase: 24.85, description: 'Unified founder productivity authority aggregation', extensionOnly: true },
+  { rowId: 'FOUNDER_PRODUCTIVITY_EVALUATOR', module: 'founder_productivity_validation', phase: 24.85, description: 'Final founder productivity result evaluation', extensionOnly: true },
+  { rowId: 'FOUNDER_PRODUCTIVITY_HISTORY', module: 'founder_productivity_validation', phase: 24.85, description: 'Bounded founder productivity evaluation history', extensionOnly: true },
+  { rowId: 'FOUNDER_PRODUCTIVITY_REPORTING', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder productivity report output', extensionOnly: true },
+  { rowId: 'FOUNDER_PRODUCTIVITY_CACHE', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder productivity bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'FOUNDER_PRODUCTIVITY_VALIDATION', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder productivity validation orchestration', extensionOnly: true },
+];
+
 export const LIVE_PREVIEW_GATEKEEPER_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'LIVE_PREVIEW_TYPES', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Live preview gatekeeper types and models', extensionOnly: true },
   { rowId: 'LIVE_PREVIEW_REGISTRY', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Live preview record registry and lookup', extensionOnly: true },
@@ -1613,6 +1755,13 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...FIRST_IMPRESSION_JUDGE_UVL_ROWS,
   ...LIVE_PREVIEW_GATEKEEPER_UVL_ROWS,
   ...AUTO_POLISH_LOOP_UVL_ROWS,
+  ...PRODUCT_EXPERIENCE_VERIFICATION_ENGINE_UVL_ROWS,
+  ...PRODUCT_REALITY_ORCHESTRATOR_UVL_ROWS,
+  ...FOUNDER_ACCEPTANCE_FRAMEWORK_UVL_ROWS,
+  ...FOUNDER_WORKFLOW_VALIDATION_UVL_ROWS,
+  ...FOUNDER_CONFIDENCE_ENGINE_UVL_ROWS,
+  ...FOUNDER_TRUST_VALIDATION_UVL_ROWS,
+  ...FOUNDER_PRODUCTIVITY_VALIDATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1921,6 +2070,34 @@ export function listLivePreviewGatekeeperUvlRows(): UvlRow[] {
 
 export function listAutoPolishLoopUvlRows(): UvlRow[] {
   return [...AUTO_POLISH_LOOP_UVL_ROWS];
+}
+
+export function listProductExperienceVerificationEngineUvlRows(): UvlRow[] {
+  return [...PRODUCT_EXPERIENCE_VERIFICATION_ENGINE_UVL_ROWS];
+}
+
+export function listProductRealityOrchestratorUvlRows(): UvlRow[] {
+  return [...PRODUCT_REALITY_ORCHESTRATOR_UVL_ROWS];
+}
+
+export function listFounderAcceptanceFrameworkUvlRows(): UvlRow[] {
+  return [...FOUNDER_ACCEPTANCE_FRAMEWORK_UVL_ROWS];
+}
+
+export function listFounderWorkflowValidationUvlRows(): UvlRow[] {
+  return [...FOUNDER_WORKFLOW_VALIDATION_UVL_ROWS];
+}
+
+export function listFounderConfidenceEngineUvlRows(): UvlRow[] {
+  return [...FOUNDER_CONFIDENCE_ENGINE_UVL_ROWS];
+}
+
+export function listFounderTrustValidationUvlRows(): UvlRow[] {
+  return [...FOUNDER_TRUST_VALIDATION_UVL_ROWS];
+}
+
+export function listFounderProductivityValidationUvlRows(): UvlRow[] {
+  return [...FOUNDER_PRODUCTIVITY_VALIDATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

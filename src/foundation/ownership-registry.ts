@@ -1260,6 +1260,55 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 24.76,
     description: 'Phase 24.7.6 Auto-Polish Loop — read-only polish opportunity identification, prioritization, and roadmap generation; no UI, CSS, copy mutation, or automatic fixes',
   },
+  product_experience_verification_engine: {
+    domain: 'product_experience_verification_engine',
+    ownerModule: 'devpulse_v2_product_experience_verification_engine',
+    ownerFunction: 'getDevPulseV2ProductExperienceVerificationEngine',
+    phase: 24.77,
+    description: 'Phase 24.7.7 Product Experience Verification Engine — read-only master product experience authority evaluating coherence, continuity, trust, identity, and launch readiness across all Product Reality Verification systems; no UI, copy, execution, or state mutation',
+  },
+  product_reality_orchestrator: {
+    domain: 'product_reality_orchestrator',
+    ownerModule: 'devpulse_v2_product_reality_orchestrator',
+    ownerFunction: 'getDevPulseV2ProductRealityOrchestrator',
+    phase: 24.78,
+    description: 'Phase 24.7.8 Product Reality Orchestrator — read-only final authority aggregating the full Product Reality Verification stack into unified verdict, conflicts, blockers, priorities, and roadmap; no UI, copy, execution, or state mutation',
+  },
+  founder_acceptance_framework: {
+    domain: 'founder_acceptance_framework',
+    ownerModule: 'devpulse_v2_founder_acceptance_framework',
+    ownerFunction: 'getDevPulseV2FounderAcceptanceFramework',
+    phase: 24.81,
+    description: 'Phase 24.8.1 Founder Acceptance Framework — read-only acceptance model, dimensions, criteria, categories, evidence, scoring, and report foundations for future founder validation; no acceptance evaluation, UI mutation, or execution',
+  },
+  founder_workflow_validation: {
+    domain: 'founder_workflow_validation',
+    ownerModule: 'devpulse_v2_founder_workflow_validation',
+    ownerFunction: 'getDevPulseV2FounderWorkflowValidation',
+    phase: 24.82,
+    description: 'Phase 24.8.2 Founder Workflow Validation — read-only founder operational workflow validation across clarity, discoverability, continuity, friction, recovery, outcome, and efficiency; no UI mutation or execution',
+  },
+  founder_confidence_engine: {
+    domain: 'founder_confidence_engine',
+    ownerModule: 'devpulse_v2_founder_confidence_engine',
+    ownerFunction: 'getDevPulseV2FounderConfidenceEngine',
+    phase: 24.83,
+    description: 'Phase 24.8.3 Founder Confidence Engine — read-only founder confidence validation across understanding, reasoning visibility, progress truth, next-step, decision, uncertainty honesty, and control; no UI mutation or execution',
+  },
+  founder_trust_validation: {
+    domain: 'founder_trust_validation',
+    ownerModule: 'devpulse_v2_founder_trust_validation',
+    ownerFunction: 'getDevPulseV2FounderTrustValidation',
+    phase: 24.84,
+    description: 'Phase 24.8.4 Founder Trust Validation — read-only founder trust validation across truthfulness, transparency, verification integrity, governance, execution predictability, evidence visibility, rollback, and safety; no UI mutation or execution',
+  },
+  founder_productivity_validation: {
+    domain: 'founder_productivity_validation',
+    ownerModule: 'devpulse_v2_founder_productivity_validation',
+    ownerFunction: 'getDevPulseV2FounderProductivityValidation',
+    phase: 24.85,
+    description: 'Phase 24.8.5 Founder Productivity Validation — read-only founder productivity validation across workflow acceleration, manual work reduction, decision reduction, context switching, execution efficiency, throughput, and overhead; no UI mutation or execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {
