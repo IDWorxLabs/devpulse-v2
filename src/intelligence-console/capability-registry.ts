@@ -341,6 +341,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'CAPABILITY_VERIFICATION_ENGINE',
+    label: 'Capability Verification Engine',
+    phase: 21.5,
+    ownerModule: 'devpulse_v2_capability_verification_engine',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

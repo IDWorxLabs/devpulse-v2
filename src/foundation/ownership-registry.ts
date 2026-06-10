@@ -1085,6 +1085,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 21.4,
     description: 'Phase 21.4 Capability Build Engine — module, integration, sequence, rollout, rollback, and validation build planning; build artifacts only, no execution or file modification',
   },
+  capability_verification_engine: {
+    domain: 'capability_verification_engine',
+    ownerModule: 'devpulse_v2_capability_verification_engine',
+    ownerFunction: 'getDevPulseV2CapabilityVerificationEngine',
+    phase: 21.5,
+    description: 'Phase 21.5 Capability Verification Engine — requirement, duplicate, risk, rollout, trust, and stall protection verification with readiness evaluation; verification only, no execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {
