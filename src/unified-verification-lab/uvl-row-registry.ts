@@ -859,6 +859,21 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const MISSING_CAPABILITY_ESCALATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'MISSING_CAPABILITY_ESCALATION_TYPES', module: 'missing_capability_escalation', phase: 21.1, description: 'Missing capability escalation types and models', extensionOnly: true },
+  { rowId: 'ESCALATION_REGISTRY', module: 'missing_capability_escalation', phase: 21.1, description: 'Escalation record registry', extensionOnly: true },
+  { rowId: 'FAILURE_PATTERN_DETECTOR', module: 'missing_capability_escalation', phase: 21.1, description: 'Repeated failure pattern detection', extensionOnly: true },
+  { rowId: 'STALL_PATTERN_DETECTOR', module: 'missing_capability_escalation', phase: 21.1, description: 'Repeated stall pattern detection', extensionOnly: true },
+  { rowId: 'BOTTLENECK_PATTERN_DETECTOR', module: 'missing_capability_escalation', phase: 21.1, description: 'Repeated bottleneck pattern detection', extensionOnly: true },
+  { rowId: 'BLOCKED_STATE_DETECTOR', module: 'missing_capability_escalation', phase: 21.1, description: 'Repeated blocked state detection', extensionOnly: true },
+  { rowId: 'CAPABILITY_GAP_ANALYZER', module: 'missing_capability_escalation', phase: 21.1, description: 'Capability gap root cause analysis', extensionOnly: true },
+  { rowId: 'ESCALATION_DECISION_ENGINE', module: 'missing_capability_escalation', phase: 21.1, description: 'Escalation decision pipeline', extensionOnly: true },
+  { rowId: 'ESCALATION_HISTORY', module: 'missing_capability_escalation', phase: 21.1, description: 'Bounded escalation history', extensionOnly: true },
+  { rowId: 'ESCALATION_REPORTING', module: 'missing_capability_escalation', phase: 21.1, description: 'Escalation report generation', extensionOnly: true },
+  { rowId: 'ESCALATION_CACHE', module: 'missing_capability_escalation', phase: 21.1, description: 'Escalation lookup cache', extensionOnly: true },
+  { rowId: 'MISSING_CAPABILITY_ESCALATION', module: 'missing_capability_escalation', phase: 21.1, description: 'Missing capability escalation orchestration and read-only registration', extensionOnly: true },
+];
+
 export const MULTI_PROJECT_MONITORING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'MULTI_PROJECT_MONITORING_TYPES', module: 'multi_project_monitoring', phase: 20.6, description: 'Multi project monitoring types and models', extensionOnly: true },
   { rowId: 'PROJECT_MONITOR_REGISTRY', module: 'multi_project_monitoring', phase: 20.6, description: 'Project monitor registry with scalable lookup', extensionOnly: true },
@@ -1085,6 +1100,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...MULTI_PROJECT_VERIFICATION_UVL_ROWS,
   ...MULTI_PROJECT_VERIFICATION_ORCHESTRATION_UVL_ROWS,
   ...MULTI_PROJECT_MONITORING_UVL_ROWS,
+  ...MISSING_CAPABILITY_ESCALATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1277,6 +1293,10 @@ export function listMultiProjectVerificationOrchestrationUvlRows(): UvlRow[] {
 
 export function listMultiProjectMonitoringUvlRows(): UvlRow[] {
   return [...MULTI_PROJECT_MONITORING_UVL_ROWS];
+}
+
+export function listMissingCapabilityEscalationUvlRows(): UvlRow[] {
+  return [...MISSING_CAPABILITY_ESCALATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

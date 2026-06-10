@@ -152,6 +152,7 @@
     "validate:multi-project-verification": "tsx scripts/validate-multi-project-verification.ts",
     "validate:multi-project-verification-orchestration": "tsx scripts/validate-multi-project-verification-orchestration.ts",
     "validate:multi-project-monitoring": "tsx scripts/validate-multi-project-monitoring.ts",
+    "validate:missing-capability-escalation": "tsx scripts/validate-missing-capability-escalation.ts",
     "validate:verification-integration": "tsx scripts/validate-verification-integration.ts",
     "validate:verification-intelligence": "tsx scripts/validate-verification-intelligence.ts",
     "validate:verification-strategy-core": "tsx scripts/validate-verification-strategy-core.ts",

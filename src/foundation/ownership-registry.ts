@@ -1057,6 +1057,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 20.6,
     description: 'Phase 20.6 Multi Project Monitoring — isolated operator feeds, timelines, event streams, live preview sessions, progress tracking, alerts, and portfolio monitoring; visibility only, no execution',
   },
+  missing_capability_escalation: {
+    domain: 'missing_capability_escalation',
+    ownerModule: 'devpulse_v2_missing_capability_escalation',
+    ownerFunction: 'getDevPulseV2MissingCapabilityEscalation',
+    phase: 21.1,
+    description: 'Phase 21.1 Missing Capability Escalation — failure, stall, bottleneck, and blocked state pattern detection with capability gap analysis; analysis only, no capability creation',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

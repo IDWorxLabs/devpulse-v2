@@ -313,6 +313,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'MISSING_CAPABILITY_ESCALATION',
+    label: 'Missing Capability Escalation',
+    phase: 21.1,
+    ownerModule: 'devpulse_v2_missing_capability_escalation',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,
