@@ -848,6 +848,17 @@ export const VERIFICATION_INTELLIGENCE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTELLIGENCE', module: 'verification_intelligence', phase: 19.31, description: 'Verification intelligence orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'PLAN_REGISTRATION', module: 'verification_integration', phase: 19.32, description: 'Verification plan registration registry', extensionOnly: true },
+  { rowId: 'PLAN_REPORTING', module: 'verification_integration', phase: 19.32, description: 'Verification plan report generation', extensionOnly: true },
+  { rowId: 'PLAN_VISIBILITY', module: 'verification_integration', phase: 19.32, description: 'Verification plan visibility models', extensionOnly: true },
+  { rowId: 'PLAN_READINESS', module: 'verification_integration', phase: 19.32, description: 'Verification readiness evaluation', extensionOnly: true },
+  { rowId: 'PLAN_COORDINATION', module: 'verification_integration', phase: 19.32, description: 'Verification plan coordination pipeline', extensionOnly: true },
+  { rowId: 'PLAN_HISTORY', module: 'verification_integration', phase: 19.32, description: 'Bounded verification plan history', extensionOnly: true },
+  { rowId: 'SNAPSHOT_SYSTEM', module: 'verification_integration', phase: 19.32, description: 'Verification integration snapshot system', extensionOnly: true },
+  { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
+];
+
 export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   ...WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
@@ -885,6 +896,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...BUILD_STRATEGY_ENGINE_UVL_ROWS,
   ...VERIFICATION_STRATEGY_CORE_UVL_ROWS,
   ...VERIFICATION_INTELLIGENCE_UVL_ROWS,
+  ...VERIFICATION_INTEGRATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1029,6 +1041,10 @@ export function listVerificationStrategyCoreUvlRows(): UvlRow[] {
 
 export function listVerificationIntelligenceUvlRows(): UvlRow[] {
   return [...VERIFICATION_INTELLIGENCE_UVL_ROWS];
+}
+
+export function listVerificationIntegrationUvlRows(): UvlRow[] {
+  return [...VERIFICATION_INTEGRATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

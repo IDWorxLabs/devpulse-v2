@@ -225,6 +225,8 @@ export {
   listVerificationStrategyCoreUvlRows,
   VERIFICATION_INTELLIGENCE_UVL_ROWS,
   listVerificationIntelligenceUvlRows,
+  VERIFICATION_INTEGRATION_UVL_ROWS,
+  listVerificationIntegrationUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';
