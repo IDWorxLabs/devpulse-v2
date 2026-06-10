@@ -572,6 +572,20 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'FOUNDER_READINESS_AUTHORITY',
+    label: 'Founder Readiness Authority',
+    phase: 24.87,
+    ownerModule: 'devpulse_v2_founder_readiness_authority',
+    extensionOnly: true,
+  },
+  {
+    capabilityId: 'FOUNDER_ACCEPTANCE_ORCHESTRATOR',
+    label: 'Founder Acceptance Orchestrator',
+    phase: 24.88,
+    ownerModule: 'devpulse_v2_founder_acceptance_orchestrator',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

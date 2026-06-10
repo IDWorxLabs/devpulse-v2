@@ -1316,6 +1316,20 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 24.86,
     description: 'Phase 24.8.6 Founder Friction Detector — read-only negative founder experience signal detection across confusion, workflow friction, decision fatigue, context switching, discoverability, trust breakdowns, confidence breakdowns, productivity blockers, verification friction, and launch blockers; no UI mutation or execution',
   },
+  founder_readiness_authority: {
+    domain: 'founder_readiness_authority',
+    ownerModule: 'devpulse_v2_founder_readiness_authority',
+    ownerFunction: 'getDevPulseV2FounderReadinessAuthority',
+    phase: 24.87,
+    description: 'Phase 24.8.7 Founder Readiness Authority — read-only unified founder readiness evaluation across workflow, confidence, trust, productivity, and friction authorities; determines founder operational and launch readiness; no UI mutation or execution',
+  },
+  founder_acceptance_orchestrator: {
+    domain: 'founder_acceptance_orchestrator',
+    ownerModule: 'devpulse_v2_founder_acceptance_orchestrator',
+    ownerFunction: 'getDevPulseV2FounderAcceptanceOrchestrator',
+    phase: 24.88,
+    description: 'Phase 24.8.8 Founder Acceptance Orchestrator — read-only final founder acceptance verdict unifying all Founder Acceptance Validation authorities; determines whether founder would genuinely accept DevPulse; no UI mutation or execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

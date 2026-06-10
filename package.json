@@ -191,6 +191,8 @@
     "validate:founder-trust-validation": "tsx scripts/validate-founder-trust-validation.ts",
     "validate:founder-productivity-validation": "tsx scripts/validate-founder-productivity-validation.ts",
     "validate:founder-friction-detector": "tsx scripts/validate-founder-friction-detector.ts",
+    "validate:founder-readiness-authority": "tsx scripts/validate-founder-readiness-authority.ts",
+    "validate:founder-acceptance-orchestrator": "tsx scripts/validate-founder-acceptance-orchestrator.ts",
     "validate:documentation-verification": "tsx scripts/validate-documentation-verification.ts",
     "validate:verification-integration": "tsx scripts/validate-verification-integration.ts",
     "validate:verification-intelligence": "tsx scripts/validate-verification-intelligence.ts",

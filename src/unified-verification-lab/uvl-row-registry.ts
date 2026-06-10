@@ -1274,6 +1274,45 @@ export const FOUNDER_FRICTION_DETECTOR_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'FOUNDER_FRICTION_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Founder friction detector orchestration', extensionOnly: true },
 ];
 
+export const FOUNDER_READINESS_AUTHORITY_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FOUNDER_READINESS_TYPES', module: 'founder_readiness_authority', phase: 24.87, description: 'Founder readiness authority types and models', extensionOnly: true },
+  { rowId: 'FOUNDER_READINESS_REGISTRY', module: 'founder_readiness_authority', phase: 24.87, description: 'Founder readiness record registry and lookup', extensionOnly: true },
+  { rowId: 'READINESS_CONTEXT_BUILDER', module: 'founder_readiness_authority', phase: 24.87, description: 'Canonical founder readiness context builder', extensionOnly: true },
+  { rowId: 'WORKFLOW_READINESS_ANALYZER', module: 'founder_readiness_authority', phase: 24.87, description: 'Workflow readiness analysis', extensionOnly: true },
+  { rowId: 'CONFIDENCE_READINESS_ANALYZER', module: 'founder_readiness_authority', phase: 24.87, description: 'Confidence readiness analysis', extensionOnly: true },
+  { rowId: 'TRUST_READINESS_ANALYZER', module: 'founder_readiness_authority', phase: 24.87, description: 'Trust readiness analysis', extensionOnly: true },
+  { rowId: 'PRODUCTIVITY_READINESS_ANALYZER', module: 'founder_readiness_authority', phase: 24.87, description: 'Productivity readiness analysis', extensionOnly: true },
+  { rowId: 'FRICTION_READINESS_ANALYZER', module: 'founder_readiness_authority', phase: 24.87, description: 'Friction readiness analysis', extensionOnly: true },
+  { rowId: 'READINESS_BLOCKER_ANALYZER', module: 'founder_readiness_authority', phase: 24.87, description: 'Readiness blocker detection', extensionOnly: true },
+  { rowId: 'READINESS_GAP_ANALYZER', module: 'founder_readiness_authority', phase: 24.87, description: 'Aggregated readiness gap analysis', extensionOnly: true },
+  { rowId: 'READINESS_ROADMAP_BUILDER', module: 'founder_readiness_authority', phase: 24.87, description: 'Founder readiness roadmap generation', extensionOnly: true },
+  { rowId: 'FOUNDER_READINESS_AUTHORITY_BUILDER', module: 'founder_readiness_authority', phase: 24.87, description: 'Unified founder readiness authority aggregation', extensionOnly: true },
+  { rowId: 'FOUNDER_READINESS_EVALUATOR', module: 'founder_readiness_authority', phase: 24.87, description: 'Final founder readiness result evaluation', extensionOnly: true },
+  { rowId: 'FOUNDER_READINESS_HISTORY', module: 'founder_readiness_authority', phase: 24.87, description: 'Bounded founder readiness evaluation history', extensionOnly: true },
+  { rowId: 'FOUNDER_READINESS_REPORTING', module: 'founder_readiness_authority', phase: 24.87, description: 'Founder readiness report output', extensionOnly: true },
+  { rowId: 'FOUNDER_READINESS_CACHE', module: 'founder_readiness_authority', phase: 24.87, description: 'Founder readiness bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'FOUNDER_READINESS_AUTHORITY', module: 'founder_readiness_authority', phase: 24.87, description: 'Founder readiness authority orchestration', extensionOnly: true },
+];
+
+export const FOUNDER_ACCEPTANCE_ORCHESTRATOR_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FOUNDER_ACCEPTANCE_ORCHESTRATOR_TYPES', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance orchestrator types and models', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_REGISTRY', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance record registry and lookup', extensionOnly: true },
+  { rowId: 'ACCEPTANCE_AGGREGATION_BUILDER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance aggregate score builder', extensionOnly: true },
+  { rowId: 'AUTHORITY_CONFLICT_DETECTOR', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Authority conflict detection for acceptance', extensionOnly: true },
+  { rowId: 'ACCEPTANCE_BLOCKER_ANALYZER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Acceptance blocker analysis', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_ANALYZER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance likelihood analysis', extensionOnly: true },
+  { rowId: 'READINESS_ACCEPTANCE_ANALYZER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Readiness contribution to acceptance analysis', extensionOnly: true },
+  { rowId: 'FRICTION_IMPACT_ANALYZER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Friction impact on acceptance analysis', extensionOnly: true },
+  { rowId: 'ACCEPTANCE_GAP_ANALYZER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Aggregated acceptance gap analysis', extensionOnly: true },
+  { rowId: 'ACCEPTANCE_ROADMAP_BUILDER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance roadmap generation', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_AUTHORITY_BUILDER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Unified founder acceptance authority aggregation', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_EVALUATOR', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Final founder acceptance evaluation and verdict', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_HISTORY', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Bounded founder acceptance evaluation history', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_REPORTING', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance report output', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_CACHE', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_ORCHESTRATOR', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance orchestration', extensionOnly: true },
+];
+
 export const LIVE_PREVIEW_GATEKEEPER_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'LIVE_PREVIEW_TYPES', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Live preview gatekeeper types and models', extensionOnly: true },
   { rowId: 'LIVE_PREVIEW_REGISTRY', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Live preview record registry and lookup', extensionOnly: true },
@@ -1787,6 +1826,8 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...FOUNDER_TRUST_VALIDATION_UVL_ROWS,
   ...FOUNDER_PRODUCTIVITY_VALIDATION_UVL_ROWS,
   ...FOUNDER_FRICTION_DETECTOR_UVL_ROWS,
+  ...FOUNDER_READINESS_AUTHORITY_UVL_ROWS,
+  ...FOUNDER_ACCEPTANCE_ORCHESTRATOR_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -2127,6 +2168,14 @@ export function listFounderProductivityValidationUvlRows(): UvlRow[] {
 
 export function listFounderFrictionDetectorUvlRows(): UvlRow[] {
   return [...FOUNDER_FRICTION_DETECTOR_UVL_ROWS];
+}
+
+export function listFounderReadinessAuthorityUvlRows(): UvlRow[] {
+  return [...FOUNDER_READINESS_AUTHORITY_UVL_ROWS];
+}
+
+export function listFounderAcceptanceOrchestratorUvlRows(): UvlRow[] {
+  return [...FOUNDER_ACCEPTANCE_ORCHESTRATOR_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

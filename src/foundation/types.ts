@@ -244,7 +244,9 @@ export type OwnershipDomain =
   | 'founder_confidence_engine'
   | 'founder_trust_validation'
   | 'founder_productivity_validation'
-  | 'founder_friction_detector';
+  | 'founder_friction_detector'
+  | 'founder_readiness_authority'
+  | 'founder_acceptance_orchestrator';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 
