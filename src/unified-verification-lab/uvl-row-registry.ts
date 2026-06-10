@@ -1052,6 +1052,22 @@ export const USER_GUIDES_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'USER_GUIDES_ENGINE', module: 'user_guides', phase: 24.3, description: 'User guides orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const ARCHITECTURE_DOCUMENTATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'ARCHITECTURE_DOCUMENTATION_TYPES', module: 'architecture_documentation', phase: 24.4, description: 'Architecture documentation types and models', extensionOnly: true },
+  { rowId: 'ARCHITECTURE_DOCUMENTATION_REGISTRY', module: 'architecture_documentation', phase: 24.4, description: 'Architecture documentation record registry and lookup', extensionOnly: true },
+  { rowId: 'DOMAIN_ARCHITECTURE_ANALYZER', module: 'architecture_documentation', phase: 24.4, description: 'Domain architecture coverage analysis', extensionOnly: true },
+  { rowId: 'DEPENDENCY_GRAPH_ANALYZER', module: 'architecture_documentation', phase: 24.4, description: 'Dependency graph coverage analysis', extensionOnly: true },
+  { rowId: 'INTEGRATION_POINT_ANALYZER', module: 'architecture_documentation', phase: 24.4, description: 'Integration point coverage analysis', extensionOnly: true },
+  { rowId: 'ARCHITECTURE_BOUNDARY_ANALYZER', module: 'architecture_documentation', phase: 24.4, description: 'Architectural boundary coverage analysis', extensionOnly: true },
+  { rowId: 'AUTHORITY_CHAIN_ARCHITECTURE_ANALYZER', module: 'architecture_documentation', phase: 24.4, description: 'Authority chain architecture coverage analysis', extensionOnly: true },
+  { rowId: 'ARCHITECTURE_DOCUMENTATION_AUTHORITY_BUILDER', module: 'architecture_documentation', phase: 24.4, description: 'Unified architecture documentation authority aggregation', extensionOnly: true },
+  { rowId: 'ARCHITECTURE_DOCUMENTATION_EVALUATOR', module: 'architecture_documentation', phase: 24.4, description: 'Final architecture documentation coverage and state evaluation', extensionOnly: true },
+  { rowId: 'ARCHITECTURE_DOCUMENTATION_HISTORY', module: 'architecture_documentation', phase: 24.4, description: 'Bounded architecture documentation history', extensionOnly: true },
+  { rowId: 'ARCHITECTURE_DOCUMENTATION_REPORTING', module: 'architecture_documentation', phase: 24.4, description: 'Architecture documentation report and recommendation generation', extensionOnly: true },
+  { rowId: 'ARCHITECTURE_DOCUMENTATION_CACHE', module: 'architecture_documentation', phase: 24.4, description: 'Architecture documentation lookup cache', extensionOnly: true },
+  { rowId: 'ARCHITECTURE_DOCUMENTATION_ENGINE', module: 'architecture_documentation', phase: 24.4, description: 'Architecture documentation orchestration and read-only registration', extensionOnly: true },
+];
+
 export const PRIVACY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'PRIVACY_HARDENING_TYPES', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening types and models', extensionOnly: true },
   { rowId: 'PRIVACY_HARDENING_REGISTRY', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening record registry and lookup', extensionOnly: true },
@@ -1443,6 +1459,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...SELF_DOCUMENTATION_UVL_ROWS,
   ...FOUNDER_GUIDES_UVL_ROWS,
   ...USER_GUIDES_UVL_ROWS,
+  ...ARCHITECTURE_DOCUMENTATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1719,6 +1736,10 @@ export function listFounderGuidesUvlRows(): UvlRow[] {
 
 export function listUserGuidesUvlRows(): UvlRow[] {
   return [...USER_GUIDES_UVL_ROWS];
+}
+
+export function listArchitectureDocumentationUvlRows(): UvlRow[] {
+  return [...ARCHITECTURE_DOCUMENTATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

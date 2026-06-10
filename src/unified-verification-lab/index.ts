@@ -291,6 +291,8 @@ export {
   listFounderGuidesUvlRows,
   USER_GUIDES_UVL_ROWS,
   listUserGuidesUvlRows,
+  ARCHITECTURE_DOCUMENTATION_UVL_ROWS,
+  listArchitectureDocumentationUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

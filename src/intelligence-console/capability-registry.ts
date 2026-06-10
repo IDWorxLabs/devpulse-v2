@@ -460,6 +460,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'ARCHITECTURE_DOCUMENTATION',
+    label: 'Architecture Documentation',
+    phase: 24.4,
+    ownerModule: 'devpulse_v2_architecture_documentation',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,
