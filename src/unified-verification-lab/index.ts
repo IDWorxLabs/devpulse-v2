@@ -239,6 +239,8 @@ export {
   listMultiProjectFoundationUvlRows,
   WORKSPACE_ISOLATION_EXPANSION_UVL_ROWS,
   listWorkspaceIsolationExpansionUvlRows,
+  RESOURCE_ALLOCATION_UVL_ROWS,
+  listResourceAllocationUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

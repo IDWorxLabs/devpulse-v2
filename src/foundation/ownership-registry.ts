@@ -1022,6 +1022,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 20.2,
     description: 'Phase 20.2 Workspace Isolation Expansion — workspace boundaries, ownership, access control, policy, isolation validation, violation detection, and reporting; isolation only, no execution',
   },
+  resource_allocation: {
+    domain: 'resource_allocation',
+    ownerModule: 'devpulse_v2_resource_allocation',
+    ownerFunction: 'getDevPulseV2ResourceAllocation',
+    phase: 20.3,
+    description: 'Phase 20.3 Resource Allocation — capacity tracking, priority, allocation, reservation, queue, contention, budgeting, and reporting; planning only, no execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

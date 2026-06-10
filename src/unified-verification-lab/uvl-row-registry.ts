@@ -859,6 +859,22 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const RESOURCE_ALLOCATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'RESOURCE_ALLOCATION_TYPES', module: 'resource_allocation', phase: 20.3, description: 'Resource allocation types and models', extensionOnly: true },
+  { rowId: 'RESOURCE_REGISTRY', module: 'resource_allocation', phase: 20.3, description: 'Resource registry with capacity tracking', extensionOnly: true },
+  { rowId: 'RESOURCE_CAPACITY_MANAGER', module: 'resource_allocation', phase: 20.3, description: 'Resource capacity configuration and tracking', extensionOnly: true },
+  { rowId: 'RESOURCE_PRIORITY_ENGINE', module: 'resource_allocation', phase: 20.3, description: 'Resource priority determination', extensionOnly: true },
+  { rowId: 'RESOURCE_ALLOCATION_ENGINE', module: 'resource_allocation', phase: 20.3, description: 'Resource allocation engine', extensionOnly: true },
+  { rowId: 'RESOURCE_BUDGET_MANAGER', module: 'resource_allocation', phase: 20.3, description: 'Per-project and per-workspace resource budgets', extensionOnly: true },
+  { rowId: 'RESOURCE_RESERVATION_MANAGER', module: 'resource_allocation', phase: 20.3, description: 'Resource reservation management', extensionOnly: true },
+  { rowId: 'RESOURCE_CONTENTION_DETECTOR', module: 'resource_allocation', phase: 20.3, description: 'Resource contention detection', extensionOnly: true },
+  { rowId: 'RESOURCE_QUEUE_MANAGER', module: 'resource_allocation', phase: 20.3, description: 'Priority allocation queue management', extensionOnly: true },
+  { rowId: 'RESOURCE_ALLOCATION_HISTORY', module: 'resource_allocation', phase: 20.3, description: 'Bounded allocation history', extensionOnly: true },
+  { rowId: 'RESOURCE_ALLOCATION_REPORTING', module: 'resource_allocation', phase: 20.3, description: 'Resource allocation reporting', extensionOnly: true },
+  { rowId: 'RESOURCE_CACHE', module: 'resource_allocation', phase: 20.3, description: 'Resource allocation lookup cache', extensionOnly: true },
+  { rowId: 'RESOURCE_ALLOCATION', module: 'resource_allocation', phase: 20.3, description: 'Resource allocation orchestration and read-only registration', extensionOnly: true },
+];
+
 export const WORKSPACE_ISOLATION_EXPANSION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'WORKSPACE_ISOLATION_TYPES', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Workspace isolation expansion types and models', extensionOnly: true },
   { rowId: 'WORKSPACE_REGISTRY', module: 'workspace_isolation_expansion', phase: 20.2, description: 'Scalable workspace registry', extensionOnly: true },
@@ -999,6 +1015,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...AUTONOMOUS_COMPLETION_ENGINE_UVL_ROWS,
   ...MULTI_PROJECT_FOUNDATION_UVL_ROWS,
   ...WORKSPACE_ISOLATION_EXPANSION_UVL_ROWS,
+  ...RESOURCE_ALLOCATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1171,6 +1188,10 @@ export function listMultiProjectFoundationUvlRows(): UvlRow[] {
 
 export function listWorkspaceIsolationExpansionUvlRows(): UvlRow[] {
   return [...WORKSPACE_ISOLATION_EXPANSION_UVL_ROWS];
+}
+
+export function listResourceAllocationUvlRows(): UvlRow[] {
+  return [...RESOURCE_ALLOCATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

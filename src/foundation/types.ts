@@ -202,7 +202,8 @@ export type OwnershipDomain =
   | 'autonomous_verification'
   | 'autonomous_completion_engine'
   | 'multi_project_foundation'
-  | 'workspace_isolation_expansion';
+  | 'workspace_isolation_expansion'
+  | 'resource_allocation';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

@@ -278,6 +278,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'RESOURCE_ALLOCATION',
+    label: 'Resource Allocation',
+    phase: 20.3,
+    ownerModule: 'devpulse_v2_resource_allocation',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,
