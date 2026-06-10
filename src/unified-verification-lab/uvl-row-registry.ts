@@ -859,6 +859,22 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const AUTONOMOUS_TESTING_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'AUTONOMOUS_TESTING_TYPES', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous testing types and models', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TEST_SELECTOR', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous test depth and category selection', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TEST_PLANNER', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous test plan builder and readiness', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TEST_SUITE_BUILDER', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous test suite builder', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TEST_RISK_ANALYZER', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous test risk analysis', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TEST_CONFIDENCE_ANALYZER', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous test confidence analysis', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TEST_COST_ANALYZER', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous test cost estimation', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TEST_COVERAGE_MODEL', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous test coverage model', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TEST_RESULT_MODEL', module: 'autonomous_testing', phase: 19.4, description: 'Planning-safe autonomous test result model', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TEST_REPORTING', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous test report generation', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TEST_HISTORY', module: 'autonomous_testing', phase: 19.4, description: 'Bounded autonomous test history', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TEST_REGISTRY', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous test depth registry', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_TESTING', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous testing orchestration and read-only registration', extensionOnly: true },
+];
+
 export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   ...WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
@@ -897,6 +913,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...VERIFICATION_STRATEGY_CORE_UVL_ROWS,
   ...VERIFICATION_INTELLIGENCE_UVL_ROWS,
   ...VERIFICATION_INTEGRATION_UVL_ROWS,
+  ...AUTONOMOUS_TESTING_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1045,6 +1062,10 @@ export function listVerificationIntelligenceUvlRows(): UvlRow[] {
 
 export function listVerificationIntegrationUvlRows(): UvlRow[] {
   return [...VERIFICATION_INTEGRATION_UVL_ROWS];
+}
+
+export function listAutonomousTestingUvlRows(): UvlRow[] {
+  return [...AUTONOMOUS_TESTING_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

@@ -236,6 +236,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'AUTONOMOUS_TESTING',
+    label: 'Autonomous Testing',
+    phase: 19.4,
+    ownerModule: 'devpulse_v2_autonomous_testing',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

@@ -196,7 +196,8 @@ export type OwnershipDomain =
   | 'build_strategy_engine'
   | 'verification_strategy_core'
   | 'verification_intelligence'
-  | 'verification_integration';
+  | 'verification_integration'
+  | 'autonomous_testing';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

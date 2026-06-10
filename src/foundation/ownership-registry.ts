@@ -980,6 +980,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 19.32,
     description: 'Phase 19.3C Verification Integration — plan registration, reporting, visibility, readiness, coordination, history, and snapshots; integration only, no validator execution',
   },
+  autonomous_testing: {
+    domain: 'autonomous_testing',
+    ownerModule: 'devpulse_v2_autonomous_testing',
+    ownerFunction: 'getDevPulseV2AutonomousTesting',
+    phase: 19.4,
+    description: 'Phase 19.4 Autonomous Testing — test depth selection, category mapping, suite planning, risk/cost/confidence analysis, readiness, and planning-safe simulated results; no real test execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {
