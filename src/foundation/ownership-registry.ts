@@ -1071,6 +1071,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 21.2,
     description: 'Phase 21.2 Capability Research Engine — domain classification, evidence analysis, gap research, similarity detection, and root cause research; research only, no capability creation',
   },
+  capability_planning_engine: {
+    domain: 'capability_planning_engine',
+    ownerModule: 'devpulse_v2_capability_planning_engine',
+    ownerFunction: 'getDevPulseV2CapabilityPlanningEngine',
+    phase: 21.3,
+    description: 'Phase 21.3 Capability Planning Engine — scope, impact, risk, verification, dependency, and approval planning with duplicate capability protection; planning only, no capability creation',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

@@ -253,6 +253,8 @@ export {
   listMissingCapabilityEscalationUvlRows,
   CAPABILITY_RESEARCH_ENGINE_UVL_ROWS,
   listCapabilityResearchEngineUvlRows,
+  CAPABILITY_PLANNING_ENGINE_UVL_ROWS,
+  listCapabilityPlanningEngineUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';
