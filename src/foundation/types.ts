@@ -243,7 +243,8 @@ export type OwnershipDomain =
   | 'founder_workflow_validation'
   | 'founder_confidence_engine'
   | 'founder_trust_validation'
-  | 'founder_productivity_validation';
+  | 'founder_productivity_validation'
+  | 'founder_friction_detector';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

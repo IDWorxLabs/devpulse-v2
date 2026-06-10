@@ -1250,6 +1250,30 @@ export const FOUNDER_PRODUCTIVITY_VALIDATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'FOUNDER_PRODUCTIVITY_VALIDATION', module: 'founder_productivity_validation', phase: 24.85, description: 'Founder productivity validation orchestration', extensionOnly: true },
 ];
 
+export const FOUNDER_FRICTION_DETECTOR_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FOUNDER_FRICTION_TYPES', module: 'founder_friction_detector', phase: 24.86, description: 'Founder friction detector types and models', extensionOnly: true },
+  { rowId: 'FOUNDER_FRICTION_REGISTRY', module: 'founder_friction_detector', phase: 24.86, description: 'Founder friction record registry and lookup', extensionOnly: true },
+  { rowId: 'FRICTION_CONTEXT_BUILDER', module: 'founder_friction_detector', phase: 24.86, description: 'Canonical founder friction context builder', extensionOnly: true },
+  { rowId: 'CONFUSION_FRICTION_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Confusion friction detection', extensionOnly: true },
+  { rowId: 'WORKFLOW_FRICTION_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Workflow friction detection', extensionOnly: true },
+  { rowId: 'DECISION_FATIGUE_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Decision fatigue detection', extensionOnly: true },
+  { rowId: 'CONTEXT_SWITCHING_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Context switching friction detection', extensionOnly: true },
+  { rowId: 'HIDDEN_CAPABILITY_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Discoverability and hidden capability friction detection', extensionOnly: true },
+  { rowId: 'TRUST_BREAKDOWN_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Trust breakdown friction detection', extensionOnly: true },
+  { rowId: 'CONFIDENCE_BREAKDOWN_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Confidence breakdown friction detection', extensionOnly: true },
+  { rowId: 'PRODUCTIVITY_BLOCKER_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Productivity blocker friction detection', extensionOnly: true },
+  { rowId: 'VERIFICATION_FRICTION_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Verification friction detection', extensionOnly: true },
+  { rowId: 'LAUNCH_BLOCKER_FRICTION_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Launch blocker friction detection', extensionOnly: true },
+  { rowId: 'FRICTION_GAP_ANALYZER', module: 'founder_friction_detector', phase: 24.86, description: 'Aggregated friction gap analysis', extensionOnly: true },
+  { rowId: 'FRICTION_ROADMAP_BUILDER', module: 'founder_friction_detector', phase: 24.86, description: 'Founder friction roadmap generation', extensionOnly: true },
+  { rowId: 'FOUNDER_FRICTION_AUTHORITY_BUILDER', module: 'founder_friction_detector', phase: 24.86, description: 'Unified founder friction authority aggregation', extensionOnly: true },
+  { rowId: 'FOUNDER_FRICTION_EVALUATOR', module: 'founder_friction_detector', phase: 24.86, description: 'Final founder friction result evaluation', extensionOnly: true },
+  { rowId: 'FOUNDER_FRICTION_HISTORY', module: 'founder_friction_detector', phase: 24.86, description: 'Bounded founder friction evaluation history', extensionOnly: true },
+  { rowId: 'FOUNDER_FRICTION_REPORTING', module: 'founder_friction_detector', phase: 24.86, description: 'Founder friction report output', extensionOnly: true },
+  { rowId: 'FOUNDER_FRICTION_CACHE', module: 'founder_friction_detector', phase: 24.86, description: 'Founder friction bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'FOUNDER_FRICTION_DETECTOR', module: 'founder_friction_detector', phase: 24.86, description: 'Founder friction detector orchestration', extensionOnly: true },
+];
+
 export const LIVE_PREVIEW_GATEKEEPER_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'LIVE_PREVIEW_TYPES', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Live preview gatekeeper types and models', extensionOnly: true },
   { rowId: 'LIVE_PREVIEW_REGISTRY', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Live preview record registry and lookup', extensionOnly: true },
@@ -1762,6 +1786,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...FOUNDER_CONFIDENCE_ENGINE_UVL_ROWS,
   ...FOUNDER_TRUST_VALIDATION_UVL_ROWS,
   ...FOUNDER_PRODUCTIVITY_VALIDATION_UVL_ROWS,
+  ...FOUNDER_FRICTION_DETECTOR_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -2098,6 +2123,10 @@ export function listFounderTrustValidationUvlRows(): UvlRow[] {
 
 export function listFounderProductivityValidationUvlRows(): UvlRow[] {
   return [...FOUNDER_PRODUCTIVITY_VALIDATION_UVL_ROWS];
+}
+
+export function listFounderFrictionDetectorUvlRows(): UvlRow[] {
+  return [...FOUNDER_FRICTION_DETECTOR_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

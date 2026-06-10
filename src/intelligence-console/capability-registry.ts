@@ -565,6 +565,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'FOUNDER_FRICTION_DETECTOR',
+    label: 'Founder Friction Detector',
+    phase: 24.86,
+    ownerModule: 'devpulse_v2_founder_friction_detector',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

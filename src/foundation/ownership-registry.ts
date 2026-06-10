@@ -1309,6 +1309,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 24.85,
     description: 'Phase 24.8.5 Founder Productivity Validation — read-only founder productivity validation across workflow acceleration, manual work reduction, decision reduction, context switching, execution efficiency, throughput, and overhead; no UI mutation or execution',
   },
+  founder_friction_detector: {
+    domain: 'founder_friction_detector',
+    ownerModule: 'devpulse_v2_founder_friction_detector',
+    ownerFunction: 'getDevPulseV2FounderFrictionDetector',
+    phase: 24.86,
+    description: 'Phase 24.8.6 Founder Friction Detector — read-only negative founder experience signal detection across confusion, workflow friction, decision fatigue, context switching, discoverability, trust breakdowns, confidence breakdowns, productivity blockers, verification friction, and launch blockers; no UI mutation or execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {
