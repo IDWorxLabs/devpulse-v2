@@ -267,6 +267,8 @@ export {
   listEvidenceIntelligenceUvlRows,
   REALITY_VERIFICATION_EXPANSION_UVL_ROWS,
   listRealityVerificationExpansionUvlRows,
+  COMPLETION_TRUTH_ENGINE_UVL_ROWS,
+  listCompletionTruthEngineUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

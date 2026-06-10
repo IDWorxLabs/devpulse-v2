@@ -376,6 +376,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'COMPLETION_TRUTH_ENGINE',
+    label: 'Completion Truth Engine',
+    phase: 22.4,
+    ownerModule: 'devpulse_v2_completion_truth_engine',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

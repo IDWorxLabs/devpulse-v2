@@ -216,7 +216,8 @@ export type OwnershipDomain =
   | 'self_evolution_governance'
   | 'unified_trust_runtime'
   | 'evidence_intelligence'
-  | 'reality_verification_expansion';
+  | 'reality_verification_expansion'
+  | 'completion_truth_engine';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

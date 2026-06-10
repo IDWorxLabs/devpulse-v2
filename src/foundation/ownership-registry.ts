@@ -1120,6 +1120,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 22.3,
     description: 'Phase 22.3 Reality Verification Expansion — validates claims against evidence, trust, verification, monitoring, and governance state; read-only, no execution or mutations',
   },
+  completion_truth_engine: {
+    domain: 'completion_truth_engine',
+    ownerModule: 'devpulse_v2_completion_truth_engine',
+    ownerFunction: 'getDevPulseV2CompletionTruthEngine',
+    phase: 22.4,
+    description: 'Phase 22.4 Completion Truth Engine — determines whether work is genuinely complete versus merely reported complete; read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

@@ -924,6 +924,22 @@ export const REALITY_VERIFICATION_EXPANSION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'REALITY_VERIFICATION_EXPANSION', module: 'reality_verification_expansion', phase: 22.3, description: 'Reality verification expansion orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const COMPLETION_TRUTH_ENGINE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'COMPLETION_TRUTH_TYPES', module: 'completion_truth_engine', phase: 22.4, description: 'Completion truth engine types and models', extensionOnly: true },
+  { rowId: 'COMPLETION_TRUTH_REGISTRY', module: 'completion_truth_engine', phase: 22.4, description: 'Completion truth authority registry and lookup', extensionOnly: true },
+  { rowId: 'COMPLETION_CLAIM_ANALYZER', module: 'completion_truth_engine', phase: 22.4, description: 'Completion claim strength, coverage, and reliability analysis', extensionOnly: true },
+  { rowId: 'COMPLETION_EVIDENCE_VALIDATOR', module: 'completion_truth_engine', phase: 22.4, description: 'Completion evidence coverage, quality, and agreement validation', extensionOnly: true },
+  { rowId: 'COMPLETION_REALITY_VALIDATOR', module: 'completion_truth_engine', phase: 22.4, description: 'Completion reality validation and gap detection', extensionOnly: true },
+  { rowId: 'FALSE_COMPLETION_DETECTOR', module: 'completion_truth_engine', phase: 22.4, description: 'False, suspect, and valid completion detection', extensionOnly: true },
+  { rowId: 'COMPLETION_CONSISTENCY_ANALYZER', module: 'completion_truth_engine', phase: 22.4, description: 'Completion consistency, stability, and agreement scoring', extensionOnly: true },
+  { rowId: 'COMPLETION_GAP_ANALYZER', module: 'completion_truth_engine', phase: 22.4, description: 'Missing completion proof gap analysis', extensionOnly: true },
+  { rowId: 'COMPLETION_TRUTH_AUTHORITY_BUILDER', module: 'completion_truth_engine', phase: 22.4, description: 'Unified completion truth authority aggregation', extensionOnly: true },
+  { rowId: 'COMPLETION_TRUTH_EVALUATOR', module: 'completion_truth_engine', phase: 22.4, description: 'Completion confidence, truth score, readiness, and stability evaluation', extensionOnly: true },
+  { rowId: 'COMPLETION_TRUTH_HISTORY', module: 'completion_truth_engine', phase: 22.4, description: 'Bounded completion truth history', extensionOnly: true },
+  { rowId: 'COMPLETION_TRUTH_REPORTING', module: 'completion_truth_engine', phase: 22.4, description: 'Completion truth report generation', extensionOnly: true },
+  { rowId: 'COMPLETION_TRUTH_ENGINE', module: 'completion_truth_engine', phase: 22.4, description: 'Completion truth engine orchestration and read-only registration', extensionOnly: true },
+];
+
 export const CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'CAPABILITY_VERIFICATION_TYPES', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification engine types and models', extensionOnly: true },
   { rowId: 'CAPABILITY_VERIFICATION_REGISTRY', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification record registry', extensionOnly: true },
@@ -1238,6 +1254,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...UNIFIED_TRUST_RUNTIME_UVL_ROWS,
   ...EVIDENCE_INTELLIGENCE_UVL_ROWS,
   ...REALITY_VERIFICATION_EXPANSION_UVL_ROWS,
+  ...COMPLETION_TRUTH_ENGINE_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1466,6 +1483,10 @@ export function listEvidenceIntelligenceUvlRows(): UvlRow[] {
 
 export function listRealityVerificationExpansionUvlRows(): UvlRow[] {
   return [...REALITY_VERIFICATION_EXPANSION_UVL_ROWS];
+}
+
+export function listCompletionTruthEngineUvlRows(): UvlRow[] {
+  return [...COMPLETION_TRUTH_ENGINE_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {
