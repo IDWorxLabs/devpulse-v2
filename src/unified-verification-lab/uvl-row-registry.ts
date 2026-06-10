@@ -876,6 +876,21 @@ export const SELF_EVOLUTION_GOVERNANCE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'SELF_EVOLUTION_GOVERNANCE', module: 'self_evolution_governance', phase: 21.6, description: 'Self evolution governance orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const UNIFIED_TRUST_RUNTIME_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'TRUST_RUNTIME_TYPES', module: 'unified_trust_runtime', phase: 22.1, description: 'Unified trust runtime types and models', extensionOnly: true },
+  { rowId: 'TRUST_SOURCE_REGISTRY', module: 'unified_trust_runtime', phase: 22.1, description: 'Trust source registration and lookup', extensionOnly: true },
+  { rowId: 'TRUST_SIGNAL_NORMALIZER', module: 'unified_trust_runtime', phase: 22.1, description: 'Trust signal normalization pipeline', extensionOnly: true },
+  { rowId: 'TRUST_STATE_MANAGER', module: 'unified_trust_runtime', phase: 22.1, description: 'Unified trust state resolution and transitions', extensionOnly: true },
+  { rowId: 'TRUST_AUTHORITY_BUILDER', module: 'unified_trust_runtime', phase: 22.1, description: 'Unified trust authority aggregation', extensionOnly: true },
+  { rowId: 'TRUST_RUNTIME_EVALUATOR', module: 'unified_trust_runtime', phase: 22.1, description: 'Trust stability, confidence, and readiness evaluation', extensionOnly: true },
+  { rowId: 'TRUST_RUNTIME_HISTORY', module: 'unified_trust_runtime', phase: 22.1, description: 'Bounded unified trust runtime history', extensionOnly: true },
+  { rowId: 'TRUST_RUNTIME_CACHE', module: 'unified_trust_runtime', phase: 22.1, description: 'Unified trust runtime lookup cache', extensionOnly: true },
+  { rowId: 'TRUST_RUNTIME_REPORTING', module: 'unified_trust_runtime', phase: 22.1, description: 'Unified trust runtime report generation', extensionOnly: true },
+  { rowId: 'TRUST_RUNTIME_REGISTRY', module: 'unified_trust_runtime', phase: 22.1, description: 'Unified trust authority record registry', extensionOnly: true },
+  { rowId: 'UNIFIED_TRUST_RUNTIME', module: 'unified_trust_runtime', phase: 22.1, description: 'Unified trust runtime orchestration and read-only registration', extensionOnly: true },
+  { rowId: 'UNIFIED_TRUST_RUNTIME_INDEX', module: 'unified_trust_runtime', phase: 22.1, description: 'Unified trust runtime public exports and test reset', extensionOnly: true },
+];
+
 export const CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'CAPABILITY_VERIFICATION_TYPES', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification engine types and models', extensionOnly: true },
   { rowId: 'CAPABILITY_VERIFICATION_REGISTRY', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification record registry', extensionOnly: true },
@@ -1187,6 +1202,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...CAPABILITY_BUILD_ENGINE_UVL_ROWS,
   ...CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS,
   ...SELF_EVOLUTION_GOVERNANCE_UVL_ROWS,
+  ...UNIFIED_TRUST_RUNTIME_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1403,6 +1419,10 @@ export function listCapabilityVerificationEngineUvlRows(): UvlRow[] {
 
 export function listSelfEvolutionGovernanceUvlRows(): UvlRow[] {
   return [...SELF_EVOLUTION_GOVERNANCE_UVL_ROWS];
+}
+
+export function listUnifiedTrustRuntimeUvlRows(): UvlRow[] {
+  return [...UNIFIED_TRUST_RUNTIME_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

@@ -261,6 +261,8 @@ export {
   listCapabilityVerificationEngineUvlRows,
   SELF_EVOLUTION_GOVERNANCE_UVL_ROWS,
   listSelfEvolutionGovernanceUvlRows,
+  UNIFIED_TRUST_RUNTIME_UVL_ROWS,
+  listUnifiedTrustRuntimeUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

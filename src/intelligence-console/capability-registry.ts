@@ -355,6 +355,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'UNIFIED_TRUST_RUNTIME',
+    label: 'Unified Trust Runtime',
+    phase: 22.1,
+    ownerModule: 'devpulse_v2_unified_trust_runtime',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

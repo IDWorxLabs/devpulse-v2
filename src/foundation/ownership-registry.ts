@@ -1099,6 +1099,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 21.6,
     description: 'Phase 21.6 Self Evolution Governance — boundary, risk, trust, approval, rollback, and self-modification governance with stall protection; governance only, no execution or self-modification',
   },
+  unified_trust_runtime: {
+    domain: 'unified_trust_runtime',
+    ownerModule: 'devpulse_v2_unified_trust_runtime',
+    ownerFunction: 'getDevPulseV2UnifiedTrustRuntime',
+    phase: 22.1,
+    description: 'Phase 22.1 Unified Trust Runtime — collects, normalizes, aggregates, and exposes trust signals from all major subsystems; read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

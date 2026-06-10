@@ -158,6 +158,7 @@
     "validate:capability-build-engine": "tsx scripts/validate-capability-build-engine.ts",
     "validate:capability-verification-engine": "tsx scripts/validate-capability-verification-engine.ts",
     "validate:self-evolution-governance": "tsx scripts/validate-self-evolution-governance.ts",
+    "validate:unified-trust-runtime": "tsx scripts/validate-unified-trust-runtime.ts",
     "validate:verification-integration": "tsx scripts/validate-verification-integration.ts",
     "validate:verification-intelligence": "tsx scripts/validate-verification-intelligence.ts",
     "validate:verification-strategy-core": "tsx scripts/validate-verification-strategy-core.ts",
