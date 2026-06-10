@@ -1043,6 +1043,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 20.5,
     description: 'Phase 20.5 Multi Project Verification — evidence, confidence, risk, readiness, aggregation, portfolio health, and reporting; planning only, no execution',
   },
+  multi_project_verification_orchestration: {
+    domain: 'multi_project_verification_orchestration',
+    ownerModule: 'devpulse_v2_multi_project_verification_orchestration',
+    ownerFunction: 'getDevPulseV2MultiProjectVerificationOrchestration',
+    phase: 20.51,
+    description: 'Phase 20.5.1 Multi Project Verification Orchestration — verification groups, dependencies, readiness, capacity, conflicts, scheduling, and reporting; planning only, no execution',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

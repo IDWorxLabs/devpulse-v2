@@ -859,6 +859,22 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const MULTI_PROJECT_VERIFICATION_ORCHESTRATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'VERIFICATION_ORCHESTRATION_TYPES', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Multi project verification orchestration types and models', extensionOnly: true },
+  { rowId: 'VERIFICATION_ORCHESTRATION_REGISTRY', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Verification orchestration plan registry', extensionOnly: true },
+  { rowId: 'VERIFICATION_GROUP_MANAGER', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Verification group management with workspace isolation', extensionOnly: true },
+  { rowId: 'VERIFICATION_DEPENDENCY_MANAGER', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Verification dependency chain building and cycle detection', extensionOnly: true },
+  { rowId: 'VERIFICATION_READINESS_EVALUATOR', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Verification orchestration readiness evaluation', extensionOnly: true },
+  { rowId: 'VERIFICATION_CAPACITY_EVALUATOR', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Verification capacity and bottleneck evaluation', extensionOnly: true },
+  { rowId: 'VERIFICATION_CONFLICT_DETECTOR', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Verification orchestration conflict detection', extensionOnly: true },
+  { rowId: 'VERIFICATION_SCHEDULER', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Capacity-aware verification scheduling', extensionOnly: true },
+  { rowId: 'VERIFICATION_PLAN_BUILDER', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Verification orchestration plan builder pipeline', extensionOnly: true },
+  { rowId: 'VERIFICATION_ORCHESTRATION_HISTORY', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Bounded verification orchestration history', extensionOnly: true },
+  { rowId: 'VERIFICATION_ORCHESTRATION_REPORTING', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Verification orchestration report generation', extensionOnly: true },
+  { rowId: 'VERIFICATION_ORCHESTRATION_CACHE', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Verification orchestration lookup cache', extensionOnly: true },
+  { rowId: 'MULTI_PROJECT_VERIFICATION_ORCHESTRATION', module: 'multi_project_verification_orchestration', phase: 20.51, description: 'Multi project verification orchestration and read-only registration', extensionOnly: true },
+];
+
 export const MULTI_PROJECT_VERIFICATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'MULTI_PROJECT_VERIFICATION_TYPES', module: 'multi_project_verification', phase: 20.5, description: 'Multi project verification types and models', extensionOnly: true },
   { rowId: 'PROJECT_VERIFICATION_REGISTRY', module: 'multi_project_verification', phase: 20.5, description: 'Project verification registry with scalable lookup', extensionOnly: true },
@@ -1050,6 +1066,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...RESOURCE_ALLOCATION_UVL_ROWS,
   ...PARALLEL_BUILD_ORCHESTRATION_UVL_ROWS,
   ...MULTI_PROJECT_VERIFICATION_UVL_ROWS,
+  ...MULTI_PROJECT_VERIFICATION_ORCHESTRATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1234,6 +1251,10 @@ export function listParallelBuildOrchestrationUvlRows(): UvlRow[] {
 
 export function listMultiProjectVerificationUvlRows(): UvlRow[] {
   return [...MULTI_PROJECT_VERIFICATION_UVL_ROWS];
+}
+
+export function listMultiProjectVerificationOrchestrationUvlRows(): UvlRow[] {
+  return [...MULTI_PROJECT_VERIFICATION_ORCHESTRATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {
