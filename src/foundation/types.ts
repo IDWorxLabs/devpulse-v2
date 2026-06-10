@@ -224,7 +224,8 @@ export type OwnershipDomain =
   | 'performance_hardening'
   | 'security_hardening'
   | 'privacy_hardening'
-  | 'recovery_hardening';
+  | 'recovery_hardening'
+  | 'scale_hardening';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

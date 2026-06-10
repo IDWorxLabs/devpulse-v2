@@ -1176,6 +1176,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 23.5,
     description: 'Phase 23.5 Recovery Hardening — rollback, containment, reset, escalation, and disaster recovery readiness analysis; read-only, no execution or mutations',
   },
+  scale_hardening: {
+    domain: 'scale_hardening',
+    ownerModule: 'devpulse_v2_scale_hardening',
+    ownerFunction: 'getDevPulseV2ScaleHardening',
+    phase: 23.6,
+    description: 'Phase 23.6 Scale Hardening — capacity, concurrency, cloud usage, queue/load, and multi-project scale readiness analysis; read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

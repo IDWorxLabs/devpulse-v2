@@ -988,6 +988,22 @@ export const RECOVERY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'RECOVERY_HARDENING_ENGINE', module: 'recovery_hardening', phase: 23.5, description: 'Recovery hardening orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const SCALE_HARDENING_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'SCALE_HARDENING_TYPES', module: 'scale_hardening', phase: 23.6, description: 'Scale hardening types and models', extensionOnly: true },
+  { rowId: 'SCALE_HARDENING_REGISTRY', module: 'scale_hardening', phase: 23.6, description: 'Scale hardening record registry and lookup', extensionOnly: true },
+  { rowId: 'CAPACITY_READINESS_ANALYZER', module: 'scale_hardening', phase: 23.6, description: 'Capacity readiness detection and scoring', extensionOnly: true },
+  { rowId: 'CONCURRENCY_RISK_ANALYZER', module: 'scale_hardening', phase: 23.6, description: 'Concurrency risk analysis', extensionOnly: true },
+  { rowId: 'CLOUD_USAGE_READINESS_ANALYZER', module: 'scale_hardening', phase: 23.6, description: 'Cloud usage readiness gap analysis', extensionOnly: true },
+  { rowId: 'QUEUE_LOAD_ANALYZER', module: 'scale_hardening', phase: 23.6, description: 'Queue and load pressure readiness analysis', extensionOnly: true },
+  { rowId: 'MULTI_PROJECT_SCALE_ANALYZER', module: 'scale_hardening', phase: 23.6, description: 'Multi-project scale readiness analysis', extensionOnly: true },
+  { rowId: 'SCALE_AUTHORITY_BUILDER', module: 'scale_hardening', phase: 23.6, description: 'Unified scale hardening authority aggregation', extensionOnly: true },
+  { rowId: 'SCALE_HARDENING_EVALUATOR', module: 'scale_hardening', phase: 23.6, description: 'Final scale score, state, and risk evaluation', extensionOnly: true },
+  { rowId: 'SCALE_HARDENING_HISTORY', module: 'scale_hardening', phase: 23.6, description: 'Bounded scale hardening history', extensionOnly: true },
+  { rowId: 'SCALE_HARDENING_REPORTING', module: 'scale_hardening', phase: 23.6, description: 'Scale hardening report and recommendation generation', extensionOnly: true },
+  { rowId: 'SCALE_HARDENING_CACHE', module: 'scale_hardening', phase: 23.6, description: 'Scale hardening lookup cache', extensionOnly: true },
+  { rowId: 'SCALE_HARDENING_ENGINE', module: 'scale_hardening', phase: 23.6, description: 'Scale hardening orchestration and read-only registration', extensionOnly: true },
+];
+
 export const PRIVACY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'PRIVACY_HARDENING_TYPES', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening types and models', extensionOnly: true },
   { rowId: 'PRIVACY_HARDENING_REGISTRY', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening record registry and lookup', extensionOnly: true },
@@ -1375,6 +1391,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...SECURITY_HARDENING_UVL_ROWS,
   ...PRIVACY_HARDENING_UVL_ROWS,
   ...RECOVERY_HARDENING_UVL_ROWS,
+  ...SCALE_HARDENING_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1635,6 +1652,10 @@ export function listPrivacyHardeningUvlRows(): UvlRow[] {
 
 export function listRecoveryHardeningUvlRows(): UvlRow[] {
   return [...RECOVERY_HARDENING_UVL_ROWS];
+}
+
+export function listScaleHardeningUvlRows(): UvlRow[] {
+  return [...SCALE_HARDENING_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

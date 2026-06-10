@@ -432,6 +432,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'SCALE_HARDENING',
+    label: 'Scale Hardening',
+    phase: 23.6,
+    ownerModule: 'devpulse_v2_scale_hardening',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,
