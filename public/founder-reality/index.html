@@ -4,9 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DevPulse V2 — Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+  <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
+  <div class="feed-backdrop" id="feed-backdrop" hidden></div>
+
   <div class="app-shell" id="app-shell">
     <aside class="sidebar" id="sidebar" aria-label="Navigation">
       <div class="sidebar-brand">
@@ -17,23 +23,55 @@
         </div>
       </div>
       <nav class="sidebar-nav" id="sidebar-nav">
-        <button type="button" class="nav-item active" data-view="command-center">Command Center</button>
-        <button type="button" class="nav-item" data-view="placeholder" data-label="Projects">Projects</button>
-        <button type="button" class="nav-item" data-view="placeholder" data-label="World 2">World 2</button>
-        <button type="button" class="nav-item" data-view="placeholder" data-label="Project Vault">Project Vault</button>
-        <button type="button" class="nav-item" data-view="placeholder" data-label="Notifications">Notifications</button>
-        <button type="button" class="nav-item" data-view="placeholder" data-label="Validators">Validators</button>
-        <button type="button" class="nav-item" data-view="founder-reality">Founder Reality</button>
+        <button type="button" class="nav-item active" data-view="command-center">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+          <span class="nav-label">Command Center</span>
+        </button>
+        <button type="button" class="nav-item" data-view="placeholder" data-label="Projects">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h5l2 2h11v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+          <span class="nav-label">Projects</span>
+        </button>
+        <button type="button" class="nav-item" data-view="placeholder" data-label="World 2">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span>
+          <span class="nav-label">World 2</span>
+        </button>
+        <button type="button" class="nav-item" data-view="placeholder" data-label="Project Vault">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/><circle cx="12" cy="14" r="1.5"/></svg></span>
+          <span class="nav-label">Project Vault</span>
+        </button>
+        <button type="button" class="nav-item" data-view="placeholder" data-label="Notifications">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 16H6l-1-2v-5a7 7 0 0 1 14 0v5l-1 2z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span>
+          <span class="nav-label">Notifications</span>
+        </button>
+        <button type="button" class="nav-item" data-view="placeholder" data-label="Validators">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg></span>
+          <span class="nav-label">Validators</span>
+        </button>
+        <button type="button" class="nav-item" data-view="founder-reality">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
+          <span class="nav-label">Founder Reality</span>
+        </button>
       </nav>
       <p class="sidebar-note">Navigation placeholders — no functionality behind inactive items.</p>
     </aside>
 
     <main class="center-area" id="center-area">
       <header class="center-header">
-        <h2 id="center-title">DevPulse V2 Command Center</h2>
-        <button type="button" class="notif-btn" id="notif-toggle" aria-expanded="false" aria-controls="notification-drawer">
-          Notifications
-        </button>
+        <div class="center-header-left">
+          <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </button>
+          <h2 id="center-title">DevPulse V2 Command Center</h2>
+        </div>
+        <div class="center-header-actions">
+          <button type="button" class="mobile-feed-toggle" id="mobile-feed-toggle" aria-label="Open operator feed" aria-expanded="false" aria-controls="operator-feed">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h14"/></svg>
+          </button>
+          <button type="button" class="notif-btn" id="notif-toggle" aria-expanded="false" aria-controls="notification-drawer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16H6l-1-2v-5a7 7 0 0 1 14 0v5l-1 2z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+            <span class="notif-btn-label">Notifications</span>
+          </button>
+        </div>
       </header>
 
       <div class="notification-drawer" id="notification-drawer" hidden>
@@ -46,6 +84,9 @@
           <div class="chat-messages-panel" id="chat-messages-panel">
             <div class="chat-welcome-state" id="chat-welcome-state">
               <div class="welcome-content">
+                <div class="welcome-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M9 3a6 6 0 0 0-4 10.5V17a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-3.5A6 6 0 0 0 15 3"/><path d="M9 17h6M10 21h4"/></svg>
+                </div>
                 <h3 class="welcome-title">DevPulse V2</h3>
                 <p class="welcome-subtitle">Unified Command Center Brain Connected</p>
                 <p class="welcome-hint">Ask DevPulse anything about roadmap, systems, architecture, or project status.</p>
@@ -61,7 +102,10 @@
               placeholder="Message DevPulse…"
               autocomplete="off"
             />
-            <button type="submit" class="send-btn" id="chat-send">Send</button>
+            <button type="submit" class="send-btn" id="chat-send" aria-label="Send message">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              <span class="send-btn-label">Send</span>
+            </button>
           </form>
         </div>
       </div>

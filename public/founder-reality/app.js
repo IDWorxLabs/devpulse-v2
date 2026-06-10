@@ -645,6 +645,14 @@
     scrollFeedToLatest();
   }
 
+  var feedSectionIcons = {
+    Planning: '<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h14"/></svg>',
+    Execution: '<svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-14h-7l0-6z"/></svg>',
+    Verification: '<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg>',
+    Approvals: '<svg viewBox="0 0 24 24"><path d="M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7l7-4z"/></svg>',
+    Learning: '<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+  };
+
   function renderOperatorFeed(sections, activeEvent, completedEventTypes) {
     var container = el('feed-sections');
     if (!container) return;
@@ -673,7 +681,26 @@
           }
         }
       }
-      div.innerHTML = '<h3>' + escapeHtml(section) + '</h3><p>' + escapeHtml(statusText) + '</p>';
+      var badgeClass = 'queued';
+      var badgeLabel = 'Queued';
+      if (isActive) {
+        badgeClass = 'active';
+        badgeLabel = 'Active';
+      } else if (isCompleted) {
+        badgeClass = 'completed';
+        badgeLabel = 'Done';
+      }
+      var icon = feedSectionIcons[section] || feedSectionIcons.Planning;
+      div.innerHTML =
+        '<div class="feed-section-header">' +
+        '<span class="feed-section-icon" aria-hidden="true">' + icon + '</span>' +
+        '<div class="feed-section-content">' +
+        '<h3>' + escapeHtml(section) + '</h3>' +
+        '<p>' + escapeHtml(statusText) + '</p>' +
+        '</div></div>' +
+        '<div class="feed-section-footer">' +
+        '<span class="feed-status-badge ' + badgeClass + '">' + badgeLabel + '</span>' +
+        '</div>';
       container.appendChild(div);
     }
     scrollFeedToLatest();
@@ -738,8 +765,13 @@
     if (!list) return;
     list.innerHTML = '';
     for (var i = 0; i < items.length; i += 1) {
+      var text = items[i];
+      var connected = text.indexOf('Not Connected') === -1 && text.indexOf('Connected') !== -1;
       var li = document.createElement('li');
-      li.textContent = items[i];
+      li.className = 'status-item ' + (connected ? 'connected' : 'disconnected');
+      li.innerHTML =
+        '<span class="status-dot ' + (connected ? 'connected' : 'disconnected') + '" aria-hidden="true"></span>' +
+        '<span class="status-text">' + escapeHtml(text) + '</span>';
       list.appendChild(li);
     }
   }
@@ -999,18 +1031,75 @@
       });
   }
 
+  function closeMobilePanels() {
+    var sidebar = el('sidebar');
+    var feed = el('operator-feed');
+    var sidebarBackdrop = el('sidebar-backdrop');
+    var feedBackdrop = el('feed-backdrop');
+    var navToggle = el('mobile-nav-toggle');
+    var feedToggle = el('mobile-feed-toggle');
+    if (sidebar) sidebar.classList.remove('mobile-open');
+    if (feed) feed.classList.remove('mobile-open');
+    if (sidebarBackdrop) {
+      sidebarBackdrop.classList.remove('visible');
+      sidebarBackdrop.setAttribute('hidden', '');
+    }
+    if (feedBackdrop) {
+      feedBackdrop.classList.remove('visible');
+      feedBackdrop.setAttribute('hidden', '');
+    }
+    if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
+    if (feedToggle) feedToggle.setAttribute('aria-expanded', 'false');
+  }
+
   function bindEvents() {
     var nav = el('sidebar-nav');
     if (nav) {
       nav.addEventListener('click', function (e) {
-        var target = e.target;
+        var target = e.target && e.target.closest ? e.target.closest('.nav-item') : e.target;
         if (!target || !target.classList.contains('nav-item')) return;
         var view = target.getAttribute('data-view');
         var label = target.getAttribute('data-label');
         if (view === 'founder-reality') switchView('founder-reality');
         else if (view === 'command-center') switchView('command-center');
         else if (view === 'placeholder') switchView('placeholder', label);
+        closeMobilePanels();
       });
+    }
+
+    var navToggle = el('mobile-nav-toggle');
+    var feedToggle = el('mobile-feed-toggle');
+    var sidebar = el('sidebar');
+    var feed = el('operator-feed');
+    var sidebarBackdrop = el('sidebar-backdrop');
+    var feedBackdrop = el('feed-backdrop');
+
+    if (navToggle && sidebar && sidebarBackdrop) {
+      navToggle.addEventListener('click', function () {
+        var open = sidebar.classList.contains('mobile-open');
+        closeMobilePanels();
+        if (!open) {
+          sidebar.classList.add('mobile-open');
+          sidebarBackdrop.removeAttribute('hidden');
+          sidebarBackdrop.classList.add('visible');
+          navToggle.setAttribute('aria-expanded', 'true');
+        }
+      });
+      sidebarBackdrop.addEventListener('click', closeMobilePanels);
+    }
+
+    if (feedToggle && feed && feedBackdrop) {
+      feedToggle.addEventListener('click', function () {
+        var open = feed.classList.contains('mobile-open');
+        closeMobilePanels();
+        if (!open) {
+          feed.classList.add('mobile-open');
+          feedBackdrop.removeAttribute('hidden');
+          feedBackdrop.classList.add('visible');
+          feedToggle.setAttribute('aria-expanded', 'true');
+        }
+      });
+      feedBackdrop.addEventListener('click', closeMobilePanels);
     }
 
     var form = el('chat-form');

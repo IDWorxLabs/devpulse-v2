@@ -231,7 +231,12 @@ export type OwnershipDomain =
   | 'user_guides'
   | 'architecture_documentation'
   | 'api_documentation'
-  | 'interactive_explanations';
+  | 'interactive_explanations'
+  | 'visual_qa_engine'
+  | 'ux_heuristic_evaluator'
+  | 'first_impression_judge'
+  | 'live_preview_gatekeeper'
+  | 'auto_polish_loop';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

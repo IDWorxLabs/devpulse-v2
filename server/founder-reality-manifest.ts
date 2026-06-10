@@ -9,8 +9,8 @@ import { buildCommandCenterShellManifest } from './command-center-shell-manifest
 export const FOUNDER_REALITY_SURFACE_OWNER_MODULE = 'devpulse_v2_founder_reality_surface';
 export const FOUNDER_REALITY_SURFACE_PASS_TOKEN = 'DEVPULSE_V2_FOUNDER_REALITY_SURFACE_FOUNDATION_V1_PASS';
 export const FOUNDER_REALITY_PORT = 4321;
-export const FOUNDER_REALITY_HOST = 'localhost';
-export const FOUNDER_REALITY_URL = `http://${FOUNDER_REALITY_HOST}:${FOUNDER_REALITY_PORT}`;
+export const FOUNDER_REALITY_HOST = '0.0.0.0';
+export const FOUNDER_REALITY_URL = `http://localhost:${FOUNDER_REALITY_PORT}`;
 
 export interface CompletedStack {
   phase: string;

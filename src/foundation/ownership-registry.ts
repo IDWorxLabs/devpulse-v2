@@ -1225,6 +1225,41 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 24.6,
     description: 'Phase 24.6 Interactive Explanations — system, workflow, reasoning, report, and next-step explanation intelligence; read-only, no execution or mutations',
   },
+  visual_qa_engine: {
+    domain: 'visual_qa_engine',
+    ownerModule: 'devpulse_v2_visual_qa_engine',
+    ownerFunction: 'getDevPulseV2VisualQAEngine',
+    phase: 24.71,
+    description: 'Phase 24.7.1 Visual QA Engine — read-only visual product evaluation for hierarchy, layout, spacing, typography, color, mobile, desktop, and professionalism; no UI modification or execution',
+  },
+  ux_heuristic_evaluator: {
+    domain: 'ux_heuristic_evaluator',
+    ownerModule: 'devpulse_v2_ux_heuristic_evaluator',
+    ownerFunction: 'getDevPulseV2UXHeuristicEvaluator',
+    phase: 24.73,
+    description: 'Phase 24.7.3 UX Heuristic Evaluator — read-only product experience evaluation for navigation, discoverability, feedback, trust, intelligence visibility, and founder usability; no UI modification or execution',
+  },
+  first_impression_judge: {
+    domain: 'first_impression_judge',
+    ownerModule: 'devpulse_v2_first_impression_judge',
+    ownerFunction: 'getDevPulseV2FirstImpressionJudge',
+    phase: 24.74,
+    description: 'Phase 24.7.4 First-Impression Judge — read-only product perception evaluation for clarity, intelligence visibility, trust, premium feel, founder usefulness, and launch readiness; no UI modification or execution',
+  },
+  live_preview_gatekeeper: {
+    domain: 'live_preview_gatekeeper',
+    ownerModule: 'devpulse_v2_live_preview_gatekeeper',
+    ownerFunction: 'getDevPulseV2LivePreviewGatekeeper',
+    phase: 24.75,
+    description: 'Phase 24.7.5 Live Preview Gatekeeper — read-only preview verification for visibility, understandability, founder verification, responsive support, honesty, and product readiness; no UI modification, server startup, or browser automation',
+  },
+  auto_polish_loop: {
+    domain: 'auto_polish_loop',
+    ownerModule: 'devpulse_v2_auto_polish_loop',
+    ownerFunction: 'getDevPulseV2AutoPolishLoop',
+    phase: 24.76,
+    description: 'Phase 24.7.6 Auto-Polish Loop — read-only polish opportunity identification, prioritization, and roadmap generation; no UI, CSS, copy mutation, or automatic fixes',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

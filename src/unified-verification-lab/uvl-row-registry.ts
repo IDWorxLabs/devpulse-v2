@@ -1084,6 +1084,120 @@ export const API_DOCUMENTATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'API_DOCUMENTATION_ENGINE', module: 'api_documentation', phase: 24.5, description: 'API documentation orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const AUTO_POLISH_LOOP_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'AUTO_POLISH_TYPES', module: 'auto_polish_loop', phase: 24.76, description: 'Auto-polish loop types and models', extensionOnly: true },
+  { rowId: 'AUTO_POLISH_REGISTRY', module: 'auto_polish_loop', phase: 24.76, description: 'Auto-polish record registry and lookup', extensionOnly: true },
+  { rowId: 'POLISH_OPPORTUNITY_MODEL', module: 'auto_polish_loop', phase: 24.76, description: 'Unified polish opportunity model', extensionOnly: true },
+  { rowId: 'VISUAL_POLISH_ANALYZER', module: 'auto_polish_loop', phase: 24.76, description: 'Visual polish opportunity analysis from Visual QA', extensionOnly: true },
+  { rowId: 'UX_POLISH_ANALYZER', module: 'auto_polish_loop', phase: 24.76, description: 'UX polish opportunity analysis from UX Heuristics', extensionOnly: true },
+  { rowId: 'RESPONSIVE_POLISH_ANALYZER', module: 'auto_polish_loop', phase: 24.76, description: 'Responsive polish opportunity analysis', extensionOnly: true },
+  { rowId: 'PREVIEW_POLISH_ANALYZER', module: 'auto_polish_loop', phase: 24.76, description: 'Preview polish opportunity analysis from Live Preview Gatekeeper', extensionOnly: true },
+  { rowId: 'DISCOVERABILITY_POLISH_ANALYZER', module: 'auto_polish_loop', phase: 24.76, description: 'Feature discoverability polish opportunity analysis', extensionOnly: true },
+  { rowId: 'FOUNDER_USABILITY_POLISH_ANALYZER', module: 'auto_polish_loop', phase: 24.76, description: 'Founder usability polish opportunity analysis', extensionOnly: true },
+  { rowId: 'TRUST_POLISH_ANALYZER', module: 'auto_polish_loop', phase: 24.76, description: 'Trust polish opportunity analysis', extensionOnly: true },
+  { rowId: 'INTELLIGENCE_VISIBILITY_POLISH_ANALYZER', module: 'auto_polish_loop', phase: 24.76, description: 'Intelligence visibility polish opportunity analysis', extensionOnly: true },
+  { rowId: 'WORKFLOW_POLISH_ANALYZER', module: 'auto_polish_loop', phase: 24.76, description: 'Workflow polish opportunity analysis', extensionOnly: true },
+  { rowId: 'PRODUCT_COHERENCE_POLISH_ANALYZER', module: 'auto_polish_loop', phase: 24.76, description: 'Product coherence polish opportunity analysis', extensionOnly: true },
+  { rowId: 'POLISH_PRIORITY_ANALYZER', module: 'auto_polish_loop', phase: 24.76, description: 'Polish opportunity priority ranking', extensionOnly: true },
+  { rowId: 'POLISH_ROADMAP_BUILDER', module: 'auto_polish_loop', phase: 24.76, description: 'Structured polish roadmap generation', extensionOnly: true },
+  { rowId: 'AUTO_POLISH_AUTHORITY_BUILDER', module: 'auto_polish_loop', phase: 24.76, description: 'Unified auto-polish authority aggregation', extensionOnly: true },
+  { rowId: 'AUTO_POLISH_EVALUATOR', module: 'auto_polish_loop', phase: 24.76, description: 'Final auto-polish result evaluation', extensionOnly: true },
+  { rowId: 'AUTO_POLISH_HISTORY', module: 'auto_polish_loop', phase: 24.76, description: 'Bounded auto-polish evaluation history', extensionOnly: true },
+  { rowId: 'AUTO_POLISH_REPORTING', module: 'auto_polish_loop', phase: 24.76, description: 'Auto-polish report and roadmap output', extensionOnly: true },
+  { rowId: 'AUTO_POLISH_CACHE', module: 'auto_polish_loop', phase: 24.76, description: 'Auto-polish bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'AUTO_POLISH_LOOP', module: 'auto_polish_loop', phase: 24.76, description: 'Auto-polish orchestration and read-only upstream registration', extensionOnly: true },
+];
+
+export const LIVE_PREVIEW_GATEKEEPER_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'LIVE_PREVIEW_TYPES', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Live preview gatekeeper types and models', extensionOnly: true },
+  { rowId: 'LIVE_PREVIEW_REGISTRY', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Live preview record registry and lookup', extensionOnly: true },
+  { rowId: 'PREVIEW_CONTEXT_BUILDER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Preview review context builder', extensionOnly: true },
+  { rowId: 'PREVIEW_VISIBILITY_ANALYZER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Preview entry and state visibility analysis', extensionOnly: true },
+  { rowId: 'PREVIEW_UNDERSTANDABILITY_ANALYZER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Preview context and limitation clarity analysis', extensionOnly: true },
+  { rowId: 'PREVIEW_STATE_MEANINGFULNESS_ANALYZER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Preview state meaningfulness and representativeness analysis', extensionOnly: true },
+  { rowId: 'FOUNDER_VERIFICATION_SUPPORT_ANALYZER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Founder verification support from preview analysis', extensionOnly: true },
+  { rowId: 'RESPONSIVE_PREVIEW_SUPPORT_ANALYZER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Desktop, tablet, and mobile preview support analysis', extensionOnly: true },
+  { rowId: 'PREVIEW_UNAVAILABLE_HONESTY_ANALYZER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Preview unavailable honesty and failure reason analysis', extensionOnly: true },
+  { rowId: 'PREVIEW_MISLEADING_RISK_ANALYZER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Preview stale, false confidence, and misleading completion analysis', extensionOnly: true },
+  { rowId: 'PREVIEW_NEXT_ACTION_ANALYZER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Preview next action and verification gap analysis', extensionOnly: true },
+  { rowId: 'PREVIEW_REPORT_CONNECTION_ANALYZER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Preview to UVL and product-reality report connection analysis', extensionOnly: true },
+  { rowId: 'PRODUCT_READINESS_PREVIEW_ANALYZER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Product readiness signal from preview analysis', extensionOnly: true },
+  { rowId: 'LIVE_PREVIEW_AUTHORITY_BUILDER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Unified live preview authority aggregation', extensionOnly: true },
+  { rowId: 'LIVE_PREVIEW_EVALUATOR', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Final live preview result evaluation', extensionOnly: true },
+  { rowId: 'LIVE_PREVIEW_HISTORY', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Bounded live preview evaluation history', extensionOnly: true },
+  { rowId: 'LIVE_PREVIEW_REPORTING', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Live preview report and priority fix recommendations', extensionOnly: true },
+  { rowId: 'LIVE_PREVIEW_CACHE', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Live preview bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'LIVE_PREVIEW_GATEKEEPER', module: 'live_preview_gatekeeper', phase: 24.75, description: 'Live preview orchestration and read-only surface registration', extensionOnly: true },
+];
+
+export const FIRST_IMPRESSION_JUDGE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'FIRST_IMPRESSION_TYPES', module: 'first_impression_judge', phase: 24.74, description: 'First-impression judge types and models', extensionOnly: true },
+  { rowId: 'FIRST_IMPRESSION_REGISTRY', module: 'first_impression_judge', phase: 24.74, description: 'First-impression record registry and lookup', extensionOnly: true },
+  { rowId: 'FIRST_VISIT_CONTEXT_BUILDER', module: 'first_impression_judge', phase: 24.74, description: 'First-visit persona context builder', extensionOnly: true },
+  { rowId: 'PRODUCT_CLARITY_ANALYZER', module: 'first_impression_judge', phase: 24.74, description: 'Product clarity and starting-point analysis', extensionOnly: true },
+  { rowId: 'INTELLIGENCE_PERCEPTION_ANALYZER', module: 'first_impression_judge', phase: 24.74, description: 'Intelligence visibility and smartness perception analysis', extensionOnly: true },
+  { rowId: 'TRUSTWORTHINESS_PERCEPTION_ANALYZER', module: 'first_impression_judge', phase: 24.74, description: 'Trust signal and uncertainty clarity analysis', extensionOnly: true },
+  { rowId: 'VISUAL_CONFIDENCE_ANALYZER', module: 'first_impression_judge', phase: 24.74, description: 'Visual polish and professional appearance analysis', extensionOnly: true },
+  { rowId: 'FOUNDER_USEFULNESS_ANALYZER', module: 'first_impression_judge', phase: 24.74, description: 'Founder immediate value and next-step analysis', extensionOnly: true },
+  { rowId: 'PREMIUM_FEEL_ANALYZER', module: 'first_impression_judge', phase: 24.74, description: 'Premium feel and perceived quality analysis', extensionOnly: true },
+  { rowId: 'ACTION_READINESS_ANALYZER', module: 'first_impression_judge', phase: 24.74, description: 'Primary action clarity and readiness analysis', extensionOnly: true },
+  { rowId: 'PRODUCT_IDENTITY_ANALYZER', module: 'first_impression_judge', phase: 24.74, description: 'Product identity and vision communication analysis', extensionOnly: true },
+  { rowId: 'EMOTIONAL_CONFIDENCE_ANALYZER', module: 'first_impression_judge', phase: 24.74, description: 'Emotional confidence and first-visit doubt analysis', extensionOnly: true },
+  { rowId: 'LAUNCH_READINESS_PERCEPTION_ANALYZER', module: 'first_impression_judge', phase: 24.74, description: 'Launch readiness perception and public readiness analysis', extensionOnly: true },
+  { rowId: 'FIRST_IMPRESSION_AUTHORITY_BUILDER', module: 'first_impression_judge', phase: 24.74, description: 'Unified first-impression authority aggregation', extensionOnly: true },
+  { rowId: 'FIRST_IMPRESSION_EVALUATOR', module: 'first_impression_judge', phase: 24.74, description: 'Final first-impression result evaluation', extensionOnly: true },
+  { rowId: 'FIRST_IMPRESSION_HISTORY', module: 'first_impression_judge', phase: 24.74, description: 'Bounded first-impression evaluation history', extensionOnly: true },
+  { rowId: 'FIRST_IMPRESSION_REPORTING', module: 'first_impression_judge', phase: 24.74, description: 'First-impression report and priority fix recommendations', extensionOnly: true },
+  { rowId: 'FIRST_IMPRESSION_CACHE', module: 'first_impression_judge', phase: 24.74, description: 'First-impression bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'FIRST_IMPRESSION_JUDGE', module: 'first_impression_judge', phase: 24.74, description: 'First-impression orchestration and read-only surface registration', extensionOnly: true },
+];
+
+export const UX_HEURISTIC_EVALUATOR_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'UX_HEURISTIC_TYPES', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'UX heuristic evaluator types and models', extensionOnly: true },
+  { rowId: 'UX_HEURISTIC_REGISTRY', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'UX heuristic record registry and lookup', extensionOnly: true },
+  { rowId: 'NAVIGATION_CLARITY_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Navigation clarity and location context analysis', extensionOnly: true },
+  { rowId: 'FEATURE_DISCOVERABILITY_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Feature discoverability and labeling analysis', extensionOnly: true },
+  { rowId: 'ACTION_CLARITY_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Action and button clarity analysis', extensionOnly: true },
+  { rowId: 'FEEDBACK_QUALITY_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Process and result feedback quality analysis', extensionOnly: true },
+  { rowId: 'SYSTEM_STATUS_VISIBILITY_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'System readiness and status visibility analysis', extensionOnly: true },
+  { rowId: 'ERROR_PREVENTION_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Error prevention and recovery path analysis', extensionOnly: true },
+  { rowId: 'USER_CONTROL_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'User control and escape path analysis', extensionOnly: true },
+  { rowId: 'COGNITIVE_LOAD_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Cognitive load and UX noise analysis', extensionOnly: true },
+  { rowId: 'TRUST_CLARITY_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Trust gap and completion clarity analysis', extensionOnly: true },
+  { rowId: 'WORKFLOW_CONTINUITY_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Workflow continuity and next-step analysis', extensionOnly: true },
+  { rowId: 'INTELLIGENCE_VISIBILITY_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Intelligence visibility and reasoning exposure analysis', extensionOnly: true },
+  { rowId: 'FOUNDER_USABILITY_ANALYZER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Founder usability and trust risk analysis', extensionOnly: true },
+  { rowId: 'UX_HEURISTIC_AUTHORITY_BUILDER', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Unified UX heuristic authority aggregation', extensionOnly: true },
+  { rowId: 'UX_HEURISTIC_EVALUATOR', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Final UX heuristic result and founder acceptance evaluation', extensionOnly: true },
+  { rowId: 'UX_HEURISTIC_HISTORY', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'Bounded UX heuristic evaluation history', extensionOnly: true },
+  { rowId: 'UX_HEURISTIC_REPORTING', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'UX heuristic report and founder acceptance notes', extensionOnly: true },
+  { rowId: 'UX_HEURISTIC_CACHE', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'UX heuristic bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'UX_HEURISTIC_ENGINE', module: 'ux_heuristic_evaluator', phase: 24.73, description: 'UX heuristic orchestration and read-only surface registration', extensionOnly: true },
+];
+
+export const VISUAL_QA_ENGINE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'VISUAL_QA_TYPES', module: 'visual_qa_engine', phase: 24.71, description: 'Visual QA engine types and models', extensionOnly: true },
+  { rowId: 'VISUAL_QA_REGISTRY', module: 'visual_qa_engine', phase: 24.71, description: 'Visual QA record registry and lookup', extensionOnly: true },
+  { rowId: 'VISUAL_HIERARCHY_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'Visual hierarchy and primary action analysis', extensionOnly: true },
+  { rowId: 'LAYOUT_QUALITY_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'Layout quality and panel structure analysis', extensionOnly: true },
+  { rowId: 'SPACING_CONSISTENCY_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'Spacing rhythm and margin consistency analysis', extensionOnly: true },
+  { rowId: 'ALIGNMENT_CONSISTENCY_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'Horizontal and vertical alignment analysis', extensionOnly: true },
+  { rowId: 'TYPOGRAPHY_QUALITY_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'Typography hierarchy and readability analysis', extensionOnly: true },
+  { rowId: 'COLOR_CONSISTENCY_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'Theme, contrast, and color harmony analysis', extensionOnly: true },
+  { rowId: 'VISUAL_CLUTTER_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'Visual clutter and density analysis', extensionOnly: true },
+  { rowId: 'EMPTY_SPACE_UTILIZATION_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'Whitespace balance and utilization analysis', extensionOnly: true },
+  { rowId: 'MOBILE_VISUAL_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'Mobile layout and discoverability analysis', extensionOnly: true },
+  { rowId: 'DESKTOP_VISUAL_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'Desktop workspace utilization analysis', extensionOnly: true },
+  { rowId: 'FIRST_IMPRESSION_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'First-impression premium and trust analysis', extensionOnly: true },
+  { rowId: 'PRODUCT_PROFESSIONALISM_ANALYZER', module: 'visual_qa_engine', phase: 24.71, description: 'Founder, customer, and investor professionalism analysis', extensionOnly: true },
+  { rowId: 'VISUAL_QA_AUTHORITY_BUILDER', module: 'visual_qa_engine', phase: 24.71, description: 'Unified visual QA authority aggregation', extensionOnly: true },
+  { rowId: 'VISUAL_QA_EVALUATOR', module: 'visual_qa_engine', phase: 24.71, description: 'Final visual QA result and production readiness evaluation', extensionOnly: true },
+  { rowId: 'VISUAL_QA_HISTORY', module: 'visual_qa_engine', phase: 24.71, description: 'Bounded visual QA evaluation history', extensionOnly: true },
+  { rowId: 'VISUAL_QA_REPORTING', module: 'visual_qa_engine', phase: 24.71, description: 'Visual QA report and priority fix recommendations', extensionOnly: true },
+  { rowId: 'VISUAL_QA_CACHE', module: 'visual_qa_engine', phase: 24.71, description: 'Visual QA bounded lookup cache', extensionOnly: true },
+  { rowId: 'VISUAL_QA_ENGINE', module: 'visual_qa_engine', phase: 24.71, description: 'Visual QA orchestration and read-only surface registration', extensionOnly: true },
+];
+
 export const INTERACTIVE_EXPLANATIONS_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'INTERACTIVE_EXPLANATIONS_TYPES', module: 'interactive_explanations', phase: 24.6, description: 'Interactive explanations types and models', extensionOnly: true },
   { rowId: 'INTERACTIVE_EXPLANATIONS_REGISTRY', module: 'interactive_explanations', phase: 24.6, description: 'Interactive explanation record registry and lookup', extensionOnly: true },
@@ -1494,6 +1608,11 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...ARCHITECTURE_DOCUMENTATION_UVL_ROWS,
   ...API_DOCUMENTATION_UVL_ROWS,
   ...INTERACTIVE_EXPLANATIONS_UVL_ROWS,
+  ...VISUAL_QA_ENGINE_UVL_ROWS,
+  ...UX_HEURISTIC_EVALUATOR_UVL_ROWS,
+  ...FIRST_IMPRESSION_JUDGE_UVL_ROWS,
+  ...LIVE_PREVIEW_GATEKEEPER_UVL_ROWS,
+  ...AUTO_POLISH_LOOP_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1782,6 +1901,26 @@ export function listApiDocumentationUvlRows(): UvlRow[] {
 
 export function listInteractiveExplanationsUvlRows(): UvlRow[] {
   return [...INTERACTIVE_EXPLANATIONS_UVL_ROWS];
+}
+
+export function listVisualQAEngineUvlRows(): UvlRow[] {
+  return [...VISUAL_QA_ENGINE_UVL_ROWS];
+}
+
+export function listUXHeuristicEvaluatorUvlRows(): UvlRow[] {
+  return [...UX_HEURISTIC_EVALUATOR_UVL_ROWS];
+}
+
+export function listFirstImpressionJudgeUvlRows(): UvlRow[] {
+  return [...FIRST_IMPRESSION_JUDGE_UVL_ROWS];
+}
+
+export function listLivePreviewGatekeeperUvlRows(): UvlRow[] {
+  return [...LIVE_PREVIEW_GATEKEEPER_UVL_ROWS];
+}
+
+export function listAutoPolishLoopUvlRows(): UvlRow[] {
+  return [...AUTO_POLISH_LOOP_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {
