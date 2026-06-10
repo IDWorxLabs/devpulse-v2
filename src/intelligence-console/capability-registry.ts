@@ -411,6 +411,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'SECURITY_HARDENING',
+    label: 'Security Hardening',
+    phase: 23.3,
+    ownerModule: 'devpulse_v2_security_hardening',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

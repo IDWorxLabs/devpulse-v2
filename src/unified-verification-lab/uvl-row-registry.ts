@@ -972,6 +972,22 @@ export const UNIFIED_TRUST_SCORE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'UNIFIED_TRUST_SCORE_ENGINE', module: 'unified_trust_score', phase: 22.6, description: 'Unified trust score orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const SECURITY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'SECURITY_HARDENING_TYPES', module: 'security_hardening', phase: 23.3, description: 'Security hardening types and models', extensionOnly: true },
+  { rowId: 'SECURITY_HARDENING_REGISTRY', module: 'security_hardening', phase: 23.3, description: 'Security hardening record registry and lookup', extensionOnly: true },
+  { rowId: 'SECURITY_BOUNDARY_ANALYZER', module: 'security_hardening', phase: 23.3, description: 'Security boundary risk detection and scoring', extensionOnly: true },
+  { rowId: 'SECRET_EXPOSURE_ANALYZER', module: 'security_hardening', phase: 23.3, description: 'Secret exposure pattern detection with redaction', extensionOnly: true },
+  { rowId: 'UNSAFE_CAPABILITY_DETECTOR', module: 'security_hardening', phase: 23.3, description: 'Unsafe capability risk detection and gating warnings', extensionOnly: true },
+  { rowId: 'ACCESS_CONTROL_READINESS_ANALYZER', module: 'security_hardening', phase: 23.3, description: 'Future access control readiness gap analysis', extensionOnly: true },
+  { rowId: 'WORKSPACE_ISOLATION_ANALYZER', module: 'security_hardening', phase: 23.3, description: 'Workspace and project isolation risk analysis', extensionOnly: true },
+  { rowId: 'SECURITY_AUTHORITY_BUILDER', module: 'security_hardening', phase: 23.3, description: 'Unified security hardening authority aggregation', extensionOnly: true },
+  { rowId: 'SECURITY_HARDENING_EVALUATOR', module: 'security_hardening', phase: 23.3, description: 'Final security score, state, and risk evaluation', extensionOnly: true },
+  { rowId: 'SECURITY_HARDENING_HISTORY', module: 'security_hardening', phase: 23.3, description: 'Bounded security hardening history', extensionOnly: true },
+  { rowId: 'SECURITY_HARDENING_REPORTING', module: 'security_hardening', phase: 23.3, description: 'Security hardening report and recommendation generation', extensionOnly: true },
+  { rowId: 'SECURITY_HARDENING_CACHE', module: 'security_hardening', phase: 23.3, description: 'Security hardening lookup cache', extensionOnly: true },
+  { rowId: 'SECURITY_HARDENING_ENGINE', module: 'security_hardening', phase: 23.3, description: 'Security hardening orchestration and read-only registration', extensionOnly: true },
+];
+
 export const PERFORMANCE_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'PERFORMANCE_HARDENING_TYPES', module: 'performance_hardening', phase: 23.2, description: 'Performance hardening types and models', extensionOnly: true },
   { rowId: 'PERFORMANCE_HARDENING_REGISTRY', module: 'performance_hardening', phase: 23.2, description: 'Performance hardening record registry and lookup', extensionOnly: true },
@@ -1323,6 +1339,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...UNIFIED_TRUST_SCORE_UVL_ROWS,
   ...RELIABILITY_HARDENING_UVL_ROWS,
   ...PERFORMANCE_HARDENING_UVL_ROWS,
+  ...SECURITY_HARDENING_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1571,6 +1588,10 @@ export function listReliabilityHardeningUvlRows(): UvlRow[] {
 
 export function listPerformanceHardeningUvlRows(): UvlRow[] {
   return [...PERFORMANCE_HARDENING_UVL_ROWS];
+}
+
+export function listSecurityHardeningUvlRows(): UvlRow[] {
+  return [...SECURITY_HARDENING_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

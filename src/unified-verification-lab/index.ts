@@ -277,6 +277,8 @@ export {
   listReliabilityHardeningUvlRows,
   PERFORMANCE_HARDENING_UVL_ROWS,
   listPerformanceHardeningUvlRows,
+  SECURITY_HARDENING_UVL_ROWS,
+  listSecurityHardeningUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';
