@@ -972,6 +972,22 @@ export const UNIFIED_TRUST_SCORE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'UNIFIED_TRUST_SCORE_ENGINE', module: 'unified_trust_score', phase: 22.6, description: 'Unified trust score orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const RELIABILITY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'RELIABILITY_HARDENING_TYPES', module: 'reliability_hardening', phase: 23.1, description: 'Reliability hardening types and models', extensionOnly: true },
+  { rowId: 'RELIABILITY_HARDENING_REGISTRY', module: 'reliability_hardening', phase: 23.1, description: 'Reliability hardening record registry and lookup', extensionOnly: true },
+  { rowId: 'FAILURE_SURFACE_ANALYZER', module: 'reliability_hardening', phase: 23.1, description: 'Reliability failure surface detection and scoring', extensionOnly: true },
+  { rowId: 'RUNTIME_STABILITY_ANALYZER', module: 'reliability_hardening', phase: 23.1, description: 'Runtime stability signal analysis', extensionOnly: true },
+  { rowId: 'RELIABILITY_BOUNDARY_CHECKER', module: 'reliability_hardening', phase: 23.1, description: 'Reliability boundary violation detection', extensionOnly: true },
+  { rowId: 'RECOVERY_READINESS_ANALYZER', module: 'reliability_hardening', phase: 23.1, description: 'Recovery readiness gap analysis', extensionOnly: true },
+  { rowId: 'RELIABILITY_CONSISTENCY_ANALYZER', module: 'reliability_hardening', phase: 23.1, description: 'Cross-system reliability consistency analysis', extensionOnly: true },
+  { rowId: 'RELIABILITY_AUTHORITY_BUILDER', module: 'reliability_hardening', phase: 23.1, description: 'Unified reliability hardening authority aggregation', extensionOnly: true },
+  { rowId: 'RELIABILITY_HARDENING_EVALUATOR', module: 'reliability_hardening', phase: 23.1, description: 'Final reliability score, state, and risk evaluation', extensionOnly: true },
+  { rowId: 'RELIABILITY_HARDENING_HISTORY', module: 'reliability_hardening', phase: 23.1, description: 'Bounded reliability hardening history', extensionOnly: true },
+  { rowId: 'RELIABILITY_HARDENING_REPORTING', module: 'reliability_hardening', phase: 23.1, description: 'Reliability hardening report and recommendation generation', extensionOnly: true },
+  { rowId: 'RELIABILITY_HARDENING_CACHE', module: 'reliability_hardening', phase: 23.1, description: 'Reliability hardening lookup cache', extensionOnly: true },
+  { rowId: 'RELIABILITY_HARDENING_ENGINE', module: 'reliability_hardening', phase: 23.1, description: 'Reliability hardening orchestration and read-only registration', extensionOnly: true },
+];
+
 export const CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'CAPABILITY_VERIFICATION_TYPES', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification engine types and models', extensionOnly: true },
   { rowId: 'CAPABILITY_VERIFICATION_REGISTRY', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification record registry', extensionOnly: true },
@@ -1289,6 +1305,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...COMPLETION_TRUTH_ENGINE_UVL_ROWS,
   ...PREDICTION_TRUST_LAYER_UVL_ROWS,
   ...UNIFIED_TRUST_SCORE_UVL_ROWS,
+  ...RELIABILITY_HARDENING_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1529,6 +1546,10 @@ export function listPredictionTrustLayerUvlRows(): UvlRow[] {
 
 export function listUnifiedTrustScoreUvlRows(): UvlRow[] {
   return [...UNIFIED_TRUST_SCORE_UVL_ROWS];
+}
+
+export function listReliabilityHardeningUvlRows(): UvlRow[] {
+  return [...RELIABILITY_HARDENING_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

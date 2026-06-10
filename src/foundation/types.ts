@@ -219,7 +219,8 @@ export type OwnershipDomain =
   | 'reality_verification_expansion'
   | 'completion_truth_engine'
   | 'prediction_trust_layer'
-  | 'unified_trust_score';
+  | 'unified_trust_score'
+  | 'reliability_hardening';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

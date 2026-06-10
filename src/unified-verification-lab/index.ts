@@ -273,6 +273,8 @@ export {
   listPredictionTrustLayerUvlRows,
   UNIFIED_TRUST_SCORE_UVL_ROWS,
   listUnifiedTrustScoreUvlRows,
+  RELIABILITY_HARDENING_UVL_ROWS,
+  listReliabilityHardeningUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

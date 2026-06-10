@@ -1141,6 +1141,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 22.6,
     description: 'Phase 22.6 Unified Trust Score — single authoritative trust score for project, workspace, verification, and completion state; read-only, scoring only, no execution or mutations',
   },
+  reliability_hardening: {
+    domain: 'reliability_hardening',
+    ownerModule: 'devpulse_v2_reliability_hardening',
+    ownerFunction: 'getDevPulseV2ReliabilityHardening',
+    phase: 23.1,
+    description: 'Phase 23.1 Reliability Hardening — failure surface, stability, boundary, recovery readiness, and consistency analysis for product hardening; read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {
