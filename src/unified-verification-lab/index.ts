@@ -293,6 +293,8 @@ export {
   listUserGuidesUvlRows,
   ARCHITECTURE_DOCUMENTATION_UVL_ROWS,
   listArchitectureDocumentationUvlRows,
+  API_DOCUMENTATION_UVL_ROWS,
+  listApiDocumentationUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

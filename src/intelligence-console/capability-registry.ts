@@ -467,6 +467,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'API_DOCUMENTATION',
+    label: 'API Documentation',
+    phase: 24.5,
+    ownerModule: 'devpulse_v2_api_documentation',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

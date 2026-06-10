@@ -1068,6 +1068,22 @@ export const ARCHITECTURE_DOCUMENTATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'ARCHITECTURE_DOCUMENTATION_ENGINE', module: 'architecture_documentation', phase: 24.4, description: 'Architecture documentation orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const API_DOCUMENTATION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'API_DOCUMENTATION_TYPES', module: 'api_documentation', phase: 24.5, description: 'API documentation types and models', extensionOnly: true },
+  { rowId: 'API_DOCUMENTATION_REGISTRY', module: 'api_documentation', phase: 24.5, description: 'API documentation record registry and lookup', extensionOnly: true },
+  { rowId: 'API_SURFACE_ANALYZER', module: 'api_documentation', phase: 24.5, description: 'API surface coverage analysis', extensionOnly: true },
+  { rowId: 'INTERFACE_DOCUMENTATION_ANALYZER', module: 'api_documentation', phase: 24.5, description: 'Interface documentation coverage analysis', extensionOnly: true },
+  { rowId: 'CONTRACT_DOCUMENTATION_ANALYZER', module: 'api_documentation', phase: 24.5, description: 'Contract documentation coverage analysis', extensionOnly: true },
+  { rowId: 'INTEGRATION_API_ANALYZER', module: 'api_documentation', phase: 24.5, description: 'Integration API coverage analysis', extensionOnly: true },
+  { rowId: 'COMMAND_SURFACE_ANALYZER', module: 'api_documentation', phase: 24.5, description: 'Command surface coverage analysis', extensionOnly: true },
+  { rowId: 'API_DOCUMENTATION_AUTHORITY_BUILDER', module: 'api_documentation', phase: 24.5, description: 'Unified API documentation authority aggregation', extensionOnly: true },
+  { rowId: 'API_DOCUMENTATION_EVALUATOR', module: 'api_documentation', phase: 24.5, description: 'Final API documentation coverage and state evaluation', extensionOnly: true },
+  { rowId: 'API_DOCUMENTATION_HISTORY', module: 'api_documentation', phase: 24.5, description: 'Bounded API documentation history', extensionOnly: true },
+  { rowId: 'API_DOCUMENTATION_REPORTING', module: 'api_documentation', phase: 24.5, description: 'API documentation report and recommendation generation', extensionOnly: true },
+  { rowId: 'API_DOCUMENTATION_CACHE', module: 'api_documentation', phase: 24.5, description: 'API documentation lookup cache', extensionOnly: true },
+  { rowId: 'API_DOCUMENTATION_ENGINE', module: 'api_documentation', phase: 24.5, description: 'API documentation orchestration and read-only registration', extensionOnly: true },
+];
+
 export const PRIVACY_HARDENING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'PRIVACY_HARDENING_TYPES', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening types and models', extensionOnly: true },
   { rowId: 'PRIVACY_HARDENING_REGISTRY', module: 'privacy_hardening', phase: 23.4, description: 'Privacy hardening record registry and lookup', extensionOnly: true },
@@ -1460,6 +1476,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...FOUNDER_GUIDES_UVL_ROWS,
   ...USER_GUIDES_UVL_ROWS,
   ...ARCHITECTURE_DOCUMENTATION_UVL_ROWS,
+  ...API_DOCUMENTATION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1740,6 +1757,10 @@ export function listUserGuidesUvlRows(): UvlRow[] {
 
 export function listArchitectureDocumentationUvlRows(): UvlRow[] {
   return [...ARCHITECTURE_DOCUMENTATION_UVL_ROWS];
+}
+
+export function listApiDocumentationUvlRows(): UvlRow[] {
+  return [...API_DOCUMENTATION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

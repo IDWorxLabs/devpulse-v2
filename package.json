@@ -176,6 +176,7 @@
     "validate:founder-guides": "tsx scripts/validate-founder-guides.ts",
     "validate:user-guides": "tsx scripts/validate-user-guides.ts",
     "validate:architecture-documentation": "tsx scripts/validate-architecture-documentation.ts",
+    "validate:api-documentation": "tsx scripts/validate-api-documentation.ts",
     "validate:verification-integration": "tsx scripts/validate-verification-integration.ts",
     "validate:verification-intelligence": "tsx scripts/validate-verification-intelligence.ts",
     "validate:verification-strategy-core": "tsx scripts/validate-verification-strategy-core.ts",
