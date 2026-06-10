@@ -377,6 +377,7 @@ export const WORLD2_BUILDER_PACKET_FIND_ALIASES: readonly FindPanelAlias[] = [
   { alias: 'Evidence Quality', capabilityId: 'EVIDENCE_INTELLIGENCE', ownerModule: 'devpulse_v2_evidence_intelligence' },
   { alias: 'Evidence Gaps', capabilityId: 'EVIDENCE_INTELLIGENCE', ownerModule: 'devpulse_v2_evidence_intelligence' },
   { alias: 'Reality Verification', capabilityId: 'REALITY_VERIFICATION_EXPANSION', ownerModule: 'devpulse_v2_reality_verification_expansion' },
+  { alias: 'Reality Verification Expansion', capabilityId: 'REALITY_VERIFICATION_EXPANSION', ownerModule: 'devpulse_v2_reality_verification_expansion' },
   { alias: 'Reality Authority', capabilityId: 'REALITY_VERIFICATION_EXPANSION', ownerModule: 'devpulse_v2_reality_verification_expansion' },
   { alias: 'Claim Validation', capabilityId: 'REALITY_VERIFICATION_EXPANSION', ownerModule: 'devpulse_v2_reality_verification_expansion' },
   { alias: 'Reality State', capabilityId: 'REALITY_VERIFICATION_EXPANSION', ownerModule: 'devpulse_v2_reality_verification_expansion' },
