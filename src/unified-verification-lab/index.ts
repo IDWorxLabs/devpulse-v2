@@ -229,6 +229,8 @@ export {
   listVerificationIntegrationUvlRows,
   AUTONOMOUS_TESTING_UVL_ROWS,
   listAutonomousTestingUvlRows,
+  AUTONOMOUS_FIXING_UVL_ROWS,
+  listAutonomousFixingUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

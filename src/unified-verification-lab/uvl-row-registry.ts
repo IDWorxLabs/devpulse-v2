@@ -859,6 +859,23 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const AUTONOMOUS_FIXING_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'AUTONOMOUS_FIXING_TYPES', module: 'autonomous_fixing', phase: 19.5, description: 'Autonomous fixing types and models', extensionOnly: true },
+  { rowId: 'FAILURE_CLASSIFIER', module: 'autonomous_fixing', phase: 19.5, description: 'Failure classification into subsystem categories', extensionOnly: true },
+  { rowId: 'ROOT_CAUSE_ANALYZER', module: 'autonomous_fixing', phase: 19.5, description: 'Root cause analysis with blast radius', extensionOnly: true },
+  { rowId: 'FIX_STRATEGY_SELECTOR', module: 'autonomous_fixing', phase: 19.5, description: 'Fix strategy selection rules', extensionOnly: true },
+  { rowId: 'REPAIR_CANDIDATE_GENERATOR', module: 'autonomous_fixing', phase: 19.5, description: 'Repair candidate generation (planning only)', extensionOnly: true },
+  { rowId: 'ROLLBACK_PLANNER', module: 'autonomous_fixing', phase: 19.5, description: 'Rollback planning without execution', extensionOnly: true },
+  { rowId: 'FIX_RISK_ANALYZER', module: 'autonomous_fixing', phase: 19.5, description: 'Fix risk score analysis', extensionOnly: true },
+  { rowId: 'FIX_CONFIDENCE_ANALYZER', module: 'autonomous_fixing', phase: 19.5, description: 'Fix confidence score analysis', extensionOnly: true },
+  { rowId: 'FIX_READINESS_EVALUATOR', module: 'autonomous_fixing', phase: 19.5, description: 'Fix readiness evaluation', extensionOnly: true },
+  { rowId: 'FIX_PLAN_BUILDER', module: 'autonomous_fixing', phase: 19.5, description: 'Fix plan builder pipeline', extensionOnly: true },
+  { rowId: 'FIX_REPORTING', module: 'autonomous_fixing', phase: 19.5, description: 'Fix report generation', extensionOnly: true },
+  { rowId: 'FIX_HISTORY', module: 'autonomous_fixing', phase: 19.5, description: 'Bounded fix history', extensionOnly: true },
+  { rowId: 'FIX_REGISTRY', module: 'autonomous_fixing', phase: 19.5, description: 'Fix strategy registry metadata', extensionOnly: true },
+  { rowId: 'AUTONOMOUS_FIXING', module: 'autonomous_fixing', phase: 19.5, description: 'Autonomous fixing orchestration and read-only registration', extensionOnly: true },
+];
+
 export const AUTONOMOUS_TESTING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'AUTONOMOUS_TESTING_TYPES', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous testing types and models', extensionOnly: true },
   { rowId: 'AUTONOMOUS_TEST_SELECTOR', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous test depth and category selection', extensionOnly: true },
@@ -914,6 +931,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...VERIFICATION_INTELLIGENCE_UVL_ROWS,
   ...VERIFICATION_INTEGRATION_UVL_ROWS,
   ...AUTONOMOUS_TESTING_UVL_ROWS,
+  ...AUTONOMOUS_FIXING_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1066,6 +1084,10 @@ export function listVerificationIntegrationUvlRows(): UvlRow[] {
 
 export function listAutonomousTestingUvlRows(): UvlRow[] {
   return [...AUTONOMOUS_TESTING_UVL_ROWS];
+}
+
+export function listAutonomousFixingUvlRows(): UvlRow[] {
+  return [...AUTONOMOUS_FIXING_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

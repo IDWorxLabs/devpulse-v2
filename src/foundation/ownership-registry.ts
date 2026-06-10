@@ -987,6 +987,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 19.4,
     description: 'Phase 19.4 Autonomous Testing — test depth selection, category mapping, suite planning, risk/cost/confidence analysis, readiness, and planning-safe simulated results; no real test execution',
   },
+  autonomous_fixing: {
+    domain: 'autonomous_fixing',
+    ownerModule: 'devpulse_v2_autonomous_fixing',
+    ownerFunction: 'getDevPulseV2AutonomousFixing',
+    phase: 19.5,
+    description: 'Phase 19.5 Autonomous Fixing — failure classification, root cause analysis, repair strategy selection, risk/confidence analysis, rollback planning, fix plans, and reporting; planning only, no code modification',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

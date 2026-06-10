@@ -243,6 +243,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'AUTONOMOUS_FIXING',
+    label: 'Autonomous Fixing',
+    phase: 19.5,
+    ownerModule: 'devpulse_v2_autonomous_fixing',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,
