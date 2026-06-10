@@ -907,6 +907,23 @@ export const EVIDENCE_INTELLIGENCE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'EVIDENCE_INTELLIGENCE', module: 'evidence_intelligence', phase: 22.2, description: 'Evidence intelligence orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const REALITY_VERIFICATION_EXPANSION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'REALITY_VERIFICATION_TYPES', module: 'reality_verification_expansion', phase: 22.3, description: 'Reality verification expansion types and models', extensionOnly: true },
+  { rowId: 'REALITY_SOURCE_REGISTRY', module: 'reality_verification_expansion', phase: 22.3, description: 'Reality source registration and lookup', extensionOnly: true },
+  { rowId: 'REALITY_RECORD_REGISTRY', module: 'reality_verification_expansion', phase: 22.3, description: 'Reality record registry and multi-dimensional lookup', extensionOnly: true },
+  { rowId: 'CLAIM_VALIDATOR', module: 'reality_verification_expansion', phase: 22.3, description: 'Claim validation and support status determination', extensionOnly: true },
+  { rowId: 'EVIDENCE_REALITY_MATCHER', module: 'reality_verification_expansion', phase: 22.3, description: 'Evidence-to-reality claim matching and mismatch detection', extensionOnly: true },
+  { rowId: 'REALITY_CONSISTENCY_ANALYZER', module: 'reality_verification_expansion', phase: 22.3, description: 'Reality consistency, stability, agreement, and alignment scoring', extensionOnly: true },
+  { rowId: 'REALITY_CONFLICT_DETECTOR', module: 'reality_verification_expansion', phase: 22.3, description: 'Reality conflict detection across claims, evidence, and trust', extensionOnly: true },
+  { rowId: 'REALITY_GAP_ANALYZER', module: 'reality_verification_expansion', phase: 22.3, description: 'Missing, insufficient, contradicted, and unverified proof gap analysis', extensionOnly: true },
+  { rowId: 'REALITY_AUTHORITY_BUILDER', module: 'reality_verification_expansion', phase: 22.3, description: 'Unified reality authority aggregation', extensionOnly: true },
+  { rowId: 'REALITY_VERIFICATION_EVALUATOR', module: 'reality_verification_expansion', phase: 22.3, description: 'Reality confidence, trustworthiness, readiness, and stability evaluation', extensionOnly: true },
+  { rowId: 'REALITY_VERIFICATION_HISTORY', module: 'reality_verification_expansion', phase: 22.3, description: 'Bounded reality verification history', extensionOnly: true },
+  { rowId: 'REALITY_VERIFICATION_CACHE', module: 'reality_verification_expansion', phase: 22.3, description: 'Reality verification lookup cache', extensionOnly: true },
+  { rowId: 'REALITY_VERIFICATION_REPORTING', module: 'reality_verification_expansion', phase: 22.3, description: 'Reality verification report generation', extensionOnly: true },
+  { rowId: 'REALITY_VERIFICATION_EXPANSION', module: 'reality_verification_expansion', phase: 22.3, description: 'Reality verification expansion orchestration and read-only registration', extensionOnly: true },
+];
+
 export const CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'CAPABILITY_VERIFICATION_TYPES', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification engine types and models', extensionOnly: true },
   { rowId: 'CAPABILITY_VERIFICATION_REGISTRY', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification record registry', extensionOnly: true },
@@ -1220,6 +1237,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...SELF_EVOLUTION_GOVERNANCE_UVL_ROWS,
   ...UNIFIED_TRUST_RUNTIME_UVL_ROWS,
   ...EVIDENCE_INTELLIGENCE_UVL_ROWS,
+  ...REALITY_VERIFICATION_EXPANSION_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1444,6 +1462,10 @@ export function listUnifiedTrustRuntimeUvlRows(): UvlRow[] {
 
 export function listEvidenceIntelligenceUvlRows(): UvlRow[] {
   return [...EVIDENCE_INTELLIGENCE_UVL_ROWS];
+}
+
+export function listRealityVerificationExpansionUvlRows(): UvlRow[] {
+  return [...REALITY_VERIFICATION_EXPANSION_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

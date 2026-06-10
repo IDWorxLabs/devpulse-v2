@@ -265,6 +265,8 @@ export {
   listUnifiedTrustRuntimeUvlRows,
   EVIDENCE_INTELLIGENCE_UVL_ROWS,
   listEvidenceIntelligenceUvlRows,
+  REALITY_VERIFICATION_EXPANSION_UVL_ROWS,
+  listRealityVerificationExpansionUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

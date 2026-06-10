@@ -1113,6 +1113,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 22.2,
     description: 'Phase 22.2 Evidence Intelligence — collects, analyzes, validates, scores, and aggregates evidence quality across the platform; read-only, no execution or mutations',
   },
+  reality_verification_expansion: {
+    domain: 'reality_verification_expansion',
+    ownerModule: 'devpulse_v2_reality_verification_expansion',
+    ownerFunction: 'getDevPulseV2RealityVerificationExpansion',
+    phase: 22.3,
+    description: 'Phase 22.3 Reality Verification Expansion — validates claims against evidence, trust, verification, monitoring, and governance state; read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

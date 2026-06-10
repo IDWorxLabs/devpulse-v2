@@ -160,6 +160,7 @@
     "validate:self-evolution-governance": "tsx scripts/validate-self-evolution-governance.ts",
     "validate:unified-trust-runtime": "tsx scripts/validate-unified-trust-runtime.ts",
     "validate:evidence-intelligence": "tsx scripts/validate-evidence-intelligence.ts",
+    "validate:reality-verification-expansion": "tsx scripts/validate-reality-verification-expansion.ts",
     "validate:verification-integration": "tsx scripts/validate-verification-integration.ts",
     "validate:verification-intelligence": "tsx scripts/validate-verification-intelligence.ts",
     "validate:verification-strategy-core": "tsx scripts/validate-verification-strategy-core.ts",

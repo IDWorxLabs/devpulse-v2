@@ -369,6 +369,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'REALITY_VERIFICATION_EXPANSION',
+    label: 'Reality Verification Expansion',
+    phase: 22.3,
+    ownerModule: 'devpulse_v2_reality_verification_expansion',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,
