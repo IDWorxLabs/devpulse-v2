@@ -383,6 +383,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'PREDICTION_TRUST_LAYER',
+    label: 'Prediction Trust Layer',
+    phase: 22.5,
+    ownerModule: 'devpulse_v2_prediction_trust_layer',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

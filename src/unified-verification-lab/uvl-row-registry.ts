@@ -940,6 +940,22 @@ export const COMPLETION_TRUTH_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'COMPLETION_TRUTH_ENGINE', module: 'completion_truth_engine', phase: 22.4, description: 'Completion truth engine orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const PREDICTION_TRUST_LAYER_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'PREDICTION_TRUST_TYPES', module: 'prediction_trust_layer', phase: 22.5, description: 'Prediction trust layer types and models', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_REGISTRY', module: 'prediction_trust_layer', phase: 22.5, description: 'Prediction trust record registry and lookup', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_TREND_ANALYZER', module: 'prediction_trust_layer', phase: 22.5, description: 'Trust trend analysis across upstream history', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_RISK_PREDICTOR', module: 'prediction_trust_layer', phase: 22.5, description: 'Future trust risk prediction', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_FAILURE_PREDICTOR', module: 'prediction_trust_layer', phase: 22.5, description: 'Likely trust failure mode prediction', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_RECOVERY_RECOMMENDER', module: 'prediction_trust_layer', phase: 22.5, description: 'Trust recovery path recommendations', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_VOLATILITY_ANALYZER', module: 'prediction_trust_layer', phase: 22.5, description: 'Trust volatility and stability analysis', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_AUTHORITY_BUILDER', module: 'prediction_trust_layer', phase: 22.5, description: 'Unified prediction trust authority aggregation', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_EVALUATOR', module: 'prediction_trust_layer', phase: 22.5, description: 'Prediction confidence, readiness, and stability evaluation', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_HISTORY', module: 'prediction_trust_layer', phase: 22.5, description: 'Bounded prediction trust history', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_REPORTING', module: 'prediction_trust_layer', phase: 22.5, description: 'Prediction trust report generation', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_CACHE', module: 'prediction_trust_layer', phase: 22.5, description: 'Prediction trust lookup cache', extensionOnly: true },
+  { rowId: 'PREDICTION_TRUST_LAYER', module: 'prediction_trust_layer', phase: 22.5, description: 'Prediction trust layer orchestration and read-only registration', extensionOnly: true },
+];
+
 export const CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'CAPABILITY_VERIFICATION_TYPES', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification engine types and models', extensionOnly: true },
   { rowId: 'CAPABILITY_VERIFICATION_REGISTRY', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification record registry', extensionOnly: true },
@@ -1255,6 +1271,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...EVIDENCE_INTELLIGENCE_UVL_ROWS,
   ...REALITY_VERIFICATION_EXPANSION_UVL_ROWS,
   ...COMPLETION_TRUTH_ENGINE_UVL_ROWS,
+  ...PREDICTION_TRUST_LAYER_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1487,6 +1504,10 @@ export function listRealityVerificationExpansionUvlRows(): UvlRow[] {
 
 export function listCompletionTruthEngineUvlRows(): UvlRow[] {
   return [...COMPLETION_TRUTH_ENGINE_UVL_ROWS];
+}
+
+export function listPredictionTrustLayerUvlRows(): UvlRow[] {
+  return [...PREDICTION_TRUST_LAYER_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

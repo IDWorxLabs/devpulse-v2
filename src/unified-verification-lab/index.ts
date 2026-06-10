@@ -269,6 +269,8 @@ export {
   listRealityVerificationExpansionUvlRows,
   COMPLETION_TRUTH_ENGINE_UVL_ROWS,
   listCompletionTruthEngineUvlRows,
+  PREDICTION_TRUST_LAYER_UVL_ROWS,
+  listPredictionTrustLayerUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

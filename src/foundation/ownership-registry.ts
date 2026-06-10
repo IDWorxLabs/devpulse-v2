@@ -1127,6 +1127,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 22.4,
     description: 'Phase 22.4 Completion Truth Engine — determines whether work is genuinely complete versus merely reported complete; read-only, no execution or mutations',
   },
+  prediction_trust_layer: {
+    domain: 'prediction_trust_layer',
+    ownerModule: 'devpulse_v2_prediction_trust_layer',
+    ownerFunction: 'getDevPulseV2PredictionTrustLayer',
+    phase: 22.5,
+    description: 'Phase 22.5 Prediction Trust Layer — predicts future trust risk before failure happens; prediction only, read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {

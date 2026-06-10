@@ -217,7 +217,8 @@ export type OwnershipDomain =
   | 'unified_trust_runtime'
   | 'evidence_intelligence'
   | 'reality_verification_expansion'
-  | 'completion_truth_engine';
+  | 'completion_truth_engine'
+  | 'prediction_trust_layer';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 
