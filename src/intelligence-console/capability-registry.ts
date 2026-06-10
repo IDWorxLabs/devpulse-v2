@@ -362,6 +362,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'EVIDENCE_INTELLIGENCE',
+    label: 'Evidence Intelligence',
+    phase: 22.2,
+    ownerModule: 'devpulse_v2_evidence_intelligence',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

@@ -214,7 +214,8 @@ export type OwnershipDomain =
   | 'capability_build_engine'
   | 'capability_verification_engine'
   | 'self_evolution_governance'
-  | 'unified_trust_runtime';
+  | 'unified_trust_runtime'
+  | 'evidence_intelligence';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

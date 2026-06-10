@@ -263,6 +263,8 @@ export {
   listSelfEvolutionGovernanceUvlRows,
   UNIFIED_TRUST_RUNTIME_UVL_ROWS,
   listUnifiedTrustRuntimeUvlRows,
+  EVIDENCE_INTELLIGENCE_UVL_ROWS,
+  listEvidenceIntelligenceUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

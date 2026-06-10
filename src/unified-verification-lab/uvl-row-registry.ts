@@ -891,6 +891,22 @@ export const UNIFIED_TRUST_RUNTIME_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'UNIFIED_TRUST_RUNTIME_INDEX', module: 'unified_trust_runtime', phase: 22.1, description: 'Unified trust runtime public exports and test reset', extensionOnly: true },
 ];
 
+export const EVIDENCE_INTELLIGENCE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'EVIDENCE_INTELLIGENCE_TYPES', module: 'evidence_intelligence', phase: 22.2, description: 'Evidence intelligence types and models', extensionOnly: true },
+  { rowId: 'EVIDENCE_SOURCE_REGISTRY', module: 'evidence_intelligence', phase: 22.2, description: 'Evidence source registration and lookup', extensionOnly: true },
+  { rowId: 'EVIDENCE_RECORD_REGISTRY', module: 'evidence_intelligence', phase: 22.2, description: 'Evidence record registry and multi-dimensional lookup', extensionOnly: true },
+  { rowId: 'EVIDENCE_QUALITY_ANALYZER', module: 'evidence_intelligence', phase: 22.2, description: 'Evidence quality, strength, reliability, freshness, and consistency scoring', extensionOnly: true },
+  { rowId: 'EVIDENCE_SUFFICIENCY_ANALYZER', module: 'evidence_intelligence', phase: 22.2, description: 'Evidence sufficiency level determination', extensionOnly: true },
+  { rowId: 'EVIDENCE_CONFLICT_DETECTOR', module: 'evidence_intelligence', phase: 22.2, description: 'Evidence conflict and disagreement detection', extensionOnly: true },
+  { rowId: 'EVIDENCE_GAP_ANALYZER', module: 'evidence_intelligence', phase: 22.2, description: 'Missing, weak, stale, and untrusted evidence gap analysis', extensionOnly: true },
+  { rowId: 'EVIDENCE_AUTHORITY_BUILDER', module: 'evidence_intelligence', phase: 22.2, description: 'Unified evidence authority aggregation', extensionOnly: true },
+  { rowId: 'EVIDENCE_INTELLIGENCE_EVALUATOR', module: 'evidence_intelligence', phase: 22.2, description: 'Evidence confidence, trustworthiness, readiness, and stability evaluation', extensionOnly: true },
+  { rowId: 'EVIDENCE_INTELLIGENCE_HISTORY', module: 'evidence_intelligence', phase: 22.2, description: 'Bounded evidence intelligence history', extensionOnly: true },
+  { rowId: 'EVIDENCE_INTELLIGENCE_CACHE', module: 'evidence_intelligence', phase: 22.2, description: 'Evidence intelligence lookup cache', extensionOnly: true },
+  { rowId: 'EVIDENCE_INTELLIGENCE_REPORTING', module: 'evidence_intelligence', phase: 22.2, description: 'Evidence intelligence report generation', extensionOnly: true },
+  { rowId: 'EVIDENCE_INTELLIGENCE', module: 'evidence_intelligence', phase: 22.2, description: 'Evidence intelligence orchestration and read-only registration', extensionOnly: true },
+];
+
 export const CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'CAPABILITY_VERIFICATION_TYPES', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification engine types and models', extensionOnly: true },
   { rowId: 'CAPABILITY_VERIFICATION_REGISTRY', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification record registry', extensionOnly: true },
@@ -1203,6 +1219,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS,
   ...SELF_EVOLUTION_GOVERNANCE_UVL_ROWS,
   ...UNIFIED_TRUST_RUNTIME_UVL_ROWS,
+  ...EVIDENCE_INTELLIGENCE_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1423,6 +1440,10 @@ export function listSelfEvolutionGovernanceUvlRows(): UvlRow[] {
 
 export function listUnifiedTrustRuntimeUvlRows(): UvlRow[] {
   return [...UNIFIED_TRUST_RUNTIME_UVL_ROWS];
+}
+
+export function listEvidenceIntelligenceUvlRows(): UvlRow[] {
+  return [...EVIDENCE_INTELLIGENCE_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

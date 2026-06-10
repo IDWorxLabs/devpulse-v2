@@ -1106,6 +1106,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 22.1,
     description: 'Phase 22.1 Unified Trust Runtime — collects, normalizes, aggregates, and exposes trust signals from all major subsystems; read-only, no execution or mutations',
   },
+  evidence_intelligence: {
+    domain: 'evidence_intelligence',
+    ownerModule: 'devpulse_v2_evidence_intelligence',
+    ownerFunction: 'getDevPulseV2EvidenceIntelligence',
+    phase: 22.2,
+    description: 'Phase 22.2 Evidence Intelligence — collects, analyzes, validates, scores, and aggregates evidence quality across the platform; read-only, no execution or mutations',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {
