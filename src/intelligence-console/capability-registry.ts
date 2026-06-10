@@ -348,6 +348,13 @@ export const INTELLIGENCE_CONSOLE_CAPABILITIES: readonly IntelligenceConsoleCapa
     extensionOnly: true,
   },
   {
+    capabilityId: 'SELF_EVOLUTION_GOVERNANCE',
+    label: 'Self Evolution Governance',
+    phase: 21.6,
+    ownerModule: 'devpulse_v2_self_evolution_governance',
+    extensionOnly: true,
+  },
+  {
     capabilityId: 'VERIFICATION_INTEGRATION',
     label: 'Verification Integration',
     phase: 19.32,

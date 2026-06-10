@@ -259,6 +259,8 @@ export {
   listCapabilityBuildEngineUvlRows,
   CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS,
   listCapabilityVerificationEngineUvlRows,
+  SELF_EVOLUTION_GOVERNANCE_UVL_ROWS,
+  listSelfEvolutionGovernanceUvlRows,
   hasUvlRow,
   type UvlRow,
 } from './uvl-row-registry.js';

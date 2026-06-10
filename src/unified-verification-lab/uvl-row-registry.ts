@@ -859,6 +859,23 @@ export const VERIFICATION_INTEGRATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_INTEGRATION', module: 'verification_integration', phase: 19.32, description: 'Verification integration orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const SELF_EVOLUTION_GOVERNANCE_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'SELF_EVOLUTION_GOVERNANCE_TYPES', module: 'self_evolution_governance', phase: 21.6, description: 'Self evolution governance types and models', extensionOnly: true },
+  { rowId: 'SELF_EVOLUTION_GOVERNANCE_REGISTRY', module: 'self_evolution_governance', phase: 21.6, description: 'Self evolution governance record registry', extensionOnly: true },
+  { rowId: 'GOVERNANCE_BOUNDARY_VALIDATOR', module: 'self_evolution_governance', phase: 21.6, description: 'Governance boundary and constitutional compliance validation', extensionOnly: true },
+  { rowId: 'GOVERNANCE_RISK_EVALUATOR', module: 'self_evolution_governance', phase: 21.6, description: 'Governance risk evaluation', extensionOnly: true },
+  { rowId: 'GOVERNANCE_TRUST_EVALUATOR', module: 'self_evolution_governance', phase: 21.6, description: 'Governance trust and verification evaluation', extensionOnly: true },
+  { rowId: 'GOVERNANCE_APPROVAL_EVALUATOR', module: 'self_evolution_governance', phase: 21.6, description: 'Governance approval requirement evaluation', extensionOnly: true },
+  { rowId: 'GOVERNANCE_ROLLBACK_VALIDATOR', module: 'self_evolution_governance', phase: 21.6, description: 'Governance rollback plan validation', extensionOnly: true },
+  { rowId: 'GOVERNANCE_SELF_MODIFICATION_VALIDATOR', module: 'self_evolution_governance', phase: 21.6, description: 'Self modification and Phase 21 safety law enforcement', extensionOnly: true },
+  { rowId: 'GOVERNANCE_READINESS_EVALUATOR', module: 'self_evolution_governance', phase: 21.6, description: 'Governance readiness and stall protection evaluation', extensionOnly: true },
+  { rowId: 'GOVERNANCE_DECISION_ENGINE', module: 'self_evolution_governance', phase: 21.6, description: 'Self evolution governance decision pipeline', extensionOnly: true },
+  { rowId: 'GOVERNANCE_HISTORY', module: 'self_evolution_governance', phase: 21.6, description: 'Bounded self evolution governance history', extensionOnly: true },
+  { rowId: 'GOVERNANCE_REPORTING', module: 'self_evolution_governance', phase: 21.6, description: 'Self evolution governance report generation', extensionOnly: true },
+  { rowId: 'GOVERNANCE_CACHE', module: 'self_evolution_governance', phase: 21.6, description: 'Self evolution governance lookup cache', extensionOnly: true },
+  { rowId: 'SELF_EVOLUTION_GOVERNANCE', module: 'self_evolution_governance', phase: 21.6, description: 'Self evolution governance orchestration and read-only registration', extensionOnly: true },
+];
+
 export const CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'CAPABILITY_VERIFICATION_TYPES', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification engine types and models', extensionOnly: true },
   { rowId: 'CAPABILITY_VERIFICATION_REGISTRY', module: 'capability_verification_engine', phase: 21.5, description: 'Capability verification record registry', extensionOnly: true },
@@ -1169,6 +1186,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...CAPABILITY_PLANNING_ENGINE_UVL_ROWS,
   ...CAPABILITY_BUILD_ENGINE_UVL_ROWS,
   ...CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS,
+  ...SELF_EVOLUTION_GOVERNANCE_UVL_ROWS,
 ];
 
 export function listWorld2BuilderPacketExecutionUvlRows(): UvlRow[] {
@@ -1381,6 +1399,10 @@ export function listCapabilityBuildEngineUvlRows(): UvlRow[] {
 
 export function listCapabilityVerificationEngineUvlRows(): UvlRow[] {
   return [...CAPABILITY_VERIFICATION_ENGINE_UVL_ROWS];
+}
+
+export function listSelfEvolutionGovernanceUvlRows(): UvlRow[] {
+  return [...SELF_EVOLUTION_GOVERNANCE_UVL_ROWS];
 }
 
 export function hasUvlRow(rowId: string): boolean {

@@ -212,7 +212,8 @@ export type OwnershipDomain =
   | 'capability_research_engine'
   | 'capability_planning_engine'
   | 'capability_build_engine'
-  | 'capability_verification_engine';
+  | 'capability_verification_engine'
+  | 'self_evolution_governance';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 

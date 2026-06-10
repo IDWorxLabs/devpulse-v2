@@ -1092,6 +1092,13 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     phase: 21.5,
     description: 'Phase 21.5 Capability Verification Engine — requirement, duplicate, risk, rollout, trust, and stall protection verification with readiness evaluation; verification only, no execution',
   },
+  self_evolution_governance: {
+    domain: 'self_evolution_governance',
+    ownerModule: 'devpulse_v2_self_evolution_governance',
+    ownerFunction: 'getDevPulseV2SelfEvolutionGovernance',
+    phase: 21.6,
+    description: 'Phase 21.6 Self Evolution Governance — boundary, risk, trust, approval, rollback, and self-modification governance with stall protection; governance only, no execution or self-modification',
+  },
 };
 
 export function resolveDevPulseV2OwnerRecord(domain: OwnershipDomain): OwnerRecord {
