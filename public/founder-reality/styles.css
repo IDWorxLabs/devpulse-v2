@@ -1327,6 +1327,78 @@ body {
   letter-spacing: 0.02em;
 }
 
+.execution-proof-dashboard {
+  margin-bottom: 1rem;
+  border: 1px solid rgba(96, 165, 250, 0.18);
+}
+
+.execution-proof-dashboard > h2 {
+  margin-bottom: 0.35rem;
+}
+
+.execution-proof-truth-map {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.75rem 0;
+}
+
+.execution-proof-truth-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.execution-proof-stage {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.execution-proof-label.execution-proof-proven {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.execution-proof-label.execution-proof-partial {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.execution-proof-label.execution-proof-blocked {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+.execution-proof-label.execution-proof-unproven {
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--text-muted);
+}
+
+.execution-proof-label.execution-proof-unavailable {
+  background: rgba(100, 116, 139, 0.18);
+  color: #94a3b8;
+}
+
+.execution-proof-bottleneck {
+  font-size: 1rem;
+}
+
+.execution-proof-scores p {
+  margin: 0.35rem 0;
+}
+
+.execution-proof-list {
+  margin: 0.35rem 0 0.85rem;
+  padding-left: 1.1rem;
+}
+
+.execution-proof-actions {
+  margin-top: 0.75rem;
+}
+
 .verification-category-group {
   margin: 0.75rem 0;
   padding-bottom: 0.5rem;

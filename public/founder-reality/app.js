@@ -13,6 +13,8 @@
   var currentViewId = 'command-center';
   var workspaceLoadState = 'idle';
   var workspaceLoadPromise = null;
+  var executionProofData = null;
+  var executionProofLoadPromise = null;
   var insightsSelectedProjectId = null;
 
   /** Client-side demo fallback — used only when workspace API is unavailable. */
@@ -2395,6 +2397,141 @@
     );
   }
 
+  function executionProofLabelClass(label) {
+    if (label === 'PROVEN') return 'execution-proof-proven';
+    if (label === 'PARTIAL' || label === 'CLAIMED') return 'execution-proof-partial';
+    if (label === 'BLOCKED') return 'execution-proof-blocked';
+    if (label === 'UNAVAILABLE') return 'execution-proof-unavailable';
+    return 'execution-proof-unproven';
+  }
+
+  function renderExecutionProofList(items, emptyText) {
+    if (!items || !items.length) {
+      return '<p class="hint">' + escapeHtml(emptyText || 'None listed.') + '</p>';
+    }
+    return '<ul class="execution-proof-list">' + items.map(function (item) {
+      return '<li>' + escapeHtml(String(item)) + '</li>';
+    }).join('') + '</ul>';
+  }
+
+  function renderExecutionProofDashboard(data) {
+    if (!data) {
+      return (
+        '<section class="card execution-proof-dashboard" id="execution-proof-dashboard">' +
+        '<h2>Execution Proof</h2>' +
+        '<p class="product-lead">Loading current execution truth from 24A reality authorities…</p>' +
+        '</section>'
+      );
+    }
+
+    var truthRows = (data.workflowTruthMap || []).map(function (row) {
+      return (
+        '<div class="execution-proof-truth-row">' +
+        '<span class="execution-proof-stage">' + escapeHtml(row.display || row.stage) + '</span>' +
+        '<span class="status-pill execution-proof-label ' + executionProofLabelClass(row.label) + '">' +
+        escapeHtml(row.label) +
+        '</span></div>'
+      );
+    }).join('');
+
+    var scoreRows =
+      '<div class="execution-proof-scores">' +
+      '<p><strong>Autonomous Builder Reality:</strong> ' + String(data.scores.builderReality) + '/100</p>' +
+      '<p><strong>Live Preview Reality:</strong> ' + String(data.scores.livePreviewReality) + '/100</p>' +
+      '<p><strong>Verification Reality:</strong> ' + String(data.scores.verificationReality) + '/100</p>' +
+      '<p><strong>Founder Workflow Reality:</strong> ' + String(data.scores.founderWorkflowReality) + '/100</p>' +
+      '</div>';
+
+    return (
+      '<section class="card execution-proof-dashboard" id="execution-proof-dashboard">' +
+      '<h2>Execution Proof</h2>' +
+      '<p class="product-lead">This is the current execution truth — where the founder workflow stops today and what must be built next. Not a marketing score.</p>' +
+      renderProductCard(
+        'Workflow Truth Map',
+        '<div class="execution-proof-truth-map">' + truthRows + '</div>' +
+        '<p class="hint">Last proven stage: <strong>' + escapeHtml(data.lastProvenStage || 'Unknown') + '</strong></p>',
+      ) +
+      renderProductCard(
+        'Current Bottleneck',
+        '<p class="execution-proof-bottleneck"><strong>Current Bottleneck:</strong> ' + escapeHtml(data.currentBottleneck || 'Unknown') + '</p>' +
+        '<p><strong>Next Required Capability:</strong> ' + escapeHtml(data.nextRequiredCapability || 'Unknown') + '</p>' +
+        '<p class="hint">This is what must be built next before later stages can be proven.</p>',
+      ) +
+      renderProductCard(
+        'Launch Readiness',
+        '<p class="status-pill execution-proof-label ' + executionProofLabelClass(data.launchReadiness && data.launchReadiness.status === 'LAUNCH_READINESS_PROVEN' ? 'PROVEN' : data.launchReadiness && data.launchReadiness.status === 'LAUNCH_READINESS_PARTIAL' ? 'PARTIAL' : 'UNAVAILABLE') + '">' +
+        escapeHtml((data.launchReadiness && data.launchReadiness.status) || 'LAUNCH_READINESS_UNAVAILABLE') +
+        '</p>' +
+        '<p><strong>Reason:</strong> ' + escapeHtml((data.launchReadiness && data.launchReadiness.reason) || 'No connected build execution evidence.') + '</p>',
+      ) +
+      renderProductCard('Reality Scores', scoreRows) +
+      renderProductCard(
+        'Evidence Summary',
+        '<p><strong>Evidence Found</strong></p>' +
+        renderExecutionProofList(data.evidenceFound, 'No evidence listed yet.') +
+        '<p><strong>Missing Evidence</strong></p>' +
+        renderExecutionProofList(data.missingEvidence, 'No missing evidence listed.') +
+        '<p><strong>Founder Blockers</strong></p>' +
+        renderExecutionProofList(data.founderBlockers, 'No blockers ranked.') +
+        '<p class="hint">' + escapeHtml(data.founderConclusion || '') + '</p>',
+      ) +
+      '<div class="execution-proof-actions">' +
+      '<button type="button" class="btn-secondary" id="copy-execution-proof-report">Copy Execution Proof Report</button>' +
+      '</div>' +
+      '</section>'
+    );
+  }
+
+  function bindExecutionProofActions() {
+    var copyBtn = el('copy-execution-proof-report');
+    if (!copyBtn || copyBtn.getAttribute('data-bound') === 'true') return;
+    copyBtn.setAttribute('data-bound', 'true');
+    copyBtn.addEventListener('click', function () {
+      var text = executionProofData && executionProofData.copyReportText;
+      if (!text) {
+        pushNotification('Execution Proof report not loaded yet');
+        return;
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          pushNotification('Execution Proof report copied');
+        }).catch(function () {
+          pushNotification('Could not copy Execution Proof report');
+        });
+      } else {
+        pushNotification('Clipboard unavailable in this browser');
+      }
+    });
+  }
+
+  function loadExecutionProof(force) {
+    if (!force && executionProofData) {
+      return Promise.resolve(executionProofData);
+    }
+    if (!force && executionProofLoadPromise) {
+      return executionProofLoadPromise;
+    }
+    executionProofLoadPromise = fetch('/api/founder/execution-proof', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('execution-proof HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        executionProofData = data;
+        return data;
+      })
+      .finally(function () {
+        executionProofLoadPromise = null;
+      });
+    return executionProofLoadPromise;
+  }
+
+  function refreshExecutionProofPanel() {
+    if (currentViewId === 'verification') {
+      renderVerificationSurface(workspaceData, manifestData);
+    }
+  }
+
   function renderVerificationSurface(ws, manifest) {
     var container = el('verification-surface');
     if (!container) return;
@@ -2409,7 +2546,8 @@
       warningCount: 0,
     };
 
-    var html =
+    var html = renderExecutionProofDashboard(executionProofData);
+    html +=
       renderProductCard(
         'Verification Readiness',
         '<p class="product-lead">Verification Readiness indicates whether sufficient testing and validation evidence exists to confidently review, test, beta, or launch the project.</p>' +
@@ -2514,6 +2652,7 @@
       '</div>';
 
     container.innerHTML = html;
+    bindExecutionProofActions();
     var inlineBtn = el('run-founder-test-verification');
     if (inlineBtn) {
       inlineBtn.addEventListener('click', function () {
@@ -3113,6 +3252,15 @@
       if (ciActive) {
         streamChangeIntelligenceFeed(ciActive);
       }
+    }
+    if (viewId === 'verification') {
+      loadExecutionProof(false)
+        .then(function () {
+          refreshExecutionProofPanel();
+        })
+        .catch(function () {
+          refreshExecutionProofPanel();
+        });
     }
     if (viewId === 'live-preview') {
       clearFeedStreamLog();
@@ -4408,6 +4556,16 @@
     lastDependencyQuery: null,
     lastImpactQuery: null,
   });
+
+  loadExecutionProof(false)
+    .then(function () {
+      if (currentViewId === 'verification') {
+        refreshExecutionProofPanel();
+      }
+    })
+    .catch(function () {
+      /* Execution Proof falls back to loading state in Verification view */
+    });
 
   fetch('/api/founder-reality.json')
     .then(function (res) {

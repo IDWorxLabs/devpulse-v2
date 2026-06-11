@@ -3,8 +3,19 @@
  * Reality over optimism: URL/container existence ≠ usable preview.
  */
 
-export const LIVE_PREVIEW_REALITY_PASS_TOKEN = 'LIVE_PREVIEW_REALITY_PASS';
-export const LIVE_PREVIEW_REALITY_OWNER_MODULE = 'aidevengine_live_preview_reality';
+import type {
+  PreviewInfrastructureLevel,
+  PreviewConnectivityLevel,
+  PreviewUsabilityLevel,
+  BuildToPreviewLevel,
+  RuntimeEvidenceLevel,
+  FounderRealityBottleneck,
+} from './live-preview-reality-analyzer-types.js';
+
+export {
+  LIVE_PREVIEW_REALITY_PASS_TOKEN,
+  LIVE_PREVIEW_REALITY_OWNER_MODULE,
+} from './live-preview-reality-bounds.js';
 
 export type LivePreviewRealityState =
   | 'NO_PREVIEW'
@@ -74,4 +85,113 @@ export interface LivePreviewRealityAssessment {
   validationReadyReason: string;
   operatorFeedEvents: LivePreviewFeedEvent[];
   falsePositiveReadiness: boolean;
+}
+
+export type { PreviewEvidenceLevel, FounderRealityBottleneck } from './live-preview-reality-analyzer-types.js';
+
+export interface LivePreviewEvidence {
+  id: string;
+  level: 'CLAIMED' | 'OBSERVED' | 'PROVEN';
+  description: string;
+  source: string;
+}
+
+export interface LivePreviewStage {
+  stage: 'INFRASTRUCTURE' | 'RUNTIME' | 'CONNECTIVITY' | 'USABILITY' | 'BUILDER_LINK';
+  status: 'COMPLETE' | 'PARTIAL' | 'BLOCKED' | 'NOT_STARTED';
+  detail: string;
+}
+
+export interface LivePreviewBlocker {
+  id: string;
+  severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  impactRank: number;
+  explanation: string;
+  recommendation: string;
+}
+
+export interface PreviewRealityMatrixRow {
+  area: string;
+  claimed: 'CLAIMED' | 'OBSERVED' | 'PROVEN' | 'NONE';
+  observed: 'CLAIMED' | 'OBSERVED' | 'PROVEN' | 'NONE';
+  proven: 'CLAIMED' | 'OBSERVED' | 'PROVEN' | 'NONE';
+}
+
+export interface LivePreviewRealitySubscores {
+  infrastructure: number;
+  runtime: number;
+  connectivity: number;
+  usability: number;
+  builderIntegration: number;
+}
+
+export interface LivePreviewAnalyzerResults {
+  previewInfrastructure: PreviewInfrastructureLevel;
+  runtimeEvidence: RuntimeEvidenceLevel;
+  previewConnectivity: PreviewConnectivityLevel;
+  previewUsability: PreviewUsabilityLevel;
+  buildToPreview: BuildToPreviewLevel;
+}
+
+export interface PreviewModulePresenceEvidence {
+  hasLivePreviewRuntime: boolean;
+  hasPreviewGatekeeper: boolean;
+  hasPreviewRealityModule: boolean;
+  hasFounderRealityUi: boolean;
+  hasWorkspaceSnapshot: boolean;
+}
+
+export interface PreviewWorkspaceSignals {
+  executionConnected: boolean;
+  connected: boolean;
+  previewRuntimeActive: boolean;
+  readyPreviewCount: number;
+  previewSessionCount: number;
+  registeredTargetCount: number;
+  blockedPreviewCount: number;
+  previewUrl: string | null;
+  activeSessionReady: boolean;
+  activeSessionProjectMatch: boolean;
+  validationReady: boolean;
+  loadRealityPassed: boolean;
+  interactivityPassed: boolean;
+  clientLoadConfirmed: boolean;
+  realityState: LivePreviewRealityState;
+}
+
+export interface AssessLivePreviewRealityAuthorityInput {
+  workspace: PreviewWorkspaceSignals;
+  moduleEvidence: PreviewModulePresenceEvidence;
+  legacyInput: LivePreviewRealityInput;
+}
+
+export interface LivePreviewReport {
+  executiveSummary: string;
+  previewRealityMatrix: PreviewRealityMatrixRow[];
+  evidenceFound: string[];
+  missingEvidence: string[];
+  previewBlockers: string[];
+  founderConclusion: string;
+  founderBottleneck: FounderRealityBottleneck;
+  markdown: string;
+}
+
+export interface LivePreviewRealityAuthorityAssessment {
+  assessmentId: string;
+  livePreviewRealityScore: number;
+  portfolioSubscores: LivePreviewRealitySubscores;
+  analyzers: LivePreviewAnalyzerResults;
+  stages: LivePreviewStage[];
+  evidence: LivePreviewEvidence[];
+  blockers: LivePreviewBlocker[];
+  previewRealityMatrix: PreviewRealityMatrixRow[];
+  evidenceFound: string[];
+  missingEvidence: string[];
+  previewBlockers: string[];
+  founderConclusion: string;
+  founderBottleneck: FounderRealityBottleneck;
+  livePreviewRealitySummary: string;
+  legacyAssessment: LivePreviewRealityAssessment;
+  assessedAt: number;
+  report: LivePreviewReport;
 }

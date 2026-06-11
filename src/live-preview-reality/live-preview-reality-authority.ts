@@ -445,3 +445,10 @@ export function buildLivePreviewRealityInputFromWorkspace(
 export function livePreviewStatusLabelFromReality(assessment: LivePreviewRealityAssessment): string {
   return assessment.displayLabel;
 }
+
+export {
+  assessLivePreviewRealityAuthority,
+  buildLivePreviewRealityReport,
+  resetLivePreviewRealityAuthorityCounterForTests,
+  writeLivePreviewRealityReportFile,
+} from './live-preview-reality-evidence-authority.js';
