@@ -2,6 +2,8 @@
  * Founder Testing Mode V4 — launch readiness reality and verdicts.
  */
 
+import type { ChatIntelligenceRealityAssessment } from '../chat-intelligence-reality/chat-intelligence-reality-types.js';
+import type { RepositoryTypecheckAssessment } from '../repository-typecheck-reality/repository-typecheck-reality-types.js';
 import type {
   FounderTestV4Verdict,
   LaunchReadinessReality,
@@ -16,6 +18,8 @@ export function computeLaunchReadinessReality(input: {
   ideaToAppScore: number;
   executionReadiness: number;
   promiseMatrix: PromiseRealityEntry[];
+  chatIntelligence?: Pick<ChatIntelligenceRealityAssessment, 'chatIntelligenceScore' | 'blocksLaunchReadiness'>;
+  repositoryTypecheck?: Pick<RepositoryTypecheckAssessment, 'blocksLaunchReadiness' | 'typecheckClean'>;
 }): LaunchReadinessReality {
   const supported = input.promiseMatrix.filter((p) => p.support === 'SUPPORTED').length;
   const partial = input.promiseMatrix.filter((p) => p.support === 'PARTIALLY_SUPPORTED').length;
@@ -28,7 +32,7 @@ export function computeLaunchReadinessReality(input: {
   const humanReadiness = input.v3.launchReadiness.humanSuccessRate;
   const executionReadiness = input.executionReadiness;
 
-  const launchReadinessRealityScore = clamp(
+  let launchReadinessRealityScore = clamp(
     technicalReadiness * 0.15 +
       productReadiness * 0.15 +
       humanReadiness * 0.15 +
@@ -36,6 +40,18 @@ export function computeLaunchReadinessReality(input: {
       promiseAlignment * 0.2 +
       input.ideaToAppScore * 0.1,
   );
+
+  if (input.chatIntelligence) {
+    launchReadinessRealityScore = clamp(
+      launchReadinessRealityScore * 0.85 + input.chatIntelligence.chatIntelligenceScore * 0.15,
+    );
+    if (input.chatIntelligence.blocksLaunchReadiness) {
+      launchReadinessRealityScore = Math.min(launchReadinessRealityScore, 54);
+    }
+    if (input.repositoryTypecheck?.blocksLaunchReadiness) {
+      launchReadinessRealityScore = Math.min(launchReadinessRealityScore, 52);
+    }
+  }
 
   return {
     technicalReadiness,
@@ -57,9 +73,13 @@ export function deriveV4Verdict(input: {
   gaps: RealityGap[];
   creationJourneyScore: number;
   ideaToAppScore: number;
+  chatIntelligence?: Pick<ChatIntelligenceRealityAssessment, 'blocksLaunchReadiness' | 'chatIntelligenceScore'>;
+  repositoryTypecheck?: Pick<RepositoryTypecheckAssessment, 'blocksLaunchReadiness' | 'readinessState'>;
 }): FounderTestV4Verdict {
   const executionGaps = input.gaps.filter((g) => g.gapType === 'EXECUTION_GAP').length;
   const lr = input.launch.launchReadinessRealityScore;
+  const chatBlocksLaunch = input.chatIntelligence?.blocksLaunchReadiness === true;
+  const typecheckBlocksLaunch = input.repositoryTypecheck?.blocksLaunchReadiness === true;
 
   if (input.creationJourneyScore < 35 || input.v3.verdict === 'NOT_READY_FOR_USERS') {
     return 'FOUNDATION_ONLY';
@@ -91,7 +111,11 @@ export function deriveV4Verdict(input: {
   }
 
   if (lr < 82 || (input.v3.v2.architectureLeakageSummary === 'CRITICAL' && !identityAligned)) {
-    return 'READY_FOR_PUBLIC_BETA';
+    return chatBlocksLaunch ? 'READY_FOR_INTERNAL_PRODUCT_USE' : 'READY_FOR_PUBLIC_BETA';
+  }
+
+  if (chatBlocksLaunch || typecheckBlocksLaunch || (input.chatIntelligence?.chatIntelligenceScore ?? 100) < 75) {
+    return 'READY_FOR_INTERNAL_PRODUCT_USE';
   }
 
   return 'READY_FOR_LAUNCH';

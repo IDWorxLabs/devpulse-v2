@@ -177,7 +177,7 @@ const FEATURE_TEMPLATES: FeatureTemplate[] = [
     name: 'Improve first-time value delivery and onboarding clarity',
     adjust: (base, input) => ({
       ...base,
-      userValue: clamp(base.userValue + input.firstTimeUserReality.actionPathPass ? 10 : 18),
+      userValue: clamp(base.userValue + (input.firstTimeUserReality.actionPathPass ? 10 : 18)),
       buildCost: clamp(base.buildCost - 8),
       adoptionImpact: clamp(base.adoptionImpact + 15),
       maintenanceCost: clamp(base.maintenanceCost - 5),
@@ -211,7 +211,7 @@ const FEATURE_TEMPLATES: FeatureTemplate[] = [
       founderValue: clamp(base.founderValue + 12),
       buildCost: clamp(base.buildCost + 12),
       maintenanceCost: clamp(base.maintenanceCost + 8),
-      adoptionImpact: clamp(base.adoptionImpact + input.launchDaySimulation.launchDayPass ? 8 : 14),
+      adoptionImpact: clamp(base.adoptionImpact + (input.launchDaySimulation.launchDayPass ? 8 : 14)),
     }),
     explanation: (s) =>
       `Launch-oriented polish: adoption impact ${s.adoptionImpact}/100, build cost ${s.buildCost}/100.`,

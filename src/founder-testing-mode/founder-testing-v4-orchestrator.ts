@@ -19,8 +19,6 @@ import {
   evaluateFounderSensemakingVisibility,
   evaluateFounderInteractionSimulationVisibility,
   evaluateFirstTimeUserRealityVisibility,
-  evaluateVerificationTrustEvidenceVisibility,
-  evaluateFounderFrictionHeatmapVisibility,
   evaluateProjectMemoryReality,
   evaluateVerificationReality,
   loadWorkspaceSnapshot,
@@ -102,6 +100,15 @@ import {
   evaluateDigitalFounderBoardVisibility,
 } from '../digital-founder-board/index.js';
 import { assessFounderSensemaking } from '../founder-sensemaking-engine/index.js';
+import {
+  assessChatIntelligenceReality,
+  evaluateChatIntelligenceVisibility,
+} from '../chat-intelligence-reality/index.js';
+import {
+  assessRepositoryTypecheckReality,
+  evaluateRepositoryTypecheckVisibility,
+  getLatestRepositoryTypecheckBaseline,
+} from '../repository-typecheck-reality/index.js';
 import { buildVerificationResultsFromV4Report } from '../verification-results-visibility/index.js';
 import { computeLaunchReadinessReality, deriveV4Verdict } from './founder-testing-v4-scorer.js';
 import type { FounderTestV4Report, RunFounderTestingModeV4Input } from './founder-testing-v4-types.js';
@@ -171,6 +178,17 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
       ? Math.round(ideaToAppResults.reduce((s, r) => s + r.ideaToAppScore, 0) / ideaToAppResults.length)
       : 0;
 
+  const chatIntelligenceReality = assessChatIntelligenceReality({
+    deadlineMs: Math.min(remaining(), 18000),
+  });
+  const chatIntelligenceRealityScore = evaluateChatIntelligenceVisibility(chatIntelligenceReality);
+
+  const repositoryTypecheckReality =
+    input.repositoryTypecheckReality ??
+    getLatestRepositoryTypecheckBaseline() ??
+    assessRepositoryTypecheckReality({ source: 'NOT_RUN' });
+  const repositoryTypecheckRealityScore = evaluateRepositoryTypecheckVisibility(repositoryTypecheckReality);
+
   const autonomousBuilderReality = evaluateAutonomousBuilderReality(workspace);
   const projectMemoryReality = evaluateProjectMemoryReality(workspace);
   const previewReality = evaluatePreviewReality(workspace, sources);
@@ -195,12 +213,37 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
     ideaToAppScore,
     executionReadiness: execReadiness,
     promiseMatrix,
+    chatIntelligence: chatIntelligenceReality,
+    repositoryTypecheck: repositoryTypecheckReality,
   });
 
   const founderOutcome = simulateFounderOutcome(ideaToAppResults, workspace, realityGaps);
   const customerOutcome = simulateCustomerOutcome(workspace);
 
-  const issues = [...v3.issues, ...gapsToIssues(realityGaps)];
+  const issues = [
+    ...v3.issues,
+    ...gapsToIssues(realityGaps),
+    ...chatIntelligenceReality.failedScenarios.map((s) => ({
+      severity: 'HIGH' as const,
+      screen: 'Chat Intelligence',
+      problem: `Chat scenario failed: "${s.prompt}"`,
+      userImpact: s.whyFailed.join('; ') || 'Chat response not useful or grounded',
+      likelyCause: s.failureCategories.join(', ') || 'CHAT_INTELLIGENCE_GAP',
+      recommendedFix: chatIntelligenceReality.requiredFixesBeforeLaunch[0] ?? 'Improve chat intelligence and operational self-awareness',
+      copyPasteFixPrompt: `Fix AiDevEngine chat intelligence for "${s.prompt}": ${s.whyFailed.join('; ')}`,
+    })),
+    ...(repositoryTypecheckReality.blocksLaunchReadiness
+      ? [{
+          severity: 'BLOCKER' as const,
+          screen: 'Repository Typecheck',
+          problem: `Repository typecheck ${repositoryTypecheckReality.readinessState}`,
+          userImpact: `${repositoryTypecheckReality.errorCount} compile error(s); launch readiness cannot be trusted`,
+          likelyCause: 'TYPECHECK_INTEGRITY_GAP',
+          recommendedFix: repositoryTypecheckReality.recommendations[0] ?? 'Fix repository TypeScript errors',
+          copyPasteFixPrompt: `Fix repository typecheck failures before launch: ${repositoryTypecheckReality.recommendations[0] ?? 'run npx tsc --noEmit'}`,
+        }]
+      : []),
+  ];
   const recommendedFixOrder = buildRecommendedFixOrder(issues);
   const copyPasteFixPrompts = issues
     .filter((i) => i.copyPasteFixPrompt)
@@ -216,6 +259,12 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
     workspace.livePreview.reality?.validationReady !== true ? 'Live preview not validation-ready' : null,
     v3.verdict === 'NOT_READY_FOR_USERS' ? 'V3 human readiness: NOT_READY_FOR_USERS' : null,
     launchReadinessReality.executionReadiness < 50 ? 'Execution readiness below 50' : null,
+    chatIntelligenceReality.blocksLaunchReadiness
+      ? `Chat intelligence blocks launch (${chatIntelligenceReality.chatLaunchVerdict}, score ${chatIntelligenceReality.chatIntelligenceScore}/100)`
+      : null,
+    repositoryTypecheckReality.blocksLaunchReadiness
+      ? `Repository typecheck blocks launch (${repositoryTypecheckReality.readinessState}, ${repositoryTypecheckReality.errorCount} error(s))`
+      : null,
   ].filter(Boolean) as string[];
 
   const verdict = deriveV4Verdict({
@@ -224,6 +273,8 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
     gaps: realityGaps,
     creationJourneyScore,
     ideaToAppScore,
+    chatIntelligence: chatIntelligenceReality,
+    repositoryTypecheck: repositoryTypecheckReality,
   });
 
   const reportCore = {
@@ -247,6 +298,10 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
     founderOutcome,
     customerOutcome,
     launchReadinessReality,
+    chatIntelligenceReality,
+    chatIntelligenceRealityScore,
+    repositoryTypecheckReality,
+    repositoryTypecheckRealityScore,
     topProductRisks,
     topLaunchRisks,
     verdict,

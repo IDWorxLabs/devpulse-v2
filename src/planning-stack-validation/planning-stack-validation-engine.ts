@@ -73,6 +73,12 @@ import {
   resetDevPulseV2ProjectVaultAuthorityForTests,
   getDevPulseV2ProjectVaultAuthority,
 } from '../project-vault/project-vault-authority.js';
+import {
+  resetClarifyingLiveGateMetricsForTests,
+} from '../clarifying-question-intelligence/clarifying-question-live-gate.js';
+import {
+  resetClarifyingLiveGateMemoryForTests,
+} from '../clarifying-question-intelligence/clarifying-question-live-gate-memory.js';
 import type {
   DuplicateDetectionStatus,
   HandoffValidation,
@@ -270,6 +276,8 @@ export function runPlanningStackValidation(
   resetDevPulseV2CodeGenerationPlannerAuthorityForTests();
   resetDevPulseV2RecoveryStrategyAuthorityForTests();
   resetDevPulseV2ProjectVaultAuthorityForTests();
+  resetClarifyingLiveGateMemoryForTests();
+  resetClarifyingLiveGateMetricsForTests();
 
   const vault = getDevPulseV2ProjectVaultAuthority();
   const project = vault.createProject('Expense Tracker Legacy', 'Existing ExpenseModule capability');
@@ -284,7 +292,7 @@ export function runPlanningStackValidation(
   const extractor = getDevPulseV2RequirementExtractorAuthority();
 
   const request = aidev.intakeBuildRequest(requestText);
-  const extraction = extractor.extractFromAiDevRequest(request);
+  const extraction = extractor.extractFromAiDevRequest(request, { projectId: project.projectId });
   const blueprint = buildArchitectureFromRequirements(extraction);
   const packages = generatePackagesFromBlueprint(blueprint);
   const implStrategy = generateStrategyFromPackages(packages);

@@ -26,6 +26,10 @@ import {
   getBuilderExecutionSessionCount,
   listControlledExecutionEvidence,
 } from '../controlled-builder-execution-engine/index.js';
+import {
+  getRealFileWorkspaceExecutionSessionCount,
+  listRealFileExecutionEvidence,
+} from '../real-file-workspace-execution/index.js';
 import type {
   AssessFounderWorkflowRealityInput,
   FounderWorkflowAnalyzerResults,
@@ -92,6 +96,8 @@ export function detectWorkflowModulePresenceEvidence(rootDir: string): WorkflowM
     hasLivePreviewReality: pathExists('src/live-preview-reality/index.ts'),
     hasVerificationReality: pathExists('src/verification-reality/index.ts'),
     hasControlledBuilderExecutionEngine: pathExists('src/controlled-builder-execution-engine/index.ts'),
+    hasMobileRuntimeExperienceReality: pathExists('src/mobile-runtime-experience-reality/index.ts'),
+    hasRealFileWorkspaceExecution: pathExists('src/real-file-workspace-execution/index.ts'),
   };
 }
 
@@ -490,6 +496,18 @@ export function collectFounderWorkflowEvidence(input: AssessFounderWorkflowReali
   }
   if (listControlledExecutionEvidence().some((e) => e.evidenceType === 'SESSION_COMPLETED')) {
     push('OBSERVED', 'Controlled execution evidence produced — session completed', 'controlled-builder-execution-engine');
+  }
+  if (m.hasMobileRuntimeExperienceReality) {
+    push('OBSERVED', 'Mobile Runtime Experience Reality authority present (Phase 24C.5)', 'mobile-runtime-experience-reality');
+  }
+  if (m.hasRealFileWorkspaceExecution) {
+    push('OBSERVED', 'Real file workspace execution present (Phase 24D)', 'real-file-workspace-execution');
+  }
+  if (getRealFileWorkspaceExecutionSessionCount() > 0) {
+    push('OBSERVED', 'Real file workspace execution session exists', 'real-file-workspace-execution');
+  }
+  if (listRealFileExecutionEvidence().some((e) => e.evidenceType === 'FILE_CREATED')) {
+    push('OBSERVED', 'Real isolated workspace file evidence produced', 'real-file-workspace-execution');
   }
   if (m.hasFounderRealityUi) {
     push('CLAIMED', 'Founder UI surface exists — panel presence is not proof', 'founder-reality-ui');

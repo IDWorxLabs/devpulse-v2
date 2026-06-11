@@ -2504,6 +2504,59 @@
         '</p>',
       ) +
       renderProductCard(
+        'Mobile Runtime Experience',
+        '<p class="hint">Mobile runtime capability truth — read-only. No emulator or device launch controls.</p>' +
+        '<p><strong>Device Frames:</strong> ' +
+        escapeHtml((data.mobileRuntimeExperience && data.mobileRuntimeExperience.deviceFrames) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Mobile Simulation:</strong> ' +
+        escapeHtml((data.mobileRuntimeExperience && data.mobileRuntimeExperience.mobileSimulation) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Android Runtime:</strong> ' +
+        escapeHtml((data.mobileRuntimeExperience && data.mobileRuntimeExperience.androidRuntime) || 'Loading…') +
+        '</p>' +
+        '<p><strong>iOS Runtime:</strong> ' +
+        escapeHtml((data.mobileRuntimeExperience && data.mobileRuntimeExperience.iosRuntime) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Expo Runtime:</strong> ' +
+        escapeHtml((data.mobileRuntimeExperience && data.mobileRuntimeExperience.expoRuntime) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Cloud Runtime:</strong> ' +
+        escapeHtml((data.mobileRuntimeExperience && data.mobileRuntimeExperience.cloudRuntime) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Overall Mobile Runtime Score:</strong> ' +
+        escapeHtml((data.mobileRuntimeExperience && data.mobileRuntimeExperience.overallScore) || 'Loading…') +
+        '</p>' +
+        '<p class="hint">' +
+        escapeHtml((data.mobileRuntimeExperience && data.mobileRuntimeExperience.founderConclusion) || '') +
+        '</p>',
+      ) +
+      renderProductCard(
+        'Real File Workspace Execution',
+        '<p class="hint">Real isolated workspace file execution — read-only. No execution controls on this dashboard.</p>' +
+        '<p><strong>Workspace Path Status:</strong> ' +
+        escapeHtml((data.realFileWorkspaceExecution && data.realFileWorkspaceExecution.workspacePathStatus) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Real File Sessions:</strong> ' +
+        escapeHtml((data.realFileWorkspaceExecution && data.realFileWorkspaceExecution.sessions && data.realFileWorkspaceExecution.sessions.label) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Operations Completed:</strong> ' +
+        escapeHtml((data.realFileWorkspaceExecution && data.realFileWorkspaceExecution.operations && data.realFileWorkspaceExecution.operations.label) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Operations Blocked:</strong> ' +
+        escapeHtml(String((data.realFileWorkspaceExecution && data.realFileWorkspaceExecution.operations && data.realFileWorkspaceExecution.operations.blocked) || 0)) +
+        '</p>' +
+        '<p><strong>Evidence Generated:</strong> ' +
+        escapeHtml((data.realFileWorkspaceExecution && data.realFileWorkspaceExecution.evidence && data.realFileWorkspaceExecution.evidence.label) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Production Protection Status:</strong> ' +
+        escapeHtml((data.realFileWorkspaceExecution && data.realFileWorkspaceExecution.productionProtectionStatus) || 'Loading…') +
+        '</p>' +
+        '<p class="hint">' +
+        escapeHtml((data.realFileWorkspaceExecution && data.realFileWorkspaceExecution.founderConclusion) || '') +
+        '</p>',
+      ) +
+      renderProductCard(
         'Evidence Summary',
         '<p><strong>Evidence Found</strong></p>' +
         renderExecutionProofList(data.evidenceFound, 'No evidence listed yet.') +
@@ -4089,6 +4142,645 @@
           html += '<li>' + escapeHtml(summary.launchBlockers[lb]) + '</li>';
         }
         html += '</ul></div>';
+      }
+      if (report.v4 && report.v4.chatIntelligenceReality) {
+        var chatIntel = report.v4.chatIntelligenceReality;
+        html +=
+          '<div class="founder-test-blockers"><h4>Chat Intelligence</h4>' +
+          '<p class="founder-test-score">Score: <strong>' +
+          String(chatIntel.chatIntelligenceScore) +
+          '/100</strong> · Verdict: <strong>' +
+          escapeHtml(chatIntel.chatLaunchVerdict) +
+          '</strong> · Blocks launch: <strong>' +
+          (chatIntel.blocksLaunchReadiness ? 'Yes' : 'No') +
+          '</strong></p>';
+        if (chatIntel.failedScenarios.length) {
+          html += '<ul>';
+          for (var cf = 0; cf < Math.min(chatIntel.failedScenarios.length, 4); cf += 1) {
+            var failedChat = chatIntel.failedScenarios[cf];
+            html +=
+              '<li><strong>' +
+              escapeHtml(failedChat.prompt) +
+              '</strong> — ' +
+              escapeHtml(failedChat.whyFailed[0] || 'Not grounded') +
+              '</li>';
+          }
+          html += '</ul>';
+        } else {
+          html += '<p class="hint">All bounded chat intelligence scenarios passed.</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.repositoryTypecheckReality) {
+        var typecheck = report.v4.repositoryTypecheckReality;
+        html +=
+          '<div class="founder-test-blockers"><h4>Repository Typecheck</h4>' +
+          '<p class="founder-test-score">State: <strong>' +
+          escapeHtml(typecheck.readinessState) +
+          '</strong> · Errors: <strong>' +
+          String(typecheck.errorCount) +
+          '</strong> · Blocks launch: <strong>' +
+          (typecheck.blocksLaunchReadiness ? 'Yes' : 'No') +
+          '</strong></p>';
+        if (typecheck.findings.length) {
+          html += '<ul>';
+          for (var tf = 0; tf < Math.min(typecheck.findings.length, 3); tf += 1) {
+            var typeFinding = typecheck.findings[tf];
+            html +=
+              '<li><strong>' +
+              escapeHtml(typeFinding.file) +
+              ':' +
+              String(typeFinding.line) +
+              '</strong> — ' +
+              escapeHtml(typeFinding.message) +
+              '</li>';
+          }
+          html += '</ul>';
+        } else if (typecheck.readinessState === 'TYPECHECK_NOT_RUN') {
+          html += '<p class="hint">Repository typecheck baseline not supplied — launch blocked until compile integrity is established.</p>';
+        } else {
+          html += '<p class="hint">Repository typecheck baseline is clean.</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.skepticalFounderSimulator) {
+        var skeptical = report.v4.skepticalFounderSimulator;
+        html +=
+          '<div class="founder-test-blockers"><h4>Skeptical Founder Simulator</h4>' +
+          '<p class="founder-test-score">Score: <strong>' +
+          String(skeptical.skepticalFounderScore) +
+          '/100</strong> · Launch risk: <strong>' +
+          String(skeptical.launchRiskScore) +
+          '/100</strong> · Objections: <strong>' +
+          String(skeptical.objectionCount) +
+          '</strong></p>';
+        if (skeptical.objections.length) {
+          html += '<ul>';
+          for (var so = 0; so < Math.min(skeptical.objections.length, 4); so += 1) {
+            html += '<li>' + escapeHtml(skeptical.objections[so]) + '</li>';
+          }
+          html += '</ul>';
+        }
+        if (skeptical.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(skeptical.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.promiseFulfillment) {
+        var promise = report.v4.promiseFulfillment;
+        html +=
+          '<div class="founder-test-blockers"><h4>Promise Fulfillment</h4>' +
+          '<p class="founder-test-score">Score: <strong>' +
+          String(promise.fulfillmentScore) +
+          '/100</strong> · Fulfilled: <strong>' +
+          String(promise.fulfilledCount) +
+          '</strong> · Partial: <strong>' +
+          String(promise.partiallyFulfilledCount) +
+          '</strong> · Unproven: <strong>' +
+          String(promise.unprovenCount) +
+          '</strong> · Contradicted: <strong>' +
+          String(promise.contradictedCount) +
+          '</strong></p>';
+        if (promise.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(promise.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.trustAuthority) {
+        var trust = report.v4.trustAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>Trust Authority</h4>' +
+          '<p class="founder-test-score">Trust score: <strong>' +
+          String(trust.trustScore) +
+          '/100</strong> · Risk score: <strong>' +
+          String(trust.trustRiskScore) +
+          '/100</strong> · Critical failures: <strong>' +
+          String(trust.criticalTrustFailures) +
+          '</strong></p>';
+        if (trust.trustRisks.length) {
+          html += '<ul>';
+          for (var tr = 0; tr < Math.min(trust.trustRisks.length, 4); tr += 1) {
+            html += '<li>' + escapeHtml(trust.trustRisks[tr]) + '</li>';
+          }
+          html += '</ul>';
+        }
+        if (trust.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(trust.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.selfAwarenessAuthority) {
+        var awareness = report.v4.selfAwarenessAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>Self-Awareness Authority</h4>' +
+          '<p class="founder-test-score">Self-awareness score: <strong>' +
+          String(awareness.selfAwarenessScore) +
+          '/100</strong> · Risk score: <strong>' +
+          String(awareness.selfAwarenessRiskScore) +
+          '/100</strong> · Critical failures: <strong>' +
+          String(awareness.criticalAwarenessFailures) +
+          '</strong></p>';
+        if (awareness.limitations.length) {
+          html += '<ul>';
+          for (var al = 0; al < Math.min(awareness.limitations.length, 4); al += 1) {
+            html += '<li>' + escapeHtml(awareness.limitations[al]) + '</li>';
+          }
+          html += '</ul>';
+        }
+        if (awareness.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(awareness.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.userSuccessAuthority) {
+        var userSuccess = report.v4.userSuccessAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>User Success Authority</h4>' +
+          '<p class="founder-test-score">User success score: <strong>' +
+          String(userSuccess.userSuccessScore) +
+          '/100</strong> · Outcome achievement: <strong>' +
+          String(userSuccess.outcomeAchievementScore) +
+          '/100</strong> · Critical failures: <strong>' +
+          String(userSuccess.criticalSuccessFailures) +
+          '</strong></p>';
+        if (userSuccess.blockers.length) {
+          html += '<ul>';
+          for (var ub = 0; ub < Math.min(userSuccess.blockers.length, 4); ub += 1) {
+            html += '<li>' + escapeHtml(userSuccess.blockers[ub]) + '</li>';
+          }
+          html += '</ul>';
+        }
+        if (userSuccess.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(userSuccess.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.gapDetectionAuthority) {
+        var gapDetection = report.v4.gapDetectionAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>Gap Detection Authority</h4>' +
+          '<p class="founder-test-score">Gap Detection Score: <strong>' +
+          String(gapDetection.gapDetectionScore) +
+          '/100</strong> · Critical Gaps: <strong>' +
+          String(gapDetection.criticalGapCount) +
+          '</strong> · High Gaps: <strong>' +
+          String(gapDetection.highGapCount) +
+          '</strong></p>' +
+          '<p class="hint">Launch Blocking Gaps: <strong>' +
+          (gapDetection.blocksLaunchReadiness ? 'Yes' : 'No') +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(gapDetection.readinessState) +
+          '</strong></p>';
+        var criticalGaps = gapDetection.detectedGaps.filter(function (gap) {
+          return gap.severity === 'CRITICAL' || gap.severity === 'HIGH';
+        });
+        if (criticalGaps.length) {
+          html += '<ul>';
+          for (var gg = 0; gg < Math.min(criticalGaps.length, 4); gg += 1) {
+            html +=
+              '<li>[' +
+              escapeHtml(criticalGaps[gg].severity) +
+              '] ' +
+              escapeHtml(criticalGaps[gg].title) +
+              ': ' +
+              escapeHtml(criticalGaps[gg].description) +
+              '</li>';
+          }
+          html += '</ul>';
+        }
+        if (gapDetection.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(gapDetection.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.selfEvolutionAuthority) {
+        var selfEvolution = report.v4.selfEvolutionAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>Self-Evolution Authority</h4>' +
+          '<p class="founder-test-score">Self-Evolution Score: <strong>' +
+          String(selfEvolution.selfEvolutionScore) +
+          '/100</strong> · Repeated Failures: <strong>' +
+          String(selfEvolution.repeatedFailureCount) +
+          '</strong></p>' +
+          '<p class="hint">Required Evolutions: <strong>' +
+          String(selfEvolution.evolutionRequiredCount) +
+          '</strong> · Blocked Evolutions: <strong>' +
+          String(selfEvolution.blockedEvolutionCount) +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(selfEvolution.readinessState) +
+          '</strong></p>';
+        if (selfEvolution.patterns.length) {
+          html += '<ul>';
+          for (var se = 0; se < Math.min(selfEvolution.patterns.length, 4); se += 1) {
+            html +=
+              '<li>[' +
+              escapeHtml(selfEvolution.patterns[se].status) +
+              '] ' +
+              escapeHtml(selfEvolution.patterns[se].failureSignal) +
+              '</li>';
+          }
+          html += '</ul>';
+        }
+        if (selfEvolution.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(selfEvolution.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.unknownDiscoveryAuthority) {
+        var unknownDiscovery = report.v4.unknownDiscoveryAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>Unknown Discovery Authority</h4>' +
+          '<p class="founder-test-score">Unknown Discovery Score: <strong>' +
+          String(unknownDiscovery.unknownDiscoveryScore) +
+          '/100</strong> · Findings: <strong>' +
+          String(unknownDiscovery.findingCount) +
+          '</strong></p>' +
+          '<p class="hint">Critical Findings: <strong>' +
+          String(unknownDiscovery.criticalFindingCount) +
+          '</strong> · High Findings: <strong>' +
+          String(unknownDiscovery.highFindingCount) +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(unknownDiscovery.readinessState) +
+          '</strong></p>';
+        if (unknownDiscovery.recommendedTests.length) {
+          html += '<p class="hint"><strong>Recommended New Tests:</strong> ' +
+            escapeHtml(unknownDiscovery.recommendedTests.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        if (unknownDiscovery.findings.length) {
+          html += '<ul>';
+          for (var ud = 0; ud < Math.min(unknownDiscovery.findings.length, 4); ud += 1) {
+            html +=
+              '<li>[' +
+              escapeHtml(unknownDiscovery.findings[ud].severity) +
+              '] ' +
+              escapeHtml(unknownDiscovery.findings[ud].title) +
+              '</li>';
+          }
+          html += '</ul>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.firstTimeUserRealityAuthority) {
+        var firstTimeUserAuthority = report.v4.firstTimeUserRealityAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>First-Time User Reality Authority</h4>' +
+          '<p class="founder-test-score">First-Time User Score: <strong>' +
+          String(firstTimeUserAuthority.firstTimeUserScore) +
+          '/100</strong> · Confusion Score: <strong>' +
+          String(firstTimeUserAuthority.confusionScore) +
+          '/100</strong></p>' +
+          '<p class="hint">Critical Confusion: <strong>' +
+          String(firstTimeUserAuthority.criticalConfusionCount) +
+          '</strong> · User Blockers: <strong>' +
+          String(firstTimeUserAuthority.blockerCount) +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(firstTimeUserAuthority.readinessState) +
+          '</strong></p>';
+        if (firstTimeUserAuthority.confusionPoints.length) {
+          html += '<ul>';
+          for (var ftuA = 0; ftuA < Math.min(firstTimeUserAuthority.confusionPoints.length, 4); ftuA += 1) {
+            html += '<li>' + escapeHtml(firstTimeUserAuthority.confusionPoints[ftuA]) + '</li>';
+          }
+          html += '</ul>';
+        }
+        if (firstTimeUserAuthority.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(firstTimeUserAuthority.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.customerValueAuthority) {
+        var customerValue = report.v4.customerValueAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>Customer Value Authority</h4>' +
+          '<p class="founder-test-score">Customer Value Score: <strong>' +
+          String(customerValue.customerValueScore) +
+          '/100</strong> · Retention Value Score: <strong>' +
+          String(customerValue.retentionValueScore) +
+          '/100</strong></p>' +
+          '<p class="hint">Value Risk Score: <strong>' +
+          String(customerValue.valueRiskScore) +
+          '/100</strong> · Critical Value Failures: <strong>' +
+          String(customerValue.criticalValueFailures) +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(customerValue.readinessState) +
+          '</strong></p>';
+        if (customerValue.valueRisks.length) {
+          html += '<p class="hint"><strong>Value Risks:</strong> ' +
+            escapeHtml(customerValue.valueRisks.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        if (customerValue.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(customerValue.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.competitiveRealityAuthority) {
+        var competitiveReality = report.v4.competitiveRealityAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>Competitive Reality Authority</h4>' +
+          '<p class="founder-test-score">Competitive Reality Score: <strong>' +
+          String(competitiveReality.competitiveRealityScore) +
+          '/100</strong> · Differentiation Score: <strong>' +
+          String(competitiveReality.differentiationScore) +
+          '/100</strong></p>' +
+          '<p class="hint">Competitive Risk Score: <strong>' +
+          String(competitiveReality.competitiveRiskScore) +
+          '/100</strong> · Unique Advantages: <strong>' +
+          String(competitiveReality.uniqueAdvantageCount) +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(competitiveReality.readinessState) +
+          '</strong></p>';
+        if (competitiveReality.competitiveRisks.length) {
+          html += '<p class="hint"><strong>Competitive Risks:</strong> ' +
+            escapeHtml(competitiveReality.competitiveRisks.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        if (competitiveReality.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(competitiveReality.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.realityProofAuthority) {
+        var realityProof = report.v4.realityProofAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>Reality-Proof Authority</h4>' +
+          '<p class="founder-test-score">Reality Proof Score: <strong>' +
+          String(realityProof.realityProofScore) +
+          '/100</strong> · Reality Risk Score: <strong>' +
+          String(realityProof.realityRiskScore) +
+          '/100</strong></p>' +
+          '<p class="hint">Proven Reality: <strong>' +
+          String(realityProof.provenRealityCount) +
+          '</strong> · Assumed Reality: <strong>' +
+          String(realityProof.assumedRealityCount) +
+          '</strong> · Unknown Reality: <strong>' +
+          String(realityProof.unknownRealityCount) +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(realityProof.readinessState) +
+          '</strong></p>';
+        if (realityProof.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(realityProof.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.realUserRealityAuthority) {
+        var realUserReality = report.v4.realUserRealityAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>Real User Reality Authority</h4>' +
+          '<p class="founder-test-score">Reality Score: <strong>' +
+          String(realUserReality.realUserRealityScore) +
+          '/100</strong> · User Evidence: <strong>' +
+          String(realUserReality.userEvidenceScore) +
+          '/100</strong></p>' +
+          '<p class="hint">User Success: <strong>' +
+          String(realUserReality.userSuccessScore) +
+          '/100</strong> · User Confusion: <strong>' +
+          String(realUserReality.userConfusionScore) +
+          '/100</strong> · User Retention: <strong>' +
+          String(realUserReality.userRetentionScore) +
+          '/100</strong></p>' +
+          '<p class="hint">Real User Evidence: <strong>' +
+          String(realUserReality.realUserEvidenceCount) +
+          '</strong> · Founder Evidence: <strong>' +
+          String(realUserReality.founderOnlyEvidenceCount) +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(realUserReality.readinessState) +
+          '</strong></p>';
+        if (realUserReality.noRealUserEvidence) {
+          html += '<p class="hint"><strong>NO_REAL_USER_EVIDENCE</strong></p>';
+        }
+        if (realUserReality.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(realUserReality.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.adoptionPredictionAuthority) {
+        var adoptionPrediction = report.v4.adoptionPredictionAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>Adoption Prediction Authority</h4>' +
+          '<p class="founder-test-score">Adoption Score: <strong>' +
+          String(adoptionPrediction.adoptionPredictionScore) +
+          '/100</strong> · Retention Prediction: <strong>' +
+          String(adoptionPrediction.retentionPredictionScore) +
+          '/100</strong></p>' +
+          '<p class="hint">Recommendation Prediction: <strong>' +
+          String(adoptionPrediction.recommendationPredictionScore) +
+          '/100</strong> · Abandonment Risk: <strong>' +
+          String(adoptionPrediction.abandonmentRiskScore) +
+          '/100</strong> · Growth Potential: <strong>' +
+          String(adoptionPrediction.growthPotentialScore) +
+          '/100</strong></p>' +
+          '<p class="hint">Evidence Confidence: <strong>' +
+          String(adoptionPrediction.evidenceConfidenceScore) +
+          '/100</strong> · Readiness: <strong>' +
+          escapeHtml(adoptionPrediction.readinessState) +
+          '</strong></p>';
+        if (adoptionPrediction.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(adoptionPrediction.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.launchReadinessAuthority) {
+        var launchReadiness = report.v4.launchReadinessAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>Launch Readiness Authority</h4>' +
+          '<p class="founder-test-score">Recommendation: <strong>' +
+          escapeHtml(launchReadiness.recommendation.replace(/_/g, ' ')) +
+          '</strong> · Confidence: <strong>' +
+          String(launchReadiness.launchConfidenceScore) +
+          '/100</strong></p>' +
+          '<p class="hint">Blocking Authorities: <strong>' +
+          String(launchReadiness.blockingAuthorityCount) +
+          '</strong> · Supporting Authorities: <strong>' +
+          String(launchReadiness.supportingAuthorityCount) +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(launchReadiness.readinessState) +
+          '</strong></p>';
+        if (launchReadiness.blockers.length) {
+          html += '<p class="hint"><strong>Blockers:</strong> ' +
+            escapeHtml(launchReadiness.blockers.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        if (launchReadiness.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(launchReadiness.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.uiReviewerAuthority) {
+        var uiReviewer = report.v4.uiReviewerAuthority;
+        html +=
+          '<div class="founder-test-blockers"><h4>UI Reviewer Authority</h4>' +
+          '<p class="founder-test-score">UI Review: <strong>' +
+          String(uiReviewer.uiReviewScore) +
+          '/100</strong> · Navigation: <strong>' +
+          String(uiReviewer.navigationScore) +
+          '/100</strong> · Discoverability: <strong>' +
+          String(uiReviewer.discoverabilityScore) +
+          '/100</strong></p>' +
+          '<p class="hint">Hierarchy: <strong>' +
+          String(uiReviewer.hierarchyScore) +
+          '/100</strong> · Critical UI failures: <strong>' +
+          String(uiReviewer.criticalUiFailures) +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(uiReviewer.readinessState) +
+          '</strong></p>';
+        if (uiReviewer.uiRisks.length) {
+          html += '<p class="hint"><strong>UI risks:</strong> ' +
+            escapeHtml(uiReviewer.uiRisks.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        if (uiReviewer.uiRecommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(uiReviewer.uiRecommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.clarifyingQuestionIntelligence) {
+        var clarifying = report.v4.clarifyingQuestionIntelligence;
+        html +=
+          '<div class="founder-test-blockers"><h4>Clarifying Question Intelligence</h4>' +
+          '<p class="founder-test-score">Requirement Completeness: <strong>' +
+          String(clarifying.requirementCompletenessScore) +
+          '/100</strong> · Confidence To Proceed: <strong>' +
+          String(clarifying.confidenceToProceed) +
+          '/100</strong></p>' +
+          '<p class="hint">Missing Requirements: <strong>' +
+          String(clarifying.missingRequirementCount) +
+          '</strong> · Critical Missing: <strong>' +
+          String(clarifying.criticalMissingRequirementCount) +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(clarifying.readinessState) +
+          '</strong></p>';
+        if (clarifying.recommendedQuestions.length) {
+          html += '<p class="hint"><strong>Recommended Questions:</strong> ' +
+            escapeHtml(
+              clarifying.recommendedQuestions
+                .slice(0, 3)
+                .map(function (item) { return item.question; })
+                .join(' · '),
+            ) +
+            '</p>';
+        }
+        if (clarifying.assumptionsPrevented.length) {
+          html += '<p class="hint"><strong>Assumptions Prevented:</strong> ' +
+            escapeHtml(clarifying.assumptionsPrevented.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.launchCouncil) {
+        var council = report.v4.launchCouncil;
+        html +=
+          '<div class="founder-test-blockers"><h4>Launch Council (Advisory)</h4>' +
+          '<p class="founder-test-score">Readiness: <strong>' +
+          escapeHtml(council.readinessState) +
+          '</strong> · Confidence: <strong>' +
+          String(council.confidenceScore) +
+          '/100</strong> · Blockers: <strong>' +
+          String(council.launchBlockerCount) +
+          '</strong></p>' +
+          '<p class="hint">' +
+          escapeHtml((report.v4.launchCouncilReport && report.v4.launchCouncilReport.summary) || 'Launch Council advisory summary unavailable.') +
+          '</p></div>';
+      }
+      if (report.v4 && report.v4.launchCouncilFinalization) {
+        var finalization = report.v4.launchCouncilFinalization;
+        html +=
+          '<div class="founder-test-blockers"><h4>Launch Council Finalization</h4>' +
+          '<p class="founder-test-score">Position: <strong>' +
+          escapeHtml(finalization.councilPosition) +
+          '</strong> · Score: <strong>' +
+          String(finalization.councilScore) +
+          '/100</strong> · Confidence: <strong>' +
+          String(finalization.councilConfidence) +
+          '/100</strong></p>' +
+          '<p class="hint">Agreement: <strong>' +
+          String(finalization.agreementScore) +
+          '/100</strong> · Blocking authorities: <strong>' +
+          String(finalization.blockingAuthorityCount) +
+          '</strong></p>';
+        if (finalization.highestRiskAuthorities.length) {
+          html += '<p class="hint"><strong>Highest risks:</strong> ' +
+            escapeHtml(finalization.highestRiskAuthorities.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        if (finalization.strongestAuthorities.length) {
+          html += '<p class="hint"><strong>Strongest areas:</strong> ' +
+            escapeHtml(finalization.strongestAuthorities.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        if (finalization.launchBlockers.length) {
+          html += '<p class="hint"><strong>Blockers:</strong> ' +
+            escapeHtml(finalization.launchBlockers.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        if (finalization.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(finalization.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (report.v4 && report.v4.launchVerdictGovernance) {
+        var governance = report.v4.launchVerdictGovernance;
+        html +=
+          '<div class="founder-test-blockers"><h4>Launch Verdict Governance</h4>' +
+          '<p class="founder-test-score">Final Verdict: <strong>' +
+          escapeHtml(governance.finalLaunchVerdict.replace(/_/g, ' ')) +
+          '</strong> · Confidence: <strong>' +
+          String(governance.governanceConfidence) +
+          '/100</strong></p>' +
+          '<p class="hint">Satisfied rules: <strong>' +
+          String(governance.satisfiedRuleCount) +
+          '</strong> · Failed rules: <strong>' +
+          String(governance.failedRuleCount) +
+          '</strong></p>';
+        if (governance.requiredEvidenceMissing.length) {
+          html += '<p class="hint"><strong>Missing evidence:</strong> ' +
+            escapeHtml(governance.requiredEvidenceMissing.slice(0, 2).join(' · ')) +
+            '</p>';
+        }
+        if (governance.blockingAuthorities.length) {
+          html += '<p class="hint"><strong>Blocking authorities:</strong> ' +
+            escapeHtml(governance.blockingAuthorities.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        if (governance.recommendations.length) {
+          html += '<p class="hint"><strong>Recommendations:</strong> ' +
+            escapeHtml(governance.recommendations.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
       }
       html += '<p class="hint">' + escapeHtml(summary.finalRecommendation) + '</p>';
       body.innerHTML = html;

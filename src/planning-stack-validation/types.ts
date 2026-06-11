@@ -77,7 +77,7 @@ export const VALIDATION_PASS_TOKEN = 'DEVPULSE_V2_PLANNING_STACK_REALITY_VALIDAT
 export const DUPLICATE_RISK_PREFIX = 'DUPLICATE_RISK';
 
 export const PLANNING_STACK_VALIDATION_REQUEST =
-  'Build an Android expense tracker app with offline support for students.';
+  'Build an Android expense tracker app with offline support for students. Single-user email/password login. No payments. Sync failures retry with user notification. Public MVP launch. Dark theme with green accents. Encrypted local storage. Success means students can track expenses reliably offline.';
 
 export const PLANNING_SYSTEMS = [
   'aidev_engine',

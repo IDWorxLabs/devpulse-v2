@@ -27,12 +27,14 @@ const issues = v4.issues.filter((i) =>
   needles.some((n) => `${i.problem} ${i.screen} ${i.copyPasteFixPrompt}`.includes(n)),
 );
 const confusion =
-  v4.confusionFindings?.filter((f) => needles.some((n) => f.topic.includes(n) || f.detail.includes(n))) ?? [];
+  v4.v3.confusionFindings?.filter((f: { topic: string; detail: string }) =>
+    needles.some((n) => f.topic.includes(n) || f.detail.includes(n)),
+  ) ?? [];
 
 console.log('TARGET_ISSUES', JSON.stringify(issues, null, 2));
 console.log('TARGET_CONFUSION', JSON.stringify(confusion, null, 2));
 console.log('TOTAL_ISSUES', v4.issues.length);
-console.log('TOTAL_CONFUSION', v4.confusionFindings?.length ?? 0);
+console.log('TOTAL_CONFUSION', v4.v3.confusionFindings?.length ?? 0);
 const v2 = runFounderTestingModeV2({ rootDir: ROOT, validatorScripts });
 const v3 = runFounderTestingModeV3({ rootDir: ROOT, validatorScripts });
 const publicDir = joinPath(ROOT, 'public', 'founder-reality');

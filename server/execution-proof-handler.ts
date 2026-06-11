@@ -20,6 +20,17 @@ import {
   runControlledBuilderExecution,
   type ControlledBuilderExecutionSummary,
 } from '../src/controlled-builder-execution-engine/index.js';
+import {
+  assessMobileRuntimeExperienceReality,
+  getMobileRuntimeExperienceDashboardSummary,
+  writeMobileRuntimeExperienceRealityReportFile,
+} from '../src/mobile-runtime-experience-reality/index.js';
+import {
+  assessRealFileWorkspaceExecution,
+  getRealFileWorkspaceExecutionSummary,
+  isRealFileWorkspaceExecutionActive,
+  runRealFileWorkspaceExecution,
+} from '../src/real-file-workspace-execution/index.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = join(__dirname, '..');
@@ -76,6 +87,8 @@ export interface ExecutionProofPayload {
   founderConclusion: string;
   executionFoundation: BuilderExecutionFoundationSummary;
   controlledBuilderExecution: ControlledBuilderExecutionSummary;
+  mobileRuntimeExperience: ReturnType<typeof getMobileRuntimeExperienceDashboardSummary>;
+  realFileWorkspaceExecution: ReturnType<typeof getRealFileWorkspaceExecutionSummary>;
   copyReportText: string;
 }
 
@@ -169,6 +182,29 @@ Workspace Isolation Status: ${payload.controlledBuilderExecution.isolation.label
 
 ${payload.controlledBuilderExecution.founderConclusion}
 
+## Mobile Runtime Experience (24C.5)
+
+Device Frames: ${payload.mobileRuntimeExperience.deviceFrames}
+Mobile Simulation: ${payload.mobileRuntimeExperience.mobileSimulation}
+Android Runtime: ${payload.mobileRuntimeExperience.androidRuntime}
+iOS Runtime: ${payload.mobileRuntimeExperience.iosRuntime}
+Expo Runtime: ${payload.mobileRuntimeExperience.expoRuntime}
+Cloud Runtime: ${payload.mobileRuntimeExperience.cloudRuntime}
+Overall Mobile Runtime Score: ${payload.mobileRuntimeExperience.overallScore}
+
+${payload.mobileRuntimeExperience.founderConclusion}
+
+## Real File Workspace Execution (24D)
+
+Workspace Path Status: ${payload.realFileWorkspaceExecution.workspacePathStatus}
+Real File Sessions: ${payload.realFileWorkspaceExecution.sessions.label}
+Operations Completed: ${payload.realFileWorkspaceExecution.operations.label}
+Operations Blocked: ${payload.realFileWorkspaceExecution.operations.blocked}
+Evidence Generated: ${payload.realFileWorkspaceExecution.evidence.label}
+Production Protection Status: ${payload.realFileWorkspaceExecution.productionProtectionStatus}
+
+${payload.realFileWorkspaceExecution.founderConclusion}
+
 ---
 Reality only — not a pass token or marketing score.`;
 }
@@ -201,14 +237,34 @@ function ensureControlledExecutionSeed(): void {
   });
 }
 
+function ensureRealFileWorkspaceExecutionSeed(rootDir: string): void {
+  if (isRealFileWorkspaceExecutionActive()) return;
+  const foundation = getBuilderExecutionFoundationSummary();
+  const workspaceId = foundation.workspace.latestId;
+  if (!workspaceId) return;
+  runRealFileWorkspaceExecution({
+    projectRootDir: rootDir,
+    workspaceId,
+    projectId: 'proj-foundation-demo',
+  });
+}
+
 export function buildExecutionProofPayload(rootDir = ROOT_DIR): ExecutionProofPayload {
   ensureExecutionFoundationSeed();
   ensureControlledExecutionSeed();
+  ensureRealFileWorkspaceExecutionSeed(rootDir);
   const assessment = assessFounderWorkflowReality(rootDir);
   const executionFoundation = getBuilderExecutionFoundationSummary();
   const controlledAssessment = assessControlledBuilderExecution();
   const controlledBuilderExecution = getControlledBuilderExecutionSummary(
     controlledAssessment.executionConnected,
+  );
+  const mobileAssessment = assessMobileRuntimeExperienceReality(rootDir);
+  writeMobileRuntimeExperienceRealityReportFile(rootDir, mobileAssessment);
+  const mobileRuntimeExperience = getMobileRuntimeExperienceDashboardSummary(mobileAssessment);
+  const realFileAssessment = assessRealFileWorkspaceExecution();
+  const realFileWorkspaceExecution = getRealFileWorkspaceExecutionSummary(
+    realFileAssessment.realFileExecutionActive,
   );
 
   const workflowTruthMap = assessment.analyzers.stages.map((s) => ({
@@ -235,10 +291,14 @@ export function buildExecutionProofPayload(rootDir = ROOT_DIR): ExecutionProofPa
 
   const foundationEvidence = executionFoundation.realityEvidenceLines.slice(0, 3);
   const controlledEvidence = controlledBuilderExecution.realityEvidenceLines.slice(0, 3);
+  const mobileEvidence = mobileRuntimeExperience.realityEvidenceLines.slice(0, 2);
+  const realFileEvidence = realFileWorkspaceExecution.realityEvidenceLines.slice(0, 2);
   const mergedEvidenceFound = [
-    ...assessment.evidenceFound.slice(0, 5),
+    ...assessment.evidenceFound.slice(0, 3),
     ...foundationEvidence,
     ...controlledEvidence,
+    ...mobileEvidence,
+    ...realFileEvidence,
   ].slice(0, 12);
 
   const base = {
@@ -262,6 +322,8 @@ export function buildExecutionProofPayload(rootDir = ROOT_DIR): ExecutionProofPa
     founderConclusion: assessment.founderConclusion,
     executionFoundation,
     controlledBuilderExecution,
+    mobileRuntimeExperience,
+    realFileWorkspaceExecution,
   };
 
   return {
@@ -276,7 +338,7 @@ export function sendExecutionProofJson(res: import('node:http').ServerResponse, 
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
     'X-DevPulse-Surface': 'execution-proof',
-    'X-DevPulse-Phase': '24C',
+    'X-DevPulse-Phase': '24D',
   });
   res.end(JSON.stringify(payload));
 }

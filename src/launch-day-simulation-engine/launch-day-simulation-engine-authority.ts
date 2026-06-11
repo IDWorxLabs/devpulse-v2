@@ -129,7 +129,7 @@ function computeSubscores(input: AssessLaunchDaySimulationInput): LaunchDaySubsc
     (trust.trustScore * 0.35) +
       (visual.launchAppearanceConfidence * 0.25) +
       (cj.subscores.trust * 0.25) +
-      (verification.readinessExplainedPass ? 15 : 5) -
+      (verification.readinessExplained ? 15 : 5) -
       (trust.blackBoxRisk ? 15 : 0),
   );
 
@@ -138,7 +138,7 @@ function computeSubscores(input: AssessLaunchDaySimulationInput): LaunchDaySubsc
       (action.recommendedNextStep ? 20 : 0) +
       (combined.includes('System Diagnostics') ? 15 : 5) +
       (combined.includes('operator-feed') || combined.includes('operatorFeed') ? 15 : 10) +
-      (verification.passCount > 0 ? 15 : 5) +
+      (verification.summary.passCount > 0 ? 15 : 5) +
       (action.stateLabel && !/unknown/i.test(action.stateLabel) ? 10 : 0),
   );
 

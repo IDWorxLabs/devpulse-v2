@@ -13,9 +13,9 @@ import { VAULT_OWNER_MODULE } from '../project-vault/types.js';
 import { POLICY_OWNER_MODULE } from '../validation-budget/types.js';
 import {
   attachRequirementsToRequest,
-  extractRequirementsForRequest,
   resetRequirementAiDevBridgeForTests,
 } from './requirement-aidev-bridge.js';
+import { extractRequirementsWithClarifyingGate } from '../clarifying-question-intelligence/clarifying-question-aidev-bridge.js';
 import {
   getLatestRequirementSummary,
   publishRequirementSummary,
@@ -137,8 +137,15 @@ export class DevPulseV2RequirementExtractorAuthority {
     return cloneExtraction(result);
   }
 
-  extractFromAiDevRequest(request: AiDevRequest): RequirementExtractionResult {
-    const result = extractRequirementsForRequest(request);
+  extractFromAiDevRequest(request: AiDevRequest, options?: { projectId?: string }): RequirementExtractionResult {
+    const gated = extractRequirementsWithClarifyingGate({ request, projectId: options?.projectId });
+    const result = gated.extraction ?? {
+      extractionId: `blocked-${request.requestId}`,
+      requestId: request.requestId,
+      requirements: [],
+      warnings: ['Requirement extraction blocked — clarifying questions required.'],
+      errors: ['CLARIFICATION_REQUIRED'],
+    };
     const attached = attachRequirementsToRequest(request, result);
     this.extractions.push(cloneExtraction(attached));
     return cloneExtraction(attached);

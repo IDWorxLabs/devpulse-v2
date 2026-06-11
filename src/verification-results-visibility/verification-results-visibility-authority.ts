@@ -3,8 +3,8 @@
  * Uses Live Preview Reality and Running Application Visibility as inputs.
  */
 
-import type { FounderTestV4Report } from '../founder-testing-mode/founder-testing-v4-types.js';
-import type { ProductWorkspaceSnapshot } from '../../server/product-workspace-snapshot.js';
+import type { FounderTestV4Report, FounderTestV4ReportCore } from '../founder-testing-mode/founder-testing-v4-types.js';
+import type { ProductWorkspaceSnapshot, ProductWorkspaceSnapshotWithoutSensemaking } from '../../server/product-workspace-snapshot.js';
 import type {
   FixPriority,
   VerificationBlockers,
@@ -63,7 +63,7 @@ function statusFromPass(passed: boolean, blocked = false): VerificationCheckStat
   return passed ? 'PASS' : 'FAIL';
 }
 
-function buildChecksFromV4Report(report: FounderTestV4Report): VerificationCheckResult[] {
+function buildChecksFromV4Report(report: FounderTestV4ReportCore): VerificationCheckResult[] {
   const pr = report.previewReality;
   const ra = report.runningAppVisibility;
   const pm = report.projectMemoryReality;
@@ -506,7 +506,7 @@ export function assessVerificationResultsVisibility(input: {
   };
 }
 
-export function buildVerificationResultsFromV4Report(report: FounderTestV4Report): VerificationResultsVisibilityAssessment {
+export function buildVerificationResultsFromV4Report(report: FounderTestV4ReportCore): VerificationResultsVisibilityAssessment {
   const checks = buildChecksFromV4Report(report);
   return assessVerificationResultsVisibility({
     founderTestRan: true,
@@ -519,7 +519,7 @@ export function buildVerificationResultsFromV4Report(report: FounderTestV4Report
 }
 
 export function buildVerificationResultsFromWorkspace(
-  workspace: ProductWorkspaceSnapshot,
+  workspace: ProductWorkspaceSnapshotWithoutSensemaking,
 ): VerificationResultsVisibilityAssessment {
   return assessVerificationResultsVisibility({
     founderTestRan: false,

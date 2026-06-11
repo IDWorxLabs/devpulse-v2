@@ -579,8 +579,7 @@ export function assessCompetitiveReality(input: AssessCompetitiveRealityInput): 
   const competitiveRealityPass =
     !majorCompetitiveRisks &&
     competitiveRealityScore >= 50 &&
-    strongestCompetitiveAdvantages.length > 0 &&
-    competitivePosition !== 'COMMODITY_RISK';
+    strongestCompetitiveAdvantages.length > 0;
 
   return {
     competitiveRealityScore,

@@ -6,6 +6,8 @@ import type { ProductWorkspaceSnapshot } from '../../server/product-workspace-sn
 import type { ChangeIntelligenceSnapshot } from './change-intelligence-visibility-types.js';
 import { getCachedVerificationResults } from '../verification-results-visibility/verification-results-cache.js';
 
+export type WorkspaceSnapshotForChangeCapture = Omit<ProductWorkspaceSnapshot, 'founderSensemaking'>;
+
 const MAX_SNAPSHOTS = 12;
 const history: ChangeIntelligenceSnapshot[] = [];
 
@@ -18,7 +20,7 @@ export function getChangeIntelligenceHistory(): readonly ChangeIntelligenceSnaps
 }
 
 export function captureChangeIntelligenceSnapshotFromWorkspace(
-  workspace: ProductWorkspaceSnapshot,
+  workspace: WorkspaceSnapshotForChangeCapture,
   label: string,
 ): ChangeIntelligenceSnapshot {
   const vr = workspace.verificationResults;
@@ -70,7 +72,10 @@ export function recordChangeIntelligenceSnapshot(snapshot: ChangeIntelligenceSna
   return true;
 }
 
-export function recordWorkspaceChangeSnapshot(workspace: ProductWorkspaceSnapshot, label: string): ChangeIntelligenceSnapshot {
+export function recordWorkspaceChangeSnapshot(
+  workspace: WorkspaceSnapshotForChangeCapture,
+  label: string,
+): ChangeIntelligenceSnapshot {
   const cached = getCachedVerificationResults();
   const snap = captureChangeIntelligenceSnapshotFromWorkspace(
     cached

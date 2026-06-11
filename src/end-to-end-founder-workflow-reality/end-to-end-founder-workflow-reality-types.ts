@@ -135,6 +135,8 @@ export interface WorkflowModulePresenceEvidence {
   hasLivePreviewReality: boolean;
   hasVerificationReality: boolean;
   hasControlledBuilderExecutionEngine: boolean;
+  hasMobileRuntimeExperienceReality: boolean;
+  hasRealFileWorkspaceExecution: boolean;
 }
 
 export interface FounderWorkflowReport {

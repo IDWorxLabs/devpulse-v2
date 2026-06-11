@@ -62,10 +62,10 @@ export const FOUNDER_TEST_V5_PHASES: FounderTestPhaseEvent[] = [
     detail: 'Synthesizing launch readiness, adoption prediction, product economics, product evolution roadmap, competitive reality, founder decision, digital founder board, and final recommendation.',
     status: 'Completed',
   },
-].slice(0, FOUNDER_TEST_V5_MAX_PHASES);
+];
 
 export function buildFounderTestV5PhaseFeed(completedPhase = FOUNDER_TEST_V5_MAX_PHASES): FounderTestPhaseEvent[] {
-  return FOUNDER_TEST_V5_PHASES.map((p, i) => ({
+  return FOUNDER_TEST_V5_PHASES.map((p, i): FounderTestPhaseEvent => ({
     ...p,
     status: i < completedPhase - 1 ? 'Completed' : i === completedPhase - 1 ? 'Completed' : 'Queued',
   }));

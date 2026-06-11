@@ -3,4 +3,5 @@ dist/
 build/
 coverage/
 .playwright/
+.generated-builder-workspaces/
 *.log

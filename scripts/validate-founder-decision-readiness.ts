@@ -293,8 +293,8 @@ function main(): void {
       promiseRealityScore: 28,
       unprovenClaims: stack.promiseRealityEngine.unprovenClaims.length
         ? stack.promiseRealityEngine.unprovenClaims
-        : [{ claim: 'Unproven workflow', severity: 'HIGH', evidence: 'none', category: 'WORKFLOW', status: 'UNPROVEN' }],
-      contradictedClaims: [{ claim: 'Contradicted claim', severity: 'HIGH', evidence: 'none', category: 'WORKFLOW', status: 'CONTRADICTED' }],
+        : [{ id: 'unproven-workflow', claim: 'Unproven workflow', severity: 'HIGH', evidence: 'none', category: 'WORKFLOW', status: 'UNPROVEN', confidence: 20 }],
+      contradictedClaims: [{ id: 'contradicted-workflow', claim: 'Contradicted claim', severity: 'HIGH', evidence: 'none', category: 'WORKFLOW', status: 'CONTRADICTED', confidence: 15 }],
     },
     visualQualityAuthority: { ...stack.visualQualityAuthority, visualQualityScore: 40 },
     launchDaySimulation: { ...stack.launchDaySimulation, majorLaunchRisks: true, launchDayScore: 35 },

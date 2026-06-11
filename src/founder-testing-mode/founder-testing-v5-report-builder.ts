@@ -48,6 +48,412 @@ ${s.highestImpactUpgrade ?? 'No single upgrade prioritized — review recommende
 
 ${listSection('Launch Blockers', s.launchBlockers)}
 
+## Chat Intelligence Reality
+
+Chat Intelligence Score: **${report.v4.chatIntelligenceReality.chatIntelligenceScore}/100**
+
+Chat Launch Verdict: **${report.v4.chatIntelligenceReality.chatLaunchVerdict}**
+
+Blocks launch readiness: **${report.v4.chatIntelligenceReality.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+Scenarios passed: ${report.v4.chatIntelligenceReality.scenariosPassed}/${report.v4.chatIntelligenceReality.scenariosRun}
+
+${report.v4.chatIntelligenceReality.founderProofNotes.map((n) => `- ${n}`).join('\n')}
+
+### Failed Chat Scenarios
+
+${report.v4.chatIntelligenceReality.failedScenarios.length ? report.v4.chatIntelligenceReality.failedScenarios.map((s) => `- **"${s.prompt}"** — ${s.whyFailed.join('; ') || 'Criteria not met'}`).join('\n') : 'None — all bounded scenarios passed.'}
+
+### Required Fixes Before Launch
+
+${report.v4.chatIntelligenceReality.requiredFixesBeforeLaunch.length ? report.v4.chatIntelligenceReality.requiredFixesBeforeLaunch.map((f) => `- ${f}`).join('\n') : 'None identified.'}
+
+## Repository Typecheck Reality
+
+Readiness state: **${report.v4.repositoryTypecheckReality.readinessState}**
+
+Typecheck clean: **${report.v4.repositoryTypecheckReality.typecheckClean ? 'Yes' : 'No'}**
+
+Blocks launch readiness: **${report.v4.repositoryTypecheckReality.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+Errors: ${report.v4.repositoryTypecheckReality.errorCount} | Warnings: ${report.v4.repositoryTypecheckReality.warningCount}
+
+${report.v4.repositoryTypecheckReality.founderProofNotes.map((n) => `- ${n}`).join('\n')}
+
+### Typecheck Findings
+
+${report.v4.repositoryTypecheckReality.findings.length ? report.v4.repositoryTypecheckReality.findings.map((f) => `- **${f.file}:${f.line}:${f.column}** [${f.code}] ${f.message}`).join('\n') : 'No compile findings recorded.'}
+
+## Skeptical Founder Simulator
+
+Score: **${report.v4.skepticalFounderSimulator.skepticalFounderScore}/100**
+
+Launch risk: **${report.v4.skepticalFounderSimulator.launchRiskScore}/100**
+
+Readiness state: **${report.v4.skepticalFounderSimulator.readinessState}**
+
+Blocks launch readiness: **${report.v4.skepticalFounderSimulator.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+Objections: ${report.v4.skepticalFounderSimulator.objectionCount}
+
+${report.v4.skepticalFounderSimulator.objections.slice(0, 5).map((objection) => `- ${objection}`).join('\n') || '- None recorded.'}
+
+Recommendations:
+
+${report.v4.skepticalFounderSimulator.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. Maintain visible proof for every launch claim.'}
+
+## Promise Fulfillment
+
+Score: **${report.v4.promiseFulfillment.fulfillmentScore}/100**
+
+Fulfilled: **${report.v4.promiseFulfillment.fulfilledCount}** | Partial: **${report.v4.promiseFulfillment.partiallyFulfilledCount}** | Unproven: **${report.v4.promiseFulfillment.unprovenCount}** | Contradicted: **${report.v4.promiseFulfillment.contradictedCount}**
+
+Readiness state: **${report.v4.promiseFulfillment.readinessState}**
+
+Blocks launch readiness: **${report.v4.promiseFulfillment.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+${report.v4.promiseFulfillment.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. If reality cannot prove the claim, treat the claim as not fulfilled.'}
+
+## Trust Authority
+
+Trust score: **${report.v4.trustAuthority.trustScore}/100**
+
+Risk score: **${report.v4.trustAuthority.trustRiskScore}/100**
+
+Critical failures: **${report.v4.trustAuthority.criticalTrustFailures}**
+
+Readiness state: **${report.v4.trustAuthority.readinessState}**
+
+Blocks launch readiness: **${report.v4.trustAuthority.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+${report.v4.trustAuthority.trustRisks.slice(0, 5).map((risk) => `- ${risk}`).join('\n') || '- None recorded.'}
+
+${report.v4.trustAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. If users cannot trust the evidence behind a claim, the claim should not be trusted.'}
+
+## Self-Awareness Authority
+
+Self-awareness score: **${report.v4.selfAwarenessAuthority.selfAwarenessScore}/100**
+
+Risk score: **${report.v4.selfAwarenessAuthority.selfAwarenessRiskScore}/100**
+
+Critical failures: **${report.v4.selfAwarenessAuthority.criticalAwarenessFailures}**
+
+Readiness state: **${report.v4.selfAwarenessAuthority.readinessState}**
+
+Blocks launch readiness: **${report.v4.selfAwarenessAuthority.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+${report.v4.selfAwarenessAuthority.limitations.slice(0, 5).map((limitation) => `- ${limitation}`).join('\n') || '- None recorded.'}
+
+${report.v4.selfAwarenessAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. A system cannot judge readiness accurately if it does not understand its own reality.'}
+
+## User Success Authority
+
+User success score: **${report.v4.userSuccessAuthority.userSuccessScore}/100**
+
+Outcome achievement score: **${report.v4.userSuccessAuthority.outcomeAchievementScore}/100**
+
+Critical failures: **${report.v4.userSuccessAuthority.criticalSuccessFailures}**
+
+Readiness state: **${report.v4.userSuccessAuthority.readinessState}**
+
+Blocks launch readiness: **${report.v4.userSuccessAuthority.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+${report.v4.userSuccessAuthority.blockers.slice(0, 5).map((blocker) => `- ${blocker}`).join('\n') || '- None recorded.'}
+
+${report.v4.userSuccessAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. The product succeeds only when users succeed.'}
+
+## Gap Detection Authority
+
+Gap Detection Score: **${report.v4.gapDetectionAuthority.gapDetectionScore}/100**
+
+Critical Gaps: **${report.v4.gapDetectionAuthority.criticalGapCount}**
+
+High Gaps: **${report.v4.gapDetectionAuthority.highGapCount}**
+
+Launch Blocking Gaps: **${report.v4.gapDetectionAuthority.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+Total gaps: **${report.v4.gapDetectionAuthority.totalGaps}**
+
+Readiness state: **${report.v4.gapDetectionAuthority.readinessState}**
+
+What capability is missing? What prevents success?
+
+${report.v4.gapDetectionAuthority.detectedGaps.filter((gap) => gap.severity === 'CRITICAL' || gap.severity === 'HIGH').slice(0, 5).map((gap) => `- [${gap.severity}] ${gap.title}: ${gap.description}`).join('\n') || '- None recorded.'}
+
+${report.v4.gapDetectionAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. A problem is not understood until the missing capability causing it is identified.'}
+
+## Self-Evolution Authority
+
+Self-Evolution Score: **${report.v4.selfEvolutionAuthority.selfEvolutionScore}/100**
+
+Repeated Failures: **${report.v4.selfEvolutionAuthority.repeatedFailureCount}**
+
+Required Evolutions: **${report.v4.selfEvolutionAuthority.evolutionRequiredCount}**
+
+Blocked Evolutions: **${report.v4.selfEvolutionAuthority.blockedEvolutionCount}**
+
+Readiness state: **${report.v4.selfEvolutionAuthority.readinessState}**
+
+Blocks launch readiness: **${report.v4.selfEvolutionAuthority.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+What keeps failing? What should evolve next?
+
+${report.v4.selfEvolutionAuthority.patterns.slice(0, 5).map((pattern) => `- [${pattern.status}] ${pattern.failureSignal} → ${pattern.recommendedEvolution}`).join('\n') || '- None recorded.'}
+
+${report.v4.selfEvolutionAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. If the same problem keeps appearing, identify what must evolve.'}
+
+## Unknown Discovery Authority
+
+Unknown Discovery Score: **${report.v4.unknownDiscoveryAuthority.unknownDiscoveryScore}/100**
+
+Findings: **${report.v4.unknownDiscoveryAuthority.findingCount}**
+
+Critical Findings: **${report.v4.unknownDiscoveryAuthority.criticalFindingCount}**
+
+High Findings: **${report.v4.unknownDiscoveryAuthority.highFindingCount}**
+
+Readiness state: **${report.v4.unknownDiscoveryAuthority.readinessState}**
+
+Blocks launch readiness: **${report.v4.unknownDiscoveryAuthority.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+What are we not testing? What blind spots remain?
+
+${report.v4.unknownDiscoveryAuthority.findings.filter((finding) => finding.severity === 'CRITICAL' || finding.severity === 'HIGH').slice(0, 5).map((finding) => `- [${finding.severity}] ${finding.title}: ${finding.description}`).join('\n') || '- None recorded.'}
+
+Recommended New Tests:
+
+${report.v4.unknownDiscoveryAuthority.recommendedTests.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. Expand bounded discovery tests for adjacent blind spots.'}
+
+${report.v4.unknownDiscoveryAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. The system must look for what its current tests may be missing.'}
+
+## First-Time User Reality Authority
+
+First-Time User Score: **${report.v4.firstTimeUserRealityAuthority.firstTimeUserScore}/100**
+
+Confusion Score: **${report.v4.firstTimeUserRealityAuthority.confusionScore}/100**
+
+Critical Confusion: **${report.v4.firstTimeUserRealityAuthority.criticalConfusionCount}**
+
+User Blockers: **${report.v4.firstTimeUserRealityAuthority.blockerCount}**
+
+Readiness state: **${report.v4.firstTimeUserRealityAuthority.readinessState}**
+
+Blocks launch readiness: **${report.v4.firstTimeUserRealityAuthority.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+What would a new user misunderstand? What would stop onboarding?
+
+${report.v4.firstTimeUserRealityAuthority.confusionPoints.slice(0, 5).map((point) => `- ${point}`).join('\n') || '- None recorded.'}
+
+${report.v4.firstTimeUserRealityAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. If a first-time user cannot understand the product, the product is not ready for widespread adoption.'}
+
+## Customer Value Authority
+
+Customer Value Score: **${report.v4.customerValueAuthority.customerValueScore}/100**
+
+Retention Value Score: **${report.v4.customerValueAuthority.retentionValueScore}/100**
+
+Value Risk Score: **${report.v4.customerValueAuthority.valueRiskScore}/100**
+
+Critical Value Failures: **${report.v4.customerValueAuthority.criticalValueFailures}**
+
+Readiness state: **${report.v4.customerValueAuthority.readinessState}**
+
+Blocks launch readiness: **${report.v4.customerValueAuthority.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+Would users come back? Does this create meaningful value?
+
+Value Risks:
+
+${report.v4.customerValueAuthority.valueRisks.slice(0, 5).map((risk) => `- ${risk}`).join('\n') || '- None recorded.'}
+
+${report.v4.customerValueAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. A product only succeeds long-term if it creates meaningful value that users want to return for.'}
+
+## Competitive Reality Authority
+
+Competitive Reality Score: **${report.v4.competitiveRealityAuthority.competitiveRealityScore}/100**
+
+Differentiation Score: **${report.v4.competitiveRealityAuthority.differentiationScore}/100**
+
+Competitive Risk Score: **${report.v4.competitiveRealityAuthority.competitiveRiskScore}/100**
+
+Unique Advantages: **${report.v4.competitiveRealityAuthority.uniqueAdvantageCount}**
+
+Readiness state: **${report.v4.competitiveRealityAuthority.readinessState}**
+
+Blocks launch readiness: **${report.v4.competitiveRealityAuthority.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+Why would users choose us? What advantages are proven?
+
+Competitive Risks:
+
+${report.v4.competitiveRealityAuthority.competitiveRisks.slice(0, 5).map((risk) => `- ${risk}`).join('\n') || '- None recorded.'}
+
+${report.v4.competitiveRealityAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. If the product cannot prove why users should choose it, differentiation is only an assumption.'}
+
+## Reality-Proof Authority
+
+Reality Proof Score: **${report.v4.realityProofAuthority.realityProofScore}/100**
+
+Reality Risk Score: **${report.v4.realityProofAuthority.realityRiskScore}/100**
+
+Proven Reality: **${report.v4.realityProofAuthority.provenRealityCount}**
+
+Assumed Reality: **${report.v4.realityProofAuthority.assumedRealityCount}**
+
+Unknown Reality: **${report.v4.realityProofAuthority.unknownRealityCount}**
+
+Readiness State: **${report.v4.realityProofAuthority.readinessState}**
+
+Blocks launch readiness: **${report.v4.realityProofAuthority.blocksLaunchReadiness ? 'Yes' : 'No'}**
+
+What is actually proven? What remains unknown?
+
+${report.v4.realityProofAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. If reality did not prove it, the system must not claim it is proven.'}
+
+## Real User Reality Authority
+
+Reality Score: **${report.v4.realUserRealityAuthority.realUserRealityScore}/100**
+
+User Evidence: **${report.v4.realUserRealityAuthority.userEvidenceScore}/100**
+
+User Success: **${report.v4.realUserRealityAuthority.userSuccessScore}/100**
+
+User Confusion: **${report.v4.realUserRealityAuthority.userConfusionScore}/100**
+
+User Retention: **${report.v4.realUserRealityAuthority.userRetentionScore}/100**
+
+Real User Evidence Count: **${report.v4.realUserRealityAuthority.realUserEvidenceCount}**
+
+Founder Evidence Count: **${report.v4.realUserRealityAuthority.founderOnlyEvidenceCount}**
+
+Readiness State: **${report.v4.realUserRealityAuthority.readinessState}**
+
+Have real users proven this?
+
+${report.v4.realUserRealityAuthority.noRealUserEvidence ? '**NO_REAL_USER_EVIDENCE**' : 'Real-user evidence is present.'}
+
+${report.v4.realUserRealityAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. If real users have not proven success, the system must not claim that real users have proven success.'}
+
+## Adoption Prediction Authority
+
+Adoption Score: **${report.v4.adoptionPredictionAuthority.adoptionPredictionScore}/100**
+
+Retention Prediction: **${report.v4.adoptionPredictionAuthority.retentionPredictionScore}/100**
+
+Recommendation Prediction: **${report.v4.adoptionPredictionAuthority.recommendationPredictionScore}/100**
+
+Abandonment Risk: **${report.v4.adoptionPredictionAuthority.abandonmentRiskScore}/100**
+
+Growth Potential: **${report.v4.adoptionPredictionAuthority.growthPotentialScore}/100**
+
+Evidence Confidence: **${report.v4.adoptionPredictionAuthority.evidenceConfidenceScore}/100**
+
+Readiness State: **${report.v4.adoptionPredictionAuthority.readinessState}**
+
+Will users return? What predicts abandonment?
+
+${report.v4.adoptionPredictionAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. Launch readiness is not only about whether users succeed today, but whether they are likely to keep succeeding tomorrow.'}
+
+## Launch Readiness Authority
+
+Recommendation: **${report.v4.launchReadinessAuthority.recommendation.replaceAll('_', ' ')}**
+
+Confidence: **${report.v4.launchReadinessAuthority.launchConfidenceScore}/100**
+
+Blocking Authorities: **${report.v4.launchReadinessAuthority.blockingAuthorityCount}**
+
+Supporting Authorities: **${report.v4.launchReadinessAuthority.supportingAuthorityCount}**
+
+Readiness State: **${report.v4.launchReadinessAuthority.readinessState}**
+
+Should this launch? What supports launch?
+
+Blockers:
+
+${report.v4.launchReadinessAuthority.blockers.slice(0, 5).map((blocker) => `- ${blocker}`).join('\n') || '- None recorded.'}
+
+${report.v4.launchReadinessAuthority.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. A launch decision should be the result of evidence, not hope.'}
+
+## UI Reviewer Authority
+
+UI Review Score: **${report.v4.uiReviewerAuthority.uiReviewScore}/100**
+
+Navigation Score: **${report.v4.uiReviewerAuthority.navigationScore}/100**
+
+Discoverability Score: **${report.v4.uiReviewerAuthority.discoverabilityScore}/100**
+
+Hierarchy Score: **${report.v4.uiReviewerAuthority.hierarchyScore}/100**
+
+Critical UI Failures: **${report.v4.uiReviewerAuthority.criticalUiFailures}**
+
+Readiness State: **${report.v4.uiReviewerAuthority.readinessState}**
+
+${report.v4.uiReviewerAuthority.uiRecommendations.slice(0, 3).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. A feature users cannot find is functionally equivalent to a feature that does not exist.'}
+
+## Clarifying Question Intelligence
+
+Requirement Completeness: **${report.v4.clarifyingQuestionIntelligence.requirementCompletenessScore}/100**
+
+Confidence To Proceed: **${report.v4.clarifyingQuestionIntelligence.confidenceToProceed}/100**
+
+Missing Requirements: **${report.v4.clarifyingQuestionIntelligence.missingRequirementCount}**
+
+Critical Missing Requirements: **${report.v4.clarifyingQuestionIntelligence.criticalMissingRequirementCount}**
+
+Readiness State: **${report.v4.clarifyingQuestionIntelligence.readinessState}**
+
+Recommended Questions:
+
+${report.v4.clarifyingQuestionIntelligence.recommendedQuestions.slice(0, 4).map((item, index) => `${index + 1}. ${item.question}`).join('\n') || '1. What problem should this product solve?'}
+
+Assumptions Prevented:
+
+${report.v4.clarifyingQuestionIntelligence.assumptionsPrevented.slice(0, 4).map((item) => `- ${item}`).join('\n') || '- None recorded.'}
+
+## Launch Council (Advisory)
+
+Readiness state: **${report.v4.launchCouncil.readinessState}**
+
+Confidence score: **${report.v4.launchCouncil.confidenceScore}/100**
+
+Overall council score: **${report.v4.launchCouncil.overallScore}/100**
+
+Launch blockers: ${report.v4.launchCouncil.launchBlockerCount}
+
+${report.v4.launchCouncilReport.summary}
+
+## Launch Council Finalization
+
+Council Position: **${report.v4.launchCouncilFinalization.councilPosition}**
+
+Council Score: **${report.v4.launchCouncilFinalization.councilScore}/100**
+
+Council Confidence: **${report.v4.launchCouncilFinalization.councilConfidence}/100**
+
+Authority Agreement: **${report.v4.launchCouncilFinalization.agreementScore}/100**
+
+Blocking Authorities: **${report.v4.launchCouncilFinalization.blockingAuthorityCount}**
+
+Highest Risks: ${report.v4.launchCouncilFinalization.highestRiskAuthorities.slice(0, 3).join(', ') || 'None recorded.'}
+
+Strongest Areas: ${report.v4.launchCouncilFinalization.strongestAuthorities.slice(0, 3).join(', ') || 'None recorded.'}
+
+${report.v4.launchCouncilFinalization.recommendations.slice(0, 3).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. Authorities provide evidence. Launch Council provides understanding.'}
+
+## Launch Verdict Governance
+
+Final Verdict: **${report.v4.launchVerdictGovernance.finalLaunchVerdict.replaceAll('_', ' ')}**
+
+Governance Confidence: **${report.v4.launchVerdictGovernance.governanceConfidence}/100**
+
+Satisfied Rules: **${report.v4.launchVerdictGovernance.satisfiedRuleCount}**
+
+Failed Rules: **${report.v4.launchVerdictGovernance.failedRuleCount}**
+
+Missing Evidence: ${report.v4.launchVerdictGovernance.requiredEvidenceMissing.length > 0 ? report.v4.launchVerdictGovernance.requiredEvidenceMissing.slice(0, 2).join('; ') : 'None recorded.'}
+
+Blocking Authorities: ${report.v4.launchVerdictGovernance.blockingAuthorities.length > 0 ? report.v4.launchVerdictGovernance.blockingAuthorities.join(', ') : 'None'}
+
 ## First-Time User Reality
 
 Score: **${report.firstTimeUserReality.firstTimeUserScore}/100**

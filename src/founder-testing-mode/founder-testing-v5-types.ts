@@ -11,6 +11,8 @@ import type { FounderTestPhaseEvent } from './founder-testing-v5-phases.js';
 
 export type FounderLaunchRecommendation =
   | 'NOT_READY'
+  | 'NOT_READY_FOR_CHAT_INTELLIGENCE'
+  | 'NOT_READY_FOR_REPOSITORY_TYPECHECK'
   | 'NOT_READY_FOR_CUSTOMERS'
   | 'NOT_READY_FOR_PROMISE_REALITY'
   | 'NOT_READY_FOR_VISUAL_QUALITY'
@@ -73,4 +75,5 @@ export interface RunFounderTestingModeV5Input {
   validatorScripts?: string[];
   liveResults?: import('./founder-testing-types.js').LiveScreenResultInput[];
   liveSection?: string;
+  repositoryTypecheckReality?: import('../repository-typecheck-reality/repository-typecheck-reality-types.js').RepositoryTypecheckAssessment;
 }

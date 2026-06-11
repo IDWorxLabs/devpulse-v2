@@ -264,7 +264,7 @@ function main(): void {
       promiseRealityScore: 28,
       unprovenClaims: stack.promiseRealityEngine.unprovenClaims.length
         ? stack.promiseRealityEngine.unprovenClaims
-        : [{ claim: 'Unproven workflow', severity: 'HIGH', evidence: 'none', category: 'WORKFLOW', status: 'UNPROVEN' }],
+        : [{ id: 'unproven-workflow', claim: 'Unproven workflow', severity: 'HIGH', evidence: 'none', category: 'WORKFLOW', status: 'UNPROVEN', confidence: 20 }],
     },
     visualQualityAuthority: { ...stack.visualQualityAuthority, visualQualityScore: 40 },
     launchDaySimulation: { ...stack.launchDaySimulation, majorLaunchRisks: true, launchDayScore: 35 },

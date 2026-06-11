@@ -7,6 +7,8 @@ import type { PromiseRealityEngineAssessment } from '../promise-reality-engine/p
 import type { VisualQualityAuthorityAssessment } from '../visual-quality-authority/visual-quality-authority-types.js';
 import type { LaunchDaySimulationAssessment } from '../launch-day-simulation-engine/launch-day-simulation-engine-types.js';
 import type { AdoptionPredictionAssessment } from '../adoption-prediction-engine/adoption-prediction-engine-types.js';
+import type { ChatIntelligenceRealityAssessment } from '../chat-intelligence-reality/chat-intelligence-reality-types.js';
+import type { RepositoryTypecheckAssessment } from '../repository-typecheck-reality/repository-typecheck-reality-types.js';
 import type { FounderTestV4Verdict } from './founder-testing-v4-types.js';
 import type { FounderLaunchRecommendation } from './founder-testing-v5-types.js';
 
@@ -33,7 +35,23 @@ export function deriveLaunchRecommendation(
     AdoptionPredictionAssessment,
     'majorAdoptionRisks' | 'adoptionPredictionPass' | 'adoptionConfidence' | 'adoptionBlockers'
   >,
+  chatIntelligence?: Pick<
+    ChatIntelligenceRealityAssessment,
+    'blocksLaunchReadiness' | 'chatIntelligenceScore' | 'chatLaunchVerdict'
+  >,
+  repositoryTypecheck?: Pick<
+    RepositoryTypecheckAssessment,
+    'blocksLaunchReadiness' | 'typecheckClean' | 'readinessState' | 'errorCount'
+  >,
 ): FounderLaunchRecommendation {
+  if (repositoryTypecheck?.blocksLaunchReadiness) {
+    return 'NOT_READY_FOR_REPOSITORY_TYPECHECK';
+  }
+
+  if (chatIntelligence?.blocksLaunchReadiness) {
+    return 'NOT_READY_FOR_CHAT_INTELLIGENCE';
+  }
+
   if (launchDay?.majorLaunchRisks) {
     return 'NOT_READY_FOR_LAUNCH_DAY';
   }
@@ -116,6 +134,10 @@ export function buildFinalRecommendation(
       return `Not ready for launch — launch day simulation detected major operational risks before real users arrive.${blockerNote}`;
     case 'NOT_READY_FOR_ADOPTION':
       return `Not ready for launch — adoption prediction detected major barriers to value, retention, or recommendation.${blockerNote}`;
+    case 'NOT_READY_FOR_CHAT_INTELLIGENCE':
+      return `Not ready for launch — chat intelligence failed bounded reality checks. "Chat exists" is not proof; only useful, grounded, purpose-aware answers count.${blockerNote}`;
+    case 'NOT_READY_FOR_REPOSITORY_TYPECHECK':
+      return `Not ready for launch — repository typecheck is not clean. Feature behavior and validator pass are not proof of compile readiness.${blockerNote}`;
     default:
       return `Not ready for external users — strengthen foundation, verification evidence, and founder comprehension.${blockerNote}`;
   }

@@ -194,7 +194,19 @@ function main(): void {
       ...founderInteractionSimulation,
       recoveryIssues: founderInteractionSimulation.recoveryIssues.length
         ? founderInteractionSimulation.recoveryIssues
-        : [{ id: 'r1', type: 'INTERACTION_FAILURE', severity: 'HIGH', whatFailed: 'Recovery path weak', recommendedFix: 'Fix recovery', regressionScenario: 'recovery' }],
+        : [{
+          id: 'recovery-r1',
+          type: 'INTERACTION_FAILURE',
+          category: 'RECOVERY',
+          severity: 'HIGH',
+          whatFailed: 'Recovery path weak',
+          founderActionAttempted: 'Close modal and continue',
+          expectedBehavior: 'Workflow continues without blocking',
+          observedBehavior: 'Recovery path weak',
+          whyItMatters: 'Founders cannot recover from interaction failures',
+          recommendedFix: 'Fix recovery',
+          regressionScenario: 'recovery',
+        }],
     },
     founderActionCenter: { ...actionBase, recommendedNextStep: null, topActions: [] },
     verificationResults: snapshot.verificationResults,

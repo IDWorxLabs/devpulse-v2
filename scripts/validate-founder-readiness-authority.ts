@@ -274,6 +274,37 @@ function runIntegration(): void {
   harness.endGroup('F-INTEGRATION', g);
 }
 
+function runChatIntelligenceIntegration(): void {
+  const g = harness.beginGroup('F2-CHAT-INTELLIGENCE');
+  const orch = readFileSync(join(ROOT, 'src/founder-testing-mode/founder-testing-v4-orchestrator.ts'), 'utf8');
+  const v5Scorer = readFileSync(join(ROOT, 'src/founder-testing-mode/founder-testing-v5-scorer.ts'), 'utf8');
+  const chatAuthority = readFileSync(join(ROOT, 'src/chat-intelligence-reality/chat-intelligence-reality-authority.ts'), 'utf8');
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { scripts?: Record<string, string> };
+  assert('F2-CHAT-INTELLIGENCE', 'module exists', existsSync(join(ROOT, 'src/chat-intelligence-reality/index.ts')), 'module');
+  assert('F2-CHAT-INTELLIGENCE', 'founder testing wired', orch.includes('assessChatIntelligenceReality'), 'orchestrator');
+  assert('F2-CHAT-INTELLIGENCE', 'launch block recommendation', v5Scorer.includes('NOT_READY_FOR_CHAT_INTELLIGENCE'), 'scorer');
+  assert('F2-CHAT-INTELLIGENCE', 'read only authority', chatAuthority.includes('readOnly: true'), 'read only');
+  assert('F2-CHAT-INTELLIGENCE', 'leaf validator script', Boolean(pkg.scripts?.['validate:chat-intelligence-reality']), 'chat validator');
+  assert('F2-CHAT-INTELLIGENCE', 'chat readiness script', Boolean(pkg.scripts?.['validate:founder-testing-chat-readiness']), 'readiness validator');
+  assert('F2-CHAT-INTELLIGENCE', 'no nested npm validate', !chatAuthority.includes('npm run validate'), 'no cascade');
+  harness.endGroup('F2-CHAT-INTELLIGENCE', g);
+}
+
+function runRepositoryTypecheckIntegration(): void {
+  const g = harness.beginGroup('F3-REPOSITORY-TYPECHECK');
+  const orch = readFileSync(join(ROOT, 'src/founder-testing-mode/founder-testing-v4-orchestrator.ts'), 'utf8');
+  const v5Scorer = readFileSync(join(ROOT, 'src/founder-testing-mode/founder-testing-v5-scorer.ts'), 'utf8');
+  const repoAuthority = readFileSync(join(ROOT, 'src/repository-typecheck-reality/repository-typecheck-reality-authority.ts'), 'utf8');
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { scripts?: Record<string, string> };
+  assert('F3-REPOSITORY-TYPECHECK', 'module exists', existsSync(join(ROOT, 'src/repository-typecheck-reality/index.ts')), 'module');
+  assert('F3-REPOSITORY-TYPECHECK', 'founder testing wired', orch.includes('assessRepositoryTypecheckReality'), 'orchestrator');
+  assert('F3-REPOSITORY-TYPECHECK', 'launch block recommendation', v5Scorer.includes('NOT_READY_FOR_REPOSITORY_TYPECHECK'), 'scorer');
+  assert('F3-REPOSITORY-TYPECHECK', 'read only authority', repoAuthority.includes('readOnly: true'), 'read only');
+  assert('F3-REPOSITORY-TYPECHECK', 'leaf validator script', Boolean(pkg.scripts?.['validate:repository-typecheck-reality']), 'validator');
+  assert('F3-REPOSITORY-TYPECHECK', 'no nested npm validate', !repoAuthority.includes('npm run validate'), 'no cascade');
+  harness.endGroup('F3-REPOSITORY-TYPECHECK', g);
+}
+
 function runReadOnly(): void {
   const g = harness.beginGroup('G-READONLY');
   const src = readFileSync(join(MODULE_DIR, 'founder-readiness-authority.ts'), 'utf8');
@@ -349,6 +380,8 @@ async function main(): Promise<void> {
   runAnalyzers();
   runAuthorityRoadmap();
   runIntegration();
+  runChatIntelligenceIntegration();
+  runRepositoryTypecheckIntegration();
   runReadOnly();
   runFailScenario();
   runPassTokens();

@@ -72,7 +72,7 @@ function buildSensemakingCacheKey(input: {
     `projects:${vault.projectCount}`,
     `history:${input.changeIntelligence.historyCount}`,
     `actions:${input.founderActionCenter.topActions.length}`,
-    `verify:${input.verificationResults.passCount}:${input.verificationResults.failCount}`,
+    `verify:${input.verificationResults.summary.passCount}:${input.verificationResults.summary.failCount}`,
   ].join('|');
 }
 
@@ -176,6 +176,8 @@ export interface ProductWorkspaceSnapshot {
   };
   portfolioInsights: PortfolioInsightsDemo;
 }
+
+export type ProductWorkspaceSnapshotWithoutSensemaking = Omit<ProductWorkspaceSnapshot, 'founderSensemaking'>;
 
 export function buildProductWorkspaceSnapshot(validatorScripts: string[]): ProductWorkspaceSnapshot {
   const vault = getDevPulseV2ProjectVaultAuthority();

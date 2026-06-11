@@ -393,6 +393,8 @@ export function detectModulePresenceEvidence(rootDir: string): ModulePresenceEvi
     hasAutonomousBuilderFoundation: pathExists('src/autonomous-builder/index.ts'),
     hasExecutionRuntime: pathExists('src/execution-runtime/index.ts'),
     hasControlledBuilderExecutionEngine: pathExists('src/controlled-builder-execution-engine/index.ts'),
+    hasMobileRuntimeExperienceReality: pathExists('src/mobile-runtime-experience-reality/index.ts'),
+    hasRealFileWorkspaceExecution: pathExists('src/real-file-workspace-execution/index.ts'),
     validatorScriptCount,
   };
 }

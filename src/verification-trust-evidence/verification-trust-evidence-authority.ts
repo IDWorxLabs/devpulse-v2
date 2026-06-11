@@ -86,6 +86,12 @@ function whyFailed(check: VerificationCheckResult): string | null {
   if (check.status === 'WARNING') {
     return check.meaning.endsWith('.') ? check.meaning : `${check.meaning}.`;
   }
+  if (check.status === 'BLOCKED') {
+    const blockedReason = check.recommendedAction
+      ? `${check.meaning} ${check.recommendedAction}`.trim()
+      : check.meaning;
+    return blockedReason.endsWith('.') ? blockedReason : `${blockedReason}.`;
+  }
   if (check.recommendedAction) {
     return `${check.meaning} ${check.recommendedAction}`.trim();
   }

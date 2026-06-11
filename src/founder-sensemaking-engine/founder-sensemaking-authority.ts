@@ -195,7 +195,7 @@ export interface FounderSensemakingWorkspaceInput {
   verification: { readiness: string; readinessLabel: string };
   autonomousBuilder: { executionConnected: boolean; readinessLabel: string };
   portfolioInsights: {
-    summary: { verificationReady: number; healthy: number; atRisk: number };
+    summary: { verificationReady: number; healthy: number; atRisk: number; previewAvailable: number };
     recommendedActions: string[];
   };
   shellSources?: FounderSensemakingShellSources;

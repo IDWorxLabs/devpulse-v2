@@ -28,7 +28,7 @@ export interface VerificationTrustFinding {
   evidenceFound: string;
   whyPassed: string | null;
   whyFailed: string | null;
-  status: 'PASS' | 'FAIL' | 'WARNING' | 'NOT_RUN';
+  status: 'PASS' | 'FAIL' | 'BLOCKED' | 'WARNING' | 'NOT_RUN';
 }
 
 export interface VerificationTrustScenarioResult {

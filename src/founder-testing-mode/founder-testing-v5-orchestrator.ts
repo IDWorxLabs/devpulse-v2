@@ -20,6 +20,7 @@ export function runFounderTestingModeV5(input: RunFounderTestingModeV5Input = {}
     validatorScripts: input.validatorScripts,
     liveResults: input.liveResults,
     liveSection: input.liveSection,
+    repositoryTypecheckReality: input.repositoryTypecheckReality,
   });
 
   const unifiedSummary = buildUnifiedFounderSummary(v4);

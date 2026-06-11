@@ -16,6 +16,7 @@ import { buildCompletionCriteria, completionOutputKey, resetCompletionCounterFor
 import { analyzeProjectGoal, deriveNextRecommendedStep, goalAnalysisKey } from './project-goal-analyzer.js';
 import { identifyRisks, resetRiskCounterForTests, riskOutputKey } from './risk-identifier.js';
 import { buildRollbackPoints, resetRollbackCounterForTests, rollbackOutputKey } from './rollback-point-builder.js';
+import { generateExecutionPlanWithClarifyingGate } from '../clarifying-question-intelligence/clarifying-question-world2-bridge.js';
 import {
   buildVerificationPoints,
   resetVerificationCounterForTests,
@@ -200,7 +201,11 @@ export class DevPulseV2World2ExecutionPlanner {
   }
 
   createPlan(input: PlannerInput): ExecutionPlan {
-    const plan = generateExecutionPlan(input);
+    const gated = generateExecutionPlanWithClarifyingGate(input);
+    if (gated.blocked) {
+      throw new Error(`CLARIFICATION_REQUIRED: ${gated.gate.missingCriticalCategories.join(', ')}`);
+    }
+    const plan = gated.plan!;
     this.plans.push(clonePlan(plan));
     this.publishSummary(plan);
     return clonePlan(plan);

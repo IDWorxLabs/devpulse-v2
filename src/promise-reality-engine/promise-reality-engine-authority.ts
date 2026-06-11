@@ -339,13 +339,13 @@ function evaluateClaims(input: AssessPromiseRealityEngineInput): PromiseClaimRec
       'workflow-verification-confidence',
       'WORKFLOW',
       'Verification improves launch confidence',
-      trust?.trustPass && (verification?.readinessExplainedPass ?? true)
+      trust?.trustPass && (verification?.readinessExplained ?? false)
         ? 'PROVEN'
-        : verification?.passCount && verification.passCount > 0
+        : verification?.summary.passCount && verification.summary.passCount > 0
           ? 'PARTIALLY_PROVEN'
           : 'UNPROVEN',
       trust?.trustPass
-        ? `Trust pass with ${verification?.passCount ?? 0} verification check(s) passing`
+        ? `Trust pass with ${verification?.summary.passCount ?? 0} verification check(s) passing`
         : 'Verification results not yet confidence-building for launch',
     ),
   );
@@ -355,9 +355,9 @@ function evaluateClaims(input: AssessPromiseRealityEngineInput): PromiseClaimRec
       'ux-navigation-clear',
       'UX',
       'Navigation is clear',
-      ft?.navigationUnderstandingPass ? 'PROVEN' : ft?.categoryScores.navigation >= 55 ? 'PARTIALLY_PROVEN' : 'UNPROVEN',
+      ft?.navigationUnderstandingPass ? 'PROVEN' : (ft?.categoryScores.navigation ?? 0) >= 55 ? 'PARTIALLY_PROVEN' : 'UNPROVEN',
       ft
-        ? `First-time navigation score ${ft.categoryScores.navigation}/100`
+        ? `First-time navigation score ${ft.categoryScores.navigation ?? 0}/100`
         : 'First-time user reality not available',
     ),
   );
@@ -367,9 +367,9 @@ function evaluateClaims(input: AssessPromiseRealityEngineInput): PromiseClaimRec
       'ux-first-time-understanding',
       'UX',
       'First-time users understand the product',
-      ft?.productUnderstandingPass ? 'PROVEN' : ft?.firstTimeUserScore >= 60 ? 'PARTIALLY_PROVEN' : 'UNPROVEN',
+      ft?.productUnderstandingPass ? 'PROVEN' : (ft?.firstTimeUserScore ?? 0) >= 60 ? 'PARTIALLY_PROVEN' : 'UNPROVEN',
       ft
-        ? `First-time user score ${ft.firstTimeUserScore}/100`
+        ? `First-time user score ${ft.firstTimeUserScore ?? 0}/100`
         : 'First-time user reality not available',
       {
         contradictingEvidence:
@@ -525,7 +525,7 @@ function buildFounderPromiseScenarios(claims: PromiseClaimRecord[]): PromiseReal
   const unproven = claims.find((c) => c.status === 'UNPROVEN');
   const contradicted = claims.find((c) => c.status === 'CONTRADICTED');
 
-  return [
+  return ([
     {
       id: 'promise-proven',
       name: 'Founder can identify a proven claim',
@@ -533,7 +533,7 @@ function buildFounderPromiseScenarios(claims: PromiseClaimRecord[]): PromiseReal
       detail: proven
         ? `Proven example: ${proven.claim} — ${proven.evidence}`
         : 'No fully proven major claim available for founder education.',
-      status: 'PROVEN',
+      status: 'PROVEN' as const,
     },
     {
       id: 'promise-partial',
@@ -542,7 +542,7 @@ function buildFounderPromiseScenarios(claims: PromiseClaimRecord[]): PromiseReal
       detail: partial
         ? `Partial example: ${partial.claim} — ${partial.missingEvidence ?? partial.evidence}`
         : 'No partially proven claims surfaced.',
-      status: 'PARTIALLY_PROVEN',
+      status: 'PARTIALLY_PROVEN' as const,
     },
     {
       id: 'promise-unproven',
@@ -551,7 +551,7 @@ function buildFounderPromiseScenarios(claims: PromiseClaimRecord[]): PromiseReal
       detail: unproven
         ? `Unproven example: ${unproven.claim} — ${unproven.whyUnproven ?? unproven.evidence}`
         : 'All bounded claims have at least partial evidence.',
-      status: 'UNPROVEN',
+      status: 'UNPROVEN' as const,
     },
     {
       id: 'promise-contradicted',
@@ -560,9 +560,9 @@ function buildFounderPromiseScenarios(claims: PromiseClaimRecord[]): PromiseReal
       detail: contradicted
         ? `Contradiction example: ${contradicted.claim} — ${contradicted.contradictingEvidence ?? contradicted.evidence}`
         : 'No direct contradictions detected in bounded claim set.',
-      status: 'CONTRADICTED',
+      status: 'CONTRADICTED' as const,
     },
-  ].slice(0, MAX_PROMISE_SCENARIOS);
+  ] satisfies PromiseRealityScenarioResult[]).slice(0, MAX_PROMISE_SCENARIOS);
 }
 
 function buildOperatorFeed(

@@ -1,0 +1,16 @@
+/**
+ * Clarifying Question Intelligence — bounded limits and pass tokens.
+ */
+
+export const CLARIFYING_QUESTION_INTELLIGENCE_PASS_TOKEN = 'CLARIFYING_QUESTION_INTELLIGENCE_PASS';
+export const CLARIFYING_QUESTION_OWNER_MODULE = 'aidevengine_clarifying_question_intelligence';
+export const MAX_CLARIFYING_HISTORY = 12;
+export const CLARIFYING_QUESTION_CACHE_KEY_PREFIX = 'clarifying-question-intelligence-v1';
+export const CLARIFYING_QUESTION_REPORT_TITLE = 'CLARIFYING_QUESTION_INTELLIGENCE_REPORT';
+export const MAX_RECOMMENDED_QUESTIONS = 8;
+export const MAX_ASSUMPTIONS_PREVENTED = 16;
+export const MAX_DETECTED_CATEGORIES = 10;
+export const COMPLETENESS_FULLY_UNDERSTOOD = 85;
+export const COMPLETENESS_MOSTLY_UNDERSTOOD = 70;
+export const COMPLETENESS_CLARIFICATION_REQUIRED = 55;
+export const COMPLETENESS_CANNOT_PROCEED = 30;

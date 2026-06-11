@@ -6,6 +6,10 @@ import {
   getBuilderExecutionSessionCount,
   listControlledExecutionEvidence,
 } from '../controlled-builder-execution-engine/index.js';
+import {
+  getRealFileWorkspaceExecutionSessionCount,
+  listRealFileExecutionEvidence,
+} from '../real-file-workspace-execution/index.js';
 import type {
   AssessAutonomousBuilderRealityInput,
   BuilderAnalyzerResults,
@@ -203,6 +207,18 @@ export function collectBuilderExecutionEvidence(input: AssessAutonomousBuilderRe
   }
   if (moduleEvidence.hasControlledBuilderExecutionEngine) {
     push('Build Execution', 'Controlled builder execution engine exists (Phase 24C)', 'OBSERVED', 'src/controlled-builder-execution-engine');
+  }
+  if (moduleEvidence.hasMobileRuntimeExperienceReality) {
+    push('Build Execution', 'Mobile Runtime Experience Reality authority exists (Phase 24C.5)', 'OBSERVED', 'src/mobile-runtime-experience-reality');
+  }
+  if (moduleEvidence.hasRealFileWorkspaceExecution) {
+    push('Build Execution', 'Real file workspace execution module exists (Phase 24D)', 'OBSERVED', 'src/real-file-workspace-execution');
+  }
+  if (getRealFileWorkspaceExecutionSessionCount() > 0) {
+    push('Build Execution', 'Real file workspace execution session recorded', 'OBSERVED', 'real-file-workspace-execution');
+  }
+  if (listRealFileExecutionEvidence().some((e) => e.evidenceType === 'FILE_CREATED')) {
+    push('Build Execution', 'Real isolated workspace file created with evidence', 'OBSERVED', 'real-file-workspace-execution');
   }
   const controlledSessionCount = getBuilderExecutionSessionCount();
   if (controlledSessionCount > 0) {

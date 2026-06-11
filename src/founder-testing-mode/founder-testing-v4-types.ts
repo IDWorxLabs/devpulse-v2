@@ -246,6 +246,28 @@ export interface LaunchReadinessReality {
   launchReadinessRealityScore: number;
 }
 
+export interface ChatIntelligenceRealityVisibility {
+  score: number;
+  chatLaunchVerdict: import('../chat-intelligence-reality/chat-intelligence-reality-types.js').ChatLaunchVerdict;
+  blocksLaunchReadiness: boolean;
+  scenariosPassed: number;
+  scenariosRun: number;
+  failedScenarioCount: number;
+  requiredFixesBeforeLaunch: string[];
+  selfEvolutionTriggered: boolean;
+}
+
+export interface RepositoryTypecheckRealityVisibility {
+  score: number;
+  readinessState: import('../repository-typecheck-reality/repository-typecheck-reality-types.js').RepositoryTypecheckReadinessState;
+  typecheckClean: boolean;
+  blocksLaunchReadiness: boolean;
+  errorCount: number;
+  warningCount: number;
+  findingCount: number;
+  recommendations: string[];
+}
+
 export interface FounderTestV4Report {
   reportId: string;
   generatedAt: number;
@@ -303,6 +325,51 @@ export interface FounderTestV4Report {
   founderOutcome: OutcomeSimulation;
   customerOutcome: OutcomeSimulation;
   launchReadinessReality: LaunchReadinessReality;
+  chatIntelligenceReality: import('../chat-intelligence-reality/chat-intelligence-reality-types.js').ChatIntelligenceRealityAssessment;
+  chatIntelligenceRealityScore: ChatIntelligenceRealityVisibility;
+  repositoryTypecheckReality: import('../repository-typecheck-reality/repository-typecheck-reality-types.js').RepositoryTypecheckAssessment;
+  repositoryTypecheckRealityScore: RepositoryTypecheckRealityVisibility;
+  skepticalFounderSimulator: import('../skeptical-founder-simulator/skeptical-founder-types.js').SkepticalFounderAssessment;
+  skepticalFounderReportMarkdown: string;
+  promiseFulfillment: import('../promise-fulfillment-authority/promise-fulfillment-types.js').PromiseFulfillmentAssessment;
+  promiseFulfillmentReportMarkdown: string;
+  trustAuthority: import('../trust-authority/trust-authority-types.js').TrustAssessment;
+  trustAuthorityReportMarkdown: string;
+  selfAwarenessAuthority: import('../self-awareness-authority/self-awareness-types.js').SelfAwarenessAssessment;
+  selfAwarenessAuthorityReportMarkdown: string;
+  userSuccessAuthority: import('../user-success-authority/user-success-types.js').UserSuccessAssessment;
+  userSuccessAuthorityReportMarkdown: string;
+  gapDetectionAuthority: import('../gap-detection-authority/gap-detection-types.js').GapDetectionAssessment;
+  gapDetectionAuthorityReportMarkdown: string;
+  selfEvolutionAuthority: import('../self-evolution-authority/self-evolution-types.js').SelfEvolutionAssessment;
+  selfEvolutionAuthorityReportMarkdown: string;
+  unknownDiscoveryAuthority: import('../unknown-discovery-authority/unknown-discovery-types.js').UnknownDiscoveryAssessment;
+  unknownDiscoveryAuthorityReportMarkdown: string;
+  firstTimeUserRealityAuthority: import('../first-time-user-reality-authority/first-time-user-reality-types.js').FirstTimeUserRealityAssessment;
+  firstTimeUserRealityAuthorityReportMarkdown: string;
+  customerValueAuthority: import('../customer-value-authority/customer-value-types.js').CustomerValueAssessment;
+  customerValueAuthorityReportMarkdown: string;
+  competitiveRealityAuthority: import('../competitive-reality-authority/competitive-reality-types.js').CompetitiveRealityAssessment;
+  competitiveRealityAuthorityReportMarkdown: string;
+  realityProofAuthority: import('../reality-proof-authority/reality-proof-types.js').RealityProofAssessment;
+  realityProofAuthorityReportMarkdown: string;
+  realUserRealityAuthority: import('../real-user-reality-authority/real-user-reality-types.js').RealUserRealityAssessment;
+  realUserRealityAuthorityReportMarkdown: string;
+  adoptionPredictionAuthority: import('../adoption-prediction-authority/adoption-prediction-types.js').AdoptionPredictionAssessment;
+  adoptionPredictionAuthorityReportMarkdown: string;
+  launchReadinessAuthority: import('../launch-readiness-authority/launch-readiness-types.js').LaunchReadinessAuthorityAssessment;
+  launchReadinessAuthorityReportMarkdown: string;
+  uiReviewerAuthority: import('../ui-reviewer-authority/ui-reviewer-types.js').UIReviewerAssessment;
+  uiReviewerAuthorityReportMarkdown: string;
+  clarifyingQuestionIntelligence: import('../clarifying-question-intelligence/clarifying-question-types.js').ClarifyingQuestionAssessment;
+  clarifyingQuestionIntelligenceReportMarkdown: string;
+  launchCouncil: import('../launch-council/launch-council-types.js').LaunchCouncilAssessment;
+  launchCouncilReport: import('../launch-council/launch-council-types.js').LaunchCouncilReport;
+  launchCouncilReportMarkdown: string;
+  launchCouncilFinalization: import('../launch-council-finalization/launch-council-finalization-types.js').LaunchCouncilFinalizationAssessment;
+  launchCouncilFinalizationReportMarkdown: string;
+  launchVerdictGovernance: import('../launch-verdict-governance/launch-verdict-governance-types.js').LaunchVerdictGovernanceAssessment;
+  launchVerdictGovernanceReportMarkdown: string;
   topProductRisks: string[];
   topLaunchRisks: string[];
   verdict: FounderTestV4Verdict;
@@ -317,4 +384,136 @@ export interface RunFounderTestingModeV4Input {
   validatorScripts?: string[];
   liveResults?: import('./founder-testing-types.js').LiveScreenResultInput[];
   liveSection?: string;
+  repositoryTypecheckReality?: import('../repository-typecheck-reality/repository-typecheck-reality-types.js').RepositoryTypecheckAssessment;
 }
+
+export type FounderTestV4ReportCore = Omit<
+  FounderTestV4Report,
+  | 'reportMarkdown'
+  | 'skepticalFounderSimulator'
+  | 'skepticalFounderReportMarkdown'
+  | 'promiseFulfillment'
+  | 'promiseFulfillmentReportMarkdown'
+  | 'trustAuthority'
+  | 'trustAuthorityReportMarkdown'
+  | 'selfAwarenessAuthority'
+  | 'selfAwarenessAuthorityReportMarkdown'
+  | 'userSuccessAuthority'
+  | 'userSuccessAuthorityReportMarkdown'
+  | 'gapDetectionAuthority'
+  | 'gapDetectionAuthorityReportMarkdown'
+  | 'selfEvolutionAuthority'
+  | 'selfEvolutionAuthorityReportMarkdown'
+  | 'unknownDiscoveryAuthority'
+  | 'unknownDiscoveryAuthorityReportMarkdown'
+  | 'firstTimeUserRealityAuthority'
+  | 'firstTimeUserRealityAuthorityReportMarkdown'
+  | 'customerValueAuthority'
+  | 'customerValueAuthorityReportMarkdown'
+  | 'competitiveRealityAuthority'
+  | 'competitiveRealityAuthorityReportMarkdown'
+  | 'realityProofAuthority'
+  | 'realityProofAuthorityReportMarkdown'
+  | 'realUserRealityAuthority'
+  | 'realUserRealityAuthorityReportMarkdown'
+  | 'adoptionPredictionAuthority'
+  | 'adoptionPredictionAuthorityReportMarkdown'
+  | 'launchReadinessAuthority'
+  | 'launchReadinessAuthorityReportMarkdown'
+  | 'uiReviewerAuthority'
+  | 'uiReviewerAuthorityReportMarkdown'
+  | 'clarifyingQuestionIntelligence'
+  | 'clarifyingQuestionIntelligenceReportMarkdown'
+  | 'launchCouncil'
+  | 'launchCouncilReport'
+  | 'launchCouncilReportMarkdown'
+  | 'launchCouncilFinalization'
+  | 'launchCouncilFinalizationReportMarkdown'
+  | 'launchVerdictGovernance'
+  | 'launchVerdictGovernanceReportMarkdown'
+>;
+
+/** Founder test core enriched with skeptical simulator artifacts for promise fulfillment input. */
+export type FounderTestV4ReportWithSkeptical = FounderTestV4ReportCore &
+  Pick<FounderTestV4Report, 'skepticalFounderSimulator' | 'skepticalFounderReportMarkdown'>;
+
+/** Founder test core enriched with skeptical and promise artifacts for trust authority input. */
+export type FounderTestV4ReportWithPromise = FounderTestV4ReportWithSkeptical &
+  Pick<FounderTestV4Report, 'promiseFulfillment' | 'promiseFulfillmentReportMarkdown'>;
+
+/** Founder test core enriched with skeptical, promise, and trust artifacts for self-awareness input. */
+export type FounderTestV4ReportWithTrust = FounderTestV4ReportWithPromise &
+  Pick<FounderTestV4Report, 'trustAuthority' | 'trustAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through self-awareness for user success input. */
+export type FounderTestV4ReportWithSelfAwareness = FounderTestV4ReportWithTrust &
+  Pick<FounderTestV4Report, 'selfAwarenessAuthority' | 'selfAwarenessAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through user success for gap detection input. */
+export type FounderTestV4ReportWithUserSuccess = FounderTestV4ReportWithSelfAwareness &
+  Pick<FounderTestV4Report, 'userSuccessAuthority' | 'userSuccessAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through gap detection for self-evolution input. */
+export type FounderTestV4ReportWithGapDetection = FounderTestV4ReportWithUserSuccess &
+  Pick<FounderTestV4Report, 'gapDetectionAuthority' | 'gapDetectionAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through self-evolution for unknown discovery input. */
+export type FounderTestV4ReportWithSelfEvolution = FounderTestV4ReportWithGapDetection &
+  Pick<FounderTestV4Report, 'selfEvolutionAuthority' | 'selfEvolutionAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through unknown discovery for first-time user reality input. */
+export type FounderTestV4ReportWithUnknownDiscovery = FounderTestV4ReportWithSelfEvolution &
+  Pick<FounderTestV4Report, 'unknownDiscoveryAuthority' | 'unknownDiscoveryAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through first-time user reality for customer value input. */
+export type FounderTestV4ReportWithFirstTimeUser = FounderTestV4ReportWithUnknownDiscovery &
+  Pick<FounderTestV4Report, 'firstTimeUserRealityAuthority' | 'firstTimeUserRealityAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through customer value for competitive reality input. */
+export type FounderTestV4ReportWithCustomerValue = FounderTestV4ReportWithFirstTimeUser &
+  Pick<FounderTestV4Report, 'customerValueAuthority' | 'customerValueAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through competitive reality for reality-proof input. */
+export type FounderTestV4ReportWithCompetitiveReality = FounderTestV4ReportWithCustomerValue &
+  Pick<FounderTestV4Report, 'competitiveRealityAuthority' | 'competitiveRealityAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through reality proof for real user reality input. */
+export type FounderTestV4ReportWithRealityProof = FounderTestV4ReportWithCompetitiveReality &
+  Pick<FounderTestV4Report, 'realityProofAuthority' | 'realityProofAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through real user reality for adoption prediction input. */
+export type FounderTestV4ReportWithRealUserReality = FounderTestV4ReportWithRealityProof &
+  Pick<FounderTestV4Report, 'realUserRealityAuthority' | 'realUserRealityAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through adoption prediction for launch readiness input. */
+export type FounderTestV4ReportWithAdoptionPrediction = FounderTestV4ReportWithRealUserReality &
+  Pick<FounderTestV4Report, 'adoptionPredictionAuthority' | 'adoptionPredictionAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through launch readiness before UI reviewer assembly. */
+export type FounderTestV4ReportForLaunchCouncil = FounderTestV4ReportWithAdoptionPrediction &
+  Pick<FounderTestV4Report, 'launchReadinessAuthority' | 'launchReadinessAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through UI reviewer before clarifying question assembly. */
+export type FounderTestV4ReportWithUiReviewer = FounderTestV4ReportForLaunchCouncil &
+  Pick<FounderTestV4Report, 'uiReviewerAuthority' | 'uiReviewerAuthorityReportMarkdown'>;
+
+/** Founder test core enriched through clarifying question intelligence before Launch Council assembly. */
+export type FounderTestV4ReportWithClarifyingQuestion = FounderTestV4ReportWithUiReviewer &
+  Pick<
+    FounderTestV4Report,
+    'clarifyingQuestionIntelligence' | 'clarifyingQuestionIntelligenceReportMarkdown'
+  >;
+
+/** Founder test core enriched through launch council before finalization assembly. */
+export type FounderTestV4ReportWithLaunchCouncil = FounderTestV4ReportWithClarifyingQuestion &
+  Pick<
+    FounderTestV4Report,
+    'launchCouncil' | 'launchCouncilReport' | 'launchCouncilReportMarkdown'
+  >;
+
+/** Founder test core enriched through launch council finalization before verdict governance. */
+export type FounderTestV4ReportWithLaunchCouncilFinalization = FounderTestV4ReportWithLaunchCouncil &
+  Pick<
+    FounderTestV4Report,
+    'launchCouncilFinalization' | 'launchCouncilFinalizationReportMarkdown'
+  >;

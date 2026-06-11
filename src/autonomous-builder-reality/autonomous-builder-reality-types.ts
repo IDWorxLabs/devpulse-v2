@@ -105,6 +105,8 @@ export interface ModulePresenceEvidence {
   hasAutonomousBuilderFoundation: boolean;
   hasExecutionRuntime: boolean;
   hasControlledBuilderExecutionEngine: boolean;
+  hasMobileRuntimeExperienceReality: boolean;
+  hasRealFileWorkspaceExecution: boolean;
   validatorScriptCount: number;
 }
 

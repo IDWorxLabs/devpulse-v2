@@ -23,6 +23,8 @@ export function buildUnifiedFounderSummary(v4: FounderTestV4Report): FounderTest
     v4.visualQualityAuthority,
     v4.launchDaySimulation,
     v4.adoptionPrediction,
+    v4.chatIntelligenceReality,
+    v4.repositoryTypecheckReality,
   );
 
   const whatWorks = cap([
@@ -128,6 +130,13 @@ export function buildUnifiedFounderSummary(v4: FounderTestV4Report): FounderTest
     v4.founderDecisionReadiness.majorDecisionRisks ? `Decision: ${v4.founderDecisionReadiness.primaryRecommendation.replace(/_/g, ' ')}` : '',
     ...v4.digitalFounderBoard.riskBoard.highestPriorityRisks.slice(0, 2).map((r) => `Board risk: ${r}`),
     v4.digitalFounderBoard.majorBoardRisks ? `Board status: ${v4.digitalFounderBoard.boardStatus.replace(/_/g, ' ').toLowerCase()}` : '',
+    v4.chatIntelligenceReality.blocksLaunchReadiness
+      ? `Chat intelligence blocks launch (${v4.chatIntelligenceReality.chatLaunchVerdict}, ${v4.chatIntelligenceReality.chatIntelligenceScore}/100)`
+      : '',
+    ...v4.chatIntelligenceReality.failedScenarios.slice(0, 3).map((s) => `Chat failed: "${s.prompt}" — ${s.whyFailed[0] ?? 'not grounded'}`),
+    v4.repositoryTypecheckReality.blocksLaunchReadiness
+      ? `Repository typecheck blocks launch (${v4.repositoryTypecheckReality.readinessState}, ${v4.repositoryTypecheckReality.errorCount} error(s))`
+      : '',
   ]);
 
   const whatDoesntMakeSense = cap([
@@ -188,6 +197,14 @@ export function buildUnifiedFounderSummary(v4: FounderTestV4Report): FounderTest
     ...v4.adoptionPrediction.adoptionBlockers.map((b) => b.explanation),
     ...v4.adoptionPrediction.retentionRisks.slice(0, 2),
     ...v4.productEconomics.lowestRoiOpportunities.slice(0, 2),
+    v4.chatIntelligenceReality.blocksLaunchReadiness
+      ? 'Chat intelligence reality failed — launch blocked until chat answers are useful and grounded'
+      : '',
+    ...v4.chatIntelligenceReality.requiredFixesBeforeLaunch.slice(0, 3),
+    v4.repositoryTypecheckReality.blocksLaunchReadiness
+      ? 'Repository typecheck baseline is not clean — compile integrity required before launch'
+      : '',
+    ...v4.repositoryTypecheckReality.recommendations.slice(0, 2),
   ].flatMap((s) => (s.includes(';') ? s.split(';').map((x) => x.trim()) : [s])));
 
   const finalRecommendation = buildFinalRecommendation(launchRecommendation, launchBlockers);
