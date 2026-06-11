@@ -75,6 +75,17 @@ export function buildUnifiedFounderSummary(v4: FounderTestV4Report): FounderTest
       ? `Product evolution strong (${v4.productEvolution.productEvolutionScore}/100)`
       : '',
     ...v4.productEvolution.recommendedNextInvestments.slice(0, 2).map((o) => `Next: ${o}`),
+    v4.competitiveReality.competitiveRealityPass
+      ? `Competitive position strong (${v4.competitiveReality.competitiveRealityScore}/100)`
+      : '',
+    ...v4.competitiveReality.strongestCompetitiveAdvantages.slice(0, 2).map((a) => `Advantage: ${a}`),
+    v4.founderDecisionReadiness.founderDecisionReadinessPass
+      ? `Founder decision ready (${v4.founderDecisionReadiness.decisionReadinessScore}/100)`
+      : '',
+    `Decision: ${v4.founderDecisionReadiness.primaryRecommendation.replace(/_/g, ' ')} (${v4.founderDecisionReadiness.decisionConfidence})`,
+    v4.digitalFounderBoard.digitalFounderBoardPass
+      ? `Digital Founder Board: ${v4.digitalFounderBoard.boardStatus.replace(/_/g, ' ').toLowerCase()}`
+      : '',
     ...v4.creationJourney.filter((s) => s.status === 'Exists').map((s) => `${s.stage}: present`),
   ]);
 
@@ -110,6 +121,13 @@ export function buildUnifiedFounderSummary(v4: FounderTestV4Report): FounderTest
     v4.productEconomics.majorEconomicRisks ? 'Major economic risks detected' : '',
     ...v4.productEvolution.doNotBuild.slice(0, 2).map((d) => `Do not build: ${d}`),
     v4.productEvolution.majorEvolutionRisks ? 'Roadmap recommendations lack clear priority' : '',
+    ...v4.competitiveReality.competitiveBlindSpots.slice(0, 2).map((b) => `Competitive blind spot: ${b}`),
+    v4.competitiveReality.majorCompetitiveRisks ? 'Competitive commodity risk detected' : '',
+    ...v4.competitiveReality.unprovenCompetitiveClaims.slice(0, 2).map((c) => `Unproven claim: ${c}`),
+    ...v4.founderDecisionReadiness.blockingEvidence.slice(0, 2).map((b) => `Decision blocker: ${b}`),
+    v4.founderDecisionReadiness.majorDecisionRisks ? `Decision: ${v4.founderDecisionReadiness.primaryRecommendation.replace(/_/g, ' ')}` : '',
+    ...v4.digitalFounderBoard.riskBoard.highestPriorityRisks.slice(0, 2).map((r) => `Board risk: ${r}`),
+    v4.digitalFounderBoard.majorBoardRisks ? `Board status: ${v4.digitalFounderBoard.boardStatus.replace(/_/g, ' ').toLowerCase()}` : '',
   ]);
 
   const whatDoesntMakeSense = cap([

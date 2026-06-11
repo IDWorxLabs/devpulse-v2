@@ -297,6 +297,141 @@ ${report.productEvolution.quickWins.map((o) => `- ${o}`).join('\n') || 'None'}
 Do not build:
 ${report.productEvolution.doNotBuild.map((o) => `- ${o}`).join('\n') || 'None'}
 
+## Competitive Reality
+
+Competitive Reality Score: **${report.competitiveReality.competitiveRealityScore}/100**
+
+Position: **${report.competitiveReality.competitivePosition.replace(/_/g, ' ')}**
+
+Differentiation Strength: ${report.competitiveReality.portfolioSubscores.differentiationStrength}/100 | Replacement Risk: ${report.competitiveReality.portfolioSubscores.replacementRisk}/100 (lower is better)
+
+Founder Advantage: ${report.competitiveReality.portfolioSubscores.founderAdvantage}/100 | Product Advantage: ${report.competitiveReality.portfolioSubscores.productAdvantage}/100
+
+Strategic Defensibility: ${report.competitiveReality.portfolioSubscores.strategicDefensibility}/100 | Blind Spot Risk: ${report.competitiveReality.portfolioSubscores.blindSpotRisk}/100
+
+Summary: ${report.competitiveReality.competitiveRealitySummary}
+
+Strongest advantages:
+${report.competitiveReality.strongestCompetitiveAdvantages.map((a) => `- ${a}`).join('\n') || 'None'}
+
+Weakest advantages:
+${report.competitiveReality.weakestCompetitiveAdvantages.map((a) => `- ${a}`).join('\n') || 'None'}
+
+High replacement risks:
+${report.competitiveReality.highReplacementRisks.map((r) => `- ${r}`).join('\n') || 'None'}
+
+Strategic defensibility:
+${report.competitiveReality.strategicDefensibility.map((d) => `- ${d}`).join('\n') || 'None'}
+
+Competitive blind spots:
+${report.competitiveReality.competitiveBlindSpots.map((b) => `- ${b}`).join('\n') || 'None'}
+
+Unproven competitive claims:
+${report.competitiveReality.unprovenCompetitiveClaims.map((c) => `- ${c}`).join('\n') || 'None'}
+
+## Founder Decision Readiness
+
+Decision Readiness Score: **${report.founderDecisionReadiness.decisionReadinessScore}/100**
+
+Primary Recommendation: **${report.founderDecisionReadiness.primaryRecommendation.replace(/_/g, ' ')}**
+
+Decision Confidence: **${report.founderDecisionReadiness.decisionConfidence}**
+
+Launch Readiness: ${report.founderDecisionReadiness.portfolioSubscores.launchReadiness}/100 | Adoption Readiness: ${report.founderDecisionReadiness.portfolioSubscores.adoptionReadiness}/100
+
+Trust Readiness: ${report.founderDecisionReadiness.portfolioSubscores.trustReadiness}/100 | Product Readiness: ${report.founderDecisionReadiness.portfolioSubscores.productReadiness}/100
+
+Strategic Readiness: ${report.founderDecisionReadiness.portfolioSubscores.strategicReadiness}/100 | Founder Readiness: ${report.founderDecisionReadiness.portfolioSubscores.founderReadiness}/100
+
+Why this recommendation:
+${report.founderDecisionReadiness.whyThisRecommendation}
+
+Supporting evidence:
+${report.founderDecisionReadiness.supportingEvidence.map((e) => `- ${e}`).join('\n') || 'None'}
+
+Blocking evidence:
+${report.founderDecisionReadiness.blockingEvidence.map((e) => `- ${e}`).join('\n') || 'None'}
+
+Recommended next actions:
+${report.founderDecisionReadiness.recommendedNextActions.map((a) => `- ${a}`).join('\n') || 'None'}
+
+Summary: ${report.founderDecisionReadiness.decisionReadinessSummary}
+
+## Digital Founder Board
+
+Board Status: **${report.digitalFounderBoard.boardStatus.replace(/_/g, ' ')}**
+
+Summary: ${report.digitalFounderBoard.digitalFounderBoardSummary}
+
+### Executive Summary
+
+Founder Decision: **${report.digitalFounderBoard.executiveSummary.founderDecision.replace(/_/g, ' ')}**
+
+Decision Confidence: **${report.digitalFounderBoard.executiveSummary.decisionConfidence}**
+
+Why: ${report.digitalFounderBoard.executiveSummary.whyThisRecommendation}
+
+Top next actions:
+${report.digitalFounderBoard.executiveSummary.topNextActions.map((a) => `- ${a}`).join('\n') || 'None'}
+
+### Product Health
+
+Launch: ${report.digitalFounderBoard.productHealth.launchReadiness}/100 | Adoption: ${report.digitalFounderBoard.productHealth.adoptionReadiness}/100 | Trust: ${report.digitalFounderBoard.productHealth.trustReadiness}/100
+
+Product: ${report.digitalFounderBoard.productHealth.productReadiness}/100 | Strategic: ${report.digitalFounderBoard.productHealth.strategicReadiness}/100 | Founder: ${report.digitalFounderBoard.productHealth.founderReadiness}/100
+
+### Risk Board
+
+Highest priority risks:
+${report.digitalFounderBoard.riskBoard.highestPriorityRisks.map((r) => `- ${r}`).join('\n') || 'None'}
+
+Blocking evidence:
+${report.digitalFounderBoard.riskBoard.blockingEvidence.map((e) => `- ${e}`).join('\n') || 'None'}
+
+### Opportunity Board
+
+Quick wins:
+${report.digitalFounderBoard.opportunityBoard.quickWins.map((o) => `- ${o}`).join('\n') || 'None'}
+
+Strategic investments:
+${report.digitalFounderBoard.opportunityBoard.strategicInvestments.map((o) => `- ${o}`).join('\n') || 'None'}
+
+Highest ROI:
+${report.digitalFounderBoard.opportunityBoard.highestRoiOpportunities.map((o) => `- ${o}`).join('\n') || 'None'}
+
+### Competitive Position
+
+Classification: **${report.digitalFounderBoard.competitivePosition.competitiveClassification}**
+
+Strongest advantages:
+${report.digitalFounderBoard.competitivePosition.strongestAdvantages.map((a) => `- ${a}`).join('\n') || 'None'}
+
+Replacement risks:
+${report.digitalFounderBoard.competitivePosition.replacementRisks.map((r) => `- ${r}`).join('\n') || 'None'}
+
+### Trust & Validation
+
+Verification Trust: ${report.digitalFounderBoard.trustValidation.verificationTrustScore}/100 | Promise Reality: ${report.digitalFounderBoard.trustValidation.promiseRealityScore}/100
+
+Reality confidence: ${report.digitalFounderBoard.trustValidation.realityConfidence}
+
+Unproven claims:
+${report.digitalFounderBoard.trustValidation.unprovenClaims.map((c) => `- ${c}`).join('\n') || 'None'}
+
+### Roadmap Intelligence
+
+Build next:
+${report.digitalFounderBoard.roadmapIntelligence.buildNext.map((b) => `- ${b}`).join('\n') || 'None'}
+
+Build later:
+${report.digitalFounderBoard.roadmapIntelligence.buildLater.map((b) => `- ${b}`).join('\n') || 'None'}
+
+Do not build:
+${report.digitalFounderBoard.roadmapIntelligence.doNotBuild.map((b) => `- ${b}`).join('\n') || 'None'}
+
+Recommended actions:
+${report.digitalFounderBoard.recommendedActions.map((a) => `- ${a}`).join('\n') || 'None'}
+
 ## Founder Sensemaking / Product Coherence
 
 Founder Sensemaking Score: **${report.founderSensemaking.founderSensemakingScore}/100**

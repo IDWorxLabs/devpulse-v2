@@ -51,6 +51,9 @@ export function runFounderTestingModeV5(input: RunFounderTestingModeV5Input = {}
     adoptionPrediction: v4.adoptionPrediction,
     productEconomics: v4.productEconomics,
     productEvolution: v4.productEvolution,
+    competitiveReality: v4.competitiveReality,
+    founderDecisionReadiness: v4.founderDecisionReadiness,
+    digitalFounderBoard: v4.digitalFounderBoard,
     verdict: v4.verdict,
   });
 }

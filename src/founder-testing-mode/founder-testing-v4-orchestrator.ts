@@ -86,6 +86,21 @@ import {
   enrichAssessmentsWithProductEvolution,
   evaluateProductEvolutionVisibility,
 } from '../product-evolution-engine/index.js';
+import {
+  assessCompetitiveReality,
+  enrichAssessmentsWithCompetitiveReality,
+  evaluateCompetitiveRealityVisibility,
+} from '../competitive-reality-engine/index.js';
+import {
+  assessFounderDecisionReadiness,
+  enrichAssessmentsWithFounderDecisionReadiness,
+  evaluateFounderDecisionReadinessVisibility,
+} from '../founder-decision-readiness/index.js';
+import {
+  assembleDigitalFounderBoard,
+  enrichSensemakingWithDigitalFounderBoard,
+  evaluateDigitalFounderBoardVisibility,
+} from '../digital-founder-board/index.js';
 import { assessFounderSensemaking } from '../founder-sensemaking-engine/index.js';
 import { buildVerificationResultsFromV4Report } from '../verification-results-visibility/index.js';
 import { computeLaunchReadinessReality, deriveV4Verdict } from './founder-testing-v4-scorer.js';
@@ -269,6 +284,12 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
     productEconomicsScore: {} as import('../product-economics-engine/product-economics-engine-types.js').ProductEconomicsVisibility,
     productEvolution: {} as import('../product-evolution-engine/product-evolution-engine-types.js').ProductEvolutionAssessment,
     productEvolutionScore: {} as import('../product-evolution-engine/product-evolution-engine-types.js').ProductEvolutionVisibility,
+    competitiveReality: {} as import('../competitive-reality-engine/competitive-reality-engine-types.js').CompetitiveRealityAssessment,
+    competitiveRealityScore: {} as import('../competitive-reality-engine/competitive-reality-engine-types.js').CompetitiveRealityVisibility,
+    founderDecisionReadiness: {} as import('../founder-decision-readiness/founder-decision-readiness-types.js').FounderDecisionReadinessAssessment,
+    founderDecisionReadinessScore: {} as import('../founder-decision-readiness/founder-decision-readiness-types.js').FounderDecisionReadinessVisibility,
+    digitalFounderBoard: {} as import('../digital-founder-board/digital-founder-board-types.js').DigitalFounderBoardAssessment,
+    digitalFounderBoardScore: {} as import('../digital-founder-board/digital-founder-board-types.js').DigitalFounderBoardVisibility,
   };
 
   const verificationResultsVisibility = buildVerificationResultsFromV4Report(reportCore);
@@ -530,6 +551,77 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
 
   const productEvolutionScore = evaluateProductEvolutionVisibility(productEvolution);
 
+  const competitiveReality = assessCompetitiveReality({
+    shellSources: sources,
+    firstTimeUserReality,
+    verificationTrustEvidence,
+    founderFrictionHeatmap,
+    customerJourneySimulation,
+    promiseRealityEngine,
+    visualQualityAuthority,
+    launchDaySimulation,
+    adoptionPrediction,
+    productEconomics,
+    productEvolution,
+    validatorScriptCount: input.validatorScripts?.length ?? 0,
+  });
+
+  const competitiveEnriched = enrichAssessmentsWithCompetitiveReality(
+    founderActionCenter,
+    founderSensemaking,
+    competitiveReality,
+  );
+  founderActionCenter = competitiveEnriched.founderActionCenter;
+  founderSensemaking = competitiveEnriched.founderSensemaking;
+
+  const competitiveRealityScore = evaluateCompetitiveRealityVisibility(competitiveReality);
+
+  const founderDecisionReadiness = assessFounderDecisionReadiness({
+    shellSources: sources,
+    firstTimeUserReality,
+    verificationTrustEvidence,
+    founderFrictionHeatmap,
+    customerJourneySimulation,
+    promiseRealityEngine,
+    visualQualityAuthority,
+    launchDaySimulation,
+    adoptionPrediction,
+    productEconomics,
+    productEvolution,
+    competitiveReality,
+  });
+
+  const decisionEnriched = enrichAssessmentsWithFounderDecisionReadiness(
+    founderActionCenter,
+    founderSensemaking,
+    founderDecisionReadiness,
+  );
+  founderActionCenter = decisionEnriched.founderActionCenter;
+  founderSensemaking = decisionEnriched.founderSensemaking;
+
+  const founderDecisionReadinessScore = evaluateFounderDecisionReadinessVisibility(founderDecisionReadiness);
+
+  const digitalFounderBoard = assembleDigitalFounderBoard({
+    firstTimeUserReality,
+    verificationTrustEvidence,
+    founderFrictionHeatmap,
+    customerJourneySimulation,
+    promiseRealityEngine,
+    visualQualityAuthority,
+    launchDaySimulation,
+    adoptionPrediction,
+    productEconomics,
+    productEvolution,
+    competitiveReality,
+    founderDecisionReadiness,
+    founderActionCenter,
+  });
+
+  const boardEnriched = enrichSensemakingWithDigitalFounderBoard(founderSensemaking, digitalFounderBoard);
+  founderSensemaking = boardEnriched.founderSensemaking;
+
+  const digitalFounderBoardScore = evaluateDigitalFounderBoardVisibility(digitalFounderBoard);
+
   return assembleFounderTestV4Report({
     ...reportCore,
     verificationResultsVisibility,
@@ -562,5 +654,11 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
     productEconomicsScore,
     productEvolution,
     productEvolutionScore,
+    competitiveReality,
+    competitiveRealityScore,
+    founderDecisionReadiness,
+    founderDecisionReadinessScore,
+    digitalFounderBoard,
+    digitalFounderBoardScore,
   });
 }

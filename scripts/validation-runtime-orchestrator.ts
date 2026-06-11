@@ -26,6 +26,9 @@ const FOUNDER_AUTHORITY_VALIDATORS: ValidatorNode[] = [
   { script: 'validate:adoption-prediction-engine', passToken: 'ADOPTION_PREDICTION_ENGINE_PASS' },
   { script: 'validate:product-economics-engine', passToken: 'PRODUCT_ECONOMICS_ENGINE_PASS' },
   { script: 'validate:product-evolution-engine', passToken: 'PRODUCT_EVOLUTION_ENGINE_PASS' },
+  { script: 'validate:competitive-reality-engine', passToken: 'COMPETITIVE_REALITY_ENGINE_PASS' },
+  { script: 'validate:founder-decision-readiness', passToken: 'FOUNDER_DECISION_READINESS_PASS' },
+  { script: 'validate:digital-founder-board', passToken: 'DIGITAL_FOUNDER_BOARD_PASS' },
   { script: 'validate:founder-testing-v5', passToken: 'FOUNDER_TESTING_MODE_V5_PASS' },
 ];
 

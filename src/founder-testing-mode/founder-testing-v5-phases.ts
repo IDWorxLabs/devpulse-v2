@@ -51,7 +51,7 @@ export const FOUNDER_TEST_V5_PHASES: FounderTestPhaseEvent[] = [
     phaseName: 'Founder Experience',
     section: 'Approvals',
     action: 'Evaluating Founder Experience',
-    detail: 'Evaluating Action Center, sensemaking, interaction simulation, customer journey simulation, visual quality, adoption prediction, product economics, product evolution, and workflow quality.',
+    detail: 'Evaluating Action Center, sensemaking, interaction simulation, customer journey simulation, visual quality, adoption prediction, product economics, product evolution, competitive reality, founder decision readiness, digital founder board, and workflow quality.',
     status: 'Active',
   },
   {
@@ -59,7 +59,7 @@ export const FOUNDER_TEST_V5_PHASES: FounderTestPhaseEvent[] = [
     phaseName: 'Launch Evaluation',
     section: 'Learning',
     action: 'Preparing Launch Recommendation',
-    detail: 'Synthesizing launch readiness, adoption prediction, product economics, product evolution roadmap, and final recommendation.',
+    detail: 'Synthesizing launch readiness, adoption prediction, product economics, product evolution roadmap, competitive reality, founder decision, digital founder board, and final recommendation.',
     status: 'Completed',
   },
 ].slice(0, FOUNDER_TEST_V5_MAX_PHASES);

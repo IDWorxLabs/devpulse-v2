@@ -274,6 +274,124 @@ ${listSection('Do Not Build', report.productEvolution.doNotBuild)}
 
 ${listSection('Evolution Candidates', report.productEvolution.candidates.map((c) => `[${c.rankingBucket}/${c.confidence}] ${c.name} — ${c.priorityScore}/100`))}
 
+## Competitive Reality
+
+Competitive Reality Score: **${report.competitiveReality.competitiveRealityScore}/100**
+
+Position: **${report.competitiveReality.competitivePosition.replace(/_/g, ' ')}**
+
+Differentiation Strength: ${report.competitiveReality.portfolioSubscores.differentiationStrength}/100 | Replacement Risk: ${report.competitiveReality.portfolioSubscores.replacementRisk}/100 (lower is better)
+
+Founder Advantage: ${report.competitiveReality.portfolioSubscores.founderAdvantage}/100 | Product Advantage: ${report.competitiveReality.portfolioSubscores.productAdvantage}/100
+
+Strategic Defensibility: ${report.competitiveReality.portfolioSubscores.strategicDefensibility}/100 | Blind Spot Risk: ${report.competitiveReality.portfolioSubscores.blindSpotRisk}/100
+
+Summary: ${report.competitiveReality.competitiveRealitySummary}
+
+${listSection('Strongest Competitive Advantages', report.competitiveReality.strongestCompetitiveAdvantages)}
+
+${listSection('Weakest Competitive Advantages', report.competitiveReality.weakestCompetitiveAdvantages)}
+
+${listSection('High Replacement Risks', report.competitiveReality.highReplacementRisks)}
+
+${listSection('Strategic Defensibility', report.competitiveReality.strategicDefensibility)}
+
+${listSection('Competitive Blind Spots', report.competitiveReality.competitiveBlindSpots)}
+
+${listSection('Unproven Competitive Claims', report.competitiveReality.unprovenCompetitiveClaims)}
+
+${listSection('Competitive Findings', report.competitiveReality.findings.map((f) => `[${f.severity}/${f.type}] ${f.explanation}`))}
+
+## Founder Decision Readiness
+
+Decision Readiness Score: **${report.founderDecisionReadiness.decisionReadinessScore}/100**
+
+Primary Recommendation: **${report.founderDecisionReadiness.primaryRecommendation.replace(/_/g, ' ')}**
+
+Decision Confidence: **${report.founderDecisionReadiness.decisionConfidence}**
+
+Launch Readiness: ${report.founderDecisionReadiness.portfolioSubscores.launchReadiness}/100 | Adoption Readiness: ${report.founderDecisionReadiness.portfolioSubscores.adoptionReadiness}/100
+
+Trust Readiness: ${report.founderDecisionReadiness.portfolioSubscores.trustReadiness}/100 | Product Readiness: ${report.founderDecisionReadiness.portfolioSubscores.productReadiness}/100
+
+Strategic Readiness: ${report.founderDecisionReadiness.portfolioSubscores.strategicReadiness}/100 | Founder Readiness: ${report.founderDecisionReadiness.portfolioSubscores.founderReadiness}/100
+
+Why this recommendation: ${report.founderDecisionReadiness.whyThisRecommendation}
+
+${listSection('Supporting Evidence', report.founderDecisionReadiness.supportingEvidence)}
+
+${listSection('Blocking Evidence', report.founderDecisionReadiness.blockingEvidence)}
+
+${listSection('Recommended Next Actions', report.founderDecisionReadiness.recommendedNextActions)}
+
+Summary: ${report.founderDecisionReadiness.decisionReadinessSummary}
+
+## Digital Founder Board
+
+Board Status: **${report.digitalFounderBoard.boardStatus.replace(/_/g, ' ')}**
+
+Summary: ${report.digitalFounderBoard.digitalFounderBoardSummary}
+
+### Executive Summary
+
+Founder Decision: **${report.digitalFounderBoard.executiveSummary.founderDecision.replace(/_/g, ' ')}** | Confidence: **${report.digitalFounderBoard.executiveSummary.decisionConfidence}**
+
+Why: ${report.digitalFounderBoard.executiveSummary.whyThisRecommendation}
+
+${listSection('Top Next Actions', report.digitalFounderBoard.executiveSummary.topNextActions)}
+
+### Product Health
+
+Launch: ${report.digitalFounderBoard.productHealth.launchReadiness}/100 | Adoption: ${report.digitalFounderBoard.productHealth.adoptionReadiness}/100 | Trust: ${report.digitalFounderBoard.productHealth.trustReadiness}/100 | Product: ${report.digitalFounderBoard.productHealth.productReadiness}/100 | Strategic: ${report.digitalFounderBoard.productHealth.strategicReadiness}/100 | Founder: ${report.digitalFounderBoard.productHealth.founderReadiness}/100
+
+### Risk Board
+
+${listSection('Highest Priority Risks', report.digitalFounderBoard.riskBoard.highestPriorityRisks)}
+
+${listSection('Blocking Evidence', report.digitalFounderBoard.riskBoard.blockingEvidence)}
+
+### Opportunity Board
+
+${listSection('Quick Wins', report.digitalFounderBoard.opportunityBoard.quickWins)}
+
+${listSection('Strategic Investments', report.digitalFounderBoard.opportunityBoard.strategicInvestments)}
+
+${listSection('Highest ROI Opportunities', report.digitalFounderBoard.opportunityBoard.highestRoiOpportunities)}
+
+${listSection('Recommended Next Investments', report.digitalFounderBoard.opportunityBoard.recommendedNextInvestments)}
+
+### Competitive Position
+
+Classification: **${report.digitalFounderBoard.competitivePosition.competitiveClassification}**
+
+${listSection('Strongest Advantages', report.digitalFounderBoard.competitivePosition.strongestAdvantages)}
+
+${listSection('Replacement Risks', report.digitalFounderBoard.competitivePosition.replacementRisks)}
+
+${listSection('Strategic Defensibility', report.digitalFounderBoard.competitivePosition.strategicDefensibility)}
+
+### Trust & Validation
+
+Verification Trust: ${report.digitalFounderBoard.trustValidation.verificationTrustScore}/100 | Promise Reality: ${report.digitalFounderBoard.trustValidation.promiseRealityScore}/100 | ${report.digitalFounderBoard.trustValidation.realityConfidence}
+
+${listSection('Unproven Claims', report.digitalFounderBoard.trustValidation.unprovenClaims)}
+
+${listSection('Contradicted Claims', report.digitalFounderBoard.trustValidation.contradictedClaims)}
+
+### Founder Experience
+
+First-Time User: ${report.digitalFounderBoard.founderExperience.firstTimeUserScore}/100 | Friction: ${report.digitalFounderBoard.founderExperience.frictionScore}/100 | Customer Journey: ${report.digitalFounderBoard.founderExperience.customerJourneyScore}/100 | Launch Day: ${report.digitalFounderBoard.founderExperience.launchDayScore}/100 | Adoption Prediction: ${report.digitalFounderBoard.founderExperience.adoptionPredictionScore}/100
+
+### Roadmap Intelligence
+
+${listSection('Build Next', report.digitalFounderBoard.roadmapIntelligence.buildNext)}
+
+${listSection('Build Later', report.digitalFounderBoard.roadmapIntelligence.buildLater)}
+
+${listSection('Do Not Build', report.digitalFounderBoard.roadmapIntelligence.doNotBuild)}
+
+${listSection('Recommended Actions', report.digitalFounderBoard.recommendedActions)}
+
 ## Final Recommendation
 
 ${s.finalRecommendation}

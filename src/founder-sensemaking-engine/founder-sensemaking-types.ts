@@ -89,4 +89,20 @@ export interface FounderSensemakingAssessment {
   evolutionDeferredOpportunities?: string[];
   evolutionDoNotBuildList?: string[];
   productEvolutionSummary?: string;
+  competitivePosition?: import('../competitive-reality-engine/competitive-reality-engine-types.js').CompetitivePositionClassification;
+  topCompetitiveAdvantages?: string[];
+  topCompetitiveRisks?: string[];
+  strategicDefensibilitySummary?: string[];
+  competitiveBlindSpots?: string[];
+  competitiveRealitySummary?: string;
+  founderDecision?: import('../founder-decision-readiness/founder-decision-readiness-types.js').FounderDecisionOutcome;
+  decisionConfidence?: import('../founder-decision-readiness/founder-decision-readiness-types.js').DecisionConfidence;
+  whyThisRecommendation?: string;
+  topDecisionBlockers?: string[];
+  topDecisionNextActions?: string[];
+  founderDecisionReadinessSummary?: string;
+  boardStatus?: import('../digital-founder-board/digital-founder-board-types.js').BoardStatusClassification;
+  digitalFounderBoardSummary?: string;
+  topBoardRisks?: string[];
+  topBoardOpportunities?: string[];
 }

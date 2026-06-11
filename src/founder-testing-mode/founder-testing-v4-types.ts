@@ -291,6 +291,12 @@ export interface FounderTestV4Report {
   productEconomicsScore: import('../product-economics-engine/product-economics-engine-types.js').ProductEconomicsVisibility;
   productEvolution: import('../product-evolution-engine/product-evolution-engine-types.js').ProductEvolutionAssessment;
   productEvolutionScore: import('../product-evolution-engine/product-evolution-engine-types.js').ProductEvolutionVisibility;
+  competitiveReality: import('../competitive-reality-engine/competitive-reality-engine-types.js').CompetitiveRealityAssessment;
+  competitiveRealityScore: import('../competitive-reality-engine/competitive-reality-engine-types.js').CompetitiveRealityVisibility;
+  founderDecisionReadiness: import('../founder-decision-readiness/founder-decision-readiness-types.js').FounderDecisionReadinessAssessment;
+  founderDecisionReadinessScore: import('../founder-decision-readiness/founder-decision-readiness-types.js').FounderDecisionReadinessVisibility;
+  digitalFounderBoard: import('../digital-founder-board/digital-founder-board-types.js').DigitalFounderBoardAssessment;
+  digitalFounderBoardScore: import('../digital-founder-board/digital-founder-board-types.js').DigitalFounderBoardVisibility;
   verificationReality: VerificationReality;
   promiseMatrix: PromiseRealityEntry[];
   realityGaps: RealityGap[];

@@ -316,3 +316,29 @@ export {
   resetProductEvolutionCounterForTests,
   type ProductEvolutionAssessment,
 } from '../product-evolution-engine/index.js';
+
+export {
+  COMPETITIVE_REALITY_ENGINE_PASS_TOKEN,
+  assessCompetitiveReality,
+  enrichAssessmentsWithCompetitiveReality,
+  evaluateCompetitiveRealityVisibility,
+  resetCompetitiveRealityCounterForTests,
+  type CompetitiveRealityAssessment,
+} from '../competitive-reality-engine/index.js';
+
+export {
+  FOUNDER_DECISION_READINESS_PASS_TOKEN,
+  assessFounderDecisionReadiness,
+  enrichAssessmentsWithFounderDecisionReadiness,
+  evaluateFounderDecisionReadinessVisibility,
+  resetFounderDecisionReadinessCounterForTests,
+  type FounderDecisionReadinessAssessment,
+} from '../founder-decision-readiness/index.js';
+
+export {
+  DIGITAL_FOUNDER_BOARD_PASS_TOKEN,
+  assembleDigitalFounderBoard,
+  enrichSensemakingWithDigitalFounderBoard,
+  evaluateDigitalFounderBoardVisibility,
+  type DigitalFounderBoardAssessment,
+} from '../digital-founder-board/index.js';

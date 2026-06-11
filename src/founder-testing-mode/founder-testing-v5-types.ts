@@ -61,6 +61,9 @@ export interface FounderTestV5Report {
   adoptionPrediction: import('../adoption-prediction-engine/adoption-prediction-engine-types.js').AdoptionPredictionAssessment;
   productEconomics: import('../product-economics-engine/product-economics-engine-types.js').ProductEconomicsAssessment;
   productEvolution: import('../product-evolution-engine/product-evolution-engine-types.js').ProductEvolutionAssessment;
+  competitiveReality: import('../competitive-reality-engine/competitive-reality-engine-types.js').CompetitiveRealityAssessment;
+  founderDecisionReadiness: import('../founder-decision-readiness/founder-decision-readiness-types.js').FounderDecisionReadinessAssessment;
+  digitalFounderBoard: import('../digital-founder-board/digital-founder-board-types.js').DigitalFounderBoardAssessment;
   verdict: string;
   reportMarkdown: string;
 }
