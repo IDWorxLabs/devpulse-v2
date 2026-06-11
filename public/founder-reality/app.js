@@ -2482,6 +2482,28 @@
         '</p>',
       ) +
       renderProductCard(
+        'Controlled Builder Execution',
+        '<p class="hint">Controlled execution inside isolated workspaces — read-only. No execution controls on this dashboard.</p>' +
+        '<p><strong>Execution Sessions:</strong> ' +
+        escapeHtml((data.controlledBuilderExecution && data.controlledBuilderExecution.sessions && data.controlledBuilderExecution.sessions.label) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Execution Actions Completed:</strong> ' +
+        escapeHtml((data.controlledBuilderExecution && data.controlledBuilderExecution.actions && data.controlledBuilderExecution.actions.label) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Execution Evidence Generated:</strong> ' +
+        escapeHtml((data.controlledBuilderExecution && data.controlledBuilderExecution.evidence && data.controlledBuilderExecution.evidence.label) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Execution State:</strong> ' +
+        escapeHtml((data.controlledBuilderExecution && data.controlledBuilderExecution.state && data.controlledBuilderExecution.state.label) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Workspace Isolation Status:</strong> ' +
+        escapeHtml((data.controlledBuilderExecution && data.controlledBuilderExecution.isolation && data.controlledBuilderExecution.isolation.label) || 'Loading…') +
+        '</p>' +
+        '<p class="hint">' +
+        escapeHtml((data.controlledBuilderExecution && data.controlledBuilderExecution.founderConclusion) || '') +
+        '</p>',
+      ) +
+      renderProductCard(
         'Evidence Summary',
         '<p><strong>Evidence Found</strong></p>' +
         renderExecutionProofList(data.evidenceFound, 'No evidence listed yet.') +

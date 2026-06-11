@@ -134,6 +134,7 @@ export interface WorkflowModulePresenceEvidence {
   hasAutonomousBuilderReality: boolean;
   hasLivePreviewReality: boolean;
   hasVerificationReality: boolean;
+  hasControlledBuilderExecutionEngine: boolean;
 }
 
 export interface FounderWorkflowReport {

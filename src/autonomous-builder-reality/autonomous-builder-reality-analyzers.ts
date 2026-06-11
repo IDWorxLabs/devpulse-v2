@@ -2,6 +2,10 @@
  * Autonomous Builder Reality — read-only analyzers.
  */
 
+import {
+  getBuilderExecutionSessionCount,
+  listControlledExecutionEvidence,
+} from '../controlled-builder-execution-engine/index.js';
 import type {
   AssessAutonomousBuilderRealityInput,
   BuilderAnalyzerResults,
@@ -196,6 +200,30 @@ export function collectBuilderExecutionEvidence(input: AssessAutonomousBuilderRe
   }
   if (moduleEvidence.hasAutonomousBuilderFoundation) {
     push('Planning', 'Autonomous builder foundation module exists (planningOnly readiness)', 'OBSERVED', 'src/autonomous-builder');
+  }
+  if (moduleEvidence.hasControlledBuilderExecutionEngine) {
+    push('Build Execution', 'Controlled builder execution engine exists (Phase 24C)', 'OBSERVED', 'src/controlled-builder-execution-engine');
+  }
+  const controlledSessionCount = getBuilderExecutionSessionCount();
+  if (controlledSessionCount > 0) {
+    push(
+      'Build Execution',
+      `${controlledSessionCount} controlled execution session(s) recorded`,
+      'OBSERVED',
+      'controlled-builder-execution-engine',
+    );
+  }
+  const controlledEvidence = listControlledExecutionEvidence();
+  if (controlledEvidence.some((e) => e.evidenceType === 'ACTION_COMPLETED')) {
+    push('Build Execution', 'Controlled execution actions completed with evidence', 'OBSERVED', 'controlled-builder-execution-engine');
+  }
+  if (controlledEvidence.some((e) => e.evidenceType === 'SESSION_COMPLETED')) {
+    push(
+      'Build Execution',
+      'Controlled execution session completed — path toward executionConnected=true',
+      'OBSERVED',
+      'controlled-builder-execution-engine',
+    );
   }
 
   return evidence;

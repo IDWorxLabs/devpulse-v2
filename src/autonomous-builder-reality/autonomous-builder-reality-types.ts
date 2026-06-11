@@ -104,6 +104,7 @@ export interface ModulePresenceEvidence {
   hasWorld2ControlledApply: boolean;
   hasAutonomousBuilderFoundation: boolean;
   hasExecutionRuntime: boolean;
+  hasControlledBuilderExecutionEngine: boolean;
   validatorScriptCount: number;
 }
 

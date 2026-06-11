@@ -13,6 +13,13 @@ import {
   prepareBuilderExecutionFoundation,
   type BuilderExecutionFoundationSummary,
 } from '../src/autonomous-builder-execution-foundation/index.js';
+import {
+  assessControlledBuilderExecution,
+  getControlledBuilderExecutionSummary,
+  isControlledBuilderExecutionConnected,
+  runControlledBuilderExecution,
+  type ControlledBuilderExecutionSummary,
+} from '../src/controlled-builder-execution-engine/index.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = join(__dirname, '..');
@@ -68,6 +75,7 @@ export interface ExecutionProofPayload {
   founderBlockers: string[];
   founderConclusion: string;
   executionFoundation: BuilderExecutionFoundationSummary;
+  controlledBuilderExecution: ControlledBuilderExecutionSummary;
   copyReportText: string;
 }
 
@@ -151,6 +159,16 @@ Execution Plans: ${payload.executionFoundation.plan.label}
 
 ${payload.executionFoundation.founderConclusion}
 
+## Controlled Builder Execution (24C)
+
+Execution Sessions: ${payload.controlledBuilderExecution.sessions.label}
+Execution Actions Completed: ${payload.controlledBuilderExecution.actions.label}
+Execution Evidence Generated: ${payload.controlledBuilderExecution.evidence.label}
+Execution State: ${payload.controlledBuilderExecution.state.label}
+Workspace Isolation Status: ${payload.controlledBuilderExecution.isolation.label}
+
+${payload.controlledBuilderExecution.founderConclusion}
+
 ---
 Reality only — not a pass token or marketing score.`;
 }
@@ -170,10 +188,28 @@ function ensureExecutionFoundationSeed(): void {
   });
 }
 
+function ensureControlledExecutionSeed(): void {
+  if (isControlledBuilderExecutionConnected()) return;
+  const workspaces = getBuilderExecutionWorkspaceCount();
+  if (workspaces === 0) return;
+  const foundation = getBuilderExecutionFoundationSummary();
+  const workspaceId = foundation.workspace.latestId;
+  if (!workspaceId) return;
+  runControlledBuilderExecution({
+    workspaceId,
+    projectId: 'proj-foundation-demo',
+  });
+}
+
 export function buildExecutionProofPayload(rootDir = ROOT_DIR): ExecutionProofPayload {
   ensureExecutionFoundationSeed();
+  ensureControlledExecutionSeed();
   const assessment = assessFounderWorkflowReality(rootDir);
   const executionFoundation = getBuilderExecutionFoundationSummary();
+  const controlledAssessment = assessControlledBuilderExecution();
+  const controlledBuilderExecution = getControlledBuilderExecutionSummary(
+    controlledAssessment.executionConnected,
+  );
 
   const workflowTruthMap = assessment.analyzers.stages.map((s) => ({
     stage: s.stage,
@@ -197,8 +233,13 @@ export function buildExecutionProofPayload(rootDir = ROOT_DIR): ExecutionProofPa
     ),
   };
 
-  const foundationEvidence = executionFoundation.realityEvidenceLines.slice(0, 4);
-  const mergedEvidenceFound = [...assessment.evidenceFound.slice(0, 6), ...foundationEvidence].slice(0, 10);
+  const foundationEvidence = executionFoundation.realityEvidenceLines.slice(0, 3);
+  const controlledEvidence = controlledBuilderExecution.realityEvidenceLines.slice(0, 3);
+  const mergedEvidenceFound = [
+    ...assessment.evidenceFound.slice(0, 5),
+    ...foundationEvidence,
+    ...controlledEvidence,
+  ].slice(0, 12);
 
   const base = {
     ownerModule: EXECUTION_PROOF_OWNER_MODULE,
@@ -220,6 +261,7 @@ export function buildExecutionProofPayload(rootDir = ROOT_DIR): ExecutionProofPa
     founderBlockers: assessment.founderBlockers.slice(0, 6),
     founderConclusion: assessment.founderConclusion,
     executionFoundation,
+    controlledBuilderExecution,
   };
 
   return {
@@ -234,7 +276,7 @@ export function sendExecutionProofJson(res: import('node:http').ServerResponse, 
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
     'X-DevPulse-Surface': 'execution-proof',
-    'X-DevPulse-Phase': '24B',
+    'X-DevPulse-Phase': '24C',
   });
   res.end(JSON.stringify(payload));
 }

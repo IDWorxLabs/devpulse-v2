@@ -392,6 +392,7 @@ export function detectModulePresenceEvidence(rootDir: string): ModulePresenceEvi
     hasWorld2ControlledApply: pathExists('src/world2-controlled-apply-runtime/index.ts'),
     hasAutonomousBuilderFoundation: pathExists('src/autonomous-builder/index.ts'),
     hasExecutionRuntime: pathExists('src/execution-runtime/index.ts'),
+    hasControlledBuilderExecutionEngine: pathExists('src/controlled-builder-execution-engine/index.ts'),
     validatorScriptCount,
   };
 }

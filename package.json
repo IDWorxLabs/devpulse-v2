@@ -89,6 +89,7 @@
     "validate:end-to-end-founder-workflow-reality": "tsx scripts/validate-end-to-end-founder-workflow-reality.ts",
     "validate:execution-proof-dashboard": "tsx scripts/validate-execution-proof-dashboard.ts",
     "validate:autonomous-builder-execution-foundation": "tsx scripts/validate-autonomous-builder-execution-foundation.ts",
+    "validate:controlled-builder-execution-engine": "tsx scripts/validate-controlled-builder-execution-engine.ts",
     "validate:running-application-visibility": "tsx scripts/validate-running-application-visibility.ts",
     "validate:verification-results-visibility": "tsx scripts/validate-verification-results-visibility.ts",
     "validate:change-intelligence-visibility": "tsx scripts/validate-change-intelligence-visibility.ts",

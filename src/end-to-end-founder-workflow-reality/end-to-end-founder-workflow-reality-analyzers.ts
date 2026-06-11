@@ -22,6 +22,10 @@ import {
   buildVerificationWorkspaceSignalsForValidation,
   detectVerificationModulePresenceEvidence,
 } from '../verification-reality/index.js';
+import {
+  getBuilderExecutionSessionCount,
+  listControlledExecutionEvidence,
+} from '../controlled-builder-execution-engine/index.js';
 import type {
   AssessFounderWorkflowRealityInput,
   FounderWorkflowAnalyzerResults,
@@ -87,6 +91,7 @@ export function detectWorkflowModulePresenceEvidence(rootDir: string): WorkflowM
     hasAutonomousBuilderReality: pathExists('src/autonomous-builder-reality/index.ts'),
     hasLivePreviewReality: pathExists('src/live-preview-reality/index.ts'),
     hasVerificationReality: pathExists('src/verification-reality/index.ts'),
+    hasControlledBuilderExecutionEngine: pathExists('src/controlled-builder-execution-engine/index.ts'),
   };
 }
 
@@ -476,6 +481,15 @@ export function collectFounderWorkflowEvidence(input: AssessFounderWorkflowReali
   if (m.hasBuildTaskRuntime) push('OBSERVED', 'Task breakdown runtime module present', 'build-task-runtime');
   if (!upstream.builderExecutionConnected) {
     push('OBSERVED', 'Build stage blocked — executionConnected=false (24A.1)', 'autonomous-builder-reality');
+  }
+  if (m.hasControlledBuilderExecutionEngine) {
+    push('OBSERVED', 'Controlled builder execution engine present (Phase 24C)', 'controlled-builder-execution-engine');
+  }
+  if (getBuilderExecutionSessionCount() > 0) {
+    push('OBSERVED', 'Execution session exists in controlled builder engine', 'controlled-builder-execution-engine');
+  }
+  if (listControlledExecutionEvidence().some((e) => e.evidenceType === 'SESSION_COMPLETED')) {
+    push('OBSERVED', 'Controlled execution evidence produced — session completed', 'controlled-builder-execution-engine');
   }
   if (m.hasFounderRealityUi) {
     push('CLAIMED', 'Founder UI surface exists — panel presence is not proof', 'founder-reality-ui');
