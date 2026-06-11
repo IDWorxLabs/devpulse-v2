@@ -2466,6 +2466,22 @@
       ) +
       renderProductCard('Reality Scores', scoreRows) +
       renderProductCard(
+        'Execution Foundation',
+        '<p class="hint">Current execution foundation state — read-only. Planned actions are not executed from this dashboard.</p>' +
+        '<p><strong>Execution Workspace:</strong> ' +
+        escapeHtml((data.executionFoundation && data.executionFoundation.workspace && data.executionFoundation.workspace.label) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Execution Queue:</strong> ' +
+        escapeHtml((data.executionFoundation && data.executionFoundation.queue && data.executionFoundation.queue.label) || 'Loading…') +
+        '</p>' +
+        '<p><strong>Execution Evidence:</strong> ' +
+        escapeHtml((data.executionFoundation && data.executionFoundation.evidence && data.executionFoundation.evidence.label) || 'Loading…') +
+        '</p>' +
+        '<p class="hint">' +
+        escapeHtml((data.executionFoundation && data.executionFoundation.founderConclusion) || '') +
+        '</p>',
+      ) +
+      renderProductCard(
         'Evidence Summary',
         '<p><strong>Evidence Found</strong></p>' +
         renderExecutionProofList(data.evidenceFound, 'No evidence listed yet.') +
