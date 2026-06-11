@@ -144,6 +144,179 @@ ${report.founderActionCenter.topActions.slice(0, 5).map((a, i) => `${i + 1}. [${
 Blockers:
 ${report.founderActionCenter.blockers.map((b) => `- ${b.title}: ${b.impact}`).join('\n') || 'None'}
 
+## Founder Interaction Simulation
+
+Interaction score: **${report.founderInteractionSimulation.interactionScore}/100**
+
+Tested: ${report.founderInteractionSimulation.testedInteractions} | Passed: ${report.founderInteractionSimulation.passedInteractions}
+
+Modal close regression: ${report.founderInteractionSimulation.modalCloseRegressionPass ? 'PASS' : 'FAIL'}
+
+Failures:
+${report.founderInteractionSimulation.findings.slice(0, 6).map((f) => `- [${f.severity}] ${f.whatFailed} — ${f.recommendedFix}`).join('\n') || 'None'}
+
+## First-Time User Reality
+
+First-Time User Score: **${report.firstTimeUserReality.firstTimeUserScore}/100**
+
+Understanding: ${report.firstTimeUserReality.categoryScores.understanding}/100 | Navigation: ${report.firstTimeUserReality.categoryScores.navigation}/100 | Workflow: ${report.firstTimeUserReality.categoryScores.workflow}/100
+
+Strengths:
+${report.firstTimeUserReality.strengths.map((s) => `- ${s}`).join('\n') || 'None'}
+
+Weaknesses:
+${report.firstTimeUserReality.weaknesses.map((w) => `- ${w}`).join('\n') || 'None'}
+
+Top confusion risk: ${report.firstTimeUserReality.topConfusionRisk ?? 'None'}
+
+## Customer Journey Simulation
+
+Customer Journey Score: **${report.customerJourneySimulation.customerJourneyScore}/100**
+
+Discovery: ${report.customerJourneySimulation.subscores.discovery}/100 | Onboarding: ${report.customerJourneySimulation.subscores.onboarding}/100 | Value: ${report.customerJourneySimulation.subscores.value}/100
+
+Trust: ${report.customerJourneySimulation.subscores.trust}/100 | Retention: ${report.customerJourneySimulation.subscores.retention}/100 | Advocacy: ${report.customerJourneySimulation.subscores.advocacy}/100
+
+Customer ready: ${report.customerJourneySimulation.customerReady ? 'Yes' : 'No'} | Not ready for customers: ${report.customerJourneySimulation.notReadyForCustomers ? 'Yes' : 'No'}
+
+Strengths:
+${report.customerJourneySimulation.strengths.map((s) => `- ${s}`).join('\n') || 'None'}
+
+Weaknesses:
+${report.customerJourneySimulation.weaknesses.map((w) => `- ${w}`).join('\n') || 'None'}
+
+Top adoption blocker: ${report.customerJourneySimulation.topAdoptionBlocker ?? 'None'}
+
+## Promise Reality Engine
+
+Promise Reality Score: **${report.promiseRealityEngine.promiseRealityScore}/100**
+
+Execution Gap Score: **${report.promiseRealityEngine.executionGapScore}/100** (lower is better)
+
+Reality Confidence: **${report.promiseRealityEngine.realityConfidence}/100**
+
+Proven claims:
+${report.promiseRealityEngine.provenClaims.map((c) => `- ${c.claim}: ${c.evidence}`).join('\n') || 'None'}
+
+Unproven claims:
+${report.promiseRealityEngine.unprovenClaims.map((c) => `- ${c.claim}: ${c.whyUnproven ?? c.evidence}`).join('\n') || 'None'}
+
+Contradicted claims:
+${report.promiseRealityEngine.contradictedClaims.map((c) => `- [${c.severity}] ${c.claim}: ${c.contradictingEvidence ?? c.evidence}`).join('\n') || 'None'}
+
+## Visual Quality Authority
+
+Visual Quality Score: **${report.visualQualityAuthority.visualQualityScore}/100**
+
+Launch appearance confidence: **${report.visualQualityAuthority.launchAppearanceConfidence}/100**
+
+Strengths:
+${report.visualQualityAuthority.strengths.map((s) => `- ${s}`).join('\n') || 'None'}
+
+Weaknesses:
+${report.visualQualityAuthority.weaknesses.map((w) => `- ${w}`).join('\n') || 'None'}
+
+Launch appearance risks:
+${report.visualQualityAuthority.launchAppearanceRisks.map((r) => `- ${r}`).join('\n') || 'None'}
+
+## Launch Day Simulation
+
+Launch Day Score: **${report.launchDaySimulation.launchDayScore}/100**
+
+Launch confidence: **${report.launchDaySimulation.launchConfidence}/100**
+
+Top launch blockers:
+${report.launchDaySimulation.topLaunchBlockers.map((b) => `- [${b.severity}] ${b.explanation}`).join('\n') || 'None'}
+
+Highest-risk assumptions:
+${report.launchDaySimulation.highestRiskAssumptions.map((a) => `- ${a}`).join('\n') || 'None'}
+
+## Adoption Prediction
+
+Adoption Prediction Score: **${report.adoptionPrediction.adoptionPredictionScore}/100**
+
+Adoption confidence: **${report.adoptionPrediction.adoptionConfidence}/100**
+
+Value Clarity: ${report.adoptionPrediction.subscores.valueClarity}/100 | Time-to-Value: ${report.adoptionPrediction.subscores.timeToValue}/100 | Adoption Friction: ${report.adoptionPrediction.subscores.adoptionFriction}/100
+
+Retention Potential: ${report.adoptionPrediction.subscores.retentionPotential}/100 | Recommendation Potential: ${report.adoptionPrediction.subscores.recommendationPotential}/100 | Competitive Pressure: ${report.adoptionPrediction.subscores.competitivePressure}/100
+
+Strengths:
+${report.adoptionPrediction.adoptionStrengths.map((s) => `- ${s}`).join('\n') || 'None'}
+
+Weaknesses:
+${report.adoptionPrediction.adoptionWeaknesses.map((w) => `- ${w}`).join('\n') || 'None'}
+
+Adoption blockers:
+${report.adoptionPrediction.adoptionBlockers.map((b) => `- [${b.severity}] ${b.explanation}`).join('\n') || 'None'}
+
+Retention risks:
+${report.adoptionPrediction.retentionRisks.map((r) => `- ${r}`).join('\n') || 'None'}
+
+Recommendation risks:
+${report.adoptionPrediction.recommendationRisks.map((r) => `- ${r}`).join('\n') || 'None'}
+
+Competitive risks:
+${report.adoptionPrediction.competitiveRisks.map((r) => `- ${r}`).join('\n') || 'None'}
+
+## Product Economics
+
+Product Economics Score: **${report.productEconomics.productEconomicsScore}/100**
+
+User Value: ${report.productEconomics.subscores.userValue}/100 | Founder Value: ${report.productEconomics.subscores.founderValue}/100 | Build Cost: ${report.productEconomics.subscores.buildCost}/100
+
+Maintenance Cost: ${report.productEconomics.subscores.maintenanceCost}/100 | Adoption Impact: ${report.productEconomics.subscores.adoptionImpact}/100 | Strategic Value: ${report.productEconomics.subscores.strategicValue}/100
+
+Summary: ${report.productEconomics.productEconomicsSummary}
+
+Highest ROI:
+${report.productEconomics.highestRoiOpportunities.map((o) => `- ${o}`).join('\n') || 'None'}
+
+Lowest ROI:
+${report.productEconomics.lowestRoiOpportunities.map((o) => `- ${o}`).join('\n') || 'None'}
+
+Economic risks:
+${report.productEconomics.economicRisks.map((r) => `- ${r}`).join('\n') || 'None'}
+
+## Product Evolution
+
+Product Evolution Score: **${report.productEvolution.productEvolutionScore}/100**
+
+Adoption Growth: ${report.productEvolution.portfolioSubscores.adoptionGrowth}/100 | Friction Reduction: ${report.productEvolution.portfolioSubscores.frictionReduction}/100 | Trust Improvement: ${report.productEvolution.portfolioSubscores.trustImprovement}/100
+
+Quality Improvement: ${report.productEvolution.portfolioSubscores.qualityImprovement}/100 | Strategic Leverage: ${report.productEvolution.portfolioSubscores.strategicLeverage}/100 | Execution Efficiency: ${report.productEvolution.portfolioSubscores.executionEfficiency}/100
+
+Summary: ${report.productEvolution.productEvolutionSummary}
+
+Recommended next investments:
+${report.productEvolution.recommendedNextInvestments.map((o) => `- ${o}`).join('\n') || 'None'}
+
+Quick wins:
+${report.productEvolution.quickWins.map((o) => `- ${o}`).join('\n') || 'None'}
+
+Do not build:
+${report.productEvolution.doNotBuild.map((o) => `- ${o}`).join('\n') || 'None'}
+
+## Founder Sensemaking / Product Coherence
+
+Founder Sensemaking Score: **${report.founderSensemaking.founderSensemakingScore}/100**
+
+Product Coherence Score: **${report.founderSensemaking.productCoherenceScore}/100**
+
+Visibility score: **${report.founderSensemakingVisibilityScore.score}/100**
+
+Top confusion risks:
+${report.founderSensemaking.topConfusionRisks.map((f) => `- [${f.severity}] ${f.whatDoesNotMakeSense}`).join('\n') || 'None'}
+
+Top contradictions:
+${report.founderSensemaking.topContradictions.map((f) => `- [${f.severity}] ${f.whatDoesNotMakeSense}`).join('\n') || 'None'}
+
+Top trust risks:
+${report.founderSensemaking.topTrustRisks.map((f) => `- [${f.severity}] ${f.whatDoesNotMakeSense}`).join('\n') || 'None'}
+
+Recommended upgrades:
+${report.founderSensemaking.recommendedUpgrades.slice(0, 5).map((u, i) => `${i + 1}. [${u.priority}] ${u.title} — ${u.expectedImpact}`).join('\n') || 'None'}
+
 ## Verification Reality
 
 Score: **${report.verificationReality.score}/100**

@@ -10,6 +10,7 @@ import {
   runFounderTestingModeV2,
   runFounderTestingModeV3,
   runFounderTestingModeV4,
+  runFounderTestingModeV5,
 } from '../src/founder-testing-mode/index.js';
 import {
   assessChangeIntelligenceVisibility,
@@ -29,7 +30,7 @@ export function sendFounderTestJson(
   res: ServerResponse,
   status: number,
   body: unknown,
-  version: 'v1' | 'v2' | 'v3' | 'v4' = 'v1',
+  version: 'v1' | 'v2' | 'v3' | 'v4' | 'v5' = 'v1',
 ): void {
   res.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
@@ -40,46 +41,88 @@ export function sendFounderTestJson(
   res.end(JSON.stringify(body));
 }
 
+async function parseFounderTestBody(req: IncomingMessage): Promise<{
+  liveResults?: LiveScreenResultInput[];
+  liveSection?: string;
+}> {
+  if (req.method !== 'POST') return {};
+  const raw = await readRequestBody(req);
+  if (!raw.trim()) return {};
+  const body = JSON.parse(raw) as {
+    liveResults?: LiveScreenResultInput[];
+    liveSection?: string;
+  };
+  return { liveResults: body.liveResults, liveSection: body.liveSection };
+}
+
+function executeUnifiedFounderTestV5(
+  validatorScripts: string[],
+  liveResults?: LiveScreenResultInput[],
+  liveSection?: string,
+) {
+  const report = runFounderTestingModeV5({
+    rootDir: ROOT_DIR,
+    validatorScripts,
+    liveResults,
+    liveSection,
+  });
+  const verificationResults = setLastVerificationResultsFromV4Report(report.v4);
+  const workspace = buildProductWorkspaceSnapshot(validatorScripts);
+  recordFounderTestChangeSnapshot(
+    { ...workspace, verificationResults },
+    verificationResults.summary.readinessScore,
+    report.v4.launchReadinessReality.launchReadinessRealityScore,
+  );
+  const changeIntelligence = assessChangeIntelligenceVisibility(getChangeIntelligenceHistory());
+  const founderActionCenter = assessFounderActionCenter({
+    ...workspace,
+    verificationResults,
+    changeIntelligence,
+  });
+  return {
+    report,
+    verificationResults,
+    changeIntelligence,
+    founderActionCenter,
+    founderSensemaking: report.founderSensemaking,
+    founderFrictionHeatmap: report.founderFrictionHeatmap,
+    phaseFeedEvents: report.phaseFeedEvents,
+  };
+}
+
+/** Primary founder validation entry — unified V5 orchestration. */
 export async function handleFounderTestRunRequest(
   req: IncomingMessage,
   res: ServerResponse,
   validatorScripts: string[],
 ): Promise<void> {
   try {
-    let liveResults: LiveScreenResultInput[] | undefined;
-    let liveSection: string | undefined;
+    const { liveResults, liveSection } = await parseFounderTestBody(req);
+    const result = executeUnifiedFounderTestV5(validatorScripts, liveResults, liveSection);
 
-    if (req.method === 'POST') {
-      const raw = await readRequestBody(req);
-      if (raw.trim()) {
-        const body = JSON.parse(raw) as {
-          liveResults?: LiveScreenResultInput[];
-          liveSection?: string;
-        };
-        liveResults = body.liveResults;
-        liveSection = body.liveSection;
-      }
-    }
-
-    const report = runFounderTestingMode({
-      rootDir: ROOT_DIR,
-      validatorScripts,
-      liveResults,
-      liveSection,
-    });
-
-    sendFounderTestJson(res, 200, {
-      ok: true,
-      readOnly: true,
-      report,
-    });
+    sendFounderTestJson(
+      res,
+      200,
+      {
+        ok: true,
+        readOnly: true,
+        mode: 'founder-testing-v5',
+        ...result,
+      },
+      'v5',
+    );
   } catch (err) {
     const message = err instanceof Error ? err.message : 'founder test failed';
-    sendFounderTestJson(res, 500, {
-      ok: false,
-      readOnly: true,
-      error: message,
-    });
+    sendFounderTestJson(
+      res,
+      500,
+      {
+        ok: false,
+        readOnly: true,
+        error: message,
+      },
+      'v5',
+    );
   }
 }
 
@@ -191,47 +234,15 @@ export async function handleFounderTestRunV3Request(
   }
 }
 
+/** Back-compat alias — routes to unified V5 orchestration. */
 export async function handleFounderTestRunV4Request(
   req: IncomingMessage,
   res: ServerResponse,
   validatorScripts: string[],
 ): Promise<void> {
   try {
-    let liveResults: LiveScreenResultInput[] | undefined;
-    let liveSection: string | undefined;
-
-    if (req.method === 'POST') {
-      const raw = await readRequestBody(req);
-      if (raw.trim()) {
-        const body = JSON.parse(raw) as {
-          liveResults?: LiveScreenResultInput[];
-          liveSection?: string;
-        };
-        liveResults = body.liveResults;
-        liveSection = body.liveSection;
-      }
-    }
-
-    const report = runFounderTestingModeV4({
-      rootDir: ROOT_DIR,
-      validatorScripts,
-      liveResults,
-      liveSection,
-    });
-    const verificationResults = setLastVerificationResultsFromV4Report(report);
-    const workspace = buildProductWorkspaceSnapshot(validatorScripts);
-    recordFounderTestChangeSnapshot(
-      { ...workspace, verificationResults },
-      verificationResults.summary.readinessScore,
-      report.launchReadinessReality.launchReadinessRealityScore,
-    );
-
-    const changeIntelligence = assessChangeIntelligenceVisibility(getChangeIntelligenceHistory());
-    const founderActionCenter = assessFounderActionCenter({
-      ...workspace,
-      verificationResults,
-      changeIntelligence,
-    });
+    const { liveResults, liveSection } = await parseFounderTestBody(req);
+    const result = executeUnifiedFounderTestV5(validatorScripts, liveResults, liveSection);
 
     sendFounderTestJson(
       res,
@@ -239,16 +250,13 @@ export async function handleFounderTestRunV4Request(
       {
         ok: true,
         readOnly: true,
-        mode: 'founder-testing-v4',
-        report,
-        verificationResults,
-        changeIntelligence,
-        founderActionCenter,
+        mode: 'founder-testing-v5',
+        ...result,
       },
-      'v4',
+      'v5',
     );
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'founder test v4 failed';
+    const message = err instanceof Error ? err.message : 'founder test failed';
     sendFounderTestJson(
       res,
       500,
@@ -257,7 +265,7 @@ export async function handleFounderTestRunV4Request(
         readOnly: true,
         error: message,
       },
-      'v4',
+      'v5',
     );
   }
 }

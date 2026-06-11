@@ -45,6 +45,7 @@ export function assessProjectIntelligenceClarity(sources: {
   const memoryText = extractFunctionBlock(appJs, 'renderProjectMemorySurface');
   const insightsText = [
     extractFunctionBlock(appJs, 'renderProjectInsightsSurface'),
+    extractFunctionBlock(appJs, 'renderProjectInsightsClarityIntro'),
     extractFunctionBlock(appJs, 'renderProjectInsightsPortfolio'),
     extractFunctionBlock(appJs, 'renderProjectInsightsDetail'),
     extractFunctionBlock(appJs, 'renderIntelligenceRelationship'),
@@ -104,10 +105,12 @@ export function assessProjectIntelligenceClarity(sources: {
 
   const sidebarMemoryHelp =
     html.includes('data-view="project-memory"') &&
-    html.includes('Project knowledge, requirements, and history');
+    (html.includes('Project knowledge, requirements, and history') ||
+      html.includes('Project vault: stored knowledge'));
   const sidebarInsightsHelp =
     html.includes('data-view="project-insights"') &&
-    html.includes('Project health, risks, recommendations, and progress');
+    (html.includes('Project health, risks, recommendations, and progress') ||
+      html.includes('patterns, risks, and recommendations'));
   checks.push({
     id: 'sidebar-memory',
     label: 'Sidebar Project Memory description',

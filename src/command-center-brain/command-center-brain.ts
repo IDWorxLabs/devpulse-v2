@@ -30,6 +30,7 @@ import { resolveRunningApplicationResponse } from './running-application-respons
 import { resolveChangeIntelligenceResponse } from './change-intelligence-responses.js';
 import { resolveVerificationResultsResponse } from './verification-results-responses.js';
 import { resolveFounderActionCenterResponse } from './founder-action-center-responses.js';
+import { resolveFounderSensemakingResponse } from './founder-sensemaking-responses.js';
 import {
   buildCrossSystemSnapshot,
   crossSystemAwarenessKey,
@@ -792,8 +793,18 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
       ? null
       : resolveFounderActionCenterResponse(message);
   const founderActionCenterOwns = Boolean(founderActionCenterResponse);
+  const founderSensemakingResponse =
+    blocked ||
+    founderActionCenterOwns ||
+    runningAppOwns ||
+    verificationResultsOwns ||
+    changeIntelligenceOwns
+      ? null
+      : resolveFounderSensemakingResponse(message);
+  const founderSensemakingOwns = Boolean(founderSensemakingResponse);
   const productIdentityResponse =
     blocked ||
+    founderSensemakingOwns ||
     founderActionCenterOwns ||
     runningAppOwns ||
     verificationResultsOwns ||
@@ -805,6 +816,7 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
   const routingPlan: QuestionRoutingPlan | undefined =
     blocked ||
     productIdentityOwns ||
+    founderSensemakingOwns ||
     founderActionCenterOwns ||
     runningAppOwns ||
     verificationResultsOwns ||
@@ -813,6 +825,7 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
       : understandGeneralQuestion(message);
   const useGeneralRouter =
     productIdentityOwns ||
+    founderSensemakingOwns ||
     founderActionCenterOwns ||
     runningAppOwns ||
     verificationResultsOwns ||
@@ -894,6 +907,8 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
       ? runningAppResponse!
       : founderActionCenterOwns
       ? founderActionCenterResponse!
+      : founderSensemakingOwns
+      ? founderSensemakingResponse!
       : productIdentityOwns
       ? productIdentityResponse!
       : generalRouterOwns

@@ -324,6 +324,118 @@ export function evaluateFounderActionCenterVisibility(
   };
 }
 
+export function evaluateFounderSensemakingVisibility(
+  assessment: import('../founder-sensemaking-engine/founder-sensemaking-types.js').FounderSensemakingAssessment,
+  sources: ScreenCheckSources,
+): import('./founder-testing-v4-types.js').FounderSensemakingVisibility {
+  const uiPresent =
+    sources.appJs.includes('product-coherence-visibility') &&
+    sources.appJs.includes('Product Coherence') &&
+    sources.appJs.includes("What Doesn't Make Sense") &&
+    sources.appJs.includes('Contradictions') &&
+    sources.appJs.includes('Trust Risks') &&
+    sources.appJs.includes('Recommended Upgrades');
+
+  const checks = [
+    assessment.findingsGenerated || assessment.insufficientInfo,
+    assessment.contradictionsDetected ? sources.appJs.includes('Contradictions') : true,
+    assessment.trustRisksDetected ? sources.appJs.includes('Trust Risks') : true,
+    assessment.upgradesGenerated ? sources.appJs.includes('Recommended Upgrades') : true,
+    assessment.scoresExplained,
+    assessment.noFalseContradictions,
+    assessment.noArchitectureLeakage,
+    uiPresent,
+  ];
+
+  return {
+    score: assessment.founderSensemakingScore,
+    coherenceScore: assessment.productCoherenceScore,
+    findingsVisiblePass: (assessment.findingsGenerated || assessment.insufficientInfo) && uiPresent,
+    contradictionsVisiblePass: !assessment.contradictionsDetected || sources.appJs.includes('Contradictions'),
+    trustRisksVisiblePass: !assessment.trustRisksDetected || sources.appJs.includes('Trust Risks'),
+    upgradesVisiblePass: !assessment.upgradesGenerated || sources.appJs.includes('Recommended Upgrades'),
+    scoresExplainedPass: assessment.scoresExplained,
+    noFalseContradictionsPass: assessment.noFalseContradictions,
+    findingCount: assessment.findings.length,
+    contradictionCount: assessment.topContradictions.length,
+    trustRiskCount: assessment.topTrustRisks.length,
+    upgradeCount: assessment.recommendedUpgrades.length,
+  };
+}
+
+export function evaluateFounderInteractionSimulationVisibility(
+  assessment: import('../founder-interaction-simulation/founder-interaction-simulation-types.js').FounderInteractionSimulationAssessment,
+  sources: ScreenCheckSources,
+): import('./founder-testing-v4-types.js').FounderInteractionSimulationVisibility {
+  const uiPresent =
+    sources.appJs.includes('founder-test-panel') &&
+    sources.appJs.includes('founder-test-close') &&
+    sources.appJs.includes('hideFounderTestPanel');
+
+  const checks = [
+    assessment.testedInteractions > 0,
+    assessment.modalCloseRegressionPass,
+    assessment.commandCenterReadableAfterClosePass,
+    assessment.copyReportAvailablePass,
+    assessment.sendInputUsableAfterClosePass,
+    uiPresent,
+    sources.css.includes('.founder-test-panel[hidden]'),
+  ];
+
+  return {
+    score: clamp((checks.filter(Boolean).length / checks.length) * 100),
+    interactionScore: assessment.interactionScore,
+    scenariosRun: assessment.testedInteractions,
+    scenariosPassed: assessment.passedInteractions,
+    modalCloseRegressionPass: assessment.modalCloseRegressionPass,
+    commandCenterReadableAfterClosePass: assessment.commandCenterReadableAfterClosePass,
+    copyReportAvailablePass: assessment.copyReportAvailablePass,
+    sendInputUsableAfterClosePass: assessment.sendInputUsableAfterClosePass,
+    failureCount: assessment.findings.length,
+    blockedWorkflowCount: assessment.blockedWorkflows.length,
+  };
+}
+
+export function evaluateFirstTimeUserRealityVisibility(
+  assessment: import('../first-time-user-reality/first-time-user-reality-types.js').FirstTimeUserRealityAssessment,
+  sources: ScreenCheckSources,
+): import('./founder-testing-v4-types.js').FirstTimeUserRealityVisibility {
+  const uiPresent =
+    sources.html.includes('welcome-subtitle') &&
+    sources.appJs.includes('switchView') &&
+    sources.html.includes('sidebar-nav');
+
+  const checks = [
+    assessment.scenarios.length > 0,
+    assessment.productUnderstandingPass,
+    assessment.navigationUnderstandingPass,
+    assessment.workflowClarityPass,
+    assessment.trustFormationPass,
+    assessment.cognitiveLoadPass,
+    uiPresent,
+  ];
+
+  const cs = assessment.categoryScores;
+
+  return {
+    score: clamp((checks.filter(Boolean).length / checks.length) * 100),
+    firstTimeUserScore: assessment.firstTimeUserScore,
+    understandingScore: cs.understanding,
+    navigationScore: cs.navigation,
+    workflowScore: cs.workflow,
+    trustScore: cs.trust,
+    simplicityScore: cs.simplicity,
+    screenPurposeChecks: assessment.screenPurposeResults.length,
+    screenPurposePassCount: assessment.screenPurposeResults.filter((s) => s.purposeClear).length,
+    productUnderstandingPass: assessment.productUnderstandingPass,
+    navigationUnderstandingPass: assessment.navigationUnderstandingPass,
+    workflowClarityPass: assessment.workflowClarityPass,
+    trustFormationPass: assessment.trustFormationPass,
+    cognitiveLoadPass: assessment.cognitiveLoadPass,
+    findingCount: assessment.findings.length,
+  };
+}
+
 export function evaluateChangeIntelligenceVisibility(
   assessment: ChangeIntelligenceVisibilityAssessment,
   sources: ScreenCheckSources,
@@ -675,3 +787,7 @@ export function simulateCustomerOutcome(workspace: ProductWorkspaceSnapshot): Ou
 export function loadWorkspaceSnapshot(validatorScripts: string[]): ProductWorkspaceSnapshot {
   return buildProductWorkspaceSnapshot(validatorScripts);
 }
+
+export { evaluateVerificationTrustEvidenceVisibility } from '../verification-trust-evidence/index.js';
+export { evaluateFounderFrictionHeatmapVisibility } from '../founder-friction-heatmap/index.js';
+export { evaluateCustomerJourneySimulationVisibility } from '../customer-journey-simulation/index.js';

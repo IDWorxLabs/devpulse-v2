@@ -16,6 +16,11 @@ import {
   evaluateVerificationResultsVisibility,
   evaluateChangeIntelligenceVisibility,
   evaluateFounderActionCenterVisibility,
+  evaluateFounderSensemakingVisibility,
+  evaluateFounderInteractionSimulationVisibility,
+  evaluateFirstTimeUserRealityVisibility,
+  evaluateVerificationTrustEvidenceVisibility,
+  evaluateFounderFrictionHeatmapVisibility,
   evaluateProjectMemoryReality,
   evaluateVerificationReality,
   loadWorkspaceSnapshot,
@@ -30,6 +35,58 @@ import {
   getChangeIntelligenceHistory,
 } from '../change-intelligence-visibility/index.js';
 import { assessFounderActionCenter } from '../founder-action-center/index.js';
+import {
+  assessFounderInteractionSimulation,
+  enrichAssessmentsWithInteractionSimulation,
+} from '../founder-interaction-simulation/index.js';
+import {
+  assessFirstTimeUserReality,
+  enrichAssessmentsWithFirstTimeUserReality,
+} from '../first-time-user-reality/index.js';
+import {
+  assessVerificationTrustEvidence,
+  evaluateVerificationTrustEvidenceVisibility,
+} from '../verification-trust-evidence/index.js';
+import {
+  assessFounderFrictionHeatmap,
+  evaluateFounderFrictionHeatmapVisibility,
+} from '../founder-friction-heatmap/index.js';
+import {
+  assessCustomerJourneySimulation,
+  enrichAssessmentsWithCustomerJourney,
+  evaluateCustomerJourneySimulationVisibility,
+} from '../customer-journey-simulation/index.js';
+import {
+  assessPromiseRealityEngine,
+  enrichAssessmentsWithPromiseReality,
+  evaluatePromiseRealityVisibility,
+} from '../promise-reality-engine/index.js';
+import {
+  assessVisualQualityAuthority,
+  enrichAssessmentsWithVisualQuality,
+  evaluateVisualQualityVisibility,
+} from '../visual-quality-authority/index.js';
+import {
+  assessLaunchDaySimulation,
+  enrichAssessmentsWithLaunchDaySimulation,
+  evaluateLaunchDaySimulationVisibility,
+} from '../launch-day-simulation-engine/index.js';
+import {
+  assessAdoptionPrediction,
+  enrichAssessmentsWithAdoptionPrediction,
+  evaluateAdoptionPredictionVisibility,
+} from '../adoption-prediction-engine/index.js';
+import {
+  assessProductEconomics,
+  enrichAssessmentsWithProductEconomics,
+  evaluateProductEconomicsVisibility,
+} from '../product-economics-engine/index.js';
+import {
+  assessProductEvolution,
+  enrichAssessmentsWithProductEvolution,
+  evaluateProductEvolutionVisibility,
+} from '../product-evolution-engine/index.js';
+import { assessFounderSensemaking } from '../founder-sensemaking-engine/index.js';
 import { buildVerificationResultsFromV4Report } from '../verification-results-visibility/index.js';
 import { computeLaunchReadinessReality, deriveV4Verdict } from './founder-testing-v4-scorer.js';
 import type { FounderTestV4Report, RunFounderTestingModeV4Input } from './founder-testing-v4-types.js';
@@ -188,6 +245,30 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
     changeIntelligenceVisibilityScore: {} as import('./founder-testing-v4-types.js').ChangeIntelligenceVisibility,
     founderActionCenter: {} as import('../founder-action-center/founder-action-center-types.js').FounderActionCenterAssessment,
     founderActionCenterVisibilityScore: {} as import('./founder-testing-v4-types.js').FounderActionCenterVisibility,
+    founderSensemaking: {} as import('../founder-sensemaking-engine/founder-sensemaking-types.js').FounderSensemakingAssessment,
+    founderSensemakingVisibilityScore: {} as import('./founder-testing-v4-types.js').FounderSensemakingVisibility,
+    founderInteractionSimulation: {} as import('../founder-interaction-simulation/founder-interaction-simulation-types.js').FounderInteractionSimulationAssessment,
+    founderInteractionSimulationScore: {} as import('./founder-testing-v4-types.js').FounderInteractionSimulationVisibility,
+    firstTimeUserReality: {} as import('../first-time-user-reality/first-time-user-reality-types.js').FirstTimeUserRealityAssessment,
+    firstTimeUserRealityScore: {} as import('./founder-testing-v4-types.js').FirstTimeUserRealityVisibility,
+    verificationTrustEvidence: {} as import('../verification-trust-evidence/verification-trust-evidence-types.js').VerificationTrustEvidenceAssessment,
+    verificationTrustEvidenceScore: {} as import('../verification-trust-evidence/verification-trust-evidence-types.js').VerificationTrustEvidenceVisibility,
+    founderFrictionHeatmap: {} as import('../founder-friction-heatmap/founder-friction-heatmap-types.js').FounderFrictionHeatmapAssessment,
+    founderFrictionHeatmapScore: {} as import('../founder-friction-heatmap/founder-friction-heatmap-types.js').FounderFrictionHeatmapVisibility,
+    customerJourneySimulation: {} as import('../customer-journey-simulation/customer-journey-simulation-types.js').CustomerJourneySimulationAssessment,
+    customerJourneySimulationScore: {} as import('../customer-journey-simulation/customer-journey-simulation-types.js').CustomerJourneySimulationVisibility,
+    promiseRealityEngine: {} as import('../promise-reality-engine/promise-reality-engine-types.js').PromiseRealityEngineAssessment,
+    promiseRealityEngineScore: {} as import('../promise-reality-engine/promise-reality-engine-types.js').PromiseRealityVisibility,
+    visualQualityAuthority: {} as import('../visual-quality-authority/visual-quality-authority-types.js').VisualQualityAuthorityAssessment,
+    visualQualityAuthorityScore: {} as import('../visual-quality-authority/visual-quality-authority-types.js').VisualQualityVisibility,
+    launchDaySimulation: {} as import('../launch-day-simulation-engine/launch-day-simulation-engine-types.js').LaunchDaySimulationAssessment,
+    launchDaySimulationScore: {} as import('../launch-day-simulation-engine/launch-day-simulation-engine-types.js').LaunchDaySimulationVisibility,
+    adoptionPrediction: {} as import('../adoption-prediction-engine/adoption-prediction-engine-types.js').AdoptionPredictionAssessment,
+    adoptionPredictionScore: {} as import('../adoption-prediction-engine/adoption-prediction-engine-types.js').AdoptionPredictionVisibility,
+    productEconomics: {} as import('../product-economics-engine/product-economics-engine-types.js').ProductEconomicsAssessment,
+    productEconomicsScore: {} as import('../product-economics-engine/product-economics-engine-types.js').ProductEconomicsVisibility,
+    productEvolution: {} as import('../product-evolution-engine/product-evolution-engine-types.js').ProductEvolutionAssessment,
+    productEvolutionScore: {} as import('../product-evolution-engine/product-evolution-engine-types.js').ProductEvolutionVisibility,
   };
 
   const verificationResultsVisibility = buildVerificationResultsFromV4Report(reportCore);
@@ -201,7 +282,7 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
     sources,
   );
 
-  const founderActionCenter = assessFounderActionCenter({
+  const founderActionCenterBase = assessFounderActionCenter({
     projectMemory: workspace.projectMemory,
     livePreview: workspace.livePreview,
     runningApplication: workspace.runningApplication,
@@ -209,10 +290,245 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
     changeIntelligence: changeIntelligenceVisibility,
     verification: workspace.verification,
   });
+
+  const founderSensemakingBase = assessFounderSensemaking(
+    {
+      projectMemory: workspace.projectMemory,
+      livePreview: workspace.livePreview,
+      runningApplication: workspace.runningApplication,
+      verificationResults: verificationResultsVisibility,
+      changeIntelligence: changeIntelligenceVisibility,
+      founderActionCenter: founderActionCenterBase,
+      verification: workspace.verification,
+      autonomousBuilder: workspace.autonomousBuilder,
+      portfolioInsights: workspace.portfolioInsights,
+      shellSources: sources,
+    },
+    {
+      launchReadinessReality: reportCore.launchReadinessReality,
+      verdict: reportCore.verdict,
+      humanReadiness: reportCore.launchReadinessReality.humanReadiness,
+      previewRealityScore: reportCore.previewReality.score,
+    },
+  );
+
+  const founderInteractionSimulation = assessFounderInteractionSimulation({
+    shellSources: sources,
+    liveResults: input.liveResults,
+  });
+
+  let firstTimeUserReality = assessFirstTimeUserReality({
+    shellSources: sources,
+  });
+
+  const enrichedInteraction = enrichAssessmentsWithInteractionSimulation(
+    founderActionCenterBase,
+    founderSensemakingBase,
+    founderInteractionSimulation,
+  );
+
+  const enriched = enrichAssessmentsWithFirstTimeUserReality(
+    enrichedInteraction.founderActionCenter,
+    enrichedInteraction.founderSensemaking,
+    firstTimeUserReality,
+  );
+
+  let founderActionCenter = enriched.founderActionCenter;
+  let founderSensemaking = enriched.founderSensemaking;
   const founderActionCenterVisibilityScore = evaluateFounderActionCenterVisibility(
     founderActionCenter,
     sources,
   );
+  const founderSensemakingVisibilityScore = evaluateFounderSensemakingVisibility(
+    founderSensemaking,
+    sources,
+  );
+  const founderInteractionSimulationScore = evaluateFounderInteractionSimulationVisibility(
+    founderInteractionSimulation,
+    sources,
+  );
+  const firstTimeUserRealityScore = evaluateFirstTimeUserRealityVisibility(
+    firstTimeUserReality,
+    sources,
+  );
+
+  const verificationTrustEvidence = assessVerificationTrustEvidence({
+    verificationResults: verificationResultsVisibility,
+    shellSources: sources,
+    durationMs: reportCore.durationMs,
+  });
+  const verificationTrustEvidenceScore = evaluateVerificationTrustEvidenceVisibility(
+    verificationTrustEvidence,
+    sources,
+  );
+
+  const founderFrictionHeatmap = assessFounderFrictionHeatmap({
+    shellSources: sources,
+    firstTimeUserReality,
+    verificationTrustEvidence,
+    founderSensemaking,
+    founderActionCenter,
+    verificationResults: verificationResultsVisibility,
+  });
+  const founderFrictionHeatmapScore = evaluateFounderFrictionHeatmapVisibility(
+    founderFrictionHeatmap,
+    sources,
+  );
+
+  const customerJourneySimulation = assessCustomerJourneySimulation({
+    shellSources: sources,
+    firstTimeUserReality,
+    founderInteractionSimulation,
+    verificationTrustEvidence,
+    founderFrictionHeatmap,
+    projectMemoryScore: projectMemoryReality.score,
+    previewValidationReady: previewReality.validationReadyPass,
+    autonomousBuilderConnected: autonomousBuilderReality.canExecuteBuilds,
+  });
+
+  const customerEnriched = enrichAssessmentsWithCustomerJourney(
+    founderActionCenter,
+    founderSensemaking,
+    customerJourneySimulation,
+  );
+  founderActionCenter = customerEnriched.founderActionCenter;
+  founderSensemaking = customerEnriched.founderSensemaking;
+
+  const customerJourneySimulationScore = evaluateCustomerJourneySimulationVisibility(
+    customerJourneySimulation,
+  );
+
+  const visualQualityAuthority = assessVisualQualityAuthority({
+    shellSources: sources,
+    firstTimeUserReality,
+  });
+
+  const launchDaySimulation = assessLaunchDaySimulation({
+    shellSources: sources,
+    firstTimeUserReality,
+    customerJourneySimulation,
+    visualQualityAuthority,
+    verificationTrustEvidence,
+    founderFrictionHeatmap,
+    founderInteractionSimulation,
+    founderActionCenter,
+    verificationResults: verificationResultsVisibility,
+  });
+
+  const adoptionPrediction = assessAdoptionPrediction({
+    shellSources: sources,
+    firstTimeUserReality,
+    customerJourneySimulation,
+    launchDaySimulation,
+    visualQualityAuthority,
+    founderFrictionHeatmap,
+  });
+
+  const promiseRealityEngine = assessPromiseRealityEngine({
+    workspace,
+    shellSources: sources,
+    ideaToAppResults,
+    creationJourney,
+    promiseMatrix,
+    realityGaps,
+    firstTimeUserReality,
+    verificationTrustEvidence,
+    customerJourneySimulation,
+    founderSensemaking,
+    founderFrictionHeatmap,
+    verificationResults: verificationResultsVisibility,
+    visualQualityAuthority,
+    launchDaySimulation,
+    adoptionPrediction,
+  });
+
+  const promiseEnriched = enrichAssessmentsWithPromiseReality(
+    founderActionCenter,
+    founderSensemaking,
+    promiseRealityEngine,
+    firstTimeUserReality,
+  );
+  founderActionCenter = promiseEnriched.founderActionCenter;
+  founderSensemaking = promiseEnriched.founderSensemaking;
+  if (promiseEnriched.firstTimeUserReality) {
+    firstTimeUserReality = promiseEnriched.firstTimeUserReality;
+  }
+
+  const promiseRealityEngineScore = evaluatePromiseRealityVisibility(promiseRealityEngine);
+
+  const visualEnriched = enrichAssessmentsWithVisualQuality(
+    founderActionCenter,
+    founderSensemaking,
+    visualQualityAuthority,
+  );
+  founderActionCenter = visualEnriched.founderActionCenter;
+  founderSensemaking = visualEnriched.founderSensemaking;
+
+  const visualQualityAuthorityScore = evaluateVisualQualityVisibility(visualQualityAuthority);
+
+  const launchEnriched = enrichAssessmentsWithLaunchDaySimulation(
+    founderActionCenter,
+    founderSensemaking,
+    launchDaySimulation,
+  );
+  founderActionCenter = launchEnriched.founderActionCenter;
+  founderSensemaking = launchEnriched.founderSensemaking;
+
+  const launchDaySimulationScore = evaluateLaunchDaySimulationVisibility(launchDaySimulation);
+
+  const adoptionEnriched = enrichAssessmentsWithAdoptionPrediction(
+    founderActionCenter,
+    founderSensemaking,
+    adoptionPrediction,
+  );
+  founderActionCenter = adoptionEnriched.founderActionCenter;
+  founderSensemaking = adoptionEnriched.founderSensemaking;
+
+  const adoptionPredictionScore = evaluateAdoptionPredictionVisibility(adoptionPrediction);
+
+  const productEconomics = assessProductEconomics({
+    shellSources: sources,
+    firstTimeUserReality,
+    customerJourneySimulation,
+    launchDaySimulation,
+    adoptionPrediction,
+    founderFrictionHeatmap,
+    promiseRealityEngine,
+    validatorScriptCount: input.validatorScripts?.length ?? 0,
+  });
+
+  const economicsEnriched = enrichAssessmentsWithProductEconomics(
+    founderActionCenter,
+    founderSensemaking,
+    productEconomics,
+  );
+  founderActionCenter = economicsEnriched.founderActionCenter;
+  founderSensemaking = economicsEnriched.founderSensemaking;
+
+  const productEconomicsScore = evaluateProductEconomicsVisibility(productEconomics);
+
+  const productEvolution = assessProductEvolution({
+    shellSources: sources,
+    firstTimeUserReality,
+    verificationTrustEvidence,
+    founderFrictionHeatmap,
+    customerJourneySimulation,
+    promiseRealityEngine,
+    visualQualityAuthority,
+    launchDaySimulation,
+    adoptionPrediction,
+    productEconomics,
+  });
+
+  const evolutionEnriched = enrichAssessmentsWithProductEvolution(
+    founderActionCenter,
+    founderSensemaking,
+    productEvolution,
+  );
+  founderActionCenter = evolutionEnriched.founderActionCenter;
+  founderSensemaking = evolutionEnriched.founderSensemaking;
+
+  const productEvolutionScore = evaluateProductEvolutionVisibility(productEvolution);
 
   return assembleFounderTestV4Report({
     ...reportCore,
@@ -222,5 +538,29 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
     changeIntelligenceVisibilityScore,
     founderActionCenter,
     founderActionCenterVisibilityScore,
+    founderSensemaking,
+    founderSensemakingVisibilityScore,
+    founderInteractionSimulation,
+    founderInteractionSimulationScore,
+    firstTimeUserReality,
+    firstTimeUserRealityScore,
+    verificationTrustEvidence,
+    verificationTrustEvidenceScore,
+    founderFrictionHeatmap,
+    founderFrictionHeatmapScore,
+    customerJourneySimulation,
+    customerJourneySimulationScore,
+    promiseRealityEngine,
+    promiseRealityEngineScore,
+    visualQualityAuthority,
+    visualQualityAuthorityScore,
+    launchDaySimulation,
+    launchDaySimulationScore,
+    adoptionPrediction,
+    adoptionPredictionScore,
+    productEconomics,
+    productEconomicsScore,
+    productEvolution,
+    productEvolutionScore,
   });
 }

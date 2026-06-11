@@ -85,7 +85,7 @@ function surfaceSnippet(appJs: string, containerId: string, viewId: string): str
   const fn = renderMap[containerId];
   if (!fn) return '';
   const idx = appJs.indexOf(`function ${fn}`);
-  return idx >= 0 ? appJs.slice(idx, idx + 4000) : '';
+  return idx >= 0 ? appJs.slice(idx, idx + 5200) : '';
 }
 
 const SCREEN_PURPOSE_EXPECTATIONS: Record<

@@ -23,6 +23,14 @@ import {
   type FounderActionCenterAssessment,
 } from '../src/founder-action-center/index.js';
 import {
+  assessFounderSensemaking,
+  getCachedFounderSensemaking,
+  setCachedFounderSensemaking,
+  type FounderSensemakingAssessment,
+} from '../src/founder-sensemaking-engine/index.js';
+import { readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import {
   buildVerificationResultsFromWorkspace,
   type VerificationResultsVisibilityAssessment,
 } from '../src/verification-results-visibility/index.js';
@@ -40,6 +48,33 @@ export const PROJECT_MEMORY_DESCRIPTION =
 
 export const AUTONOMOUS_BUILDER_DESCRIPTION =
   'Autonomous Builder plans and executes project work in an isolated workspace. Foundation architecture is in place; full autonomous execution is not active yet.';
+
+function buildSensemakingCacheKey(input: {
+  projectMemory: ProductWorkspaceSnapshot['projectMemory'];
+  changeIntelligence: ChangeIntelligenceVisibilityAssessment;
+  founderActionCenter: FounderActionCenterAssessment;
+  verificationResults: VerificationResultsVisibilityAssessment;
+}): string {
+  const publicDir = join(process.cwd(), 'public', 'founder-reality');
+  let shellKey = 'shell:missing';
+  try {
+    const appStat = statSync(join(publicDir, 'app.js'));
+    const htmlStat = statSync(join(publicDir, 'index.html'));
+    shellKey = `shell:${appStat.mtimeMs}:${appStat.size}:${htmlStat.mtimeMs}:${htmlStat.size}`;
+  } catch {
+    shellKey = 'shell:missing';
+  }
+  const vault = input.projectMemory.vaultState;
+  return [
+    'sensemaking',
+    shellKey,
+    `facts:${vault.factCount}`,
+    `projects:${vault.projectCount}`,
+    `history:${input.changeIntelligence.historyCount}`,
+    `actions:${input.founderActionCenter.topActions.length}`,
+    `verify:${input.verificationResults.passCount}:${input.verificationResults.failCount}`,
+  ].join('|');
+}
 
 export interface ProductWorkspaceSnapshot {
   productBrand: 'AiDevEngine';
@@ -108,6 +143,7 @@ export interface ProductWorkspaceSnapshot {
   verificationResults: VerificationResultsVisibilityAssessment;
   changeIntelligence: ChangeIntelligenceVisibilityAssessment;
   founderActionCenter: FounderActionCenterAssessment;
+  founderSensemaking: FounderSensemakingAssessment;
   verification: {
     readiness: 'ready' | 'partial' | 'idle';
     readinessLabel: string;
@@ -392,8 +428,51 @@ export function buildProductWorkspaceSnapshot(validatorScripts: string[]): Produ
 
   const founderActionCenter = assessFounderActionCenter(workspaceWithChange);
 
-  return {
+  const workspaceComplete = {
     ...workspaceWithChange,
     founderActionCenter,
+  };
+
+  const cacheKey = buildSensemakingCacheKey({
+    projectMemory: workspaceComplete.projectMemory,
+    changeIntelligence: workspaceComplete.changeIntelligence,
+    founderActionCenter: workspaceComplete.founderActionCenter,
+    verificationResults: workspaceComplete.verificationResults,
+  });
+  const cachedSensemaking = getCachedFounderSensemaking(cacheKey);
+  if (cachedSensemaking) {
+    return { ...workspaceComplete, founderSensemaking: cachedSensemaking };
+  }
+
+  let shellSources: { appJs: string; html: string } | undefined;
+  try {
+    const publicDir = join(process.cwd(), 'public', 'founder-reality');
+    shellSources = {
+      appJs: readFileSync(join(publicDir, 'app.js'), 'utf8'),
+      html: readFileSync(join(publicDir, 'index.html'), 'utf8'),
+    };
+  } catch {
+    shellSources = undefined;
+  }
+
+  const founderSensemaking = assessFounderSensemaking(
+    {
+      projectMemory: workspaceComplete.projectMemory,
+      livePreview: workspaceComplete.livePreview,
+      runningApplication: workspaceComplete.runningApplication,
+      verificationResults: workspaceComplete.verificationResults,
+      changeIntelligence: workspaceComplete.changeIntelligence,
+      founderActionCenter: workspaceComplete.founderActionCenter,
+      verification: workspaceComplete.verification,
+      autonomousBuilder: workspaceComplete.autonomousBuilder,
+      portfolioInsights: workspaceComplete.portfolioInsights,
+      shellSources,
+    },
+  );
+  setCachedFounderSensemaking(cacheKey, founderSensemaking);
+
+  return {
+    ...workspaceComplete,
+    founderSensemaking,
   };
 }

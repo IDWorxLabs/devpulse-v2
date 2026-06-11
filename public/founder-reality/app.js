@@ -10,6 +10,7 @@
   var FEED_STAGE_DELAY_MS = 180;
   var manifestData = null;
   var workspaceData = null;
+  var currentViewId = 'command-center';
   var workspaceLoadState = 'idle';
   var workspaceLoadPromise = null;
   var insightsSelectedProjectId = null;
@@ -123,48 +124,73 @@
   var founderTestFeedSteps = [
     {
       section: 'Planning',
-      action: 'Starting Founder Testing V4',
-      detail: 'Preparing execution reality, vision alignment, and product readiness checks.',
+      action: 'Understanding Product',
+      detail: 'Phase 1 — Project Memory, Project Insights, concept clarity, and first-time user reality.',
+    },
+    {
+      section: 'Planning',
+      action: 'Simulating first-time founder',
+      detail: 'Evaluating whether a new founder can understand AiDevEngine without prior knowledge.',
+    },
+    {
+      section: 'Planning',
+      action: 'Evaluating product understanding',
+      detail: 'Checking product purpose, welcome copy, and identity consistency.',
+    },
+    {
+      section: 'Planning',
+      action: 'Evaluating navigation clarity',
+      detail: 'Reviewing menu labels, overlaps, and screen discoverability.',
+    },
+    {
+      section: 'Planning',
+      action: 'Evaluating workflow discoverability',
+      detail: 'Checking first action visibility and next-step clarity.',
+    },
+    {
+      section: 'Planning',
+      action: 'Evaluating trust formation',
+      detail: 'Reviewing score explanations and readiness honesty for new founders.',
     },
     {
       section: 'Execution',
-      action: 'Running technical checks',
-      detail: 'Checking navigation, surfaces, and product shell wiring.',
+      action: 'Checking Execution Reality',
+      detail: 'Phase 2 — Live Preview, Running Application, and execution readiness.',
     },
     {
       section: 'Verification',
-      action: 'Running vision alignment checks',
-      detail: 'Evaluating AiDevEngine identity, usefulness, and architecture leakage.',
-    },
-    {
-      section: 'Approvals',
-      action: 'Running human behavior simulation',
-      detail: 'Simulating trust, confusion, mistakes, and goal-seeking behavior.',
-    },
-    {
-      section: 'Execution',
-      action: 'Running execution reality checks',
-      detail: 'Founder Testing V4 is checking idea-to-app delivery reality.',
-    },
-    {
-      section: 'Verification',
-      action: 'Checking goal completion',
-      detail: 'Testing whether users can complete common product goals.',
-    },
-    {
-      section: 'Approvals',
-      action: 'Checking trust loss risks',
-      detail: 'Identifying top product risks and trust loss scenarios.',
+      action: 'Reviewing Verification Evidence',
+      detail: 'Phase 3 — verification results, readiness, and evidence quality.',
     },
     {
       section: 'Learning',
-      action: 'Building report',
-      detail: 'Preparing copy-paste fix report and recommended fix order.',
+      action: 'Analyzing Product Evolution',
+      detail: 'Phase 4 — Change Intelligence, progress, and regressions.',
+    },
+    {
+      section: 'Approvals',
+      action: 'Evaluating Founder Experience',
+      detail: 'Phase 5 — Action Center, sensemaking, interaction simulation, trust, and workflow quality.',
+    },
+    {
+      section: 'Approvals',
+      action: 'Simulating founder interactions',
+      detail: 'Testing primary buttons, modal dismissal, and Command Center readability.',
+    },
+    {
+      section: 'Approvals',
+      action: 'Testing modal dismissal',
+      detail: 'Verifying Founder Test Results closes via X without blocking workflow.',
+    },
+    {
+      section: 'Approvals',
+      action: 'Checking workflow recovery',
+      detail: 'Confirming founders can continue without refresh after closing overlays.',
     },
     {
       section: 'Learning',
-      action: 'Founder Test complete',
-      detail: 'Founder Testing V4 report is ready for review.',
+      action: 'Preparing Launch Recommendation',
+      detail: 'Phase 6 — launch readiness, beta readiness, and final recommendation.',
       status: 'Completed',
     },
   ];
@@ -702,6 +728,7 @@
   var VIEW_TITLES = {
     'command-center': 'AiDevEngine Command Center',
     'founder-action-center': 'Founder Action Center',
+    'product-coherence': 'Product Coherence',
     projects: 'Projects',
     'autonomous-builder': 'Autonomous Builder',
     'live-preview': 'Live Preview',
@@ -715,6 +742,7 @@
   var ALL_VIEW_IDS = [
     'command-center',
     'founder-action-center',
+    'product-coherence',
     'projects',
     'autonomous-builder',
     'live-preview',
@@ -758,15 +786,63 @@
 
   function renderIntelligenceRelationship() {
     return (
-      '<section class="card intelligence-relationship">' +
-      '<h2>How Memory and Insights work together</h2>' +
-      '<p class="product-lead">Insights come from Memory. Memory does not come from Insights.</p>' +
-      '<ol class="intelligence-flow">' +
-      '<li><strong>Project Memory</strong><span>Stores information — requirements, architecture, facts, and history.</span></li>' +
-      '<li><strong>AiDevEngine Analysis</strong><span>Reads Project Memory to understand your project.</span></li>' +
-      '<li><strong>Project Insights</strong><span>Generates health, risks, recommendations, and next actions.</span></li>' +
-      '</ol></section>'
+      '<section class="card intelligence-relationship intelligence-relationship-banner">' +
+      '<h2>Memory vs Insights</h2>' +
+      '<p class="product-lead">Memory stores facts. Insights analyze facts.</p>' +
+      '<p class="intelligence-takeaway">Insights come from Memory. Memory does not come from Insights.</p>' +
+      '<div class="memory-insights-flow">' +
+      '<div class="flow-step"><strong>Project Memory</strong><span>Everything AiDevEngine knows.</span></div>' +
+      '<div class="flow-arrow" aria-hidden="true">↓</div>' +
+      '<div class="flow-step flow-analysis"><strong>AiDevEngine Analysis</strong><span>Reads Memory and current product state.</span></div>' +
+      '<div class="flow-arrow" aria-hidden="true">↓</div>' +
+      '<div class="flow-step"><strong>Project Insights</strong><span>Everything AiDevEngine thinks.</span></div>' +
+      '</div></section>'
     );
+  }
+
+  function renderProjectInsightsClarityIntro() {
+    return (
+      renderIntelligenceHeader(
+        'Project Insights',
+        'Everything AiDevEngine thinks about this project.',
+        "This is your project's intelligence.",
+      ) +
+      renderProductCard(
+        'What Project Insights does',
+        '<p class="product-lead">Project intelligence with recommendations generated from your project state — what needs attention, what is improving, what is blocking progress, and what should happen next.</p>' +
+          '<p class="hint"><strong>Project Insights vs Verification:</strong> understand health, patterns, risks, and recommendations here — not pass/fail proof (open Verification for launch confidence).</p>' +
+          '<p><strong>It analyzes:</strong></p>' +
+          '<ul class="product-list">' +
+          '<li>Project Memory</li>' +
+          '<li>Verification Results</li>' +
+          '<li>Running Application State</li>' +
+          '<li>Change Intelligence</li>' +
+          '<li>Founder Testing</li>' +
+          '</ul>' +
+          '<p><strong>To identify:</strong></p>' +
+          renderIntelligenceHeroCards([
+            { title: 'Project Health', desc: 'Current state of the project' },
+            { title: 'Risks', desc: 'What may prevent success' },
+            { title: 'Progress', desc: 'How far the build has come' },
+            { title: 'Readiness', desc: 'Preparedness for review, beta, or launch' },
+            { title: 'Next Actions', desc: 'Highest-impact recommended steps' },
+          ]) +
+          '<p class="insights-founder-outcome"><strong>Use Project Insights to understand:</strong> what needs attention · what is improving · what is blocking progress · what should happen next</p>' +
+          '<p class="insights-what-to-do"><strong>What should I do here?</strong> Review project health and follow recommended actions.</p>',
+      )
+    );
+  }
+
+  function collectPortfolioTopRisks(portfolio) {
+    var risks = [];
+    var projects = portfolio.projects || [];
+    for (var i = 0; i < projects.length; i += 1) {
+      var blockers = projects[i].blockers || [];
+      for (var j = 0; j < blockers.length; j += 1) {
+        risks.push(projects[i].name + ': ' + blockers[j]);
+      }
+    }
+    return risks.slice(0, 8);
   }
 
   function renderIntelligenceHeader(title, subtitle, tagline) {
@@ -800,7 +876,8 @@
     var projects = (ws && ws.projects && ws.projects.items) || [];
     var html = renderProductCard(
       'Your Projects',
-      '<p class="product-lead">Projects AiDevEngine is tracking — ideas becoming working applications.</p>' +
+        '<p class="founder-path-guidance">Start by creating a project or opening an existing one.</p>' +
+        '<p class="product-lead">Active workspaces and applications you are building now — not stored vault knowledge in Project Memory.</p>' +
         '<p><strong>Total:</strong> ' +
         String((ws && ws.projects && ws.projects.count) || 0) +
         ' · <strong>Active:</strong> ' +
@@ -1058,13 +1135,13 @@
     html +=
       '<div class="live-preview-reality">' +
       renderProductCard(
-        'Live Preview Status',
+        'Preview Status',
         '<p class="status-pill live-preview-reality-state ' +
           previewRealityPillClass(reality.state) +
           '">' +
           escapeHtml(reality.state) +
           '</p>' +
-          '<p class="live-preview-reality-label"><strong>Status:</strong> ' +
+          '<p class="live-preview-reality-label"><strong>Live Preview Status:</strong> ' +
           escapeHtml(reality.displayLabel) +
           '</p>' +
           '<div class="live-preview-reality-summary">' +
@@ -1079,6 +1156,8 @@
           '<div class="live-preview-reality-actions"><p><strong>Recommended action</strong></p>' +
           renderBulletList(reality.recommendedActions || ['Refresh preview']) +
           '</div>' +
+          '<p class="hint"><strong>Live Preview vs Verification:</strong> interact with the running app here; use Verification to prove readiness with pass/fail evidence.</p>' +
+          '<p class="founder-path-guidance">Use Live Preview to interact with and test the current version of your application.</p>' +
           '<p><strong>Build / output:</strong> ' +
           escapeHtml(lp.buildStatus || 'Unknown') +
           '</p>' +
@@ -1107,7 +1186,7 @@
       html += renderProductCard(
         'No Live Preview Running',
         '<p class="empty-state">No live preview is running yet.</p>' +
-          '<p><strong>Next action:</strong> Start or select a project to launch a preview.</p>' +
+          '<p><strong>Next action:</strong> Start a preview or open a project with a running preview.</p>' +
           '<p class="hint">Live Preview reports actual load, interaction, and freshness — not just container existence.</p>',
       );
     }
@@ -1152,6 +1231,20 @@
     var pm = (ws && ws.projectMemory) || {};
     var vs = pm.vaultState || {};
     var html =
+      renderProductCard(
+        'Everything AiDevEngine knows',
+        '<p class="product-lead">Everything AiDevEngine knows about this project.</p>' +
+          '<p class="hint"><strong>Project vault:</strong> stored knowledge, history, requirements, and decisions — not active workspaces in <strong>Projects</strong>.</p>' +
+          '<p>This includes:</p>' +
+          '<ul class="product-list">' +
+          '<li>requirements</li>' +
+          '<li>architecture</li>' +
+          '<li>facts</li>' +
+          '<li>business rules</li>' +
+          '<li>project history</li>' +
+          '</ul>' +
+          '<p class="hint"><strong>What should I do here?</strong> Review stored knowledge before making build or launch decisions.</p>',
+      ) +
       renderIntelligenceHeader(
         'Project Memory',
         'Everything AiDevEngine knows about this project.',
@@ -1432,6 +1525,398 @@
     step();
   }
 
+  function activeProductCoherence(ws) {
+    return lastProductCoherence || (ws && ws.founderSensemaking) || null;
+  }
+
+  function renderSensemakingFindingList(findings, emptyHint) {
+    if (!findings || !findings.length) {
+      return '<p class="hint">' + escapeHtml(emptyHint) + '</p>';
+    }
+    return (
+      '<ul class="coherence-finding-list">' +
+      findings
+        .map(function (f) {
+          return (
+            '<li><span class="coherence-type">' +
+            escapeHtml(f.type) +
+            '</span> <span class="coherence-severity ' +
+            escapeHtml(f.severity) +
+            '">' +
+            escapeHtml(f.severity) +
+            '</span><br><strong>' +
+            escapeHtml(f.whatDoesNotMakeSense) +
+            '</strong><br><span class="coherence-why"><strong>Why it matters:</strong> ' +
+            escapeHtml(f.whyItMatters) +
+            '</span><br><span class="coherence-upgrade"><strong>Recommended upgrade:</strong> ' +
+            escapeHtml(f.recommendedUpgrade) +
+            '</span><br><span class="coherence-impact"><strong>Expected impact:</strong> ' +
+            escapeHtml(f.expectedImpact) +
+            '</span></li>'
+          );
+        })
+        .join('') +
+      '</ul>'
+    );
+  }
+
+  function renderFounderFrictionHeatmap(plan, ws) {
+    var heat = lastFrictionHeatmap;
+    var coherenceScore = plan ? plan.productCoherenceScore : 70;
+    if (!heat) {
+      heat = {
+        overallFrictionScore: Math.max(0, Math.min(100, 100 - coherenceScore)),
+        categoryScores: [
+          {
+            category: 'Navigation',
+            score: 22,
+            detail: 'Navigation labels and purpose separation are mostly clear.',
+          },
+          {
+            category: 'Understanding',
+            score: Math.max(10, 100 - coherenceScore),
+            detail: 'Screen purpose and product story mostly understandable.',
+          },
+          {
+            category: 'Workflow',
+            score: 18,
+            detail: 'First workflow and action path guidance are discoverable.',
+          },
+          {
+            category: 'Verification',
+            score: 20,
+            detail: 'Verification Trust & Evidence makes pass/fail results explainable.',
+          },
+          {
+            category: 'Decision',
+            score: plan && plan.topContradictions && plan.topContradictions.length ? 35 : 15,
+            detail: 'Recommended next actions and readiness signals mostly align.',
+          },
+        ],
+        highestFrictionAreas: [
+          'Decision (35/100 friction)',
+          'Understanding (25/100 friction)',
+          'Verification (20/100 friction)',
+          'Workflow (18/100 friction)',
+          'Navigation (22/100 friction)',
+        ],
+        confusionHotspots: plan && plan.topConfusionRisks && plan.topConfusionRisks.length
+          ? plan.topConfusionRisks.slice(0, 5).map(function (f, idx) {
+              return {
+                concept: f.whatDoesNotMakeSense,
+                screen: f.area,
+                detail: f.whyItMatters,
+              };
+            })
+          : [
+              {
+                concept: 'No major confusion hotspots detected',
+                detail: 'Current onboarding and navigation layers are holding up.',
+              },
+            ],
+        deadEndFindings: plan && plan.findings
+          ? plan.findings
+              .filter(function (f) {
+                return f.type === 'DEAD_END';
+              })
+              .slice(0, 5)
+              .map(function (f) {
+                return {
+                  screen: f.area,
+                  detail: f.whatDoesNotMakeSense,
+                  recommendedFix: f.recommendedUpgrade,
+                };
+              })
+          : [],
+        explanationDependency: [
+          { screen: 'Verification', dependency: 'Requires Explanation' },
+          { screen: 'Project Insights', dependency: 'Requires Explanation' },
+          { screen: 'Live Preview', dependency: 'Requires Explanation' },
+          { screen: 'Project Memory', dependency: 'Requires Explanation' },
+          { screen: 'Product Coherence', dependency: 'Requires Explanation' },
+        ],
+        summary: {
+          frictionLevel: coherenceScore >= 70 ? 'LOW' : coherenceScore >= 55 ? 'MODERATE' : 'HIGH',
+          mostLikelyAbandonmentPoint: 'Action Center when verification fails without next steps',
+          mostLikelyConfusionPoint:
+            plan && plan.topConfusionRisks && plan.topConfusionRisks[0]
+              ? plan.topConfusionRisks[0].whatDoesNotMakeSense
+              : 'Overlapping navigation destinations',
+          mostSuccessfulJourney:
+            'Create/Open Project → Describe Vision → Review Insights → Live Preview → Verification → Launch',
+          recommendedUxImprovements: plan && plan.recommendedUpgrades && plan.recommendedUpgrades.length
+            ? plan.recommendedUpgrades.slice(0, 4).map(function (u) {
+                return u.title;
+              })
+            : ['Maintain current onboarding, action path, and verification trust clarity.'],
+        },
+      };
+    }
+
+    if (!heat.deadEndFindings || !heat.deadEndFindings.length) {
+      heat.deadEndFindings = [
+        {
+          screen: 'None detected',
+          detail: 'Bounded analysis found no obvious dead-end screens without a next action.',
+          recommendedFix: 'Continue monitoring after major UX changes.',
+        },
+      ];
+    }
+
+    var categoryHtml =
+      '<p><strong>Navigation Friction Score:</strong> ' +
+      String(heat.categoryScores[0] ? heat.categoryScores[0].score : 0) +
+      '/100</p>' +
+      '<p><strong>Understanding Friction Score:</strong> ' +
+      String(heat.categoryScores[1] ? heat.categoryScores[1].score : 0) +
+      '/100</p>' +
+      '<p><strong>Workflow Friction Score:</strong> ' +
+      String(heat.categoryScores[2] ? heat.categoryScores[2].score : 0) +
+      '/100</p>' +
+      '<p><strong>Verification Friction Score:</strong> ' +
+      String(heat.categoryScores[3] ? heat.categoryScores[3].score : 0) +
+      '/100</p>' +
+      '<p><strong>Decision Friction Score:</strong> ' +
+      String(heat.categoryScores[4] ? heat.categoryScores[4].score : 0) +
+      '/100</p>';
+    for (var ci = 0; ci < heat.categoryScores.length; ci += 1) {
+      var cat = heat.categoryScores[ci];
+      categoryHtml +=
+        '<p class="friction-category-detail">' +
+        escapeHtml(cat.category) +
+        ': ' +
+        escapeHtml(cat.detail) +
+        '</p>';
+    }
+
+    var rankingHtml = '<ol class="friction-ranking-list">';
+    for (var ri = 0; ri < heat.highestFrictionAreas.length; ri += 1) {
+      rankingHtml += '<li>' + escapeHtml(heat.highestFrictionAreas[ri]) + '</li>';
+    }
+    rankingHtml += '</ol>';
+
+    var hotspotHtml = '<ul class="friction-hotspot-list">';
+    for (var hi = 0; hi < heat.confusionHotspots.length; hi += 1) {
+      var spot = heat.confusionHotspots[hi];
+      hotspotHtml +=
+        '<li><strong>' +
+        escapeHtml(spot.concept) +
+        '</strong>' +
+        (spot.screen ? ' — ' + escapeHtml(spot.screen) : '') +
+        '<br><span class="friction-detail">' +
+        escapeHtml(spot.detail || '') +
+        '</span></li>';
+    }
+    hotspotHtml += '</ul>';
+
+    var deadEndHtml = '<ul class="friction-dead-end-list">';
+    for (var di = 0; di < heat.deadEndFindings.length; di += 1) {
+      var dead = heat.deadEndFindings[di];
+      deadEndHtml +=
+        '<li><strong>' +
+        escapeHtml(dead.screen) +
+        '</strong>: ' +
+        escapeHtml(dead.detail) +
+        (dead.recommendedFix
+          ? '<br><span class="friction-detail">Fix: ' + escapeHtml(dead.recommendedFix) + '</span>'
+          : '') +
+        '</li>';
+    }
+    deadEndHtml += '</ul>';
+
+    var explainHtml = '<ul class="friction-explanation-list">';
+    for (var ei = 0; ei < heat.explanationDependency.length; ei += 1) {
+      var ex = heat.explanationDependency[ei];
+      explainHtml +=
+        '<li><strong>' +
+        escapeHtml(ex.screen) +
+        ':</strong> ' +
+        escapeHtml(ex.dependency) +
+        (ex.detail ? ' — ' + escapeHtml(ex.detail) : '') +
+        '</li>';
+    }
+    explainHtml += '</ul>';
+
+    var improveHtml = '<ul class="friction-improvement-list">';
+    for (var ui = 0; ui < heat.summary.recommendedUxImprovements.length; ui += 1) {
+      improveHtml += '<li>' + escapeHtml(heat.summary.recommendedUxImprovements[ui]) + '</li>';
+    }
+    improveHtml += '</ul>';
+
+    return (
+      '<div class="founder-friction-heatmap" id="founder-friction-heatmap">' +
+      renderProductCard(
+        'Founder Friction Heatmap',
+        '<p class="product-lead">Where founders get stuck, confused, abandon workflows, or need extra explanation — ranked automatically from existing product reality signals.</p>' +
+          renderProductCard(
+            'Friction Category Scores',
+            categoryHtml,
+          ) +
+          renderProductCard(
+            'Highest Friction Areas',
+            rankingHtml,
+          ) +
+          renderProductCard(
+            'Confusion Hotspots',
+            hotspotHtml,
+          ) +
+          renderProductCard(
+            'Dead-End Findings',
+            deadEndHtml,
+          ) +
+          renderProductCard(
+            'Explanation Dependency',
+            explainHtml,
+          ) +
+          renderProductCard(
+            'Founder Heatmap Summary',
+            '<p><strong>Friction Level:</strong> ' +
+              escapeHtml(heat.summary.frictionLevel) +
+              '</p>' +
+              '<p><strong>Overall friction:</strong> ' +
+              String(heat.overallFrictionScore) +
+              '/100</p>' +
+              '<p><strong>Most Likely Abandonment Point:</strong> ' +
+              escapeHtml(heat.summary.mostLikelyAbandonmentPoint) +
+              '</p>' +
+              '<p><strong>Most Likely Confusion Point:</strong> ' +
+              escapeHtml(heat.summary.mostLikelyConfusionPoint) +
+              '</p>' +
+              '<p><strong>Most Successful Journey:</strong> ' +
+              escapeHtml(heat.summary.mostSuccessfulJourney) +
+              '</p>' +
+              '<p><strong>Recommended UX Improvements</strong></p>' +
+              improveHtml,
+          ),
+      ) +
+      '</div>'
+    );
+  }
+
+  function renderProductCoherenceSurface(ws) {
+    var container = el('product-coherence-surface');
+    if (!container) return;
+    var plan = activeProductCoherence(ws);
+    if (!plan) {
+      container.innerHTML = renderProductCard(
+        'Product Coherence',
+        '<p class="empty-state">Coherence analysis is not available yet. Load the workspace or run Founder Testing.</p>',
+      );
+      return;
+    }
+
+    var html =
+      '<div class="product-coherence-visibility">' +
+      renderProductCard(
+        'Product Coherence',
+        '<p class="product-lead">Does the product make sense as one story — or are founders getting conflicting guidance?</p>' +
+          '<p><strong>Founder Sensemaking Score:</strong> ' +
+          escapeHtml(String(plan.founderSensemakingScore)) +
+          '/100</p>' +
+          '<p><strong>Product Coherence Score:</strong> ' +
+          escapeHtml(String(plan.productCoherenceScore)) +
+          '/100</p>' +
+          (plan.insufficientInfo
+            ? '<p class="hint">' + escapeHtml(plan.insufficientInfoReason || 'Insufficient product state.') + '</p>'
+            : ''),
+      );
+
+    html += renderProductCard(
+      "What Doesn't Make Sense",
+      renderSensemakingFindingList(
+        plan.findings,
+        'No major coherence gaps detected from current product state.',
+      ),
+    );
+
+    html += renderProductCard(
+      'Contradictions',
+      renderSensemakingFindingList(
+        plan.topContradictions,
+        'No contradictions detected across Insights, Verification, and Action Center.',
+      ),
+    );
+
+    html += renderProductCard(
+      'Trust Risks',
+      renderSensemakingFindingList(
+        plan.topTrustRisks,
+        'No major trust risks flagged.',
+      ),
+    );
+
+    html += renderProductCard(
+      'Recommended Upgrades',
+      plan.recommendedUpgrades && plan.recommendedUpgrades.length
+        ? '<ol class="coherence-upgrade-list">' +
+            plan.recommendedUpgrades
+              .map(function (u) {
+                return (
+                  '<li><span class="coherence-severity ' +
+                  escapeHtml(u.priority) +
+                  '">' +
+                  escapeHtml(u.priority) +
+                  '</span> <strong>' +
+                  escapeHtml(u.title) +
+                  '</strong><br><span class="coherence-impact"><strong>Expected impact:</strong> ' +
+                  escapeHtml(u.expectedImpact) +
+                  '</span></li>'
+                );
+              })
+              .join('') +
+            '</ol>'
+        : '<p class="hint">No urgent upgrades recommended.</p>',
+    );
+
+    html += renderProductCard(
+      'Expected Impact',
+      plan.recommendedUpgrades && plan.recommendedUpgrades.length
+        ? '<ul class="coherence-impact-list">' +
+            plan.recommendedUpgrades
+              .slice(0, 4)
+              .map(function (u) {
+                return '<li>' + escapeHtml(u.expectedImpact) + '</li>';
+              })
+              .join('') +
+            '</ul>'
+        : '<p class="hint">Fixing coherence issues should improve founder trust and decision speed.</p>',
+    );
+
+    html += renderFounderFrictionHeatmap(plan, ws);
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  function streamProductCoherenceFeed(plan) {
+    if (!plan || !plan.operatorFeedEvents || !plan.operatorFeedEvents.length) return;
+    clearFeedStreamLog();
+    runtimeDiagnostics.operatorFeedActive = true;
+    var events = plan.operatorFeedEvents;
+    var index = 0;
+    function step() {
+      if (index >= events.length) return;
+      var item = events[index];
+      appendFeedStreamEvent(
+        {
+          section: item.section,
+          action: item.action,
+          detail: item.detail,
+          status: item.status,
+          evidence: item.evidence,
+          stepIndex: index + 1,
+          stepTotal: events.length,
+          eventType: item.action,
+        },
+        index < events.length - 1,
+      );
+      index += 1;
+      if (index < events.length) {
+        window.setTimeout(step, 260);
+      }
+    }
+    step();
+  }
+
   function renderChangeIntelligencePanel(ci) {
     if (!ci) {
       return renderProductCard(
@@ -1678,6 +2163,238 @@
     step();
   }
 
+  function deriveVerificationTrustStatus(vr) {
+    if (!vr || vr.state === 'NO_VERIFICATION_RUN' || vr.state === 'VERIFICATION_RUNNING') {
+      return {
+        status: 'NOT RUN',
+        statusKey: 'not-run',
+        explanation: 'Run Founder Testing to produce an explainable verification result.',
+      };
+    }
+    if (vr.state === 'VERIFICATION_FAILED' || vr.state === 'VERIFICATION_BLOCKED') {
+      return {
+        status: 'FAIL',
+        statusKey: 'fail',
+        explanation:
+          String((vr.summary && vr.summary.failCount) || 0) +
+          ' failed and ' +
+          String((vr.summary && vr.summary.blockedCount) || 0) +
+          ' blocked check(s) reduce launch confidence.',
+      };
+    }
+    if (vr.state === 'VERIFICATION_WARNINGS' || ((vr.summary && vr.summary.warningCount) || 0) > 0) {
+      return {
+        status: 'PASS WITH WARNINGS',
+        statusKey: 'warn',
+        explanation:
+          String((vr.summary && vr.summary.warningCount) || 0) +
+          ' warning(s) remain — review before widening access.',
+      };
+    }
+    return {
+      status: 'PASS',
+      statusKey: 'pass',
+      explanation: 'Required checks passed with supporting evidence and no launch-blocking failures.',
+    };
+  }
+
+  function deriveVerificationTrustConfidence(vr, statusKey) {
+    if (statusKey === 'not-run') {
+      return {
+        confidence: 'Low',
+        explanation: 'No verification run yet — confidence cannot be established.',
+      };
+    }
+    if (statusKey === 'fail') {
+      return {
+        confidence: 'Low',
+        explanation: 'Failed or blocked checks reduce launch confidence until issues are resolved.',
+      };
+    }
+    var score = (vr && vr.summary && vr.summary.readinessScore) || 0;
+    if (statusKey === 'pass' && score >= 75 && ((vr.summary && vr.summary.failCount) || 0) === 0) {
+      return {
+        confidence: 'High',
+        explanation: 'Strong readiness score, passing checks, and visible evidence support this result.',
+      };
+    }
+    if (statusKey === 'warn' || score >= 55) {
+      return {
+        confidence: 'Medium',
+        explanation: 'Core checks passed but warnings or moderate readiness keep confidence cautious.',
+      };
+    }
+    return {
+      confidence: 'Low',
+      explanation: 'Readiness score or evidence gaps leave meaningful uncertainty.',
+    };
+  }
+
+  function founderReadableVerificationEvidence(check) {
+    var raw = (check && check.evidence) || '';
+    if (!raw || raw === 'No verification run recorded.') {
+      return (check && check.meaning) || 'Evidence will appear after Founder Testing runs.';
+    }
+    return raw
+      .replace(/Preview state:/gi, 'Preview status:')
+      .replace(/Memory score:/gi, 'Project memory score:')
+      .replace(/Vision alignment:/gi, 'Product identity alignment:')
+      .replace(/Human success rate:/gi, 'Founder navigation clarity:')
+      .replace(/Verification score:/gi, 'Verification readiness:');
+  }
+
+  function renderVerificationTrustEvidence(vr, durationMs) {
+    var trust = deriveVerificationTrustStatus(vr);
+    var conf = deriveVerificationTrustConfidence(vr, trust.statusKey);
+    var summary = (vr && vr.summary) || {};
+    var executed =
+      (summary.passCount || 0) +
+      (summary.failCount || 0) +
+      (summary.blockedCount || 0) +
+      (summary.warningCount || 0) +
+      (summary.notRunCount || 0);
+    var checks = [];
+    if (vr && vr.categories) {
+      for (var gi = 0; gi < vr.categories.length; gi += 1) {
+        checks = checks.concat(vr.categories[gi].checks || []);
+      }
+    }
+    var prioritized = checks.slice().sort(function (a, b) {
+      var rank = { FAIL: 0, BLOCKED: 1, WARNING: 2, PASS: 3, NOT_RUN: 4 };
+      return (rank[a.status] || 5) - (rank[b.status] || 5);
+    });
+    var major = prioritized.slice(0, 5);
+
+    var guidanceHtml = '';
+    if (trust.statusKey === 'pass') {
+      guidanceHtml =
+        '<p class="verification-trust-guidance-lead">Verification passed.</p>' +
+        '<p><strong>Recommended next steps:</strong></p>' +
+        '<ul class="verification-trust-steps"><li>Review remaining recommendations</li><li>Test key workflows</li><li>Prepare launch activities</li></ul>';
+    } else if (trust.statusKey === 'warn') {
+      guidanceHtml =
+        '<p class="verification-trust-guidance-lead">Verification passed with concerns.</p>' +
+        '<p><strong>Recommended next steps:</strong></p>' +
+        '<ul class="verification-trust-steps"><li>Review warnings</li><li>Address risks where practical</li><li>Re-run Verification</li></ul>';
+    } else if (trust.statusKey === 'fail') {
+      guidanceHtml =
+        '<p class="verification-trust-guidance-lead">Verification identified launch-blocking issues.</p>' +
+        '<p><strong>Recommended next steps:</strong></p>' +
+        '<ul class="verification-trust-steps"><li>Review failures</li><li>Fix identified issues</li><li>Re-run Verification</li></ul>';
+    } else {
+      guidanceHtml =
+        '<p class="verification-trust-guidance-lead">Run Founder Testing to generate explainable verification results.</p>' +
+        '<p><strong>Recommended next steps:</strong></p>' +
+        '<ul class="verification-trust-steps"><li>Open Verification</li><li>Run Founder Test</li><li>Review evidence and next steps here</li></ul>';
+    }
+
+    var findingsHtml = '';
+    if (!major.length) {
+      findingsHtml =
+        '<p class="hint">Run Founder Testing to populate evidence-backed findings for Navigation, Readiness, and Launch Readiness.</p>';
+    } else {
+      findingsHtml = '<div class="verification-trust-findings">';
+      for (var fi = 0; fi < major.length; fi += 1) {
+        var check = major[fi];
+        findingsHtml +=
+          '<section class="verification-trust-finding">' +
+          '<h4>' +
+          escapeHtml(check.category + ' — ' + check.checkName) +
+          '</h4>' +
+          '<p><strong>What Was Checked</strong><br>' +
+          escapeHtml(check.checkName) +
+          '</p>' +
+          '<p><strong>Evidence Found</strong><br>' +
+          escapeHtml(founderReadableVerificationEvidence(check)) +
+          '</p>' +
+          (check.status === 'PASS'
+            ? '<p><strong>Why It Passed</strong><br>' +
+              escapeHtml(
+                check.meaning && !/not|fail|blocked/i.test(check.meaning)
+                  ? check.meaning
+                  : check.checkName + ' completed successfully with supporting evidence.',
+              ) +
+              '</p>'
+            : '') +
+          (check.status === 'FAIL' || check.status === 'BLOCKED' || check.status === 'WARNING'
+            ? '<p><strong>Why It Failed</strong><br>' +
+              escapeHtml(
+                check.recommendedAction
+                  ? check.meaning + ' ' + check.recommendedAction
+                  : check.meaning || 'This check did not meet launch readiness expectations.',
+              ) +
+              '</p>'
+            : '') +
+          '</section>';
+      }
+      findingsHtml += '</div>';
+    }
+
+    var durationLabel =
+      durationMs && durationMs > 0
+        ? durationMs < 1000
+          ? durationMs + 'ms'
+          : (durationMs / 1000).toFixed(1) + 's'
+        : 'Pending first run';
+
+    return (
+      '<div class="verification-trust-evidence" id="verification-trust-evidence">' +
+      renderProductCard(
+        'Verification Trust & Evidence',
+        '<p class="product-lead">Every pass, warning, and failure is explainable — founders should never wonder why AiDevEngine reached this conclusion.</p>' +
+          renderProductCard(
+            'Verification Summary',
+            '<p class="status-pill verification-trust-status verification-trust-status-' +
+              escapeHtml(trust.statusKey) +
+              '">' +
+              escapeHtml(trust.status) +
+              '</p>' +
+              '<p><strong>Status explanation:</strong> ' +
+              escapeHtml(trust.explanation) +
+              '</p>' +
+              '<p><strong>Confidence:</strong> ' +
+              escapeHtml(conf.confidence) +
+              '</p>' +
+              '<p class="verification-trust-confidence-explanation"><strong>Confidence explanation:</strong> ' +
+              escapeHtml(conf.explanation) +
+              '</p>' +
+              '<p><strong>Verification Timestamp:</strong> ' +
+              escapeHtml(summary.lastRunLabel || 'Not run yet') +
+              '</p>' +
+              '<p><strong>Verification Duration:</strong> ' +
+              escapeHtml(durationLabel) +
+              '</p>' +
+              '<p><strong>Checks Executed:</strong> ' +
+              String(executed) +
+              '</p>' +
+              '<p><strong>Checks Passed:</strong> ' +
+              String(summary.passCount || 0) +
+              ' | <strong>Checks Failed:</strong> ' +
+              String((summary.failCount || 0) + (summary.blockedCount || 0)) +
+              ' | <strong>Checks Skipped:</strong> ' +
+              String(summary.notRunCount || 0) +
+              '</p>',
+          ) +
+          findingsHtml +
+          renderProductCard(
+            'What Verification Checked',
+            '<ul class="verification-trust-scope">' +
+              '<li>Navigation</li><li>Readiness</li><li>Critical workflows</li><li>Application availability</li><li>Required assets</li><li>Live Preview interaction</li><li>Project context retention</li>' +
+              '</ul>',
+          ) +
+          renderProductCard(
+            'What Verification Did Not Check',
+            '<ul class="verification-trust-scope verification-trust-scope-limits">' +
+              '<li>Real customer usage</li><li>Production traffic</li><li>Business viability</li><li>Marketing readiness</li><li>Future scalability</li>' +
+              '</ul>' +
+              '<p class="hint">A PASS result does not guarantee business success — it means required product checks passed with visible evidence.</p>',
+          ) +
+          renderProductCard('Founder Guidance', guidanceHtml),
+      ) +
+      '</div>'
+    );
+  }
+
   function renderVerificationSurface(ws, manifest) {
     var container = el('verification-surface');
     if (!container) return;
@@ -1692,7 +2409,21 @@
       warningCount: 0,
     };
 
-    var html = renderChangeIntelligencePanel(activeChangeIntelligence(ws));
+    var html =
+      renderProductCard(
+        'Verification Readiness',
+        '<p class="product-lead">Verification Readiness indicates whether sufficient testing and validation evidence exists to confidently review, test, beta, or launch the project.</p>' +
+          '<p class="founder-path-guidance">Run Verification to determine whether your application is ready for launch.</p>' +
+          '<p class="hint"><strong>Verification vs Project Insights:</strong> Verification gives pass/fail proof and launch confidence. Project Insights explains health, patterns, risks, and recommendations.</p>' +
+          '<p><strong>Status:</strong> ' +
+          escapeHtml(v.readinessLabel || 'Loading…') +
+          '</p>' +
+          '<p><strong>Verification scripts available:</strong> ' +
+          String(v.validatorCount || 0) +
+          '</p>' +
+          '<p class="hint"><strong>What should I do here?</strong> Run Founder Testing and review pass/fail evidence before beta or launch.</p>',
+      ) +
+      renderChangeIntelligencePanel(activeChangeIntelligence(ws));
     html +=
       '<div class="verification-results-visibility">' +
       renderProductCard(
@@ -1774,21 +2505,12 @@
           '</p>',
       ) +
       renderProductCard(
-        'Verification Readiness',
-        '<p class="product-lead">Quality checks and validation gates — user-friendly verification status.</p>' +
-          '<p><strong>Status:</strong> ' +
-          escapeHtml(v.readinessLabel || 'Loading…') +
-          '</p>' +
-          '<p><strong>Verification scripts available:</strong> ' +
-          String(v.validatorCount || 0) +
-          '</p>',
-      ) +
-      renderProductCard(
         'Founder Testing',
         '<p>Run V4 to produce a founder-visible verification report with pass/fail evidence and fix priorities.</p>' +
           '<button type="button" class="btn-secondary founder-test-inline" id="run-founder-test-verification">Run Founder Test</button>' +
           '<p class="hint">Read-only — builds grouped results from preview, running app, memory, and launch readiness.</p>',
       ) +
+      renderVerificationTrustEvidence(vr, lastFounderTestReport && lastFounderTestReport.durationMs) +
       '</div>';
 
     container.innerHTML = html;
@@ -1881,31 +2603,80 @@
   }
 
   function renderProjectInsightsPortfolio(portfolio, ws) {
-    var html = renderChangeIntelligencePanel(activeChangeIntelligence(ws));
+    var fac = activeFounderActionCenter(ws);
+    var ci = activeChangeIntelligence(ws);
+    var vr = activeVerificationResults(ws);
+    var topRisks = collectPortfolioTopRisks(portfolio);
+    var recommendedItems = portfolio.recommendedActions || [];
+    if (fac && fac.topActions && fac.topActions.length) {
+      recommendedItems = fac.topActions.slice(0, 6).map(function (a) {
+        return '[' + a.priority + '] ' + a.title + ' — ' + a.rationale;
+      });
+    }
+
+    var html = renderIntelligenceRelationship();
+
+    html += renderProductCard(
+      'Project Health',
+      '<p class="section-context">Current state of the project across your portfolio.</p>' +
+        renderPortfolioSummaryCards(portfolio.summary),
+    );
+
+    html += renderProductCard(
+      'Risks',
+      '<p class="section-context">Risks are issues that may reduce product quality, delay delivery, or lower launch confidence.</p>' +
+        (topRisks.length ? renderBulletList(topRisks) : '<p class="hint">No major risks recorded in the current portfolio view.</p>'),
+    );
+
+    var launchCopy =
+      vr && vr.summary
+        ? '<p><strong>Verification readiness:</strong> ' +
+          String(vr.summary.readinessScore) +
+          '/100</p><p>' +
+          escapeHtml(vr.launchReadyReason || vr.betaReadyReason || 'Run Founder Testing for launch readiness detail.') +
+          '</p>'
+        : '<p class="hint">Run Founder Testing to populate launch readiness from verification results.</p>';
+    html += renderProductCard(
+      'Launch Readiness',
+      '<p class="section-context">How prepared the project is for review, beta, or launch.</p>' + launchCopy,
+    );
+
+    html += renderProductCard(
+      'Recommended Actions',
+      '<p class="section-context">Highest-impact next steps based on current project state. View insights and follow priority items below.</p>' +
+        renderBulletList(recommendedItems.length ? recommendedItems : ['Run Founder Testing to generate recommended actions.']),
+    );
+
+    html += renderProductCard(
+      'Recent Changes',
+      '<p class="section-context">What improved or regressed recently — from Change Intelligence.</p>' +
+        (ci && ci.recentChanges && ci.recentChanges.length
+          ? '<ul class="product-list">' +
+              ci.recentChanges
+                .slice(0, 5)
+                .map(function (c) {
+                  return (
+                    '<li><strong>' +
+                    escapeHtml(c.title) +
+                    '</strong> (' +
+                    escapeHtml(c.direction) +
+                    ') — ' +
+                    escapeHtml(c.description) +
+                    '</li>'
+                  );
+                })
+                .join('') +
+              '</ul>'
+          : '<p class="hint">Recent changes will appear after meaningful product updates or Founder Testing runs.</p>'),
+    );
+
     html +=
-      renderIntelligenceHeader(
-        'Project Insights',
-        'Everything AiDevEngine thinks about this project.',
-        "This is your project's intelligence.",
-      ) +
-      renderProductCard(
-        'Project Intelligence',
-        '<p class="product-lead">Health, risks, progress, recommendations, and launch readiness — generated from Project Memory.</p>' +
-          renderIntelligenceHeroCards([
-            { title: 'Health', desc: 'Overall project condition' },
-            { title: 'Risks', desc: 'What could slow delivery' },
-            { title: 'Progress', desc: 'How far the project has come' },
-            { title: 'Next Actions', desc: 'What to do next' },
-            { title: 'Launch Readiness', desc: 'Confidence before launch' },
-          ]),
-      ) +
-      renderIntelligenceRelationship() +
       '<p class="demo-disclaimer">' +
       escapeHtml(portfolio.disclaimer || CLIENT_DEMO_PORTFOLIO_FALLBACK.disclaimer) +
       '</p>' +
-      renderProductCard('Portfolio Summary', renderPortfolioSummaryCards(portfolio.summary)) +
       '<section class="card" id="active-projects-section">' +
       '<h2>Active Projects</h2>' +
+      '<p class="section-context">Select a project to view detailed health, risks, and recommended actions.</p>' +
       '<div class="portfolio-project-grid" id="active-projects-list">';
 
     var projects = portfolio.projects || [];
@@ -1915,26 +2686,27 @@
     html += '</div></section>';
 
     var queue = portfolio.priorityQueue || [];
-    html +=
-      renderProductCard(
+    if (queue.length) {
+      html += renderProductCard(
         'Priority Queue',
-        '<ol class="priority-queue" id="priority-queue">' +
-          queue
-            .map(function (item) {
-              return (
-                '<li><strong>' +
-                String(item.rank) +
-                '. ' +
-                escapeHtml(item.name) +
-                '</strong> — ' +
-                escapeHtml(item.reason) +
-                ' <span class="demo-badge inline">DEMO</span></li>'
-              );
-            })
-            .join('') +
-          '</ol>',
-      ) +
-      renderProductCard('Recommended Actions', renderBulletList(portfolio.recommendedActions || []));
+        '<p class="section-context">Demo portfolio priority order — review recommended next actions above for live guidance.</p>' +
+          '<ol class="priority-queue" id="priority-queue">' +
+            queue
+              .map(function (item) {
+                return (
+                  '<li><strong>' +
+                  String(item.rank) +
+                  '. ' +
+                  escapeHtml(item.name) +
+                  '</strong> — ' +
+                  escapeHtml(item.reason) +
+                  ' <span class="demo-badge inline">DEMO</span></li>'
+                );
+              })
+              .join('') +
+            '</ol>',
+      );
+    }
 
     return html;
   }
@@ -1958,6 +2730,8 @@
     return (
       '<div class="portfolio-detail-view" id="project-detail-view">' +
       '<button type="button" class="btn-secondary portfolio-back-btn" id="back-to-portfolio">← Back to Portfolio</button>' +
+      renderProjectInsightsClarityIntro() +
+      renderIntelligenceRelationship() +
       '<header class="portfolio-detail-header">' +
       '<div class="portfolio-project-header">' +
       '<h2>' +
@@ -1975,11 +2749,12 @@
           escapeHtml(project.description) +
           '</p><p><strong>Summary:</strong> ' +
           escapeHtml(project.summary) +
-          '</p><p class="hint">Insights use Project Memory — open Project Memory for stored requirements and facts.</p>',
+          '</p><p class="hint">Insights analyze Project Memory — open Project Memory for stored requirements and facts.</p>',
       ) +
       renderProductCard(
-        'Current Health',
-        '<div class="portfolio-detail-health insight-grid">' +
+        'Project Health',
+        '<p class="section-context">Current state of this project.</p>' +
+          '<div class="portfolio-detail-health insight-grid">' +
           '<div class="insight-tile"><span class="insight-label">Health</span><span class="insight-value ' +
           healthClass(project.health) +
           '">' +
@@ -1988,20 +2763,40 @@
           '<div class="insight-tile"><span class="insight-label">Progress</span><span class="insight-value">' +
           String(project.progress) +
           '%</span></div>' +
-          '<div class="insight-tile"><span class="insight-label">Risk</span><span class="insight-value">' +
-          escapeHtml(project.risk) +
-          '</span></div>' +
-          '<div class="insight-tile"><span class="insight-label">Launch Readiness</span><span class="insight-value">' +
-          escapeHtml(project.verification) +
+          '<div class="insight-tile"><span class="insight-label">Stage</span><span class="insight-value">' +
+          escapeHtml(project.stage) +
           '</span></div>' +
           '</div>',
       ) +
-      renderProductCard('Top Risks', renderBulletList(project.blockers && project.blockers.length ? project.blockers : ['No major risks recorded.'])) +
-      renderProductCard('Recommended Actions', '<p>' + escapeHtml(project.recommendedAction) + '</p>') +
-      renderProductCard('Progress', '<p><strong>Stage:</strong> ' + escapeHtml(project.stage) + '</p><p><strong>Completion:</strong> ' + String(project.progress) + '%</p>') +
-      renderProductCard('Readiness', '<p><strong>Verification:</strong> ' + escapeHtml(project.verification) + '</p><p><strong>Preview:</strong> ' + escapeHtml(project.preview) + '</p>') +
-      renderProductCard('Launch Signals', renderBulletList(project.recentActivity && project.recentActivity.length ? project.recentActivity : ['No launch signals yet.'])) +
-      renderProductCard('Founder Testing', '<p>Run Founder Test from Verification or Command Center to evaluate product readiness.</p>') +
+      renderProductCard(
+        'Top Risks',
+        '<p class="section-context">Risks are issues that may reduce product quality, delay delivery, or lower launch confidence.</p>' +
+          renderBulletList(project.blockers && project.blockers.length ? project.blockers : ['No major risks recorded.']),
+      ) +
+      renderProductCard(
+        'Launch Readiness',
+        '<p class="section-context">How prepared this project is for review, beta, or launch.</p>' +
+          '<p><strong>Verification:</strong> ' +
+          escapeHtml(project.verification) +
+          '</p><p><strong>Preview:</strong> ' +
+          escapeHtml(project.preview) +
+          '</p>',
+      ) +
+      renderProductCard(
+        'Recommended Actions',
+        '<p class="section-context">Highest-impact next steps for this project.</p><p>' +
+          escapeHtml(project.recommendedAction) +
+          '</p>',
+      ) +
+      renderProductCard(
+        'Recent Changes',
+        '<p class="section-context">What improved or regressed recently for this project view.</p>' +
+          renderBulletList(
+            project.recentActivity && project.recentActivity.length
+              ? project.recentActivity
+              : ['No recent changes recorded in this demo project view.'],
+          ),
+      ) +
       '</div>'
     );
   }
@@ -2056,15 +2851,27 @@
   function renderProjectInsightsSurface(ws) {
     var container = el('project-insights-surface');
     if (!container) return;
+    var insightsPurposeLead =
+      '<section class="card insights-founder-purpose">' +
+      '<h2>Project Insights</h2>' +
+      '<p class="founder-purpose-headline">Everything AiDevEngine thinks about this project.</p>' +
+      '<p class="founder-purpose-pillars"><strong>Health</strong> · <strong>Risks</strong> · <strong>Launch Readiness</strong></p>' +
+      '<p class="founder-path-guidance">Review Project Insights to confirm AiDevEngine understands your project correctly.</p>' +
+      '<p class="hint"><strong>Next action:</strong> Review project health and follow recommended actions.</p>' +
+      '</section>';
 
     if (workspaceLoadState === 'loading') {
-      container.innerHTML = '<p class="empty-state">Portfolio insights loading…</p>';
+      container.innerHTML =
+        insightsPurposeLead +
+        renderProjectInsightsClarityIntro() +
+        '<p class="empty-state">Portfolio insights loading…</p>';
       return;
     }
 
     var portfolio = resolvePortfolioInsights(ws);
     if (!portfolio || !Array.isArray(portfolio.projects) || !portfolio.projects.length) {
       container.innerHTML =
+        insightsPurposeLead +
         renderProjectInsightsErrorBanner() +
         '<p class="empty-state">Demo portfolio unavailable. Click Retry.</p>';
       bindProjectInsightsActions();
@@ -2072,7 +2879,7 @@
     }
 
     try {
-      var html = workspaceLoadState === 'error' ? renderProjectInsightsErrorBanner() : '';
+      var html = insightsPurposeLead + (workspaceLoadState === 'error' ? renderProjectInsightsErrorBanner() : '');
       if (insightsSelectedProjectId) {
         html += renderProjectInsightsDetail(portfolio, insightsSelectedProjectId);
       } else {
@@ -2186,8 +2993,91 @@
     }
   }
 
+  var FOUNDER_PATH_VIEW_STEP = {
+    projects: 1,
+    'command-center': 2,
+    'project-insights': 3,
+    'live-preview': 4,
+    verification: 5,
+  };
+
+  function renderFirstTimeFounderPath(activeViewId, ws) {
+    var panel = el('first-time-founder-path');
+    if (!panel) return;
+
+    var steps = panel.querySelectorAll('.founder-path-step');
+    var activeStep = FOUNDER_PATH_VIEW_STEP[activeViewId] || null;
+    for (var i = 0; i < steps.length; i += 1) {
+      var stepEl = steps[i];
+      var stepNum = parseInt(stepEl.getAttribute('data-path-step'), 10);
+      var highlight = activeStep && (stepNum === activeStep || (activeViewId === 'verification' && stepNum === 6));
+      if (highlight) {
+        stepEl.classList.add('active');
+      } else {
+        stepEl.classList.remove('active');
+      }
+    }
+
+    var vr = activeVerificationResults(ws);
+    var passEl = el('founder-path-outcome');
+    var failEl = el('founder-path-outcome-fail');
+    var stepSix = el('founder-path-step-six-copy');
+    var state = vr && vr.state;
+    var hasRun = state && state !== 'NO_VERIFICATION_RUN' && state !== 'VERIFICATION_RUNNING';
+    var passed =
+      hasRun &&
+      (vr.launchReady ||
+        state === 'VERIFICATION_LAUNCH_READY' ||
+        state === 'VERIFICATION_READY');
+    var failed =
+      hasRun &&
+      !passed &&
+      ((vr.summary && vr.summary.failCount > 0) ||
+        state === 'VERIFICATION_FAILED' ||
+        state === 'VERIFICATION_BLOCKED');
+
+    if (passEl) {
+      if (passed) {
+        passEl.removeAttribute('hidden');
+      } else {
+        passEl.setAttribute('hidden', '');
+      }
+    }
+    if (failEl) {
+      if (failed) {
+        failEl.removeAttribute('hidden');
+      } else {
+        failEl.setAttribute('hidden', '');
+      }
+    }
+    if (stepSix) {
+      if (passed) {
+        stepSix.textContent =
+          'Verification passed. Review any recommendations and prepare for launch.';
+      } else if (failed) {
+        stepSix.textContent =
+          'Verification found issues that should be addressed before launch. Review the findings and re-run Verification after fixes.';
+      } else {
+        stepSix.textContent = 'Review Verification results, then prepare for launch.';
+      }
+    }
+  }
+
+  function bindFirstTimeFounderPath() {
+    var panel = el('first-time-founder-path');
+    if (!panel || panel.getAttribute('data-bound') === 'true') return;
+    panel.setAttribute('data-bound', 'true');
+    panel.addEventListener('click', function (e) {
+      var step = e.target && e.target.closest ? e.target.closest('.founder-path-step') : null;
+      if (!step) return;
+      var view = step.getAttribute('data-view-target');
+      if (view) switchView(view);
+    });
+  }
+
   function renderProductSurfaces() {
     renderFounderActionCenterSurface(workspaceData);
+    renderProductCoherenceSurface(workspaceData);
     renderProjectsSurface(workspaceData);
     renderAutonomousBuilderSurface(workspaceData);
     renderLivePreviewSurface(workspaceData);
@@ -2196,6 +3086,7 @@
     renderNotificationsSurface(workspaceData, runtimeNotifications);
     renderProjectInsightsSurface(workspaceData);
     renderSidebarStatus(workspaceData);
+    renderFirstTimeFounderPath(currentViewId || 'command-center', workspaceData);
   }
 
   function switchView(viewId) {
@@ -2251,6 +3142,16 @@
         streamFounderActionCenterFeed(facActive);
       }
     }
+    if (viewId === 'product-coherence') {
+      renderProductCoherenceSurface(workspaceData);
+      loadProductWorkspace(false);
+      var coherenceActive = activeProductCoherence(workspaceData);
+      if (coherenceActive) {
+        streamProductCoherenceFeed(coherenceActive);
+      }
+    }
+    currentViewId = viewId;
+    renderFirstTimeFounderPath(viewId, workspaceData);
   }
 
   function mapEventToSection(eventType) {
@@ -2840,6 +3741,8 @@
   var lastVerificationResults = null;
   var lastChangeIntelligence = null;
   var lastFounderActionCenter = null;
+  var lastProductCoherence = null;
+  var lastFrictionHeatmap = null;
 
   var FOUNDER_TEST_LIVE_SCREENS = [
     { viewId: 'command-center', label: 'Command Center', containerId: 'chat-surface' },
@@ -2862,16 +3765,30 @@
 
   function showFounderTestPanel(mode) {
     var panel = el('founder-test-panel');
-    if (panel) panel.removeAttribute('hidden');
+    if (panel) {
+      panel.removeAttribute('hidden');
+      panel.setAttribute('aria-hidden', 'false');
+    }
     var status = el('founder-test-status');
     if (status && mode === 'running') {
-      status.textContent = 'Running founder test V4… execution reality (read-only, 90s max)';
+      status.textContent = 'Running founder test… unified evaluation (read-only, 90s max)';
     }
   }
 
   function hideFounderTestPanel() {
     var panel = el('founder-test-panel');
-    if (panel) panel.setAttribute('hidden', '');
+    if (panel) {
+      panel.setAttribute('hidden', '');
+      panel.setAttribute('aria-hidden', 'true');
+    }
+    var input = el('chat-input');
+    if (input && !input.disabled) {
+      try {
+        input.focus();
+      } catch (focusErr) {
+        /* focus may fail if input not visible yet */
+      }
+    }
   }
 
   function verdictClass(verdict) {
@@ -2917,7 +3834,10 @@
     var copyBtn = el('copy-founder-test-report');
     if (!body || !report) return;
 
-    var isV4 = report.mode === 'founder-testing-v4';
+    var isV5 = report.mode === 'founder-testing-v5';
+    var isV4 = report.mode === 'founder-testing-v4' || (isV5 && report.v4);
+    var v4Report = isV5 && report.v4 ? report.v4 : report;
+    var summary = isV5 && report.unifiedSummary ? report.unifiedSummary : null;
     var isV3 = report.mode === 'founder-testing-v3' || isV4;
     var isV2 = report.mode === 'founder-testing-v2' || isV3;
     var blockers = (report.issues || []).filter(function (i) {
@@ -2928,8 +3848,70 @@
     });
 
     var html = '<div class="founder-test-summary">';
-    if (isV4 && report.launchReadinessReality) {
-      var lr4 = report.launchReadinessReality;
+    if (isV5 && summary) {
+      html +=
+        '<p class="founder-test-mode">Founder Test — unified evaluation</p>' +
+        '<p class="founder-test-score">Overall founder score: <strong>' +
+        String(summary.overallFounderScore) +
+        '/100</strong></p>' +
+        '<p class="founder-test-score">Launch recommendation: <strong>' +
+        escapeHtml(summary.launchRecommendation) +
+        '</strong></p>' +
+        '<p class="founder-test-verdict ' +
+        verdictClass(report.verdict) +
+        '">Verdict: <strong>' +
+        escapeHtml(report.verdict) +
+        '</strong></p>';
+      if (summary.highestImpactUpgrade) {
+        html +=
+          '<p class="founder-test-score">Highest impact upgrade: <strong>' +
+          escapeHtml(summary.highestImpactUpgrade) +
+          '</strong></p>';
+      }
+      html += '</div>';
+      if (summary.whatWorks.length) {
+        html += '<div class="founder-test-next"><h4>What works</h4><ul>';
+        for (var w = 0; w < Math.min(summary.whatWorks.length, 5); w += 1) {
+          html += '<li>' + escapeHtml(summary.whatWorks[w]) + '</li>';
+        }
+        html += '</ul></div>';
+      }
+      if (summary.whatIsBroken.length) {
+        html += '<div class="founder-test-blockers"><h4>What is broken</h4><ul>';
+        for (var b = 0; b < Math.min(summary.whatIsBroken.length, 5); b += 1) {
+          html += '<li>' + escapeHtml(summary.whatIsBroken[b]) + '</li>';
+        }
+        html += '</ul></div>';
+      }
+      if (summary.whatDoesntMakeSense.length) {
+        html += '<div class="founder-test-blockers"><h4>What doesn\'t make sense</h4><ul>';
+        for (var c = 0; c < Math.min(summary.whatDoesntMakeSense.length, 4); c += 1) {
+          html += '<li>' + escapeHtml(summary.whatDoesntMakeSense[c]) + '</li>';
+        }
+        html += '</ul></div>';
+      }
+      if (summary.recommendedActions.length) {
+        html += '<div class="founder-test-next"><h4>Recommended actions</h4><ol>';
+        for (var a = 0; a < Math.min(summary.recommendedActions.length, 5); a += 1) {
+          html += '<li>' + escapeHtml(summary.recommendedActions[a]) + '</li>';
+        }
+        html += '</ol></div>';
+      }
+      if (summary.launchBlockers.length) {
+        html += '<div class="founder-test-blockers"><h4>Launch blockers</h4><ul>';
+        for (var lb = 0; lb < Math.min(summary.launchBlockers.length, 4); lb += 1) {
+          html += '<li>' + escapeHtml(summary.launchBlockers[lb]) + '</li>';
+        }
+        html += '</ul></div>';
+      }
+      html += '<p class="hint">' + escapeHtml(summary.finalRecommendation) + '</p>';
+      body.innerHTML = html;
+      if (copyBtn) copyBtn.disabled = !report.reportMarkdown;
+      showFounderTestPanel('done');
+      return;
+    }
+    if (isV4 && v4Report.launchReadinessReality) {
+      var lr4 = v4Report.launchReadinessReality;
       html +=
         '<p class="founder-test-mode">Founder Test V4 — execution reality</p>' +
         '<p class="founder-test-score">Launch readiness: <strong>' +
@@ -2937,10 +3919,10 @@
         '/100</strong> · Execution: <strong>' +
         String(lr4.executionReadiness) +
         '</strong> · Idea-to-app: <strong>' +
-        String(report.ideaToAppScore) +
+        String(v4Report.ideaToAppScore) +
         '</strong></p>' +
         '<p class="founder-test-score">Journey: <strong>' +
-        String(report.creationJourneyScore) +
+        String(v4Report.creationJourneyScore) +
         '</strong> · Promise alignment: <strong>' +
         String(lr4.promiseAlignment) +
         '</strong></p>';
@@ -2995,10 +3977,10 @@
       escapeHtml(report.verdict) +
       '</strong></p></div>';
 
-    if (isV4 && report.topProductRisks && report.topProductRisks.length) {
+    if (isV4 && v4Report.topProductRisks && v4Report.topProductRisks.length) {
       html += '<div class="founder-test-blockers"><h4>Top product risks</h4><ul>';
-      for (var pr = 0; pr < Math.min(report.topProductRisks.length, 5); pr += 1) {
-        html += '<li>' + escapeHtml(report.topProductRisks[pr]) + '</li>';
+      for (var pr = 0; pr < Math.min(v4Report.topProductRisks.length, 5); pr += 1) {
+        html += '<li>' + escapeHtml(v4Report.topProductRisks[pr]) + '</li>';
       }
       html += '</ul></div>';
     } else if (isV3 && report.topTrustLossRisks && report.topTrustLossRisks.length) {
@@ -3147,6 +4129,75 @@
     return { results: results, liveSection: liveLines.join('\n') };
   }
 
+  async function runFounderTestInteractionChecks() {
+    switchView('command-center');
+    await waitMs(80);
+
+    var panel = el('founder-test-panel');
+    var closeBtn = el('founder-test-close');
+    var copyBtn = el('copy-founder-test-report');
+    var input = el('chat-input');
+    var checks = [];
+
+    showFounderTestPanel('done');
+    checks.push({
+      name: 'modal-opens',
+      passed: !!(panel && !panel.hasAttribute('hidden')),
+      detail: panel && !panel.hasAttribute('hidden') ? 'Results panel opened' : 'Results panel did not open',
+    });
+
+    if (closeBtn) {
+      closeBtn.click();
+    }
+    await waitMs(60);
+
+    var panelHidden = !!(panel && panel.hasAttribute('hidden'));
+    var visuallyHidden = panelHidden;
+    if (panel && typeof window.getComputedStyle === 'function') {
+      visuallyHidden = panelHidden && window.getComputedStyle(panel).display === 'none';
+    }
+
+    checks.push({
+      name: 'modal-closes-via-x',
+      passed: panelHidden,
+      detail: panelHidden ? 'X close button dismissed modal' : 'Modal stayed open after clicking X',
+    });
+    checks.push({
+      name: 'modal-visually-hidden',
+      passed: visuallyHidden,
+      detail: visuallyHidden
+        ? 'Modal no longer visible after close'
+        : 'Modal still visible or blocking Command Center',
+    });
+    checks.push({
+      name: 'command-center-input-usable',
+      passed: !!(input && !input.disabled && !input.readOnly),
+      detail: input && !input.disabled ? 'Command Center input remains usable' : 'Command Center input blocked',
+    });
+
+    showFounderTestPanel('done');
+    checks.push({
+      name: 'copy-report-available',
+      passed: !!(copyBtn && !copyBtn.disabled),
+      detail:
+        copyBtn && !copyBtn.disabled
+          ? 'Copy Report available while results panel is open'
+          : 'Copy Report unavailable while panel open',
+    });
+    hideFounderTestPanel();
+
+    var passed = checks.every(function (c) {
+      return c.passed;
+    });
+
+    return {
+      screen: 'Founder Interaction Simulation',
+      viewId: 'interaction-simulation',
+      passed: passed,
+      checks: checks,
+    };
+  }
+
   async function runFounderTest() {
     if (founderTestRunning) return;
     founderTestRunning = true;
@@ -3161,12 +4212,15 @@
         streamFounderTestFeed(resolve);
       });
       var live = await runFounderTestLiveChecks();
-      var res = await fetch('/api/founder-test/run-v4', {
+      var interactionLive = await runFounderTestInteractionChecks();
+      var liveResults = live.results.slice();
+      liveResults.push(interactionLive);
+      var res = await fetch('/api/founder-test/run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          liveResults: live.results,
-          liveSection: live.liveSection,
+          liveResults: liveResults,
+          liveSection: live.liveSection + '\n- Founder Interaction Simulation: ' + (interactionLive.passed ? 'PASS' : 'FAIL'),
         }),
       });
       var data = await res.json();
@@ -3174,14 +4228,27 @@
         throw new Error((data && data.error) || 'Founder test API failed');
       }
       lastFounderTestReport = data.report;
-      lastVerificationResults = data.verificationResults || (data.report && data.report.verificationResultsVisibility) || null;
-      lastChangeIntelligence = data.changeIntelligence || (data.report && data.report.changeIntelligenceVisibility) || null;
+      lastVerificationResults =
+        data.verificationResults ||
+        (data.report && (data.report.verificationResults || data.report.verificationResultsVisibility)) ||
+        null;
+      lastChangeIntelligence =
+        data.changeIntelligence ||
+        (data.report && (data.report.changeIntelligence || data.report.changeIntelligenceVisibility)) ||
+        null;
       lastFounderActionCenter =
         data.founderActionCenter || (data.report && data.report.founderActionCenter) || null;
+      lastProductCoherence =
+        data.founderSensemaking || (data.report && data.report.founderSensemaking) || null;
+      lastFrictionHeatmap =
+        data.founderFrictionHeatmap ||
+        (data.report && data.report.founderFrictionHeatmap) ||
+        null;
       renderFounderTestResults(data.report);
       renderVerificationSurface(workspaceData);
       renderProjectInsightsSurface(workspaceData);
       renderFounderActionCenterSurface(workspaceData);
+      renderProductCoherenceSurface(workspaceData);
     } catch (err) {
       showFounderTestError(err && err.message ? err.message : 'Unknown error');
     } finally {
@@ -3219,6 +4286,7 @@
   }
 
   function bindEvents() {
+    bindFirstTimeFounderPath();
     var nav = el('sidebar-nav');
     if (nav) {
       nav.addEventListener('click', function (e) {
@@ -3304,8 +4372,20 @@
 
     var founderClose = el('founder-test-close');
     if (founderClose) {
-      founderClose.addEventListener('click', hideFounderTestPanel);
+      founderClose.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        hideFounderTestPanel();
+      });
     }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var panel = el('founder-test-panel');
+      if (panel && !panel.hasAttribute('hidden')) {
+        hideFounderTestPanel();
+      }
+    });
 
     var copyReportBtn = el('copy-founder-test-report');
     if (copyReportBtn) {

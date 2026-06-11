@@ -4,6 +4,7 @@
 
 import type { ChangeIntelligenceVisibilityAssessment } from '../change-intelligence-visibility/change-intelligence-visibility-types.js';
 import type { FounderActionCenterAssessment } from '../founder-action-center/founder-action-center-types.js';
+import type { FounderSensemakingAssessment } from '../founder-sensemaking-engine/founder-sensemaking-types.js';
 import type { VerificationResultsVisibilityAssessment } from '../verification-results-visibility/verification-results-visibility-types.js';
 import type { FounderTestV3Report } from './founder-testing-v3-types.js';
 import type { FounderTestIssue } from './founder-testing-types.js';
@@ -98,6 +99,52 @@ export interface FounderActionCenterVisibility {
   topActionCount: number;
   blockerCount: number;
   recommendedNextStep: string | null;
+}
+
+export interface FounderSensemakingVisibility {
+  score: number;
+  coherenceScore: number;
+  findingsVisiblePass: boolean;
+  contradictionsVisiblePass: boolean;
+  trustRisksVisiblePass: boolean;
+  upgradesVisiblePass: boolean;
+  scoresExplainedPass: boolean;
+  noFalseContradictionsPass: boolean;
+  findingCount: number;
+  contradictionCount: number;
+  trustRiskCount: number;
+  upgradeCount: number;
+}
+
+export interface FounderInteractionSimulationVisibility {
+  score: number;
+  interactionScore: number;
+  scenariosRun: number;
+  scenariosPassed: number;
+  modalCloseRegressionPass: boolean;
+  commandCenterReadableAfterClosePass: boolean;
+  copyReportAvailablePass: boolean;
+  sendInputUsableAfterClosePass: boolean;
+  failureCount: number;
+  blockedWorkflowCount: number;
+}
+
+export interface FirstTimeUserRealityVisibility {
+  score: number;
+  firstTimeUserScore: number;
+  understandingScore: number;
+  navigationScore: number;
+  workflowScore: number;
+  trustScore: number;
+  simplicityScore: number;
+  screenPurposeChecks: number;
+  screenPurposePassCount: number;
+  productUnderstandingPass: boolean;
+  navigationUnderstandingPass: boolean;
+  workflowClarityPass: boolean;
+  trustFormationPass: boolean;
+  cognitiveLoadPass: boolean;
+  findingCount: number;
 }
 
 export interface VerificationResultsVisibility {
@@ -220,6 +267,30 @@ export interface FounderTestV4Report {
   changeIntelligenceVisibilityScore: ChangeIntelligenceVisibility;
   founderActionCenter: FounderActionCenterAssessment;
   founderActionCenterVisibilityScore: FounderActionCenterVisibility;
+  founderSensemaking: FounderSensemakingAssessment;
+  founderSensemakingVisibilityScore: FounderSensemakingVisibility;
+  founderInteractionSimulation: import('../founder-interaction-simulation/founder-interaction-simulation-types.js').FounderInteractionSimulationAssessment;
+  founderInteractionSimulationScore: FounderInteractionSimulationVisibility;
+  firstTimeUserReality: import('../first-time-user-reality/first-time-user-reality-types.js').FirstTimeUserRealityAssessment;
+  firstTimeUserRealityScore: FirstTimeUserRealityVisibility;
+  verificationTrustEvidence: import('../verification-trust-evidence/verification-trust-evidence-types.js').VerificationTrustEvidenceAssessment;
+  verificationTrustEvidenceScore: import('../verification-trust-evidence/verification-trust-evidence-types.js').VerificationTrustEvidenceVisibility;
+  founderFrictionHeatmap: import('../founder-friction-heatmap/founder-friction-heatmap-types.js').FounderFrictionHeatmapAssessment;
+  founderFrictionHeatmapScore: import('../founder-friction-heatmap/founder-friction-heatmap-types.js').FounderFrictionHeatmapVisibility;
+  customerJourneySimulation: import('../customer-journey-simulation/customer-journey-simulation-types.js').CustomerJourneySimulationAssessment;
+  customerJourneySimulationScore: import('../customer-journey-simulation/customer-journey-simulation-types.js').CustomerJourneySimulationVisibility;
+  promiseRealityEngine: import('../promise-reality-engine/promise-reality-engine-types.js').PromiseRealityEngineAssessment;
+  promiseRealityEngineScore: import('../promise-reality-engine/promise-reality-engine-types.js').PromiseRealityVisibility;
+  visualQualityAuthority: import('../visual-quality-authority/visual-quality-authority-types.js').VisualQualityAuthorityAssessment;
+  visualQualityAuthorityScore: import('../visual-quality-authority/visual-quality-authority-types.js').VisualQualityVisibility;
+  launchDaySimulation: import('../launch-day-simulation-engine/launch-day-simulation-engine-types.js').LaunchDaySimulationAssessment;
+  launchDaySimulationScore: import('../launch-day-simulation-engine/launch-day-simulation-engine-types.js').LaunchDaySimulationVisibility;
+  adoptionPrediction: import('../adoption-prediction-engine/adoption-prediction-engine-types.js').AdoptionPredictionAssessment;
+  adoptionPredictionScore: import('../adoption-prediction-engine/adoption-prediction-engine-types.js').AdoptionPredictionVisibility;
+  productEconomics: import('../product-economics-engine/product-economics-engine-types.js').ProductEconomicsAssessment;
+  productEconomicsScore: import('../product-economics-engine/product-economics-engine-types.js').ProductEconomicsVisibility;
+  productEvolution: import('../product-evolution-engine/product-evolution-engine-types.js').ProductEvolutionAssessment;
+  productEvolutionScore: import('../product-evolution-engine/product-evolution-engine-types.js').ProductEvolutionVisibility;
   verificationReality: VerificationReality;
   promiseMatrix: PromiseRealityEntry[];
   realityGaps: RealityGap[];

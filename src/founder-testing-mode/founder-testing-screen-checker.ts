@@ -38,31 +38,33 @@ function extractNavLabels(html: string): string[] {
   return labels;
 }
 
+const SURFACE_RENDERER_SNIPPET_CHARS = 5200;
+
+const SURFACE_RENDER_FNS: Record<string, string> = {
+  'projects-surface': 'renderProjectsSurface',
+  'autonomous-builder-surface': 'renderAutonomousBuilderSurface',
+  'live-preview-surface': 'renderLivePreviewSurface',
+  'project-memory-surface': 'renderProjectMemorySurface',
+  'verification-surface': 'renderVerificationSurface',
+  'notifications-surface': 'renderNotificationsSurface',
+  'project-insights-surface': 'renderProjectInsightsSurface',
+};
+
 function screenSurfaceSnippet(appJs: string, containerId: string): string {
-  const fnPatterns = [
-    `el('${containerId}')`,
-    `id="${containerId}"`,
-    `function render${containerId.split('-').map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join('')}`,
-  ];
-  for (const pattern of fnPatterns) {
-    const idx = appJs.indexOf(pattern);
-    if (idx !== -1) {
-      return appJs.slice(idx, idx + 2500);
+  const renderFn = SURFACE_RENDER_FNS[containerId];
+  if (renderFn) {
+    const fnIdx = appJs.indexOf(`function ${renderFn}`);
+    if (fnIdx !== -1) {
+      return appJs.slice(fnIdx, fnIdx + SURFACE_RENDERER_SNIPPET_CHARS);
     }
   }
-  const renderFns: Record<string, string> = {
-    'projects-surface': 'renderProjectsSurface',
-    'autonomous-builder-surface': 'renderAutonomousBuilderSurface',
-    'live-preview-surface': 'renderLivePreviewSurface',
-    'project-memory-surface': 'renderProjectMemorySurface',
-    'verification-surface': 'renderVerificationSurface',
-    'notifications-surface': 'renderNotificationsSurface',
-    'project-insights-surface': 'renderProjectInsightsSurface',
-  };
-  const fn = renderFns[containerId];
-  if (fn) {
-    const idx = appJs.indexOf(`function ${fn}`);
-    if (idx !== -1) return appJs.slice(idx, idx + 3500);
+
+  const fallbackPatterns = [`id="${containerId}"`, `el('${containerId}')`];
+  for (const pattern of fallbackPatterns) {
+    const idx = appJs.indexOf(pattern);
+    if (idx !== -1) {
+      return appJs.slice(idx, idx + SURFACE_RENDERER_SNIPPET_CHARS);
+    }
   }
   return '';
 }

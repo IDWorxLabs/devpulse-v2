@@ -17,6 +17,7 @@ export type ProductIdentityIntent =
   | 'AFTER_CREATE_PROJECT'
   | 'PROJECT_MEMORY'
   | 'PROJECT_INSIGHTS'
+  | 'WHY_PROJECT_INSIGHTS'
   | 'MEMORY_VS_INSIGHTS'
   | 'LIVE_PREVIEW'
   | 'VERIFY_PROJECT'
@@ -74,6 +75,14 @@ const INTENT_MATCHERS: ReadonlyArray<{ intent: ProductIdentityIntent; patterns: 
   {
     intent: 'PROJECT_INSIGHTS',
     patterns: [/^what is project insights\??$/i, /^explain project insights\??$/i],
+  },
+  {
+    intent: 'WHY_PROJECT_INSIGHTS',
+    patterns: [
+      /^why should i use project insights\??$/i,
+      /^why use project insights\??$/i,
+      /^why does project insights matter\??$/i,
+    ],
   },
   {
     intent: 'MEMORY_VS_INSIGHTS',
@@ -343,32 +352,38 @@ export function generateProductIdentityResponse(intent: ProductIdentityIntent): 
 
     case 'PROJECT_MEMORY':
       return withNextAction(
-        `Project Memory is what AiDevEngine knows about your project — requirements, goals, architecture, decisions, facts, conversations, and history.\n\nThis is your project's memory. It stores information as you build.`,
+        `Everything AiDevEngine knows about your project lives in Project Memory.\n\nThis includes requirements, architecture, facts, business rules, and project history.\n\nThis is your project's memory — it stores information as you build.`,
         'Open Project Memory to review stored requirements, architecture, and facts.',
       );
 
     case 'PROJECT_INSIGHTS':
       return withNextAction(
-        `Project Insights is what AiDevEngine thinks about your project — health, risks, progress, recommendations, blockers, and launch readiness.\n\nThis is your project's intelligence. Insights are generated from Project Memory.`,
-        'Open Project Insights for health, risks, and recommended next actions.',
+        `Everything AiDevEngine thinks about your project lives in Project Insights.\n\nIt analyzes Project Memory, Verification Results, Running Application State, Change Intelligence, and Founder Testing to identify Health, Risks, Launch Readiness, and recommended actions.`,
+        'Open Project Insights — review project health and follow recommended actions.',
+      );
+
+    case 'WHY_PROJECT_INSIGHTS':
+      return withNextAction(
+        `Use Project Insights to understand what needs attention, what is improving, what is blocking progress, and what should happen next.\n\nIt identifies risks, progress, readiness, blockers, and highest-impact recommended actions — without reading every report manually.`,
+        'Open Project Insights and start with Project Health and Recommended Actions.',
       );
 
     case 'MEMORY_VS_INSIGHTS':
       return withNextAction(
-        `Project Memory and Project Insights work together:\n\n• **Project Memory** — what AiDevEngine **knows** (requirements, architecture, facts, history)\n• **Project Insights** — what AiDevEngine **thinks** (health, risks, progress, next actions, launch readiness)\n\nFlow: Project Memory → AiDevEngine Analysis → Project Insights\n\nInsights come from Memory. Memory does not come from Insights.`,
-        'Use Project Memory to review stored knowledge. Use Project Insights for recommendations and next steps.',
+        `Memory stores facts. Insights analyze facts.\n\n• **Project Memory** — Everything AiDevEngine **knows** (requirements, architecture, facts, history)\n• **AiDevEngine Analysis** — reads Memory and current product state\n• **Project Insights** — Everything AiDevEngine **thinks** (health, risks, progress, readiness, recommended actions)\n\nInsights come from Memory. Memory does not come from Insights.`,
+        'Use Project Memory to review stored knowledge. Use Project Insights for health, risks, and next steps.',
       );
 
     case 'LIVE_PREVIEW':
       return withNextAction(
-        `Live Preview is where you see and validate what AiDevEngine is building — a running view of your application so you can confirm behavior, design, and progress before launch.`,
-        'Select a project and open Live Preview to review the current build.',
+        `Live Preview shows whether a running preview is available and whether it is validation-ready.\n\nIf no preview is running, you will see: No Live Preview Running.\n\nNext action: Start a preview or open a project with a running preview.`,
+        'Open Live Preview to check Preview Status and recommended actions.',
       );
 
     case 'VERIFY_PROJECT':
       return withNextAction(
-        `Verification helps you evaluate readiness, quality, and launch confidence for your project.\n\nAiDevEngine checks planning completeness, implementation quality signals, preview readiness, and launch criteria — then recommends what to fix or confirm next.`,
-        'Open Verification for your project and review the readiness summary.',
+        `Verification Readiness indicates whether sufficient testing and validation evidence exists to confidently review, test, beta, or launch your project.\n\nOpen Verification to see pass/fail evidence, grouped results, and recommended fixes.`,
+        'Open Verification and run Founder Testing to populate Verification Readiness.',
       );
 
     case 'WHAT_NEXT':

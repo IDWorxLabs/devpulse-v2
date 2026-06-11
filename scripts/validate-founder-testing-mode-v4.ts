@@ -91,7 +91,11 @@ async function main(): Promise<void> {
   assert('17. no auto-fix', !orch.includes('auto-fix'), 'no autofix');
   assert('18. runtime 90s', FOUNDER_TEST_V4_MAX_TOTAL_MS === 90000, String(FOUNDER_TEST_V4_MAX_TOTAL_MS));
   assert('19. package script', Boolean(pkg.scripts?.['validate:founder-testing-mode-v4']), 'pkg');
-  assert('20. UI run-v4', appJs.includes('/api/founder-test/run-v4'), 'ui');
+  assert(
+    '20. UI run founder test',
+    appJs.includes('/api/founder-test/run') || appJs.includes('/api/founder-test/run-v4'),
+    'ui',
+  );
   assert('21. report sections', report.includes('Promise Reality Matrix') && report.includes('Execution Readiness'), 'report');
 
   const v4 = runFounderTestingModeV4({

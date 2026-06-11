@@ -26,6 +26,7 @@ import type {
 } from './founder-testing-v3-types.js';
 import type { ScreenCheckSources } from './founder-testing-screen-checker.js';
 import type { FounderTestV2Report } from './founder-testing-v2-types.js';
+import { assessProjectIntelligenceClarity } from './project-intelligence-clarity.js';
 
 const PERSONA_DEFINITIONS = [
   {
@@ -478,20 +479,20 @@ export function detectHumanConfusion(v2: FounderTestV2Report, sources: ScreenChe
     });
   }
 
-  const appJs = sources.appJs;
-  if (/project memory/i.test(appJs) && /project insights|portfolio/i.test(appJs)) {
-    const distinguished =
-      appJs.includes('Everything AiDevEngine knows') &&
-      appJs.includes('Everything AiDevEngine thinks') &&
-      appJs.includes('Insights come from Memory') &&
-      appJs.includes('project knowledge, requirements, and history');
-    if (!distinguished) {
-      findings.push({
-        topic: 'Project Memory vs Project Insights',
-        severity: 'HIGH',
-        detail: 'Users may not distinguish stored project knowledge from project intelligence',
-      });
-    }
+  const { appJs, html } = sources;
+  const clarity = assessProjectIntelligenceClarity({ appJs, html });
+  const memoryInsightsAlreadyReported = findings.some((f) => f.topic === 'Project Memory vs Project Insights');
+  if (
+    (clarity.confusionSeverity === 'HIGH' || clarity.confusionSeverity === 'CRITICAL') &&
+    !memoryInsightsAlreadyReported
+  ) {
+    findings.push({
+      topic: 'Project Memory vs Project Insights',
+      severity: 'HIGH',
+      detail:
+        clarity.issues[0] ??
+        'Users may not distinguish stored project knowledge from project intelligence',
+    });
   }
 
   if (appJs.includes('System Diagnostics') && appJs.includes('verification-surface')) {

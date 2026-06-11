@@ -57,7 +57,7 @@ export const FOUNDER_TEST_SCREENS: readonly FounderTestScreenSpec[] = [
     label: 'Project Memory',
     titlePattern: 'Project Memory',
     containerId: 'project-memory-surface',
-    purposeKeywords: ['Project Memory', 'everything AiDevEngine knows', 'Project Knowledge', 'Requirements'],
+    purposeKeywords: ['Project Memory', 'Everything AiDevEngine knows', 'Project Knowledge', 'Requirements'],
     forbiddenInSurface: ['section-stacks', 'validator-list', 'completed-stacks'],
   },
   {
@@ -80,7 +80,7 @@ export const FOUNDER_TEST_SCREENS: readonly FounderTestScreenSpec[] = [
     label: 'Project Insights',
     titlePattern: 'Project Insights',
     containerId: 'project-insights-surface',
-    purposeKeywords: ['Project Insights', 'everything AiDevEngine thinks', 'Health', 'Risks', 'Launch Readiness'],
+    purposeKeywords: ['Project Insights', 'Everything AiDevEngine thinks', 'Health', 'Risks', 'Launch Readiness'],
     forbiddenInSurface: ['section-stacks', 'id="validator-list"', 'Foundation Stacks'],
   },
   {

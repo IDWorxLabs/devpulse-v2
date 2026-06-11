@@ -168,6 +168,9 @@ export {
   evaluateVerificationResultsVisibility,
   evaluateChangeIntelligenceVisibility,
   evaluateFounderActionCenterVisibility,
+  evaluateFounderSensemakingVisibility,
+  evaluateFounderInteractionSimulationVisibility,
+  evaluateFirstTimeUserRealityVisibility,
   evaluateVerificationReality,
   buildPromiseRealityMatrix,
   detectRealityGaps,
@@ -177,6 +180,27 @@ export {
 export { computeLaunchReadinessReality, deriveV4Verdict } from './founder-testing-v4-scorer.js';
 export { buildFounderTestV4ReportMarkdown, assembleFounderTestV4Report } from './founder-testing-v4-report-builder.js';
 export { runFounderTestingModeV4 } from './founder-testing-v4-orchestrator.js';
+
+export {
+  FOUNDER_TESTING_MODE_V5_PASS_TOKEN,
+  FOUNDER_TESTING_MODE_V5_OWNER_MODULE,
+  FOUNDER_TEST_V5_REPORT_TITLE,
+  FOUNDER_TEST_V5_MAX_TOTAL_MS,
+  FOUNDER_TEST_V5_MAX_PHASES,
+} from './founder-testing-v5-bounds.js';
+
+export type {
+  FounderTestV5Report,
+  FounderLaunchRecommendation,
+  FounderTestV5UnifiedSummary,
+  RunFounderTestingModeV5Input,
+} from './founder-testing-v5-types.js';
+
+export { FOUNDER_TEST_V5_PHASES, buildFounderTestV5PhaseFeed } from './founder-testing-v5-phases.js';
+export { deriveLaunchRecommendation, buildFinalRecommendation } from './founder-testing-v5-scorer.js';
+export { buildUnifiedFounderSummary } from './founder-testing-v5-unified-summary.js';
+export { buildFounderTestV5ReportMarkdown, assembleFounderTestV5Report } from './founder-testing-v5-report-builder.js';
+export { runFounderTestingModeV5 } from './founder-testing-v5-orchestrator.js';
 
 export {
   LIVE_PREVIEW_REALITY_PASS_TOKEN,
@@ -214,3 +238,81 @@ export {
   type RunningApplicationVisibilityAssessment,
   type RunningAppOutputState,
 } from '../running-application-visibility/index.js';
+
+export {
+  FOUNDER_INTERACTION_SIMULATION_PASS_TOKEN,
+  assessFounderInteractionSimulation,
+  enrichAssessmentsWithInteractionSimulation,
+  type FounderInteractionSimulationAssessment,
+} from '../founder-interaction-simulation/index.js';
+
+export {
+  FIRST_TIME_USER_REALITY_PASS_TOKEN,
+  assessFirstTimeUserReality,
+  enrichAssessmentsWithFirstTimeUserReality,
+  type FirstTimeUserRealityAssessment,
+} from '../first-time-user-reality/index.js';
+
+export {
+  CUSTOMER_JOURNEY_SIMULATION_PASS_TOKEN,
+  assessCustomerJourneySimulation,
+  enrichAssessmentsWithCustomerJourney,
+  evaluateCustomerJourneySimulationVisibility,
+  resetCustomerJourneyCounterForTests,
+  type CustomerJourneySimulationAssessment,
+} from '../customer-journey-simulation/index.js';
+
+export {
+  PROMISE_REALITY_ENGINE_PASS_TOKEN,
+  assessPromiseRealityEngine,
+  enrichAssessmentsWithPromiseReality,
+  enrichFirstTimeUserRealityWithPromiseScenarios,
+  evaluatePromiseRealityVisibility,
+  resetPromiseRealityCounterForTests,
+  type PromiseRealityEngineAssessment,
+} from '../promise-reality-engine/index.js';
+
+export {
+  VISUAL_QUALITY_AUTHORITY_PASS_TOKEN,
+  assessVisualQualityAuthority,
+  enrichAssessmentsWithVisualQuality,
+  evaluateVisualQualityVisibility,
+  resetVisualQualityCounterForTests,
+  type VisualQualityAuthorityAssessment,
+} from '../visual-quality-authority/index.js';
+
+export {
+  LAUNCH_DAY_SIMULATION_ENGINE_PASS_TOKEN,
+  assessLaunchDaySimulation,
+  enrichAssessmentsWithLaunchDaySimulation,
+  evaluateLaunchDaySimulationVisibility,
+  resetLaunchDayCounterForTests,
+  type LaunchDaySimulationAssessment,
+} from '../launch-day-simulation-engine/index.js';
+
+export {
+  ADOPTION_PREDICTION_ENGINE_PASS_TOKEN,
+  assessAdoptionPrediction,
+  enrichAssessmentsWithAdoptionPrediction,
+  evaluateAdoptionPredictionVisibility,
+  resetAdoptionPredictionCounterForTests,
+  type AdoptionPredictionAssessment,
+} from '../adoption-prediction-engine/index.js';
+
+export {
+  PRODUCT_ECONOMICS_ENGINE_PASS_TOKEN,
+  assessProductEconomics,
+  enrichAssessmentsWithProductEconomics,
+  evaluateProductEconomicsVisibility,
+  resetProductEconomicsCounterForTests,
+  type ProductEconomicsAssessment,
+} from '../product-economics-engine/index.js';
+
+export {
+  PRODUCT_EVOLUTION_ENGINE_PASS_TOKEN,
+  assessProductEvolution,
+  enrichAssessmentsWithProductEvolution,
+  evaluateProductEvolutionVisibility,
+  resetProductEvolutionCounterForTests,
+  type ProductEvolutionAssessment,
+} from '../product-evolution-engine/index.js';
