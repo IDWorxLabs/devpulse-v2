@@ -14,9 +14,9 @@ const CATEGORY_PATTERNS: Array<{ category: BrainRequestCategory; patterns: strin
   { category: 'ROADMAP', patterns: ['what should we build', 'build next', 'next phase', 'roadmap', 'what next', 'what should we do next'] },
   { category: 'STATUS', patterns: ['how mature', 'maturity', 'status', 'complete', 'ready', 'what exists', 'what phase'] },
   { category: 'RISK', patterns: ['risk', 'danger', 'unsafe', 'will this break', 'concern'] },
+  { category: 'ARCHITECTURE', patterns: ['architecture', 'duplication', 'duplicate', 'ownership', 'registry', 'design', 'authority chain', 'foundation stack'] },
   { category: 'SYSTEM', patterns: ['explain', 'trust engine', 'world 2', 'world2', 'governance', 'mobile command', 'self-evolution', 'experience layer', 'what is'] },
   { category: 'PROJECT', patterns: ['project', 'project idea', 'workspace', 'build it', 'can i type'] },
-  { category: 'ARCHITECTURE', patterns: ['architecture', 'duplication', 'duplicate', 'ownership', 'registry', 'design'] },
 ];
 
 export function classificationKey(classification: BrainClassification): string {

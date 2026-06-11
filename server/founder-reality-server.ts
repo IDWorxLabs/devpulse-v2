@@ -15,6 +15,14 @@ import {
   FOUNDER_REALITY_URL,
 } from './founder-reality-manifest.js';
 import { handleBrainRespondRequest, sendBrainHealth } from './brain-api-handler.js';
+import {
+  handleFounderTestRunRequest,
+  handleFounderTestRunV2Request,
+  handleFounderTestRunV3Request,
+  handleFounderTestRunV4Request,
+} from './founder-testing-handler.js';
+import { buildPortfolioInsightsDemo } from './portfolio-demo-data.js';
+import { buildProductWorkspaceSnapshot } from './product-workspace-snapshot.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = join(__dirname, '..');
@@ -37,8 +45,15 @@ function loadValidatorScripts(): string[] {
     .sort();
 }
 
-const MANIFEST = buildFounderRealityManifest(loadValidatorScripts());
+const VALIDATOR_SCRIPTS = loadValidatorScripts();
+const MANIFEST = buildFounderRealityManifest(VALIDATOR_SCRIPTS);
 const MANIFEST_JSON = JSON.stringify(MANIFEST, null, 2);
+
+function buildProductWorkspaceJson(): string {
+  return JSON.stringify(buildProductWorkspaceSnapshot(VALIDATOR_SCRIPTS), null, 2);
+}
+
+const PORTFOLIO_DEMO_JSON = JSON.stringify(buildPortfolioInsightsDemo(), null, 2);
 
 function sendJson(res: ServerResponse, status: number, body: string): void {
   res.writeHead(status, {
@@ -104,9 +119,29 @@ export function createFounderRealityServer() {
       return;
     }
 
+    if (urlPath === '/api/founder-test/run' && req.method === 'POST') {
+      await handleFounderTestRunRequest(req, res, VALIDATOR_SCRIPTS);
+      return;
+    }
+
+    if (urlPath === '/api/founder-test/run-v2' && req.method === 'POST') {
+      await handleFounderTestRunV2Request(req, res, VALIDATOR_SCRIPTS);
+      return;
+    }
+
+    if (urlPath === '/api/founder-test/run-v3' && req.method === 'POST') {
+      await handleFounderTestRunV3Request(req, res, VALIDATOR_SCRIPTS);
+      return;
+    }
+
+    if (urlPath === '/api/founder-test/run-v4' && req.method === 'POST') {
+      await handleFounderTestRunV4Request(req, res, VALIDATOR_SCRIPTS);
+      return;
+    }
+
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       sendJson(res, 405, JSON.stringify({
-        error: 'Method not allowed — only GET and POST /api/brain/* endpoints are supported',
+        error: 'Method not allowed — only GET and POST /api/brain/* and POST /api/founder-test/* are supported',
         hint: 'Restart DevPulse with npm run dev if Brain POST returns read-only errors',
       }));
       return;
@@ -124,6 +159,39 @@ export function createFounderRealityServer() {
         return;
       }
       sendJson(res, 200, MANIFEST_JSON);
+      return;
+    }
+
+    if (urlPath === '/api/product-workspace.json') {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      try {
+        sendJson(res, 200, buildProductWorkspaceJson());
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'workspace snapshot failed';
+        sendJson(
+          res,
+          200,
+          JSON.stringify({
+            productBrand: 'AiDevEngine',
+            portfolioInsights: JSON.parse(PORTFOLIO_DEMO_JSON),
+            workspaceError: message,
+          }),
+        );
+      }
+      return;
+    }
+
+    if (urlPath === '/api/portfolio-demo.json') {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendJson(res, 200, PORTFOLIO_DEMO_JSON);
       return;
     }
 

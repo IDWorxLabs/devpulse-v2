@@ -45,6 +45,18 @@ function readJson(relativePath: string): Record<string, unknown> {
   return JSON.parse(readFileSync(join(ROOT, relativePath), 'utf8')) as Record<string, unknown>;
 }
 
+function extractSidebarNavLabels(html: string): string[] {
+  const labels: string[] = [];
+  const re = /<span class="nav-label">([^<]*)<\/span>/g;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(html)) !== null) {
+    labels.push(match[1]!.trim());
+  }
+  return labels;
+}
+
+const REMOVED_PRODUCT_NAV_LABELS = ['World 2', 'Project Vault', 'Validators', 'Founder Reality'] as const;
+
 async function fetchManifestFromServer(): Promise<{ status: number; body: string; headers: Record<string, string | string[] | undefined> }> {
   return new Promise((resolve, reject) => {
     const server = createFounderRealityServer();
@@ -86,6 +98,7 @@ async function main(): Promise<void> {
   const css = readText('public/founder-reality/styles.css');
   const appJs = readText('public/founder-reality/app.js');
   const manifestModule = readText('server/founder-reality-manifest.ts');
+  const workspaceSnapshotSrc = readText('server/product-workspace-snapshot.ts');
 
   const validators = Object.keys(scripts).filter((k) => k.startsWith('validate:')).sort();
   const manifest = buildFounderRealityManifest(validators);
@@ -102,16 +115,18 @@ async function main(): Promise<void> {
   assert('9. registry ownership', getDevPulseV2Owner('founder_reality_surface').ownerModule === FOUNDER_REALITY_SURFACE_OWNER_MODULE, FOUNDER_REALITY_SURFACE_OWNER_MODULE);
   assert('10. registry phase 10.3', getDevPulseV2Owner('founder_reality_surface').phase === 10.3, '10.3');
 
-  assert('11. html DevPulse V2 title', html.includes('DevPulse V2'), 'title');
-  assert('12. html Founder Reality Surface', html.includes('Founder Reality') || html.includes('founder-reality'), 'founder');
+  const sidebarNavLabels = extractSidebarNavLabels(html);
+
+  assert('11. html AiDevEngine branding', html.includes('AiDevEngine'), 'AiDevEngine');
+  assert('12. html Project Insights surface', html.includes('Project Insights') && html.includes('id="view-project-insights"'), 'project insights');
   assert('13. html current status section', html.includes('Current Status'), 'section');
-  assert('14. html completed stacks section', html.includes('Completed Foundation Stacks'), 'section');
-  assert('15. html validators section', html.includes('Available Validators'), 'section');
-  assert('16. html exists vs not yet section', html.includes('What Exists vs What Does Not Exist Yet'), 'section');
+  assert('14. html foundation stacks in system diagnostics', html.includes('Foundation Stacks') && html.includes('id="view-system-diagnostics"'), 'section');
+  assert('15. html verification scripts section', html.includes('Verification Scripts'), 'section');
+  assert('16. html exists vs not yet section', html.includes('What Exists vs Not Yet'), 'section');
   assert('17. html reality warnings section', html.includes('Reality Warnings') || html.includes('section-warnings'), 'section');
-  assert('18. html founder checklist section', html.includes('Founder Reality Checklist'), 'section');
-  assert('19. html next step section', html.includes('Next Recommended Build Step'), 'section');
-  assert('20. html no auto-run hint', html.includes('does not auto-run validators'), 'hint');
+  assert('18. html product readiness checklist', html.includes('Product Readiness Checklist'), 'section');
+  assert('19. html recommended next actions', html.includes('Recommended Next Actions'), 'section');
+  assert('20. html no auto-run verification hint', html.includes('does not auto-run'), 'hint');
 
   assert('21. manifest title', manifest.title === 'DevPulse V2', manifest.title);
   assert('22. manifest subtitle', manifest.subtitle === 'Command Center Runtime Shell' || manifest.subtitle.includes('Command Center'), manifest.subtitle);
@@ -137,7 +152,7 @@ async function main(): Promise<void> {
 
   assert('41. app.js fetch manifest', appJs.includes('/api/founder-reality.json'), 'fetch');
   assert('42. app.js no eval', !appJs.includes('eval('), 'clean');
-  assert('43. app.js no auto validator', !appJs.includes('validate:') || appJs.includes('does not auto-run'), 'no auto-run');
+  assert('43. app.js no auto validator run', html.includes('does not auto-run') && !appJs.includes('child_process'), 'no auto-run');
   assert('44. css present', css.length > 500, String(css.length));
   assert('45. pass token defined', FOUNDER_REALITY_SURFACE_PASS_TOKEN === 'DEVPULSE_V2_FOUNDER_REALITY_SURFACE_FOUNDATION_V1_PASS', FOUNDER_REALITY_SURFACE_PASS_TOKEN);
   assert('46. url defined', FOUNDER_REALITY_URL === 'http://localhost:4321', FOUNDER_REALITY_URL);
@@ -309,9 +324,43 @@ async function main(): Promise<void> {
   assert('179. owner function registered', getDevPulseV2Owner('founder_reality_surface').ownerFunction === 'startFounderRealityServer', 'startFounderRealityServer');
   assert('180. description mentions visibility', getDevPulseV2Owner('founder_reality_surface').description.includes('visibility'), 'visibility');
 
+  assert('181. portfolio insights surface container', html.includes('id="project-insights-surface"'), 'portfolio surface');
+  assert('182. system diagnostics view exists', html.includes('id="view-system-diagnostics"'), 'system diagnostics');
+  assert('183. portfolio render in app', appJs.includes('renderProjectInsightsSurface') && appJs.includes('portfolio-summary-grid'), 'portfolio render');
+  assert('184. demo badge in app', appJs.includes('demo-badge') && appJs.includes('DEMO'), 'demo badge');
+  assert('185. back to portfolio action', appJs.includes('back-to-portfolio'), 'back action');
+  assert('186. project detail view in app', appJs.includes('project-detail-view'), 'detail view');
+  assert('187. priority queue in app', appJs.includes('priority-queue'), 'priority queue');
+  assert('188. active projects section in app', appJs.includes('active-projects-section'), 'active projects');
+  const insightsHtmlBlock = html.slice(html.indexOf('id="view-project-insights"'), html.indexOf('id="view-system-diagnostics"'));
+  assert('189. project insights no foundation stacks', !insightsHtmlBlock.includes('section-stacks'), 'separated');
+  assert('190. demo data in workspace snapshot', workspaceSnapshotSrc.includes('portfolioInsights') && workspaceSnapshotSrc.includes('buildPortfolioInsightsDemo'), 'demo in snapshot');
+  assert('191. portfolio demo flag', readText('server/portfolio-demo-data.ts').includes('isDemo: true'), 'isDemo');
+  assert('192. exactly 3 demo projects', readText('server/portfolio-demo-data.ts').includes('AiDevEngine Demo') && readText('server/portfolio-demo-data.ts').includes('Field Service App Demo') && readText('server/portfolio-demo-data.ts').includes('Customer Portal Demo'), '3 demos');
+  assert('193. system diagnostics footer', html.includes('internal platform visibility'), 'footer');
+  assert('194. no placeholder footer copy', !html.includes('Navigation placeholders'), 'no placeholder footer');
+  assert('195. no generic placeholder panel', !html.includes('id="view-placeholder"'), 'no placeholder view');
+  assert('196. sidebar status area', html.includes('id="sidebar-status"'), 'sidebar status');
+  assert('197. product workspace api in app', appJs.includes('/api/product-workspace.json'), 'workspace api');
+  assert('198. product workspace api on server', serverSrc.includes('/api/product-workspace.json'), 'workspace route');
+  assert('199. live preview surface view', html.includes('id="view-live-preview"') && appJs.includes('renderLivePreviewSurface'), 'live preview');
+  assert('200. verification no massive list default', !appJs.includes('validators.slice(0, 12)'), 'verification cleanup');
+  assert('201. portfolio load not permanent', appJs.includes('workspaceLoadState') && appJs.includes('resolvePortfolioInsights'), 'load state');
+  assert('202. demo portfolio client fallback', appJs.includes('CLIENT_DEMO_PORTFOLIO_FALLBACK') && appJs.includes('AiDevEngine Demo'), 'demo fallback');
+  assert('203. workspace load function', appJs.includes('loadProductWorkspace'), 'load workspace');
+  assert('204. retry workspace button', appJs.includes('retry-workspace-load'), 'retry');
+  assert('205. portfolio demo api route', serverSrc.includes('/api/portfolio-demo.json'), 'demo api');
+  assert('206. insights re-render on view', appJs.includes('isProjectInsightsViewActive'), 're-render');
+  assert('207. html no DevPulse sidebar label', !sidebarNavLabels.some((l) => l.includes('DevPulse')), 'no DevPulse nav');
+
+  for (let i = 0; i < REMOVED_PRODUCT_NAV_LABELS.length; i += 1) {
+    const removed = REMOVED_PRODUCT_NAV_LABELS[i]!;
+    assert(`${208 + i}. sidebar absent ${removed}`, !sidebarNavLabels.includes(removed), removed);
+  }
+
   for (let i = 0; i < 20; i += 1) {
     const m = buildFounderRealityManifest(validators);
-    assert(`${181 + i}. manifest rebuild stable ${i}`, m.title === 'DevPulse V2' && m.completedStacks.length === COMPLETED_STACKS.length, 'stable');
+    assert(`${212 + i}. manifest rebuild stable ${i}`, m.title === 'DevPulse V2' && m.completedStacks.length === COMPLETED_STACKS.length, 'stable');
   }
 
   const passed = results.filter((r) => r.passed).length;

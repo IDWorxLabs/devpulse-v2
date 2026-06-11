@@ -133,24 +133,30 @@ function generateRiskResponse(): string {
 
 function generateProjectResponse(): string {
   return [
-    'Project and workspace foundations exist in World 2 workspace foundation (Phase 7.1), but end-to-end project building from a founder idea is NOT YET available.',
+    'AiDevEngine helps you turn product ideas into working applications through guided project creation, planning, and verification.',
     '',
-    'You can map experience journeys (Phase 10.1) and assess trust (Phase 10.2), but DevPulse cannot execute builds, modify project files, or autonomously complete projects today.',
+    'You can create a project, define requirements, plan the system, preview progress, and verify launch readiness.',
     '',
-    world2HonestStatus(),
+    'Next action: Tell me what application you want to build, or ask "What should I do next?" for a tailored starting point.',
   ].join('\n');
 }
 
-function generateGeneralResponse(roadmap: BrainRoadmapContext): string {
+function generateGeneralResponse(): string {
   return [
-    'I am the Unified Command Center Brain — local intelligence only, no external AI models.',
+    'AiDevEngine helps turn software ideas into working applications.',
     '',
-    'I understand DevPulse phases, registered systems, ownership, and roadmap status. I can explain architecture, maturity, risks, and next steps.',
+    'I can help you:',
+    '• create projects',
+    '• define requirements',
+    '• plan systems',
+    '• review architecture',
+    '• understand project status',
+    '• prepare for verification',
+    '• prepare for launch',
     '',
-    `Current phase: ${roadmap.currentPhase}.`,
-    roadmap.recommendedNextStep,
+    'Tell me what you want to build.',
     '',
-    'Try: "What should we build next?" or "How does World 2 connect to Command Center?" or "What depends on Governance?"',
+    'Next action: Describe your product idea — for example: "Build a CRM for my sales team."',
   ].join('\n');
 }
 
@@ -175,7 +181,7 @@ export function generateBrainResponse(
       return generateProjectResponse();
     case 'GENERAL':
     default:
-      return generateGeneralResponse(roadmap);
+      return generateGeneralResponse();
   }
 }
 

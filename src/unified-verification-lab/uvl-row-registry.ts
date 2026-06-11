@@ -1296,7 +1296,7 @@ export const FOUNDER_READINESS_AUTHORITY_UVL_ROWS: readonly UvlRow[] = [
 
 export const FOUNDER_ACCEPTANCE_ORCHESTRATOR_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'FOUNDER_ACCEPTANCE_ORCHESTRATOR_TYPES', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance orchestrator types and models', extensionOnly: true },
-  { rowId: 'FOUNDER_ACCEPTANCE_REGISTRY', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance record registry and lookup', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_ORCHESTRATOR_REGISTRY', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance record registry and lookup', extensionOnly: true },
   { rowId: 'ACCEPTANCE_AGGREGATION_BUILDER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance aggregate score builder', extensionOnly: true },
   { rowId: 'AUTHORITY_CONFLICT_DETECTOR', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Authority conflict detection for acceptance', extensionOnly: true },
   { rowId: 'ACCEPTANCE_BLOCKER_ANALYZER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Acceptance blocker analysis', extensionOnly: true },
@@ -1305,11 +1305,11 @@ export const FOUNDER_ACCEPTANCE_ORCHESTRATOR_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'FRICTION_IMPACT_ANALYZER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Friction impact on acceptance analysis', extensionOnly: true },
   { rowId: 'ACCEPTANCE_GAP_ANALYZER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Aggregated acceptance gap analysis', extensionOnly: true },
   { rowId: 'ACCEPTANCE_ROADMAP_BUILDER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance roadmap generation', extensionOnly: true },
-  { rowId: 'FOUNDER_ACCEPTANCE_AUTHORITY_BUILDER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Unified founder acceptance authority aggregation', extensionOnly: true },
-  { rowId: 'FOUNDER_ACCEPTANCE_EVALUATOR', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Final founder acceptance evaluation and verdict', extensionOnly: true },
-  { rowId: 'FOUNDER_ACCEPTANCE_HISTORY', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Bounded founder acceptance evaluation history', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_ORCHESTRATOR_AUTHORITY_BUILDER', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Unified founder acceptance authority aggregation', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_ORCHESTRATOR_EVALUATOR', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Final founder acceptance evaluation and verdict', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_ORCHESTRATOR_HISTORY', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Bounded founder acceptance evaluation history', extensionOnly: true },
   { rowId: 'FOUNDER_ACCEPTANCE_REPORTING', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance report output', extensionOnly: true },
-  { rowId: 'FOUNDER_ACCEPTANCE_CACHE', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance bounded lookup and source text cache', extensionOnly: true },
+  { rowId: 'FOUNDER_ACCEPTANCE_ORCHESTRATOR_CACHE', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance bounded lookup and source text cache', extensionOnly: true },
   { rowId: 'FOUNDER_ACCEPTANCE_ORCHESTRATOR', module: 'founder_acceptance_orchestrator', phase: 24.88, description: 'Founder acceptance orchestration', extensionOnly: true },
 ];
 

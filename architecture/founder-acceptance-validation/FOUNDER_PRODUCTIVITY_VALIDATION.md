@@ -39,7 +39,7 @@ Module path: `src/founder-acceptance-validation/founder-productivity-validation/
 
 - Read-only validation — no execution, UI mutation, or state mutation
 - No browser execution or HTTP server startup
-- Phases 24.8.6–24.8.8 out of scope
+- Does not produce final acceptance verdict — authority consumed by phases 24.8.6–24.8.8
 
 ## Productivity Contexts
 

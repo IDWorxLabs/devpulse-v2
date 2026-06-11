@@ -42,7 +42,7 @@ Module path: `src/founder-acceptance-validation/founder-friction-detector/`
 
 - Read-only detection — no execution, UI mutation, or state mutation
 - No browser execution or HTTP server startup
-- Phases 24.8.7–24.8.8 out of scope
+- Does not produce final acceptance verdict — authority consumed by phases 24.8.7–24.8.8
 
 ## Friction Contexts
 

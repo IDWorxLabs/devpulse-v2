@@ -66,6 +66,51 @@ export {
   generateBlockedResponse,
 } from './brain-response-generator.js';
 
+export {
+  MANDATORY_PRODUCT_IDENTITY_PROMPTS,
+  matchProductIdentityIntent,
+  generateProductIdentityResponse,
+  resolveProductIdentityResponse,
+  isExplicitArchitectureRequest,
+} from './product-identity-responses.js';
+
+export {
+  resolveRunningApplicationResponse,
+  matchRunningApplicationIntent,
+  generateRunningApplicationResponse,
+} from './running-application-responses.js';
+
+export {
+  resolveVerificationResultsResponse,
+  matchVerificationResultsIntent,
+  generateVerificationResultsResponse,
+} from './verification-results-responses.js';
+
+export {
+  resolveChangeIntelligenceResponse,
+  matchChangeIntelligenceIntent,
+  generateChangeIntelligenceResponse,
+} from './change-intelligence-responses.js';
+
+export {
+  resolveFounderActionCenterResponse,
+  matchFounderActionCenterIntent,
+  generateFounderActionCenterResponse,
+} from './founder-action-center-responses.js';
+
+export {
+  enrichOperatorFeedEvents,
+  resolveOperatorFeedEventDetail,
+  FEED_SECTION_IDLE_COPY,
+  PRODUCT_IDENTITY_OPERATOR_FEED,
+  FORBIDDEN_VAGUE_FEED_PHRASES,
+} from './operator-feed-detail-catalog.js';
+export type { ProductIdentityIntent } from './product-identity-responses.js';
+export type { RunningApplicationIntent } from './running-application-responses.js';
+export type { VerificationResultsIntent } from './verification-results-responses.js';
+export type { ChangeIntelligenceIntent } from './change-intelligence-responses.js';
+export type { FounderActionCenterIntent } from './founder-action-center-responses.js';
+
 export type {
   BrainRequestCategory,
   BrainPipelineStage,

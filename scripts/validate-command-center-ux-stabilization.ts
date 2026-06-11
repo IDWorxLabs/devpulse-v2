@@ -5,7 +5,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { processBrainRequest, withSharedMemoryFeedStages, OPERATOR_FEED_EVENT_SEQUENCE } from '../src/command-center-brain/index.js';
+import { processBrainRequest, OPERATOR_FEED_EVENT_SEQUENCE } from '../src/command-center-brain/index.js';
 import {
   COMMAND_CENTER_UX_STABILIZATION_PASS_TOKEN,
   UX_CHAT_INPUT_ID,
@@ -34,6 +34,16 @@ function assert(name: string, condition: boolean, detail: string): void {
 
 function readText(relativePath: string): string {
   return readFileSync(join(ROOT, relativePath), 'utf8');
+}
+
+function extractSidebarNavLabels(html: string): string[] {
+  const labels: string[] = [];
+  const re = /<span class="nav-label">([^<]*)<\/span>/g;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(html)) !== null) {
+    labels.push(match[1]!.trim());
+  }
+  return labels;
 }
 
 async function postBrain(message: string): Promise<{ status: number; body: Record<string, unknown> | null }> {
@@ -74,6 +84,7 @@ async function main(): Promise<void> {
   const css = readText('public/founder-reality/styles.css');
   const appJs = readText('public/founder-reality/app.js');
   const serverSrc = readText('server/founder-reality-server.ts');
+  const workspaceSnapshotSrc = readText('server/product-workspace-snapshot.ts');
   const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { scripts?: Record<string, string> };
 
   assert('1. ux manifest exists', existsSync(join(ROOT, 'src/command-center-brain/ux-stabilization/command-center-ux-manifest.ts')), 'exists');
@@ -115,7 +126,7 @@ async function main(): Promise<void> {
   assert('33. brain api preserved', appJs.includes('/api/brain/respond'), 'brain');
   assert('34. feed stream preserved', appJs.includes('streamOperatorFeedEvents'), 'feed');
   assert('35. notifications preserved', appJs.includes('Brain Request Started'), 'notifications');
-  assert('36. founder reality nav', appJs.includes("switchView('founder-reality')"), 'founder');
+  assert('36. project insights nav', html.includes('data-view="project-insights"') && appJs.includes('project-insights'), 'project insights');
   assert('37. sidebar nav preserved', html.includes('id="sidebar-nav"'), 'sidebar');
   assert('38. operator feed preserved', html.includes('id="operator-feed"'), 'feed');
   assert('39. notification drawer preserved', html.includes('id="notification-drawer"'), 'drawer');
@@ -147,7 +158,12 @@ async function main(): Promise<void> {
 
   const brain = processBrainRequest({ message: 'What should we build next?' });
   assert('61. brain still responds locally', brain.brainResponse.length > 20, 'response');
-  assert('62. brain feed events', brain.operatorFeedEvents.length === withSharedMemoryFeedStages(OPERATOR_FEED_EVENT_SEQUENCE).length, String(brain.operatorFeedEvents.length));
+  assert(
+    '62. brain feed events',
+    brain.operatorFeedEvents.length >= OPERATOR_FEED_EVENT_SEQUENCE.length &&
+      brain.operatorFeedEvents.some((e) => e.eventType === 'Response Ready'),
+    String(brain.operatorFeedEvents.length),
+  );
   assert('63. brain no execution', brain.confirmation.noExecutionPerformed === true, 'confirm');
 
   const http = await postBrain('What should we build next?');
@@ -207,7 +223,7 @@ async function main(): Promise<void> {
   }
 
   for (let i = 0; i < 10; i += 1) {
-    assert(`${201 + i}. welcome copy title ${i}`, UX_WELCOME_COPY.title === 'DevPulse V2', 'title');
+    assert(`${201 + i}. welcome copy title ${i}`, UX_WELCOME_COPY.title === 'AiDevEngine', 'title');
   }
 
   for (let i = 0; i < 10; i += 1) {
@@ -218,7 +234,37 @@ async function main(): Promise<void> {
   assert('222. brain thinking indicator', appJs.includes('Brain is analyzing'), 'thinking');
   assert('223. user message class', css.includes('.chat-message.user'), 'user');
   assert('224. grid template areas', css.includes("'sidebar center feed'"), 'grid');
-  assert('225. placeholder simplified input', html.includes('placeholder="Message DevPulse'), 'placeholder');
+  assert('225. placeholder simplified input', html.includes('placeholder="Message AiDevEngine'), 'placeholder');
+
+  const sidebarNavLabels = extractSidebarNavLabels(html);
+
+  assert('226. no generic placeholder panel', !html.includes('id="view-placeholder"'), 'no placeholder view');
+  assert('227. no navigation placeholder footer', !html.includes('Navigation placeholders'), 'no placeholder footer');
+  assert('228. sidebar runtime status area', html.includes('id="sidebar-status"'), 'sidebar status');
+  assert('229. live preview honest empty state', appJs.includes('No live preview is running yet'), 'preview empty');
+  assert('230. project memory explanation copy', workspaceSnapshotSrc.includes('does not forget what it is building'), 'memory copy');
+  assert('231. verification nav replaces validators', sidebarNavLabels.includes('Verification') && !sidebarNavLabels.includes('Validators'), 'verification nav');
+  assert('232. autonomous builder nav replaces world2', sidebarNavLabels.includes('Autonomous Builder') && !sidebarNavLabels.includes('World 2'), 'builder nav');
+  assert('233. project memory nav replaces vault', sidebarNavLabels.includes('Project Memory') && !sidebarNavLabels.includes('Project Vault'), 'memory nav');
+  assert('234. product workspace loader', appJs.includes('/api/product-workspace.json'), 'workspace api');
+  assert('235. live preview surface render', appJs.includes('renderLivePreviewSurface'), 'live preview');
+  assert('236. verification surface render', appJs.includes('renderVerificationSurface'), 'verification surface');
+  assert('237. no DevPulse in welcome title html', !html.includes('<h3 class="welcome-title">DevPulse'), 'no devpulse welcome');
+  assert('238. AiDevEngine welcome title html', html.includes('<h3 class="welcome-title">AiDevEngine</h3>'), 'aidevengine welcome');
+  assert('239. product brand constant in app', appJs.includes("var PRODUCT_BRAND = 'AiDevEngine'"), 'product brand');
+  assert('240. render sidebar status fn', appJs.includes('renderSidebarStatus'), 'sidebar status fn');
+  assert('241. system diagnostics nav', html.includes('data-view="system-diagnostics"'), 'system diagnostics nav');
+  assert('242. portfolio insights surface', html.includes('id="project-insights-surface"') && appJs.includes('renderProjectInsightsSurface'), 'portfolio');
+  assert('243. portfolio summary cards', appJs.includes('portfolio-summary-grid'), 'summary cards');
+  assert('244. three demo projects data', readText('server/portfolio-demo-data.ts').includes('AiDevEngine Demo') && readText('server/portfolio-demo-data.ts').includes('Field Service App Demo') && readText('server/portfolio-demo-data.ts').includes('Customer Portal Demo'), '3 demos');
+  assert('245. demo badge visible', appJs.includes('demo-badge') && appJs.includes('DEMO'), 'demo badge');
+  assert('246. back to portfolio', appJs.includes('back-to-portfolio'), 'back portfolio');
+  assert('247. project insights no stacks', !html.slice(html.indexOf('view-project-insights'), html.indexOf('view-system-diagnostics')).includes('section-stacks'), 'no stacks in insights');
+  assert('248. system diagnostics has stacks', html.includes('id="view-system-diagnostics"') && html.includes('id="section-stacks"'), 'stacks in diagnostics');
+  assert('249. verification points to diagnostics', appJs.includes('System Diagnostics') && appJs.includes('Verification Scripts'), 'verification cleanup');
+  assert('250. portfolio not stuck loading', appJs.includes('workspaceLoadState') && appJs.includes('resolvePortfolioInsights'), 'load state');
+  assert('251. demo fallback three projects', appJs.includes('Field Service App Demo') && appJs.includes('Customer Portal Demo'), '3 demos');
+  assert('252. workspace fetch completes render', appJs.includes('loadProductWorkspace') && appJs.includes('isProjectInsightsViewActive'), 're-render');
 
   const passed = results.filter((r) => r.passed).length;
   const failed = results.filter((r) => !r.passed);

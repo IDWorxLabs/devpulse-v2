@@ -529,7 +529,7 @@ export const WORLD2_BUILDER_PACKET_FIND_ALIASES: readonly FindPanelAlias[] = [
   { alias: 'Product Reality Roadmap', capabilityId: 'PRODUCT_REALITY_ORCHESTRATOR', ownerModule: 'devpulse_v2_product_reality_orchestrator' },
   { alias: 'Founder Priority', capabilityId: 'PRODUCT_REALITY_ORCHESTRATOR', ownerModule: 'devpulse_v2_product_reality_orchestrator' },
   { alias: 'Authority Conflicts', capabilityId: 'PRODUCT_REALITY_ORCHESTRATOR', ownerModule: 'devpulse_v2_product_reality_orchestrator' },
-  { alias: 'Founder Acceptance', capabilityId: 'FOUNDER_ACCEPTANCE_FRAMEWORK', ownerModule: 'devpulse_v2_founder_acceptance_framework' },
+  { alias: 'Acceptance Model Foundation', capabilityId: 'FOUNDER_ACCEPTANCE_FRAMEWORK', ownerModule: 'devpulse_v2_founder_acceptance_framework' },
   { alias: 'Acceptance Framework', capabilityId: 'FOUNDER_ACCEPTANCE_FRAMEWORK', ownerModule: 'devpulse_v2_founder_acceptance_framework' },
   { alias: 'Founder Acceptance Dimensions', capabilityId: 'FOUNDER_ACCEPTANCE_FRAMEWORK', ownerModule: 'devpulse_v2_founder_acceptance_framework' },
   { alias: 'Acceptance Criteria', capabilityId: 'FOUNDER_ACCEPTANCE_FRAMEWORK', ownerModule: 'devpulse_v2_founder_acceptance_framework' },

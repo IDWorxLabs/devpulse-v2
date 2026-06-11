@@ -176,11 +176,20 @@ export interface BrainRoadmapContext {
   stackMaturitySummary: string;
 }
 
+export type OperatorFeedCardStatus = 'Queued' | 'Active' | 'Completed' | 'Blocked' | 'Warning';
+
 export interface OperatorFeedEvent {
   eventId: string;
   eventType: OperatorFeedEventType;
   timestamp: number;
   informationalOnly: true;
+  section?: string;
+  action?: string;
+  detail?: string;
+  status?: OperatorFeedCardStatus;
+  stepIndex?: number;
+  stepTotal?: number;
+  evidence?: string;
 }
 
 export interface BrainConfirmation {

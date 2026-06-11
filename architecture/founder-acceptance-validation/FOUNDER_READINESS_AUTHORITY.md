@@ -38,7 +38,7 @@ Module path: `src/founder-acceptance-validation/founder-readiness-authority/`
 
 - Read-only evaluation — no execution, UI mutation, or state mutation
 - No browser execution or HTTP server startup
-- Phase 24.8.8 Founder Acceptance Orchestrator out of scope
+- Does not produce final acceptance verdict — readiness authority consumed by Founder Acceptance Orchestrator (24.8.8)
 
 ## Readiness Contexts
 

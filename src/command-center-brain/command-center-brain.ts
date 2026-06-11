@@ -22,6 +22,15 @@ import {
   responseKey,
 } from './brain-response-generator.js';
 import {
+  enrichOperatorFeedEvents,
+  PRODUCT_IDENTITY_OPERATOR_FEED,
+} from './operator-feed-detail-catalog.js';
+import { resolveProductIdentityResponse } from './product-identity-responses.js';
+import { resolveRunningApplicationResponse } from './running-application-responses.js';
+import { resolveChangeIntelligenceResponse } from './change-intelligence-responses.js';
+import { resolveVerificationResultsResponse } from './verification-results-responses.js';
+import { resolveFounderActionCenterResponse } from './founder-action-center-responses.js';
+import {
   buildCrossSystemSnapshot,
   crossSystemAwarenessKey,
   isCrossSystemCategory,
@@ -661,7 +670,9 @@ function feedSequenceForCategory(
   generalRouterOwns: boolean,
   timelineRouterOwns: boolean,
   decisionRouterOwns: boolean,
+  productIdentityOwns: boolean,
 ): readonly OperatorFeedEventType[] {
+  if (productIdentityOwns) return PRODUCT_IDENTITY_OPERATOR_FEED;
   if (decisionRouterOwns) return UNIFIED_DECISION_LAYER_FEED;
   if (timelineRouterOwns) return TIMELINE_INTELLIGENCE_FEED;
   if (generalRouterOwns) return GENERAL_QUESTION_UNDERSTANDING_FEED;
@@ -679,15 +690,17 @@ function buildOperatorFeedEvents(
   generalRouterOwns: boolean,
   timelineRouterOwns: boolean,
   decisionRouterOwns: boolean,
+  productIdentityOwns: boolean,
 ): OperatorFeedEvent[] {
-  const base = feedSequenceForCategory(category, generalRouterOwns, timelineRouterOwns, decisionRouterOwns);
-  const sequence = memoryLookup ? withSharedMemoryFeedStages(base) : base;
-  return sequence.map((eventType, index) => ({
-    eventId: `feed-${(index + 1).toString().padStart(2, '0')}`,
-    eventType,
-    timestamp: timestamp + index,
-    informationalOnly: true as const,
-  }));
+  const base = feedSequenceForCategory(
+    category,
+    generalRouterOwns,
+    timelineRouterOwns,
+    decisionRouterOwns,
+    productIdentityOwns,
+  );
+  const sequence = memoryLookup && !productIdentityOwns ? withSharedMemoryFeedStages(base) : base;
+  return enrichOperatorFeedEvents(sequence, timestamp, { productIdentity: productIdentityOwns });
 }
 
 function buildPipelineStages(
@@ -766,8 +779,46 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
   const referenced = blocked ? [] : findSystemByKeyword(message).map((s) => s.systemId);
   const roadmap = getBrainRoadmapContext();
 
-  const routingPlan: QuestionRoutingPlan | undefined = blocked ? undefined : understandGeneralQuestion(message);
-  const useGeneralRouter = shouldUseGeneralRouter(blocked, classification, message, routingPlan);
+  const changeIntelligenceResponse = blocked ? null : resolveChangeIntelligenceResponse(message);
+  const changeIntelligenceOwns = Boolean(changeIntelligenceResponse);
+  const verificationResultsResponse =
+    blocked || changeIntelligenceOwns ? null : resolveVerificationResultsResponse(message);
+  const verificationResultsOwns = Boolean(verificationResultsResponse);
+  const runningAppResponse =
+    blocked || verificationResultsOwns || changeIntelligenceOwns ? null : resolveRunningApplicationResponse(message);
+  const runningAppOwns = Boolean(runningAppResponse);
+  const founderActionCenterResponse =
+    blocked || runningAppOwns || verificationResultsOwns || changeIntelligenceOwns
+      ? null
+      : resolveFounderActionCenterResponse(message);
+  const founderActionCenterOwns = Boolean(founderActionCenterResponse);
+  const productIdentityResponse =
+    blocked ||
+    founderActionCenterOwns ||
+    runningAppOwns ||
+    verificationResultsOwns ||
+    changeIntelligenceOwns
+      ? null
+      : resolveProductIdentityResponse(message);
+  const productIdentityOwns = Boolean(productIdentityResponse);
+
+  const routingPlan: QuestionRoutingPlan | undefined =
+    blocked ||
+    productIdentityOwns ||
+    founderActionCenterOwns ||
+    runningAppOwns ||
+    verificationResultsOwns ||
+    changeIntelligenceOwns
+      ? undefined
+      : understandGeneralQuestion(message);
+  const useGeneralRouter =
+    productIdentityOwns ||
+    founderActionCenterOwns ||
+    runningAppOwns ||
+    verificationResultsOwns ||
+    changeIntelligenceOwns
+    ? false
+    : shouldUseGeneralRouter(blocked, classification, message, routingPlan);
   const generalRouting =
     routingPlan && useGeneralRouter
       ? executeGeneralQuestionRouting(routingPlan, { message, classification, systems, roadmap })
@@ -816,6 +867,7 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
         generalRouterOwns,
         timelineRouterOwns,
         decisionRouterOwns,
+        productIdentityOwns,
       );
   const feedStages = operatorFeedEvents.map((e) => e.eventType);
 
@@ -834,15 +886,25 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
 
   const brainResponse = blocked
     ? generateBlockedResponse(blockedReason!)
-    : generalRouterOwns
-      ? generalRouting!.responseText
-      : isMemoryRecall
-        ? formatMemoryRecallResponse(message, recallRelevantMemories(message))
-        : isProjectUnderstanding
-          ? projectUnderstandingResult!.responseText
-          : isCrossSystem
-            ? crossSystemResult!.responseText
-            : generateBrainResponse(message, classification, systems, roadmap);
+    : changeIntelligenceOwns
+      ? changeIntelligenceResponse!
+      : verificationResultsOwns
+      ? verificationResultsResponse!
+      : runningAppOwns
+      ? runningAppResponse!
+      : founderActionCenterOwns
+      ? founderActionCenterResponse!
+      : productIdentityOwns
+      ? productIdentityResponse!
+      : generalRouterOwns
+        ? generalRouting!.responseText
+        : isMemoryRecall
+          ? formatMemoryRecallResponse(message, recallRelevantMemories(message))
+          : isProjectUnderstanding
+            ? projectUnderstandingResult!.responseText
+            : isCrossSystem
+              ? crossSystemResult!.responseText
+              : generateBrainResponse(message, classification, systems, roadmap);
 
   const pipelineStages = buildPipelineStages(
     blocked,

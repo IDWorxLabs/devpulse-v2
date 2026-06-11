@@ -6,7 +6,7 @@ The Founder Acceptance Framework establishes the foundational model for the Foun
 
 > If DevPulse were used by the founder today, what determines whether it is acceptable or unacceptable?
 
-This phase provides acceptance models, dimensions, criteria, categories, evidence structures, scoring foundations, and reporting foundations. It does **not** evaluate acceptance itself — future phases (24.8.2–24.8.8) will perform actual validation.
+This phase provides acceptance models, dimensions, criteria, categories, evidence structures, scoring foundations, and reporting foundations. It does **not** produce a founder acceptance verdict — downstream phases (24.8.2–24.8.8) consume this framework to perform validation and final acceptance orchestration.
 
 ## Architecture
 
@@ -21,10 +21,10 @@ Module path: `src/founder-acceptance-validation/founder-acceptance-framework/`
 | `founder-acceptance-dimensions.ts` | 10 canonical acceptance dimensions |
 | `founder-acceptance-criteria-registry.ts` | 9 criteria groups with weighted criteria |
 | `founder-acceptance-category-builder.ts` | 7 acceptance categories |
-| `founder-acceptance-evidence-model.ts` | Future evidence source slots |
+| `founder-acceptance-evidence-model.ts` | Evidence source slots for stack integration |
 | `founder-acceptance-scoring-model.ts` | Scoring foundation (no execution) |
 | `founder-acceptance-report-model.ts` | Report foundation (no generation) |
-| `founder-acceptance-authority-builder.ts` | Unified framework authority + future roadmap |
+| `founder-acceptance-authority-builder.ts` | Unified framework authority + stack integration roadmap |
 | `founder-acceptance-evaluator.ts` | Framework completeness evaluation |
 | `founder-acceptance-framework.ts` | Orchestration and read-only integrations |
 | `index.ts` | Public exports and test reset |
@@ -73,18 +73,18 @@ Each category links `acceptanceCriteria` and `relatedDimensions`.
 
 ## Evidence Model
 
-`FOUNDER_ACCEPTANCE_EVIDENCE` supports future evidence sources:
+`FOUNDER_ACCEPTANCE_EVIDENCE` registers evidence sources consumed by the completed stack:
 
-- Product Reality Verification (available)
+- Product Reality Verification (24.7.8)
 - Founder Workflow Validation (24.8.2)
 - Founder Confidence Engine (24.8.3)
 - Founder Trust Validation (24.8.4)
 - Founder Productivity Validation (24.8.5)
 - Founder Friction Detector (24.8.6)
 - Founder Readiness Authority (24.8.7)
-- Future Founder Reports (24.8.8)
+- Founder Acceptance Orchestrator (24.8.8)
 
-Framework only — no evidence evaluation.
+Framework only — no evidence evaluation in this phase.
 
 ## Scoring Model
 
@@ -94,15 +94,15 @@ Framework only — no evidence evaluation.
 - Category score slots with weights
 - Overall acceptance score placeholder
 - Blended weighting strategy
-- Future scoring input hooks
+- Scoring input hooks consumed by downstream validation phases
 
 No actual scoring execution in this phase.
 
 ## Report Model
 
-`FOUNDER_ACCEPTANCE_REPORT_MODEL` supports future report sections:
+`FOUNDER_ACCEPTANCE_REPORT_MODEL` defines report sections used by the completed stack:
 
-- Summary, dimensions, criteria, categories, evidence, scores, recommendations, future verdicts
+- Summary, dimensions, criteria, categories, evidence, scores, recommendations, verdict placeholders
 
 Placeholder verdicts: `FOUNDER_ACCEPTABLE`, `FOUNDER_ACCEPTABLE_WITH_WARNINGS`, `FOUNDER_NOT_ACCEPTABLE`, `FOUNDER_LAUNCH_ACCEPTABLE`.
 
@@ -112,9 +112,9 @@ Placeholder verdicts: `FOUNDER_ACCEPTABLE`, `FOUNDER_ACCEPTABLE_WITH_WARNINGS`, 
 
 - `dimensions`, `criteria`, `categories`
 - `evidenceModel`, `scoreModel`, `reportModel`
-- `futureRoadmap` — integration points for phases 24.8.2–24.8.8
+- `futureRoadmap` — integration points for phases 24.8.2–24.8.8 (completed stack)
 
-## Future Integrations
+## Stack Integrations
 
 | Phase | Module | Target |
 |-------|--------|--------|
@@ -131,8 +131,8 @@ Upstream: Product Reality Orchestrator (24.7.8) registered as available evidence
 ## Limitations
 
 - Framework establishment only — no founder acceptance verdict
-- No workflow, confidence, trust, or productivity validation
-- Phases 24.8.2–24.8.8 out of scope
+- No workflow, confidence, trust, or productivity validation in this phase
+- Downstream validation and orchestration performed by phases 24.8.2–24.8.8
 
 ## Validation
 

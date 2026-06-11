@@ -1279,7 +1279,7 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     ownerModule: 'devpulse_v2_founder_acceptance_framework',
     ownerFunction: 'getDevPulseV2FounderAcceptanceFramework',
     phase: 24.81,
-    description: 'Phase 24.8.1 Founder Acceptance Framework — read-only acceptance model, dimensions, criteria, categories, evidence, scoring, and report foundations for future founder validation; no acceptance evaluation, UI mutation, or execution',
+    description: 'Phase 24.8.1 Founder Acceptance Framework — read-only acceptance model, dimensions, criteria, categories, evidence, scoring, and report foundations consumed by the completed Founder Acceptance Validation stack (24.8.2–24.8.8); no acceptance verdict, UI mutation, or execution',
   },
   founder_workflow_validation: {
     domain: 'founder_workflow_validation',

@@ -46,7 +46,7 @@ function pickPrimaryConclusion(
     if (lower.includes('strong at')) {
       const milestones = reasoning.selectedFacts.filter((f) => f.category === 'milestone');
       if (milestones.length > 0) {
-        return `DevPulse V2 is strong at foundation intelligence — ${milestones.slice(0, 2).map((m) => m.statement).join(' ')}`;
+        return `AiDevEngine is strong at planning and product guidance — ${milestones.slice(0, 2).map((m) => m.statement).join(' ')}`;
       }
     }
   }

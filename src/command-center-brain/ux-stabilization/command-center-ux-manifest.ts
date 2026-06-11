@@ -13,9 +13,9 @@ export const UX_OPERATOR_FEED_BODY_ID = 'operator-feed-body';
 export const UX_CHAT_MESSAGES_PANEL_ID = 'chat-messages-panel';
 
 export const UX_WELCOME_COPY = {
-  title: 'DevPulse V2',
-  subtitle: 'Unified Command Center Brain Connected',
-  hint: 'Ask DevPulse anything about roadmap, systems, architecture, or project status.',
+  title: 'AiDevEngine',
+  subtitle: 'Turn detailed product ideas into working applications',
+  hint: 'Ask AiDevEngine about your project, roadmap, architecture, verification, or what to build next.',
 } as const;
 
 export const UX_LAYOUT_RULES = {
