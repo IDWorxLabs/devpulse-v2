@@ -4782,6 +4782,48 @@
         }
         html += '</div>';
       }
+      if (report.v4 && report.v4.adaptiveAutofixIntelligence) {
+        var adaptive = report.v4.adaptiveAutofixIntelligence;
+        html +=
+          '<div class="founder-test-blockers"><h4>Adaptive AutoFix Intelligence</h4>' +
+          '<p class="founder-test-score">AutoFix Score: <strong>' +
+          String(adaptive.adaptiveAutoFixScore) +
+          '/100</strong> · Readiness: <strong>' +
+          escapeHtml(adaptive.autofixReadiness) +
+          '</strong></p>' +
+          '<p class="hint">Repeated Failures: <strong>' +
+          String(adaptive.repeatedFailureCount) +
+          '</strong> · Capability Gaps: <strong>' +
+          String(adaptive.capabilityGapCount) +
+          '</strong> · Evolution Required: <strong>' +
+          String(adaptive.evolutionRequiredCount) +
+          '</strong></p>';
+        if (adaptive.failureCategories.length) {
+          html += '<p class="hint"><strong>Failure Categories:</strong> ' +
+            escapeHtml(adaptive.failureCategories.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        if (adaptive.recommendations.length) {
+          html += '<p class="hint"><strong>Evolution Recommendations:</strong> ' +
+            escapeHtml(
+              adaptive.recommendations
+                .slice(0, 3)
+                .map(function (item) { return item.missingCapability; })
+                .join(' · '),
+            ) +
+            '</p>';
+        }
+        if (adaptive.missingCapabilities.length) {
+          html += '<p class="hint"><strong>Missing Capabilities:</strong> ' +
+            escapeHtml(adaptive.missingCapabilities.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '<p class="hint">Expected Failure Reduction: <strong>' +
+          String(adaptive.estimatedFailureReduction) +
+          '%</strong> · Triggered: <strong>' +
+          (adaptive.triggeredAdaptiveAutofix ? 'ADAPTIVE_AUTOFIX_REQUIRED' : 'No') +
+          '</strong></p></div>';
+      }
       html += '<p class="hint">' + escapeHtml(summary.finalRecommendation) + '</p>';
       body.innerHTML = html;
       if (copyBtn) copyBtn.disabled = !report.reportMarkdown;

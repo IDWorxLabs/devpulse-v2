@@ -109,7 +109,7 @@ function main(): void {
     authorities.some((entry) => entry.authorityId === 'ui-reviewer-authority'),
     'ui-reviewer-authority',
   );
-  assert('04. registry count 22', authorities.length === 22, String(authorities.length));
+  assert('04. registry count 23', authorities.length === 23, String(authorities.length));
 
   const v4 = runFounderTestingModeV4();
   const input = toForLaunchCouncil(v4);

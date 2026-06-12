@@ -370,6 +370,8 @@ export interface FounderTestV4Report {
   launchCouncilFinalizationReportMarkdown: string;
   launchVerdictGovernance: import('../launch-verdict-governance/launch-verdict-governance-types.js').LaunchVerdictGovernanceAssessment;
   launchVerdictGovernanceReportMarkdown: string;
+  adaptiveAutofixIntelligence: import('../adaptive-autofix-intelligence/adaptive-autofix-types.js').AdaptiveAutoFixAssessment;
+  adaptiveAutofixIntelligenceReportMarkdown: string;
   topProductRisks: string[];
   topLaunchRisks: string[];
   verdict: FounderTestV4Verdict;
@@ -431,6 +433,8 @@ export type FounderTestV4ReportCore = Omit<
   | 'launchCouncilFinalizationReportMarkdown'
   | 'launchVerdictGovernance'
   | 'launchVerdictGovernanceReportMarkdown'
+  | 'adaptiveAutofixIntelligence'
+  | 'adaptiveAutofixIntelligenceReportMarkdown'
 >;
 
 /** Founder test core enriched with skeptical simulator artifacts for promise fulfillment input. */
@@ -517,3 +521,11 @@ export type FounderTestV4ReportWithLaunchCouncilFinalization = FounderTestV4Repo
     FounderTestV4Report,
     'launchCouncilFinalization' | 'launchCouncilFinalizationReportMarkdown'
   >;
+
+/** Founder test core enriched through launch verdict governance before adaptive autofix. */
+export type FounderTestV4ReportWithLaunchVerdictGovernance = FounderTestV4ReportWithLaunchCouncilFinalization &
+  Pick<FounderTestV4Report, 'launchVerdictGovernance' | 'launchVerdictGovernanceReportMarkdown'>;
+
+/** Founder test core enriched through adaptive autofix intelligence. */
+export type FounderTestV4ReportWithAdaptiveAutofix = FounderTestV4ReportWithLaunchVerdictGovernance &
+  Pick<FounderTestV4Report, 'adaptiveAutofixIntelligence' | 'adaptiveAutofixIntelligenceReportMarkdown'>;

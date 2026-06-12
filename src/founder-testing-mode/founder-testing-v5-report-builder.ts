@@ -454,6 +454,30 @@ Missing Evidence: ${report.v4.launchVerdictGovernance.requiredEvidenceMissing.le
 
 Blocking Authorities: ${report.v4.launchVerdictGovernance.blockingAuthorities.length > 0 ? report.v4.launchVerdictGovernance.blockingAuthorities.join(', ') : 'None'}
 
+## Adaptive AutoFix Intelligence
+
+Adaptive AutoFix Score: **${report.v4.adaptiveAutofixIntelligence.adaptiveAutoFixScore}/100**
+
+Repeated Failures: **${report.v4.adaptiveAutofixIntelligence.repeatedFailureCount}**
+
+Failure Categories: ${report.v4.adaptiveAutofixIntelligence.failureCategories.slice(0, 5).join(', ') || 'None recorded.'}
+
+Capability Gaps: **${report.v4.adaptiveAutofixIntelligence.capabilityGapCount}**
+
+Evolution Required: **${report.v4.adaptiveAutofixIntelligence.evolutionRequiredCount}**
+
+Expected Failure Reduction: **${report.v4.adaptiveAutofixIntelligence.estimatedFailureReduction}%**
+
+AutoFix Readiness: **${report.v4.adaptiveAutofixIntelligence.autofixReadiness}**
+
+Missing Capabilities:
+
+${report.v4.adaptiveAutofixIntelligence.missingCapabilities.slice(0, 4).map((item) => `- ${item}`).join('\n') || '- None recorded.'}
+
+Evolution Recommendations:
+
+${report.v4.adaptiveAutofixIntelligence.recommendations.slice(0, 4).map((item, index) => `${index + 1}. [${item.implementationPriority}] ${item.missingCapability}`).join('\n') || '1. No repeated failure loops detected.'}
+
 ## First-Time User Reality
 
 Score: **${report.firstTimeUserReality.firstTimeUserScore}/100**

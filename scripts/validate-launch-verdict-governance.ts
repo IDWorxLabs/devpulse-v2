@@ -74,8 +74,8 @@ function toWithFinalization(
     reportMarkdown: _reportMarkdown,
     launchVerdictGovernance: _governance,
     launchVerdictGovernanceReportMarkdown: _governanceMarkdown,
-    uiReviewerAuthority: _uiReviewer,
-    uiReviewerAuthorityReportMarkdown: _uiReviewerMarkdown,
+    adaptiveAutofixIntelligence: _adaptive,
+    adaptiveAutofixIntelligenceReportMarkdown: _adaptiveMarkdown,
     clarifyingQuestionIntelligence: _clarifying,
     clarifyingQuestionIntelligenceReportMarkdown: _clarifyingMarkdown,
     ...withFinalization
@@ -103,7 +103,7 @@ function main(): void {
     authorities.some((entry) => entry.authorityId === 'launch-verdict-governance'),
     'launch-verdict-governance',
   );
-  assert('03. registry count 22', authorities.length === 22, String(authorities.length));
+  assert('03. registry count 23', authorities.length === 23, String(authorities.length));
 
   const v4 = runFounderTestingModeV4();
   const input = toWithFinalization(v4);

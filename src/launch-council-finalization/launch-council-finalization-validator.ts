@@ -28,7 +28,7 @@ export function validateAuthorityClassification(): { passed: boolean; detail: st
 
   return {
 
-    passed: total === 20 && overlap.length === 0,
+    passed: total === 21 && overlap.length === 0,
 
     detail: `gates=${LAUNCH_GATE_AUTHORITY_IDS.length}; advisory=${ADVISORY_AUTHORITY_IDS.length}; overlap=${overlap.length}`,
 

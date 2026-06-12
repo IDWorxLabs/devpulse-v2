@@ -2,7 +2,7 @@
  * Founder Testing Mode V4 — AIDEVENGINE_FOUNDER_TEST_REPORT_V4 builder.
  */
 
-import { assembleLaunchCouncilFromFounderTestV4 } from '../launch-council/launch-council-founder-integration.js';
+import { assembleLaunchCouncilFromFounderTestV4, refreshLaunchCouncilWithAdaptiveAutofix } from '../launch-council/launch-council-founder-integration.js';
 import { buildSkepticalFounderSimulatorArtifacts } from '../skeptical-founder-simulator/index.js';
 import { buildPromiseFulfillmentArtifacts } from '../promise-fulfillment-authority/index.js';
 import { buildTrustAuthorityArtifacts } from '../trust-authority/index.js';
@@ -22,6 +22,7 @@ import { buildUIReviewerAuthorityArtifacts } from '../ui-reviewer-authority/inde
 import { buildClarifyingQuestionIntelligenceArtifacts } from '../clarifying-question-intelligence/index.js';
 import { buildLaunchCouncilFinalizationArtifacts } from '../launch-council-finalization/index.js';
 import { buildLaunchVerdictGovernanceArtifacts } from '../launch-verdict-governance/index.js';
+import { buildAdaptiveAutofixIntelligenceArtifacts } from '../adaptive-autofix-intelligence/index.js';
 import { FOUNDER_TEST_V4_REPORT_TITLE } from './founder-testing-v4-bounds.js';
 import type {
   FounderTestV4Report,
@@ -29,6 +30,8 @@ import type {
   FounderTestV4ReportForLaunchCouncil,
   FounderTestV4ReportWithLaunchCouncil,
   FounderTestV4ReportWithLaunchCouncilFinalization,
+  FounderTestV4ReportWithLaunchVerdictGovernance,
+  FounderTestV4ReportWithAdaptiveAutofix,
   FounderTestV4ReportWithUiReviewer,
   FounderTestV4ReportWithClarifyingQuestion,
   FounderTestV4ReportWithCompetitiveReality,
@@ -1044,6 +1047,34 @@ Recommendations:
 
 ${report.launchVerdictGovernance.recommendations.slice(0, 5).map((item, index) => `${index + 1}. ${item}`).join('\n') || '1. No authority may declare a launch without governance permission.'}
 
+## Adaptive AutoFix Intelligence
+
+Adaptive AutoFix Score: **${report.adaptiveAutofixIntelligence.adaptiveAutoFixScore}/100**
+
+Repeated Failures: **${report.adaptiveAutofixIntelligence.repeatedFailureCount}**
+
+Failure Categories: ${report.adaptiveAutofixIntelligence.failureCategories.slice(0, 5).join(', ') || 'None recorded.'}
+
+Capability Gaps: **${report.adaptiveAutofixIntelligence.capabilityGapCount}**
+
+Evolution Required: **${report.adaptiveAutofixIntelligence.evolutionRequiredCount}**
+
+Expected Failure Reduction: **${report.adaptiveAutofixIntelligence.estimatedFailureReduction}%**
+
+AutoFix Readiness: **${report.adaptiveAutofixIntelligence.autofixReadiness}**
+
+Adaptive AutoFix Triggered: **${report.adaptiveAutofixIntelligence.triggeredAdaptiveAutofix ? 'Yes — ADAPTIVE_AUTOFIX_REQUIRED' : 'No'}**
+
+What capability is missing? Why are we failing repeatedly? What should be created next?
+
+Missing Capabilities:
+
+${report.adaptiveAutofixIntelligence.missingCapabilities.slice(0, 5).map((item) => `- ${item}`).join('\n') || '- None recorded in bounded analysis.'}
+
+Evolution Recommendations:
+
+${report.adaptiveAutofixIntelligence.recommendations.slice(0, 4).map((item, index) => `${index + 1}. [${item.implementationPriority}] ${item.missingCapability} — ${item.expectedBenefit}`).join('\n') || '1. No repeated failure loops detected in bounded analysis.'}
+
 ## Final Verdict
 
 **${report.verdict}**
@@ -1149,12 +1180,22 @@ export function assembleFounderTestV4Report(partial: FounderTestV4ReportCore): F
     ...finalizationArtifacts,
   };
   const governanceArtifacts = buildLaunchVerdictGovernanceArtifacts(withFinalization);
-  const enriched: Omit<FounderTestV4Report, 'reportMarkdown'> = {
+  const withGovernance: FounderTestV4ReportWithLaunchVerdictGovernance = {
     ...withFinalization,
     ...governanceArtifacts,
   };
+  const adaptiveArtifacts = buildAdaptiveAutofixIntelligenceArtifacts(withGovernance);
+  const withAdaptiveAutofix: FounderTestV4ReportWithAdaptiveAutofix = {
+    ...withGovernance,
+    ...adaptiveArtifacts,
+  };
+  const councilRefresh = refreshLaunchCouncilWithAdaptiveAutofix(withAdaptiveAutofix);
+  const enriched: Omit<FounderTestV4Report, 'reportMarkdown'> = {
+    ...withAdaptiveAutofix,
+    ...councilRefresh,
+  };
   return {
     ...enriched,
-    reportMarkdown: `${buildFounderTestV4ReportMarkdown(enriched)}\n\n${skepticalArtifacts.skepticalFounderReportMarkdown}\n\n${promiseArtifacts.promiseFulfillmentReportMarkdown}\n\n${trustArtifacts.trustAuthorityReportMarkdown}\n\n${selfAwarenessArtifacts.selfAwarenessAuthorityReportMarkdown}\n\n${userSuccessArtifacts.userSuccessAuthorityReportMarkdown}\n\n${gapDetectionArtifacts.gapDetectionAuthorityReportMarkdown}\n\n${selfEvolutionArtifacts.selfEvolutionAuthorityReportMarkdown}\n\n${unknownDiscoveryArtifacts.unknownDiscoveryAuthorityReportMarkdown}\n\n${firstTimeUserArtifacts.firstTimeUserRealityAuthorityReportMarkdown}\n\n${customerValueArtifacts.customerValueAuthorityReportMarkdown}\n\n${competitiveRealityArtifacts.competitiveRealityAuthorityReportMarkdown}\n\n${realityProofArtifacts.realityProofAuthorityReportMarkdown}\n\n${realUserRealityArtifacts.realUserRealityAuthorityReportMarkdown}\n\n${adoptionPredictionArtifacts.adoptionPredictionAuthorityReportMarkdown}\n\n${launchReadinessArtifacts.launchReadinessAuthorityReportMarkdown}\n\n${uiReviewerArtifacts.uiReviewerAuthorityReportMarkdown}\n\n${clarifyingArtifacts.clarifyingQuestionIntelligenceReportMarkdown}\n\n${councilArtifacts.launchCouncilReportMarkdown}\n\n${finalizationArtifacts.launchCouncilFinalizationReportMarkdown}\n\n${governanceArtifacts.launchVerdictGovernanceReportMarkdown}`,
+    reportMarkdown: `${buildFounderTestV4ReportMarkdown(enriched)}\n\n${skepticalArtifacts.skepticalFounderReportMarkdown}\n\n${promiseArtifacts.promiseFulfillmentReportMarkdown}\n\n${trustArtifacts.trustAuthorityReportMarkdown}\n\n${selfAwarenessArtifacts.selfAwarenessAuthorityReportMarkdown}\n\n${userSuccessArtifacts.userSuccessAuthorityReportMarkdown}\n\n${gapDetectionArtifacts.gapDetectionAuthorityReportMarkdown}\n\n${selfEvolutionArtifacts.selfEvolutionAuthorityReportMarkdown}\n\n${unknownDiscoveryArtifacts.unknownDiscoveryAuthorityReportMarkdown}\n\n${firstTimeUserArtifacts.firstTimeUserRealityAuthorityReportMarkdown}\n\n${customerValueArtifacts.customerValueAuthorityReportMarkdown}\n\n${competitiveRealityArtifacts.competitiveRealityAuthorityReportMarkdown}\n\n${realityProofArtifacts.realityProofAuthorityReportMarkdown}\n\n${realUserRealityArtifacts.realUserRealityAuthorityReportMarkdown}\n\n${adoptionPredictionArtifacts.adoptionPredictionAuthorityReportMarkdown}\n\n${launchReadinessArtifacts.launchReadinessAuthorityReportMarkdown}\n\n${uiReviewerArtifacts.uiReviewerAuthorityReportMarkdown}\n\n${clarifyingArtifacts.clarifyingQuestionIntelligenceReportMarkdown}\n\n${councilRefresh.launchCouncilReportMarkdown}\n\n${finalizationArtifacts.launchCouncilFinalizationReportMarkdown}\n\n${governanceArtifacts.launchVerdictGovernanceReportMarkdown}\n\n${adaptiveArtifacts.adaptiveAutofixIntelligenceReportMarkdown}`,
   };
 }

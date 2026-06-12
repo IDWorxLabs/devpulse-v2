@@ -61,5 +61,7 @@ export { assessLaunchCouncil, buildLaunchCouncilArtifacts } from './launch-counc
 
 export {
   mapFounderTestV4ToLaunchCouncilAuthorities,
+  mapFounderTestV4ToLaunchCouncilAuthoritiesWithAdaptive,
   assembleLaunchCouncilFromFounderTestV4,
+  refreshLaunchCouncilWithAdaptiveAutofix,
 } from './launch-council-founder-integration.js';

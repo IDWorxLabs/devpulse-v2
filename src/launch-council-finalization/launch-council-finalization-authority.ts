@@ -86,6 +86,8 @@ export const LAUNCH_GATE_AUTHORITY_IDS: readonly string[] = [
 
   'clarifying-question-intelligence',
 
+  'adaptive-autofix-intelligence',
+
 ] as const;
 
 

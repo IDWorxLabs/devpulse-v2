@@ -107,7 +107,7 @@ function main(): void {
     authorities.some((entry) => entry.authorityId === 'clarifying-question-intelligence'),
     'clarifying-question-intelligence',
   );
-  assert('04. registry count 22', authorities.length === 22, String(authorities.length));
+  assert('04. registry count 23', authorities.length === 23, String(authorities.length));
 
   const v4 = runFounderTestingModeV4();
   const input = toWithUiReviewer(v4);

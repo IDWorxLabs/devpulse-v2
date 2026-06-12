@@ -18,6 +18,7 @@
     "validate:ui-reviewer-authority": "tsx scripts/validate-ui-reviewer-authority.ts",
     "validate:clarifying-question-intelligence": "tsx scripts/validate-clarifying-question-intelligence.ts",
     "validate:clarifying-question-live-gate": "tsx scripts/validate-clarifying-question-live-gate.ts",
+    "validate:adaptive-autofix-intelligence": "tsx scripts/validate-adaptive-autofix-intelligence.ts",
     "validate:skeptical-founder-simulator": "tsx scripts/validate-skeptical-founder-simulator.ts",
     "validate:promise-fulfillment-authority": "tsx scripts/validate-promise-fulfillment-authority.ts",
     "validate:trust-authority": "tsx scripts/validate-trust-authority.ts",

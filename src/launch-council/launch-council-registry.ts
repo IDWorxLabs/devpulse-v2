@@ -137,6 +137,12 @@ const REGISTERED_AUTHORITIES: readonly LaunchCouncilRegistryEntry[] = [
     authorityCategory: 'CLARIFYING_QUESTION_INTELLIGENCE',
     registrationOrder: 22,
   },
+  {
+    authorityId: 'adaptive-autofix-intelligence',
+    authorityName: 'Adaptive AutoFix Intelligence',
+    authorityCategory: 'ADAPTIVE_AUTOFIX_INTELLIGENCE',
+    registrationOrder: 23,
+  },
 ] as const;
 
 export function listLaunchCouncilAuthorities(): readonly LaunchCouncilRegistryEntry[] {
@@ -166,7 +172,7 @@ export function assertLaunchCouncilRegistryIntegrity(): boolean {
   const orders = REGISTERED_AUTHORITIES.map((entry) => entry.registrationOrder);
   const uniqueOrders = new Set(orders);
   return (
-    REGISTERED_AUTHORITIES.length === 22 &&
+    REGISTERED_AUTHORITIES.length === 23 &&
     uniqueOrders.size === REGISTERED_AUTHORITIES.length &&
     REGISTERED_AUTHORITIES.every((entry) => entry.authorityId.length > 0)
   );

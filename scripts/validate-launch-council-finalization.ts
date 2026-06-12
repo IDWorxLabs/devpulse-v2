@@ -73,8 +73,8 @@ function toWithLaunchCouncil(report: ReturnType<typeof runFounderTestingModeV4>)
     launchCouncilFinalizationReportMarkdown: _finalizationMarkdown,
     launchVerdictGovernance: _governance,
     launchVerdictGovernanceReportMarkdown: _governanceMarkdown,
-    uiReviewerAuthority: _uiReviewer,
-    uiReviewerAuthorityReportMarkdown: _uiReviewerMarkdown,
+    adaptiveAutofixIntelligence: _adaptive,
+    adaptiveAutofixIntelligenceReportMarkdown: _adaptiveMarkdown,
     clarifyingQuestionIntelligence: _clarifying,
     clarifyingQuestionIntelligenceReportMarkdown: _clarifyingMarkdown,
     ...withLaunchCouncil
@@ -105,7 +105,7 @@ function main(): void {
     authorities.some((entry) => entry.authorityId === 'launch-council-finalization'),
     'launch-council-finalization',
   );
-  assert('04. registry count 22', authorities.length === 22, String(authorities.length));
+  assert('04. registry count 23', authorities.length === 23, String(authorities.length));
 
   const v4 = runFounderTestingModeV4();
   const input = toWithLaunchCouncil(v4);

@@ -7,6 +7,7 @@ import type {
   FounderTestV4ReportForLaunchCouncil,
   FounderTestV4ReportWithUiReviewer,
   FounderTestV4ReportWithClarifyingQuestion,
+  FounderTestV4ReportWithAdaptiveAutofix,
   FounderTestV4ReportWithCompetitiveReality,
   FounderTestV4ReportWithRealityProof,
   FounderTestV4ReportWithRealUserReality,
@@ -682,6 +683,47 @@ function mapClarifyingQuestionIntelligence(
   };
 }
 
+function mapAdaptiveAutofixIntelligence(
+  report: FounderTestV4ReportWithAdaptiveAutofix,
+): LaunchCouncilAuthorityResult {
+  const adaptive = report.adaptiveAutofixIntelligence;
+  let status: LaunchCouncilAuthorityStatus = 'NOT_RUN';
+  switch (adaptive.autofixReadiness) {
+    case 'AUTOFIX_READY':
+      status = 'PASS';
+      break;
+    case 'LIMITED_AUTOFIX':
+      status = 'WARNING';
+      break;
+    case 'EVOLUTION_REQUIRED':
+      status = 'WARNING';
+      break;
+    case 'BLOCKED':
+      status = 'FAIL';
+      break;
+  }
+
+  return {
+    authorityId: 'adaptive-autofix-intelligence',
+    authorityName: 'Adaptive AutoFix Intelligence',
+    authorityCategory: 'ADAPTIVE_AUTOFIX_INTELLIGENCE',
+    score: adaptive.adaptiveAutoFixScore,
+    confidence: clamp(Math.max(0, 100 - adaptive.capabilityGapCount * 8)),
+    status,
+    launchBlocker: adaptive.blocksLaunchReadiness,
+    findings: [
+      `Adaptive autofix score: ${adaptive.adaptiveAutoFixScore}/100`,
+      `Repeated failures: ${adaptive.repeatedFailureCount}`,
+      `Capability gaps: ${adaptive.capabilityGapCount}`,
+      `Evolution required: ${adaptive.evolutionRequiredCount}`,
+      `Estimated failure reduction: ${adaptive.estimatedFailureReduction}%`,
+      `Adaptive trigger: ${adaptive.triggeredAdaptiveAutofix ? 'ADAPTIVE_AUTOFIX_REQUIRED' : 'Not triggered'}`,
+      ...adaptive.missingCapabilities.slice(0, 2).map((item) => `Missing capability: ${item}`),
+    ],
+    recommendations: adaptive.recommendations.slice(0, 4).map((item) => item.missingCapability),
+  };
+}
+
 function mapUiReviewerAuthority(report: FounderTestV4ReportWithClarifyingQuestion): LaunchCouncilAuthorityResult {
   const ui = report.uiReviewerAuthority;
   let status: LaunchCouncilAuthorityStatus = 'NOT_RUN';
@@ -767,6 +809,7 @@ export function mapEvidenceAuthoritiesFromFounderTestV4(
     'launch-readiness-authority',
     'ui-reviewer-authority',
     'clarifying-question-intelligence',
+    'adaptive-autofix-intelligence',
   ]);
   const evidenceIds = listLaunchCouncilAuthorities()
     .map((entry) => entry.authorityId)
@@ -804,6 +847,40 @@ export function mapFounderTestV4ToLaunchCouncilAuthorities(
     mapClarifyingQuestionIntelligence(report),
   ];
   return mapped.filter((result) => registeredIds.includes(result.authorityId));
+}
+
+export function mapFounderTestV4ToLaunchCouncilAuthoritiesWithAdaptive(
+  report: FounderTestV4ReportWithAdaptiveAutofix,
+): LaunchCouncilAuthorityResult[] {
+  const registeredIds = listLaunchCouncilAuthorities().map((entry) => entry.authorityId);
+  const mapped = [
+    ...mapEvidenceAuthoritiesFromFounderTestV4(report),
+    mapRealityProofAuthority(report),
+    mapRealUserRealityAuthority(report),
+    mapAdoptionPredictionAuthority(report),
+    mapLaunchReadinessAuthority(report),
+    mapUiReviewerAuthority(report),
+    mapClarifyingQuestionIntelligence(report),
+    mapAdaptiveAutofixIntelligence(report),
+  ];
+  return mapped.filter((result) => registeredIds.includes(result.authorityId));
+}
+
+export function refreshLaunchCouncilWithAdaptiveAutofix(
+  report: FounderTestV4ReportWithAdaptiveAutofix,
+): {
+  launchCouncil: LaunchCouncilAssessment;
+  launchCouncilReport: LaunchCouncilReport;
+  launchCouncilReportMarkdown: string;
+} {
+  const authorityResults = mapFounderTestV4ToLaunchCouncilAuthoritiesWithAdaptive(report);
+  const launchCouncil = assessLaunchCouncil({ authorityResults, generatedAt: report.generatedAt });
+  const artifacts = buildLaunchCouncilArtifacts(launchCouncil, report.generatedAt);
+  return {
+    launchCouncil,
+    launchCouncilReport: artifacts.report,
+    launchCouncilReportMarkdown: artifacts.reportMarkdown,
+  };
 }
 
 export function assembleLaunchCouncilFromFounderTestV4(
