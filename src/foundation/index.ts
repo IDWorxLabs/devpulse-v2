@@ -19,3 +19,23 @@ export {
   type ConstitutionalValidationInput,
   type FounderGateReport,
 } from './types.js';
+export {
+  FOUNDER_ACCEPTANCE_AUTHORITATIVE_OWNER,
+  FOUNDER_TEST_INTEGRATION_ROLE,
+  FOUNDER_ACCEPTANCE_GATE_ROLE,
+  applyOrchestratorAcceptanceDelegation,
+  buildFounderAcceptanceBridgeSnapshot,
+  resolveAuthoritativeFounderAcceptance,
+} from './founder-acceptance-integration-bridge.js';
+export type {
+  FounderAcceptanceBridgeInput,
+  FounderAcceptanceBridgeSnapshot,
+} from './founder-acceptance-integration-bridge.js';
+export {
+  PLANNER_OWNERSHIP_PASS_TOKEN,
+  PLANNER_OWNERSHIP_RULES,
+  assertNoThirdPlanner,
+  assertPlannerOwnership,
+  resolvePlannerOwnerForPlanSource,
+} from './planner-ownership-registry.js';
+export type { PlannerOwnershipRule, PlannerPlanSource } from './planner-ownership-registry.js';

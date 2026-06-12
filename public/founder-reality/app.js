@@ -4009,8 +4009,15 @@
       panel.setAttribute('aria-hidden', 'false');
     }
     var status = el('founder-test-status');
-    if (status && mode === 'running') {
-      status.textContent = 'Running founder test… unified evaluation (read-only, 90s max)';
+    if (!status) return;
+    if (mode === 'running') {
+      status.textContent = 'RUNNING — one button, one execution, one report (read-only)';
+    } else if (mode === 'done') {
+      status.textContent = 'COMPLETE — unified launch-readiness report ready';
+    } else if (mode === 'error') {
+      status.textContent = 'FAILED — founder test did not complete';
+    } else {
+      status.textContent = 'READY — press Run Founder Test';
     }
   }
 
@@ -4077,6 +4084,7 @@
     var isV4 = report.mode === 'founder-testing-v4' || (isV5 && report.v4);
     var v4Report = isV5 && report.v4 ? report.v4 : report;
     var summary = isV5 && report.unifiedSummary ? report.unifiedSummary : null;
+    var launchReadiness = report.launchReadiness || report.founderTestLaunchReadiness || null;
     var isV3 = report.mode === 'founder-testing-v3' || isV4;
     var isV2 = report.mode === 'founder-testing-v2' || isV3;
     var blockers = (report.issues || []).filter(function (i) {
@@ -4087,6 +4095,53 @@
     });
 
     var html = '<div class="founder-test-summary">';
+    if (launchReadiness) {
+      html +=
+        '<p class="founder-test-mode">Phase 25.19 — One Button Founder Test Integration</p>' +
+        '<p class="founder-test-score">Founder Readiness Score: <strong>' +
+        String(launchReadiness.founderReadinessScore) +
+        '/100</strong></p>' +
+        '<p class="founder-test-score">Launch Readiness: <strong>' +
+        escapeHtml(launchReadiness.launchReadinessVerdict) +
+        '</strong></p>' +
+        '<p class="founder-test-score">Founder Acceptance: <strong>' +
+        escapeHtml(launchReadiness.founderAcceptanceState) +
+        '</strong></p>' +
+        '<p class="founder-test-score">Confidence: <strong>' +
+        escapeHtml(launchReadiness.confidenceLevel) +
+        '</strong></p>' +
+        '<p class="founder-test-score">Blockers: <strong>' +
+        String((launchReadiness.topBlockers || []).length) +
+        '</strong> · Warnings: <strong>' +
+        String((launchReadiness.topWarnings || []).length) +
+        '</strong></p>';
+      if (launchReadiness.topBlockers && launchReadiness.topBlockers.length) {
+        html += '<div class="founder-test-blockers"><h4>Top launch blockers</h4><ul>';
+        for (var lb = 0; lb < Math.min(launchReadiness.topBlockers.length, 5); lb += 1) {
+          var blocker = launchReadiness.topBlockers[lb];
+          html +=
+            '<li><strong>' +
+            escapeHtml(blocker.sourceAuthority) +
+            ':</strong> ' +
+            escapeHtml(blocker.explanation) +
+            '</li>';
+        }
+        html += '</ul></div>';
+      }
+      if (launchReadiness.topRecommendedActions && launchReadiness.topRecommendedActions.length) {
+        html += '<div class="founder-test-next"><h4>Top recommended actions</h4><ul>';
+        for (var ra = 0; ra < Math.min(launchReadiness.topRecommendedActions.length, 5); ra += 1) {
+          html +=
+            '<li>' +
+            escapeHtml(launchReadiness.topRecommendedActions[ra].action) +
+            '</li>';
+        }
+        html += '</ul></div>';
+      }
+      html +=
+        '<p class="hint"><button type="button" class="btn-secondary" id="view-founder-test-full-report">View Full Report</button></p>' +
+        '<pre class="founder-test-full-report hidden" id="founder-test-full-report"></pre>';
+    }
     if (isV5 && summary) {
       html +=
         '<p class="founder-test-mode">Founder Test — unified evaluation</p>' +
@@ -4939,6 +4994,17 @@
 
     body.innerHTML = html;
     if (copyBtn) copyBtn.disabled = !report.reportMarkdown;
+    var viewFullBtn = el('view-founder-test-full-report');
+    var fullReportEl = el('founder-test-full-report');
+    if (viewFullBtn && fullReportEl && report.reportMarkdown) {
+      fullReportEl.textContent = report.reportMarkdown;
+      viewFullBtn.addEventListener('click', function () {
+        fullReportEl.classList.toggle('hidden');
+        viewFullBtn.textContent = fullReportEl.classList.contains('hidden')
+          ? 'View Full Report'
+          : 'Hide Full Report';
+      });
+    }
     showFounderTestPanel('done');
   }
 

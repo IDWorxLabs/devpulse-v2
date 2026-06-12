@@ -21,6 +21,7 @@ import { assessFounderActionCenter } from '../src/founder-action-center/index.js
 import { buildProductWorkspaceSnapshot } from './product-workspace-snapshot.js';
 import { setLastVerificationResultsFromV4Report } from '../src/verification-results-visibility/index.js';
 import type { LiveScreenResultInput } from '../src/founder-testing-mode/founder-testing-types.js';
+import { buildFounderTestLaunchReadinessArtifacts } from '../src/founder-test-launch-readiness/index.js';
 import { readRequestBody } from './brain-api-handler.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -90,6 +91,10 @@ function executeUnifiedFounderTestV5(
   };
 }
 
+function executeFounderTestLaunchReadinessOrchestration() {
+  return buildFounderTestLaunchReadinessArtifacts({ rootDir: ROOT_DIR });
+}
+
 /** Primary founder validation entry — unified V5 orchestration. */
 export async function handleFounderTestRunRequest(
   req: IncomingMessage,
@@ -98,7 +103,18 @@ export async function handleFounderTestRunRequest(
 ): Promise<void> {
   try {
     const { liveResults, liveSection } = await parseFounderTestBody(req);
+    const launchReadinessArtifacts = executeFounderTestLaunchReadinessOrchestration();
     const result = executeUnifiedFounderTestV5(validatorScripts, liveResults, liveSection);
+    const launchReport = launchReadinessArtifacts.founderTestLaunchReadinessAssessment.report;
+
+    if (result.report) {
+      result.report.launchReadiness = launchReport;
+      result.report.founderTestLaunchReadiness = launchReport;
+      result.report.reportMarkdown =
+        launchReadinessArtifacts.founderTestLaunchReadinessReportMarkdown +
+        '\n\n---\n\n' +
+        (result.report.reportMarkdown ?? '');
+    }
 
     sendFounderTestJson(
       res,
@@ -107,6 +123,10 @@ export async function handleFounderTestRunRequest(
         ok: true,
         readOnly: true,
         mode: 'founder-testing-v5',
+        launchReadiness: launchReport,
+        founderTestLaunchReadinessAssessment: launchReadinessArtifacts.founderTestLaunchReadinessAssessment,
+        founderTestLaunchReadinessReportMarkdown:
+          launchReadinessArtifacts.founderTestLaunchReadinessReportMarkdown,
         ...result,
       },
       'v5',

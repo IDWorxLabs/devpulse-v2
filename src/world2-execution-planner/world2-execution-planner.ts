@@ -57,6 +57,7 @@ function createPlanId(): string {
 function clonePlan(plan: ExecutionPlan): ExecutionPlan {
   return {
     ...plan,
+    planSource: plan.planSource,
     executionStages: plan.executionStages.map((s) => ({ ...s, dependsOn: [...s.dependsOn] })),
     riskItems: plan.riskItems.map((r) => ({ ...r })),
     verificationPoints: plan.verificationPoints.map((v) => ({ ...v })),
@@ -128,6 +129,7 @@ export function generateExecutionPlan(input: PlannerInput): ExecutionPlan {
 
   return {
     planId: createPlanId(),
+    planSource: 'builder',
     workspaceId: input.workspaceId,
     projectId: input.projectId.trim().toLowerCase().replace(/\s+/g, '-'),
     projectGoal: analysis.normalizedGoal,

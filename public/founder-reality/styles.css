@@ -592,6 +592,22 @@ body {
   font-size: 0.8125rem;
 }
 
+.founder-test-full-report {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  max-height: 280px;
+  overflow: auto;
+  font-size: 0.75rem;
+  white-space: pre-wrap;
+  background: var(--surface-elevated, rgba(0, 0, 0, 0.2));
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.founder-test-full-report.hidden {
+  display: none;
+}
+
 .founder-test-blockers ul,
 .founder-test-next ol {
   margin: 0;

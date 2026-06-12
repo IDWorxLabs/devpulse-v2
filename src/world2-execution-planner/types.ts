@@ -84,6 +84,7 @@ export interface CompletionCriterion {
 
 export interface ExecutionPlan {
   planId: string;
+  planSource: 'builder';
   workspaceId: string;
   projectId: string;
   projectGoal: string;

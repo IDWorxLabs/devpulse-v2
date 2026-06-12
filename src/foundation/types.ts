@@ -246,7 +246,28 @@ export type OwnershipDomain =
   | 'founder_productivity_validation'
   | 'founder_friction_detector'
   | 'founder_readiness_authority'
-  | 'founder_acceptance_orchestrator';
+  | 'founder_acceptance_orchestrator'
+  | 'execution_proof_evolution'
+  | 'founder_test_integration'
+  | 'founder_acceptance_gate'
+  | 'autonomous_repair_loop'
+  | 'autonomous_builder_execution_planner'
+  | 'autonomous_builder_execution_sandbox'
+  | 'world2_controlled_execution_runtime'
+  | 'world2_execution_engine'
+  | 'world2_disposable_workspace'
+  | 'world2_change_set_authority'
+  | 'world2_workspace_population'
+  | 'world2_workspace_materialization'
+  | 'world2_workspace_instantiation_governance'
+  | 'world2_disposable_workspace_creator'
+  | 'world2_disposable_workspace_instantiator'
+  | 'world2_repository_snapshot'
+  | 'world2_repository_snapshot_executor'
+  | 'world2_repository_snapshot_materializer'
+  | 'world2_change_set_materializer'
+  | 'world2_dry_run_execution_composer'
+  | 'world2_dry_run_execution_verifier';
 
 export type BuildStage = 'foundation' | 'phase1_impl' | 'release' | 'validation';
 
