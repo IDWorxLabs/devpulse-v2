@@ -5,3 +5,4 @@ coverage/
 .playwright/
 .generated-builder-workspaces/
 *.log
+.env

@@ -157,6 +157,54 @@ function main(): void {
   );
 
   assert(
+    'consumes connected runtime activation proof',
+    authoritySource.includes('assessConnectedRuntimeActivationProof'),
+    'assessConnectedRuntimeActivationProof',
+  );
+
+  assert(
+    'orchestration includes runtime activation proof',
+    registrySource.includes('Assess Connected Runtime Activation Proof'),
+    'registry step',
+  );
+
+  assert(
+    'consumes connected preview experience proof',
+    authoritySource.includes('assessConnectedPreviewExperienceProof'),
+    'assessConnectedPreviewExperienceProof',
+  );
+
+  assert(
+    'orchestration includes preview experience proof',
+    registrySource.includes('Assess Connected Preview Experience Proof'),
+    'registry step',
+  );
+
+  assert(
+    'consumes connected verification execution proof',
+    authoritySource.includes('assessConnectedVerificationExecutionProof'),
+    'assessConnectedVerificationExecutionProof',
+  );
+
+  assert(
+    'orchestration includes verification execution proof',
+    registrySource.includes('Assess Connected Verification Execution Proof'),
+    'registry step',
+  );
+
+  assert(
+    'consumes connected launch readiness proof',
+    authoritySource.includes('assessConnectedLaunchReadinessProof'),
+    'assessConnectedLaunchReadinessProof',
+  );
+
+  assert(
+    'orchestration includes launch readiness proof',
+    registrySource.includes('Assess Connected Launch Readiness Proof'),
+    'registry step',
+  );
+
+  assert(
     'consumes founder acceptance orchestrator',
     authoritySource.includes('evaluateFounderAcceptanceOrchestrator'),
     'evaluateFounderAcceptanceOrchestrator',

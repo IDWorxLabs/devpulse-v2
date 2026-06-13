@@ -12,6 +12,11 @@ import type { RuntimeFounderExecutionProofHydration } from '../founder-test-inte
 import type { ChatStressSimulationReport } from '../founder-test-chat-stress-simulation/chat-stress-simulation-types.js';
 import type { ProductReadinessReport } from '../founder-test-product-readiness/product-readiness-types.js';
 import type { AutonomousBuildExecutionProofReport } from '../autonomous-build-execution-proof/autonomous-build-execution-proof-types.js';
+import type { ConnectedBuildExecutionReport } from '../connected-build-execution/connected-build-execution-types.js';
+import type { RuntimeActivationProofReport } from '../connected-runtime-activation-proof/connected-runtime-activation-proof-types.js';
+import type { PreviewExperienceProofReport } from '../connected-preview-experience-proof/connected-preview-experience-proof-types.js';
+import type { VerificationExecutionProofReport } from '../connected-verification-execution-proof/connected-verification-execution-proof-types.js';
+import type { LaunchReadinessProofReport } from '../connected-launch-readiness-proof/connected-launch-readiness-proof-types.js';
 
 export type FounderTestPanelState = 'READY' | 'RUNNING' | 'COMPLETE' | 'FAILED';
 
@@ -114,6 +119,16 @@ export interface FounderTestLaunchReadinessReport {
   executionChainConnected: boolean;
   executionChainBlocksLaunch: boolean;
   firstBrokenExecutionStage: AutonomousBuildExecutionProofReport['firstBrokenStage'];
+  connectedBuildExecution: ConnectedBuildExecutionReport | null;
+  connectedBuildExecutionSummary: string | null;
+  connectedRuntimeActivationProof: RuntimeActivationProofReport | null;
+  connectedRuntimeActivationProofSummary: string | null;
+  connectedPreviewExperienceProof: PreviewExperienceProofReport | null;
+  connectedPreviewExperienceProofSummary: string | null;
+  connectedVerificationExecutionProof: VerificationExecutionProofReport | null;
+  connectedVerificationExecutionProofSummary: string | null;
+  connectedLaunchReadinessProof: LaunchReadinessProofReport | null;
+  connectedLaunchReadinessProofSummary: string | null;
   inputSnapshot: FounderTestLaunchReadinessInputSnapshot;
   cacheKey: string;
 }
@@ -143,6 +158,16 @@ export interface RunFounderTestLaunchReadinessInput {
   productReadinessSimulation?: ProductReadinessReport | null;
   skipAutonomousBuildExecutionProof?: boolean;
   autonomousBuildExecutionProof?: AutonomousBuildExecutionProofReport | null;
+  skipConnectedBuildExecution?: boolean;
+  connectedBuildExecution?: ConnectedBuildExecutionReport | null;
+  skipConnectedRuntimeActivationProof?: boolean;
+  connectedRuntimeActivationProof?: RuntimeActivationProofReport | null;
+  skipConnectedPreviewExperienceProof?: boolean;
+  connectedPreviewExperienceProof?: PreviewExperienceProofReport | null;
+  skipConnectedVerificationExecutionProof?: boolean;
+  connectedVerificationExecutionProof?: VerificationExecutionProofReport | null;
+  skipConnectedLaunchReadinessProof?: boolean;
+  connectedLaunchReadinessProof?: LaunchReadinessProofReport | null;
   /** Skip bounded history write — used for internal chain stubs. */
   skipHistoryRecording?: boolean;
   chatStressMaxScenarios?: number;

@@ -4,12 +4,20 @@
  */
 
 import { createHash } from 'node:crypto';
+import { assessConnectedBuildExecution } from '../connected-build-execution/index.js';
+import type { ConnectedBuildExecutionReport } from '../connected-build-execution/connected-build-execution-types.js';
 import { assessConnectedAutonomousBuildExecution } from '../connected-build-execution-foundation/index.js';
-import type { ConnectedBuildExecutionAssessment } from '../connected-build-execution-foundation/connected-build-execution-types.js';
+import type { ConnectedBuildExecutionAssessment as ConnectedBuildFoundationAssessment } from '../connected-build-execution-foundation/connected-build-execution-types.js';
 import { assessConnectedLivePreview } from '../connected-live-preview-foundation/index.js';
 import type { ConnectedLivePreviewAssessment } from '../connected-live-preview-foundation/connected-live-preview-types.js';
 import { assessConnectedRuntimeActivation } from '../connected-runtime-activation-foundation/index.js';
 import type { ConnectedRuntimeActivationAssessment } from '../connected-runtime-activation-foundation/connected-runtime-activation-types.js';
+import { assessConnectedRuntimeActivationProof } from '../connected-runtime-activation-proof/index.js';
+import type { RuntimeActivationProofReport } from '../connected-runtime-activation-proof/connected-runtime-activation-proof-types.js';
+import { assessConnectedPreviewExperienceProof } from '../connected-preview-experience-proof/index.js';
+import type { PreviewExperienceProofReport } from '../connected-preview-experience-proof/connected-preview-experience-proof-types.js';
+import { assessConnectedVerificationExecutionProof } from '../connected-verification-execution-proof/index.js';
+import type { VerificationExecutionProofReport } from '../connected-verification-execution-proof/connected-verification-execution-proof-types.js';
 import { assessConnectedVerification } from '../connected-verification-foundation/index.js';
 import type { ConnectedVerificationAssessment } from '../connected-verification-foundation/connected-verification-types.js';
 import {
@@ -34,6 +42,11 @@ import {
 } from './execution-chain-analyzer.js';
 import { recordAutonomousBuildExecutionProofAssessment } from './execution-proof-history.js';
 import { buildAutonomousBuildExecutionProofReportMarkdown } from './execution-proof-report-builder.js';
+import type {
+  LaunchReadinessFixture,
+  LaunchReadinessProofReport,
+} from '../connected-launch-readiness-proof/connected-launch-readiness-proof-types.js';
+import { assessConnectedLaunchReadinessProof } from '../connected-launch-readiness-proof/index.js';
 import { analyzeLaunchStage } from './launch-stage-analyzer.js';
 import { analyzePreviewStage } from './preview-stage-analyzer.js';
 import { analyzeRuntimeStage } from './runtime-stage-analyzer.js';
@@ -42,6 +55,7 @@ import {
   AUTONOMOUS_BUILD_EXECUTION_PROOF_CACHE_KEY_PREFIX,
   AUTONOMOUS_BUILD_EXECUTION_PROOF_CORE_QUESTION,
   AUTONOMOUS_BUILD_EXECUTION_PROOF_PASS_TOKEN,
+  CORE_CHAIN_STAGES,
   MAX_MISSING_EVIDENCE,
   MAX_RECOMMENDED_ACTIONS,
 } from './autonomous-build-execution-proof-registry.js';
@@ -101,22 +115,22 @@ function resolveFounderTestAssessment(
 
 function resolveAssessments(input: AssessAutonomousBuildExecutionProofInput, rootDir: string): {
   founderTestAssessment: FounderTestAssessment;
-  connectedBuildExecutionAssessment: ConnectedBuildExecutionAssessment;
+  connectedBuildFoundationAssessment: ConnectedBuildFoundationAssessment;
   connectedRuntimeActivationAssessment: ConnectedRuntimeActivationAssessment;
   connectedLivePreviewAssessment: ConnectedLivePreviewAssessment;
   connectedVerificationAssessment: ConnectedVerificationAssessment;
 } {
   const founderTestAssessment = resolveFounderTestAssessment(input, rootDir);
 
-  const connectedBuildExecutionAssessment =
-    input.connectedBuildExecutionAssessment ??
+  const connectedBuildFoundationAssessment =
+    input.connectedBuildFoundationAssessment ??
     assessConnectedAutonomousBuildExecution({ rootDir });
 
   const connectedRuntimeActivationAssessment =
     input.connectedRuntimeActivationAssessment ??
     assessConnectedRuntimeActivation({
       rootDir,
-      connectedBuildExecutionAssessment,
+      connectedBuildExecutionAssessment: connectedBuildFoundationAssessment,
     });
 
   const connectedLivePreviewAssessment =
@@ -146,7 +160,7 @@ function resolveAssessments(input: AssessAutonomousBuildExecutionProofInput, roo
 
   return {
     founderTestAssessment,
-    connectedBuildExecutionAssessment,
+    connectedBuildFoundationAssessment,
     connectedRuntimeActivationAssessment,
     connectedLivePreviewAssessment,
     connectedVerificationAssessment,
@@ -156,9 +170,14 @@ function resolveAssessments(input: AssessAutonomousBuildExecutionProofInput, roo
 function buildInputSnapshot(
   resolved: ReturnType<typeof resolveAssessments>,
   requirementsToPlanContract: RequirementsToPlanContractReport | null,
+  connectedBuildMaterialization: ConnectedBuildExecutionReport | null,
+  connectedRuntimeActivationProof: RuntimeActivationProofReport | null,
+  connectedPreviewExperienceProof: PreviewExperienceProofReport | null,
+  connectedVerificationExecutionProof: VerificationExecutionProofReport | null,
+  connectedLaunchReadinessProof: LaunchReadinessProofReport | null,
 ): AutonomousBuildExecutionProofInputSnapshot {
   const missingAuthorities = dedupeStrings([
-    ...resolved.connectedBuildExecutionAssessment.report.inputSnapshot.missingAuthorities,
+    ...resolved.connectedBuildFoundationAssessment.report.inputSnapshot.missingAuthorities,
     ...resolved.connectedRuntimeActivationAssessment.report.inputSnapshot.missingAuthorities,
     ...resolved.connectedLivePreviewAssessment.report.inputSnapshot.missingAuthorities,
     ...resolved.connectedVerificationAssessment.report.inputSnapshot.missingAuthorities,
@@ -167,6 +186,11 @@ function buildInputSnapshot(
   return {
     readOnly: true,
     ...resolved,
+    connectedBuildMaterialization,
+    connectedRuntimeActivationProof,
+    connectedPreviewExperienceProof,
+    connectedVerificationExecutionProof,
+    connectedLaunchReadinessProof,
     requirementsToPlanContract,
     missingAuthorities,
   };
@@ -219,49 +243,134 @@ export function assessAutonomousBuildExecutionProof(
       rawPrompt: input.rawPrompt ?? EXECUTION_PROOF_REFERENCE_PROMPT,
     }).report;
 
-  const inputSnapshot = buildInputSnapshot(resolved, requirementsToPlanContract);
+  const connectedBuildMaterialization =
+    input.connectedBuildMaterialization ??
+    assessConnectedBuildExecution({
+      rootDir,
+      buildReadyContract: requirementsToPlanContract.buildReadyContract,
+      observedEvidence: input.observedBuildEvidence,
+    }).report;
+
+  const connectedRuntimeActivationProof =
+    input.connectedRuntimeActivationProof ??
+    assessConnectedRuntimeActivationProof({
+      rootDir,
+      buildMaterializationReport: connectedBuildMaterialization,
+      runtimeSessionEvidence: input.runtimeSessionEvidence,
+    }).report;
+
+  const connectedPreviewExperienceProof =
+    input.connectedPreviewExperienceProof ??
+    assessConnectedPreviewExperienceProof({
+      rootDir,
+      runtimeActivationProof: connectedRuntimeActivationProof,
+      previewSessionEvidence: input.previewSessionEvidence,
+    }).report;
+
+  const connectedVerificationExecutionProof =
+    input.connectedVerificationExecutionProof ??
+    assessConnectedVerificationExecutionProof({
+      rootDir,
+      previewExperienceProof: connectedPreviewExperienceProof,
+      verificationEvidenceFixture: input.verificationEvidenceFixture,
+    }).report;
+
+  const inputSnapshotBase = buildInputSnapshot(
+    resolved,
+    requirementsToPlanContract,
+    connectedBuildMaterialization,
+    connectedRuntimeActivationProof,
+    connectedPreviewExperienceProof,
+    connectedVerificationExecutionProof,
+    null,
+  );
 
   const requirements = analyzeRequirementsStage(
     requirementsToPlanContract,
-    inputSnapshot.founderTestAssessment,
+    inputSnapshotBase.founderTestAssessment,
   );
-  const plan = analyzePlanStage(requirementsToPlanContract, inputSnapshot.connectedBuildExecutionAssessment);
-  const build = analyzeBuildStage(inputSnapshot.connectedBuildExecutionAssessment);
-  const runtime = analyzeRuntimeStage(
-    inputSnapshot.connectedRuntimeActivationAssessment,
-    inputSnapshot.connectedBuildExecutionAssessment.report.buildOutputManifest.manifestId,
+  const plan = analyzePlanStage(
+    requirementsToPlanContract,
+    inputSnapshotBase.connectedBuildFoundationAssessment,
   );
-  const preview = analyzePreviewStage(
-    inputSnapshot.connectedLivePreviewAssessment,
-    inputSnapshot.connectedRuntimeActivationAssessment.report.runtimeActivationContract.contractId,
-  );
-  const verify = analyzeVerificationStage(
-    inputSnapshot.connectedVerificationAssessment,
-    inputSnapshot.connectedLivePreviewAssessment.report.previewReadinessContract.contractId,
-  );
+  const build = analyzeBuildStage(inputSnapshotBase.connectedBuildMaterialization);
+  const runtime = analyzeRuntimeStage(inputSnapshotBase.connectedRuntimeActivationProof);
+  const preview = analyzePreviewStage(inputSnapshotBase.connectedPreviewExperienceProof);
+  const verify = analyzeVerificationStage(inputSnapshotBase.connectedVerificationExecutionProof);
 
-  const chainLinks = buildChainLinks({
+  const chainLinksCore = buildChainLinks({
     requirements,
     plan,
     build,
     runtime,
     preview,
     verify,
-    buildAssessment: inputSnapshot.connectedBuildExecutionAssessment,
-    runtimeAssessment: inputSnapshot.connectedRuntimeActivationAssessment,
-    previewAssessment: inputSnapshot.connectedLivePreviewAssessment,
-    verificationAssessment: inputSnapshot.connectedVerificationAssessment,
+    buildAssessment: inputSnapshotBase.connectedBuildFoundationAssessment,
+    runtimeAssessment: inputSnapshotBase.connectedRuntimeActivationAssessment,
+    previewAssessment: inputSnapshotBase.connectedLivePreviewAssessment,
+    verificationAssessment: inputSnapshotBase.connectedVerificationAssessment,
+    contractReport: requirementsToPlanContract,
+  });
+
+  const coreChainAnalysis = analyzeExecutionChain({
+    stageProofs: [requirements, plan, build, runtime, preview, verify],
+    chainLinks: chainLinksCore,
+    chainMode: 'core',
+  });
+
+  const coreChainConnected =
+    CORE_CHAIN_STAGES.every(
+      (stage) =>
+        [requirements, plan, build, runtime, preview, verify].find((s) => s.stage === stage)
+          ?.proofLevel === 'PROVEN',
+    ) && chainLinksCore.every((l) => l.connected);
+
+  const connectedLaunchReadinessProof =
+    input.connectedLaunchReadinessProof ??
+    assessConnectedLaunchReadinessProof({
+      rootDir,
+      verificationExecutionProof: connectedVerificationExecutionProof,
+      founderTestAssessment: inputSnapshotBase.founderTestAssessment,
+      coreStageProofs: [requirements, plan, build, runtime, preview, verify],
+      coreChainConnected,
+      coreFirstBrokenStage:
+        coreChainAnalysis.firstBrokenStage === 'LAUNCH'
+          ? null
+          : coreChainAnalysis.firstBrokenStage,
+      launchReadinessFixture: input.launchReadinessFixture,
+    }).report;
+
+  const launch = analyzeLaunchStage(connectedLaunchReadinessProof);
+
+  const chainLinksFull = buildChainLinks({
+    requirements,
+    plan,
+    build,
+    runtime,
+    preview,
+    verify,
+    launch,
+    buildAssessment: inputSnapshotBase.connectedBuildFoundationAssessment,
+    runtimeAssessment: inputSnapshotBase.connectedRuntimeActivationAssessment,
+    previewAssessment: inputSnapshotBase.connectedLivePreviewAssessment,
+    verificationAssessment: inputSnapshotBase.connectedVerificationAssessment,
     contractReport: requirementsToPlanContract,
   });
 
   const chainAnalysis = analyzeExecutionChain({
-    stageProofs: [requirements, plan, build, runtime, preview, verify],
-    chainLinks,
+    stageProofs: [requirements, plan, build, runtime, preview, verify, launch],
+    chainLinks: chainLinksFull,
+    chainMode: 'full',
   });
 
-  const launch = analyzeLaunchStage(
-    inputSnapshot.founderTestAssessment,
-    chainAnalysis.chainConnected,
+  const inputSnapshot = buildInputSnapshot(
+    resolved,
+    requirementsToPlanContract,
+    connectedBuildMaterialization,
+    connectedRuntimeActivationProof,
+    connectedPreviewExperienceProof,
+    connectedVerificationExecutionProof,
+    connectedLaunchReadinessProof,
   );
 
   const stageProofs = applyDownstreamBlocking([

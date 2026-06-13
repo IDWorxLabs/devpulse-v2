@@ -35,6 +35,31 @@ import {
 } from '../autonomous-build-execution-proof/index.js';
 import type { AutonomousBuildExecutionProofReport } from '../autonomous-build-execution-proof/autonomous-build-execution-proof-types.js';
 import {
+  assessConnectedBuildExecution,
+  formatConnectedBuildExecutionSummary,
+} from '../connected-build-execution/index.js';
+import type { ConnectedBuildExecutionReport } from '../connected-build-execution/connected-build-execution-types.js';
+import {
+  assessConnectedRuntimeActivationProof,
+  formatRuntimeActivationProofSummary,
+} from '../connected-runtime-activation-proof/index.js';
+import type { RuntimeActivationProofReport } from '../connected-runtime-activation-proof/connected-runtime-activation-proof-types.js';
+import {
+  assessConnectedPreviewExperienceProof,
+  formatPreviewExperienceProofSummary,
+} from '../connected-preview-experience-proof/index.js';
+import type { PreviewExperienceProofReport } from '../connected-preview-experience-proof/connected-preview-experience-proof-types.js';
+import {
+  assessConnectedVerificationExecutionProof,
+  formatVerificationExecutionProofSummary,
+} from '../connected-verification-execution-proof/index.js';
+import type { VerificationExecutionProofReport } from '../connected-verification-execution-proof/connected-verification-execution-proof-types.js';
+import {
+  assessConnectedLaunchReadinessProof,
+  formatLaunchReadinessProofSummary,
+} from '../connected-launch-readiness-proof/index.js';
+import type { LaunchReadinessProofReport } from '../connected-launch-readiness-proof/connected-launch-readiness-proof-types.js';
+import {
   FOUNDER_TEST_LAUNCH_READINESS_CACHE_KEY_PREFIX,
   FOUNDER_TEST_LAUNCH_READINESS_CORE_QUESTION,
   FOUNDER_TEST_LAUNCH_READINESS_PASS_TOKEN,
@@ -528,6 +553,112 @@ export function runFounderTestLaunchReadiness(
   const executionChainBlocksLaunch = autonomousBuildExecutionProof?.launchBlockedByChain ?? false;
   const firstBrokenExecutionStage = autonomousBuildExecutionProof?.firstBrokenStage ?? null;
 
+  let connectedBuildExecution: ConnectedBuildExecutionReport | null =
+    input.connectedBuildExecution ?? null;
+  if (!input.skipConnectedBuildExecution && !connectedBuildExecution) {
+    if (autonomousBuildExecutionProof?.inputSnapshot.connectedBuildMaterialization) {
+      connectedBuildExecution = autonomousBuildExecutionProof.inputSnapshot.connectedBuildMaterialization;
+    } else {
+      connectedBuildExecution = assessConnectedBuildExecution({ rootDir }).report;
+    }
+  }
+  const connectedBuildExecutionSummary = connectedBuildExecution
+    ? formatConnectedBuildExecutionSummary(connectedBuildExecution)
+    : null;
+
+  let connectedRuntimeActivationProof: RuntimeActivationProofReport | null =
+    input.connectedRuntimeActivationProof ?? null;
+  if (!input.skipConnectedRuntimeActivationProof && !connectedRuntimeActivationProof) {
+    if (autonomousBuildExecutionProof?.inputSnapshot.connectedRuntimeActivationProof) {
+      connectedRuntimeActivationProof =
+        autonomousBuildExecutionProof.inputSnapshot.connectedRuntimeActivationProof;
+    } else {
+      connectedRuntimeActivationProof = assessConnectedRuntimeActivationProof({
+        rootDir,
+        buildMaterializationReport: connectedBuildExecution,
+      }).report;
+    }
+  }
+  const connectedRuntimeActivationProofSummary = connectedRuntimeActivationProof
+    ? formatRuntimeActivationProofSummary(connectedRuntimeActivationProof)
+    : null;
+
+  let connectedPreviewExperienceProof: PreviewExperienceProofReport | null =
+    input.connectedPreviewExperienceProof ?? null;
+  if (!input.skipConnectedPreviewExperienceProof && !connectedPreviewExperienceProof) {
+    if (autonomousBuildExecutionProof?.inputSnapshot.connectedPreviewExperienceProof) {
+      connectedPreviewExperienceProof =
+        autonomousBuildExecutionProof.inputSnapshot.connectedPreviewExperienceProof;
+    } else {
+      connectedPreviewExperienceProof = assessConnectedPreviewExperienceProof({
+        rootDir,
+        runtimeActivationProof: connectedRuntimeActivationProof,
+      }).report;
+    }
+  }
+  const connectedPreviewExperienceProofSummary = connectedPreviewExperienceProof
+    ? formatPreviewExperienceProofSummary(connectedPreviewExperienceProof)
+    : null;
+
+  let connectedVerificationExecutionProof: VerificationExecutionProofReport | null =
+    input.connectedVerificationExecutionProof ?? null;
+  if (!input.skipConnectedVerificationExecutionProof && !connectedVerificationExecutionProof) {
+    if (autonomousBuildExecutionProof?.inputSnapshot.connectedVerificationExecutionProof) {
+      connectedVerificationExecutionProof =
+        autonomousBuildExecutionProof.inputSnapshot.connectedVerificationExecutionProof;
+    } else {
+      connectedVerificationExecutionProof = assessConnectedVerificationExecutionProof({
+        rootDir,
+        previewExperienceProof: connectedPreviewExperienceProof,
+      }).report;
+    }
+  }
+  const connectedVerificationExecutionProofSummary = connectedVerificationExecutionProof
+    ? formatVerificationExecutionProofSummary(connectedVerificationExecutionProof)
+    : null;
+
+  let connectedLaunchReadinessProof: LaunchReadinessProofReport | null =
+    input.connectedLaunchReadinessProof ?? null;
+  if (!input.skipConnectedLaunchReadinessProof && !connectedLaunchReadinessProof) {
+    if (autonomousBuildExecutionProof?.inputSnapshot.connectedLaunchReadinessProof) {
+      connectedLaunchReadinessProof =
+        autonomousBuildExecutionProof.inputSnapshot.connectedLaunchReadinessProof;
+    } else {
+      connectedLaunchReadinessProof = assessConnectedLaunchReadinessProof({
+        rootDir,
+        autonomousBuildExecutionProof,
+        verificationExecutionProof: connectedVerificationExecutionProof,
+        founderTestAssessment,
+        founderAcceptanceAssessment,
+        launchCouncilAssessment,
+        productReadinessSimulation,
+        chatStressSimulation,
+      }).report;
+    }
+  }
+  const connectedLaunchReadinessProofSummary = connectedLaunchReadinessProof
+    ? formatLaunchReadinessProofSummary(connectedLaunchReadinessProof)
+    : null;
+
+  if (connectedLaunchReadinessProof && connectedLaunchReadinessProof.launchProofLevel !== 'PROVEN') {
+    topBlockers.unshift({
+      readOnly: true,
+      sourceAuthority: 'Connected Launch Readiness Proof',
+      severity:
+        connectedLaunchReadinessProof.blockers.criticalCount > 0 ? 'CRITICAL' : 'HIGH',
+      explanation:
+        `Launch proof ${connectedLaunchReadinessProof.launchProofLevel} — state ${connectedLaunchReadinessProof.launchState}. ` +
+        `${connectedLaunchReadinessProof.founderQuestions.whyNot.slice(0, 2).join('; ')}`,
+      recommendedAction: connectedLaunchReadinessProof.recommendedFix,
+    });
+    if (
+      resolvedVerdict === 'LAUNCH_READY' ||
+      resolvedVerdict === 'LAUNCH_READY_WITH_WARNINGS'
+    ) {
+      resolvedVerdict = 'NOT_LAUNCH_READY';
+    }
+  }
+
   if (executionChainBlocksLaunch && autonomousBuildExecutionProof) {
     topBlockers.unshift({
       readOnly: true,
@@ -567,6 +698,11 @@ export function runFounderTestLaunchReadiness(
     ...(chatStressSimulation?.missingCapabilities ?? []),
     ...(productReadinessSimulation?.selfEvolution.topMissingCapabilities ?? []),
     ...(autonomousBuildExecutionProof?.founderQuestions.mustBuildNext ?? []),
+    ...(connectedBuildExecution?.founderQuestions.whatShouldBeBuiltNext ?? []),
+    ...(connectedRuntimeActivationProof?.founderQuestions.whatShouldBeBuiltNext ?? []),
+    ...(connectedPreviewExperienceProof?.founderQuestions.whatShouldBeBuiltNext ?? []),
+    ...(connectedVerificationExecutionProof?.founderQuestions.whatShouldBeBuiltNext ?? []),
+    ...(connectedLaunchReadinessProof?.founderQuestions.whatMustBeFixedNext ?? []),
   ]).slice(0, MAX_TOP_MISSING_CAPABILITIES);
 
   const report: FounderTestLaunchReadinessReport = {
@@ -638,6 +774,16 @@ export function runFounderTestLaunchReadiness(
     executionChainConnected,
     executionChainBlocksLaunch,
     firstBrokenExecutionStage,
+    connectedBuildExecution,
+    connectedBuildExecutionSummary,
+    connectedRuntimeActivationProof,
+    connectedRuntimeActivationProofSummary,
+    connectedPreviewExperienceProof,
+    connectedPreviewExperienceProofSummary,
+    connectedVerificationExecutionProof,
+    connectedVerificationExecutionProofSummary,
+    connectedLaunchReadinessProof,
+    connectedLaunchReadinessProofSummary,
     inputSnapshot: {
       readOnly: true,
       founderTestAssessment,
@@ -719,6 +865,11 @@ export async function buildFounderTestLaunchReadinessArtifactsAsync(
     productReadinessSimulation,
     autonomousBuildExecutionProof,
     skipAutonomousBuildExecutionProof: true,
+    skipConnectedBuildExecution: true,
+    skipConnectedRuntimeActivationProof: true,
+    skipConnectedPreviewExperienceProof: true,
+    skipConnectedVerificationExecutionProof: true,
+    skipConnectedLaunchReadinessProof: true,
   });
 
   return {

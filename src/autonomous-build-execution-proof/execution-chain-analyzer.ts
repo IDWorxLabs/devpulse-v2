@@ -8,7 +8,7 @@ import type { ConnectedRuntimeActivationAssessment } from '../connected-runtime-
 import type { ConnectedVerificationAssessment } from '../connected-verification-foundation/connected-verification-types.js';
 import type { FounderTestAssessment } from '../founder-test-integration/founder-test-integration-types.js';
 import type { RequirementsToPlanContractReport } from '../requirements-to-plan-execution-contract/requirements-to-plan-contract-types.js';
-import { CORE_CHAIN_STAGES } from './autonomous-build-execution-proof-registry.js';
+import { CORE_CHAIN_STAGES, EXECUTION_CHAIN_STAGE_ORDER } from './autonomous-build-execution-proof-registry.js';
 import type {
   ChainLinkEvidence,
   ExecutionChainAnalysis,
@@ -313,6 +313,7 @@ export function buildChainLinks(input: {
   runtime: StageExecutionProof;
   preview: StageExecutionProof;
   verify: StageExecutionProof;
+  launch?: StageExecutionProof;
   buildAssessment: ConnectedBuildExecutionAssessment;
   runtimeAssessment: ConnectedRuntimeActivationAssessment;
   previewAssessment: ConnectedLivePreviewAssessment;
@@ -326,7 +327,7 @@ export function buildChainLinks(input: {
   const planId = buildManifest.planId;
   const contract = input.contractReport;
 
-  return [
+  const links: ChainLinkEvidence[] = [
     {
       readOnly: true,
       fromStage: 'REQUIREMENTS',
@@ -385,17 +386,38 @@ export function buildChainLinks(input: {
       detail: `${input.previewAssessment.report.previewReadinessContract.contractId} → ${verifyCandidate.previewReadinessContractId}`,
     },
   ];
+
+  if (input.launch) {
+    links.push({
+      readOnly: true,
+      fromStage: 'VERIFY',
+      toStage: 'LAUNCH',
+      connected:
+        input.verify.proofLevel === 'PROVEN' && input.launch.proofLevel === 'PROVEN',
+      detail:
+        input.launch.proofLevel === 'PROVEN'
+          ? `Verification proven → launch proof ${input.launch.proofLevel}`
+          : 'Verification not linked to proven launch readiness',
+    });
+  }
+
+  return links;
 }
 
 export function analyzeExecutionChain(input: {
   stageProofs: StageExecutionProof[];
   chainLinks: ChainLinkEvidence[];
+  chainMode?: 'core' | 'full';
 }): ExecutionChainAnalysis {
+  const chainMode = input.chainMode ?? 'core';
+  const stagesToValidate =
+    chainMode === 'full' ? EXECUTION_CHAIN_STAGE_ORDER : CORE_CHAIN_STAGES;
+
   const stageMap = new Map(input.stageProofs.map((s) => [s.stage, s]));
   const missingLinks = input.chainLinks.filter((l) => !l.connected).map((l) => `${l.fromStage}→${l.toStage}: ${l.detail}`);
 
   let firstBrokenStage: ExecutionStageId | null = null;
-  for (const stage of CORE_CHAIN_STAGES) {
+  for (const stage of stagesToValidate) {
     const proof = stageMap.get(stage);
     if (!proof || proof.proofLevel !== 'PROVEN') {
       firstBrokenStage = stage;
@@ -410,16 +432,30 @@ export function analyzeExecutionChain(input: {
     }
   }
 
-  const allStagesProven = CORE_CHAIN_STAGES.every(
+  const allStagesProven = stagesToValidate.every(
     (stage) => stageMap.get(stage)?.proofLevel === 'PROVEN',
   );
+
+  if (!firstBrokenStage && chainMode === 'core') {
+    const allCoreProven = CORE_CHAIN_STAGES.every(
+      (stage) => stageMap.get(stage)?.proofLevel === 'PROVEN',
+    );
+    const allCoreLinksConnected = input.chainLinks
+      .filter((l) => l.toStage !== 'LAUNCH')
+      .every((l) => l.connected);
+    if (allCoreProven && allCoreLinksConnected) {
+      firstBrokenStage = 'LAUNCH';
+    }
+  }
+
   const allLinksConnected = input.chainLinks.every((l) => l.connected);
-  const chainConnected = allStagesProven && allLinksConnected;
+  const chainConnected =
+    chainMode === 'full' ? allStagesProven && allLinksConnected : false;
 
   return {
     readOnly: true,
     chainConnected,
-    firstBrokenStage,
+    firstBrokenStage: chainMode === 'full' && chainConnected ? null : firstBrokenStage,
     chainLinks: input.chainLinks,
     missingLinks,
     downstreamBlockedFrom: firstBrokenStage,

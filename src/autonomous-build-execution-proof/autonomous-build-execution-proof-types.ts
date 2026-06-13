@@ -3,11 +3,29 @@
  * Read-only — no synthetic execution claims.
  */
 
-import type { ConnectedBuildExecutionAssessment } from '../connected-build-execution-foundation/connected-build-execution-types.js';
+import type { ConnectedBuildExecutionAssessment as ConnectedBuildFoundationAssessment } from '../connected-build-execution-foundation/connected-build-execution-types.js';
+import type { ConnectedBuildExecutionReport } from '../connected-build-execution/connected-build-execution-types.js';
+import type { ObservedFileEvidence } from '../connected-build-execution/connected-build-execution-types.js';
 import type { ConnectedLivePreviewAssessment } from '../connected-live-preview-foundation/connected-live-preview-types.js';
 import type { ConnectedRuntimeActivationAssessment } from '../connected-runtime-activation-foundation/connected-runtime-activation-types.js';
+import type {
+  RuntimeActivationProofReport,
+  RuntimeSessionEvidence,
+} from '../connected-runtime-activation-proof/connected-runtime-activation-proof-types.js';
+import type {
+  PreviewExperienceProofReport,
+  PreviewSessionEvidence,
+} from '../connected-preview-experience-proof/connected-preview-experience-proof-types.js';
+import type {
+  VerificationEvidenceFixture,
+  VerificationExecutionProofReport,
+} from '../connected-verification-execution-proof/connected-verification-execution-proof-types.js';
 import type { ConnectedVerificationAssessment } from '../connected-verification-foundation/connected-verification-types.js';
 import type { FounderTestAssessment } from '../founder-test-integration/founder-test-integration-types.js';
+import type {
+  LaunchReadinessFixture,
+  LaunchReadinessProofReport,
+} from '../connected-launch-readiness-proof/connected-launch-readiness-proof-types.js';
 import type { RequirementsToPlanContractReport } from '../requirements-to-plan-execution-contract/requirements-to-plan-contract-types.js';
 
 export type ExecutionStageId =
@@ -74,7 +92,12 @@ export interface FounderExecutionProofQuestions {
 export interface AutonomousBuildExecutionProofInputSnapshot {
   readOnly: true;
   founderTestAssessment: FounderTestAssessment;
-  connectedBuildExecutionAssessment: ConnectedBuildExecutionAssessment;
+  connectedBuildFoundationAssessment: ConnectedBuildFoundationAssessment;
+  connectedBuildMaterialization: ConnectedBuildExecutionReport | null;
+  connectedRuntimeActivationProof: RuntimeActivationProofReport | null;
+  connectedPreviewExperienceProof: PreviewExperienceProofReport | null;
+  connectedVerificationExecutionProof: VerificationExecutionProofReport | null;
+  connectedLaunchReadinessProof: LaunchReadinessProofReport | null;
   connectedRuntimeActivationAssessment: ConnectedRuntimeActivationAssessment;
   connectedLivePreviewAssessment: ConnectedLivePreviewAssessment;
   connectedVerificationAssessment: ConnectedVerificationAssessment;
@@ -114,7 +137,17 @@ export interface AssessAutonomousBuildExecutionProofInput {
   rawPrompt?: string;
   founderTestAssessment?: FounderTestAssessment;
   requirementsToPlanContract?: RequirementsToPlanContractReport | null;
-  connectedBuildExecutionAssessment?: ConnectedBuildExecutionAssessment;
+  connectedBuildFoundationAssessment?: ConnectedBuildFoundationAssessment;
+  connectedBuildMaterialization?: ConnectedBuildExecutionReport | null;
+  observedBuildEvidence?: ObservedFileEvidence;
+  connectedRuntimeActivationProof?: RuntimeActivationProofReport | null;
+  runtimeSessionEvidence?: RuntimeSessionEvidence;
+  connectedPreviewExperienceProof?: PreviewExperienceProofReport | null;
+  previewSessionEvidence?: PreviewSessionEvidence;
+  connectedVerificationExecutionProof?: VerificationExecutionProofReport | null;
+  verificationEvidenceFixture?: VerificationEvidenceFixture;
+  connectedLaunchReadinessProof?: LaunchReadinessProofReport | null;
+  launchReadinessFixture?: LaunchReadinessFixture;
   connectedRuntimeActivationAssessment?: ConnectedRuntimeActivationAssessment;
   connectedLivePreviewAssessment?: ConnectedLivePreviewAssessment;
   connectedVerificationAssessment?: ConnectedVerificationAssessment;

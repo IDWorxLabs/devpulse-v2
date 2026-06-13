@@ -12,7 +12,12 @@ import {
 } from './founder-test-launch-readiness-registry.js';
 import { buildChatStressSimulationReportMarkdown } from '../founder-test-chat-stress-simulation/index.js';
 import { buildProductReadinessReportMarkdown } from '../founder-test-product-readiness/index.js';
-import { buildAutonomousBuildExecutionProofReportMarkdown } from '../autonomous-build-execution-proof/index.js';
+import { buildAutonomousBuildExecutionProofReportMarkdown } from '../autonomous-build-execution-proof/execution-proof-report-builder.js';
+import { buildConnectedBuildExecutionReportMarkdown } from '../connected-build-execution/index.js';
+import { buildRuntimeActivationProofReportMarkdown } from '../connected-runtime-activation-proof/index.js';
+import { buildPreviewExperienceProofReportMarkdown } from '../connected-preview-experience-proof/index.js';
+import { buildVerificationExecutionProofReportMarkdown } from '../connected-verification-execution-proof/index.js';
+import { buildLaunchReadinessProofReportMarkdown } from '../connected-launch-readiness-proof/index.js';
 import type { FounderTestLaunchReadinessReport } from './founder-test-launch-readiness-types.js';
 
 export function buildFounderTestLaunchReadinessReportMarkdown(
@@ -121,6 +126,51 @@ export function buildFounderTestLaunchReadinessReportMarkdown(
     lines.push(buildAutonomousBuildExecutionProofReportMarkdown(report.autonomousBuildExecutionProof));
   } else {
     lines.push('## AUTONOMOUS BUILD EXECUTION PROOF');
+    lines.push('');
+    lines.push('Not run in this assessment.');
+    lines.push('');
+  }
+
+  if (report.connectedBuildExecution) {
+    lines.push(buildConnectedBuildExecutionReportMarkdown(report.connectedBuildExecution));
+  } else {
+    lines.push('## CONNECTED BUILD EXECUTION');
+    lines.push('');
+    lines.push('Not run in this assessment.');
+    lines.push('');
+  }
+
+  if (report.connectedRuntimeActivationProof) {
+    lines.push(buildRuntimeActivationProofReportMarkdown(report.connectedRuntimeActivationProof));
+  } else {
+    lines.push('## CONNECTED RUNTIME ACTIVATION PROOF');
+    lines.push('');
+    lines.push('Not run in this assessment.');
+    lines.push('');
+  }
+
+  if (report.connectedPreviewExperienceProof) {
+    lines.push(buildPreviewExperienceProofReportMarkdown(report.connectedPreviewExperienceProof));
+  } else {
+    lines.push('## CONNECTED PREVIEW EXPERIENCE PROOF');
+    lines.push('');
+    lines.push('Not run in this assessment.');
+    lines.push('');
+  }
+
+  if (report.connectedVerificationExecutionProof) {
+    lines.push(buildVerificationExecutionProofReportMarkdown(report.connectedVerificationExecutionProof));
+  } else {
+    lines.push('## CONNECTED VERIFICATION EXECUTION PROOF');
+    lines.push('');
+    lines.push('Not run in this assessment.');
+    lines.push('');
+  }
+
+  if (report.connectedLaunchReadinessProof) {
+    lines.push(buildLaunchReadinessProofReportMarkdown(report.connectedLaunchReadinessProof));
+  } else {
+    lines.push('## CONNECTED LAUNCH READINESS PROOF');
     lines.push('');
     lines.push('Not run in this assessment.');
     lines.push('');

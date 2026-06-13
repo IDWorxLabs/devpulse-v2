@@ -1,8 +1,9 @@
 /**
  * Autonomous Build Execution Proof — PREVIEW stage analyzer.
+ * Consumes Connected Preview Experience Proof authority (Phase 26.10).
  */
 
-import type { ConnectedLivePreviewAssessment } from '../connected-live-preview-foundation/connected-live-preview-types.js';
+import type { PreviewExperienceProofReport } from '../connected-preview-experience-proof/connected-preview-experience-proof-types.js';
 import type { StageEvidenceEntry, StageExecutionProof } from './autonomous-build-execution-proof-types.js';
 
 function entry(
@@ -15,80 +16,97 @@ function entry(
 }
 
 export function analyzePreviewStage(
-  previewAssessment: ConnectedLivePreviewAssessment,
-  runtimeContractId: string,
+  previewExperienceProof: PreviewExperienceProofReport | null,
 ): StageExecutionProof {
-  const report = previewAssessment.report;
-  const answers = report.questionAnswers;
-  const state = report.previewState;
-  const candidate = report.previewCandidate;
-  const contractLinked = candidate.runtimeActivationContractId === runtimeContractId;
+  if (!previewExperienceProof) {
+    return {
+      readOnly: true,
+      stage: 'PREVIEW',
+      proofLevel: 'NOT_PROVEN',
+      score: 0,
+      sourceAuthority: 'connected-preview-experience-proof',
+      upstreamState: 'NO_ASSESSMENT',
+      evidence: [
+        entry('Connected preview experience proof', 'not assessed', false, 'connected-preview-experience-proof'),
+      ],
+      missingEvidence: ['Connected preview experience proof assessment not run'],
+      recommendedFix: 'Run connected preview experience proof assessment.',
+      downstreamBlocked: true,
+    };
+  }
 
+  const report = previewExperienceProof;
   let proofLevel: StageExecutionProof['proofLevel'] = 'NOT_PROVEN';
-  if (state === 'PREVIEW_READY' && answers.previewReadinessProven && contractLinked) {
-    proofLevel = 'PROVEN';
-  } else if (
-    state === 'PREVIEW_READY_WITH_WARNINGS' ||
-    (answers.previewCandidateExists && contractLinked)
+  if (
+    report.previewProofLevel === 'PROVEN' &&
+    report.linkage.previewLinkageConnected &&
+    report.runtimeActivationProven &&
+    report.render.applicationRendered &&
+    report.interaction.interactionObserved
   ) {
+    proofLevel = 'PROVEN';
+  } else if (report.previewProofLevel === 'PARTIAL' || report.url.urlObserved) {
     proofLevel = 'PARTIAL';
   }
 
   const evidence: StageEvidenceEntry[] = [
     entry(
-      'Runtime contract linkage',
-      `${candidate.runtimeActivationContractId} → ${runtimeContractId}`,
-      contractLinked,
-      'connected-live-preview-foundation',
+      'Runtime activation proven',
+      String(report.runtimeActivationProven),
+      report.runtimeActivationProven,
+      'connected-preview-experience-proof',
     ),
     entry(
-      'Preview candidate',
-      candidate.candidateId,
-      answers.previewCandidateExists,
-      'connected-live-preview-foundation',
+      'Preview session',
+      report.session.sessionId ?? 'none',
+      report.session.sessionObserved,
+      'connected-preview-experience-proof',
     ),
     entry(
-      'Preview activation path',
-      candidate.previewActivationPath ?? 'none',
-      answers.previewActivationPathExists,
-      'connected-live-preview-foundation',
+      'Preview URL reachable',
+      report.url.previewUrl ?? 'none',
+      report.url.urlReachable,
+      'connected-preview-experience-proof',
     ),
     entry(
-      'Preview readiness traceable',
-      String(answers.previewReadinessTraceable),
-      answers.previewReadinessTraceable,
-      'connected-live-preview-foundation',
+      'Application rendered',
+      report.render.renderState,
+      report.render.applicationRendered,
+      'connected-preview-experience-proof',
     ),
-    entry('Preview state', state, state === 'PREVIEW_READY', 'connected-live-preview-foundation'),
+    entry(
+      'Interaction evidence',
+      report.interaction.interactionState,
+      report.interaction.interactionObserved,
+      'connected-preview-experience-proof',
+    ),
+    entry(
+      'Preview linkage',
+      String(report.linkage.previewLinkageConnected),
+      report.linkage.previewLinkageConnected,
+      'connected-preview-experience-proof',
+    ),
   ];
 
-  const missingEvidence: string[] = [];
-  if (!contractLinked) {
-    missingEvidence.push(
-      `Preview not linked to runtime contract (${candidate.runtimeActivationContractId} ≠ ${runtimeContractId})`,
-    );
-  }
-  if (!answers.previewReadinessProven) missingEvidence.push('Preview readiness not proven');
-  if (candidate.realPreviewLaunchPerformed !== false) {
-    missingEvidence.push('Real preview launch must not be claimed without evidence');
+  const missingEvidence = [...report.missingEvidence];
+  if (report.linkage.firstBrokenPreviewLink) {
+    missingEvidence.unshift(`First broken preview link: ${report.linkage.firstBrokenPreviewLink}`);
   }
 
-  let recommendedFix = 'Connect runtime activation contract to preview readiness with traceable activation path.';
+  let recommendedFix = report.recommendedFix;
   if (proofLevel === 'PROVEN') {
-    recommendedFix = 'Maintain preview contract linkage to runtime activation.';
-  } else if (proofLevel === 'PARTIAL') {
-    recommendedFix = 'Resolve preview warning gaps before claiming preview proof.';
+    recommendedFix = 'Preview experience proven — proceed to VERIFY execution proof.';
   }
 
   return {
     readOnly: true,
     stage: 'PREVIEW',
     proofLevel,
-    score: report.previewReadinessScore,
-    sourceAuthority: 'connected-live-preview-foundation',
-    upstreamState: state,
+    score: report.linkage.traceabilityScore,
+    sourceAuthority: 'connected-preview-experience-proof',
+    upstreamState: report.previewState,
     evidence,
-    missingEvidence,
+    missingEvidence: missingEvidence.slice(0, 10),
     recommendedFix,
     downstreamBlocked: proofLevel !== 'PROVEN',
   };

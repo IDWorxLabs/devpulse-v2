@@ -1,8 +1,9 @@
 /**
  * Autonomous Build Execution Proof — BUILD stage analyzer.
+ * Consumes Connected Build Execution materialization authority (Phase 26.8).
  */
 
-import type { ConnectedBuildExecutionAssessment } from '../connected-build-execution-foundation/connected-build-execution-types.js';
+import type { ConnectedBuildExecutionReport } from '../connected-build-execution/connected-build-execution-types.js';
 import type { StageEvidenceEntry, StageExecutionProof } from './autonomous-build-execution-proof-types.js';
 
 function entry(
@@ -15,85 +16,101 @@ function entry(
 }
 
 export function analyzeBuildStage(
-  buildAssessment: ConnectedBuildExecutionAssessment,
+  connectedBuildExecution: ConnectedBuildExecutionReport | null,
 ): StageExecutionProof {
-  const report = buildAssessment.report;
-  const manifest = report.buildOutputManifest;
-  const answers = report.questionAnswers;
-  const state = report.buildOutputState;
+  if (!connectedBuildExecution) {
+    return {
+      readOnly: true,
+      stage: 'BUILD',
+      proofLevel: 'NOT_PROVEN',
+      score: 0,
+      sourceAuthority: 'connected-build-execution',
+      upstreamState: 'NO_ASSESSMENT',
+      evidence: [
+        entry('Connected build execution', 'not assessed', false, 'connected-build-execution'),
+      ],
+      missingEvidence: ['Connected build execution assessment not run'],
+      recommendedFix: 'Run connected build execution materialization assessment.',
+      downstreamBlocked: true,
+    };
+  }
 
-  const generatedFilesObserved =
-    manifest.filesToCreate.length > 0 || manifest.expectedArtifacts.length > 0;
-  const builderExists = report.inputSnapshot.executionPlannerAssessment.plan !== null;
-  const outputVerified = state === 'BUILD_OUTPUT_PROVEN';
-
+  const report = connectedBuildExecution;
   let proofLevel: StageExecutionProof['proofLevel'] = 'NOT_PROVEN';
-  if (outputVerified && generatedFilesObserved && answers.outputsTraceable) {
-    proofLevel = 'PROVEN';
-  } else if (
-    builderExists &&
-    (state === 'BUILD_OUTPUT_PARTIALLY_PROVEN' || generatedFilesObserved)
+  if (
+    report.proofLevel === 'PROVEN' &&
+    report.linkageAnalysis.linkageConnected &&
+    report.artifactEvidence.artifactEvidenceLevel === 'PROVEN' &&
+    report.workspaceMaterialization.workspaceExists
   ) {
+    proofLevel = 'PROVEN';
+  } else if (report.proofLevel === 'PARTIAL' || report.generatedFileEvidence.fileCount > 0) {
     proofLevel = 'PARTIAL';
   }
 
   const evidence: StageEvidenceEntry[] = [
     entry(
-      'Execution plan linked',
-      manifest.planId ?? 'no plan id',
-      manifest.planId !== null,
-      'autonomous-builder-execution-planner',
+      'Materialization state',
+      report.buildMaterialization.materializationState,
+      report.buildMaterialization.materializationState === 'MATERIALIZED',
+      'connected-build-execution',
     ),
     entry(
-      'Expected file outputs',
-      `${manifest.filesToCreate.length} create / ${manifest.filesToModify.length} modify`,
-      generatedFilesObserved,
-      'connected-build-execution-foundation',
+      'Generated files observed',
+      `${report.generatedFileEvidence.fileCount}/${report.buildMaterialization.expectedArtifacts.length}`,
+      report.generatedFileEvidence.fileCount > 0,
+      'connected-build-execution',
     ),
     entry(
-      'Proof artifacts',
-      `${manifest.proofArtifacts.length} artifact(s)`,
-      manifest.proofArtifacts.length > 0,
-      'connected-build-execution-foundation',
+      'Artifact evidence',
+      report.artifactEvidence.artifactEvidenceLevel,
+      report.artifactEvidence.artifactEvidenceLevel === 'PROVEN',
+      'connected-build-execution',
     ),
     entry(
-      'Verification artifacts',
-      `${manifest.verificationArtifacts.length} artifact(s)`,
-      manifest.verificationArtifacts.length > 0,
-      'connected-build-execution-foundation',
+      'Workspace exists',
+      String(report.workspaceMaterialization.workspaceExists),
+      report.workspaceMaterialization.workspaceExists,
+      'connected-build-execution',
     ),
     entry(
-      'Build output state',
-      state,
-      outputVerified,
-      'connected-build-execution-foundation',
+      'Build output linkage',
+      String(report.linkageAnalysis.linkageConnected),
+      report.linkageAnalysis.linkageConnected,
+      'connected-build-execution',
+    ),
+    entry(
+      'Manifest traceability',
+      `${report.buildManifest.traceabilityScore}/100`,
+      report.buildManifest.traceabilityScore >= 90,
+      'connected-build-execution',
     ),
   ];
 
-  const missingEvidence: string[] = [];
-  if (!generatedFilesObserved) missingEvidence.push('No generated artifacts observed in build manifest');
-  if (!answers.outputsTraceable) missingEvidence.push('Plan-to-output traceability missing');
-  if (!answers.outputsVerifiable) missingEvidence.push('Build output verification coverage missing');
-  if (state === 'BUILD_OUTPUT_NOT_PROVEN') {
-    missingEvidence.push('Build output not proven — dry-run chain incomplete');
+  const missingEvidence = [...report.missingEvidence];
+  if (report.linkageAnalysis.firstBrokenLink) {
+    missingEvidence.unshift(`First broken link: ${report.linkageAnalysis.firstBrokenLink}`);
+  }
+  if (report.generatedFileEvidence.missingPaths.length > 0) {
+    missingEvidence.push(
+      ...report.generatedFileEvidence.missingPaths.slice(0, 4).map((p) => `Missing artifact: ${p}`),
+    );
   }
 
-  let recommendedFix = 'Complete connected build output proof with traceable generated artifacts.';
+  let recommendedFix = report.recommendedFix;
   if (proofLevel === 'PROVEN') {
-    recommendedFix = 'Maintain build manifest linkage before any real execution phase.';
-  } else if (proofLevel === 'PARTIAL') {
-    recommendedFix = 'Resolve partial build proof — verify generated outputs against execution plan.';
+    recommendedFix = 'Build materialization proven — proceed to RUNTIME execution proof.';
   }
 
   return {
     readOnly: true,
     stage: 'BUILD',
     proofLevel,
-    score: report.buildOutputScore,
-    sourceAuthority: 'connected-build-execution-foundation',
-    upstreamState: state,
+    score: report.linkageAnalysis.traceabilityScore,
+    sourceAuthority: 'connected-build-execution',
+    upstreamState: report.buildMaterialization.materializationState,
     evidence,
-    missingEvidence,
+    missingEvidence: missingEvidence.slice(0, 10),
     recommendedFix,
     downstreamBlocked: proofLevel !== 'PROVEN',
   };

@@ -4307,6 +4307,174 @@
         }
         html += '</div>';
       }
+      if (launchReadiness.connectedBuildExecution) {
+        var cbe = launchReadiness.connectedBuildExecution;
+        html +=
+          '<div class="founder-test-connected-build"><h4>Connected Build Execution</h4>' +
+          '<p>Materialization: <strong>' +
+          escapeHtml(cbe.materializationLevel || '—') +
+          '</strong> · Artifacts: <strong>' +
+          escapeHtml(cbe.artifactEvidenceLevel || '—') +
+          '</strong> · Linkage: <strong>' +
+          (cbe.linkageConnected ? 'CONNECTED' : 'BROKEN') +
+          '</strong></p>' +
+          '<p>Generated artifacts: <strong>' +
+          (cbe.canProveGeneratedArtifacts ? 'YES' : 'NO') +
+          '</strong> · Workspace: <strong>' +
+          (cbe.canProveWorkspaceCreation ? 'YES' : 'NO') +
+          '</strong> · Materialization: <strong>' +
+          (cbe.canProveBuildMaterialization ? 'YES' : 'NO') +
+          '</strong></p>';
+        if (cbe.missingBuildEvidence && cbe.missingBuildEvidence.length) {
+          html +=
+            '<p><strong>Missing evidence:</strong> ' +
+            escapeHtml(cbe.missingBuildEvidence.slice(0, 5).join(' · ')) +
+            '</p>';
+        }
+        if (cbe.whatShouldBeBuiltNext) {
+          html += '<p><strong>Build next:</strong> ' + escapeHtml(cbe.whatShouldBeBuiltNext) + '</p>';
+        }
+        html += '</div>';
+      }
+      if (launchReadiness.connectedRuntimeActivationProof) {
+        var cra = launchReadiness.connectedRuntimeActivationProof;
+        html +=
+          '<div class="founder-test-connected-runtime"><h4>Connected Runtime Activation Proof</h4>' +
+          '<p>Runtime proof: <strong>' +
+          escapeHtml(cra.runtimeProofLevel || '—') +
+          '</strong> · State: <strong>' +
+          escapeHtml(cra.runtimeActivationState || '—') +
+          '</strong> · Linkage: <strong>' +
+          (cra.linkage.runtimeLinkageConnected ? 'CONNECTED' : 'BROKEN') +
+          '</strong></p>' +
+          '<p>Can start app: <strong>' +
+          (cra.founderQuestions.canApplicationRun ? 'YES' : 'NO') +
+          '</strong> · Reachable: <strong>' +
+          (cra.founderQuestions.canRuntimeBeReached ? 'YES' : 'NO') +
+          '</strong></p>';
+        if (cra.founderQuestions.commandUsed) {
+          html +=
+            '<p>Command: <code>' + escapeHtml(cra.founderQuestions.commandUsed) + '</code></p>';
+        }
+        if (cra.founderQuestions.portOrUrlObserved) {
+          html +=
+            '<p>URL: <code>' + escapeHtml(cra.founderQuestions.portOrUrlObserved) + '</code></p>';
+        }
+        if (cra.founderQuestions.exactMissingRuntimeEvidence.length) {
+          html +=
+            '<p><strong>Missing evidence:</strong> ' +
+            escapeHtml(cra.founderQuestions.exactMissingRuntimeEvidence.slice(0, 4).join(' · ')) +
+            '</p>';
+        }
+        if (cra.founderQuestions.whatShouldBeBuiltNext.length) {
+          html +=
+            '<p><strong>Build next:</strong> ' +
+            escapeHtml(cra.founderQuestions.whatShouldBeBuiltNext[0]) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (launchReadiness.connectedPreviewExperienceProof) {
+        var cpe = launchReadiness.connectedPreviewExperienceProof;
+        html +=
+          '<div class="founder-test-connected-preview"><h4>Connected Preview Experience Proof</h4>' +
+          '<p>Preview proof: <strong>' +
+          escapeHtml(cpe.previewProofLevel || '—') +
+          '</strong> · State: <strong>' +
+          escapeHtml(cpe.previewState || '—') +
+          '</strong> · Linkage: <strong>' +
+          (cpe.linkage.previewLinkageConnected ? 'CONNECTED' : 'BROKEN') +
+          '</strong></p>' +
+          '<p>Founder can see app: <strong>' +
+          (cpe.founderQuestions.canFounderSeeApp ? 'YES' : 'NO') +
+          '</strong> · Can interact: <strong>' +
+          (cpe.founderQuestions.canFounderInteractWithApp ? 'YES' : 'NO') +
+          '</strong></p>';
+        if (cpe.url.previewUrl) {
+          html += '<p>Preview URL: <code>' + escapeHtml(cpe.url.previewUrl) + '</code></p>';
+        }
+        if (cpe.founderQuestions.whatEvidenceMissing.length) {
+          html +=
+            '<p><strong>Missing evidence:</strong> ' +
+            escapeHtml(cpe.founderQuestions.whatEvidenceMissing.slice(0, 4).join(' · ')) +
+            '</p>';
+        }
+        if (cpe.founderQuestions.whatShouldBeBuiltNext.length) {
+          html +=
+            '<p><strong>Build next:</strong> ' +
+            escapeHtml(cpe.founderQuestions.whatShouldBeBuiltNext[0]) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (launchReadiness.connectedVerificationExecutionProof) {
+        var cve = launchReadiness.connectedVerificationExecutionProof;
+        html +=
+          '<div class="founder-test-connected-verification"><h4>Connected Verification Execution Proof</h4>' +
+          '<p>Verification proof: <strong>' +
+          escapeHtml(cve.verificationProofLevel || '—') +
+          '</strong> · State: <strong>' +
+          escapeHtml(cve.verificationState || '—') +
+          '</strong> · Readiness: <strong>' +
+          escapeHtml(cve.readiness.readinessState || '—') +
+          '</strong></p>' +
+          '<p>App verified: <strong>' +
+          (cve.founderQuestions.wasGeneratedAppVerified ? 'YES' : 'NO') +
+          '</strong> · Trust verification: <strong>' +
+          (cve.founderQuestions.canVerificationBeTrusted ? 'YES' : 'NO') +
+          '</strong></p>';
+        if (cve.results.passCount || cve.results.failCount) {
+          html +=
+            '<p>Pass/Fail: <strong>' +
+            String(cve.results.passCount) +
+            '</strong> / <strong>' +
+            String(cve.results.failCount) +
+            '</strong></p>';
+        }
+        if (cve.founderQuestions.whatEvidenceMissing.length) {
+          html +=
+            '<p><strong>Missing evidence:</strong> ' +
+            escapeHtml(cve.founderQuestions.whatEvidenceMissing.slice(0, 4).join(' · ')) +
+            '</p>';
+        }
+        if (cve.founderQuestions.whatShouldBeBuiltNext.length) {
+          html +=
+            '<p><strong>Build next:</strong> ' +
+            escapeHtml(cve.founderQuestions.whatShouldBeBuiltNext[0]) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (launchReadiness.connectedLaunchReadinessProof) {
+        var clr = launchReadiness.connectedLaunchReadinessProof;
+        html +=
+          '<div class="founder-test-connected-launch"><h4>Connected Launch Readiness Proof</h4>' +
+          '<p>Launch proof: <strong>' +
+          escapeHtml(clr.launchProofLevel || '—') +
+          '</strong> · State: <strong>' +
+          escapeHtml(clr.launchState || '—') +
+          '</strong> · Linkage: <strong>' +
+          (clr.linkage.launchLinkageConnected ? 'CONNECTED' : 'BROKEN') +
+          '</strong></p>' +
+          '<p>Launch ready: <strong>' +
+          (clr.founderQuestions.areWeLaunchReady ? 'YES' : 'NO') +
+          '</strong> · Critical blockers: <strong>' +
+          String(clr.blockers.criticalCount) +
+          '</strong></p>';
+        if (clr.founderQuestions.whatBlocksLaunch.length) {
+          html +=
+            '<p><strong>Blocks launch:</strong> ' +
+            escapeHtml(clr.founderQuestions.whatBlocksLaunch.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        if (clr.founderQuestions.whatMustBeFixedNext.length) {
+          html +=
+            '<p><strong>Fix next:</strong> ' +
+            escapeHtml(clr.founderQuestions.whatMustBeFixedNext[0]) +
+            '</p>';
+        }
+        html += '</div>';
+      }
       if (launchReadiness.autonomousBuildExecutionProof) {
         var ep = launchReadiness.autonomousBuildExecutionProof;
         html +=

@@ -60,8 +60,12 @@ const authoritySource = readFileSync(
   join(ROOT, 'src/autonomous-build-execution-proof/autonomous-build-execution-proof-authority.ts'),
   'utf8',
 );
-assert('uses connected build', authoritySource.includes('assessConnectedAutonomousBuildExecution'), 'yes');
-assert('uses connected runtime', authoritySource.includes('assessConnectedRuntimeActivation'), 'yes');
+assert('uses connected build materialization', authoritySource.includes('assessConnectedBuildExecution'), 'yes');
+assert('uses connected runtime activation proof', authoritySource.includes('assessConnectedRuntimeActivationProof'), 'yes');
+assert('uses connected preview experience proof', authoritySource.includes('assessConnectedPreviewExperienceProof'), 'yes');
+assert('uses connected verification execution proof', authoritySource.includes('assessConnectedVerificationExecutionProof'), 'yes');
+assert('uses connected launch readiness proof', authoritySource.includes('assessConnectedLaunchReadinessProof'), 'yes');
+assert('uses connected runtime foundation', authoritySource.includes('assessConnectedRuntimeActivation'), 'yes');
 assert('uses connected preview', authoritySource.includes('assessConnectedLivePreview'), 'yes');
 assert('uses connected verification', authoritySource.includes('assessConnectedVerification'), 'yes');
 assert('no synthetic execution flag', authoritySource.includes('launchBlockedByChain'), 'yes');
@@ -94,6 +98,41 @@ assert(
   'first broken stage tracked',
   !report.chainConnected ? report.firstBrokenStage !== null : report.firstBrokenStage === null,
   String(report.firstBrokenStage),
+);
+const launchStageProof = report.stageProofs.find((s) => s.stage === 'LAUNCH');
+assert(
+  'LAUNCH stage uses connected-launch-readiness-proof',
+  launchStageProof?.sourceAuthority === 'connected-launch-readiness-proof',
+  launchStageProof?.sourceAuthority ?? 'missing',
+);
+const buildStage = report.stageProofs.find((s) => s.stage === 'BUILD');
+assert(
+  'BUILD stage uses connected-build-execution',
+  buildStage?.sourceAuthority === 'connected-build-execution',
+  buildStage?.sourceAuthority ?? 'missing',
+);
+assert(
+  'BUILD reports precise missing evidence when not proven',
+  buildStage?.proofLevel !== 'PROVEN' ? (buildStage?.missingEvidence.length ?? 0) > 0 : true,
+  String(buildStage?.missingEvidence.length ?? 0),
+);
+const runtimeStage = report.stageProofs.find((s) => s.stage === 'RUNTIME');
+assert(
+  'RUNTIME stage uses connected-runtime-activation-proof',
+  runtimeStage?.sourceAuthority === 'connected-runtime-activation-proof',
+  runtimeStage?.sourceAuthority ?? 'missing',
+);
+const previewStage = report.stageProofs.find((s) => s.stage === 'PREVIEW');
+assert(
+  'PREVIEW stage uses connected-preview-experience-proof',
+  previewStage?.sourceAuthority === 'connected-preview-experience-proof',
+  previewStage?.sourceAuthority ?? 'missing',
+);
+const verifyStage = report.stageProofs.find((s) => s.stage === 'VERIFY');
+assert(
+  'VERIFY stage uses connected-verification-execution-proof',
+  verifyStage?.sourceAuthority === 'connected-verification-execution-proof',
+  verifyStage?.sourceAuthority ?? 'missing',
 );
 assert(
   'reference CRM prompt advances break to BUILD',

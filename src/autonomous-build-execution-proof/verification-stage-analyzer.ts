@@ -1,8 +1,9 @@
 /**
  * Autonomous Build Execution Proof — VERIFY stage analyzer.
+ * Consumes Connected Verification Execution Proof authority (Phase 26.11).
  */
 
-import type { ConnectedVerificationAssessment } from '../connected-verification-foundation/connected-verification-types.js';
+import type { VerificationExecutionProofReport } from '../connected-verification-execution-proof/connected-verification-execution-proof-types.js';
 import type { StageEvidenceEntry, StageExecutionProof } from './autonomous-build-execution-proof-types.js';
 
 function entry(
@@ -15,88 +16,104 @@ function entry(
 }
 
 export function analyzeVerificationStage(
-  verificationAssessment: ConnectedVerificationAssessment,
-  previewContractId: string,
+  verificationExecutionProof: VerificationExecutionProofReport | null,
 ): StageExecutionProof {
-  const report = verificationAssessment.report;
-  const answers = report.questionAnswers;
-  const state = report.verificationState;
-  const candidate = report.verificationCandidate;
-  const contractLinked = candidate.previewReadinessContractId === previewContractId;
+  if (!verificationExecutionProof) {
+    return {
+      readOnly: true,
+      stage: 'VERIFY',
+      proofLevel: 'NOT_PROVEN',
+      score: 0,
+      sourceAuthority: 'connected-verification-execution-proof',
+      upstreamState: 'NO_ASSESSMENT',
+      evidence: [
+        entry(
+          'Connected verification execution proof',
+          'not assessed',
+          false,
+          'connected-verification-execution-proof',
+        ),
+      ],
+      missingEvidence: ['Connected verification execution proof assessment not run'],
+      recommendedFix: 'Run connected verification execution proof assessment.',
+      downstreamBlocked: true,
+    };
+  }
 
+  const report = verificationExecutionProof;
   let proofLevel: StageExecutionProof['proofLevel'] = 'NOT_PROVEN';
-  if (state === 'VERIFICATION_READY' && answers.verificationReadinessProven && contractLinked) {
-    proofLevel = 'PROVEN';
-  } else if (
-    state === 'VERIFICATION_READY_WITH_WARNINGS' ||
-    (answers.verificationCandidateExists && contractLinked)
+  if (
+    report.verificationProofLevel === 'PROVEN' &&
+    report.linkage.verificationLinkageConnected &&
+    report.previewExperienceProven &&
+    report.run.runObserved &&
+    report.evidence.evidenceObserved
   ) {
+    proofLevel = 'PROVEN';
+  } else if (report.verificationProofLevel === 'PARTIAL' || report.run.runObserved) {
     proofLevel = 'PARTIAL';
   }
 
   const evidence: StageEvidenceEntry[] = [
     entry(
-      'Preview contract linkage',
-      `${candidate.previewReadinessContractId} → ${previewContractId}`,
-      contractLinked,
-      'connected-verification-foundation',
+      'Preview experience proven',
+      String(report.previewExperienceProven),
+      report.previewExperienceProven,
+      'connected-verification-execution-proof',
     ),
     entry(
-      'Verification candidate',
-      candidate.candidateId,
-      answers.verificationCandidateExists,
-      'connected-verification-foundation',
+      'Verification run',
+      report.run.runId ?? report.run.runState,
+      report.run.runObserved,
+      'connected-verification-execution-proof',
     ),
     entry(
-      'Verification path',
-      candidate.verificationPath ?? 'none',
-      answers.verificationPathExists,
-      'connected-verification-foundation',
+      'Target linked',
+      report.target.targetState,
+      report.target.targetState === 'LINKED',
+      'connected-verification-execution-proof',
     ),
     entry(
-      'Verification traceable',
-      String(answers.verificationTraceable),
-      answers.verificationTraceable,
-      'connected-verification-foundation',
+      'Results observed',
+      report.results.resultState,
+      report.results.resultsObserved,
+      'connected-verification-execution-proof',
     ),
     entry(
-      'Verification state',
-      state,
-      state === 'VERIFICATION_READY',
-      'connected-verification-foundation',
+      'Evidence artifacts',
+      report.evidence.evidenceState,
+      report.evidence.evidenceObserved,
+      'connected-verification-execution-proof',
+    ),
+    entry(
+      'Verification linkage',
+      String(report.linkage.verificationLinkageConnected),
+      report.linkage.verificationLinkageConnected,
+      'connected-verification-execution-proof',
     ),
   ];
 
-  const missingEvidence: string[] = [];
-  if (!contractLinked) {
-    missingEvidence.push(
-      `Verification not linked to preview contract (${candidate.previewReadinessContractId} ≠ ${previewContractId})`,
+  const missingEvidence = [...report.missingEvidence];
+  if (report.linkage.firstBrokenVerificationLink) {
+    missingEvidence.unshift(
+      `First broken verification link: ${report.linkage.firstBrokenVerificationLink}`,
     );
   }
-  if (!answers.verificationReadinessProven) {
-    missingEvidence.push('Verification readiness not proven — users cannot trust pass/fail/next steps');
-  }
-  if (candidate.realVerificationExecutionPerformed !== false) {
-    missingEvidence.push('Real verification execution must not be claimed without evidence');
-  }
 
-  let recommendedFix =
-    'Connect preview readiness contract to verification with founder-readable pass/fail/next-step evidence.';
+  let recommendedFix = report.recommendedFix;
   if (proofLevel === 'PROVEN') {
-    recommendedFix = 'Maintain verification contract linkage and UVL-readable outcomes.';
-  } else if (proofLevel === 'PARTIAL') {
-    recommendedFix = 'Resolve verification warning gaps before launch claims.';
+    recommendedFix = 'Verification execution proven — proceed to LAUNCH readiness assessment.';
   }
 
   return {
     readOnly: true,
     stage: 'VERIFY',
     proofLevel,
-    score: report.verificationReadinessScore,
-    sourceAuthority: 'connected-verification-foundation',
-    upstreamState: state,
+    score: report.linkage.traceabilityScore,
+    sourceAuthority: 'connected-verification-execution-proof',
+    upstreamState: report.verificationState,
     evidence,
-    missingEvidence,
+    missingEvidence: missingEvidence.slice(0, 10),
     recommendedFix,
     downstreamBlocked: proofLevel !== 'PROVEN',
   };
