@@ -135,15 +135,18 @@
           <h2 id="center-title">AiDevEngine Command Center</h2>
         </div>
         <div class="center-header-actions">
+          <div class="founder-test-runtime-wrap">
           <button type="button" class="founder-test-btn" id="run-founder-test" title="Run a complete founder simulation and launch-readiness evaluation.">
-            <span class="founder-test-btn-label">Run Founder Test</span>
-            <span class="founder-test-btn-hint">Complete founder validation — one report, one verdict.</span>
+            <span class="founder-test-btn-label" id="founder-test-btn-label">Run Founder Test</span>
+            <span class="founder-test-btn-hint" id="founder-test-btn-hint">Complete founder validation — one report, one verdict.</span>
           </button>
+          </div>
           <button type="button" class="mobile-feed-toggle" id="mobile-feed-toggle" aria-label="Open operator feed" aria-expanded="false" aria-controls="operator-feed">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h14"/></svg>
           </button>
           <button type="button" class="notif-btn" id="notif-toggle" aria-expanded="false" aria-controls="notification-drawer">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16H6l-1-2v-5a7 7 0 0 1 14 0v5l-1 2z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+            <span class="notif-unread-badge" id="notif-unread-badge" hidden aria-label="Unread notifications">0</span>
             <span class="notif-btn-label">Notifications</span>
           </button>
         </div>
@@ -152,6 +155,17 @@
       <div class="notification-drawer" id="notification-drawer" hidden>
         <h3>Notifications</h3>
         <ul id="notification-list" class="notification-list"></ul>
+      </div>
+
+      <div class="founder-test-report-modal" id="founder-test-report-modal" hidden aria-hidden="true" role="dialog" aria-labelledby="founder-test-report-modal-title">
+        <div class="founder-test-report-modal-backdrop" id="founder-test-report-modal-backdrop"></div>
+        <div class="founder-test-report-modal-panel">
+          <div class="founder-test-report-modal-header">
+            <h3 id="founder-test-report-modal-title">Founder Test Report</h3>
+            <button type="button" class="founder-test-report-modal-close" id="founder-test-report-modal-close" aria-label="Close report">×</button>
+          </div>
+          <pre class="founder-test-report-modal-body" id="founder-test-report-modal-body"></pre>
+        </div>
       </div>
 
       <div class="founder-test-panel" id="founder-test-panel" hidden>
@@ -163,7 +177,8 @@
           <p class="founder-test-status" id="founder-test-status">Ready to run.</p>
         </div>
         <div class="founder-test-panel-actions">
-          <button type="button" class="btn-secondary" id="copy-founder-test-report" disabled>Copy Report</button>
+          <button type="button" class="btn-secondary founder-test-copy-btn" id="copy-founder-test-report" disabled aria-disabled="true">Copy Report</button>
+          <button type="button" class="btn-secondary founder-test-open-btn" id="open-founder-test-report" disabled aria-disabled="true">Open Report</button>
         </div>
       </div>
 
@@ -185,6 +200,10 @@
             <div class="chat-history" id="chat-history" aria-live="polite"></div>
           </div>
           <form class="chat-input-row" id="chat-form">
+            <button type="button" class="chat-action-btn chat-upload-btn" id="chat-upload-btn" aria-label="Upload file">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <input type="file" id="chat-upload-input" hidden accept="*/*" />
             <input
               type="text"
               id="chat-input"
@@ -192,6 +211,9 @@
               placeholder="Message AiDevEngine…"
               autocomplete="off"
             />
+            <button type="button" class="chat-action-btn chat-voice-btn" id="chat-voice-btn" aria-label="Record voice note">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/></svg>
+            </button>
             <button type="submit" class="send-btn" id="chat-send" aria-label="Send message">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
               <span class="send-btn-label">Send</span>
@@ -459,6 +481,7 @@
     <aside class="operator-feed" id="operator-feed" aria-label="Operator Feed">
       <h2 class="feed-title">Operator Feed</h2>
       <div class="operator-feed-body" id="operator-feed-body">
+        <div class="founder-test-operator-trace" id="founder-test-operator-trace" hidden aria-live="polite"></div>
         <div class="feed-stream-log" id="feed-stream-log" aria-live="polite"></div>
         <div class="feed-sections" id="feed-sections"></div>
       </div>

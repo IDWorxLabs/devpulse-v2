@@ -1,16 +1,23 @@
 /**
  * Phase 26.5 — Full product readiness simulation orchestrator.
+ * Phase 26.46 — Bounded chat stress, fixture cache, honest partial results.
  */
 
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { assessFounderTestIntegration } from '../founder-test-integration/index.js';
 import type { FounderTestAssessment, FounderTestAuthorityResult } from '../founder-test-integration/founder-test-integration-types.js';
 import { runFounderTestChatStressSimulation } from '../founder-test-chat-stress-simulation/index.js';
 import type { ChatStressSimulationReport } from '../founder-test-chat-stress-simulation/chat-stress-simulation-types.js';
 import { retrieveDevPulseIntelligenceSnapshot } from '../world-class-chat-brain/devpulse-intelligence-adapter.js';
-import { loadProductMemoryFoundations } from '../llm-chat-brain/product-memory-foundation-loader.js';
 import { CURRENT_PRODUCT_NAME, usesDevPulseAsCurrentIdentity } from '../identity-foundation/legacy-product-identity.js';
+import {
+  loadProductMemoryFoundationsCached,
+  loadProductReadinessShellCached,
+} from './product-readiness-fixture-cache.js';
+import {
+  createSimulationBudgetTracker,
+  SIMULATION_BUDGET_MS,
+  type SimulationRuntimeHealth,
+} from './product-readiness-simulation-budget.js';
 import {
   attachWeights,
   buildWeightedReadinessScore,
@@ -55,11 +62,7 @@ function categoryChatScore(report: ChatStressSimulationReport | null, category: 
 }
 
 function loadShell(rootDir: string): { html: string; appJs: string } {
-  const publicDir = join(rootDir, 'public', 'founder-reality');
-  return {
-    html: readFileSync(join(publicDir, 'index.html'), 'utf8'),
-    appJs: readFileSync(join(publicDir, 'app.js'), 'utf8'),
-  };
+  return loadProductReadinessShellCached(rootDir);
 }
 
 function sim(
@@ -91,7 +94,7 @@ function buildSimulations(input: {
   const { founderTest, chatStress, snapshot, rootDir } = input;
   const results = founderTest.run.authorityResults;
   const shell = loadShell(rootDir);
-  const memory = loadProductMemoryFoundations({ message: 'what are we building' });
+  const memory = loadProductMemoryFoundationsCached('what are we building');
 
   const chatOverall = chatStress?.overallScore ?? 65;
   const identityChat = categoryChatScore(chatStress, 'IDENTITY') ?? chatOverall;
@@ -326,8 +329,19 @@ function buildAutomaticBlockers(input: {
   launchDayScore: number;
   claimScore: number;
   founderReviewerConfidence: number | null;
+  simulationDegradedPartial: boolean;
+  simulationRuntimeHealth: SimulationRuntimeHealth;
 }): ProductReadinessAutomaticBlocker[] {
   const blockers: ProductReadinessAutomaticBlocker[] = [];
+  if (input.simulationDegradedPartial) {
+    blockers.push({
+      readOnly: true,
+      id: 'simulation-partial-result',
+      explanation: `Product readiness simulation returned a partial/degraded result (${input.simulationRuntimeHealth}).`,
+      recommendedAction:
+        'Re-run full product readiness and chat stress simulation outside Founder Test budget before trusting launch readiness.',
+    });
+  }
   if (input.chatScore < CHAT_INTELLIGENCE_LAUNCH_GATE) {
     blockers.push({
       readOnly: true,
@@ -398,21 +412,73 @@ export async function runFullProductReadinessSimulation(
   input: RunProductReadinessSimulationInput = {},
 ): Promise<ProductReadinessAssessment> {
   const rootDir = input.rootDir ?? process.cwd();
+  const budgetMs = input.simulationBudgetMs ?? SIMULATION_BUDGET_MS;
+  const budget = createSimulationBudgetTracker({ budgetMs, startedAtMs: Date.now() });
+  const simulationBudgetNotes: string[] = [];
+  const founderTestContext = input.founderTestContext !== false;
+
+  input.onSimulationTrace?.({
+    operationId: 'product-readiness-simulation-started',
+    operationLabel: 'Product readiness simulation started',
+    phase: 'RUNNING',
+  });
+
   const founderTest =
     input.founderTestAssessment ??
     assessFounderTestIntegration({ rootDir });
 
   let chatStress = input.chatStressSimulation ?? null;
   if (!input.skipChatStressSimulation && !chatStress) {
-    const chat = await runFounderTestChatStressSimulation({
-      rootDir,
-      maxScenarios: input.chatStressMaxScenarios,
-      concurrency: 6,
+    if (budget.isBudgetExceeded()) {
+      simulationBudgetNotes.push('Chat stress skipped — product readiness budget already exceeded.');
+    } else {
+      input.onSimulationTrace?.({
+        operationId: 'product-readiness-chat-stress-started',
+        operationLabel: 'Running bounded chat stress inside product readiness',
+        phase: 'RUNNING',
+      });
+      const chat = await runFounderTestChatStressSimulation({
+        rootDir,
+        maxScenarios: input.chatStressMaxScenarios,
+        concurrency: 4,
+        founderTestContext,
+        budgetMs: budget.remainingMs(),
+        onTrace: input.onSimulationTrace,
+      });
+      chatStress = chat.report;
+      simulationBudgetNotes.push(...chat.report.budgetNotes);
+      input.onSimulationTrace?.({
+        operationId: 'product-readiness-chat-stress-complete',
+        operationLabel: chat.report.degradedPartialResult
+          ? `Chat stress partial (${chat.report.scenariosExecuted}/${chat.report.scenariosRequested} executed)`
+          : 'Chat stress complete',
+        phase: chat.report.degradedPartialResult ? 'BUDGET_EXCEEDED' : 'PASSED',
+      });
+    }
+  }
+
+  const budgetSnap = budget.snapshot();
+  if (budgetSnap.health === 'SIMULATION_SLOW') {
+    input.onSimulationTrace?.({
+      operationId: 'product-readiness-simulation-slow',
+      operationLabel: budgetSnap.reason ?? 'Product readiness simulation slow',
+      phase: 'SLOW',
     });
-    chatStress = chat.report;
+  }
+  if (budgetSnap.health === 'SIMULATION_STALLED' || budgetSnap.health === 'SIMULATION_BUDGET_EXCEEDED') {
+    input.onSimulationTrace?.({
+      operationId: 'product-readiness-simulation-stalled',
+      operationLabel: budgetSnap.reason ?? 'Product readiness simulation stalled',
+      phase: budgetSnap.health === 'SIMULATION_BUDGET_EXCEEDED' ? 'BUDGET_EXCEEDED' : 'STALLED',
+    });
   }
 
   const snapshot = retrieveDevPulseIntelligenceSnapshot(rootDir);
+  input.onSimulationTrace?.({
+    operationId: 'building-product-readiness-scoring',
+    operationLabel: 'Building product readiness simulation scores',
+    phase: 'RUNNING',
+  });
   const executionProven =
     founderTest.executionProofSummary?.founderExecutionState === 'FOUNDER_EXECUTION_PROVEN' ||
     founderTest.executionProofSummary?.founderExecutionState === 'FOUNDER_EXECUTION_PROVEN_WITH_WARNINGS' ||
@@ -423,14 +489,34 @@ export async function runFullProductReadinessSimulation(
   const readinessScore = buildWeightedReadinessScore(simulations);
   let verdict = verdictFromScore(readinessScore);
 
+  input.onSimulationTrace?.({
+    operationId: 'building-product-readiness-scoring',
+    operationLabel: 'Building product readiness simulation scores',
+    phase: 'PASSED',
+  });
+
   const launchDaySim = simulations.find((s) => s.id === 'LAUNCH_DAY');
   const claimSim = simulations.find((s) => s.id === 'CLAIM_VS_REALITY');
+  const simulationDegradedPartial =
+    chatStress?.degradedPartialResult === true || budgetSnap.budgetExceeded;
+  const simulationRuntimeHealth =
+    chatStress?.runtimeHealth && chatStress.runtimeHealth !== 'HEALTHY'
+      ? chatStress.runtimeHealth
+      : budgetSnap.health;
+  if (simulationDegradedPartial) {
+    simulationBudgetNotes.push(
+      `Product readiness completed with ${simulationRuntimeHealth} — partial scoring from executed work only.`,
+    );
+  }
+
   const automaticBlockers = buildAutomaticBlockers({
     chatScore: chatStress?.overallScore ?? 0,
     executionProven,
     launchDayScore: launchDaySim?.score ?? 0,
     claimScore: claimSim?.score ?? 0,
     founderReviewerConfidence: input.founderReviewerConfidence ?? null,
+    simulationDegradedPartial,
+    simulationRuntimeHealth,
   });
 
   const launchBlocked = automaticBlockers.length > 0 || verdict === 'LAUNCH_BLOCKED';
@@ -453,7 +539,19 @@ export async function runFullProductReadinessSimulation(
     selfEvolution: buildSelfEvolution(simulations, automaticBlockers),
     chatStressSimulation: chatStress,
     founderTestScore: founderTest.score.overall,
+    simulationRuntimeHealth,
+    simulationBudgetElapsedMs: budgetSnap.elapsedMs,
+    simulationDegradedPartial,
+    simulationBudgetNotes: simulationBudgetNotes,
   };
+
+  input.onSimulationTrace?.({
+    operationId: 'product-readiness-simulation-complete',
+    operationLabel: simulationDegradedPartial
+      ? `Product readiness simulation complete (${simulationRuntimeHealth})`
+      : 'Product readiness simulation complete',
+    phase: simulationDegradedPartial ? 'BUDGET_EXCEEDED' : 'PASSED',
+  });
 
   const assessment: ProductReadinessAssessment = {
     readOnly: true,

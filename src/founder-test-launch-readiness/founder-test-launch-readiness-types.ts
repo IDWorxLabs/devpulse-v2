@@ -171,7 +171,20 @@ export interface RunFounderTestLaunchReadinessInput {
   /** Skip bounded history write — used for internal chain stubs. */
   skipHistoryRecording?: boolean;
   chatStressMaxScenarios?: number;
+  /** Read-only runtime trace hook — observability only; does not affect scoring. */
+  onBuildTrace?: LaunchReadinessBuildTraceCallback;
 }
+
+export type LaunchReadinessBuildTracePhase = 'RUNNING' | 'PASSED' | 'FAILED';
+
+export interface LaunchReadinessBuildTraceEvent {
+  operationId: string;
+  operationLabel: string;
+  phase: LaunchReadinessBuildTracePhase;
+  errorMessage?: string;
+}
+
+export type LaunchReadinessBuildTraceCallback = (event: LaunchReadinessBuildTraceEvent) => void;
 
 export interface FounderTestLaunchReadinessHistoryEntry {
   timestamp: string;

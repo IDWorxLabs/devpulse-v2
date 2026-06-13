@@ -37,6 +37,9 @@ export type {
   FounderTestLaunchReadinessHistoryEntry,
   FounderTestLaunchReadinessHistorySummary,
   FounderTestLaunchReadinessArtifacts,
+  LaunchReadinessBuildTracePhase,
+  LaunchReadinessBuildTraceEvent,
+  LaunchReadinessBuildTraceCallback,
 } from './founder-test-launch-readiness-types.js';
 
 export {

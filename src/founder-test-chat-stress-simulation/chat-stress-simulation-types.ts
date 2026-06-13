@@ -2,6 +2,8 @@
  * Phase 26.4 — Founder Test chat stress simulation types.
  */
 
+import type { SimulationRuntimeHealth } from '../founder-test-product-readiness/product-readiness-simulation-budget.js';
+
 export const CHAT_STRESS_LAUNCH_BLOCK_THRESHOLD = 85;
 
 export type ChatStressCategory =
@@ -21,6 +23,13 @@ export type ChatStressAnswerBand =
   | 'GOOD_NEEDS_POLISH'
   | 'USABLE_NOT_LAUNCH_READY'
   | 'CHAT_BLOCKS_LAUNCH';
+
+export type ChatStressScenarioRunStatus =
+  | 'PASSED'
+  | 'FAILED'
+  | 'TIMEOUT'
+  | 'ERROR'
+  | 'SKIPPED';
 
 export interface ChatStressScenarioDefinition {
   readOnly: true;
@@ -44,6 +53,12 @@ export interface ChatStressScenarioRun {
   contextIncluded: boolean;
   judgeScore: number | null;
   durationMs: number;
+  timedOut?: boolean;
+  skipped?: boolean;
+  skipReason?: string | null;
+  status?: ChatStressScenarioRunStatus;
+  passed?: boolean;
+  terminal?: boolean;
 }
 
 export interface ChatStressEvaluation {
@@ -89,12 +104,20 @@ export interface ChatStressSimulationReport {
   runId: string;
   generatedAt: string;
   totalScenarios: number;
+  scenariosRequested: number;
+  scenariosExecuted: number;
+  scenariosSkipped: number;
+  scenariosTimedOut: number;
   passedCount: number;
   failedCount: number;
   weakCount: number;
   overallScore: number;
   chatBlocksLaunchReadiness: boolean;
   selfEvolutionRequired: boolean;
+  runtimeHealth: SimulationRuntimeHealth;
+  budgetElapsedMs: number;
+  degradedPartialResult: boolean;
+  budgetNotes: string[];
   strongestAnswers: ChatStressEvaluation[];
   worstAnswers: ChatStressEvaluation[];
   weakAnswers: ChatStressEvaluation[];
@@ -118,4 +141,14 @@ export interface RunChatStressSimulationInput {
   providerOverride?: import('../llm-chat-brain/llm-provider-types.js').LlmProvider;
   maxScenarios?: number;
   concurrency?: number;
+  /** Founder Test uses bounded defaults when true. */
+  founderTestContext?: boolean;
+  budgetMs?: number;
+  perScenarioTimeoutMs?: number;
+  onTrace?: (event: {
+    operationId: string;
+    operationLabel: string;
+    phase: 'RUNNING' | 'PASSED' | 'FAILED' | 'SLOW' | 'STALLED' | 'BUDGET_EXCEEDED';
+    errorMessage?: string;
+  }) => void;
 }

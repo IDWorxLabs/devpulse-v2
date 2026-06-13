@@ -49,6 +49,7 @@ export interface FounderRealityManifest {
   trustEnginePlaceholder: string;
   nextRecommendedStep: string;
   validators: string[];
+  apiBaseUrl: string;
   confirmation: {
     visibilityOnly: true;
     noExecutionPerformed: true;
@@ -138,6 +139,7 @@ export function buildFounderRealityManifest(validators: string[]): FounderRealit
     nextRecommendedStep:
       'Phase 11.2 — Cross-System Awareness (deepen Brain context across registered systems). Execution runtime and autonomous building remain future phases.',
     validators,
+    apiBaseUrl: FOUNDER_REALITY_URL,
     confirmation: {
       visibilityOnly: true,
       noExecutionPerformed: true,

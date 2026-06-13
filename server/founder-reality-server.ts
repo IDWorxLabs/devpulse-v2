@@ -22,7 +22,14 @@ import {
   handleFounderTestRunV2Request,
   handleFounderTestRunV3Request,
   handleFounderTestRunV4Request,
+  handleFounderTestRuntimeStatusRequest,
+  handleFounderTestResultRequest,
+  handleFounderTestResultDebugRequest,
+  handleFounderTestPingRequest,
+  handleFounderTestResultReportRequest,
+  handleFounderTestResultDownloadRequest,
 } from './founder-testing-handler.js';
+import { buildFounderTestPingResponse, FOUNDER_TEST_SERVER_STARTED_AT } from './founder-test-server-process-metadata.js';
 import { sendExecutionProofJson } from './execution-proof-handler.js';
 import { buildPortfolioInsightsDemo } from './portfolio-demo-data.js';
 import { buildProductWorkspaceSnapshot } from './product-workspace-snapshot.js';
@@ -124,6 +131,66 @@ export function createFounderRealityServer() {
 
     if (urlPath === '/api/founder-test/run' && req.method === 'POST') {
       await handleFounderTestRunRequest(req, res, VALIDATOR_SCRIPTS);
+      return;
+    }
+
+    if (urlPath === '/api/founder-test/runtime-status' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      handleFounderTestRuntimeStatusRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/founder-test/ping' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      handleFounderTestPingRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/founder-test/result' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      handleFounderTestResultRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/founder-test/result-debug' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      handleFounderTestResultDebugRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/founder-test/result-report' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'text/markdown; charset=utf-8' });
+        res.end();
+        return;
+      }
+      handleFounderTestResultReportRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/founder-test/result-download' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'text/markdown; charset=utf-8' });
+        res.end();
+        return;
+      }
+      handleFounderTestResultDownloadRequest(req, res);
       return;
     }
 
@@ -245,11 +312,23 @@ export function getFounderRealityManifestJson(): string {
 export function startFounderRealityServer(port = FOUNDER_REALITY_PORT, host = FOUNDER_REALITY_HOST): ReturnType<typeof createFounderRealityServer> {
   const server = createFounderRealityServer();
   server.listen(port, host, () => {
+    const ping = buildFounderTestPingResponse();
     console.log('');
     console.log('DevPulse V2 — Command Center + Unified Brain');
     console.log('============================================');
     console.log('');
     console.log(`Open: ${FOUNDER_REALITY_URL}`);
+    console.log('');
+    console.log(`Listening: ${host}:${port} (pid ${String(ping.processId)}, started ${FOUNDER_TEST_SERVER_STARTED_AT})`);
+    console.log('');
+    console.log('Founder Test API routes registered:');
+    console.log('  GET  /api/founder-test/ping');
+    console.log('  GET  /api/founder-test/result');
+    console.log('  GET  /api/founder-test/result-report');
+    console.log('  GET  /api/founder-test/result-download');
+    console.log('  GET  /api/founder-test/result-debug');
+    console.log('  GET  /api/founder-test/runtime-status');
+    console.log('  POST /api/founder-test/run');
     console.log('');
     console.log('Phase 11.1A Brain Runtime — POST /api/brain/respond + GET /api/brain/health');
     console.log('If Brain fails with 405, stop stale servers on port 4321 and restart.');

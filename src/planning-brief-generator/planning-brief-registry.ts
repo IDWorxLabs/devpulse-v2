@@ -1,0 +1,49 @@
+/**
+ * Planning Brief Generator — registry constants (V1).
+ */
+
+export const PLANNING_BRIEF_GENERATOR_V1_PASS = 'PLANNING_BRIEF_GENERATOR_V1_PASS';
+
+export const PLANNING_BRIEF_GENERATOR_OWNER_MODULE = 'planning-brief-generator';
+
+export const PLANNING_BRIEF_GENERATOR_PHASE = '26.30';
+
+export const PLANNING_BRIEF_GENERATOR_REPORT_TITLE = 'Planning Brief Generator Report';
+
+export const MAX_PLANNING_BRIEF_HISTORY = 32;
+
+export const PLATFORM_TARGETS = [
+  'WEB',
+  'IOS',
+  'ANDROID',
+  'MOBILE',
+  'IPAD',
+  'ANDROID_TABLET',
+  'TABLET',
+  'DESKTOP',
+] as const;
+
+export const PLANNING_BRIEF_QUALITY_LEVELS = [
+  'INSUFFICIENT',
+  'PARTIAL',
+  'COMPLETE',
+  'HIGH_CONFIDENCE',
+] as const;
+
+export const PLANNING_BRIEF_READINESS_LEVELS = [
+  'NOT_READY',
+  'DRAFT_READY',
+  'PLANNING_READY',
+] as const;
+
+export const SAFETY_GUARANTEES = [
+  'READ_ONLY_PLANNING_PREPARATION',
+  'NO_ARCHITECTURE_GENERATION',
+  'NO_CODE_GENERATION',
+  'NO_PLANNING_EXECUTION',
+  'NO_PROJECT_MODIFICATION',
+  'NO_AUTONOMOUS_EXECUTION',
+  'GATE_ENFORCED_GENERATION',
+  'EVIDENCE_BASED_OUTPUTS_ONLY',
+  'BOUNDED_BRIEF_HISTORY',
+] as const;

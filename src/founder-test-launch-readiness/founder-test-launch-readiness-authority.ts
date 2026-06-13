@@ -79,6 +79,7 @@ import type {
   FounderTestLaunchWarning,
   LaunchReadinessConfidence,
   LaunchReadinessVerdict,
+  LaunchReadinessBuildTraceEvent,
   RunFounderTestLaunchReadinessInput,
 } from './founder-test-launch-readiness-types.js';
 
@@ -443,10 +444,23 @@ export function aggregateTopRecommendedActions(
     .slice(0, MAX_TOP_RECOMMENDED_ACTIONS);
 }
 
+function emitLaunchReadinessBuildTrace(
+  input: RunFounderTestLaunchReadinessInput,
+  event: LaunchReadinessBuildTraceEvent,
+): void {
+  input.onBuildTrace?.(event);
+}
+
 export function runFounderTestLaunchReadiness(
   input: RunFounderTestLaunchReadinessInput = {},
 ): FounderTestLaunchReadinessAssessment {
   const rootDir = input.rootDir ?? process.cwd();
+
+  emitLaunchReadinessBuildTrace(input, {
+    operationId: 'loading-execution-proof',
+    operationLabel: 'Loading execution proof',
+    phase: 'RUNNING',
+  });
 
   const hydratedBundle =
     input.runtimeProofHydration && input.founderExecutionProofInput
@@ -459,12 +473,36 @@ export function runFounderTestLaunchReadiness(
   const founderExecutionProofInput = input.founderExecutionProofInput ?? hydratedBundle.input;
   const runtimeProofHydration = input.runtimeProofHydration ?? hydratedBundle.hydration;
 
+  emitLaunchReadinessBuildTrace(input, {
+    operationId: 'loading-execution-proof',
+    operationLabel: 'Loading execution proof',
+    phase: 'PASSED',
+  });
+
+  emitLaunchReadinessBuildTrace(input, {
+    operationId: 'loading-founder-summary',
+    operationLabel: 'Loading founder summary',
+    phase: 'RUNNING',
+  });
+
   const founderTestAssessment =
     input.founderTestAssessment ??
     assessFounderTestIntegration({
       rootDir,
       founderExecutionProofInput,
     });
+
+  emitLaunchReadinessBuildTrace(input, {
+    operationId: 'loading-founder-summary',
+    operationLabel: 'Loading founder summary',
+    phase: 'PASSED',
+  });
+
+  emitLaunchReadinessBuildTrace(input, {
+    operationId: 'loading-readiness-authorities',
+    operationLabel: 'Loading readiness authorities',
+    phase: 'RUNNING',
+  });
 
   const founderAcceptanceAssessment = assessFounderAcceptanceGate({
     founderTestAssessment,
@@ -490,6 +528,18 @@ export function runFounderTestLaunchReadiness(
     participatingAuthorityCount === 0
       ? 0
       : Math.round((availableAuthorityCount / participatingAuthorityCount) * 100);
+
+  emitLaunchReadinessBuildTrace(input, {
+    operationId: 'loading-readiness-authorities',
+    operationLabel: 'Loading readiness authorities',
+    phase: 'PASSED',
+  });
+
+  emitLaunchReadinessBuildTrace(input, {
+    operationId: 'assessing-launch-readiness',
+    operationLabel: 'Assessing launch readiness',
+    phase: 'RUNNING',
+  });
 
   const launchReadinessVerdict = deriveLaunchReadinessVerdict(
     founderTestAssessment,
@@ -812,6 +862,13 @@ export function runFounderTestLaunchReadiness(
   if (!input.skipHistoryRecording) {
     recordFounderTestLaunchReadinessAssessment(assessment);
   }
+
+  emitLaunchReadinessBuildTrace(input, {
+    operationId: 'assessing-launch-readiness',
+    operationLabel: 'Assessing launch readiness',
+    phase: 'PASSED',
+  });
+
   return assessment;
 }
 
@@ -832,52 +889,187 @@ export async function buildFounderTestLaunchReadinessArtifactsAsync(
 ): Promise<FounderTestLaunchReadinessArtifacts> {
   const rootDir = input.rootDir ?? process.cwd();
 
-  let autonomousBuildExecutionProof: AutonomousBuildExecutionProofReport | null =
-    input.autonomousBuildExecutionProof ?? null;
-  if (!input.skipAutonomousBuildExecutionProof && !autonomousBuildExecutionProof) {
-    autonomousBuildExecutionProof = assessAutonomousBuildExecutionProof({ rootDir }).report;
-  }
-
-  let productReadinessSimulation: ProductReadinessReport | null =
-    input.productReadinessSimulation ?? null;
-  let chatStressSimulation = input.chatStressSimulation ?? null;
-
-  if (!input.skipProductReadinessSimulation && !productReadinessSimulation) {
-    const productReadiness = await runFullProductReadinessSimulation({
-      rootDir,
-      skipChatStressSimulation: input.skipChatStressSimulation,
-      chatStressMaxScenarios: input.chatStressMaxScenarios,
-      founderReviewerConfidence: null,
-    });
-    productReadinessSimulation = productReadiness.report;
-    chatStressSimulation = productReadiness.report.chatStressSimulation;
-  } else if (!input.skipChatStressSimulation && !chatStressSimulation) {
-    const chatStress = await runFounderTestChatStressSimulation({
-      rootDir,
-      maxScenarios: input.chatStressMaxScenarios,
-    });
-    chatStressSimulation = chatStress.report;
-  }
-
-  const founderTestLaunchReadinessAssessment = runFounderTestLaunchReadiness({
-    ...input,
-    chatStressSimulation,
-    productReadinessSimulation,
-    autonomousBuildExecutionProof,
-    skipAutonomousBuildExecutionProof: true,
-    skipConnectedBuildExecution: true,
-    skipConnectedRuntimeActivationProof: true,
-    skipConnectedPreviewExperienceProof: true,
-    skipConnectedVerificationExecutionProof: true,
-    skipConnectedLaunchReadinessProof: true,
+  emitLaunchReadinessBuildTrace(input, {
+    operationId: 'launch-readiness-artifact-build-started',
+    operationLabel: 'Launch readiness artifact build started',
+    phase: 'RUNNING',
   });
 
-  return {
-    founderTestLaunchReadinessAssessment,
-    founderTestLaunchReadinessReportMarkdown: buildFounderTestLaunchReadinessReportMarkdown(
+  try {
+    let autonomousBuildExecutionProof: AutonomousBuildExecutionProofReport | null =
+      input.autonomousBuildExecutionProof ?? null;
+    if (!input.skipAutonomousBuildExecutionProof && !autonomousBuildExecutionProof) {
+      emitLaunchReadinessBuildTrace(input, {
+        operationId: 'loading-autonomous-build-proof',
+        operationLabel: 'Loading autonomous build execution proof',
+        phase: 'RUNNING',
+      });
+      autonomousBuildExecutionProof = assessAutonomousBuildExecutionProof({ rootDir }).report;
+      emitLaunchReadinessBuildTrace(input, {
+        operationId: 'loading-autonomous-build-proof',
+        operationLabel: 'Loading autonomous build execution proof',
+        phase: 'PASSED',
+      });
+    }
+
+    let productReadinessSimulation: ProductReadinessReport | null =
+      input.productReadinessSimulation ?? null;
+    let chatStressSimulation = input.chatStressSimulation ?? null;
+
+    const hydratedBundle =
+      input.runtimeProofHydration && input.founderExecutionProofInput
+        ? {
+            input: input.founderExecutionProofInput,
+            hydration: input.runtimeProofHydration,
+          }
+        : null;
+    const founderTestAssessment =
+      input.founderTestAssessment ??
+      assessFounderTestIntegration({
+        rootDir,
+        founderExecutionProofInput: hydratedBundle?.input ?? input.founderExecutionProofInput,
+      });
+
+    const mapSimulationTrace = (event: {
+      operationId: string;
+      operationLabel: string;
+      phase: 'RUNNING' | 'PASSED' | 'FAILED' | 'SLOW' | 'STALLED' | 'BUDGET_EXCEEDED';
+      errorMessage?: string;
+    }) => {
+      const completionBoundary =
+        event.operationId === 'chat-stress-simulation-complete' ||
+        event.operationId === 'product-readiness-simulation-complete' ||
+        event.operationId === 'launch-readiness-assessment-complete' ||
+        event.operationId === 'launch-readiness-artifacts-built';
+      emitLaunchReadinessBuildTrace(input, {
+        operationId: event.operationId,
+        operationLabel: event.errorMessage
+          ? `${event.operationLabel}: ${event.errorMessage}`
+          : event.operationLabel,
+        phase:
+          event.phase === 'PASSED' || completionBoundary
+            ? 'PASSED'
+            : event.phase === 'RUNNING'
+              ? 'RUNNING'
+              : 'FAILED',
+      });
+    };
+
+    if (!input.skipProductReadinessSimulation && !productReadinessSimulation) {
+      emitLaunchReadinessBuildTrace(input, {
+        operationId: 'running-product-readiness-simulation',
+        operationLabel: 'Running product readiness simulation',
+        phase: 'RUNNING',
+      });
+      const productReadiness = await runFullProductReadinessSimulation({
+        rootDir,
+        skipChatStressSimulation: input.skipChatStressSimulation,
+        chatStressMaxScenarios: input.chatStressMaxScenarios,
+        founderReviewerConfidence: null,
+        founderTestAssessment,
+        founderTestContext: true,
+        onSimulationTrace: mapSimulationTrace,
+      });
+      productReadinessSimulation = productReadiness.report;
+      chatStressSimulation = productReadiness.report.chatStressSimulation;
+      emitLaunchReadinessBuildTrace(input, {
+        operationId: 'running-product-readiness-simulation',
+        operationLabel: productReadiness.report.simulationDegradedPartial
+          ? `Running product readiness simulation (${productReadiness.report.simulationRuntimeHealth})`
+          : 'Running product readiness simulation',
+        phase: 'PASSED',
+        errorMessage: productReadiness.report.simulationDegradedPartial
+          ? productReadiness.report.simulationBudgetNotes.join(' ')
+          : undefined,
+      });
+      emitLaunchReadinessBuildTrace(input, {
+        operationId: 'product-readiness-simulation-complete',
+        operationLabel: 'Product readiness simulation complete',
+        phase: 'PASSED',
+      });
+    } else if (!input.skipChatStressSimulation && !chatStressSimulation) {
+      emitLaunchReadinessBuildTrace(input, {
+        operationId: 'running-chat-stress-simulation',
+        operationLabel: 'Running chat stress simulation',
+        phase: 'RUNNING',
+      });
+      const chatStress = await runFounderTestChatStressSimulation({
+        rootDir,
+        maxScenarios: input.chatStressMaxScenarios,
+        founderTestContext: true,
+        onTrace: mapSimulationTrace,
+      });
+      chatStressSimulation = chatStress.report;
+      emitLaunchReadinessBuildTrace(input, {
+        operationId: 'running-chat-stress-simulation',
+        operationLabel: chatStress.report.degradedPartialResult
+          ? `Running chat stress simulation (${chatStress.report.runtimeHealth})`
+          : 'Running chat stress simulation',
+        phase: 'PASSED',
+        errorMessage: chatStress.report.degradedPartialResult
+          ? chatStress.report.budgetNotes.join(' ')
+          : undefined,
+      });
+      emitLaunchReadinessBuildTrace(input, {
+        operationId: 'chat-stress-simulation-complete',
+        operationLabel: 'Chat stress simulation complete',
+        phase: 'PASSED',
+      });
+    }
+
+    const founderTestLaunchReadinessAssessment = runFounderTestLaunchReadiness({
+      ...input,
+      founderTestAssessment,
+      productReadinessSimulation,
+      autonomousBuildExecutionProof,
+      skipAutonomousBuildExecutionProof: true,
+      skipConnectedBuildExecution: true,
+      skipConnectedRuntimeActivationProof: true,
+      skipConnectedPreviewExperienceProof: true,
+      skipConnectedVerificationExecutionProof: true,
+      skipConnectedLaunchReadinessProof: true,
+    });
+
+    emitLaunchReadinessBuildTrace(input, {
+      operationId: 'launch-readiness-assessment-complete',
+      operationLabel: 'Launch readiness assessment complete',
+      phase: 'PASSED',
+    });
+
+    emitLaunchReadinessBuildTrace(input, {
+      operationId: 'building-launch-readiness-report-markdown',
+      operationLabel: 'Building launch readiness report markdown',
+      phase: 'RUNNING',
+    });
+    const founderTestLaunchReadinessReportMarkdown = buildFounderTestLaunchReadinessReportMarkdown(
       founderTestLaunchReadinessAssessment.report,
-    ),
-  };
+    );
+    emitLaunchReadinessBuildTrace(input, {
+      operationId: 'building-launch-readiness-report-markdown',
+      operationLabel: 'Building launch readiness report markdown',
+      phase: 'PASSED',
+    });
+
+    emitLaunchReadinessBuildTrace(input, {
+      operationId: 'launch-readiness-artifacts-built',
+      operationLabel: 'Launch readiness artifacts built',
+      phase: 'PASSED',
+    });
+
+    return {
+      founderTestLaunchReadinessAssessment,
+      founderTestLaunchReadinessReportMarkdown,
+    };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'launch readiness artifact build failed';
+    emitLaunchReadinessBuildTrace(input, {
+      operationId: 'launch-readiness-artifact-build-failed',
+      operationLabel: 'Launch readiness artifact build failed',
+      phase: 'FAILED',
+      errorMessage: message,
+    });
+    throw err;
+  }
 }
 
 export function resetFounderTestLaunchReadinessModuleForTests(): void {

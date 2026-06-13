@@ -84,6 +84,18 @@ export function buildChatStressSimulationReportMarkdown(report: ChatStressSimula
     '',
   ];
 
+  const timedOutRuns = report.scenarioRuns.filter((run) => run.timedOut);
+  if (timedOutRuns.length) {
+    lines.push('### Scenario timeouts', '');
+    for (const run of timedOutRuns) {
+      lines.push(`CHAT_STRESS_SCENARIO_TIMEOUT: ${run.scenarioId}`);
+      if (run.skipReason) {
+        lines.push(`- Reason: ${run.skipReason}`);
+      }
+    }
+    lines.push('');
+  }
+
   if (report.strongestAnswers.length) {
     lines.push('### Strongest answers', '');
     for (const entry of report.strongestAnswers.slice(0, 3)) {

@@ -197,6 +197,37 @@
     },
   ];
   var runtimeNotifications = [];
+  var deliveredFounderTestReportKeys = Object.create(null);
+  var notificationIdCounter = 0;
+  var localFounderTestPreviewRunId = null;
+  var operatorFeedMode = 'default';
+  var founderTestRuntimeDismissed = false;
+  var founderTestRuntimePinnedRunId = null;
+  var lastKnownActiveFounderTestRuntimeSnapshot = null;
+  var founderTestRuntimeCardSnapshot = null;
+  var founderTestRuntimeReportBindingMismatch = false;
+  var founderTestRuntimeReportBindingRefreshInFlight = false;
+  var founderTestFinalReportsByRunId = Object.create(null);
+  var founderTestFinalReportFetchStateByRunId = Object.create(null);
+  var founderTestOperatorFeedReportFetching = false;
+  var founderTestOperatorFeedReportFetchInFlight = false;
+  var founderTestRuntimeReportFetchFailed = false;
+  var founderTestCompletePreparingSinceMs = null;
+  var founderTestReportHandoffStalled = false;
+  var founderTestResultDebugSnapshot = null;
+  var founderTestLastResultFetchDiagnostic = null;
+  var founderTestReportHandoffStallCheckId = null;
+  var FOUNDER_TEST_REPORT_HANDOFF_STALL_MS = 10000;
+  var FOUNDER_TEST_RESULT_FETCH_TIMEOUT_MS = 3000;
+  var FOUNDER_TEST_RESULT_FETCH_MAX_ATTEMPTS = 3;
+  var NON_JSON_RESPONSE_PREVIEW_MAX_CHARS = 120;
+  var FOUNDER_TEST_COMPLETE_HEADER_HANDOFF_STALLED =
+    'Founder Test complete — report handoff stalled.';
+  var founderTestRunStartedAt = null;
+  var founderTestRunningDiagnosticDelivered = false;
+  var OPERATOR_FEED_MODE_DEFAULT = 'default';
+  var OPERATOR_FEED_MODE_FOUNDER_TEST = 'founder-test-runtime';
+  var FOUNDER_TEST_RUNNING_DIAGNOSTIC_MS = 45000;
   var runtimeDiagnostics = {
     brainConnected: false,
     brainEndpointReachable: false,
@@ -247,11 +278,1195 @@
     if (panel) panel.classList.add('has-conversation');
   }
 
-  function pushNotification(text) {
-    if (runtimeNotifications.indexOf(text) === -1) {
-      runtimeNotifications.unshift(text);
+  function createNotificationId(prefix) {
+    notificationIdCounter += 1;
+    return String(prefix) + '-' + String(notificationIdCounter) + '-' + String(Date.now());
+  }
+
+  function normalizeNotificationEntry(entry) {
+    if (typeof entry === 'string') {
+      return { id: createNotificationId('simple'), type: 'simple', text: entry, timestamp: new Date().toISOString() };
     }
+    return entry;
+  }
+
+  function findNotificationEntryById(id) {
+    for (var i = 0; i < runtimeNotifications.length; i += 1) {
+      var entry = normalizeNotificationEntry(runtimeNotifications[i]);
+      if (entry.id === id) return entry;
+    }
+    return null;
+  }
+
+  function refreshNotificationSurfaces() {
     renderNotifications(runtimeNotifications);
+    renderNotificationsSurface(workspaceData, runtimeNotifications);
+    updateNotificationUnreadBadge();
+  }
+
+  function updateNotificationUnreadBadge() {
+    var badge = el('notif-unread-badge');
+    var toggle = el('notif-toggle');
+    var unread = 0;
+    for (var u = 0; u < runtimeNotifications.length; u += 1) {
+      var note = normalizeNotificationEntry(runtimeNotifications[u]);
+      if (note.read !== true) unread += 1;
+    }
+    if (badge) {
+      badge.textContent = unread > 0 ? String(unread) : '0';
+      if (unread > 0) {
+        badge.removeAttribute('hidden');
+        badge.setAttribute('aria-hidden', 'false');
+      } else {
+        badge.setAttribute('hidden', '');
+        badge.setAttribute('aria-hidden', 'true');
+      }
+    }
+    if (toggle) toggle.setAttribute('data-unread-count', String(unread));
+  }
+
+  function markAllNotificationsRead() {
+    for (var i = 0; i < runtimeNotifications.length; i += 1) {
+      var entry = runtimeNotifications[i];
+      if (typeof entry === 'object' && entry) entry.read = true;
+    }
+    updateNotificationUnreadBadge();
+  }
+
+  function traceFounderTestDelivery(event, detail) {
+    if (typeof window !== 'undefined' && window.__DEVPULSE_TRACE_FOUNDER_TEST__ === true) {
+      console.log('[founder-test-delivery]', event, detail || '');
+    }
+  }
+
+  function pushNotification(text) {
+    var exists = false;
+    for (var i = 0; i < runtimeNotifications.length; i += 1) {
+      var existing = normalizeNotificationEntry(runtimeNotifications[i]);
+      if (existing.type === 'simple' && existing.text === text) {
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      runtimeNotifications.unshift({
+        id: createNotificationId('simple'),
+        type: 'simple',
+        text: text,
+        timestamp: new Date().toISOString(),
+        read: false,
+      });
+    }
+    refreshNotificationSurfaces();
+  }
+
+  function buildFounderTestReportNotificationHtml(entry) {
+    var preview = entry.preview || '';
+    if (!preview && entry.reportMarkdown) {
+      preview = String(entry.reportMarkdown).slice(0, 280).replace(/\s+/g, ' ').trim();
+      if (entry.reportMarkdown.length > preview.length) preview += '…';
+    }
+    return (
+      '<div class="founder-test-report-notification-inner">' +
+      '<p class="notification-report-title"><strong>' +
+      escapeHtml(entry.title || 'Founder Test Report') +
+      '</strong></p>' +
+      '<p class="notification-report-meta">' +
+      escapeHtml('Status: ' + (entry.status || 'unknown')) +
+      ' · Run: ' +
+      escapeHtml(entry.runId || 'n/a') +
+      ' · ' +
+      escapeHtml(entry.timestamp || '') +
+      '</p>' +
+      (preview
+        ? '<pre class="notification-report-preview">' + escapeHtml(preview) + '</pre>'
+        : '<p class="notification-report-preview empty">No report preview available.</p>') +
+      '<button type="button" class="notification-copy-report-btn" data-copy-report-id="' +
+      escapeHtml(entry.id) +
+      '">Copy Report</button>' +
+      '</div>'
+    );
+  }
+
+  function setNotificationCopyButtonFeedback(button, state) {
+    if (!button) return;
+    button.classList.remove('is-copied', 'is-copy-failed');
+    if (state === 'copied') {
+      button.textContent = 'Copied';
+      button.classList.add('is-copied');
+      window.setTimeout(function () {
+        button.textContent = 'Copy Report';
+        button.classList.remove('is-copied');
+      }, 2200);
+      return;
+    }
+    if (state === 'failed') {
+      button.textContent = 'Copy failed';
+      button.classList.add('is-copy-failed');
+      window.setTimeout(function () {
+        button.textContent = 'Copy Report';
+        button.classList.remove('is-copy-failed');
+      }, 2600);
+    }
+  }
+
+  function wireNotificationCopyButtons(container) {
+    if (!container || container.dataset.copyWired === 'true') return;
+    container.dataset.copyWired = 'true';
+    container.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('[data-copy-report-id]') : null;
+      if (!btn) return;
+      e.preventDefault();
+      var entry = findNotificationEntryById(btn.getAttribute('data-copy-report-id'));
+      if (!entry) {
+        setNotificationCopyButtonFeedback(btn, 'failed');
+        return;
+      }
+      var noteRunId = entry.runId || resolveActiveFounderTestRunId();
+      var useHandoffResolver =
+        entry.status === 'COMPLETE' ||
+        (entry.reportMarkdown &&
+          String(entry.reportMarkdown).indexOf('# Founder Test Runtime Failure Report') >= 0);
+      if (useHandoffResolver) {
+        copyFounderTestReportHandoffShared({
+          runId: noteRunId,
+          onCopied: function () {
+            setNotificationCopyButtonFeedback(btn, 'copied');
+          },
+          onFailed: function () {
+            setNotificationCopyButtonFeedback(btn, 'failed');
+          },
+        });
+        return;
+      }
+      copyFounderTestFinalReportMarkdownShared(noteRunId, {
+        fallbackText: entry.reportMarkdown,
+        onCopied: function () {
+          setNotificationCopyButtonFeedback(btn, 'copied');
+        },
+        onFailed: function () {
+          setNotificationCopyButtonFeedback(btn, 'failed');
+        },
+      });
+    });
+  }
+
+  function isValidHandoffRunId(runId) {
+    if (runId == null) return false;
+    var normalized = String(runId).trim().toLowerCase();
+    return (
+      normalized.length > 0 &&
+      normalized !== 'n/a' &&
+      normalized !== 'unknown' &&
+      normalized !== 'null' &&
+      normalized !== 'undefined'
+    );
+  }
+
+  function resolveReportHandoffRunId(explicitRunId, runtime) {
+    var candidates = [
+      explicitRunId,
+      founderTestRuntimeCardSnapshot && founderTestRuntimeCardSnapshot.runId,
+      runtime && runtime.runId,
+      founderTestRuntimePinnedRunId,
+      lastKnownActiveFounderTestRuntimeSnapshot && lastKnownActiveFounderTestRuntimeSnapshot.runId,
+      lastFounderTestRuntimeSnapshot && lastFounderTestRuntimeSnapshot.runId,
+    ];
+    for (var ri = 0; ri < candidates.length; ri += 1) {
+      if (isValidHandoffRunId(candidates[ri])) return String(candidates[ri]).trim();
+    }
+    return null;
+  }
+
+  function coerceReportHandoffRunId(resolvedRunId, runtime) {
+    if (isValidHandoffRunId(resolvedRunId)) return String(resolvedRunId).trim();
+    return resolveReportHandoffRunId(null, runtime);
+  }
+
+  function buildReportHandoffRunIdDiagnosticFields(requestedRunId, runtime) {
+    runtime = runtime || resolveActiveFounderTestRuntimeSnapshot();
+    var resolvedActiveRunId = resolveReportHandoffRunId(null, runtime);
+    return {
+      requestedRunId: isValidHandoffRunId(requestedRunId) ? String(requestedRunId) : 'n/a',
+      runtimeCardRunId: isValidHandoffRunId(founderTestRuntimeCardSnapshot && founderTestRuntimeCardSnapshot.runId)
+        ? String(founderTestRuntimeCardSnapshot.runId)
+        : 'n/a',
+      pinnedRunId: isValidHandoffRunId(founderTestRuntimePinnedRunId) ? String(founderTestRuntimePinnedRunId) : 'n/a',
+      resolvedActiveRunId: isValidHandoffRunId(resolvedActiveRunId) ? String(resolvedActiveRunId) : 'n/a',
+      runtimeSnapshotRunId: isValidHandoffRunId(runtime && runtime.runId) ? String(runtime.runId) : 'n/a',
+    };
+  }
+
+  function normalizeFounderTestDeliveryRunId(runId, runtime) {
+    return resolveReportHandoffRunId(runId, runtime);
+  }
+
+  function refreshNotificationDrawerIfOpen() {
+    var drawer = el('notification-drawer');
+    var list = el('notification-list');
+    if (drawer && !drawer.hasAttribute('hidden')) {
+      renderNotifications(runtimeNotifications);
+      if (list) wireNotificationCopyButtons(list);
+    }
+  }
+
+  function refreshFounderTestFinalReportDeliverySurfaces(runtime) {
+    refreshNotificationSurfaces();
+    updateNotificationUnreadBadge();
+    refreshNotificationDrawerIfOpen();
+    var runId = normalizeFounderTestDeliveryRunId(null, runtime);
+    if (runId && hasFounderTestFinalReportAvailable(runId)) {
+      setFounderTestFinalReportFetchState(runId, 'available');
+    }
+    founderTestOperatorFeedReportFetching = false;
+    founderTestOperatorFeedReportFetchInFlight = false;
+    updateFounderTestOperatorFeedReportActionLabels(runtime);
+    updateCopyReportButtonState();
+    lastRenderedOperatorTraceKey = '';
+    if (runtime) {
+      renderFounderTestRuntime(runtime);
+    } else if (founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot()) {
+      renderFounderTestUnifiedRuntimeCard(
+        founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot(),
+      );
+    }
+  }
+
+  function pushFounderTestReportReadyNotification(runId, markdown, options) {
+    options = options || {};
+    if (!runId || !markdown || !String(markdown).trim()) return false;
+    var dedupeKey = 'founder-test-report-' + runId + '-COMPLETE';
+    if (!options.allowDuplicate && deliveredFounderTestReportKeys[dedupeKey]) {
+      return false;
+    }
+    deliveredFounderTestReportKeys[dedupeKey] = true;
+    var preview = String(markdown).slice(0, 280).replace(/\s+/g, ' ').trim();
+    if (markdown.length > preview.length) preview += '…';
+    runtimeNotifications.unshift({
+      id: createNotificationId('ft-report'),
+      type: 'founder-test-report',
+      title: 'Founder Test Report Ready',
+      text: 'Founder Test Report Ready',
+      reportMarkdown: String(markdown),
+      preview: preview,
+      runId: runId,
+      status: 'COMPLETE',
+      timestamp: options.generatedAt || new Date().toISOString(),
+      read: false,
+    });
+    return true;
+  }
+
+  function applyFounderTestFinalReport(runId, markdown, source, options) {
+    options = options || {};
+    if (!markdown || !String(markdown).trim()) return false;
+    if (!isFounderTestFinalReportMarkdown(markdown)) return false;
+    runId = normalizeFounderTestDeliveryRunId(runId, options.runtime);
+    if (!runId) {
+      traceFounderTestDelivery('bridge-runid-missing', source || 'unknown');
+      return false;
+    }
+    var normalized = String(markdown);
+    founderTestFinalReportsByRunId[runId] = normalized;
+    setFounderTestFinalReportFetchState(runId, 'available');
+    if (options.reportObject && typeof options.reportObject === 'object') {
+      lastFounderTestReport = options.reportObject;
+      if (!lastFounderTestReport.reportMarkdown) lastFounderTestReport.reportMarkdown = normalized;
+    } else {
+      lastFounderTestReport = lastFounderTestReport || {};
+      lastFounderTestReport.reportMarkdown = normalized;
+    }
+    lastFounderTestPartialReportMarkdown = normalized;
+    founderTestRuntimePinnedRunId = runId;
+    founderTestOperatorFeedReportFetching = false;
+    founderTestOperatorFeedReportFetchInFlight = false;
+    founderTestRuntimeReportFetchFailed = false;
+    if (options.runtime) {
+      rememberActiveFounderTestRuntimeSnapshot(options.runtime);
+    }
+    var notificationDelivered = false;
+    if (options.skipNotification !== true) {
+      notificationDelivered = pushFounderTestReportReadyNotification(runId, normalized, {
+        allowDuplicate: options.allowDuplicate === true,
+        generatedAt: options.generatedAt,
+      });
+    }
+    refreshFounderTestFinalReportDeliverySurfaces(options.runtime || lastFounderTestRuntimeSnapshot);
+    syncFounderTestOperatorFeedReportButtonState(runId, options.runtime || lastFounderTestRuntimeSnapshot);
+    traceFounderTestDelivery('bridge-applied', {
+      runId: runId,
+      source: source || 'unknown',
+      notificationDelivered: notificationDelivered,
+    });
+    traceFounderTestDelivery('final-report-client-cache-ready', { runId: runId, source: source || 'unknown' });
+    if (notificationDelivered) {
+      traceFounderTestDelivery('final-report-notification-delivered', { runId: runId });
+    }
+    founderTestReportHandoffStalled = false;
+    founderTestCompletePreparingSinceMs = null;
+    founderTestResultDebugSnapshot = null;
+    stopFounderTestReportHandoffStallGuard();
+    return true;
+  }
+
+  function getFounderTestFinalReportMarkdownByRunId(runId) {
+    if (!runId) return null;
+    var cached = founderTestFinalReportsByRunId[runId];
+    return cached && String(cached).trim() ? String(cached) : null;
+  }
+
+  function getFounderTestFinalReportFetchState(runId) {
+    runId = runId || resolveActiveFounderTestRunId();
+    if (hasFounderTestFinalReportAvailable(runId)) {
+      founderTestFinalReportFetchStateByRunId[runId] = 'available';
+      return 'available';
+    }
+    return founderTestFinalReportFetchStateByRunId[runId] || 'idle';
+  }
+
+  function setFounderTestFinalReportFetchState(runId, state) {
+    if (!runId) return;
+    if (hasFounderTestFinalReportAvailable(runId)) {
+      founderTestFinalReportFetchStateByRunId[runId] = 'available';
+      return;
+    }
+    if (state === 'failed' && founderTestFinalReportFetchStateByRunId[runId] === 'available') {
+      return;
+    }
+    founderTestFinalReportFetchStateByRunId[runId] = state;
+  }
+
+  function markFounderTestFinalReportFetching(runId) {
+    if (!runId) return;
+    if (hasFounderTestFinalReportAvailable(runId)) {
+      setFounderTestFinalReportFetchState(runId, 'available');
+      return;
+    }
+    setFounderTestFinalReportFetchState(runId, 'fetching');
+    founderTestOperatorFeedReportFetching = true;
+    founderTestOperatorFeedReportFetchInFlight = true;
+  }
+
+  function markFounderTestFinalReportFetchFailed(runId) {
+    if (!runId || hasFounderTestFinalReportAvailable(runId)) {
+      if (runId) setFounderTestFinalReportFetchState(runId, 'available');
+      founderTestOperatorFeedReportFetching = false;
+      founderTestOperatorFeedReportFetchInFlight = false;
+      return;
+    }
+    setFounderTestFinalReportFetchState(runId, 'failed');
+    founderTestOperatorFeedReportFetching = false;
+    founderTestOperatorFeedReportFetchInFlight = false;
+    founderTestRuntimeReportFetchFailed = true;
+  }
+
+  function syncFounderTestOperatorFeedReportButtonState(runId, runtime) {
+    runId = normalizeFounderTestDeliveryRunId(runId, runtime);
+    if (runId && hasFounderTestFinalReportAvailable(runId)) {
+      setFounderTestFinalReportFetchState(runId, 'available');
+      founderTestOperatorFeedReportFetching = false;
+      founderTestOperatorFeedReportFetchInFlight = false;
+      founderTestRuntimeReportFetchFailed = false;
+    }
+    lastRenderedOperatorTraceKey = '';
+    updateFounderTestOperatorFeedReportActionLabels(runtime);
+    renderFounderTestUnifiedRuntimeCard(
+      runtime || founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot(),
+    );
+  }
+
+  function copyFounderTestFinalReportMarkdownShared(runId, feedback) {
+    feedback = feedback || {};
+    runId = normalizeFounderTestDeliveryRunId(runId, feedback.runtime);
+    var resolved = resolveFounderTestFinalReportMarkdown(runId);
+    var text = resolved.markdown;
+    if (!text && feedback.fallbackText && String(feedback.fallbackText).trim()) {
+      text = String(feedback.fallbackText);
+    }
+    if (!text || !String(text).trim()) {
+      if (feedback.onFailed) feedback.onFailed();
+      return Promise.resolve({ ok: false, method: 'none' });
+    }
+    return copyTextToClipboardWithFallback(String(text))
+      .then(function (result) {
+        if (result.ok && feedback.onCopied) feedback.onCopied();
+        else if (!result.ok && feedback.onFailed) feedback.onFailed();
+        return result;
+      })
+      .catch(function () {
+        if (feedback.onFailed) feedback.onFailed();
+        return { ok: false, method: 'error' };
+      });
+  }
+
+  function findNotificationReportMarkdownByRunId(runId) {
+    if (!runId) return null;
+    for (var i = 0; i < runtimeNotifications.length; i += 1) {
+      var entry = normalizeNotificationEntry(runtimeNotifications[i]);
+      if (entry.type !== 'founder-test-report') continue;
+      if (entry.runId !== runId) continue;
+      if (entry.reportMarkdown && String(entry.reportMarkdown).trim()) {
+        return String(entry.reportMarkdown);
+      }
+    }
+    return null;
+  }
+
+  function resolveFounderTestFinalReportMarkdown(runId) {
+    runId = runId || resolveActiveFounderTestRunId();
+    var cached = getFounderTestFinalReportMarkdownByRunId(runId);
+    if (cached) {
+      return { markdown: cached, source: 'local-cache', runId: runId };
+    }
+    if (lastFounderTestReport && lastFounderTestReport.reportMarkdown && isFounderTestFinalReportMarkdown(lastFounderTestReport.reportMarkdown)) {
+      return { markdown: String(lastFounderTestReport.reportMarkdown), source: 'full-report', runId: runId };
+    }
+    var notificationMarkdown = findNotificationReportMarkdownByRunId(runId);
+    if (notificationMarkdown) {
+      return { markdown: notificationMarkdown, source: 'notification', runId: runId };
+    }
+    if (lastFounderTestPartialReportMarkdown && isFounderTestFinalReportMarkdown(lastFounderTestPartialReportMarkdown)) {
+      return { markdown: String(lastFounderTestPartialReportMarkdown), source: 'partial-report', runId: runId };
+    }
+    return { markdown: null, source: 'none', runId: runId };
+  }
+
+  function hasFounderTestFinalReportAvailable(runId) {
+    runId = runId || resolveActiveFounderTestRunId();
+    if (getFounderTestFinalReportMarkdownByRunId(runId)) return true;
+    if (
+      lastFounderTestReport &&
+      lastFounderTestReport.reportMarkdown &&
+      isFounderTestFinalReportMarkdown(lastFounderTestReport.reportMarkdown)
+    ) {
+      return true;
+    }
+    if (findNotificationReportMarkdownByRunId(runId)) return true;
+    if (lastFounderTestPartialReportMarkdown && isFounderTestFinalReportMarkdown(lastFounderTestPartialReportMarkdown)) {
+      return true;
+    }
+    return false;
+  }
+
+  function stopFounderTestReportHandoffStallGuard() {
+    if (founderTestReportHandoffStallCheckId != null) {
+      window.clearInterval(founderTestReportHandoffStallCheckId);
+      founderTestReportHandoffStallCheckId = null;
+    }
+  }
+
+  function resetFounderTestReportHandoffStallState() {
+    founderTestCompletePreparingSinceMs = null;
+    founderTestReportHandoffStalled = false;
+    founderTestResultDebugSnapshot = null;
+    founderTestLastResultFetchDiagnostic = null;
+    stopFounderTestReportHandoffStallGuard();
+  }
+
+  var founderTestApiBaseUrlOverride = null;
+  var founderTestApiResolvedOrigin = null;
+
+  function resolveFounderTestFrontendOrigin() {
+    if (typeof window === 'undefined' || !window.location) return 'n/a';
+    return window.location.origin || 'n/a';
+  }
+
+  function resolveFounderTestApiBaseUrl() {
+    if (founderTestApiBaseUrlOverride) {
+      return String(founderTestApiBaseUrlOverride).replace(/\/$/, '');
+    }
+    if (manifestData && manifestData.apiBaseUrl) {
+      return String(manifestData.apiBaseUrl).replace(/\/$/, '');
+    }
+    if (typeof window !== 'undefined' && window.__DEVPULSE_FOUNDER_TEST_API_BASE__) {
+      return String(window.__DEVPULSE_FOUNDER_TEST_API_BASE__).replace(/\/$/, '');
+    }
+    if (founderTestApiResolvedOrigin) {
+      return String(founderTestApiResolvedOrigin).replace(/\/$/, '');
+    }
+    if (typeof window !== 'undefined' && window.location) {
+      var port = window.location.port;
+      if (port === '5173' || port === '5174' || port === '3000') {
+        return 'http://localhost:4321';
+      }
+      return window.location.origin;
+    }
+    return '';
+  }
+
+  function rememberFounderTestApiOriginFromUrl(requestUrl) {
+    try {
+      var parsed = new URL(String(requestUrl), resolveFounderTestFrontendOrigin());
+      if (parsed.origin && parsed.origin !== 'null') {
+        founderTestApiResolvedOrigin = parsed.origin;
+      }
+    } catch (rememberErr) {
+      /* ignore invalid URL */
+    }
+  }
+
+  function buildFounderTestApiUrl(path, params) {
+    var normalizedPath = path.charAt(0) === '/' ? path : '/' + path;
+    var base = resolveFounderTestApiBaseUrl();
+    var url = base ? base.replace(/\/$/, '') + normalizedPath : normalizedPath;
+    if (params && typeof params === 'object') {
+      var queryParts = [];
+      for (var key in params) {
+        if (!Object.prototype.hasOwnProperty.call(params, key)) continue;
+        var value = params[key];
+        if (value == null || value === '') continue;
+        queryParts.push(encodeURIComponent(key) + '=' + encodeURIComponent(String(value)));
+      }
+      if (queryParts.length) {
+        url += (url.indexOf('?') >= 0 ? '&' : '?') + queryParts.join('&');
+      }
+    }
+    return url;
+  }
+
+  function buildFounderTestResultFetchUrl(runId) {
+    return buildFounderTestApiUrl('/api/founder-test/result', { runId: runId });
+  }
+
+  function buildFounderTestResultDebugUrl(runId) {
+    return buildFounderTestApiUrl('/api/founder-test/result-debug', { runId: runId });
+  }
+
+  function buildFounderTestResultReportUrl(runId) {
+    return buildFounderTestApiUrl('/api/founder-test/result-report', { runId: runId });
+  }
+
+  function buildFounderTestResultDownloadUrl(runId) {
+    return buildFounderTestApiUrl('/api/founder-test/result-download', { runId: runId });
+  }
+
+  function buildFounderTestPingUrl() {
+    return buildFounderTestApiUrl('/api/founder-test/ping', null);
+  }
+
+  function buildFounderTestRuntimeStatusUrl(runId) {
+    return buildFounderTestApiUrl('/api/founder-test/runtime-status', runId ? { runId: runId } : null);
+  }
+
+  function buildFounderTestRunUrl() {
+    return buildFounderTestApiUrl('/api/founder-test/run', null);
+  }
+
+  function buildFounderTestApiRoutingDiagnosticLines(runId) {
+    var resolvedRunId = coerceReportHandoffRunId(runId, null) || 'n/a';
+    return [
+      '- Frontend origin: ' + resolveFounderTestFrontendOrigin(),
+      '- Resolved API base: ' + (resolveFounderTestApiBaseUrl() || 'same-origin-relative'),
+      '- Runtime-status URL: ' + buildFounderTestRuntimeStatusUrl(resolvedRunId === 'n/a' ? null : resolvedRunId),
+      '- Result URL: ' + buildFounderTestResultFetchUrl(resolvedRunId),
+      '- Result-report URL: ' + buildFounderTestResultReportUrl(resolvedRunId),
+      '- Result-debug URL: ' + buildFounderTestResultDebugUrl(resolvedRunId),
+      '- Ping URL: ' + buildFounderTestPingUrl(),
+    ];
+  }
+
+  function previewNonJsonResponseBody(body, maxChars) {
+    maxChars = maxChars || NON_JSON_RESPONSE_PREVIEW_MAX_CHARS;
+    if (!body) return '';
+    var normalized = String(body).replace(/\s+/g, ' ').trim();
+    return normalized.length > maxChars ? normalized.slice(0, maxChars) + '…' : normalized;
+  }
+
+  function buildResultFetchFailureDiagnosticLines(diagnostic) {
+    diagnostic = diagnostic || {};
+    return [
+      '- Requested URL: ' + String(diagnostic.requestedUrl || 'n/a'),
+      '- Requested runId: ' + String(diagnostic.requestedRunId || 'n/a'),
+      '- Fetch error message: ' + String(diagnostic.fetchErrorMessage || 'none'),
+      '- HTTP status: ' + String(diagnostic.httpStatus != null ? diagnostic.httpStatus : 'n/a'),
+      '- Response content-type: ' + String(diagnostic.responseContentType || 'n/a'),
+      '- JSON parse failed: ' + String(diagnostic.jsonParseFailed === true),
+      '- Non-JSON response preview: ' + String(diagnostic.nonJsonResponsePreview || 'none'),
+    ];
+  }
+
+  function buildResultDebugResponseDiagnosticLines(debug) {
+    if (!debug) {
+      return ['- result-debug response: unavailable'];
+    }
+    return [
+      '- result-debug routeReached: ' + String(debug.routeReached === true),
+      '- result-debug requestedRunId: ' + String(debug.requestedRunId || 'n/a'),
+      '- result-debug hasStoredResult: ' + String(debug.hasStoredResult === true),
+      '- result-debug storedRunIds: ' + (Array.isArray(debug.storedRunIds) ? debug.storedRunIds.join(', ') : 'none'),
+      '- result-debug runtimeState: ' + String(debug.runtimeState || 'n/a'),
+      '- result-debug publicState: ' + String(debug.publicState || 'n/a'),
+      '- result-debug handoffState: ' + String(debug.handoffState || 'n/a'),
+      '- result-debug currentOperation: ' + String(debug.currentOperation || 'n/a'),
+      '- result-debug hasReportMarkdown: ' + String(debug.hasReportMarkdown === true),
+      '- result-debug reportMarkdownLength: ' + String(typeof debug.reportMarkdownLength === 'number' ? debug.reportMarkdownLength : 0),
+      '- result-debug generatedAt: ' + String(debug.generatedAt || 'n/a'),
+      '- result-debug contentTypeExpected: ' + String(debug.contentTypeExpected || 'application/json'),
+    ];
+  }
+
+  async function parseFounderTestHttpJsonResponse(res) {
+    var contentType = res.headers && res.headers.get ? res.headers.get('content-type') || '' : '';
+    var rawText = await res.text();
+    var jsonParseFailed = false;
+    var nonJsonResponsePreview = '';
+    var data = null;
+    try {
+      data = JSON.parse(rawText);
+    } catch (parseErr) {
+      jsonParseFailed = true;
+      nonJsonResponsePreview = previewNonJsonResponseBody(rawText);
+    }
+    return {
+      contentType: contentType,
+      data: data,
+      jsonParseFailed: jsonParseFailed,
+      nonJsonResponsePreview: nonJsonResponsePreview,
+      rawText: rawText,
+    };
+  }
+
+  function recordFounderTestResultFetchAttempt(partial) {
+    founderTestLastResultFetchDiagnostic = {
+      requestedUrl: partial.requestedUrl || null,
+      requestedRunId: partial.requestedRunId || null,
+      fetchErrorMessage: partial.fetchErrorMessage || null,
+      httpStatus: partial.httpStatus != null ? partial.httpStatus : null,
+      responseContentType: partial.responseContentType || null,
+      jsonParseFailed: partial.jsonParseFailed === true,
+      nonJsonResponsePreview: partial.nonJsonResponsePreview || null,
+      resultDebugResponse: partial.resultDebugResponse || null,
+    };
+    return founderTestLastResultFetchDiagnostic;
+  }
+
+  async function attachResultFetchFailureDebug(runId, runtime, partialDiagnostic) {
+    var debugResponse = await fetchFounderTestResultDebug(runId, runtime);
+    var diagnostic = recordFounderTestResultFetchAttempt({
+      requestedUrl: partialDiagnostic.requestedUrl,
+      requestedRunId: runId,
+      fetchErrorMessage: partialDiagnostic.fetchErrorMessage,
+      httpStatus: partialDiagnostic.httpStatus,
+      responseContentType: partialDiagnostic.responseContentType,
+      jsonParseFailed: partialDiagnostic.jsonParseFailed,
+      nonJsonResponsePreview: partialDiagnostic.nonJsonResponsePreview,
+      resultDebugResponse: debugResponse,
+    });
+    if (debugResponse) {
+      founderTestResultDebugSnapshot = debugResponse;
+    }
+    return diagnostic;
+  }
+
+  function buildResultFetchFailureHandoffDiagnostic(runtime, fetchDiagnostic, debug) {
+    fetchDiagnostic = fetchDiagnostic || founderTestLastResultFetchDiagnostic || {};
+    debug = debug || fetchDiagnostic.resultDebugResponse || founderTestResultDebugSnapshot || {};
+    runtime = runtime || founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot();
+    var runIdFields = buildReportHandoffRunIdDiagnosticFields(fetchDiagnostic.requestedRunId, runtime);
+    return [
+      '# Founder Test Complete — Report Handoff / Fetch Failure Diagnostic',
+      '',
+      'Generated: ' + new Date().toISOString(),
+      '',
+      '## Status',
+      '',
+      founderTestReportHandoffStalled
+        ? FOUNDER_TEST_COMPLETE_HEADER_HANDOFF_STALLED
+        : 'Founder Test complete — result fetch failed.',
+      '',
+      '- Missing boundary: ' + String(debug.missingHandoffBoundary || 'Final report delivered to client cache'),
+      '',
+      '## RunId Propagation',
+      '',
+      '- Requested runId: ' + runIdFields.requestedRunId,
+      '- Runtime card runId: ' + runIdFields.runtimeCardRunId,
+      '- Pinned runId: ' + runIdFields.pinnedRunId,
+      '- Resolved active runId: ' + runIdFields.resolvedActiveRunId,
+      '- Runtime snapshot runId: ' + runIdFields.runtimeSnapshotRunId,
+      '',
+      '## API Routing',
+      '',
+    ]
+      .concat(buildFounderTestApiRoutingDiagnosticLines(runIdFields.resolvedActiveRunId))
+      .concat([
+        '',
+        '## Result Fetch',
+        '',
+      ])
+      .concat(buildResultFetchFailureDiagnosticLines(fetchDiagnostic))
+      .concat([
+        '',
+        '## Result Debug Endpoint',
+        '',
+      ])
+      .concat(buildResultDebugResponseDiagnosticLines(debug))
+      .concat([
+        '',
+        '## Store Snapshot',
+        '',
+        '- Stored runId: ' + String(debug.storedRunId || 'n/a'),
+        '- hasStoredResult: ' + String(debug.hasStoredResult === true),
+        '- hasReportMarkdown: ' + String(debug.hasReportMarkdown === true),
+        '- reportMarkdownLength: ' + String(typeof debug.reportMarkdownLength === 'number' ? debug.reportMarkdownLength : 0),
+        '- storedRunIds: ' + (Array.isArray(debug.storedRunIds) ? debug.storedRunIds.join(', ') : 'none'),
+        '- endpoint status: ' + String(debug.endpointStatus != null ? debug.endpointStatus : 'n/a'),
+        '',
+        '## Runtime Snapshot',
+        '',
+        '- State: ' + (runtime && runtime.state ? runtime.state : 'COMPLETE'),
+        '- Elapsed: ' + (runtime && runtime.uiSummary ? runtime.uiSummary.elapsedLine : 'n/a'),
+        '',
+      ])
+      .join('\n');
+  }
+
+  function buildReportHandoffStallDiagnosticMarkdown(runtime, debug) {
+    return buildResultFetchFailureHandoffDiagnostic(
+      runtime,
+      founderTestLastResultFetchDiagnostic,
+      debug || founderTestResultDebugSnapshot,
+    );
+  }
+
+  async function fetchFounderTestResultDebug(runId, runtime) {
+    runId = coerceReportHandoffRunId(resolveReportHandoffRunId(runId, runtime), runtime);
+    if (!runId) return null;
+    var requestedUrl = buildFounderTestResultDebugUrl(runId);
+    try {
+      var res = await fetch(requestedUrl, { cache: 'no-store' });
+      rememberFounderTestApiOriginFromUrl(requestedUrl);
+      var parsed = await parseFounderTestHttpJsonResponse(res);
+      if (parsed.jsonParseFailed) {
+        recordFounderTestResultFetchAttempt({
+          requestedUrl: requestedUrl,
+          requestedRunId: runId,
+          fetchErrorMessage: 'result-debug returned non-JSON response',
+          httpStatus: res.status,
+          responseContentType: parsed.contentType,
+          jsonParseFailed: true,
+          nonJsonResponsePreview: parsed.nonJsonResponsePreview,
+          resultDebugResponse: null,
+        });
+        return null;
+      }
+      if (!res.ok) {
+        recordFounderTestResultFetchAttempt({
+          requestedUrl: requestedUrl,
+          requestedRunId: runId,
+          fetchErrorMessage: 'result-debug returned HTTP ' + String(res.status),
+          httpStatus: res.status,
+          responseContentType: parsed.contentType,
+          jsonParseFailed: false,
+          nonJsonResponsePreview: null,
+          resultDebugResponse: parsed.data,
+        });
+        return parsed.data;
+      }
+      return parsed.data;
+    } catch (debugErr) {
+      recordFounderTestResultFetchAttempt({
+        requestedUrl: requestedUrl,
+        requestedRunId: runId,
+        fetchErrorMessage:
+          debugErr && debugErr.message ? debugErr.message : 'result-debug fetch failed',
+        httpStatus: null,
+        responseContentType: null,
+        jsonParseFailed: false,
+        nonJsonResponsePreview: null,
+        resultDebugResponse: null,
+      });
+      return null;
+    }
+  }
+
+  async function triggerFounderTestReportHandoffStall(runId, runtime) {
+    if (founderTestReportHandoffStalled) return;
+    runtime = runtime || founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot();
+    runId = coerceReportHandoffRunId(resolveReportHandoffRunId(runId, runtime), runtime);
+    if (!runId) return;
+    if (hasFounderTestFinalReportAvailable(runId)) return;
+    founderTestReportHandoffStalled = true;
+    founderTestOperatorFeedReportFetching = false;
+    founderTestOperatorFeedReportFetchInFlight = false;
+    stopFounderTestReportHandoffStallGuard();
+    var runIdFields = buildReportHandoffRunIdDiagnosticFields(runId, runtime);
+    var debug = await fetchFounderTestResultDebug(runId, runtime);
+    if (debug) {
+      founderTestResultDebugSnapshot = debug;
+    } else {
+      founderTestResultDebugSnapshot = {
+        requestedRunId: runId,
+        runtimeCardRunId: runIdFields.runtimeCardRunId,
+        pinnedRunId: runIdFields.pinnedRunId,
+        resolvedActiveRunId: runIdFields.resolvedActiveRunId,
+        hasStoredResult: false,
+        hasReportMarkdown: false,
+        reportMarkdownLength: 0,
+        storedRunIds: [],
+        endpointStatus: 'debug-fetch-failed',
+        missingHandoffBoundary: 'Final report delivered to client cache',
+        runtimeRunId: runIdFields.runtimeSnapshotRunId,
+        storedRunId: null,
+      };
+    }
+    refreshFounderTestFinalReportDeliverySurfaces(runtime || resolveActiveFounderTestRuntimeSnapshot());
+    traceFounderTestDelivery('report-handoff-stalled', founderTestResultDebugSnapshot);
+  }
+
+  function scheduleFounderTestReportHandoffStallGuard(runId, runtime) {
+    runId = coerceReportHandoffRunId(resolveReportHandoffRunId(runId, runtime), runtime);
+    var publicState = runtime && (runtime.publicState || runtime.state);
+    if (!runId || !runtime || (publicState !== 'COMPLETE' && !isFounderTestCompleteSuccessState(runtime.state))) return;
+    if (hasFounderTestFinalReportAvailable(runId)) {
+      resetFounderTestReportHandoffStallState();
+      return;
+    }
+    if (founderTestCompletePreparingSinceMs == null) {
+      founderTestCompletePreparingSinceMs = Date.now();
+    }
+    if (founderTestReportHandoffStallCheckId != null) return;
+    founderTestReportHandoffStallCheckId = window.setInterval(function () {
+      if (founderTestReportHandoffStalled) {
+        stopFounderTestReportHandoffStallGuard();
+        return;
+      }
+      var activeRunId = coerceReportHandoffRunId(
+        resolveReportHandoffRunId(runId, founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot()),
+        founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot(),
+      );
+      if (hasFounderTestFinalReportAvailable(activeRunId)) {
+        resetFounderTestReportHandoffStallState();
+        return;
+      }
+      var elapsed = Date.now() - (founderTestCompletePreparingSinceMs || Date.now());
+      if (elapsed >= FOUNDER_TEST_REPORT_HANDOFF_STALL_MS) {
+        triggerFounderTestReportHandoffStall(activeRunId, runtime || resolveActiveFounderTestRuntimeSnapshot());
+      }
+    }, 500);
+  }
+
+  function resolveFounderTestCompleteReportFallbackText(runtime, runId, fetchResult) {
+    var diagnostic =
+      fetchResult && fetchResult.fetchDiagnostic
+        ? fetchResult.fetchDiagnostic
+        : founderTestLastResultFetchDiagnostic;
+    var errorMessage =
+      fetchResult && fetchResult.errorMessage
+        ? fetchResult.errorMessage
+        : lastFounderTestErrorMessage || 'Final report unavailable';
+    return buildCompleteFounderTestHandoffDiagnostic(runtime, runId, errorMessage, diagnostic);
+  }
+
+  function resolveFounderTestCompleteHeaderHint(runtime) {
+    runtime = runtime || resolveActiveFounderTestRuntimeSnapshot();
+    var publicState = runtime && (runtime.publicState || runtime.state);
+    if (!runtime || (publicState !== 'COMPLETE' && publicState !== 'REPORT_HANDOFF_PENDING' && !isFounderTestCompleteSuccessState(runtime.state))) {
+      return null;
+    }
+    var runId = normalizeFounderTestDeliveryRunId(runtime.runId, runtime);
+    if (hasFounderTestFinalReportAvailable(runId)) {
+      return 'Founder Test complete — report ready.';
+    }
+    if (founderTestReportHandoffStalled) {
+      return FOUNDER_TEST_COMPLETE_HEADER_HANDOFF_STALLED;
+    }
+    if (founderTestRuntimeReportFetchFailed) {
+      return 'Founder Test complete — report fetch failed, diagnostic available.';
+    }
+    var fetchState = getFounderTestFinalReportFetchState(runId);
+    if (fetchState === 'fetching') {
+      return 'Report Handoff pending — fetching report.';
+    }
+    if (publicState === 'REPORT_HANDOFF_PENDING' || runtime.state === 'COMPLETING') {
+      return runtime.handoffStateLabel || 'Report Handoff pending.';
+    }
+    return 'Report Handoff pending.';
+  }
+
+  function resolveFounderTestReportHandoffStatusLabel(runtime, runId) {
+    runtime = runtime || founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot();
+    runId = normalizeFounderTestDeliveryRunId(runId, runtime);
+    if (hasFounderTestFinalReportAvailable(runId)) return null;
+    if (founderTestReportHandoffStalled || founderTestRuntimeReportFetchFailed) {
+      return 'Report Handoff Diagnostic available';
+    }
+    var fetchState = getFounderTestFinalReportFetchState(runId);
+    if (fetchState === 'fetching' || founderTestOperatorFeedReportFetchInFlight) {
+      return 'Fetching Report...';
+    }
+    if (runtime && runtime.handoffStateLabel) return runtime.handoffStateLabel;
+    if (runtime && runtime.publicState === 'REPORT_HANDOFF_PENDING') return 'Report Handoff pending';
+    return null;
+  }
+
+  function isFounderTestPublicCompleteWithReport(runtime, runId) {
+    runId = normalizeFounderTestDeliveryRunId(runId, runtime);
+    return hasFounderTestFinalReportAvailable(runId);
+  }
+
+  function resolveFounderTestOperatorFeedReportActionLabels(runtime) {
+    runtime = runtime || founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot();
+    var runId = normalizeFounderTestDeliveryRunId(null, runtime);
+    var publicState = runtime && (runtime.publicState || runtime.state);
+    var hasLocal = hasFounderTestFinalReportAvailable(runId);
+    var fetchState = getFounderTestFinalReportFetchState(runId);
+    if (hasLocal) {
+      return { copy: 'Copy Final Report', open: 'Open Final Report', enabled: true, fetchingStatus: null };
+    }
+    if (founderTestReportHandoffStalled || fetchState === 'failed' || founderTestRuntimeReportFetchFailed) {
+      return {
+        copy: 'Copy Handoff Diagnostic',
+        open: 'Open Handoff Diagnostic',
+        enabled: true,
+        fetchingStatus: 'Report Handoff Diagnostic available',
+      };
+    }
+    if (
+      fetchState === 'fetching' ||
+      founderTestOperatorFeedReportFetchInFlight ||
+      publicState === 'COMPLETE' ||
+      publicState === 'REPORT_HANDOFF_PENDING' ||
+      (runtime && runtime.state === 'COMPLETING')
+    ) {
+      return {
+        copy: 'Copy Final Report',
+        open: 'Open Final Report',
+        enabled: false,
+        fetchingStatus: resolveFounderTestReportHandoffStatusLabel(runtime, runId),
+      };
+    }
+    return { copy: 'Copy Latest Report', open: 'Open Report', enabled: true, fetchingStatus: null };
+  }
+
+  function shouldUseFounderTestHandoffDiagnosticForCompleteReport() {
+    return (
+      founderTestReportHandoffStalled === true ||
+      founderTestRuntimeReportFetchFailed === true ||
+      !!(founderTestLastResultFetchDiagnostic && founderTestLastResultFetchDiagnostic.requestedUrl) ||
+      !!founderTestResultDebugSnapshot ||
+      isGenericFailedToFetchMessage(lastFounderTestErrorMessage)
+    );
+  }
+
+  function isGenericFailedToFetchMessage(message) {
+    if (!message) return false;
+    return /failed to fetch/i.test(String(message));
+  }
+
+  function buildCompleteFounderTestHandoffDiagnostic(runtime, runId, errorMessage, fetchDiagnostic) {
+    runtime = runtime || founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot();
+    runId = coerceReportHandoffRunId(runId, runtime);
+    var diagnostic = fetchDiagnostic || founderTestLastResultFetchDiagnostic || {};
+    if (!diagnostic.requestedUrl) {
+      diagnostic = {
+        requestedUrl: runId ? buildFounderTestResultFetchUrl(runId) : 'n/a',
+        requestedRunId: runId || 'n/a',
+        fetchErrorMessage:
+          errorMessage || diagnostic.fetchErrorMessage || lastFounderTestErrorMessage || 'Final report fetch failed',
+        httpStatus: diagnostic.httpStatus != null ? diagnostic.httpStatus : null,
+        responseContentType: diagnostic.responseContentType || null,
+        jsonParseFailed: diagnostic.jsonParseFailed === true,
+        nonJsonResponsePreview: diagnostic.nonJsonResponsePreview || null,
+        resultDebugResponse: diagnostic.resultDebugResponse || founderTestResultDebugSnapshot || null,
+      };
+    }
+    return buildResultFetchFailureHandoffDiagnostic(runtime, diagnostic, founderTestResultDebugSnapshot);
+  }
+
+  function resolveFounderTestResultsPanelReportActionLabels(runtime) {
+    runtime = runtime || resolveActiveFounderTestRuntimeSnapshot();
+    var operatorLabels = resolveFounderTestOperatorFeedReportActionLabels(runtime);
+    if (operatorLabels.copy === 'Copy Handoff Diagnostic') {
+      return { copy: 'Copy Handoff Diagnostic', open: 'Open Handoff Diagnostic', enabled: true };
+    }
+    if (operatorLabels.enabled === false && operatorLabels.fetchingStatus) {
+      return { copy: operatorLabels.copy, open: operatorLabels.open, enabled: false };
+    }
+    var runId = normalizeFounderTestDeliveryRunId(null, runtime);
+    var hasLocal = hasFounderTestFinalReportAvailable(runId);
+    if (hasLocal) {
+      return { copy: 'Copy Final Report', open: 'Open Final Report', enabled: true };
+    }
+    var payload = buildFounderTestCopyPayload(runtime);
+    if (
+      payload &&
+      (payload.source === 'runtime-diagnostic' ||
+        payload.source === 'runtime-failure' ||
+        payload.source === 'diagnostic')
+    ) {
+      return { copy: 'Copy Runtime Diagnostic', open: 'Open Runtime Diagnostic', enabled: true };
+    }
+    return { copy: 'Copy Report', open: 'Open Report', enabled: operatorLabels.enabled !== false };
+  }
+
+  function updateFounderTestOperatorFeedReportActionLabels(runtime) {
+    var labels = resolveFounderTestOperatorFeedReportActionLabels(runtime);
+    var copyBtn = el('founder-test-copy-latest-report');
+    var openBtn = el('founder-test-open-report');
+    var statusEl = el('founder-test-report-handoff-status');
+    var buttonsEnabled = labels.enabled !== false;
+    if (statusEl) {
+      if (labels.fetchingStatus) {
+        statusEl.textContent = labels.fetchingStatus;
+        statusEl.removeAttribute('hidden');
+      } else {
+        statusEl.textContent = '';
+        statusEl.setAttribute('hidden', '');
+      }
+    }
+    if (copyBtn) {
+      copyBtn.disabled = !buttonsEnabled;
+      copyBtn.setAttribute('aria-disabled', buttonsEnabled ? 'false' : 'true');
+      if (copyBtn.textContent !== 'Copied' && copyBtn.textContent !== 'Copy failed') {
+        copyBtn.textContent = labels.copy;
+      }
+    }
+    if (openBtn) {
+      openBtn.disabled = !buttonsEnabled;
+      openBtn.setAttribute('aria-disabled', buttonsEnabled ? 'false' : 'true');
+      openBtn.textContent = labels.open;
+    }
+    var retryBtn = el('founder-test-retry-fetch-result');
+    if (retryBtn) {
+      var runId = normalizeFounderTestDeliveryRunId(null, runtime);
+      var fetchState = getFounderTestFinalReportFetchState(runId);
+      var showRetry =
+        fetchState === 'failed' ||
+        founderTestReportHandoffStalled ||
+        founderTestRuntimeReportFetchFailed;
+      if (showRetry) {
+        retryBtn.removeAttribute('hidden');
+      } else {
+        retryBtn.setAttribute('hidden', '');
+      }
+    }
+  }
+
+  function resolveFounderTestReportDelivery(input) {
+    input = input || {};
+    var runtime = input.runtime || resolveActiveFounderTestRuntimeSnapshot() || null;
+    var data = input.data || {};
+    var runId = data.runId || resolveActiveFounderTestRunId() || (runtime && runtime.runId) || input.runId || 'unknown';
+    var state = data.state || (runtime && runtime.state) || (data.ok ? 'COMPLETE' : 'FAILED');
+    var markdown =
+      data.reportMarkdown ||
+      (data.report && data.report.reportMarkdown) ||
+      input.reportMarkdown ||
+      '';
+    if (!markdown && data.partialReportMarkdown && isFounderTestFinalReportMarkdown(data.partialReportMarkdown)) {
+      markdown = data.partialReportMarkdown;
+    }
+    if (!markdown && !isFounderTestCompleteSuccessState(state)) {
+      markdown =
+        data.failureReportMarkdown ||
+        data.runtimeDiagnosticMarkdown ||
+        data.founderTestLaunchReadinessReportMarkdown ||
+        '';
+    }
+    if (!markdown && runtime && isFounderTestCompleteSuccessState(runtime.state)) {
+      markdown = buildCompleteFounderTestHandoffDiagnostic(
+        runtime,
+        runId,
+        data.error || input.errorMessage || lastFounderTestErrorMessage,
+      );
+    }
+    if (!markdown && runtime && !isFounderTestCompleteSuccessState(runtime.state)) {
+      markdown = buildRuntimeFailureReportText(runtime, data.error || input.errorMessage || lastFounderTestErrorMessage);
+    }
+    var status = state;
+    var title = input.title;
+    if (!title) {
+      if (state === 'RUNNING' || state === 'STARTING' || state === 'COMPLETING') {
+        title = 'Founder Test Still Running — Diagnostic Available';
+        status = 'RUNNING';
+      } else if (state === 'STALLED') {
+        title = 'Founder Test Stalled — Diagnostic Report Available';
+      } else if (state === 'FAILED' || state === 'CANCELLED') {
+        title = 'Founder Test Failed — Runtime Report Available';
+      } else if (state === 'COMPLETE') {
+        if (data.reportMarkdown || (data.report && data.report.reportMarkdown)) {
+          title = 'Founder Test Report Ready';
+        } else {
+          title = 'Founder Test Report Ready';
+          status = 'COMPLETE';
+        }
+      } else {
+        title = 'Founder Test Partial Report Available';
+        status = 'PARTIAL';
+      }
+    }
+    return {
+      runId: runId,
+      status: status,
+      title: title,
+      reportMarkdown: markdown,
+      timestamp: data.generatedAt || new Date().toISOString(),
+    };
+  }
+
+  function deliverFounderTestReportNotification(input) {
+    input = input || {};
+    var resolved = resolveFounderTestReportDelivery(input);
+    if (!resolved.reportMarkdown || !String(resolved.reportMarkdown).trim()) {
+      traceFounderTestDelivery('skipped-empty-markdown', resolved.runId);
+      return false;
+    }
+    if (
+      isFounderTestFinalReportMarkdown(resolved.reportMarkdown) &&
+      (resolved.status === 'COMPLETE' ||
+        (input.data && isFounderTestCompleteSuccessState(input.data.state)) ||
+        (input.runtime && isFounderTestCompleteSuccessState(input.runtime.state)))
+    ) {
+      return applyFounderTestFinalReport(resolved.runId, resolved.reportMarkdown, 'deliver-notification', {
+        runtime: input.runtime || lastFounderTestRuntimeSnapshot,
+        generatedAt: resolved.timestamp,
+        allowDuplicate: input.allowDuplicate === true,
+      });
+    }
+    var dedupeKey = 'founder-test-report-' + resolved.runId + '-' + resolved.status;
+    if (!input.allowDuplicate && deliveredFounderTestReportKeys[dedupeKey]) {
+      traceFounderTestDelivery('dedupe-blocked', dedupeKey);
+      return false;
+    }
+    deliveredFounderTestReportKeys[dedupeKey] = true;
+    var preview = String(resolved.reportMarkdown).slice(0, 280).replace(/\s+/g, ' ').trim();
+    if (resolved.reportMarkdown.length > preview.length) preview += '…';
+    runtimeNotifications.unshift({
+      id: createNotificationId('ft-report'),
+      type: 'founder-test-report',
+      title: resolved.title,
+      text: resolved.title,
+      reportMarkdown: resolved.reportMarkdown,
+      preview: preview,
+      runId: resolved.runId,
+      status: resolved.status,
+      timestamp: resolved.timestamp,
+      read: false,
+    });
+    traceFounderTestDelivery('delivered', { runId: resolved.runId, status: resolved.status, title: resolved.title });
+    refreshNotificationSurfaces();
+    updateNotificationUnreadBadge();
+    refreshNotificationDrawerIfOpen();
+    return true;
+  }
+
+  function renderNotificationsVaultHtml(items) {
+    if (!items || !items.length) return '<p class="empty-state">No notifications yet.</p>';
+    var html = '<ul class="notification-vault-list">';
+    for (var i = 0; i < items.length; i += 1) {
+      var entry = normalizeNotificationEntry(items[i]);
+      if (entry.type === 'founder-test-report') {
+        html +=
+          '<li class="notification-vault-item founder-test-report-notification">' +
+          buildFounderTestReportNotificationHtml(entry) +
+          '</li>';
+      } else {
+        html +=
+          '<li class="notification-vault-item notification-simple">' + escapeHtml(entry.text || '') + '</li>';
+      }
+    }
+    html += '</ul>';
+    return html;
   }
 
   function renderLearningVisibilityDiagnostics(diag) {
@@ -3276,12 +4491,12 @@
     if (!items.length && runtimeNotifications.length) {
       items = runtimeNotifications.slice();
     }
-    container.innerHTML =
-      renderProductCard(
-        'Notifications',
-        '<p class="product-lead">Runtime events and system notices from your AiDevEngine session.</p>' +
-          (items.length ? renderBulletList(items) : '<p class="empty-state">No notifications yet.</p>'),
-      );
+    container.innerHTML = renderProductCard(
+      'Notifications',
+      '<p class="product-lead">Runtime events and system notices from your AiDevEngine session.</p>' +
+        renderNotificationsVaultHtml(items),
+    );
+    wireNotificationCopyButtons(container);
   }
 
   function renderSidebarStatus(ws) {
@@ -3519,6 +4734,7 @@
   }
 
   function clearFeedStreamLog() {
+    if (isOperatorFeedFounderTestMode()) return;
     var log = el('feed-stream-log');
     if (log) log.innerHTML = '';
   }
@@ -3540,6 +4756,7 @@
   }
 
   function appendFeedStreamEvent(event, active) {
+    if (isOperatorFeedFounderTestMode()) return;
     var log = el('feed-stream-log');
     if (!log) return;
     var pres = resolveFeedEventPresentation(event);
@@ -3568,7 +4785,62 @@
     return 'queued';
   }
 
+  function isOperatorFeedFounderTestMode() {
+    return operatorFeedMode === OPERATOR_FEED_MODE_FOUNDER_TEST && !founderTestRuntimeDismissed;
+  }
+
+  function applyOperatorFeedModeLayout() {
+    var body = el('operator-feed-body');
+    if (!body) return;
+    var active = isOperatorFeedFounderTestMode();
+    body.classList.toggle('founder-test-runtime-active', active);
+    body.setAttribute('data-operator-feed-mode', operatorFeedMode);
+    var streamLog = el('feed-stream-log');
+    var sections = el('feed-sections');
+    if (streamLog) streamLog.setAttribute('aria-hidden', active ? 'true' : 'false');
+    if (sections) sections.setAttribute('aria-hidden', active ? 'true' : 'false');
+  }
+
+  function activateOperatorFeedFounderTestMode(runtime) {
+    operatorFeedMode = OPERATOR_FEED_MODE_FOUNDER_TEST;
+    founderTestRuntimeDismissed = false;
+    if (runtime && runtime.runId) founderTestRuntimePinnedRunId = runtime.runId;
+    applyOperatorFeedModeLayout();
+  }
+
+  function dismissOperatorFeedFounderTestMode() {
+    founderTestRuntimeDismissed = true;
+    operatorFeedMode = OPERATOR_FEED_MODE_DEFAULT;
+    founderTestRuntimePinnedRunId = null;
+    founderTestRuntimeCardSnapshot = null;
+    lastKnownActiveFounderTestRuntimeSnapshot = null;
+    founderTestRuntimeReportBindingMismatch = false;
+    lastRenderedOperatorTraceKey = '';
+    applyOperatorFeedModeLayout();
+    var container = el('founder-test-operator-trace');
+    if (container) {
+      container.setAttribute('hidden', '');
+      container.innerHTML = '';
+    }
+  }
+
+  function syncOperatorFeedLayout(runtime) {
+    if (runtime && runtime.runId && runtime.state !== 'IDLE' && !founderTestRuntimeDismissed) {
+      activateOperatorFeedFounderTestMode(runtime);
+      return;
+    }
+    if (isOperatorFeedFounderTestMode()) {
+      applyOperatorFeedModeLayout();
+      return;
+    }
+    applyOperatorFeedModeLayout();
+  }
+
   function renderOperatorFeed(sections, options) {
+    if (isOperatorFeedFounderTestMode()) {
+      applyOperatorFeedModeLayout();
+      return;
+    }
     var container = el('feed-sections');
     if (!container) return;
     options = options || {};
@@ -3757,10 +5029,17 @@
     if (!list) return;
     list.innerHTML = '';
     for (var i = 0; i < notifications.length; i += 1) {
+      var entry = normalizeNotificationEntry(notifications[i]);
       var li = document.createElement('li');
-      li.textContent = notifications[i];
+      if (entry.type === 'founder-test-report') {
+        li.className = 'notification-item founder-test-report-notification';
+        li.innerHTML = buildFounderTestReportNotificationHtml(entry);
+      } else {
+        li.textContent = entry.text || '';
+      }
       list.appendChild(li);
     }
+    wireNotificationCopyButtons(list);
   }
 
   function interpretBrainFailure(status, bodyText) {
@@ -3903,6 +5182,10 @@
 
   function applyManifest(data) {
     manifestData = data;
+    if (data && data.apiBaseUrl) {
+      founderTestApiBaseUrlOverride = null;
+      founderTestApiResolvedOrigin = String(data.apiBaseUrl).replace(/\/$/, '');
+    }
     var shell = data.runtimeShell || {};
 
     if (el('page-title')) el('page-title').textContent = PRODUCT_BRAND;
@@ -3932,7 +5215,15 @@
     }
 
     defaultFeedSections = shell.operatorFeedSections || defaultFeedSections;
-    runtimeNotifications = ['AiDevEngine Command Center brain connected'];
+    runtimeNotifications = [
+      {
+        id: createNotificationId('simple'),
+        type: 'simple',
+        text: 'AiDevEngine Command Center brain connected',
+        timestamp: new Date().toISOString(),
+        read: true,
+      },
+    ];
     renderOperatorFeed(defaultFeedSections, { idle: true });
     var statusItems = shell.productStatusBarItems || shell.statusBarItems || [];
     renderStatusBar(statusItems);
@@ -4082,7 +5373,16 @@
 
   var FOUNDER_TEST_MAX_SCREEN_MS = 5000;
   var founderTestRunning = false;
+  var founderTestRuntimePollId = null;
+  var lastRenderedRuntimeFeedKey = '';
+  var lastRenderedOperatorTraceKey = '';
+  var founderTestUnifiedTraceExpanded = false;
+  var lastFounderTestPostTimedOut = false;
   var lastFounderTestReport = null;
+  var lastFounderTestRuntimeSnapshot = null;
+  var lastFounderTestErrorMessage = null;
+  var lastFounderTestPartialReportMarkdown = null;
+  var copyReportFeedbackTimer = null;
   var lastVerificationResults = null;
   var lastChangeIntelligence = null;
   var lastFounderActionCenter = null;
@@ -4102,10 +5402,664 @@
     { viewId: 'system-diagnostics', label: 'System Diagnostics', containerId: 'section-system-diagnostics-hero' },
   ];
 
+  function resolveActiveFounderTestRunId() {
+    return resolveReportHandoffRunId(null, null);
+  }
+
+  function resolveActiveFounderTestRuntimeSnapshot() {
+    var runId = resolveActiveFounderTestRunId();
+    function isActiveSnapshot(snapshot) {
+      return (
+        snapshot &&
+        snapshot.runId &&
+        snapshot.state !== 'IDLE' &&
+        (!runId || snapshot.runId === runId)
+      );
+    }
+    if (isActiveSnapshot(founderTestRuntimeCardSnapshot)) return founderTestRuntimeCardSnapshot;
+    if (isActiveSnapshot(lastKnownActiveFounderTestRuntimeSnapshot)) return lastKnownActiveFounderTestRuntimeSnapshot;
+    if (isActiveSnapshot(lastFounderTestRuntimeSnapshot)) return lastFounderTestRuntimeSnapshot;
+    if (founderTestRuntimeCardSnapshot && founderTestRuntimeCardSnapshot.runId) {
+      return founderTestRuntimeCardSnapshot;
+    }
+    if (lastKnownActiveFounderTestRuntimeSnapshot) return lastKnownActiveFounderTestRuntimeSnapshot;
+    return lastFounderTestRuntimeSnapshot;
+  }
+
+  function rememberActiveFounderTestRuntimeSnapshot(runtime) {
+    if (!runtime || !runtime.runId) return;
+    if (runtime.state !== 'IDLE') {
+      lastKnownActiveFounderTestRuntimeSnapshot = runtime;
+      founderTestRuntimePinnedRunId = runtime.runId;
+      founderTestRuntimeReportBindingMismatch = false;
+    }
+    lastFounderTestRuntimeSnapshot = runtime;
+  }
+
+  function detectFounderTestRuntimeReportMismatch(cardRuntime, reportRuntime) {
+    if (!cardRuntime || !reportRuntime) return false;
+    if (!cardRuntime.runId || !reportRuntime.runId) return false;
+    if (cardRuntime.runId !== reportRuntime.runId) return true;
+    var cardActive =
+      cardRuntime.state === 'RUNNING' ||
+      cardRuntime.state === 'STARTING' ||
+      cardRuntime.state === 'COMPLETING' ||
+      cardRuntime.state === 'STALLED';
+    var reportIdle = reportRuntime.state === 'IDLE' || !reportRuntime.runId;
+    return cardActive && reportIdle;
+  }
+
+  async function refreshActiveFounderTestReportBinding(reason) {
+    var runId = resolveActiveFounderTestRunId();
+    if (!runId || founderTestRuntimeReportBindingRefreshInFlight) return null;
+    founderTestRuntimeReportBindingRefreshInFlight = true;
+    try {
+      if (reason) {
+        pushNotification('Runtime/report mismatch detected — refreshing active run result.');
+      }
+      var statusUrl = buildFounderTestRuntimeStatusUrl(runId);
+      var statusRes = await fetch(statusUrl, { cache: 'no-store' });
+      if (statusRes.ok) {
+        rememberFounderTestApiOriginFromUrl(statusUrl);
+        var statusData = await statusRes.json();
+        if (statusData && statusData.runtime && statusData.runtime.state !== 'IDLE') {
+          rememberActiveFounderTestRuntimeSnapshot(statusData.runtime);
+          renderFounderTestRuntime(statusData.runtime);
+        }
+      }
+      var resultUrl = buildFounderTestResultFetchUrl(runId);
+      var resultRes = await fetch(resultUrl, {
+        cache: 'no-store',
+      });
+      if (resultRes.ok || resultRes.status === 202) {
+        rememberFounderTestApiOriginFromUrl(resultUrl);
+        var resultData = await resultRes.json();
+        applyFounderTestResultPayload(resultData);
+        return resultData;
+      }
+    } catch (refreshErr) {
+      /* best-effort refresh */
+    } finally {
+      founderTestRuntimeReportBindingRefreshInFlight = false;
+    }
+    return null;
+  }
+
   function waitMs(ms) {
     return new Promise(function (resolve) {
       setTimeout(resolve, ms);
     });
+  }
+
+  function stopFounderTestRuntimePolling() {
+    if (founderTestRuntimePollId != null) {
+      window.clearInterval(founderTestRuntimePollId);
+      founderTestRuntimePollId = null;
+    }
+  }
+
+  function resolveOperatorTraceStateClass(traceStageStatus) {
+    if (traceStageStatus === 'SLOW') return 'trace-slow';
+    if (traceStageStatus === 'STALLED') return 'trace-stalled';
+    if (traceStageStatus === 'FAILED') return 'trace-failed';
+    if (traceStageStatus === 'COMPLETE') return 'trace-complete';
+    if (traceStageStatus === 'RUNNING') return 'trace-running';
+    return 'trace-idle';
+  }
+
+  function renderFounderTestUnifiedRuntimeCard(runtime) {
+    var container = el('founder-test-operator-trace');
+    if (!container) return;
+
+    if (founderTestRuntimeDismissed) {
+      container.setAttribute('hidden', '');
+      container.innerHTML = '';
+      return;
+    }
+
+    var displayRuntime = runtime;
+    if (
+      (!displayRuntime || displayRuntime.state === 'IDLE' || !displayRuntime.runId) &&
+      isOperatorFeedFounderTestMode() &&
+      lastKnownActiveFounderTestRuntimeSnapshot &&
+      lastKnownActiveFounderTestRuntimeSnapshot.runId
+    ) {
+      displayRuntime = lastKnownActiveFounderTestRuntimeSnapshot;
+    } else if (
+      (!displayRuntime || displayRuntime.state === 'IDLE' || !displayRuntime.runId) &&
+      isOperatorFeedFounderTestMode() &&
+      lastFounderTestRuntimeSnapshot &&
+      lastFounderTestRuntimeSnapshot.runId
+    ) {
+      displayRuntime = lastFounderTestRuntimeSnapshot;
+    }
+
+    if (!displayRuntime || !displayRuntime.runId) {
+      if (!isOperatorFeedFounderTestMode()) {
+        container.setAttribute('hidden', '');
+        container.innerHTML = '';
+        lastRenderedOperatorTraceKey = '';
+      }
+      founderTestRuntimeCardSnapshot = null;
+      return;
+    }
+
+    runtime = displayRuntime;
+    founderTestRuntimeCardSnapshot = runtime;
+    var publicState = runtime.publicState || runtime.state || 'RUNNING';
+    var cardRunId = normalizeFounderTestDeliveryRunId(null, runtime);
+    var cardHasLocalReport = hasFounderTestFinalReportAvailable(cardRunId);
+    var cardFetchState = getFounderTestFinalReportFetchState(cardRunId);
+    var traceStatus =
+      cardHasLocalReport && publicState === 'COMPLETE'
+        ? 'COMPLETE'
+        : publicState === 'REPORT_HANDOFF_PENDING' || runtime.state === 'COMPLETING' || cardFetchState === 'fetching'
+          ? 'REPORT_HANDOFF_PENDING'
+          : runtime.traceStageStatus || runtime.state || 'RUNNING';
+    var stateClass = resolveOperatorTraceStateClass(traceStatus === 'REPORT_HANDOFF_PENDING' ? 'RUNNING' : traceStatus);
+    var stageLine =
+      runtime.handoffStateLabel ||
+      (runtime.uiSummary && runtime.uiSummary.stageLine) ||
+      (runtime.progress && runtime.progress.currentStageLabel
+        ? 'Stage ' +
+          String(runtime.progress.currentStageOrder) +
+          '/' +
+          String(runtime.progress.totalStages) +
+          ' — ' +
+          runtime.progress.currentStageLabel
+        : 'Stage pending');
+    var handoffStatusLabel = resolveFounderTestReportHandoffStatusLabel(runtime, cardRunId);
+    var timelineEvents = (runtime.traceEvents || []).slice(-8);
+    var fullTraceEvents = runtime.traceEvents || [];
+    var traceKey =
+      String(runtime.runId) +
+      ':' +
+      String(traceStatus) +
+      ':' +
+      String(timelineEvents.length) +
+      ':' +
+      String(founderTestUnifiedTraceExpanded) +
+      ':' +
+      (timelineEvents.length ? timelineEvents[timelineEvents.length - 1].traceEventId : '') +
+      ':' +
+      String(cardHasLocalReport) +
+      ':' +
+      String(cardFetchState);
+    if (traceKey === lastRenderedOperatorTraceKey) return;
+    lastRenderedOperatorTraceKey = traceKey;
+
+    function renderEventList(events) {
+      var html = '';
+      for (var i = 0; i < events.length; i += 1) {
+        var event = events[i];
+        var eventClass = 'trace-event';
+        if (event.status === 'SLOW') eventClass += ' trace-event-slow';
+        if (event.status === 'STALLED') eventClass += ' trace-event-stalled';
+        if (event.status === 'FAILED') eventClass += ' trace-event-failed';
+        if (event.status === 'COMPLETE' || event.status === 'PASSED') eventClass += ' trace-event-complete';
+        html +=
+          '<li class="' +
+          eventClass +
+          '">' +
+          escapeHtml(event.displayLine || event.operationLabel) +
+          '</li>';
+      }
+      return html;
+    }
+
+    var isComplete = isFounderTestPublicCompleteWithReport(runtime, cardRunId);
+    var actionLabels = resolveFounderTestOperatorFeedReportActionLabels(runtime);
+    var copyReportLabel = actionLabels.copy;
+    var openReportLabel = actionLabels.open;
+    var reportButtonsDisabled = actionLabels.enabled === false;
+    var showRetryFetch =
+      cardFetchState === 'failed' ||
+      founderTestReportHandoffStalled ||
+      founderTestRuntimeReportFetchFailed;
+
+    var detailsHtml = '';
+    if (!isComplete && runtime.missingCompletionBoundary) {
+      detailsHtml +=
+        '<div class="founder-test-unified-boundary"><dt>Missing boundary</dt><dd>' +
+        escapeHtml(runtime.missingCompletionBoundary) +
+        '</dd></div>';
+    }
+    if (!isComplete && runtime.stage2CompletionGapReason) {
+      detailsHtml +=
+        '<div class="founder-test-operator-trace-stall"><dt>Stage 2 gap</dt><dd>' +
+        escapeHtml(runtime.stage2CompletionGapReason) +
+        '</dd></div>';
+    }
+    if (founderTestRuntimeReportBindingMismatch) {
+      detailsHtml +=
+        '<div class="founder-test-operator-trace-stall"><dt>Report binding</dt><dd>Runtime/report mismatch detected — refreshing active run result.</dd></div>';
+    }
+    if (!isComplete && runtime.stallReason) {
+      detailsHtml +=
+        '<div class="founder-test-operator-trace-stall"><dt>Stall reason</dt><dd>' +
+        escapeHtml(runtime.stallReason) +
+        '</dd></div>';
+    }
+
+    container.removeAttribute('hidden');
+    container.className = 'founder-test-operator-trace founder-test-unified-runtime ' + stateClass;
+    syncOperatorFeedLayout(runtime);
+    container.innerHTML =
+      '<div class="founder-test-operator-trace-header">' +
+      '<h3>Founder Test Runtime</h3>' +
+      '<span class="founder-test-operator-trace-badge">' +
+      escapeHtml(String(traceStatus)) +
+      '</span></div>' +
+      '<p class="founder-test-unified-run-id">Run ID: ' +
+      escapeHtml(String(runtime.runId)) +
+      '</p>' +
+      '<div class="founder-test-unified-status">' +
+      '<p class="founder-test-unified-stage">' +
+      escapeHtml(stageLine) +
+      '</p>' +
+      '<p class="founder-test-unified-elapsed">' +
+      escapeHtml((runtime.uiSummary && runtime.uiSummary.elapsedLine) || 'Elapsed: —') +
+      '</p></div>' +
+      '<dl class="founder-test-operator-trace-meta founder-test-unified-operations">' +
+      '<div><dt>Handoff state</dt><dd>' +
+      escapeHtml(runtime.handoffStateLabel || '—') +
+      '</dd></div>' +
+      '<div><dt>Current operation</dt><dd>' +
+      escapeHtml(runtime.currentOperation || '—') +
+      '</dd></div>' +
+      '<div><dt>Last completed</dt><dd>' +
+      escapeHtml(runtime.lastCompletedOperation || '—') +
+      '</dd></div>' +
+      '<div><dt>Next expected</dt><dd>' +
+      escapeHtml(runtime.nextExpectedOperation || '—') +
+      '</dd></div>' +
+      detailsHtml +
+      '</dl>' +
+      '<div class="founder-test-unified-scroll">' +
+      '<p class="founder-test-unified-section-label">Progress timeline</p>' +
+      '<ul class="founder-test-operator-trace-events founder-test-unified-timeline" aria-label="Latest founder test runtime events">' +
+      renderEventList(timelineEvents) +
+      '</ul>' +
+      (founderTestUnifiedTraceExpanded
+        ? '<ul class="founder-test-operator-trace-events founder-test-unified-full-trace" aria-label="Full founder test runtime trace">' +
+          renderEventList(fullTraceEvents) +
+          '</ul>'
+        : '') +
+      '</div>' +
+      (handoffStatusLabel
+        ? '<p class="founder-test-report-handoff-status" id="founder-test-report-handoff-status">' +
+          escapeHtml(handoffStatusLabel) +
+          '</p>'
+        : '<p class="founder-test-report-handoff-status" id="founder-test-report-handoff-status" hidden></p>') +
+      '<div class="founder-test-runtime-report-actions">' +
+      '<button type="button" class="founder-test-runtime-action-btn" id="founder-test-copy-latest-report"' +
+      (reportButtonsDisabled ? ' disabled aria-disabled="true"' : '') +
+      '>' +
+      escapeHtml(copyReportLabel) +
+      '</button>' +
+      '<button type="button" class="founder-test-runtime-action-btn" id="founder-test-open-report"' +
+      (reportButtonsDisabled ? ' disabled aria-disabled="true"' : '') +
+      '>' +
+      escapeHtml(openReportLabel) +
+      '</button>' +
+      (showRetryFetch
+        ? '<button type="button" class="founder-test-runtime-action-btn" id="founder-test-retry-fetch-result">Retry Fetch Result</button>'
+        : '<button type="button" class="founder-test-runtime-action-btn" id="founder-test-retry-fetch-result" hidden>Retry Fetch Result</button>') +
+      '<button type="button" class="founder-test-runtime-action-btn founder-test-runtime-dismiss-btn" id="founder-test-dismiss-runtime">Dismiss</button>' +
+      '</div>' +
+      '<button type="button" class="founder-test-unified-trace-toggle" id="founder-test-unified-trace-toggle">' +
+      (founderTestUnifiedTraceExpanded ? 'Hide full trace' : 'Show full trace') +
+      '</button>';
+
+    wireFounderTestRuntimeCardActions(runtime);
+
+    var toggleBtn = el('founder-test-unified-trace-toggle');
+    if (toggleBtn) {
+      toggleBtn.onclick = function () {
+        founderTestUnifiedTraceExpanded = !founderTestUnifiedTraceExpanded;
+        lastRenderedOperatorTraceKey = '';
+        renderFounderTestUnifiedRuntimeCard(runtime);
+      };
+    }
+  }
+
+  function wireFounderTestRuntimeCardActions(runtime) {
+    var copyBtn = el('founder-test-copy-latest-report');
+    if (copyBtn) {
+      copyBtn.onclick = function () {
+        copyLatestFounderTestReport(copyBtn);
+      };
+    }
+    var openBtn = el('founder-test-open-report');
+    if (openBtn) {
+      openBtn.onclick = function () {
+        openFounderTestReportModal();
+      };
+    }
+    var retryBtn = el('founder-test-retry-fetch-result');
+    if (retryBtn) {
+      retryBtn.onclick = function () {
+        retryFetchFounderTestResult(retryBtn);
+      };
+    }
+    var dismissBtn = el('founder-test-dismiss-runtime');
+    if (dismissBtn) {
+      dismissBtn.onclick = function () {
+        dismissOperatorFeedFounderTestMode();
+      };
+    }
+  }
+
+  function copyLatestFounderTestReport(buttonEl) {
+    copyFounderTestReportHandoffShared({
+      feedbackButton: buttonEl,
+      resetOperatorFeedLabels: true,
+      syncOperatorFeedLabels: true,
+    });
+  }
+
+  function openFounderTestReportModal() {
+    openFounderTestReportHandoffShared();
+  }
+
+  function hideFounderTestReportModal() {
+    var modal = el('founder-test-report-modal');
+    if (!modal) return;
+    modal.setAttribute('hidden', '');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  function applyFounderTestResultPayload(data) {
+    if (!data) return;
+    var runId = normalizeFounderTestDeliveryRunId(data.runId, data.runtime);
+    var markdown = data.reportMarkdown || (data.report && data.report.reportMarkdown) || null;
+    if (markdown && isFounderTestFinalReportMarkdown(markdown)) {
+      applyFounderTestFinalReport(runId, markdown, 'result-endpoint', {
+        runtime: data.runtime,
+        reportObject: data.report || null,
+        generatedAt: data.generatedAt,
+      });
+      return;
+    }
+    if (data.runtime) {
+      rememberActiveFounderTestRuntimeSnapshot(data.runtime);
+      renderFounderTestRuntime(data.runtime);
+    }
+    var completeSuccess =
+      isFounderTestCompleteSuccessState(data.state) ||
+      (data.runtime && isFounderTestCompleteSuccessState(data.runtime.state));
+    if (data.partialReportMarkdown && isFounderTestFinalReportMarkdown(data.partialReportMarkdown)) {
+      lastFounderTestPartialReportMarkdown = data.partialReportMarkdown;
+    }
+    if (!completeSuccess) {
+      if (data.partialReportMarkdown) {
+        lastFounderTestPartialReportMarkdown = data.partialReportMarkdown;
+      }
+      if (data.failureReportMarkdown && !lastFounderTestPartialReportMarkdown) {
+        lastFounderTestPartialReportMarkdown = data.failureReportMarkdown;
+      }
+      if (data.runtimeDiagnosticMarkdown && !lastFounderTestPartialReportMarkdown) {
+        lastFounderTestPartialReportMarkdown = data.runtimeDiagnosticMarkdown;
+      }
+    }
+    updateCopyReportButtonState();
+  }
+
+  async function retryFetchFounderTestResult(buttonEl) {
+    var cardRuntime = founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot();
+    var runId = coerceReportHandoffRunId(null, cardRuntime);
+    if (!runId) {
+      pushNotification('No founder test runId available to retry');
+      return;
+    }
+    if (buttonEl) {
+      buttonEl.disabled = true;
+      buttonEl.textContent = 'Fetching…';
+    }
+    founderTestRuntimeReportFetchFailed = false;
+    founderTestReportHandoffStalled = false;
+    try {
+      var fetchResult = await fetchFounderTestResultWithRetry(runId, FOUNDER_TEST_RESULT_FETCH_MAX_ATTEMPTS);
+      if (fetchResult && fetchResult.data && !fetchResult.fetchFailed) {
+        applyFounderTestResultPayload(fetchResult.data);
+        if (buttonEl) buttonEl.textContent = 'Fetched';
+      } else if (fetchResult && fetchResult.fetchFailed) {
+        markFounderTestFinalReportFetchFailed(runId);
+        founderTestReportHandoffStalled = true;
+        refreshFounderTestFinalReportDeliverySurfaces(cardRuntime);
+        if (buttonEl) buttonEl.textContent = 'Fetch failed';
+      } else if (buttonEl) {
+        buttonEl.textContent = 'Not ready';
+      }
+    } catch (fetchErr) {
+      if (buttonEl) buttonEl.textContent = 'Fetch failed';
+      markFounderTestFinalReportFetchFailed(runId);
+      founderTestReportHandoffStalled = true;
+      refreshFounderTestFinalReportDeliverySurfaces(cardRuntime);
+      pushNotification('Retry fetch failed — ' + (fetchErr && fetchErr.message ? fetchErr.message : 'unknown error'));
+    } finally {
+      if (buttonEl) {
+        buttonEl.disabled = false;
+        window.setTimeout(function () {
+          buttonEl.textContent = 'Retry Fetch Result';
+        }, 2200);
+      }
+    }
+  }
+
+  function maybeDeliverRunningDiagnosticNotification() {
+    if (founderTestRunningDiagnosticDelivered || founderTestRuntimeDismissed) return;
+    if (!founderTestRunStartedAt || !lastFounderTestRuntimeSnapshot || !lastFounderTestRuntimeSnapshot.runId) return;
+    var runtime = lastFounderTestRuntimeSnapshot;
+    var terminalStates = { COMPLETE: true, FAILED: true, CANCELLED: true, STALLED: true };
+    if (terminalStates[runtime.state]) return;
+    if (Date.now() - founderTestRunStartedAt < FOUNDER_TEST_RUNNING_DIAGNOSTIC_MS) return;
+    var delivered = deliverFounderTestReportNotification({
+      title: 'Founder Test Still Running — Diagnostic Available',
+      data: { runId: runtime.runId, state: 'RUNNING' },
+      runtime: runtime,
+    });
+    if (delivered) founderTestRunningDiagnosticDelivered = true;
+  }
+
+  function renderFounderTestOperatorFeedTrace(runtime) {
+    renderFounderTestUnifiedRuntimeCard(runtime);
+  }
+
+  function renderFounderTestRuntime(runtime) {
+    var btn = el('run-founder-test');
+    var btnLabel = el('founder-test-btn-label');
+    var btnHint = el('founder-test-btn-hint');
+    if (!runtime) {
+      if (!isOperatorFeedFounderTestMode()) {
+        if (btn) btn.classList.remove('is-running');
+        if (btnLabel) btnLabel.textContent = 'Run Founder Test';
+        if (btnHint) btnHint.textContent = 'Complete founder validation — one report, one verdict.';
+        lastRenderedRuntimeFeedKey = '';
+        renderFounderTestUnifiedRuntimeCard(null);
+      }
+      return;
+    }
+
+    activateOperatorFeedFounderTestMode(runtime);
+    var ui = runtime.uiSummary || {};
+    var running =
+      runtime.state === 'RUNNING' ||
+      runtime.state === 'STARTING' ||
+      runtime.state === 'COMPLETING' ||
+      runtime.state === 'STALLED';
+    if (btn) {
+      btn.disabled = running;
+      btn.classList.toggle('is-running', running);
+    }
+    if (btnLabel) {
+      btnLabel.textContent = running ? 'Running Founder Test...' : 'Run Founder Test';
+    }
+    if (btnHint) {
+      btnHint.textContent = running
+        ? ui.stageLine || 'Founder Test in progress — see Operator Feed runtime card.'
+        : runtime.state === 'COMPLETE'
+          ? resolveFounderTestCompleteHeaderHint(runtime) || 'Founder Test complete — preparing report.'
+          : runtime.state === 'FAILED'
+            ? 'Founder Test failed — copy runtime failure report for diagnostics.'
+            : 'Complete founder validation — one report, one verdict.';
+    }
+    renderFounderTestUnifiedRuntimeCard(runtime);
+  }
+
+  function renderLocalFounderTestRuntimePreview(stageLine) {
+    if (!localFounderTestPreviewRunId) {
+      localFounderTestPreviewRunId = 'local-preview-' + String(Date.now());
+    }
+    renderFounderTestRuntime({
+      runId: localFounderTestPreviewRunId,
+      uiSummary: {
+        headline: 'Running Founder Test...',
+        stageLine: stageLine || 'Preparing local checks',
+        elapsedLine: 'Elapsed: —',
+        remainingLine: 'Remaining: —',
+      },
+      feed: { events: [] },
+      state: 'RUNNING',
+      progress: { currentStageOrder: 0, totalStages: 11, currentStageLabel: stageLine },
+    });
+  }
+
+  async function waitForFounderTestAsyncResult(runId) {
+    var deadline = Date.now() + 20 * 60 * 1000;
+    var terminalStates = { COMPLETE: true, FAILED: true, CANCELLED: true, STALLED: true };
+    while (Date.now() < deadline) {
+      await pollFounderTestRuntimeStatusOnce();
+      var runtime = lastFounderTestRuntimeSnapshot;
+      if (runtime && terminalStates[runtime.state]) {
+        break;
+      }
+      await new Promise(function (resolve) {
+        window.setTimeout(resolve, 800);
+      });
+    }
+    var resultUrl = buildFounderTestResultFetchUrl(runId);
+    var resultRes = await fetch(resultUrl, { cache: 'no-store' });
+    rememberFounderTestApiOriginFromUrl(resultUrl);
+    if (!resultRes.ok && resultRes.status !== 202) {
+      var stalledRuntime = lastFounderTestRuntimeSnapshot;
+      var stalledState =
+        stalledRuntime && isFounderTestCompleteSuccessState(stalledRuntime.state)
+          ? 'COMPLETE'
+          : stalledRuntime && stalledRuntime.state === 'STALLED'
+            ? 'STALLED'
+            : 'FAILED';
+      deliverFounderTestReportNotification({
+        data: {
+          runId: runId,
+          state: stalledState,
+          error: 'Founder test result not ready (HTTP ' + String(resultRes.status) + ').',
+          failureReportMarkdown:
+            stalledRuntime && isFounderTestCompleteSuccessState(stalledRuntime.state)
+              ? buildCompleteFounderTestHandoffDiagnostic(
+                  stalledRuntime,
+                  runId,
+                  'Founder test result not ready (HTTP ' + String(resultRes.status) + ').',
+                )
+              : null,
+        },
+        runtime: stalledRuntime,
+        errorMessage: 'Founder test result not ready (HTTP ' + String(resultRes.status) + ').',
+      });
+      throw new Error('Founder test result not ready (HTTP ' + String(resultRes.status) + ').');
+    }
+    var data = await resultRes.json();
+    if (
+      isFounderTestCompleteSuccessState(data.state) ||
+      (data.runtime && isFounderTestCompleteSuccessState(data.runtime.state))
+    ) {
+      if (!data.reportMarkdown && !(data.report && data.report.reportMarkdown)) {
+        for (var retry = 0; retry < FOUNDER_TEST_RESULT_FETCH_MAX_ATTEMPTS; retry += 1) {
+          await waitMs(FOUNDER_TEST_RESULT_FETCH_DELAY_MS);
+          resultRes = await fetch(buildFounderTestResultFetchUrl(runId), { cache: 'no-store' });
+          if (!resultRes.ok && resultRes.status !== 202) break;
+          data = await resultRes.json();
+          if (data.reportMarkdown || (data.report && data.report.reportMarkdown)) break;
+        }
+      }
+    }
+    applyFounderTestResultPayload(data);
+    return data;
+  }
+
+  async function pollFounderTestRuntimeStatusOnce() {
+    try {
+      var activeRunId = resolveActiveFounderTestRunId();
+      var statusUrl = buildFounderTestRuntimeStatusUrl(activeRunId);
+      var res = await fetch(statusUrl, { cache: 'no-store' });
+      if (!res.ok) return null;
+      rememberFounderTestApiOriginFromUrl(statusUrl);
+      var data = await res.json();
+      if (data && data.runtime) {
+        if (
+          data.runtime.state === 'IDLE' &&
+          activeRunId &&
+          lastKnownActiveFounderTestRuntimeSnapshot &&
+          lastKnownActiveFounderTestRuntimeSnapshot.runId === activeRunId
+        ) {
+          founderTestRuntimeReportBindingMismatch = true;
+          lastRenderedOperatorTraceKey = '';
+          renderFounderTestUnifiedRuntimeCard(lastKnownActiveFounderTestRuntimeSnapshot);
+          refreshActiveFounderTestReportBinding(false);
+          return lastKnownActiveFounderTestRuntimeSnapshot;
+        }
+        rememberActiveFounderTestRuntimeSnapshot(data.runtime);
+        renderFounderTestRuntime(data.runtime);
+        if (data.runtime.publicState === 'COMPLETE' || isFounderTestCompleteSuccessState(data.runtime.state)) {
+          var pollRunId = normalizeFounderTestDeliveryRunId(activeRunId, data.runtime);
+          scheduleFounderTestReportHandoffStallGuard(pollRunId, data.runtime);
+          if (
+            !hasFounderTestFinalReportAvailable(pollRunId) &&
+            getFounderTestFinalReportFetchState(pollRunId) !== 'fetching' &&
+            !founderTestOperatorFeedReportFetchInFlight
+          ) {
+            markFounderTestFinalReportFetching(pollRunId);
+            updateFounderTestOperatorFeedReportActionLabels(data.runtime);
+            fetchFounderTestResultWithRetry(pollRunId, FOUNDER_TEST_RESULT_FETCH_MAX_ATTEMPTS).then(
+              function (fetchResult) {
+                var markdown =
+                  (fetchResult &&
+                    fetchResult.data &&
+                    (fetchResult.data.reportMarkdown ||
+                      (fetchResult.data.report && fetchResult.data.report.reportMarkdown))) ||
+                  null;
+                if (markdown) {
+                  applyFounderTestFinalReport(pollRunId, markdown, 'poll-result-fetch', {
+                    runtime: fetchResult.data.runtime || data.runtime,
+                    reportObject: fetchResult.data.report || null,
+                    generatedAt: fetchResult.data.generatedAt,
+                  });
+                } else if (fetchResult && fetchResult.fetchFailed) {
+                  markFounderTestFinalReportFetchFailed(pollRunId);
+                  founderTestReportHandoffStalled = true;
+                  refreshFounderTestFinalReportDeliverySurfaces(data.runtime);
+                } else {
+                  founderTestOperatorFeedReportFetching = false;
+                  founderTestOperatorFeedReportFetchInFlight = false;
+                }
+              },
+            );
+          }
+        }
+        maybeDeliverRunningDiagnosticNotification();
+        return data.runtime;
+      }
+    } catch (pollErr) {
+      /* polling is best-effort */
+    }
+    return null;
+  }
+
+  function startFounderTestRuntimePolling() {
+    stopFounderTestRuntimePolling();
+    founderTestRuntimePollId = window.setInterval(function () {
+      pollFounderTestRuntimeStatusOnce();
+    }, 800);
   }
 
   function showFounderTestPanel(mode) {
@@ -4119,7 +6073,11 @@
     if (mode === 'running') {
       status.textContent = 'RUNNING — one button, one execution, one report (read-only)';
     } else if (mode === 'done') {
-      status.textContent = 'COMPLETE — unified launch-readiness report ready';
+      status.textContent = hasFounderTestFinalReportAvailable(resolveActiveFounderTestRunId())
+        ? 'COMPLETE — unified launch-readiness report ready'
+        : founderTestReportHandoffStalled
+          ? 'COMPLETE — report handoff stalled (diagnostic available)'
+          : 'COMPLETE — preparing final report';
     } else if (mode === 'error') {
       status.textContent = 'FAILED — founder test did not complete';
     } else {
@@ -5270,7 +7228,7 @@
       }
       html += '<p class="hint">' + escapeHtml(summary.finalRecommendation) + '</p>';
       body.innerHTML = html;
-      if (copyBtn) copyBtn.disabled = !report.reportMarkdown;
+      updateCopyReportButtonState();
       showFounderTestPanel('done');
       return;
     }
@@ -5382,7 +7340,7 @@
     }
 
     body.innerHTML = html;
-    if (copyBtn) copyBtn.disabled = !report.reportMarkdown;
+    updateCopyReportButtonState();
     var viewFullBtn = el('view-founder-test-full-report');
     var fullReportEl = el('founder-test-full-report');
     if (viewFullBtn && fullReportEl && report.reportMarkdown) {
@@ -5397,13 +7355,980 @@
     showFounderTestPanel('done');
   }
 
-  function showFounderTestError(message) {
+  function formatFounderTestFetchError(err) {
+    if (!err) return 'Unknown error';
+    var message = err.message || String(err);
+    if (err.name === 'TypeError' && /failed to fetch|networkerror|load failed/i.test(message)) {
+      return 'Failed to fetch — the server connection was lost or timed out. The dev server may have restarted during the run.';
+    }
+    if (/abort/i.test(message)) {
+      return 'Founder test request was aborted before completion.';
+    }
+    return message;
+  }
+
+  var FOUNDER_TEST_RESULT_FETCH_DELAY_MS = 600;
+
+  function isFounderTestCompleteSuccessState(state) {
+    return state === 'COMPLETE';
+  }
+
+  function isFounderTestFinalReportMarkdown(markdown) {
+    if (!markdown || !String(markdown).trim()) return false;
+    var text = String(markdown);
+    return (
+      text.indexOf('# Founder Test Runtime Failure Report') < 0 &&
+      text.indexOf('Founder test still running') < 0
+    );
+  }
+
+  function buildFounderTestCompletePreparingDiagnosticText(snapshot, generatedAt) {
+    return [
+      '# Founder Test Complete — Report Preparing',
+      '',
+      'Generated: ' + (generatedAt || (snapshot && snapshot.endedAt) || new Date().toISOString()),
+      '',
+      '## Status',
+      '',
+      'Final report preparing',
+      '',
+      'All founder test stages completed successfully. The final report is being assembled — retry Copy/Open Report in a moment.',
+      '',
+      '## Runtime Snapshot',
+      '',
+      '- Run ID: ' + (snapshot && snapshot.runId ? snapshot.runId : 'n/a'),
+      '- State: COMPLETE',
+      '- Elapsed: ' + (snapshot && snapshot.uiSummary ? snapshot.uiSummary.elapsedLine : 'n/a'),
+      '',
+    ].join('\n');
+  }
+
+  function buildFounderTestCompleteHandoffFallbackText(snapshot, reason, fetchAttempts) {
+    return [
+      '# Founder Test Complete — Report Handoff Diagnostic',
+      '',
+      'Generated: ' + new Date().toISOString(),
+      '',
+      '## Status',
+      '',
+      '- State: COMPLETE',
+      '- Run ID: ' + (snapshot && snapshot.runId ? snapshot.runId : 'n/a'),
+      '- Reason: ' + (reason || 'Final report not available after bounded retries.'),
+      ...(typeof fetchAttempts === 'number' ? ['- Result fetch attempts: ' + String(fetchAttempts)] : []),
+      '',
+      'All founder test stages completed. The final report could not be retrieved from the result endpoint after bounded retries.',
+      '',
+      '## Runtime Snapshot',
+      '',
+      '- Elapsed: ' + (snapshot && snapshot.uiSummary ? snapshot.uiSummary.elapsedLine : 'n/a'),
+      '',
+    ].join('\n');
+  }
+
+  async function fetchFounderTestReportMarkdownFromEndpoint(runId) {
+    runId = coerceReportHandoffRunId(runId, founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot());
+    if (!runId) return { markdown: null, errorMessage: 'No active founder test runId.' };
+    var reportUrl = buildFounderTestResultReportUrl(runId);
+    try {
+      var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      var fetchTimer = null;
+      if (controller) {
+        fetchTimer = window.setTimeout(function () {
+          controller.abort();
+        }, FOUNDER_TEST_RESULT_FETCH_TIMEOUT_MS);
+      }
+      var reportRes = await fetch(reportUrl, {
+        cache: 'no-store',
+        signal: controller ? controller.signal : undefined,
+      });
+      if (fetchTimer != null) window.clearTimeout(fetchTimer);
+      rememberFounderTestApiOriginFromUrl(reportUrl);
+      if (!reportRes.ok) {
+        return {
+          markdown: null,
+          errorMessage: 'Result-report endpoint returned HTTP ' + String(reportRes.status),
+          httpStatus: reportRes.status,
+          requestedUrl: reportUrl,
+        };
+      }
+      var contentType = reportRes.headers && reportRes.headers.get ? reportRes.headers.get('content-type') || '' : '';
+      var markdown = await reportRes.text();
+      if (!markdown || !String(markdown).trim()) {
+        return {
+          markdown: null,
+          errorMessage: 'Result-report endpoint returned empty markdown',
+          httpStatus: reportRes.status,
+          requestedUrl: reportUrl,
+          responseContentType: contentType,
+        };
+      }
+      return {
+        markdown: String(markdown),
+        errorMessage: null,
+        httpStatus: reportRes.status,
+        requestedUrl: reportUrl,
+        responseContentType: contentType,
+      };
+    } catch (reportErr) {
+      return {
+        markdown: null,
+        errorMessage:
+          reportErr && reportErr.name === 'AbortError'
+            ? 'Result-report fetch timed out after ' + String(FOUNDER_TEST_RESULT_FETCH_TIMEOUT_MS) + ' ms'
+            : reportErr && reportErr.message
+              ? reportErr.message
+              : 'Failed to fetch founder test report markdown',
+        requestedUrl: reportUrl,
+      };
+    }
+  }
+
+  function resolveFounderTestResultDeliveryMarkdown(data, runId) {
+    if (!data) return null;
+    if (data.reportMarkdown && String(data.reportMarkdown).trim()) {
+      return String(data.reportMarkdown);
+    }
+    if (data.report && data.report.reportMarkdown && String(data.report.reportMarkdown).trim()) {
+      return String(data.report.reportMarkdown);
+    }
+    return null;
+  }
+
+  function shouldFetchFounderTestReportFromMarkdownEndpoint(data) {
+    if (!data) return false;
+    if (data.payloadTooLarge === true) return true;
+    if (data.deliveryMode === 'markdown-endpoint' || data.deliveryMode === 'download-endpoint') return true;
+    if (data.hasReportMarkdown === true && !resolveFounderTestResultDeliveryMarkdown(data)) return true;
+    return false;
+  }
+
+  async function fetchFounderTestResultWithRetry(runId, maxAttempts) {
+    runId = coerceReportHandoffRunId(runId, founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot());
+    if (!runId) {
+      return {
+        data: null,
+        fetchFailed: true,
+        exhausted: true,
+        errorMessage: 'No active founder test runId.',
+        fetchDiagnostic: null,
+      };
+    }
+    if (founderTestOperatorFeedReportFetchInFlight && getFounderTestFinalReportFetchState(runId) === 'fetching') {
+      return {
+        data: null,
+        fetchFailed: false,
+        exhausted: false,
+        errorMessage: null,
+        fetchDiagnostic: null,
+        inFlight: true,
+      };
+    }
+    if (!hasFounderTestFinalReportAvailable(runId)) {
+      markFounderTestFinalReportFetching(runId);
+    }
+    updateFounderTestOperatorFeedReportActionLabels(founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot());
+    var attempts = Math.max(1, maxAttempts || FOUNDER_TEST_RESULT_FETCH_MAX_ATTEMPTS);
+    var lastData = null;
+    var lastError = null;
+    var lastRequestedUrl = buildFounderTestResultFetchUrl(runId);
+    var lastHttpStatus = null;
+    var lastContentType = null;
+    var lastJsonParseFailed = false;
+    var lastNonJsonPreview = null;
+    for (var attempt = 0; attempt < attempts; attempt += 1) {
+      if (attempt > 0) {
+        await waitMs(FOUNDER_TEST_RESULT_FETCH_DELAY_MS);
+      }
+      lastRequestedUrl = buildFounderTestResultFetchUrl(runId);
+      try {
+        var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+        var fetchTimer = null;
+        if (controller) {
+          fetchTimer = window.setTimeout(function () {
+            controller.abort();
+          }, FOUNDER_TEST_RESULT_FETCH_TIMEOUT_MS);
+        }
+        var resultRes = await fetch(lastRequestedUrl, {
+          cache: 'no-store',
+          signal: controller ? controller.signal : undefined,
+        });
+        if (fetchTimer != null) window.clearTimeout(fetchTimer);
+        rememberFounderTestApiOriginFromUrl(lastRequestedUrl);
+        lastHttpStatus = resultRes.status;
+        var parsed = await parseFounderTestHttpJsonResponse(resultRes);
+        lastContentType = parsed.contentType;
+        lastJsonParseFailed = parsed.jsonParseFailed;
+        lastNonJsonPreview = parsed.nonJsonResponsePreview;
+        recordFounderTestResultFetchAttempt({
+          requestedUrl: lastRequestedUrl,
+          requestedRunId: runId,
+          fetchErrorMessage: lastError,
+          httpStatus: lastHttpStatus,
+          responseContentType: lastContentType,
+          jsonParseFailed: lastJsonParseFailed,
+          nonJsonResponsePreview: lastNonJsonPreview,
+          resultDebugResponse: founderTestResultDebugSnapshot,
+        });
+        if (parsed.jsonParseFailed) {
+          lastError = 'Result endpoint returned non-JSON response (content-type: ' + String(lastContentType || 'unknown') + ')';
+          continue;
+        }
+        if (lastHttpStatus === 404) {
+          lastError = 'Founder test result not stored for runId ' + runId;
+          continue;
+        }
+        if (!resultRes.ok && lastHttpStatus !== 202) {
+          lastError = 'Result endpoint returned HTTP ' + String(lastHttpStatus);
+          continue;
+        }
+        var data = parsed.data;
+        lastData = data;
+        var inlineMarkdown = resolveFounderTestResultDeliveryMarkdown(data, runId);
+        if (inlineMarkdown) {
+          applyFounderTestFinalReport(
+            runId,
+            inlineMarkdown,
+            'result-fetch-retry',
+            {
+              runtime: data.runtime || lastFounderTestRuntimeSnapshot,
+              reportObject: data.report || null,
+              generatedAt: data.generatedAt,
+            },
+          );
+          return {
+            data: data,
+            fetchFailed: false,
+            exhausted: false,
+            errorMessage: null,
+            fetchDiagnostic: founderTestLastResultFetchDiagnostic,
+          };
+        }
+        if (data && shouldFetchFounderTestReportFromMarkdownEndpoint(data)) {
+          var reportFetch = await fetchFounderTestReportMarkdownFromEndpoint(runId);
+          if (reportFetch.markdown) {
+            applyFounderTestFinalReport(
+              runId,
+              reportFetch.markdown,
+              'result-report-endpoint',
+              {
+                runtime: data.runtime || lastFounderTestRuntimeSnapshot,
+                generatedAt: data.generatedAt,
+              },
+            );
+            return {
+              data: data,
+              fetchFailed: false,
+              exhausted: false,
+              errorMessage: null,
+              fetchDiagnostic: founderTestLastResultFetchDiagnostic,
+            };
+          }
+          lastError = reportFetch.errorMessage || 'Result-report endpoint did not return markdown';
+          recordFounderTestResultFetchAttempt({
+            requestedUrl: reportFetch.requestedUrl || buildFounderTestResultReportUrl(runId),
+            requestedRunId: runId,
+            fetchErrorMessage: lastError,
+            httpStatus: reportFetch.httpStatus != null ? reportFetch.httpStatus : null,
+            responseContentType: reportFetch.responseContentType || null,
+            jsonParseFailed: false,
+            nonJsonResponsePreview: null,
+            resultDebugResponse: founderTestResultDebugSnapshot,
+          });
+          continue;
+        }
+        if (lastHttpStatus === 202) {
+          lastError = 'Result metadata preparing for runId ' + runId;
+          continue;
+        }
+        lastError = 'Stored result missing reportMarkdown for runId ' + runId;
+      } catch (fetchErr) {
+        lastError =
+          fetchErr && fetchErr.name === 'AbortError'
+            ? 'Result fetch timed out after ' + String(FOUNDER_TEST_RESULT_FETCH_TIMEOUT_MS) + ' ms'
+            : fetchErr && fetchErr.message
+              ? fetchErr.message
+              : 'Failed to fetch founder test result';
+        recordFounderTestResultFetchAttempt({
+          requestedUrl: lastRequestedUrl,
+          requestedRunId: runId,
+          fetchErrorMessage: lastError,
+          httpStatus: lastHttpStatus,
+          responseContentType: lastContentType,
+          jsonParseFailed: lastJsonParseFailed,
+          nonJsonResponsePreview: lastNonJsonPreview,
+          resultDebugResponse: null,
+        });
+      }
+    }
+    var fetchFailed = !resolveFounderTestFinalReportMarkdown(runId).markdown;
+    var fetchDiagnostic = null;
+    if (fetchFailed) {
+      markFounderTestFinalReportFetchFailed(runId);
+      founderTestReportHandoffStalled = true;
+      fetchDiagnostic = await attachResultFetchFailureDebug(
+        runId,
+        founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot(),
+        {
+          requestedUrl: lastRequestedUrl,
+          fetchErrorMessage: lastError || 'Final report not available after bounded retries.',
+          httpStatus: lastHttpStatus,
+          responseContentType: lastContentType,
+          jsonParseFailed: lastJsonParseFailed,
+          nonJsonResponsePreview: lastNonJsonPreview,
+        },
+      );
+      refreshFounderTestFinalReportDeliverySurfaces(
+        founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot(),
+      );
+    }
+    return {
+      data: lastData,
+      fetchFailed: fetchFailed,
+      exhausted: true,
+      errorMessage: lastError || 'Final report not available after bounded retries.',
+      fetchDiagnostic: fetchDiagnostic,
+    };
+  }
+
+  function buildRuntimeFailureReportText(snapshot, errorMessage) {
+    if (snapshot && isFounderTestCompleteSuccessState(snapshot.state)) {
+      return buildCompleteFounderTestHandoffDiagnostic(snapshot, snapshot.runId, errorMessage);
+    }
+    var lines = [
+      '# Founder Test Runtime Failure Report',
+      '',
+      'Generated: ' + new Date().toISOString(),
+      '',
+      '## Error',
+      '',
+      errorMessage || 'Unknown error',
+      '',
+      '## Runtime Snapshot',
+      '',
+      '- Run ID: ' + (snapshot && snapshot.runId ? snapshot.runId : 'n/a'),
+      '- State: ' + (snapshot && snapshot.state ? snapshot.state : 'unknown'),
+      '- Stage: ' +
+        (snapshot && snapshot.progress
+          ? (snapshot.progress.currentStageLabel || 'unknown') +
+            ' (' +
+            String(snapshot.progress.currentStageOrder) +
+            '/' +
+            String(snapshot.progress.totalStages) +
+            ')'
+          : 'unknown'),
+      '- Elapsed: ' + (snapshot && snapshot.uiSummary ? snapshot.uiSummary.elapsedLine : 'n/a'),
+      '- Stall health: ' + (snapshot && snapshot.stallAnalysis ? snapshot.stallAnalysis.health : 'n/a'),
+      '- Stall reason: ' +
+        (snapshot && (snapshot.stallReason || (snapshot.stallAnalysis && snapshot.stallAnalysis.warningMessage))
+          ? snapshot.stallReason || snapshot.stallAnalysis.warningMessage
+          : 'none'),
+      '- Last heartbeat: ' + (snapshot && snapshot.lastHeartbeatAt ? snapshot.lastHeartbeatAt : 'n/a'),
+      '- Seconds since heartbeat: ' +
+        String(snapshot && typeof snapshot.secondsSinceLastHeartbeat === 'number' ? snapshot.secondsSinceLastHeartbeat : 0),
+      '- Last successful artifact sub-step: ' +
+        (snapshot && snapshot.lastSuccessfulArtifactSubstep ? snapshot.lastSuccessfulArtifactSubstep : 'n/a'),
+      '- Active artifact sub-step: ' +
+        (snapshot && snapshot.activeArtifactBuildSubstep ? snapshot.activeArtifactBuildSubstep : 'none'),
+      '- Artifact sub-step stall: ' +
+        (snapshot && snapshot.artifactBuildSubstepStallReason ? snapshot.artifactBuildSubstepStallReason : 'none'),
+      '- Missing completion boundary: ' +
+        (snapshot && snapshot.missingCompletionBoundary ? snapshot.missingCompletionBoundary : 'none'),
+      '- Chat stress started: ' +
+        String(snapshot && typeof snapshot.chatStressStartedCount === 'number' ? snapshot.chatStressStartedCount : 0),
+      '- Chat stress settled: ' +
+        String(snapshot && typeof snapshot.chatStressSettledCount === 'number' ? snapshot.chatStressSettledCount : 0),
+      '- Chat stress pending: ' +
+        String(snapshot && typeof snapshot.chatStressPendingCount === 'number' ? snapshot.chatStressPendingCount : 0),
+      ...(snapshot && snapshot.chatStressPendingScenarioIds && snapshot.chatStressPendingScenarioIds.length
+        ? ['- Chat stress pending scenarios: ' + snapshot.chatStressPendingScenarioIds.join(', ')]
+        : []),
+      '- Chat stress active scenario: ' +
+        (snapshot && snapshot.chatStressActiveScenarioId ? snapshot.chatStressActiveScenarioId : 'n/a'),
+      '- Handler alive: ' + (snapshot && snapshot.handlerAlive ? 'yes' : 'no'),
+      '- POST timed out: ' +
+        (lastFounderTestPostTimedOut || (snapshot && snapshot.postTimedOut) ? 'yes' : 'no'),
+      '- Last completed scenario: ' +
+        (snapshot && (snapshot.lastSuccessfulArtifactSubstep || snapshot.lastCompletedOperation)
+          ? snapshot.lastSuccessfulArtifactSubstep || snapshot.lastCompletedOperation
+          : 'n/a'),
+      '- Runtime monitor running: ' +
+        (snapshot && (snapshot.state === 'RUNNING' || snapshot.state === 'STALLED') ? 'yes' : 'no'),
+      '',
+      '## Artifact Build Trace',
+      '',
+    ];
+    if (snapshot && snapshot.traceEvents) {
+      for (var t = 0; t < snapshot.traceEvents.length; t += 1) {
+        var traceEvent = snapshot.traceEvents[t];
+        if (
+          traceEvent.operationId.indexOf('launch-readiness') >= 0 ||
+          traceEvent.operationId.indexOf('loading-') >= 0 ||
+          traceEvent.operationId.indexOf('running-') >= 0 ||
+          traceEvent.operationId.indexOf('assessing-') >= 0 ||
+          traceEvent.operationId.indexOf('building-launch') >= 0 ||
+          traceEvent.operationId.indexOf('artifact-substep') >= 0
+        ) {
+          lines.push('- ' + traceEvent.displayLine);
+        }
+      }
+    }
+    lines.push(
+      '',
+      '## Stage Timings',
+      '',
+    );
+    if (snapshot && snapshot.stages) {
+      for (var i = 0; i < snapshot.stages.length; i += 1) {
+        var stage = snapshot.stages[i];
+        lines.push(
+          '- ' +
+            String(stage.order) +
+            '. ' +
+            stage.label +
+            ': ' +
+            stage.status +
+            (stage.durationMs != null ? ' (' + String(stage.durationMs) + ' ms)' : ''),
+        );
+      }
+    }
+    lines.push('', '## Runtime Feed', '');
+    if (snapshot && snapshot.feed && snapshot.feed.events) {
+      for (var j = 0; j < snapshot.feed.events.length; j += 1) {
+        var event = snapshot.feed.events[j];
+        lines.push('- [' + event.displayTime + '] ' + event.message);
+      }
+    }
+    if (lastFounderTestPartialReportMarkdown) {
+      lines.push('', '## Partial Founder Test Report', '', lastFounderTestPartialReportMarkdown, '');
+    }
+    return lines.join('\n');
+  }
+
+  function buildFounderTestMinimalDiagnosticText(errorMessage) {
+    return [
+      '# Founder Test Diagnostic Report',
+      '',
+      'Generated: ' + new Date().toISOString(),
+      '',
+      '## Error',
+      '',
+      errorMessage || 'Unknown error',
+      '',
+      'No runtime snapshot or founder test report was available at copy time.',
+      '',
+    ].join('\n');
+  }
+
+  function buildFounderTestCopyPayload(cardRuntime) {
+    cardRuntime = cardRuntime || founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot();
+    var activeRuntime = cardRuntime || resolveActiveFounderTestRuntimeSnapshot();
+    var activeRunId = coerceReportHandoffRunId(null, activeRuntime);
+    var resolvedFinal = resolveFounderTestFinalReportMarkdown(activeRunId);
+    if (resolvedFinal.markdown) {
+      return {
+        source: resolvedFinal.source,
+        text: resolvedFinal.markdown,
+        runtime: activeRuntime,
+        runId: activeRunId,
+        needsFetch: false,
+      };
+    }
+    if (activeRuntime && isFounderTestCompleteSuccessState(activeRuntime.state)) {
+      if (shouldUseFounderTestHandoffDiagnosticForCompleteReport()) {
+        return {
+          source: 'complete-fetch-failure-diagnostic',
+          text: buildCompleteFounderTestHandoffDiagnostic(
+            activeRuntime,
+            activeRunId,
+            lastFounderTestErrorMessage,
+          ),
+          runtime: activeRuntime,
+          runId: activeRunId,
+          needsFetch: false,
+        };
+      }
+      return {
+        source: 'complete-preparing',
+        text: null,
+        runtime: activeRuntime,
+        needsFetch: true,
+        runId: activeRunId,
+      };
+    }
+    if (activeRuntime && activeRuntime.runId && activeRuntime.state !== 'IDLE') {
+      if (isFounderTestCompleteSuccessState(activeRuntime.state)) {
+        if (shouldUseFounderTestHandoffDiagnosticForCompleteReport()) {
+          return {
+            source: 'complete-fetch-failure-diagnostic',
+            text: buildCompleteFounderTestHandoffDiagnostic(
+              activeRuntime,
+              activeRunId,
+              lastFounderTestErrorMessage,
+            ),
+            runtime: activeRuntime,
+            runId: activeRunId,
+            needsFetch: false,
+          };
+        }
+        return {
+          source: 'complete-preparing',
+          text: null,
+          runtime: activeRuntime,
+          needsFetch: true,
+          runId: activeRunId,
+        };
+      }
+      var diagnosticMessage =
+        lastFounderTestErrorMessage ||
+        (activeRuntime.state === 'STALLED'
+          ? 'Founder test stalled — diagnostic snapshot available.'
+          : activeRuntime.state === 'FAILED'
+            ? 'Founder test failed — diagnostic snapshot available.'
+            : activeRuntime.state === 'RUNNING' ||
+                activeRuntime.state === 'STARTING' ||
+                activeRuntime.state === 'COMPLETING'
+              ? 'Founder test still running — diagnostic snapshot available.'
+              : 'Founder test diagnostic snapshot available.');
+      return {
+        source: 'runtime-diagnostic',
+        text: buildRuntimeFailureReportText(activeRuntime, diagnosticMessage),
+        runtime: activeRuntime,
+      };
+    }
+    if (activeRunId && lastKnownActiveFounderTestRuntimeSnapshot) {
+      if (isFounderTestCompleteSuccessState(lastKnownActiveFounderTestRuntimeSnapshot.state)) {
+        return {
+          source: 'complete-fetch-failure-diagnostic',
+          text: buildCompleteFounderTestHandoffDiagnostic(
+            lastKnownActiveFounderTestRuntimeSnapshot,
+            activeRunId,
+            lastFounderTestErrorMessage,
+          ),
+          runtime: lastKnownActiveFounderTestRuntimeSnapshot,
+          runId: activeRunId,
+          needsFetch: false,
+        };
+      }
+      return {
+        source: 'runtime-failure',
+        text: buildRuntimeFailureReportText(
+          lastKnownActiveFounderTestRuntimeSnapshot,
+          lastFounderTestErrorMessage || 'Founder test still running — diagnostic snapshot available.',
+        ),
+        runtime: lastKnownActiveFounderTestRuntimeSnapshot,
+      };
+    }
+    if (lastFounderTestRuntimeSnapshot && lastFounderTestRuntimeSnapshot.runId) {
+      if (isFounderTestCompleteSuccessState(lastFounderTestRuntimeSnapshot.state)) {
+        return {
+          source: 'complete-fetch-failure-diagnostic',
+          text: buildCompleteFounderTestHandoffDiagnostic(
+            lastFounderTestRuntimeSnapshot,
+            activeRunId || lastFounderTestRuntimeSnapshot.runId,
+            lastFounderTestErrorMessage,
+          ),
+          runtime: lastFounderTestRuntimeSnapshot,
+          runId: coerceReportHandoffRunId(activeRunId, lastFounderTestRuntimeSnapshot),
+          needsFetch: false,
+        };
+      }
+      return {
+        source: 'runtime-failure',
+        text: buildRuntimeFailureReportText(lastFounderTestRuntimeSnapshot, lastFounderTestErrorMessage),
+        runtime: lastFounderTestRuntimeSnapshot,
+      };
+    }
+    if (lastFounderTestErrorMessage) {
+      if (
+        lastFounderTestRuntimeSnapshot &&
+        isFounderTestCompleteSuccessState(lastFounderTestRuntimeSnapshot.state)
+      ) {
+        return {
+          source: 'complete-fetch-failure-diagnostic',
+          text: buildCompleteFounderTestHandoffDiagnostic(
+            lastFounderTestRuntimeSnapshot,
+            activeRunId,
+            lastFounderTestErrorMessage,
+          ),
+          runtime: lastFounderTestRuntimeSnapshot,
+          runId: coerceReportHandoffRunId(activeRunId, lastFounderTestRuntimeSnapshot),
+          needsFetch: false,
+        };
+      }
+      return {
+        source: 'diagnostic',
+        text: buildFounderTestMinimalDiagnosticText(lastFounderTestErrorMessage),
+        runtime: activeRuntime,
+      };
+    }
+    return null;
+  }
+
+  function resolveFounderTestReportHandoffText(cardRuntime, handoffRunId, fetchResult) {
+    var refreshed = buildFounderTestCopyPayload(cardRuntime);
+    if (refreshed && refreshed.text && String(refreshed.text).trim() && !refreshed.needsFetch) {
+      return String(refreshed.text);
+    }
+    var cachedMarkdown = resolveFounderTestFinalReportMarkdown(handoffRunId).markdown;
+    if (cachedMarkdown) return cachedMarkdown;
+    if (fetchResult && fetchResult.data && fetchResult.data.reportMarkdown) {
+      return String(fetchResult.data.reportMarkdown);
+    }
+    return resolveFounderTestCompleteReportFallbackText(cardRuntime, handoffRunId, fetchResult);
+  }
+
+  function copyFounderTestReportHandoffShared(options) {
+    options = options || {};
+    var cardRuntime = options.runtime || founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot();
+    var handoffRunId = coerceReportHandoffRunId(options.runId || null, cardRuntime);
+    var reportRuntime = resolveActiveFounderTestRuntimeSnapshot();
+
+    function finishClipboardCopy(text) {
+      return copyTextToClipboardWithFallback(String(text)).then(function (result) {
+        if (options.feedbackButton) {
+          options.feedbackButton.textContent = result.ok ? 'Copied' : 'Copy failed';
+          if (options.resetOperatorFeedLabels) {
+            window.setTimeout(function () {
+              updateFounderTestOperatorFeedReportActionLabels(cardRuntime);
+            }, 2200);
+          }
+        }
+        if (result.ok && options.onCopied) options.onCopied();
+        else if (!result.ok && options.onFailed) options.onFailed();
+        return result;
+      });
+    }
+
+    if (cardRuntime && detectFounderTestRuntimeReportMismatch(cardRuntime, reportRuntime)) {
+      founderTestRuntimeReportBindingMismatch = true;
+      return refreshActiveFounderTestReportBinding(true).then(function () {
+        return copyFounderTestReportHandoffShared(options);
+      });
+    }
+
+    var cached = resolveFounderTestFinalReportMarkdown(handoffRunId);
+    if (cached.markdown) {
+      return copyFounderTestFinalReportMarkdownShared(handoffRunId, {
+        runtime: cardRuntime,
+        onCopied: options.onCopied,
+        onFailed: options.onFailed,
+      });
+    }
+
+    var payload = buildFounderTestCopyPayload(cardRuntime);
+    if (payload && payload.text && String(payload.text).trim() && !payload.needsFetch) {
+      return copyFounderTestFinalReportMarkdownShared(handoffRunId || payload.runId, {
+        fallbackText: payload.text,
+        runtime: payload.runtime,
+        onCopied: options.onCopied,
+        onFailed: options.onFailed,
+      });
+    }
+
+    if (payload && payload.needsFetch && handoffRunId) {
+      if (options.syncOperatorFeedLabels) {
+        markFounderTestFinalReportFetching(handoffRunId);
+        updateFounderTestOperatorFeedReportActionLabels(cardRuntime);
+      }
+      return fetchFounderTestResultWithRetry(handoffRunId, FOUNDER_TEST_RESULT_FETCH_MAX_ATTEMPTS).then(function (fetchResult) {
+        if (!hasFounderTestFinalReportAvailable(handoffRunId)) {
+          if (fetchResult && fetchResult.fetchFailed) {
+            markFounderTestFinalReportFetchFailed(handoffRunId);
+          } else {
+            founderTestOperatorFeedReportFetching = false;
+            founderTestOperatorFeedReportFetchInFlight = false;
+          }
+        }
+        if (options.syncOperatorFeedLabels) {
+          updateFounderTestOperatorFeedReportActionLabels(cardRuntime);
+        }
+        updateCopyReportButtonState();
+        return finishClipboardCopy(resolveFounderTestReportHandoffText(cardRuntime, handoffRunId, fetchResult));
+      });
+    }
+
+    if (!payload || !payload.text || !String(payload.text).trim()) {
+      if (options.feedbackButton) {
+        options.feedbackButton.textContent = 'Copy failed';
+        if (options.resetOperatorFeedLabels) {
+          window.setTimeout(function () {
+            updateFounderTestOperatorFeedReportActionLabels(cardRuntime);
+          }, 2200);
+        }
+      }
+      if (options.onFailed) options.onFailed();
+      return Promise.resolve({ ok: false, method: 'none' });
+    }
+
+    return finishClipboardCopy(String(payload.text));
+  }
+
+  function openFounderTestReportHandoffShared(options) {
+    options = options || {};
+    var cardRuntime = options.runtime || founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot();
+    var handoffRunId = coerceReportHandoffRunId(options.runId || null, cardRuntime);
+    var reportRuntime = resolveActiveFounderTestRuntimeSnapshot();
+    var modal = el('founder-test-report-modal');
+    var body = el('founder-test-report-modal-body');
+    if (!modal || !body) return Promise.resolve();
+
+    function showReportText(text) {
+      body.textContent =
+        text && String(text).trim()
+          ? String(text)
+          : 'No founder test report is available yet. Use Retry Fetch Result or wait for the run to finish.';
+      modal.removeAttribute('hidden');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    if (cardRuntime && detectFounderTestRuntimeReportMismatch(cardRuntime, reportRuntime)) {
+      founderTestRuntimeReportBindingMismatch = true;
+      return refreshActiveFounderTestReportBinding(true).then(function () {
+        return openFounderTestReportHandoffShared(options);
+      });
+    }
+
+    var payload = buildFounderTestCopyPayload(cardRuntime);
+    if (payload && payload.text && String(payload.text).trim() && !payload.needsFetch) {
+      showReportText(payload.text);
+      return Promise.resolve();
+    }
+
+    var openCached = resolveFounderTestFinalReportMarkdown(handoffRunId);
+    if (openCached.markdown) {
+      showReportText(openCached.markdown);
+      return Promise.resolve();
+    }
+
+    if (payload && payload.needsFetch && handoffRunId) {
+      markFounderTestFinalReportFetching(handoffRunId);
+      updateFounderTestOperatorFeedReportActionLabels(cardRuntime);
+      updateCopyReportButtonState();
+      body.textContent = 'Fetching Report...';
+      modal.removeAttribute('hidden');
+      modal.setAttribute('aria-hidden', 'false');
+      return fetchFounderTestResultWithRetry(handoffRunId, FOUNDER_TEST_RESULT_FETCH_MAX_ATTEMPTS).then(function (fetchResult) {
+        if (!hasFounderTestFinalReportAvailable(handoffRunId)) {
+          if (fetchResult && fetchResult.fetchFailed) {
+            markFounderTestFinalReportFetchFailed(handoffRunId);
+          } else {
+            founderTestOperatorFeedReportFetching = false;
+            founderTestOperatorFeedReportFetchInFlight = false;
+          }
+        }
+        updateFounderTestOperatorFeedReportActionLabels(cardRuntime);
+        updateCopyReportButtonState();
+        showReportText(resolveFounderTestReportHandoffText(cardRuntime, handoffRunId, fetchResult));
+      });
+    }
+
+    showReportText(payload && payload.text ? payload.text : '');
+    return Promise.resolve();
+  }
+
+  function setCopyReportButtonFeedback(state) {
+    var copyBtn = el('copy-founder-test-report');
+    if (!copyBtn) return;
+    copyBtn.classList.remove('is-copied', 'is-copy-failed');
+    if (copyReportFeedbackTimer != null) {
+      window.clearTimeout(copyReportFeedbackTimer);
+      copyReportFeedbackTimer = null;
+    }
+    if (state === 'copied') {
+      copyBtn.textContent = 'Copied';
+      copyBtn.classList.add('is-copied');
+      copyReportFeedbackTimer = window.setTimeout(function () {
+        updateCopyReportButtonState();
+      }, 2200);
+      return;
+    }
+    if (state === 'failed') {
+      copyBtn.textContent = 'Copy failed';
+      copyBtn.classList.add('is-copy-failed');
+      copyReportFeedbackTimer = window.setTimeout(function () {
+        updateCopyReportButtonState();
+      }, 2600);
+    }
+  }
+
+  function updateCopyReportButtonState() {
+    var copyBtn = el('copy-founder-test-report');
+    var openBtn = el('open-founder-test-report');
+    if (!copyBtn && !openBtn) return;
+    var payload = buildFounderTestCopyPayload();
+    var activeRuntime = resolveActiveFounderTestRuntimeSnapshot();
+    var hasText = !!(payload && payload.text && String(payload.text).trim());
+    var canFetchComplete = !!(payload && payload.needsFetch && payload.runId && !hasText);
+    var panelLabels = resolveFounderTestResultsPanelReportActionLabels(activeRuntime);
+    var buttonsEnabled = panelLabels.enabled !== false && (hasText || canFetchComplete);
+    if (copyBtn) {
+      copyBtn.disabled = !buttonsEnabled;
+      copyBtn.setAttribute('aria-disabled', buttonsEnabled ? 'false' : 'true');
+      if (copyBtn.textContent !== 'Copied' && copyBtn.textContent !== 'Copy failed') {
+        copyBtn.textContent = panelLabels.copy;
+      }
+      copyBtn.classList.remove('is-copied', 'is-copy-failed');
+    }
+    if (openBtn) {
+      openBtn.disabled = !buttonsEnabled;
+      openBtn.setAttribute('aria-disabled', buttonsEnabled ? 'false' : 'true');
+      openBtn.textContent = panelLabels.open;
+    }
+  }
+
+  function copyTextToClipboardWithFallback(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function () {
+        return { ok: true, method: 'clipboard' };
+      });
+    }
+    return new Promise(function (resolve) {
+      var textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', 'readonly');
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try {
+        var ok = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        resolve({ ok: ok, method: 'execCommand' });
+      } catch (copyErr) {
+        document.body.removeChild(textarea);
+        resolve({ ok: false, method: 'execCommand', error: copyErr });
+      }
+    });
+  }
+
+  function renderFounderTestRuntimeFailedOverlay(errorMessage) {
+    var snap = lastFounderTestRuntimeSnapshot;
+    if (!snap) {
+      renderFounderTestRuntime({
+        state: 'FAILED',
+        runId: null,
+        uiSummary: {
+          headline: 'Founder Test Failed',
+          stageLine: errorMessage || 'Connection lost before completion',
+          elapsedLine: 'Elapsed: —',
+          remainingLine: 'Remaining: —',
+        },
+        feed: { events: [] },
+        progress: { currentStageOrder: 0, totalStages: 11, currentStageLabel: 'Failed' },
+      });
+      return;
+    }
+    var failedSnap = {
+      runId: snap.runId,
+      state: snap.state === 'COMPLETE' ? snap.state : 'FAILED',
+      alreadyRunning: false,
+      uiSummary: {
+        headline: 'Founder Test Failed',
+        stageLine: errorMessage || (snap.uiSummary && snap.uiSummary.stageLine) || 'Execution stopped',
+        elapsedLine: (snap.uiSummary && snap.uiSummary.elapsedLine) || 'Elapsed: —',
+        remainingLine: 'Remaining: —',
+      },
+      feed: snap.feed || { events: [] },
+      progress: snap.progress || { currentStageOrder: 0, totalStages: 11, currentStageLabel: 'Failed' },
+      stallAnalysis: snap.stallAnalysis,
+      lastHeartbeatAt: snap.lastHeartbeatAt,
+      secondsSinceLastHeartbeat: snap.secondsSinceLastHeartbeat,
+      currentStageTimeoutMs: snap.currentStageTimeoutMs,
+      stallReason: snap.stallReason,
+    };
+    renderFounderTestRuntime(failedSnap);
+  }
+
+  function showFounderTestError(message, context) {
+    context = context || {};
+    lastFounderTestErrorMessage = message || 'Unknown error';
+    if (context.runtime) {
+      lastFounderTestRuntimeSnapshot = context.runtime;
+    }
+    if (context.partialReportMarkdown) {
+      lastFounderTestPartialReportMarkdown = context.partialReportMarkdown;
+    }
+    var runtime = context.runtime || lastFounderTestRuntimeSnapshot;
+    if (runtime && isFounderTestCompleteSuccessState(runtime.state)) {
+      if (isGenericFailedToFetchMessage(lastFounderTestErrorMessage)) {
+        founderTestRuntimeReportFetchFailed = true;
+        recordFounderTestResultFetchAttempt({
+          requestedUrl: runtime.runId ? buildFounderTestResultFetchUrl(runtime.runId) : 'n/a',
+          requestedRunId: runtime.runId || null,
+          fetchErrorMessage: lastFounderTestErrorMessage,
+          httpStatus: null,
+          responseContentType: null,
+          jsonParseFailed: false,
+          nonJsonResponsePreview: null,
+          resultDebugResponse: founderTestResultDebugSnapshot,
+        });
+      }
+      var bodyComplete = el('founder-test-panel-body');
+      if (bodyComplete) {
+        bodyComplete.innerHTML =
+          '<p class="founder-test-error">Founder Test complete — final report handoff failed.</p>' +
+          '<p class="hint">Use <strong>Copy Handoff Diagnostic</strong> or <strong>Open Report</strong> for fetch/debug proof.</p>';
+      }
+      deliverFounderTestReportNotification({
+        data: {
+          runId: runtime.runId,
+          state: 'COMPLETE',
+          failureReportMarkdown: buildCompleteFounderTestHandoffDiagnostic(
+            runtime,
+            runtime.runId,
+            lastFounderTestErrorMessage,
+          ),
+        },
+        runtime: runtime,
+        errorMessage: lastFounderTestErrorMessage,
+      });
+      renderFounderTestRuntime(runtime);
+      updateCopyReportButtonState();
+      showFounderTestPanel('done');
+      return;
+    }
     var body = el('founder-test-panel-body');
+    var runtimeHint = '';
+    if (lastFounderTestRuntimeSnapshot && lastFounderTestRuntimeSnapshot.progress) {
+      runtimeHint =
+        '<p class="hint">Last known stage: <strong>' +
+        escapeHtml(
+          'Stage ' +
+            String(lastFounderTestRuntimeSnapshot.progress.currentStageOrder) +
+            '/' +
+            String(lastFounderTestRuntimeSnapshot.progress.totalStages) +
+            ' — ' +
+            (lastFounderTestRuntimeSnapshot.progress.currentStageLabel || 'unknown'),
+        ) +
+        '</strong></p>';
+    }
     if (body) {
       body.innerHTML =
-        '<p class="founder-test-error">Founder test failed: ' + escapeHtml(message || 'unknown error') + '</p>' +
-        '<p class="hint">Partial report may still be available after retry.</p>';
+        '<p class="founder-test-error">Founder test failed: ' +
+        escapeHtml(lastFounderTestErrorMessage) +
+        '</p>' +
+        runtimeHint +
+        '<p class="hint">Use <strong>Copy Report</strong> to copy the full report, partial report, or runtime diagnostic snapshot.</p>';
     }
+    renderFounderTestRuntimeFailedOverlay(lastFounderTestErrorMessage);
+    deliverFounderTestReportNotification({
+      data: {
+        runId: lastFounderTestRuntimeSnapshot && lastFounderTestRuntimeSnapshot.runId,
+        state:
+          lastFounderTestRuntimeSnapshot && lastFounderTestRuntimeSnapshot.state === 'STALLED'
+            ? 'STALLED'
+            : 'FAILED',
+        partialReportMarkdown: lastFounderTestPartialReportMarkdown,
+        failureReportMarkdown: lastFounderTestRuntimeSnapshot
+          ? buildRuntimeFailureReportText(lastFounderTestRuntimeSnapshot, lastFounderTestErrorMessage)
+          : null,
+        error: lastFounderTestErrorMessage,
+      },
+      runtime: lastFounderTestRuntimeSnapshot,
+      errorMessage: lastFounderTestErrorMessage,
+    });
+    updateCopyReportButtonState();
     showFounderTestPanel('error');
   }
 
@@ -5574,35 +8499,152 @@
   }
 
   async function runFounderTest() {
-    if (founderTestRunning) return;
+    if (founderTestRunning) {
+      renderLocalFounderTestRuntimePreview('Duplicate run blocked — please wait');
+      return;
+    }
     founderTestRunning = true;
-    lastFounderTestReport = null;
+    founderTestUnifiedTraceExpanded = false;
+    lastFounderTestPostTimedOut = false;
+    lastRenderedRuntimeFeedKey = '';
+    lastRenderedOperatorTraceKey = '';
+    localFounderTestPreviewRunId = null;
+    founderTestRuntimeDismissed = false;
+    founderTestRunningDiagnosticDelivered = false;
+    founderTestRunStartedAt = Date.now();
+    lastKnownActiveFounderTestRuntimeSnapshot = null;
+    founderTestRuntimeCardSnapshot = null;
+    founderTestRuntimeReportBindingMismatch = false;
+    founderTestOperatorFeedReportFetching = false;
+    founderTestOperatorFeedReportFetchInFlight = false;
+    founderTestRuntimeReportFetchFailed = false;
+    resetFounderTestReportHandoffStallState();
+    founderTestLastResultFetchDiagnostic = null;
+    founderTestFinalReportFetchStateByRunId = Object.create(null);
+    founderTestRuntimePinnedRunId = null;
+    activateOperatorFeedFounderTestMode(null);
+    var runBtn = el('run-founder-test');
+    if (runBtn) {
+      runBtn.disabled = true;
+      runBtn.classList.add('is-running');
+    }
+    lastFounderTestErrorMessage = null;
     var copyBtn = el('copy-founder-test-report');
-    if (copyBtn) copyBtn.disabled = true;
+    if (copyBtn) {
+      copyBtn.disabled = true;
+      copyBtn.setAttribute('aria-disabled', 'true');
+    }
+    var openReportBtnAtRun = el('open-founder-test-report');
+    if (openReportBtnAtRun) {
+      openReportBtnAtRun.disabled = true;
+      openReportBtnAtRun.setAttribute('aria-disabled', 'true');
+    }
     showFounderTestPanel('running');
     renderVerificationSurface(workspaceData);
+    renderLocalFounderTestRuntimePreview('Local screen checks');
 
     try {
-      await new Promise(function (resolve) {
-        streamFounderTestFeed(resolve);
-      });
       var live = await runFounderTestLiveChecks();
+      renderLocalFounderTestRuntimePreview('Founder interaction simulation');
       var interactionLive = await runFounderTestInteractionChecks();
+      renderLocalFounderTestRuntimePreview('Connecting to founder test API');
+      startFounderTestRuntimePolling();
+      await pollFounderTestRuntimeStatusOnce();
+
       var liveResults = live.results.slice();
       liveResults.push(interactionLive);
-      var res = await fetch('/api/founder-test/run', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          liveResults: liveResults,
-          liveSection: live.liveSection + '\n- Founder Interaction Simulation: ' + (interactionLive.passed ? 'PASS' : 'FAIL'),
-        }),
-      });
-      var data = await res.json();
-      if (!data.ok || !data.report) {
+      var res;
+      var data = null;
+      try {
+        res = await fetch(buildFounderTestRunUrl(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            liveResults: liveResults,
+            liveSection:
+              live.liveSection +
+              '\n- Founder Interaction Simulation: ' +
+              (interactionLive.passed ? 'PASS' : 'FAIL'),
+          }),
+        });
+        rememberFounderTestApiOriginFromUrl(buildFounderTestRunUrl());
+      } catch (fetchErr) {
+        lastFounderTestPostTimedOut = true;
+        var runtimeAfterFetchFailure = await pollFounderTestRuntimeStatusOnce();
+        if (runtimeAfterFetchFailure) {
+          runtimeAfterFetchFailure.postTimedOut = true;
+          lastFounderTestRuntimeSnapshot = runtimeAfterFetchFailure;
+        }
+        throw {
+          fetchFailure: true,
+          message: formatFounderTestFetchError(fetchErr),
+          runtime: runtimeAfterFetchFailure || lastFounderTestRuntimeSnapshot,
+        };
+      }
+
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        var runtimeAfterParseFailure = await pollFounderTestRuntimeStatusOnce();
+        throw {
+          fetchFailure: true,
+          message: 'Founder test response was not valid JSON (HTTP ' + String(res.status) + ').',
+          runtime: runtimeAfterParseFailure || lastFounderTestRuntimeSnapshot,
+        };
+      }
+
+      if (res.status === 409 && data.errorCode === 'FOUNDER_TEST_ALREADY_RUNNING') {
+        if (data.runtime) lastFounderTestRuntimeSnapshot = data.runtime;
+        renderFounderTestRuntime(data.runtime);
+        throw new Error('Founder Test is already running. Please wait for the current run to finish.');
+      }
+
+      if ((res.status === 202 || data.accepted) && data.runId) {
+        if (data.runtime) {
+          lastFounderTestRuntimeSnapshot = data.runtime;
+          renderFounderTestRuntime(data.runtime);
+        }
+        data = await waitForFounderTestAsyncResult(data.runId);
+        if (data.runtime) {
+          lastFounderTestRuntimeSnapshot = data.runtime;
+          renderFounderTestRuntime(data.runtime);
+        }
+      } else if (data.runtime) {
+        lastFounderTestRuntimeSnapshot = data.runtime;
+        renderFounderTestRuntime(data.runtime);
+      }
+
+      if (data.founderTestLaunchReadinessReportMarkdown) {
+        lastFounderTestPartialReportMarkdown = data.founderTestLaunchReadinessReportMarkdown;
+      }
+
+      if (!data.ok) {
         throw new Error((data && data.error) || 'Founder test API failed');
       }
-      lastFounderTestReport = data.report;
+      if (data.report && data.report.reportMarkdown) {
+        applyFounderTestFinalReport(
+          normalizeFounderTestDeliveryRunId(data.runId, data.runtime),
+          data.report.reportMarkdown,
+          'run-complete',
+          {
+            runtime: data.runtime || lastFounderTestRuntimeSnapshot,
+            reportObject: data.report,
+            generatedAt: data.generatedAt,
+          },
+        );
+      } else if (data.reportMarkdown) {
+        applyFounderTestFinalReport(
+          normalizeFounderTestDeliveryRunId(data.runId, data.runtime),
+          data.reportMarkdown,
+          'run-complete-markdown',
+          {
+            runtime: data.runtime || lastFounderTestRuntimeSnapshot,
+            generatedAt: data.generatedAt,
+          },
+        );
+      } else if (!isFounderTestCompleteSuccessState(data.state)) {
+        throw new Error((data && data.error) || 'Founder test API failed');
+      }
       lastVerificationResults =
         data.verificationResults ||
         (data.report && (data.report.verificationResults || data.report.verificationResultsVisibility)) ||
@@ -5624,19 +8666,48 @@
       renderProjectInsightsSurface(workspaceData);
       renderFounderActionCenterSurface(workspaceData);
       renderProductCoherenceSurface(workspaceData);
+      showFounderTestPanel('done');
+      updateCopyReportButtonState();
     } catch (err) {
-      showFounderTestError(err && err.message ? err.message : 'Unknown error');
+      var errorMessage =
+        err && err.fetchFailure && err.message
+          ? err.message
+          : err && err.message
+            ? err.message
+            : 'Unknown error';
+      showFounderTestError(errorMessage, {
+        runtime:
+          (err && err.runtime) ||
+          lastFounderTestRuntimeSnapshot ||
+          null,
+        partialReportMarkdown: lastFounderTestPartialReportMarkdown,
+      });
     } finally {
+      stopFounderTestRuntimePolling();
       founderTestRunning = false;
+      var btn = el('run-founder-test');
+      if (btn) {
+        btn.disabled = false;
+        btn.classList.remove('is-running');
+      }
+      updateCopyReportButtonState();
     }
   }
 
   function copyFounderTestReport() {
-    if (!lastFounderTestReport || !lastFounderTestReport.reportMarkdown) return;
-    var text = lastFounderTestReport.reportMarkdown;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text);
-    }
+    copyFounderTestReportHandoffShared({
+      syncOperatorFeedLabels: true,
+      onCopied: function () {
+        setCopyReportButtonFeedback('copied');
+      },
+      onFailed: function () {
+        setCopyReportButtonFeedback('failed');
+      },
+    });
+  }
+
+  function openFounderTestResultsPanelReport() {
+    openFounderTestReportHandoffShared();
   }
 
   function closeMobilePanels() {
@@ -5723,6 +8794,41 @@
       });
     }
 
+    var uploadBtn = el('chat-upload-btn');
+    var uploadInput = el('chat-upload-input');
+    if (uploadBtn && uploadInput) {
+      uploadBtn.addEventListener('click', function () {
+        if (typeof uploadInput.showPicker === 'function') {
+          try {
+            uploadInput.showPicker();
+            return;
+          } catch (pickerErr) {
+            /* fall through to click */
+          }
+        }
+        uploadInput.click();
+      });
+      uploadInput.addEventListener('change', function () {
+        if (uploadInput.files && uploadInput.files.length) {
+          pushNotification('Upload coming soon — selected: ' + uploadInput.files[0].name);
+        } else {
+          pushNotification('Upload coming soon');
+        }
+        uploadInput.value = '';
+      });
+    } else if (uploadBtn) {
+      uploadBtn.addEventListener('click', function () {
+        pushNotification('Upload coming soon');
+      });
+    }
+
+    var voiceBtn = el('chat-voice-btn');
+    if (voiceBtn) {
+      voiceBtn.addEventListener('click', function () {
+        pushNotification('Voice notes coming soon');
+      });
+    }
+
     var notifToggle = el('notif-toggle');
     var drawer = el('notification-drawer');
     if (notifToggle && drawer) {
@@ -5731,12 +8837,18 @@
         if (open) {
           drawer.removeAttribute('hidden');
           notifToggle.setAttribute('aria-expanded', 'true');
+          markAllNotificationsRead();
         } else {
           drawer.setAttribute('hidden', '');
           notifToggle.setAttribute('aria-expanded', 'false');
         }
       });
     }
+
+    var reportModalClose = el('founder-test-report-modal-close');
+    var reportModalBackdrop = el('founder-test-report-modal-backdrop');
+    if (reportModalClose) reportModalClose.addEventListener('click', hideFounderTestReportModal);
+    if (reportModalBackdrop) reportModalBackdrop.addEventListener('click', hideFounderTestReportModal);
 
     var founderBtn = el('run-founder-test');
     if (founderBtn) {
@@ -5766,6 +8878,10 @@
     if (copyReportBtn) {
       copyReportBtn.addEventListener('click', copyFounderTestReport);
     }
+    var openReportBtn = el('open-founder-test-report');
+    if (openReportBtn) {
+      openReportBtn.addEventListener('click', openFounderTestResultsPanelReport);
+    }
   }
 
   bindEvents();
@@ -5794,9 +8910,10 @@
       /* Execution Proof falls back to loading state in Verification view */
     });
 
-  fetch('/api/founder-reality.json')
+  fetch(buildFounderTestApiUrl('/api/founder-reality.json', null))
     .then(function (res) {
       if (!res.ok) throw new Error('Failed to load manifest');
+      rememberFounderTestApiOriginFromUrl(buildFounderTestApiUrl('/api/founder-reality.json', null));
       return res.json();
     })
     .then(function (data) {

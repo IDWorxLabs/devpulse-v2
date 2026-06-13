@@ -2,7 +2,7 @@
  * Phase 25.32 — Founder Test Reality Sweep validation (leaf mode).
  */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { FounderAcceptanceAssessment } from '../src/founder-acceptance-gate/founder-acceptance-gate-types.js';
@@ -25,6 +25,7 @@ import {
   FOUNDER_LAUNCH_VERDICTS,
   FOUNDER_TEST_REALITY_SWEEP_CORE_QUESTION,
   FOUNDER_TEST_REALITY_SWEEP_PASS_TOKEN,
+  FOUNDER_TEST_REALITY_SWEEP_TYPE_DRIFT_REPAIR_V1_PASS,
   LAUNCH_BLOCKER_SEVERITIES,
   LAUNCH_RECOMMENDATIONS,
   ORCHESTRATION_FLOW,
@@ -377,16 +378,17 @@ function buildPreviewFixture(score: number): LivePreviewRealityAuthorityAssessme
       runtime: score,
       connectivity: score,
       usability: score,
-      buildToPreview: score,
+      // Canonical rename: portfolio subscore is builderIntegration (was buildToPreview in stale fixtures).
+      builderIntegration: score,
     },
     analyzers: {
       previewInfrastructure: ready ? 'PREVIEW_INFRASTRUCTURE_PRESENT' : 'PREVIEW_INFRASTRUCTURE_MISSING',
-      runtimeEvidence: ready ? 'RUNTIME_PROVEN' : 'RUNTIME_MISSING',
+      // Runtime evidence ladder: RUNTIME_CLAIMED | RUNTIME_OBSERVED | RUNTIME_PROVEN (RUNTIME_MISSING removed).
+      runtimeEvidence: ready ? 'RUNTIME_PROVEN' : 'RUNTIME_CLAIMED',
       previewConnectivity: ready ? 'PREVIEW_CONNECTED' : 'PREVIEW_DISCONNECTED',
-      previewUsability: ready ? 'PREVIEW_USABLE' : 'PREVIEW_UNUSABLE',
+      // Usability ladder: PREVIEW_UNPROVEN covers blocked preview (PREVIEW_UNUSABLE removed).
+      previewUsability: ready ? 'PREVIEW_USABLE' : 'PREVIEW_UNPROVEN',
       buildToPreview: ready ? 'BUILD_TO_PREVIEW_PROVEN' : 'BUILD_TO_PREVIEW_MISSING',
-      previewEvidence: ready ? 'PREVIEW_EVIDENCE_PROVEN' : 'PREVIEW_EVIDENCE_MISSING',
-      founderBottleneck: ready ? 'NONE' : 'PREVIEW_NOT_USABLE',
     },
     stages: [],
     evidence: [],
@@ -404,7 +406,8 @@ function buildPreviewFixture(score: number): LivePreviewRealityAuthorityAssessme
     missingEvidence: ready ? [] : ['Live preview usability proof'],
     previewBlockers: ready ? [] : ['Preview not usable'],
     founderConclusion: ready ? 'Preview usable' : 'Preview not founder-ready',
-    founderBottleneck: ready ? 'NONE' : 'PREVIEW_NOT_USABLE',
+    // FounderRealityBottleneck: BUILD | PREVIEW | NONE (PREVIEW_NOT_USABLE removed).
+    founderBottleneck: ready ? 'NONE' : 'PREVIEW',
     livePreviewRealitySummary: ready ? 'Preview ready' : 'Preview blocked',
     legacyAssessment: {
       state: ready ? 'PREVIEW_READY' : 'NO_PREVIEW',
@@ -413,17 +416,14 @@ function buildPreviewFixture(score: number): LivePreviewRealityAuthorityAssessme
       problems: ready ? [] : ['No preview'],
       recommendedActions: [],
       availability: { passed: ready, reason: 'fixture' },
-      connectivity: { passed: ready, reason: 'fixture' },
-      contentRendered: { passed: ready, reason: 'fixture' },
+      // connectivity/contentRendered retired — loadReality + freshness model preview truth.
+      loadReality: { passed: ready, reason: ready ? 'fixture load proven' : 'fixture load unproven' },
       interactivity: { passed: ready, reason: 'fixture' },
-      buildToPreview: { passed: ready, reason: 'fixture' },
-      runtimeEvidence: { passed: ready, reason: 'fixture' },
-      founderViewability: { passed: ready, reason: 'fixture' },
+      freshness: { passed: ready, reason: 'fixture' },
+      validationReady: ready,
+      validationReadyReason: ready ? 'fixture validation ready' : 'fixture validation not ready',
       operatorFeedEvents: [],
-      previewRealityScore: score,
-      previewRealityPass: ready,
-      insufficientInfo: false,
-      insufficientInfoReason: null,
+      falsePositiveReadiness: !ready,
     },
     assessedAt: Date.now(),
     report: {
@@ -433,8 +433,7 @@ function buildPreviewFixture(score: number): LivePreviewRealityAuthorityAssessme
       missingEvidence: [],
       previewBlockers: [],
       founderConclusion: 'fixture',
-      previewStatus: ready ? 'PREVIEW_PROVEN' : 'PREVIEW_NOT_PROVEN',
-      founderBottleneck: ready ? 'NONE' : 'PREVIEW_NOT_USABLE',
+      founderBottleneck: ready ? 'NONE' : 'PREVIEW',
       markdown: '# fixture',
     },
   };
@@ -442,10 +441,12 @@ function buildPreviewFixture(score: number): LivePreviewRealityAuthorityAssessme
 
 function buildVerificationFixture(score: number): VerificationRealityAssessment {
   const proven = score >= 70;
+  // VerificationInventoryLevel: VERIFICATION_CLAIMED | VERIFICATION_OBSERVED | VERIFICATION_PROVEN (VERIFICATION_PARTIAL removed).
+  const inventoryLevel = proven ? 'VERIFICATION_PROVEN' : 'VERIFICATION_CLAIMED';
   return {
     assessmentId: 'fixture-verification',
     verificationRealityScore: score,
-    verificationStatus: proven ? 'VERIFICATION_PROVEN' : 'VERIFICATION_PARTIAL',
+    verificationStatus: inventoryLevel,
     portfolioSubscores: {
       validationInfrastructure: score,
       runtimeLink: score,
@@ -454,7 +455,7 @@ function buildVerificationFixture(score: number): VerificationRealityAssessment 
       evidenceChain: score,
     },
     analyzers: {
-      validationInventory: proven ? 'VERIFICATION_PROVEN' : 'VERIFICATION_PARTIAL',
+      validationInventory: inventoryLevel,
       runtimeLink: proven ? 'RUNTIME_LINK_PROVEN' : 'RUNTIME_LINK_MISSING',
       buildOutputLink: proven ? 'BUILD_OUTPUT_LINK_PROVEN' : 'BUILD_OUTPUT_LINK_MISSING',
       previewLink: proven ? 'PREVIEW_LINK_PROVEN' : 'PREVIEW_LINK_MISSING',
@@ -487,7 +488,7 @@ function buildVerificationFixture(score: number): VerificationRealityAssessment 
       missingEvidence: [],
       verificationBlockers: [],
       founderConclusion: 'fixture',
-      verificationStatus: proven ? 'VERIFICATION_PROVEN' : 'VERIFICATION_PARTIAL',
+      verificationStatus: inventoryLevel,
       evidenceChainBreakPoint: proven ? 'NONE' : 'RUNTIME',
       markdown: '# fixture',
     },
@@ -648,6 +649,11 @@ function main(): void {
   );
 
   assert('no nested npm validation', !authoritySource.includes("execSync('npm run validate"), 'cascade');
+  assert(
+    'no validator recursion',
+    !authoritySource.includes("execSync('npm run validate:founder-test-reality-sweep"),
+    'recursion',
+  );
   assert('no network fetch', !authoritySource.includes('fetch('), 'network');
 
   assert(
@@ -862,9 +868,55 @@ function main(): void {
     return;
   }
 
+  const typeDriftReport = [
+    '# Founder Test Reality Sweep Type Drift Repair Report',
+    '',
+    '## Root Cause',
+    '',
+    '- Validator fixtures in `scripts/validate-founder-test-reality-sweep.ts` lagged behind Phase 24A live-preview and verification type model updates.',
+    '- Stale enum literals and legacy assessment fields remained after canonical types tightened evidence ladders.',
+    '',
+    '## Stale Fields / Enums Found',
+    '',
+    '| Location | Stale value | Canonical replacement |',
+    '| -------- | ----------- | --------------------- |',
+    '| `portfolioSubscores` | `buildToPreview` | `builderIntegration` |',
+    '| `analyzers.runtimeEvidence` | `RUNTIME_MISSING` | `RUNTIME_CLAIMED` (blocked fixture) |',
+    '| `analyzers.previewUsability` | `PREVIEW_UNUSABLE` | `PREVIEW_UNPROVEN` |',
+    '| `analyzers` | `previewEvidence`, `founderBottleneck` | removed — not in `LivePreviewAnalyzerResults` |',
+    '| `founderBottleneck` / report | `PREVIEW_NOT_USABLE` | `PREVIEW` |',
+    '| `legacyAssessment` | `connectivity`, `contentRendered`, `buildToPreview`, `runtimeEvidence`, `founderViewability`, `previewRealityScore`, `previewRealityPass`, `insufficientInfo*` | `loadReality`, `freshness`, `validationReady`, `validationReadyReason`, `falsePositiveReadiness` |',
+    '| `report` | `previewStatus` | removed — not in `LivePreviewReport` |',
+    '| verification status / inventory | `VERIFICATION_PARTIAL` | `VERIFICATION_CLAIMED` (blocked fixture) |',
+    '',
+    '## Validation Results',
+    '',
+    `- Founder test reality sweep: ${passed}/${results.length} checks passed`,
+    '- Command center UI wiring: run separately via `npm run validate:command-center-ui-wiring-founder-report-delivery`',
+    '',
+    '## Scoring / Verdict Confirmation',
+    '',
+    '- No changes to founder-test scoring modules.',
+    '- No changes to founder-test verdict logic or launch verdict computation.',
+    '- Fixture alignment only — all scenario assertions preserved.',
+    '',
+    '---',
+    '',
+    `Pass token: ${FOUNDER_TEST_REALITY_SWEEP_TYPE_DRIFT_REPAIR_V1_PASS}`,
+    '',
+  ].join('\n');
+
+  writeFileSync(
+    join(ROOT, 'architecture', 'FOUNDER_TEST_REALITY_SWEEP_TYPE_DRIFT_REPAIR_REPORT.md'),
+    typeDriftReport,
+    'utf8',
+  );
+
   console.log(FOUNDER_TEST_REALITY_SWEEP_PASS_TOKEN);
+  console.log(FOUNDER_TEST_REALITY_SWEEP_TYPE_DRIFT_REPAIR_V1_PASS);
   console.log('');
   console.log('Report: architecture/FOUNDER_TEST_REALITY_SWEEP_REPORT.md');
+  console.log('Type drift report: architecture/FOUNDER_TEST_REALITY_SWEEP_TYPE_DRIFT_REPAIR_REPORT.md');
 }
 
 main();

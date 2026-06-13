@@ -17,6 +17,15 @@ import type {
   ChatStressScenarioDefinition,
   ChatStressScenarioRun,
 } from './chat-stress-simulation-types.js';
+import {
+  getChatStressScenarioTerminalStatus,
+  listStartedChatStressScenarioIds,
+} from './chat-stress-completion-tracker.js';
+import {
+  buildChatStressTimeoutRunResult,
+  CHAT_STRESS_TIMEOUT_RUN_REASON,
+} from './chat-stress-timeout-run-materialization.js';
+import { CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS } from '../founder-test-product-readiness/product-readiness-simulation-budget.js';
 
 function bandFromScore(score: number): ChatStressAnswerBand {
   if (score >= 90) return 'STRONG_FOUNDER_FACING';
@@ -77,6 +86,17 @@ export function evaluateChatStressResponse(input: {
   run: ChatStressScenarioRun;
 }): ChatStressEvaluation {
   const { scenario, run } = input;
+
+  if (run.timedOut || run.status === 'TIMEOUT') {
+    return evaluateChatStressTimeoutRun({ scenario, run });
+  }
+  if (run.skipped || run.status === 'SKIPPED') {
+    return evaluateChatStressSkippedRun({ scenario, run });
+  }
+  if (run.status === 'ERROR' || (run.skipReason && !run.timedOut && !run.skipped)) {
+    return evaluateChatStressErrorRun({ scenario, run });
+  }
+
   const answer = run.finalAnswer.trim();
   const lower = answer.toLowerCase();
   const promptLower = scenario.prompt.toLowerCase();
@@ -206,6 +226,88 @@ export function evaluateChatStressResponse(input: {
   };
 }
 
+function evaluateChatStressTimeoutRun(input: {
+  scenario: ChatStressScenarioDefinition;
+  run: ChatStressScenarioRun;
+}): ChatStressEvaluation {
+  const reason = input.run.skipReason ?? CHAT_STRESS_TIMEOUT_RUN_REASON;
+  return buildTerminalChatStressEvaluation({
+    scenario: input.scenario,
+    run: input.run,
+    score: 0,
+    failureReasons: [`Scenario timed out: ${reason}`],
+    missingCapability: missingCapabilityFor(input.scenario.category, ['Scenario timed out']),
+    recommendedFix: `Reduce scenario latency or improve chat path reliability for "${input.scenario.prompt.slice(0, 60)}".`,
+  });
+}
+
+function evaluateChatStressSkippedRun(input: {
+  scenario: ChatStressScenarioDefinition;
+  run: ChatStressScenarioRun;
+}): ChatStressEvaluation {
+  const reason = input.run.skipReason ?? 'Scenario skipped';
+  return buildTerminalChatStressEvaluation({
+    scenario: input.scenario,
+    run: input.run,
+    score: 0,
+    failureReasons: [`Scenario skipped: ${reason}`],
+    missingCapability: null,
+    recommendedFix: null,
+  });
+}
+
+function evaluateChatStressErrorRun(input: {
+  scenario: ChatStressScenarioDefinition;
+  run: ChatStressScenarioRun;
+}): ChatStressEvaluation {
+  const reason = input.run.skipReason ?? 'Scenario error';
+  return buildTerminalChatStressEvaluation({
+    scenario: input.scenario,
+    run: input.run,
+    score: 0,
+    failureReasons: [`Scenario error: ${reason}`],
+    missingCapability: missingCapabilityFor(input.scenario.category, ['Scenario error']),
+    recommendedFix: `Investigate chat stress execution failure for "${input.scenario.prompt.slice(0, 60)}".`,
+  });
+}
+
+function buildTerminalChatStressEvaluation(input: {
+  scenario: ChatStressScenarioDefinition;
+  run: ChatStressScenarioRun;
+  score: number;
+  failureReasons: string[];
+  missingCapability: string | null;
+  recommendedFix: string | null;
+}): ChatStressEvaluation {
+  return {
+    readOnly: true,
+    scenarioId: input.scenario.id,
+    category: input.scenario.category,
+    prompt: input.scenario.prompt,
+    actualAnswer: input.run.finalAnswer,
+    score: input.score,
+    passed: false,
+    weak: false,
+    band: bandFromScore(input.score),
+    failureReasons: input.failureReasons,
+    missingCapability: input.missingCapability,
+    recommendedFix: input.recommendedFix,
+    answeredActualQuestion: false,
+    identityCorrect: false,
+    founderIdentityCorrect: false,
+    companyIdentityCorrect: false,
+    legacyDevPulseHandled: false,
+    avoidedLegacyMisuse: true,
+    usedProjectContext: false,
+    admittedUncertainty: false,
+    avoidedOverclaim: true,
+    naturalFounderFacing: false,
+    usefulNextAction: false,
+    avoidedGenericOnboarding: true,
+    avoidedInternalJargon: true,
+  };
+}
+
 export function evaluateChatStressRuns(input: {
   scenarios: ChatStressScenarioDefinition[];
   runs: ChatStressScenarioRun[];
@@ -213,11 +315,32 @@ export function evaluateChatStressRuns(input: {
   const runById = new Map(input.runs.map((run) => [run.scenarioId, run]));
   return input.scenarios
     .map((scenario) => {
-      const run = runById.get(scenario.id);
+      let run = runById.get(scenario.id);
+      if (!run) {
+        const terminal = getChatStressScenarioTerminalStatus(scenario.id);
+        if (
+          terminal === 'TIMEOUT' ||
+          terminal === 'ERROR' ||
+          terminal === 'FAILED' ||
+          terminal === 'SKIPPED_BUDGET' ||
+          terminal === 'SKIPPED_WITH_REASON'
+        ) {
+          run = buildChatStressTimeoutRunResult({
+            scenario,
+            durationMs: CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS,
+            reason: CHAT_STRESS_TIMEOUT_RUN_REASON,
+          });
+        }
+      }
       if (!run) {
         throw new Error(`Missing run for scenario ${scenario.id}`);
       }
       return evaluateChatStressResponse({ scenario, run });
     })
     .sort((a, b) => a.score - b.score);
+}
+
+export function countChatStressRunsForStartedScenarios(runs: ChatStressScenarioRun[]): number {
+  const startedIds = new Set(listStartedChatStressScenarioIds());
+  return runs.filter((run) => startedIds.has(run.scenarioId)).length;
 }

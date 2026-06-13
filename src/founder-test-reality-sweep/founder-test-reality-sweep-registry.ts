@@ -5,6 +5,8 @@
 import type { FounderLaunchVerdict, LaunchRecommendation, RealitySweepCategory } from './founder-test-reality-sweep-types.js';
 
 export const FOUNDER_TEST_REALITY_SWEEP_PASS_TOKEN = 'FOUNDER_TEST_REALITY_SWEEP_PASS';
+export const FOUNDER_TEST_REALITY_SWEEP_TYPE_DRIFT_REPAIR_V1_PASS =
+  'FOUNDER_TEST_REALITY_SWEEP_TYPE_DRIFT_REPAIR_V1_PASS';
 export const FOUNDER_TEST_REALITY_SWEEP_OWNER_MODULE = 'devpulse_founder_test_reality_sweep';
 export const FOUNDER_TEST_REALITY_SWEEP_PHASE = 'Phase 25.32 — Founder Test Reality Sweep V1';
 export const FOUNDER_TEST_REALITY_SWEEP_REPORT_TITLE = 'FOUNDER_TEST_REALITY_SWEEP_REPORT';

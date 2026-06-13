@@ -4,6 +4,7 @@
 
 import type { ChatStressSimulationReport } from '../founder-test-chat-stress-simulation/chat-stress-simulation-types.js';
 import type { FounderTestAssessment } from '../founder-test-integration/founder-test-integration-types.js';
+import type { SimulationRuntimeHealth } from './product-readiness-simulation-budget.js';
 
 export const FULL_PRODUCT_READINESS_SIMULATION_PASS_TOKEN =
   'FULL_PRODUCT_READINESS_SIMULATION_ORCHESTRATOR_PASS';
@@ -74,6 +75,10 @@ export interface ProductReadinessReport {
   selfEvolution: ProductReadinessSelfEvolution;
   chatStressSimulation: ChatStressSimulationReport | null;
   founderTestScore: number | null;
+  simulationRuntimeHealth: SimulationRuntimeHealth;
+  simulationBudgetElapsedMs: number;
+  simulationDegradedPartial: boolean;
+  simulationBudgetNotes: string[];
 }
 
 export interface ProductReadinessAssessment {
@@ -89,6 +94,15 @@ export interface RunProductReadinessSimulationInput {
   skipChatStressSimulation?: boolean;
   chatStressMaxScenarios?: number;
   founderReviewerConfidence?: number | null;
+  /** Founder Test path — applies bounded scenario defaults and budget guards. */
+  founderTestContext?: boolean;
+  simulationBudgetMs?: number;
+  onSimulationTrace?: (event: {
+    operationId: string;
+    operationLabel: string;
+    phase: 'RUNNING' | 'PASSED' | 'FAILED' | 'SLOW' | 'STALLED' | 'BUDGET_EXCEEDED';
+    errorMessage?: string;
+  }) => void;
 }
 
 export interface ProductReadinessHistoryEntry {

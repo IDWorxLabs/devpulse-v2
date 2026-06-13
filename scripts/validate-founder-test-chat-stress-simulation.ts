@@ -78,6 +78,7 @@ assert('uses command-center+llm path', sampleRun.brainPath === 'command-center-b
 const assessment = await runFounderTestChatStressSimulation({
   rootDir: ROOT,
   concurrency: 6,
+  founderTestContext: false,
 });
 const report = assessment.report;
 
