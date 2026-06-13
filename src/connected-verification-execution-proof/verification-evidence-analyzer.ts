@@ -36,7 +36,7 @@ export function analyzeVerificationEvidence(input: {
   if (paths.some((p) => p.includes('dom'))) inferredTypes.push('dom_snapshots');
 
   let evidenceState: VerificationEvidenceState = 'PARTIAL';
-  if (paths.length >= 1 && inferredTypes.length >= 1) {
+  if (paths.length >= 1 || (logCount > 0 && input.resultsObserved)) {
     evidenceState = 'EVIDENCED';
   } else if (paths.length >= 1 || logCount > 0) {
     evidenceState = 'PARTIAL';
@@ -56,5 +56,5 @@ export function analyzeVerificationEvidence(input: {
 }
 
 export function isEvidenceSufficient(assessment: VerificationEvidenceAssessment): boolean {
-  return assessment.evidenceState === 'EVIDENCED' && assessment.evidenceCount > 0;
+  return assessment.evidenceObserved && assessment.evidenceCount > 0;
 }

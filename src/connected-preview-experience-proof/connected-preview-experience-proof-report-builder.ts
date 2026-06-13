@@ -101,6 +101,23 @@ export function buildPreviewExperienceProofReportMarkdown(
     `| Can founder interact? | ${report.founderQuestions.canFounderInteractWithApp ? 'YES' : 'NO'} |`,
   );
 
+  if (report.activationEvidence) {
+    const ev = report.activationEvidence;
+    lines.push('');
+    lines.push('## Preview Experience Proof');
+    lines.push('');
+    lines.push(`- preview URL: ${ev.previewUrl ?? 'none'}`);
+    lines.push(`- response code: ${ev.httpStatus ?? 'none'}`);
+    lines.push(`- content type: ${ev.contentType ?? 'none'}`);
+    lines.push(`- render evidence: ${ev.renderEvidenceType ?? 'none'} (length ${ev.responseLength ?? 0})`);
+    lines.push(`- render observed: ${ev.renderObserved ? 'YES' : 'NO'}`);
+    lines.push(`- proof level: **${ev.proofLevel}**`);
+    lines.push('');
+    lines.push('## First Broken Preview Link');
+    lines.push('');
+    lines.push(ev.firstBrokenPreviewLink ?? 'none');
+  }
+
   lines.push('');
   lines.push('## Safety Guarantees');
   lines.push('');

@@ -1,5 +1,5 @@
 /**
- * Verification Linkage Analyzer — verify full build-to-verification evidence chain.
+ * Verification Linkage Analyzer — verify preview→verification execution chain (Phase 26.76).
  */
 
 import type { PreviewExperienceProofReport } from '../connected-preview-experience-proof/connected-preview-experience-proof-types.js';
@@ -10,10 +10,8 @@ import type {
   VerificationRunAssessment,
   VerificationTargetAssessment,
 } from './connected-verification-execution-proof-types.js';
-import { isEvidenceSufficient } from './verification-evidence-analyzer.js';
 import { areResultsObserved } from './verification-result-analyzer.js';
 import { isRunCompleted } from './verification-run-analyzer.js';
-import { isTargetLinked } from './verification-target-analyzer.js';
 
 export function analyzeVerificationLinkage(input: {
   previewExperienceProof: PreviewExperienceProofReport | null;
@@ -21,28 +19,28 @@ export function analyzeVerificationLinkage(input: {
   target: VerificationTargetAssessment;
   results: VerificationResultAssessment;
   evidence: VerificationEvidenceAssessment;
+  verificationSucceeded?: boolean;
+  commandDetected?: boolean;
 }): VerificationLinkageAnalysis {
   const previewProven = input.previewExperienceProof?.previewProofLevel === 'PROVEN';
+  const commandExists =
+    input.commandDetected === true ||
+    (input.run.command !== null && input.run.command.length > 0);
+  const executionObserved = isRunCompleted(input.run) && input.run.runObserved;
+  const resultsCaptured = areResultsObserved(input.results);
+  const successObserved = input.verificationSucceeded === true;
 
-  const contractToWorkspace = previewProven === true && input.target.targetLinkedToBuild;
-  const workspaceToRuntime =
-    contractToWorkspace && input.target.targetLinkedToRuntime && input.previewExperienceProof?.session.runtimeLinked === true;
-  const runtimeToPreview =
-    workspaceToRuntime && input.target.targetLinkedToPreview && input.previewExperienceProof?.session.sessionObserved === true;
-  const previewToVerificationRun =
-    runtimeToPreview && isRunCompleted(input.run) && input.run.runObserved;
-  const verificationRunToResults =
-    previewToVerificationRun && areResultsObserved(input.results);
-  const resultsToEvidence =
-    verificationRunToResults && isEvidenceSufficient(input.evidence);
+  const previewToCommand = previewProven && commandExists;
+  const commandToExecution = previewToCommand && executionObserved;
+  const executionToResults =
+    commandToExecution && resultsCaptured && (input.results.passCount + input.results.failCount > 0);
+  const resultsToSuccess = executionToResults && successObserved;
 
   const links = [
-    { key: 'contract→workspace', ok: contractToWorkspace },
-    { key: 'workspace→runtime', ok: workspaceToRuntime },
-    { key: 'runtime→preview', ok: runtimeToPreview },
-    { key: 'preview→verificationRun', ok: previewToVerificationRun },
-    { key: 'verificationRun→results', ok: verificationRunToResults },
-    { key: 'results→evidence', ok: resultsToEvidence },
+    { key: 'preview→command', ok: previewToCommand },
+    { key: 'command→execution', ok: commandToExecution },
+    { key: 'execution→results', ok: executionToResults },
+    { key: 'results→success', ok: resultsToSuccess },
   ];
 
   const missingLinks: string[] = [];
@@ -56,7 +54,7 @@ export function analyzeVerificationLinkage(input: {
 
   if (!previewProven) {
     missingLinks.unshift('Preview experience not PROVEN — verification chain cannot start');
-    if (firstBrokenVerificationLink === null) firstBrokenVerificationLink = 'contract→workspace';
+    if (firstBrokenVerificationLink === null) firstBrokenVerificationLink = 'preview→command';
   }
 
   const passed = links.filter((l) => l.ok).length;
@@ -69,11 +67,11 @@ export function analyzeVerificationLinkage(input: {
     firstBrokenVerificationLink,
     missingLinks,
     traceabilityScore,
-    contractToWorkspace,
-    workspaceToRuntime,
-    runtimeToPreview,
-    previewToVerificationRun,
-    verificationRunToResults,
-    resultsToEvidence,
+    contractToWorkspace: previewProven && input.target.targetLinkedToBuild,
+    workspaceToRuntime: previewProven && input.target.targetLinkedToRuntime,
+    runtimeToPreview: previewProven && input.target.targetLinkedToPreview,
+    previewToVerificationRun: previewToCommand,
+    verificationRunToResults: executionToResults,
+    resultsToEvidence: resultsToSuccess,
   };
 }

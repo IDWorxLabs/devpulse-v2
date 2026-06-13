@@ -323,6 +323,57 @@ function dedupeReasons(items: string[]): string[] {
 export function assessFounderAcceptanceGate(
   input: AssessFounderAcceptanceGateInput = {},
 ): FounderAcceptanceAssessment {
+  if (input.skipFounderTestIntegration && !input.founderTestAssessment) {
+    const assessment: FounderAcceptanceAssessment = {
+      readOnly: true,
+      advisoryOnly: true,
+      coreQuestion: FOUNDER_ACCEPTANCE_CORE_QUESTION,
+      acceptanceState: 'INSUFFICIENT_EVIDENCE',
+      acceptanceConfidence: 35,
+      confidenceBreakdown: {
+        authorityCoverage: 0,
+        proofQuality: 0,
+        simulationQuality: 0,
+        requirementCompleteness: 0,
+        founderReadiness: 0,
+      },
+      inputSnapshot: {
+        founderTestAssessment: null as unknown as FounderTestAssessment,
+        requiredAuthorities: REQUIRED_ACCEPTANCE_AUTHORITY_IDS.map((authorityId) => ({
+          authorityId,
+          displayName: REQUIRED_ACCEPTANCE_AUTHORITY_LABELS[authorityId],
+          available: false,
+          score: 0,
+          blockers: [],
+          warnings: [],
+        })),
+        missingRequiredAuthorities: REQUIRED_ACCEPTANCE_AUTHORITY_IDS.map(
+          (authorityId) => REQUIRED_ACCEPTANCE_AUTHORITY_LABELS[authorityId],
+        ),
+        founderTestScore: 0,
+        founderTestVerdict: 'NOT_FOUNDER_READY',
+        criticalBlockerCount: 0,
+        executionProofRegressionFree: true,
+        executionProofScore: 0,
+        executionProofVerdict: null,
+        founderSimulationPassed: false,
+        founderSimulationScore: 0,
+        requirementRealityAboveThreshold: false,
+        requirementRealityScore: 0,
+      },
+      reasons: {
+        acceptedBecause: [],
+        rejectedBecause: ['Founder test integration skipped during launch proof hydration.'],
+        warningReasons: [],
+        blockingReasons: [],
+        requiredNextActions: ['Run founder test integration for full acceptance evidence.'],
+      },
+      cacheKey: stableCacheKey('skipped-founder-test', 'INSUFFICIENT_EVIDENCE', 35),
+    };
+    recordFounderAcceptanceAssessment(assessment);
+    return assessment;
+  }
+
   const founderTestAssessment =
     input.founderTestAssessment ??
     assessFounderTestIntegration({ rootDir: input.rootDir ?? process.cwd() });

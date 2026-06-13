@@ -5,6 +5,7 @@
 import {
   CONNECTED_LAUNCH_READINESS_PROOF_CORE_QUESTION,
   CONNECTED_LAUNCH_READINESS_PROOF_PASS_TOKEN,
+  CONNECTED_LAUNCH_READINESS_PROOF_REPAIR_V1_PASS,
   CONNECTED_LAUNCH_READINESS_PROOF_PHASE,
   CONNECTED_LAUNCH_READINESS_PROOF_REPORT_TITLE,
   SAFETY_GUARANTEES,
@@ -32,7 +33,29 @@ export function buildLaunchReadinessProofReportMarkdown(
     `**Launch proof level:** ${report.launchProofLevel}`,
     `**Launch state:** ${report.launchState}`,
     `**Execution chain connected (through VERIFY):** ${report.executionChainConnected ? 'YES' : 'NO'}`,
+    `**Launch execution connected:** ${report.launchExecutionConnected ? 'YES' : 'NO'}`,
     `**Verification proven:** ${report.verificationProven ? 'YES' : 'NO'}`,
+    `**Launch criteria satisfied:** ${report.launchCriteriaSatisfied ? 'YES' : 'NO'}`,
+    '',
+    '## Connected Launch Readiness Proof',
+    '',
+    `- requirements proven: ${report.evidence.requirementsProven}`,
+    `- plan proven: ${report.evidence.planProven}`,
+    `- build proven: ${report.evidence.buildProven}`,
+    `- runtime proven: ${report.evidence.runtimeProven}`,
+    `- preview proven: ${report.evidence.previewProven}`,
+    `- verification proven: ${report.evidence.verificationProven}`,
+    `- launch criteria satisfied: ${report.evidence.launchCriteriaSatisfied}`,
+    `- readiness score: ${report.evidence.readinessScore}/100`,
+    `- proof level: **${report.evidence.proofLevel}**`,
+    '',
+    '### First Launch Blocker',
+    '',
+    report.evidence.firstLaunchBlocker
+      ? `[${report.evidence.firstLaunchBlocker.severity}] ${report.evidence.firstLaunchBlocker.blockerTitle}: ${report.evidence.firstLaunchBlocker.blockerReason}`
+      : report.launchProofLevel === 'PROVEN'
+        ? 'Launch Ready'
+        : 'none reported',
     '',
     '## Launch State',
     '',
@@ -136,8 +159,14 @@ export function buildLaunchReadinessProofReportMarkdown(
     '',
     '---',
     '',
-    CONNECTED_LAUNCH_READINESS_PROOF_PASS_TOKEN,
   ];
+  if (report.repairToken) {
+    lines.push(`Repair token: \`${report.repairToken}\``);
+    lines.push('');
+  }
+  lines.push(CONNECTED_LAUNCH_READINESS_PROOF_PASS_TOKEN);
+  lines.push(`Repair pass token: \`${CONNECTED_LAUNCH_READINESS_PROOF_REPAIR_V1_PASS}\``);
+  lines.push('');
 
   return lines.join('\n');
 }

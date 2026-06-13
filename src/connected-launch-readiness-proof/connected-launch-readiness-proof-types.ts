@@ -4,6 +4,7 @@
  */
 
 import type { AutonomousBuildExecutionProofReport } from '../autonomous-build-execution-proof/autonomous-build-execution-proof-types.js';
+import type { ConnectedBuildExecutionReport } from '../connected-build-execution/connected-build-execution-types.js';
 import type { FounderAcceptanceAssessment } from '../founder-acceptance-gate/founder-acceptance-gate-types.js';
 import type { ChatStressSimulationReport } from '../founder-test-chat-stress-simulation/chat-stress-simulation-types.js';
 import type { ProductReadinessReport } from '../founder-test-product-readiness/product-readiness-types.js';
@@ -24,8 +25,11 @@ export type LaunchAcceptanceState = 'REJECTED' | 'CONDITIONAL' | 'ACCEPTED';
 export interface LaunchBlockerEntry {
   readOnly: true;
   blockerId: string;
+  blockerTitle: string;
+  blockerReason: string;
   severity: LaunchBlockerSeverity;
   sourceAuthority: string;
+  /** @deprecated use blockerReason */
   message: string;
   recommendedFix: string;
 }
@@ -127,7 +131,10 @@ export interface LaunchReadinessProofReport {
   launchProofLevel: LaunchProofLevel;
   launchState: LaunchReadinessState;
   executionChainConnected: boolean;
+  launchExecutionConnected: boolean;
   verificationProven: boolean;
+  launchCriteriaSatisfied: boolean;
+  evidence: LaunchReadinessEvidence;
   blockers: LaunchBlockerAssessment;
   risk: LaunchRiskAssessment;
   acceptance: LaunchAcceptanceAssessment;
@@ -141,6 +148,24 @@ export interface LaunchReadinessProofReport {
   recommendedNextActions: string[];
   founderQuestions: LaunchReadinessFounderQuestions;
   cacheKey: string;
+  repairToken: string | null;
+}
+
+/** Connected launch readiness evidence from execution chain (Phase 26.77). */
+export interface LaunchReadinessEvidence {
+  readOnly: true;
+  requirementsProven: boolean;
+  planProven: boolean;
+  buildProven: boolean;
+  runtimeProven: boolean;
+  previewProven: boolean;
+  verificationProven: boolean;
+  launchCriteriaSatisfied: boolean;
+  launchBlockers: LaunchBlockerEntry[];
+  readinessScore: number;
+  generatedAt: string;
+  proofLevel: LaunchProofLevel;
+  firstLaunchBlocker: LaunchBlockerEntry | null;
 }
 
 export interface LaunchReadinessProofAssessment {
@@ -171,6 +196,14 @@ export interface AssessConnectedLaunchReadinessProofInput {
   founderTestAssessment?: FounderTestAssessment | null;
   founderAcceptanceAssessment?: FounderAcceptanceAssessment | null;
   launchReadinessFixture?: LaunchReadinessFixture;
+  /** Pre-resolved launch chain evidence — skips live resolver when injected (tests). */
+  launchReadinessEvidence?: LaunchReadinessEvidence;
+  /** Skip live verification gap activation when resolving chain (tests). */
+  skipVerificationProofGapActivation?: boolean;
+  /** Skip founder test re-assessment (tests / injected assessments). */
+  skipFounderTestReassessment?: boolean;
+  /** Pre-resolved build materialization for chain resolver (tests / injected). */
+  buildMaterializationReport?: ConnectedBuildExecutionReport | null;
 }
 
 export interface LaunchReadinessProofHistoryEntry {

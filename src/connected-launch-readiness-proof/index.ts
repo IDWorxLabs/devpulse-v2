@@ -4,6 +4,7 @@
 
 export {
   CONNECTED_LAUNCH_READINESS_PROOF_PASS_TOKEN,
+  CONNECTED_LAUNCH_READINESS_PROOF_REPAIR_V1_PASS,
   CONNECTED_LAUNCH_READINESS_PROOF_OWNER_MODULE,
   CONNECTED_LAUNCH_READINESS_PROOF_PHASE,
   CONNECTED_LAUNCH_READINESS_PROOF_REPORT_TITLE,
@@ -36,6 +37,7 @@ export type {
   LaunchReadinessProofAssessment,
   LaunchReadinessFixture,
   AssessConnectedLaunchReadinessProofInput,
+  LaunchReadinessEvidence,
   LaunchReadinessProofHistoryEntry,
   LaunchReadinessProofHistorySummary,
   LaunchReadinessProofArtifacts,
@@ -71,3 +73,4 @@ export {
 } from './launch-claim-reality-analyzer.js';
 export { analyzeLaunchManifest } from './launch-manifest-analyzer.js';
 export { analyzeLaunchLinkage } from './launch-linkage-analyzer.js';
+export { resolveLaunchReadinessEvidence } from './launch-proof-chain-resolver.js';

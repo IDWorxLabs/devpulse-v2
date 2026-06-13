@@ -10,6 +10,7 @@ import type {
 } from '../founder-execution-proof/founder-execution-proof-types.js';
 
 import type { FounderAcceptanceBridgeSnapshot } from '../foundation/founder-acceptance-integration-bridge.js';
+import type { ExecutionChainStageContext } from './connected-execution-chain-stage-resolver.js';
 
 export type FounderTestAuthorityId =
   | 'FOUNDER_REALITY'
@@ -102,6 +103,7 @@ export interface FounderTestRun {
   completedAt: string;
   rootDir: string;
   authorityResults: FounderTestAuthorityResult[];
+  executionChainStageContext?: ExecutionChainStageContext;
 }
 
 export interface FounderTestAssessment {
@@ -141,6 +143,16 @@ export interface RunFounderTestIntegrationInput {
   founderExecutionProofAssessment?: FounderExecutionProofAssessment;
   /** Pre-resolved executionConnected — skips resolver when injected (tests). */
   resolvedExecutionConnected?: boolean;
+  /** Pre-resolved BUILD materialization connected — authority sync (Phase 26.74). */
+  resolvedBuilderMaterializationConnected?: boolean;
+  /** Pre-resolved preview experience connected — authority sync (Phase 26.75). */
+  resolvedPreviewExperienceConnected?: boolean;
+  /** Pre-resolved execution chain stage context — skips live resolver when injected (tests). */
+  executionChainStageContext?: ExecutionChainStageContext;
+  /** Skip real verification gap activation when resolving chain (tests). */
+  skipVerificationProofGapActivation?: boolean;
+  /** Skip live launch proof resolution when resolving chain (tests). */
+  skipLaunchProofGapResolution?: boolean;
 }
 
 export interface FounderTestHistorySummary {

@@ -14,6 +14,7 @@ import { recordPreviewExperienceProofAssessment } from './connected-preview-expe
 import { buildPreviewExperienceProofReportMarkdown } from './connected-preview-experience-proof-report-builder.js';
 import type {
   AssessConnectedPreviewExperienceProofInput,
+  PreviewActivationEvidence,
   PreviewExperienceFounderQuestions,
   PreviewExperienceProofAssessment,
   PreviewExperienceProofArtifacts,
@@ -21,6 +22,7 @@ import type {
   PreviewExperienceState,
   PreviewProofLevel,
 } from './connected-preview-experience-proof-types.js';
+import { activatePreviewProofGap } from './preview-proof-gap-activator.js';
 import { analyzePreviewCapture } from './preview-capture-analyzer.js';
 import { analyzePreviewInteraction, isPreviewInteractive } from './preview-interaction-analyzer.js';
 import { analyzePreviewLinkage } from './preview-linkage-analyzer.js';
@@ -73,31 +75,47 @@ function derivePreviewState(input: {
 
 function deriveProofLevel(input: {
   runtimeProven: boolean;
-  sessionObserved: boolean;
+  urlExists: boolean;
   urlReachable: boolean;
   rendered: boolean;
-  interactive: boolean;
   linkageConnected: boolean;
 }): PreviewProofLevel {
   if (
     input.runtimeProven &&
-    input.sessionObserved &&
+    input.urlExists &&
     input.urlReachable &&
     input.rendered &&
-    input.interactive &&
     input.linkageConnected
   ) {
     return 'PROVEN';
   }
-  if (
-    input.urlReachable ||
-    input.rendered ||
-    input.sessionObserved ||
-    input.urlReachable
-  ) {
+  if (input.urlExists || input.urlReachable || input.rendered) {
     return 'PARTIAL';
   }
   return 'NOT_PROVEN';
+}
+
+function buildEmptyActivationEvidence(reason: string): PreviewActivationEvidence {
+  return {
+    readOnly: true,
+    workspaceId: 'none',
+    workspacePath: 'none',
+    previewUrl: null,
+    runtimePort: null,
+    previewDetected: false,
+    generatedAt: new Date().toISOString(),
+    urlChecked: false,
+    httpStatus: null,
+    reachable: false,
+    checkedAt: null,
+    renderEvidenceType: null,
+    renderObserved: false,
+    responseLength: null,
+    contentType: null,
+    renderCheckedAt: null,
+    proofLevel: 'NOT_PROVEN',
+    firstBrokenPreviewLink: reason.includes('RUNTIME') ? 'runtime→url' : 'runtime→url',
+  };
 }
 
 function buildEmptyReport(assessmentId: string, reason: string): PreviewExperienceProofReport {
@@ -198,6 +216,7 @@ function buildEmptyReport(assessmentId: string, reason: string): PreviewExperien
       whatEvidenceMissing: [reason],
       whatShouldBeBuiltNext: ['Complete RUNTIME activation proof first.'],
     },
+    activationEvidence: buildEmptyActivationEvidence(reason),
     cacheKey: stableCacheKey(assessmentId, 'NOT_PROVEN'),
   };
 }
@@ -226,12 +245,41 @@ export function assessConnectedPreviewExperienceProof(
   }
 
   const sessionEvidence = input.previewSessionEvidence;
+  let activationEvidence: PreviewActivationEvidence | null = null;
+  let resolvedSessionEvidence = sessionEvidence;
 
-  const session = analyzePreviewSession({ runtimeActivationProof, sessionEvidence });
-  const url = analyzePreviewUrl({ runtimeActivationProof, session, sessionEvidence });
-  const render = analyzePreviewRender({ url, sessionEvidence });
-  const interaction = analyzePreviewInteraction({ render, sessionEvidence });
-  const captures = analyzePreviewCapture({ sessionEvidence });
+  const workspacePath =
+    runtimeActivationProof.command.workingDirectory ??
+    runtimeActivationProof.activationEvidence?.workspacePath ??
+    null;
+  const workspaceId =
+    runtimeActivationProof.activationEvidence?.workspaceId ??
+    workspacePath?.split('/').pop() ??
+    'unknown';
+
+  const shouldActivateGap =
+    resolvedSessionEvidence === undefined &&
+    input.skipPreviewProofGapActivation !== true &&
+    workspacePath !== null;
+
+  if (shouldActivateGap) {
+    const activation = activatePreviewProofGap({
+      projectRootDir: rootDir,
+      workspacePath,
+      workspaceId,
+      runtimeActivationProof,
+    });
+    activationEvidence = activation.activationEvidence;
+    if (activation.sessionEvidence) {
+      resolvedSessionEvidence = activation.sessionEvidence;
+    }
+  }
+
+  const session = analyzePreviewSession({ runtimeActivationProof, sessionEvidence: resolvedSessionEvidence });
+  const url = analyzePreviewUrl({ runtimeActivationProof, session, sessionEvidence: resolvedSessionEvidence });
+  const render = analyzePreviewRender({ url, sessionEvidence: resolvedSessionEvidence });
+  const interaction = analyzePreviewInteraction({ render, sessionEvidence: resolvedSessionEvidence });
+  const captures = analyzePreviewCapture({ sessionEvidence: resolvedSessionEvidence });
   const manifest = analyzePreviewManifest({ runtimeActivationProof, session, url });
   const linkage = analyzePreviewLinkage({
     runtimeActivationProof,
@@ -255,19 +303,17 @@ export function assessConnectedPreviewExperienceProof(
 
   const previewProofLevel = deriveProofLevel({
     runtimeProven,
-    sessionObserved,
+    urlExists: url.previewUrl !== null,
     urlReachable,
     rendered,
-    interactive,
     linkageConnected: linkage.previewLinkageConnected,
   });
 
   const missingEvidence: string[] = [
     ...linkage.missingLinks,
-    ...(!sessionObserved ? ['Preview session not observed'] : []),
+    ...(url.previewUrl === null ? ['Preview URL not detected'] : []),
     ...(!urlReachable ? ['Preview URL not reachable'] : []),
     ...(!rendered ? ['Application render evidence missing'] : []),
-    ...(!interactive ? ['Preview interaction evidence missing'] : []),
   ];
 
   let recommendedFix =
@@ -326,6 +372,32 @@ export function assessConnectedPreviewExperienceProof(
     recommendedFix,
     recommendedNextActions: founderQuestions.whatShouldBeBuiltNext,
     founderQuestions,
+    activationEvidence:
+      activationEvidence ??
+      (resolvedSessionEvidence
+        ? {
+            readOnly: true,
+            workspaceId,
+            workspacePath: workspacePath ?? 'none',
+            previewUrl: url.previewUrl,
+            runtimePort: url.port,
+            previewDetected: url.urlObserved,
+            generatedAt: new Date().toISOString(),
+            urlChecked: resolvedSessionEvidence.urlChecked ?? url.urlObserved,
+            httpStatus: resolvedSessionEvidence.responseCode ?? null,
+            reachable: urlReachable,
+            checkedAt: resolvedSessionEvidence.checkedAt ?? null,
+            renderEvidenceType: resolvedSessionEvidence.renderEvidenceType ?? null,
+            renderObserved: rendered,
+            responseLength: resolvedSessionEvidence.responseLength ?? null,
+            contentType: resolvedSessionEvidence.contentType ?? null,
+            renderCheckedAt: resolvedSessionEvidence.renderCheckedAt ?? null,
+            proofLevel: previewProofLevel,
+            firstBrokenPreviewLink: linkage.previewLinkageConnected
+              ? null
+              : linkage.firstBrokenPreviewLink,
+          }
+        : buildEmptyActivationEvidence('Preview activation not attempted')),
     cacheKey: stableCacheKey(assessmentId, previewProofLevel),
   };
 

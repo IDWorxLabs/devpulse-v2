@@ -98,6 +98,8 @@ export interface AssessFounderAcceptanceGateInput {
   projectId?: string;
   workspaceId?: string;
   governanceBlocked?: boolean;
+  /** Skip running founder test integration — prevents recursion during launch proof hydration. */
+  skipFounderTestIntegration?: boolean;
 }
 
 export interface FounderAcceptanceHistorySummary {

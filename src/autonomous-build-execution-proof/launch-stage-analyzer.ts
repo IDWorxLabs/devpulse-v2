@@ -62,9 +62,15 @@ export function analyzeLaunchStage(
       'connected-launch-readiness-proof',
     ),
     entry(
-      'Execution chain connected',
-      String(report.executionChainConnected),
-      report.executionChainConnected,
+      'Launch execution connected',
+      String(report.launchExecutionConnected),
+      report.launchExecutionConnected,
+      'connected-launch-readiness-proof',
+    ),
+    entry(
+      'Launch criteria satisfied',
+      String(report.launchCriteriaSatisfied),
+      report.launchCriteriaSatisfied,
       'connected-launch-readiness-proof',
     ),
     entry(

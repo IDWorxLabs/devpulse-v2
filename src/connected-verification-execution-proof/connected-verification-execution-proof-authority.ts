@@ -9,18 +9,22 @@ import type { PreviewExperienceProofReport } from '../connected-preview-experien
 import {
   CONNECTED_VERIFICATION_EXECUTION_PROOF_CACHE_KEY_PREFIX,
   CONNECTED_VERIFICATION_EXECUTION_PROOF_PASS_TOKEN,
+  CONNECTED_VERIFICATION_EXECUTION_PROOF_REPAIR_V1_PASS,
 } from './connected-verification-execution-proof-registry.js';
 import { recordVerificationExecutionProofAssessment } from './connected-verification-execution-proof-history.js';
 import { buildVerificationExecutionProofReportMarkdown } from './connected-verification-execution-proof-report-builder.js';
 import type {
   AssessConnectedVerificationExecutionProofInput,
+  VerificationActivationEvidence,
   VerificationExecutionFounderQuestions,
   VerificationExecutionProofAssessment,
   VerificationExecutionProofArtifacts,
   VerificationExecutionProofReport,
   VerificationExecutionState,
   VerificationProofLevel,
+  VerificationSessionEvidence,
 } from './connected-verification-execution-proof-types.js';
+import { activateVerificationProofGap } from './verification-proof-gap-activator.js';
 import { analyzeVerificationEvidence, isEvidenceSufficient } from './verification-evidence-analyzer.js';
 import { analyzeVerificationFailures } from './verification-failure-analyzer.js';
 import { analyzeVerificationLinkage } from './verification-linkage-analyzer.js';
@@ -82,6 +86,7 @@ function deriveProofLevel(input: {
   resultsObserved: boolean;
   evidenceSufficient: boolean;
   linkageConnected: boolean;
+  verificationSucceeded: boolean;
 }): VerificationProofLevel {
   if (
     input.previewProven &&
@@ -89,7 +94,8 @@ function deriveProofLevel(input: {
     input.targetLinked &&
     input.resultsObserved &&
     input.evidenceSufficient &&
-    input.linkageConnected
+    input.linkageConnected &&
+    input.verificationSucceeded
   ) {
     return 'PROVEN';
   }
@@ -102,6 +108,50 @@ function deriveProofLevel(input: {
     return 'PARTIAL';
   }
   return 'NOT_PROVEN';
+}
+
+function buildEmptyActivationEvidence(reason: string): VerificationActivationEvidence {
+  return {
+    readOnly: true,
+    workspaceId: 'none',
+    workspacePath: 'none',
+    verificationCommand: null,
+    commandDetected: false,
+    generatedAt: new Date().toISOString(),
+    executionAttempted: false,
+    executionObserved: false,
+    verificationSucceeded: false,
+    exitCode: null,
+    passCount: 0,
+    failCount: 0,
+    skippedCount: 0,
+    testsExecuted: 0,
+    checksExecuted: 0,
+    executionStartedAt: null,
+    executionCompletedAt: null,
+    durationMs: null,
+    proofLevel: 'NOT_PROVEN',
+    firstBrokenVerificationLink: reason.includes('Preview') ? 'preview→command' : 'preview→command',
+  };
+}
+
+function buildEmptySession(): VerificationSessionEvidence {
+  return {
+    readOnly: true,
+    sessionId: null,
+    verificationRunId: null,
+    runStatus: 'NOT_OBSERVED',
+    workspaceId: null,
+    verificationCommand: null,
+    executionObserved: false,
+    verificationSucceeded: false,
+    exitCode: null,
+    passCount: 0,
+    failCount: 0,
+    skippedCount: 0,
+    generatedAt: new Date().toISOString(),
+    proofLevel: 'NOT_PROVEN',
+  };
 }
 
 function buildEmptyReport(assessmentId: string, reason: string): VerificationExecutionProofReport {
@@ -180,7 +230,7 @@ function buildEmptyReport(assessmentId: string, reason: string): VerificationExe
   const emptyLinkage = {
     readOnly: true as const,
     verificationLinkageConnected: false,
-    firstBrokenVerificationLink: 'contract→workspace',
+    firstBrokenVerificationLink: 'preview→command',
     missingLinks: [reason],
     traceabilityScore: 0,
     contractToWorkspace: false,
@@ -198,7 +248,10 @@ function buildEmptyReport(assessmentId: string, reason: string): VerificationExe
     generatedAt: new Date().toISOString(),
     verificationProofLevel: 'NOT_PROVEN',
     verificationState: 'NOT_RUN',
+    verificationExecutionConnected: false,
     previewExperienceProven: false,
+    session: buildEmptySession(),
+    activationEvidence: buildEmptyActivationEvidence(reason),
     run: emptyRun,
     target: emptyTarget,
     results: emptyResults,
@@ -221,6 +274,7 @@ function buildEmptyReport(assessmentId: string, reason: string): VerificationExe
       whatShouldBeBuiltNext: ['Complete PREVIEW experience proof first.'],
     },
     cacheKey: stableCacheKey(assessmentId, 'NOT_PROVEN'),
+    repairToken: null,
   };
 }
 
@@ -231,7 +285,8 @@ export function assessConnectedVerificationExecutionProof(
   const assessmentId = nextAssessmentId();
   const previewExperienceProof = resolvePreviewExperienceProof(input, rootDir);
   const previewProven = previewExperienceProof?.previewProofLevel === 'PROVEN';
-  const fixture = input.verificationEvidenceFixture;
+  let fixture = input.verificationEvidenceFixture;
+  let activationEvidence: VerificationActivationEvidence | null = null;
 
   if (!previewExperienceProof || !previewProven) {
     const reason = !previewExperienceProof
@@ -246,6 +301,30 @@ export function assessConnectedVerificationExecutionProof(
     };
     recordVerificationExecutionProofAssessment(assessment);
     return assessment;
+  }
+
+  const workspacePath = previewExperienceProof.activationEvidence?.workspacePath ?? null;
+  const workspaceId =
+    previewExperienceProof.activationEvidence?.workspaceId ??
+    workspacePath?.split('/').pop() ??
+    'unknown';
+
+  const shouldActivateGap =
+    fixture === undefined &&
+    input.skipVerificationProofGapActivation !== true &&
+    workspacePath !== null;
+
+  if (shouldActivateGap) {
+    const activation = activateVerificationProofGap({
+      projectRootDir: rootDir,
+      workspacePath,
+      workspaceId,
+      previewExperienceProof,
+    });
+    activationEvidence = activation.activationEvidence;
+    if (activation.sessionFixture) {
+      fixture = activation.sessionFixture;
+    }
   }
 
   const run = analyzeVerificationRun({ fixture });
@@ -264,11 +343,19 @@ export function assessConnectedVerificationExecutionProof(
     target,
     results,
     evidence,
+    verificationSucceeded:
+      activationEvidence?.verificationSucceeded ??
+      (fixture?.resultStatus === 'PASS' && (fixture.failCount ?? 0) === 0),
+    commandDetected:
+      activationEvidence?.commandDetected ?? (run.command !== null && run.command.length > 0),
   });
 
   const targetLinked = isTargetLinked(target);
   const resultsObserved = areResultsObserved(results);
   const evidenceSufficient = isEvidenceSufficient(evidence);
+  const verificationSucceeded =
+    activationEvidence?.verificationSucceeded ??
+    (fixture?.resultStatus === 'PASS' && (fixture.failCount ?? 0) === 0);
 
   const verificationProofLevel = deriveProofLevel({
     previewProven,
@@ -278,6 +365,7 @@ export function assessConnectedVerificationExecutionProof(
     resultsObserved,
     evidenceSufficient,
     linkageConnected: linkage.verificationLinkageConnected,
+    verificationSucceeded,
   });
 
   const verificationState = deriveVerificationState({
@@ -345,6 +433,27 @@ export function assessConnectedVerificationExecutionProof(
         : [recommendedFix],
   };
 
+  const session: VerificationSessionEvidence = {
+    readOnly: true,
+    sessionId: fixture?.previewSessionId ?? previewExperienceProof.session.sessionId,
+    verificationRunId: run.runId,
+    runStatus: run.runState,
+    workspaceId: fixture?.workspaceId ?? workspaceId,
+    verificationCommand: run.command ?? activationEvidence?.verificationCommand ?? null,
+    executionObserved: activationEvidence?.executionObserved ?? run.runObserved,
+    verificationSucceeded,
+    exitCode: activationEvidence?.exitCode ?? null,
+    passCount: results.passCount,
+    failCount: results.failCount,
+    skippedCount: results.skippedCount,
+    generatedAt: new Date().toISOString(),
+    proofLevel: verificationProofLevel,
+  };
+
+  const verificationExecutionConnected = verificationProofLevel === 'PROVEN';
+  const repairToken =
+    verificationProofLevel === 'PROVEN' ? CONNECTED_VERIFICATION_EXECUTION_PROOF_REPAIR_V1_PASS : null;
+
   const report: VerificationExecutionProofReport = {
     readOnly: true,
     advisoryOnly: true,
@@ -352,7 +461,40 @@ export function assessConnectedVerificationExecutionProof(
     generatedAt: new Date().toISOString(),
     verificationProofLevel,
     verificationState,
+    verificationExecutionConnected,
     previewExperienceProven: previewProven,
+    session,
+    activationEvidence:
+      activationEvidence ??
+      (fixture
+        ? {
+            readOnly: true,
+            workspaceId,
+            workspacePath: workspacePath ?? 'none',
+            verificationCommand: run.command,
+            commandDetected: run.command !== null,
+            generatedAt: new Date().toISOString(),
+            executionAttempted: run.runObserved,
+            executionObserved: run.runObserved && runCompleted,
+            verificationSucceeded,
+            exitCode: null,
+            passCount: results.passCount,
+            failCount: results.failCount,
+            skippedCount: results.skippedCount,
+            testsExecuted: results.passCount + results.failCount + results.skippedCount,
+            checksExecuted: results.passCount + results.failCount,
+            executionStartedAt: run.startedAt,
+            executionCompletedAt: run.completedAt,
+            durationMs:
+              run.startedAt && run.completedAt
+                ? new Date(run.completedAt).getTime() - new Date(run.startedAt).getTime()
+                : null,
+            proofLevel: verificationProofLevel,
+            firstBrokenVerificationLink: linkage.verificationLinkageConnected
+              ? null
+              : linkage.firstBrokenVerificationLink,
+          }
+        : buildEmptyActivationEvidence('Verification activation not attempted')),
     run,
     target,
     results,
@@ -366,6 +508,7 @@ export function assessConnectedVerificationExecutionProof(
     recommendedNextActions: founderQuestions.whatShouldBeBuiltNext,
     founderQuestions,
     cacheKey: stableCacheKey(assessmentId, verificationProofLevel),
+    repairToken,
   };
 
   const assessment: VerificationExecutionProofAssessment = {

@@ -4,6 +4,7 @@
 
 export {
   CONNECTED_VERIFICATION_EXECUTION_PROOF_PASS_TOKEN,
+  CONNECTED_VERIFICATION_EXECUTION_PROOF_REPAIR_V1_PASS,
   CONNECTED_VERIFICATION_EXECUTION_PROOF_OWNER_MODULE,
   CONNECTED_VERIFICATION_EXECUTION_PROOF_PHASE,
   CONNECTED_VERIFICATION_EXECUTION_PROOF_REPORT_TITLE,
@@ -12,6 +13,7 @@ export {
   MAX_VERIFICATION_EXECUTION_PROOF_HISTORY,
   ORCHESTRATION_FLOW,
   SAFETY_GUARANTEES,
+  VERIFICATION_PROBE_TIMEOUT_MS,
 } from './connected-verification-execution-proof-registry.js';
 
 export type {
@@ -37,6 +39,8 @@ export type {
   VerificationExecutionProofAssessment,
   VerificationEvidenceFixture,
   AssessConnectedVerificationExecutionProofInput,
+  VerificationSessionEvidence,
+  VerificationActivationEvidence,
   VerificationExecutionProofHistoryEntry,
   VerificationExecutionProofHistorySummary,
   VerificationExecutionProofArtifacts,
@@ -68,4 +72,5 @@ export { analyzeVerificationEvidence, isEvidenceSufficient } from './verificatio
 export { analyzeVerificationFailures } from './verification-failure-analyzer.js';
 export { analyzeVerificationReadiness } from './verification-readiness-analyzer.js';
 export { analyzeVerificationManifest } from './verification-manifest-analyzer.js';
+export { activateVerificationProofGap } from './verification-proof-gap-activator.js';
 export { analyzeVerificationLinkage } from './verification-linkage-analyzer.js';

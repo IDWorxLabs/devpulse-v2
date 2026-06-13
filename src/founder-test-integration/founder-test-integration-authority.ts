@@ -33,6 +33,8 @@ import {
   resolveFounderExecutionConnected,
   type ResolvedFounderExecutionConnected,
 } from './founder-execution-connected-resolver.js';
+import { resolveExecutionChainStageContext } from './connected-execution-chain-stage-resolver.js';
+import { assessConnectedLaunchReadinessProof } from '../connected-launch-readiness-proof/index.js';
 import { resetExecutionProofEvolutionModuleForTests } from '../execution-proof-evolution/index.js';
 import {
   buildFounderAcceptanceBridgeSnapshot,
@@ -317,10 +319,44 @@ export function assessFounderTestIntegration(
           founderExecutionProofAssessment: founderExecutionProofPre,
         });
 
+  const chainContextBase =
+    input.executionChainStageContext ??
+    resolveExecutionChainStageContext(rootDir, {
+      skipVerificationProofGapActivation: input.skipVerificationProofGapActivation,
+    });
+
+  let launchReadinessProof = chainContextBase.launchReadinessProof;
+  if (
+    !input.skipLaunchProofGapResolution &&
+    chainContextBase.verificationProven &&
+    !launchReadinessProof
+  ) {
+    launchReadinessProof = assessConnectedLaunchReadinessProof({
+      rootDir,
+      verificationExecutionProof: chainContextBase.verificationExecutionProof,
+      buildMaterializationReport: chainContextBase.buildMaterializationReport ?? undefined,
+      skipFounderTestReassessment: true,
+    }).report;
+  }
+
+  const chainContext =
+    input.executionChainStageContext ??
+    resolveExecutionChainStageContext(rootDir, {
+      skipVerificationProofGapActivation: input.skipVerificationProofGapActivation,
+      verificationExecutionProof: chainContextBase.verificationExecutionProof,
+      buildMaterializationReport: chainContextBase.buildMaterializationReport ?? undefined,
+      launchReadinessProof,
+      launchProven: launchReadinessProof?.launchProofLevel === 'PROVEN',
+      launchExecutionConnected: launchReadinessProof?.launchExecutionConnected ?? false,
+    });
+
   const run = runFounderTestIntegration({
     ...input,
     rootDir,
-    resolvedExecutionConnected: resolvedExecutionConnected.executionConnected,
+    resolvedBuilderMaterializationConnected: chainContext.builderMaterializationConnected,
+    resolvedPreviewExperienceConnected: chainContext.previewExperienceConnected,
+    executionChainStageContext: chainContext,
+    resolvedExecutionConnected: input.resolvedExecutionConnected,
     founderExecutionProofAssessment: founderExecutionProofPre,
   });
 

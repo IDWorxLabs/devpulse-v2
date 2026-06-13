@@ -4,10 +4,13 @@
 
 export const CONNECTED_VERIFICATION_EXECUTION_PROOF_PASS_TOKEN =
   'CONNECTED_VERIFICATION_EXECUTION_PROOF_PASS';
+export const CONNECTED_VERIFICATION_EXECUTION_PROOF_REPAIR_V1_PASS =
+  'CONNECTED_VERIFICATION_EXECUTION_PROOF_REPAIR_V1_PASS';
 export const CONNECTED_VERIFICATION_EXECUTION_PROOF_OWNER_MODULE =
   'devpulse_connected_verification_execution_proof';
 export const CONNECTED_VERIFICATION_EXECUTION_PROOF_PHASE =
-  'Phase 26.11 — Connected Verification Execution Proof';
+  'Phase 26.76 — Connected Verification Execution Proof Repair';
+export const VERIFICATION_PROBE_TIMEOUT_MS = 45_000;
 export const CONNECTED_VERIFICATION_EXECUTION_PROOF_REPORT_TITLE =
   'CONNECTED_VERIFICATION_EXECUTION_PROOF_REPORT';
 export const CONNECTED_VERIFICATION_EXECUTION_PROOF_CACHE_KEY_PREFIX =
@@ -19,6 +22,7 @@ export const CONNECTED_VERIFICATION_EXECUTION_PROOF_CORE_QUESTION =
 
 export const ORCHESTRATION_FLOW = [
   'Preview Experience Proof Report (upstream)',
+  'Verification Proof Gap Activator (generated workspace)',
   'Verification Run Analyzer',
   'Verification Target Analyzer',
   'Verification Result Analyzer',
@@ -31,8 +35,8 @@ export const ORCHESTRATION_FLOW = [
 ] as const;
 
 export const SAFETY_GUARANTEES = [
-  'Read-only — does not execute verification commands',
-  'PROVEN requires completed run, linked target, results, and evidence artifacts',
-  'Failed verification can still be PROVEN if run evidence exists',
+  'Read-only analysis path — gap activator executes real npm verify in generated workspace only',
+  'PROVEN requires preview proven, command detected, execution observed, and verificationSucceeded',
+  'Failed verification run is PARTIAL — not PROVEN without success',
   'No pass-token-only or validator-exists proof',
 ] as const;

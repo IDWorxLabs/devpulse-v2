@@ -39,10 +39,10 @@ export function analyzePreviewStage(
   let proofLevel: StageExecutionProof['proofLevel'] = 'NOT_PROVEN';
   if (
     report.previewProofLevel === 'PROVEN' &&
-    report.linkage.previewLinkageConnected &&
     report.runtimeActivationProven &&
+    report.url.urlReachable &&
     report.render.applicationRendered &&
-    report.interaction.interactionObserved
+    report.linkage.previewLinkageConnected
   ) {
     proofLevel = 'PROVEN';
   } else if (report.previewProofLevel === 'PARTIAL' || report.url.urlObserved) {

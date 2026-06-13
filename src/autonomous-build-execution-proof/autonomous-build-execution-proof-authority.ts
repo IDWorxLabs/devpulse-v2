@@ -333,6 +333,7 @@ export function assessAutonomousBuildExecutionProof(
       founderTestAssessment: inputSnapshotBase.founderTestAssessment,
       coreStageProofs: [requirements, plan, build, runtime, preview, verify],
       coreChainConnected,
+      buildMaterializationReport: connectedBuildMaterialization,
       coreFirstBrokenStage:
         coreChainAnalysis.firstBrokenStage === 'LAUNCH'
           ? null

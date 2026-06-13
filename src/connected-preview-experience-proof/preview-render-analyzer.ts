@@ -16,19 +16,26 @@ export function analyzePreviewRender(input: {
   const injected = input.sessionEvidence;
   const renderEvidence: string[] = [];
 
-  if (injected?.htmlResponse) renderEvidence.push('HTML response observed');
+  if (injected?.renderEvidenceType) renderEvidence.push(injected.renderEvidenceType);
+  if (injected?.responseLength !== undefined && injected.responseLength > 0) {
+    renderEvidence.push(`Response length: ${injected.responseLength}`);
+  }
+  if (injected?.contentType) renderEvidence.push(`Content-Type: ${injected.contentType}`);
+  if (injected?.htmlResponse) renderEvidence.push('HTML/JSON response observed');
   if (injected?.domSnapshot) renderEvidence.push('DOM snapshot captured');
   if (injected?.renderCapturePath) renderEvidence.push(`Render capture: ${injected.renderCapturePath}`);
   if (injected?.applicationTitle) renderEvidence.push(`Application title: ${injected.applicationTitle}`);
   if (injected?.applicationRoot) renderEvidence.push(`Application root: ${injected.applicationRoot}`);
 
   const hasRenderSignal =
+    injected?.renderObserved === true ||
     renderEvidence.length > 0 ||
     Boolean(injected?.applicationTitle) ||
     Boolean(injected?.domSnapshot) ||
-    injected?.htmlResponse === true;
+    injected?.htmlResponse === true ||
+    (injected?.responseLength !== undefined && injected.responseLength > 0);
 
-  if (!hasRenderSignal) {
+  if (!hasRenderSignal || !input.url.urlReachable) {
     return {
       readOnly: true,
       renderState: 'NOT_RENDERED',
@@ -42,11 +49,15 @@ export function analyzePreviewRender(input: {
   }
 
   const fullRender =
-    (injected?.htmlResponse || injected?.domSnapshot) &&
-    (injected?.applicationTitle || injected?.applicationRoot);
+    injected?.renderObserved === true ||
+    (injected?.responseLength !== undefined &&
+      injected.responseLength > 0 &&
+      injected?.renderEvidenceType !== undefined) ||
+    ((injected?.htmlResponse || injected?.domSnapshot) &&
+      (injected?.applicationTitle || injected?.applicationRoot));
 
   let renderState: PreviewRenderState = 'PARTIAL';
-  if (fullRender || (injected?.htmlResponse && injected?.applicationRoot)) {
+  if (fullRender) {
     renderState = 'RENDERED';
   }
 

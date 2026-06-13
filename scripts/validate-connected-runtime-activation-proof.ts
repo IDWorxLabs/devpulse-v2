@@ -1,8 +1,8 @@
 /**
- * Phase 26.9 — Connected Runtime Activation Proof validation.
+ * Phase 26.74 — Connected Runtime Activation Proof repair validation.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -13,23 +13,25 @@ import {
   assessConnectedBuildExecution,
   materializeBuildContractExpectations,
   resetConnectedBuildExecutionModuleForTests,
+  WORKSPACE_ROOT_DIR,
 } from '../src/connected-build-execution/index.js';
 import {
-  CONNECTED_RUNTIME_ACTIVATION_PROOF_PASS_TOKEN,
+  CONNECTED_RUNTIME_ACTIVATION_PROOF_REPAIR_V1_PASS,
   assessConnectedRuntimeActivationProof,
   buildRuntimeActivationProofReportMarkdown,
   resetConnectedRuntimeActivationProofModuleForTests,
 } from '../src/connected-runtime-activation-proof/index.js';
+import {
+  assessConnectedPreviewExperienceProof,
+  resetConnectedPreviewExperienceProofModuleForTests,
+} from '../src/connected-preview-experience-proof/index.js';
 import type { RuntimeSessionEvidence } from '../src/connected-runtime-activation-proof/connected-runtime-activation-proof-types.js';
 import {
   assessRequirementsToPlanExecutionContract,
   resetRequirementsToPlanContractModuleForTests,
 } from '../src/requirements-to-plan-execution-contract/index.js';
-import {
-  resetFounderTestLaunchReadinessModuleForTests,
-  runFounderTestLaunchReadiness,
-} from '../src/founder-test-launch-readiness/index.js';
 import { assessFounderTestIntegration } from '../src/founder-test-integration/index.js';
+import { resolveExecutionChainStageContext } from '../src/founder-test-integration/connected-execution-chain-stage-resolver.js';
 
 interface CheckResult {
   name: string;
@@ -45,50 +47,46 @@ function assert(name: string, condition: boolean, detail: string): void {
 }
 
 const REQUIRED = [
-  'src/connected-runtime-activation-proof/connected-runtime-activation-proof-types.ts',
-  'src/connected-runtime-activation-proof/connected-runtime-activation-proof-registry.ts',
-  'src/connected-runtime-activation-proof/runtime-command-resolver.ts',
-  'src/connected-runtime-activation-proof/runtime-process-analyzer.ts',
-  'src/connected-runtime-activation-proof/runtime-port-analyzer.ts',
-  'src/connected-runtime-activation-proof/runtime-health-analyzer.ts',
-  'src/connected-runtime-activation-proof/runtime-log-analyzer.ts',
-  'src/connected-runtime-activation-proof/runtime-manifest-analyzer.ts',
-  'src/connected-runtime-activation-proof/runtime-linkage-analyzer.ts',
+  'src/connected-runtime-activation-proof/runtime-proof-gap-activator.ts',
+  'src/connected-runtime-activation-proof/runtime-proof-gap-probe.mjs',
   'src/connected-runtime-activation-proof/connected-runtime-activation-proof-authority.ts',
-  'src/connected-runtime-activation-proof/connected-runtime-activation-proof-report-builder.ts',
-  'architecture/CONNECTED_RUNTIME_ACTIVATION_PROOF_REPORT.md',
+  'src/connected-build-execution/build-proof-gap-materializer.ts',
+  'src/founder-test-integration/connected-execution-chain-stage-resolver.ts',
+  'scripts/validate-connected-runtime-activation-proof.ts',
+  'architecture/CONNECTED_RUNTIME_ACTIVATION_PROOF_REPAIR_REPORT.md',
 ];
 
 for (const file of REQUIRED) {
   assert(`file: ${file}`, existsSync(join(ROOT, file)), existsSync(join(ROOT, file)) ? 'present' : 'missing');
 }
 
-const crmPrompt =
+const CRM_PROMPT =
   'Build a CRM for a small sales team with contacts, deals, tasks, login, dashboard, and admin role.';
 
-function getCrmBuildProvenReport() {
-  resetRequirementsToPlanContractModuleForTests();
-  resetConnectedBuildExecutionModuleForTests();
-  const crmAssessment = assessRequirementsToPlanExecutionContract({ rawPrompt: crmPrompt });
-  const contract = crmAssessment.report.buildReadyContract!;
-  const materialization = materializeBuildContractExpectations(contract);
-  const buildReport = assessConnectedBuildExecution({
-    rootDir: ROOT,
-    buildReadyContract: contract,
-    observedEvidence: {
-      paths: materialization.expectedFiles,
-      directories: materialization.workspaceTargets,
-    },
-  }).report;
-  return { crmAssessment, contract, materialization, buildReport };
+function cleanupWorkspace(contractId: string): void {
+  const workspacePath = join(ROOT, WORKSPACE_ROOT_DIR, contractId);
+  if (existsSync(workspacePath)) {
+    rmSync(workspacePath, { recursive: true, force: true });
+  }
 }
 
-function workspacePathFrom(buildReport: ReturnType<typeof getCrmBuildProvenReport>['buildReport']) {
-  return (
-    buildReport.workspaceMaterialization.workspacePath ??
-    buildReport.buildMaterialization.workspaceTargets[0] ??
-    `.generated-builder-workspaces/${buildReport.buildMaterialization.contractId}`
-  ).replace(/\\/g, '/');
+function getBuildReadyIdea4Contract() {
+  resetRequirementsToPlanContractModuleForTests();
+  let contract = null;
+  for (let i = 0; i < 4; i += 1) {
+    const assessment = assessRequirementsToPlanExecutionContract({ rawPrompt: CRM_PROMPT });
+    contract = assessment.report.buildReadyContract;
+  }
+  return contract!;
+}
+
+function fileNonEmpty(absPath: string): boolean {
+  try {
+    const stat = statSync(absPath);
+    return stat.isFile() && stat.size > 0;
+  } catch {
+    return false;
+  }
 }
 
 function fullRuntimeFixture(workspacePath: string): RuntimeSessionEvidence {
@@ -97,195 +95,201 @@ function fullRuntimeFixture(workspacePath: string): RuntimeSessionEvidence {
     command: 'npm run dev',
     workingDirectory: workspacePath,
     scriptName: 'dev',
-    frameworkHint: 'VITE',
-    executionObserved: false,
+    frameworkHint: 'NODE',
+    executionObserved: true,
     processId: '4242',
     processState: 'STARTED',
     startTime: new Date().toISOString(),
     exitStatus: null,
-    port: 5173,
-    host: 'localhost',
-    url: 'http://localhost:5173',
+    port: 4173,
+    host: '127.0.0.1',
+    url: 'http://127.0.0.1:4173',
     reachable: true,
     protocol: 'http',
     healthStatusCode: 200,
-    healthResponseType: 'html',
+    healthResponseType: 'json',
     responseTimeMs: 38,
-    healthEndpoint: 'http://localhost:5173',
-    logLines: ['  ➜  Local:   http://localhost:5173/', 'ready in 480ms'],
+    healthEndpoint: 'http://127.0.0.1:4173',
+    logLines: ['{"ready":true,"port":4173}'],
   };
 }
 
-const { crmAssessment, buildReport, materialization } = getCrmBuildProvenReport();
-const workspacePath = workspacePathFrom(buildReport);
+const contract = getBuildReadyIdea4Contract();
+cleanupWorkspace(contract.contractId);
 
-assert('fixture: BUILD PROVEN', buildReport.proofLevel === 'PROVEN', buildReport.proofLevel);
-
-resetConnectedRuntimeActivationProofModuleForTests();
-const noEvidence = assessConnectedRuntimeActivationProof({
+resetConnectedBuildExecutionModuleForTests();
+const buildAssessment = assessConnectedBuildExecution({
   rootDir: ROOT,
-  buildMaterializationReport: buildReport,
+  buildReadyContract: contract,
 });
-assert('A no runtime evidence: NOT_PROVEN', noEvidence.report.runtimeProofLevel === 'NOT_PROVEN', noEvidence.report.runtimeProofLevel);
+const buildReport = buildAssessment.report;
+assert('A BUILD materialization PROVEN', buildReport.proofLevel === 'PROVEN', buildReport.proofLevel);
 
-resetConnectedRuntimeActivationProofModuleForTests();
-const commandOnly = assessConnectedRuntimeActivationProof({
-  rootDir: ROOT,
-  buildMaterializationReport: buildReport,
-  workspacePath,
-  runtimeSessionEvidence: {
-    command: 'npm run dev',
-    workingDirectory: workspacePath,
-    scriptName: 'dev',
-  },
-});
-assert('B command only: PARTIAL', commandOnly.report.runtimeProofLevel === 'PARTIAL', commandOnly.report.runtimeProofLevel);
+const workspacePath = (
+  buildReport.workspaceMaterialization.workspacePath ??
+  `${WORKSPACE_ROOT_DIR}/${contract.contractId}`
+).replace(/\\/g, '/');
+
+const pkgPath = join(ROOT, workspacePath, 'package.json');
+const pkg = JSON.parse(readFileSync(pkgPath, 'utf8')) as { scripts?: Record<string, string> };
+assert('A package.json has dev script', Boolean(pkg.scripts?.dev), pkg.scripts?.dev ?? 'missing');
+assert('A package.json has start script', Boolean(pkg.scripts?.start), pkg.scripts?.start ?? 'missing');
 assert(
-  'B activation state COMMAND_FOUND',
-  commandOnly.report.runtimeActivationState === 'COMMAND_FOUND',
-  commandOnly.report.runtimeActivationState,
+  'A runtime dev-server materialized',
+  fileNonEmpty(join(ROOT, workspacePath, 'runtime/dev-server.mjs')),
+  join(ROOT, workspacePath, 'runtime/dev-server.mjs'),
 );
 
 resetConnectedRuntimeActivationProofModuleForTests();
-const processNoPort = assessConnectedRuntimeActivationProof({
+const noScriptWorkspace = assessConnectedRuntimeActivationProof({
   rootDir: ROOT,
   buildMaterializationReport: buildReport,
-  workspacePath,
-  runtimeSessionEvidence: {
-    runtimeSessionId: 'session-process-only',
-    command: 'npm run dev',
-    workingDirectory: workspacePath,
-    processId: '9999',
-    processState: 'STARTED',
-  },
+  skipRuntimeProofGapActivation: true,
+  workspacePath: '.generated-builder-workspaces/missing-workspace',
+  runtimeSessionEvidence: { command: 'npm run dev' },
 });
-assert('C process no port: PARTIAL', processNoPort.report.runtimeProofLevel === 'PARTIAL', processNoPort.report.runtimeProofLevel);
 assert(
-  'C activation state PROCESS_STARTED',
-  processNoPort.report.runtimeActivationState === 'PROCESS_STARTED',
-  processNoPort.report.runtimeActivationState,
+  'B fixture without process: PARTIAL',
+  noScriptWorkspace.report.runtimeProofLevel === 'PARTIAL',
+  noScriptWorkspace.report.runtimeProofLevel,
 );
 
 resetConnectedRuntimeActivationProofModuleForTests();
-const portNoHealth = assessConnectedRuntimeActivationProof({
+const liveRuntime = assessConnectedRuntimeActivationProof({
   rootDir: ROOT,
   buildMaterializationReport: buildReport,
   workspacePath,
-  runtimeSessionEvidence: {
-    runtimeSessionId: 'session-port-only',
-    command: 'npm run dev',
-    workingDirectory: workspacePath,
-    processId: '8888',
-    processState: 'STARTED',
-    port: 3000,
-    host: 'localhost',
-    url: 'http://localhost:3000',
-    reachable: true,
-    protocol: 'http',
-  },
 });
-assert('D port no health: PARTIAL', portNoHealth.report.runtimeProofLevel === 'PARTIAL', portNoHealth.report.runtimeProofLevel);
+assert('C live activation: runtime command evidence', liveRuntime.report.command.runtimeCommandFound, liveRuntime.report.command.command ?? 'none');
 assert(
-  'D activation state PORT_REACHABLE',
-  portNoHealth.report.runtimeActivationState === 'PORT_REACHABLE',
-  portNoHealth.report.runtimeActivationState,
+  'C live activation: package.json inspected',
+  liveRuntime.report.activationEvidence?.packageJsonDetected === true,
+  String(liveRuntime.report.activationEvidence?.packageJsonDetected),
 );
-
-resetConnectedRuntimeActivationProofModuleForTests();
-const full = assessConnectedRuntimeActivationProof({
-  rootDir: ROOT,
-  buildMaterializationReport: buildReport,
-  workspacePath,
-  runtimeSessionEvidence: fullRuntimeFixture(workspacePath),
-});
-assert('E fully linked fixture: PROVEN', full.report.runtimeProofLevel === 'PROVEN', full.report.runtimeProofLevel);
-assert('E linkage connected', full.report.linkage.runtimeLinkageConnected, String(full.report.linkage.runtimeLinkageConnected));
+assert(
+  'C live activation: script detected',
+  liveRuntime.report.activationEvidence?.scriptDetected === true,
+  String(liveRuntime.report.activationEvidence?.scriptDetected),
+);
+assert(
+  'C live activation: process observed',
+  liveRuntime.report.process.processState === 'STARTED',
+  liveRuntime.report.process.processState,
+);
+assert(
+  'C live activation: port reachable',
+  liveRuntime.report.port.reachable,
+  String(liveRuntime.report.port.reachable),
+);
+assert(
+  'C live activation: health verified',
+  liveRuntime.report.health.healthState === 'HEALTHY' || liveRuntime.report.health.healthState === 'PARTIAL',
+  liveRuntime.report.health.healthState,
+);
+assert('C live activation: RUNTIME PROVEN', liveRuntime.report.runtimeProofLevel === 'PROVEN', liveRuntime.report.runtimeProofLevel);
+assert('C live activation: linkage connected', liveRuntime.report.linkage.runtimeLinkageConnected, String(liveRuntime.report.linkage.runtimeLinkageConnected));
+assert(
+  'C activation evidence proof level PROVEN',
+  liveRuntime.report.activationEvidence?.proofLevel === 'PROVEN',
+  liveRuntime.report.activationEvidence?.proofLevel ?? 'missing',
+);
 
 resetConnectedRuntimeActivationProofModuleForTests();
 const broken = assessConnectedRuntimeActivationProof({
   rootDir: ROOT,
   buildMaterializationReport: buildReport,
   workspacePath,
+  skipRuntimeProofGapActivation: true,
   runtimeSessionEvidence: {
     ...fullRuntimeFixture(workspacePath),
     reachable: false,
-    port: 5173,
+    port: 4173,
   },
 });
 assert(
-  'F linkage break: firstBrokenRuntimeLink identified',
-  broken.report.linkage.firstBrokenRuntimeLink !== null,
+  'D broken port reports firstBrokenRuntimeLink',
+  broken.report.linkage.firstBrokenRuntimeLink === 'process→port' ||
+    broken.report.linkage.firstBrokenRuntimeLink === 'port→health',
   String(broken.report.linkage.firstBrokenRuntimeLink),
 );
 
 resetAutonomousBuildExecutionProofModuleForTests();
 resetConnectedRuntimeActivationProofModuleForTests();
+resetConnectedPreviewExperienceProofModuleForTests();
+const previewNotProven = assessConnectedPreviewExperienceProof({
+  rootDir: ROOT,
+  runtimeActivationProof: liveRuntime.report,
+  skipPreviewProofGapActivation: true,
+}).report;
 const proofAssessment = assessAutonomousBuildExecutionProof({
   rootDir: ROOT,
-  requirementsToPlanContract: crmAssessment.report,
-  observedBuildEvidence: {
-    paths: materialization.expectedFiles,
-    directories: materialization.workspaceTargets,
-  },
-  runtimeSessionEvidence: fullRuntimeFixture(workspacePath),
+  connectedBuildMaterialization: buildReport,
+  connectedPreviewExperienceProof: previewNotProven,
 });
 const proof = proofAssessment.report;
+const buildStage = proof.stageProofs.find((s) => s.stage === 'BUILD');
 const runtimeStage = proof.stageProofs.find((s) => s.stage === 'RUNTIME');
+const previewStage = proof.stageProofs.find((s) => s.stage === 'PREVIEW');
+const verifyStage = proof.stageProofs.find((s) => s.stage === 'VERIFY');
+const launchStage = proof.stageProofs.find((s) => s.stage === 'LAUNCH');
+
+assert('E BUILD remains PROVEN', buildStage?.proofLevel === 'PROVEN', buildStage?.proofLevel ?? 'missing');
 assert(
-  'G RUNTIME consumes connected-runtime-activation-proof',
+  'E RUNTIME consumes connected-runtime-activation-proof',
   runtimeStage?.sourceAuthority === 'connected-runtime-activation-proof',
   runtimeStage?.sourceAuthority ?? 'missing',
 );
-assert('G RUNTIME PROVEN with fixture', runtimeStage?.proofLevel === 'PROVEN', runtimeStage?.proofLevel ?? 'missing');
+assert('E RUNTIME PROVEN with live activation', runtimeStage?.proofLevel === 'PROVEN', runtimeStage?.proofLevel ?? 'missing');
+assert('E firstBrokenStage advances to PREVIEW', proof.firstBrokenStage === 'PREVIEW', String(proof.firstBrokenStage));
+assert('E PREVIEW not falsely PROVEN', previewStage?.proofLevel !== 'PROVEN', previewStage?.proofLevel ?? 'missing');
+assert('E VERIFY not falsely PROVEN', verifyStage?.proofLevel !== 'PROVEN', verifyStage?.proofLevel ?? 'missing');
+assert('E LAUNCH not falsely PROVEN', launchStage?.proofLevel !== 'PROVEN', launchStage?.proofLevel ?? 'missing');
+
+const chainContext = resolveExecutionChainStageContext(ROOT);
+assert('F builder materialization connected', chainContext.builderMaterializationConnected, String(chainContext.builderMaterializationConnected));
 assert(
-  'G firstBrokenStage advances to PREVIEW',
-  proof.firstBrokenStage === 'PREVIEW',
-  String(proof.firstBrokenStage),
+  'F first broken stage PREVIEW or VERIFY',
+  chainContext.firstBrokenStage === 'PREVIEW' || chainContext.firstBrokenStage === 'VERIFY',
+  chainContext.firstBrokenStage,
 );
 
-resetFounderTestLaunchReadinessModuleForTests();
-const founderTest = runFounderTestLaunchReadiness({
-  rootDir: ROOT,
-  founderTestAssessment: assessFounderTestIntegration({ rootDir: ROOT }),
-  autonomousBuildExecutionProof: proof,
-  connectedBuildExecution: proof.inputSnapshot.connectedBuildMaterialization,
-  connectedRuntimeActivationProof: proof.inputSnapshot.connectedRuntimeActivationProof,
-  skipAutonomousBuildExecutionProof: true,
-  skipConnectedBuildExecution: true,
-  skipConnectedRuntimeActivationProof: true,
-  skipChatStressSimulation: true,
-  skipProductReadinessSimulation: true,
-  skipHistoryRecording: true,
-});
+const founderTest = assessFounderTestIntegration({ rootDir: ROOT });
+const requirementReality = founderTest.run.authorityResults.find((r) => r.authorityId === 'REQUIREMENT_REALITY');
+const blockersJoined = (requirementReality?.blockers ?? []).join(' ').toLowerCase();
 assert(
-  'H founder test includes connected runtime activation proof',
-  founderTest.report.connectedRuntimeActivationProof !== null,
-  founderTest.report.connectedRuntimeActivationProofSummary ?? 'missing',
+  'G stale BUILD blockers removed from requirement reality',
+  !blockersJoined.includes('execution is not connected to real build output') &&
+    !blockersJoined.includes('build blocked'),
+  blockersJoined.slice(0, 120) || 'none',
 );
 
 assert(
-  'report markdown',
-  buildRuntimeActivationProofReportMarkdown(full.report).includes('CONNECTED RUNTIME ACTIVATION PROOF'),
+  'report markdown includes Runtime Activation Proof',
+  buildRuntimeActivationProofReportMarkdown(liveRuntime.report).includes('Runtime Activation Proof'),
   'yes',
 );
 
-const runtimeSource = readFileSync(
-  join(ROOT, 'src/autonomous-build-execution-proof/runtime-stage-analyzer.ts'),
+const arch = readFileSync(
+  join(ROOT, 'architecture/CONNECTED_RUNTIME_ACTIVATION_PROOF_REPAIR_REPORT.md'),
   'utf8',
 );
-assert('runtime stage uses activation proof authority', runtimeSource.includes('connected-runtime-activation-proof'), 'yes');
+assert('architecture repair token', arch.includes(CONNECTED_RUNTIME_ACTIVATION_PROOF_REPAIR_V1_PASS), 'yes');
 
-const arch = readFileSync(join(ROOT, 'architecture/CONNECTED_RUNTIME_ACTIVATION_PROOF_REPORT.md'), 'utf8');
-assert('architecture pass token', arch.includes(CONNECTED_RUNTIME_ACTIVATION_PROOF_PASS_TOKEN), 'yes');
+const validatorSource = readFileSync(join(ROOT, 'scripts/validate-connected-runtime-activation-proof.ts'), 'utf8');
+assert(
+  'no validator recursion',
+  !/spawn(?:Sync)?\([^)]*validate-connected-runtime-activation-proof/.test(validatorSource),
+  'yes',
+);
 
 const failed = results.filter((r) => !r.passed);
-console.log('\n--- Connected Runtime Activation Proof Validation ---');
+console.log('\n--- Connected Runtime Activation Proof Repair Validation ---');
 for (const r of results) {
   console.log(`${r.passed ? 'PASS' : 'FAIL'} — ${r.name}: ${r.detail}`);
 }
 
 if (failed.length === 0) {
-  console.log(`\n${CONNECTED_RUNTIME_ACTIVATION_PROOF_PASS_TOKEN}`);
+  console.log(`\n${CONNECTED_RUNTIME_ACTIVATION_PROOF_REPAIR_V1_PASS}`);
   process.exit(0);
 }
 

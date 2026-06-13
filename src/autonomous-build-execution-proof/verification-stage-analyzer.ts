@@ -1,6 +1,6 @@
 /**
  * Autonomous Build Execution Proof — VERIFY stage analyzer.
- * Consumes Connected Verification Execution Proof authority (Phase 26.11).
+ * Consumes Connected Verification Execution Proof authority (Phase 26.11 / 26.76).
  */
 
 import type { VerificationExecutionProofReport } from '../connected-verification-execution-proof/connected-verification-execution-proof-types.js';
@@ -41,13 +41,14 @@ export function analyzeVerificationStage(
   }
 
   const report = verificationExecutionProof;
+  const executionSucceeded = report.session.verificationSucceeded;
   let proofLevel: StageExecutionProof['proofLevel'] = 'NOT_PROVEN';
   if (
     report.verificationProofLevel === 'PROVEN' &&
     report.linkage.verificationLinkageConnected &&
     report.previewExperienceProven &&
     report.run.runObserved &&
-    report.evidence.evidenceObserved
+    executionSucceeded
   ) {
     proofLevel = 'PROVEN';
   } else if (report.verificationProofLevel === 'PARTIAL' || report.run.runObserved) {
@@ -62,15 +63,21 @@ export function analyzeVerificationStage(
       'connected-verification-execution-proof',
     ),
     entry(
-      'Verification run',
-      report.run.runId ?? report.run.runState,
-      report.run.runObserved,
+      'Verification command',
+      report.session.verificationCommand ?? report.run.command ?? 'none',
+      report.session.verificationCommand !== null || report.run.command !== null,
       'connected-verification-execution-proof',
     ),
     entry(
-      'Target linked',
-      report.target.targetState,
-      report.target.targetState === 'LINKED',
+      'Verification execution observed',
+      String(report.session.executionObserved),
+      report.session.executionObserved,
+      'connected-verification-execution-proof',
+    ),
+    entry(
+      'Verification run',
+      report.run.runId ?? report.run.runState,
+      report.run.runObserved,
       'connected-verification-execution-proof',
     ),
     entry(
@@ -80,9 +87,9 @@ export function analyzeVerificationStage(
       'connected-verification-execution-proof',
     ),
     entry(
-      'Evidence artifacts',
-      report.evidence.evidenceState,
-      report.evidence.evidenceObserved,
+      'Verification succeeded',
+      String(executionSucceeded),
+      executionSucceeded,
       'connected-verification-execution-proof',
     ),
     entry(

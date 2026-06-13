@@ -6,25 +6,27 @@
 import { createHash } from 'node:crypto';
 import { assessFounderAcceptanceGate } from '../founder-acceptance-gate/index.js';
 import type { FounderAcceptanceAssessment } from '../founder-acceptance-gate/founder-acceptance-gate-types.js';
-import { assessFounderTestIntegration } from '../founder-test-integration/index.js';
 import type { FounderTestAssessment } from '../founder-test-integration/founder-test-integration-types.js';
 import { assessLaunchCouncil } from '../launch-council/index.js';
 import type { LaunchCouncilAssessment } from '../launch-council/launch-council-types.js';
 import {
   CONNECTED_LAUNCH_READINESS_PROOF_CACHE_KEY_PREFIX,
   CONNECTED_LAUNCH_READINESS_PROOF_PASS_TOKEN,
+  CONNECTED_LAUNCH_READINESS_PROOF_REPAIR_V1_PASS,
 } from './connected-launch-readiness-proof-registry.js';
 import { recordLaunchReadinessProofAssessment } from './connected-launch-readiness-proof-history.js';
 import { buildLaunchReadinessProofReportMarkdown } from './connected-launch-readiness-proof-report-builder.js';
 import type {
   AssessConnectedLaunchReadinessProofInput,
   LaunchProofLevel,
+  LaunchReadinessEvidence,
   LaunchReadinessFounderQuestions,
   LaunchReadinessProofArtifacts,
   LaunchReadinessProofAssessment,
   LaunchReadinessProofReport,
   LaunchReadinessState,
 } from './connected-launch-readiness-proof-types.js';
+import { resolveLaunchReadinessEvidence } from './launch-proof-chain-resolver.js';
 import { analyzeLaunchAcceptance, isAcceptanceRejected } from './launch-acceptance-analyzer.js';
 import { analyzeLaunchBlockers, hasCriticalBlockers } from './launch-blocker-analyzer.js';
 import { analyzeLaunchClaimReality, hasCriticalClaimViolations } from './launch-claim-reality-analyzer.js';
@@ -82,6 +84,7 @@ function resolveCoreChainConnected(input: AssessConnectedLaunchReadinessProofInp
 }
 
 function deriveLaunchProofLevel(input: {
+  launchCriteriaSatisfied: boolean;
   coreChainConnected: boolean;
   verificationProven: boolean;
   blockers: ReturnType<typeof analyzeLaunchBlockers>;
@@ -91,7 +94,9 @@ function deriveLaunchProofLevel(input: {
   linkage: ReturnType<typeof analyzeLaunchLinkage>;
 }): LaunchProofLevel {
   if (isAcceptanceRejected(input.acceptance.acceptanceState)) return 'NOT_PROVEN';
-  if (!input.verificationProven || !input.coreChainConnected) return 'NOT_PROVEN';
+  if (!input.launchCriteriaSatisfied || !input.verificationProven || !input.coreChainConnected) {
+    return 'NOT_PROVEN';
+  }
 
   if (
     !hasCriticalBlockers(input.blockers) &&
@@ -159,11 +164,27 @@ export function assessConnectedLaunchReadinessProof(
   const rootDir = input.rootDir ?? process.cwd();
   const assessmentId = nextAssessmentId();
 
-  const founderTestAssessment: FounderTestAssessment =
-    input.founderTestAssessment ?? assessFounderTestIntegration({ rootDir });
+  const launchEvidence: LaunchReadinessEvidence =
+    input.launchReadinessEvidence ??
+    resolveLaunchReadinessEvidence({
+      rootDir,
+      coreStageProofs: input.coreStageProofs ?? input.autonomousBuildExecutionProof?.stageProofs,
+      verificationExecutionProof: input.verificationExecutionProof,
+      buildMaterializationReport: input.buildMaterializationReport ?? undefined,
+      skipVerificationProofGapActivation: input.skipVerificationProofGapActivation,
+    });
+
+  const connectedExecutionChainProven = launchEvidence.launchCriteriaSatisfied;
+
+  const founderTestAssessment: FounderTestAssessment | null = input.founderTestAssessment ?? null;
 
   const founderAcceptance: FounderAcceptanceAssessment =
-    input.founderAcceptanceAssessment ?? assessFounderAcceptanceGate({ rootDir });
+    input.founderAcceptanceAssessment ??
+    assessFounderAcceptanceGate({
+      rootDir,
+      founderTestAssessment: input.founderTestAssessment ?? undefined,
+      skipFounderTestIntegration: input.skipFounderTestReassessment,
+    });
 
   const launchCouncil: LaunchCouncilAssessment | null =
     input.launchCouncilAssessment ??
@@ -172,8 +193,10 @@ export function assessConnectedLaunchReadinessProof(
       generatedAt: Date.now(),
     });
 
-  const coreChainConnected = resolveCoreChainConnected(input);
+  const coreChainConnected =
+    resolveCoreChainConnected(input) || connectedExecutionChainProven;
   const verificationProven =
+    launchEvidence.verificationProven ||
     input.verificationExecutionProof?.verificationProofLevel === 'PROVEN';
 
   const simulation = analyzeLaunchSimulation({
@@ -192,6 +215,7 @@ export function assessConnectedLaunchReadinessProof(
     founderTest: founderTestAssessment,
     launchCouncil,
     founderAcceptance,
+    connectedExecutionChainProven,
     fixture: input.launchReadinessFixture,
   });
 
@@ -200,6 +224,7 @@ export function assessConnectedLaunchReadinessProof(
     founderTest: founderTestAssessment,
     productReadiness: input.productReadinessSimulation ?? null,
     launchCouncil,
+    connectedExecutionChainProven,
     fixture: input.launchReadinessFixture,
   });
 
@@ -208,6 +233,7 @@ export function assessConnectedLaunchReadinessProof(
     coreStageProofs: input.coreStageProofs,
     verificationProof: input.verificationExecutionProof ?? null,
     coreChainConnected,
+    connectedExecutionChainProven,
     fixture: input.launchReadinessFixture,
   });
 
@@ -250,9 +276,12 @@ export function assessConnectedLaunchReadinessProof(
     coreStageProofs: input.coreStageProofs,
     readiness,
     launchProofProven: isLaunchReadyState(readiness.readinessState),
+    launchCriteriaSatisfied: launchEvidence.launchCriteriaSatisfied,
+    launchReadinessEvidence: launchEvidence,
   });
 
   const launchProofLevel = deriveLaunchProofLevel({
+    launchCriteriaSatisfied: launchEvidence.launchCriteriaSatisfied,
     coreChainConnected,
     verificationProven,
     blockers,
@@ -273,10 +302,12 @@ export function assessConnectedLaunchReadinessProof(
   }
 
   const missingEvidence = dedupeStrings([
-    ...blockers.blockers.map((b) => b.message),
+    ...blockers.blockers.map((b) => b.blockerReason),
     ...linkage.missingLinks,
-    ...(verificationProven ? [] : ['Verification execution not proven']),
-    ...(coreChainConnected ? [] : ['Core execution chain not connected through VERIFY']),
+    ...(verificationProven || connectedExecutionChainProven ? [] : ['Verification execution not proven']),
+    ...(coreChainConnected || connectedExecutionChainProven
+      ? []
+      : ['Core execution chain not connected through VERIFY']),
   ]).slice(0, 12);
 
   const recommendedFix =
@@ -293,6 +324,19 @@ export function assessConnectedLaunchReadinessProof(
     linkage,
   });
 
+  const firstLaunchBlocker = blockers.blockers[0] ?? null;
+  const evidenceWithBlockers: LaunchReadinessEvidence = {
+    ...launchEvidence,
+    launchBlockers: blockers.blockers,
+    firstLaunchBlocker,
+    proofLevel: launchProofLevel,
+    readinessScore: readiness.readinessScore,
+  };
+
+  const launchExecutionConnected = launchProofLevel === 'PROVEN';
+  const repairToken =
+    launchProofLevel === 'PROVEN' ? CONNECTED_LAUNCH_READINESS_PROOF_REPAIR_V1_PASS : null;
+
   const report: LaunchReadinessProofReport = {
     readOnly: true,
     advisoryOnly: true,
@@ -301,7 +345,10 @@ export function assessConnectedLaunchReadinessProof(
     launchProofLevel,
     launchState,
     executionChainConnected: coreChainConnected,
+    launchExecutionConnected,
     verificationProven,
+    launchCriteriaSatisfied: launchEvidence.launchCriteriaSatisfied,
+    evidence: evidenceWithBlockers,
     blockers,
     risk,
     acceptance,
@@ -323,6 +370,7 @@ export function assessConnectedLaunchReadinessProof(
     recommendedNextActions: founderQuestions.whatMustBeFixedNext,
     founderQuestions,
     cacheKey: stableCacheKey(assessmentId, launchProofLevel),
+    repairToken,
   };
 
   const assessment: LaunchReadinessProofAssessment = {

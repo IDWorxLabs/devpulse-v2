@@ -152,7 +152,10 @@ export interface VerificationExecutionProofReport {
   generatedAt: string;
   verificationProofLevel: VerificationProofLevel;
   verificationState: VerificationExecutionState;
+  verificationExecutionConnected: boolean;
   previewExperienceProven: boolean;
+  session: VerificationSessionEvidence;
+  activationEvidence: VerificationActivationEvidence | null;
   run: VerificationRunAssessment;
   target: VerificationTargetAssessment;
   results: VerificationResultAssessment;
@@ -166,6 +169,7 @@ export interface VerificationExecutionProofReport {
   recommendedNextActions: string[];
   founderQuestions: VerificationExecutionFounderQuestions;
   cacheKey: string;
+  repairToken: string | null;
 }
 
 export interface VerificationExecutionProofAssessment {
@@ -213,9 +217,53 @@ export interface VerificationEvidenceFixture {
   }>;
 }
 
+/** Session-level verification proof summary (Phase 26.76). */
+export interface VerificationSessionEvidence {
+  readOnly: true;
+  sessionId: string | null;
+  verificationRunId: string | null;
+  runStatus: VerificationRunState;
+  workspaceId: string | null;
+  verificationCommand: string | null;
+  executionObserved: boolean;
+  verificationSucceeded: boolean;
+  exitCode: number | null;
+  passCount: number;
+  failCount: number;
+  skippedCount: number;
+  generatedAt: string;
+  proofLevel: VerificationProofLevel;
+}
+
+/** Real verification execution evidence from gap activator (Phase 26.76). */
+export interface VerificationActivationEvidence {
+  readOnly: true;
+  workspaceId: string;
+  workspacePath: string;
+  verificationCommand: string | null;
+  commandDetected: boolean;
+  generatedAt: string;
+  executionAttempted: boolean;
+  executionObserved: boolean;
+  verificationSucceeded: boolean;
+  exitCode: number | null;
+  passCount: number;
+  failCount: number;
+  skippedCount: number;
+  testsExecuted: number;
+  checksExecuted: number;
+  executionStartedAt: string | null;
+  executionCompletedAt: string | null;
+  durationMs: number | null;
+  proofLevel: VerificationProofLevel;
+  firstBrokenVerificationLink: string | null;
+}
+
 export interface AssessConnectedVerificationExecutionProofInput {
   rootDir?: string;
   previewExperienceProof?: PreviewExperienceProofReport | null;
+  /** When set, skips real verification execution in generated workspace (tests / fixtures). */
+  skipVerificationProofGapActivation?: boolean;
   verificationEvidenceFixture?: VerificationEvidenceFixture;
 }
 
@@ -224,6 +272,7 @@ export interface VerificationExecutionProofHistoryEntry {
   assessmentId: string;
   verificationProofLevel: VerificationProofLevel;
   verificationState: VerificationExecutionState;
+  verificationExecutionConnected: boolean;
   verificationLinkageConnected: boolean;
 }
 

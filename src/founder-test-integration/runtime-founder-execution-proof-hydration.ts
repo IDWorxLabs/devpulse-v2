@@ -3,7 +3,11 @@
  * Reuses 25.26–25.30 authorities only — no synthetic pass values.
  */
 
+import { assessConnectedVerificationExecutionProof } from '../connected-verification-execution-proof/index.js';
 import { assessConnectedVerificationExecution } from '../connected-verification-execution/index.js';
+import { assessConnectedPreviewExperienceProof } from '../connected-preview-experience-proof/index.js';
+import { assessConnectedBuildExecution } from '../connected-build-execution/index.js';
+import { assessConnectedRuntimeActivationProof } from '../connected-runtime-activation-proof/index.js';
 import { getLatestConnectedLivePreviewExecutionAssessment } from '../connected-live-preview-execution/index.js';
 import { getLatestConnectedRuntimeExecutionAssessment } from '../connected-runtime-execution/index.js';
 import { getLatestConnectedVerificationExecutionAssessment } from '../connected-verification-execution/index.js';
@@ -96,18 +100,54 @@ function collectMissingConnectedAssessments(input: AssessFounderExecutionProofIn
   return missing;
 }
 
-function deriveStageProven(input: AssessFounderExecutionProofInput): RuntimeFounderExecutionProofHydration['stageProven'] {
+function deriveStageProven(
+  input: AssessFounderExecutionProofInput,
+  rootDir?: string,
+): RuntimeFounderExecutionProofHydration['stageProven'] {
   const workspace = input.connectedWorkspaceCreationAssessment ?? null;
   const runtime = input.connectedRuntimeExecutionAssessment ?? null;
   const preview = input.connectedLivePreviewExecutionAssessment ?? null;
   const verification = input.connectedVerificationExecutionAssessment ?? null;
 
+  let buildProven = extractBuildEvidence(runtime).proven;
+  let runtimeProven = extractRuntimeEvidence(runtime).proven;
+  let previewProven = extractPreviewEvidence(preview).proven;
+
+  let verificationProven = extractVerificationEvidence(verification).proven;
+  let launchProven = false;
+
+  if (rootDir && !buildProven) {
+    const buildMaterialization = assessConnectedBuildExecution({ rootDir }).report;
+    buildProven = buildMaterialization.proofLevel === 'PROVEN';
+    if (buildProven && !runtimeProven) {
+      const runtimeReport = assessConnectedRuntimeActivationProof({
+        rootDir,
+        buildMaterializationReport: buildMaterialization,
+      }).report;
+      runtimeProven = runtimeReport.runtimeProofLevel === 'PROVEN';
+      if (runtimeProven && !previewProven) {
+        const previewReport = assessConnectedPreviewExperienceProof({
+          rootDir,
+          runtimeActivationProof: runtimeReport,
+        }).report;
+        previewProven = previewReport.previewProofLevel === 'PROVEN';
+        if (previewProven && !verificationProven) {
+          verificationProven =
+            assessConnectedVerificationExecutionProof({
+              rootDir,
+              previewExperienceProof: previewReport,
+            }).report.verificationProofLevel === 'PROVEN';
+        }
+      }
+    }
+  }
+
   return {
     workspace: extractWorkspaceEvidence(workspace).proven,
-    build: extractBuildEvidence(runtime).proven,
-    runtime: extractRuntimeEvidence(runtime).proven,
-    preview: extractPreviewEvidence(preview).proven,
-    verification: extractVerificationEvidence(verification).proven,
+    build: buildProven,
+    runtime: runtimeProven,
+    preview: previewProven,
+    verification: verificationProven,
   };
 }
 
@@ -201,10 +241,11 @@ async function hydrateFromBoundedReassessment(
 function buildHydrationMetadata(
   input: AssessFounderExecutionProofInput,
   source: RuntimeProofHydrationSource,
+  rootDir?: string,
 ): RuntimeFounderExecutionProofHydration {
   const hydrated = hasConnectedAssessmentObjects(input);
   const missing = collectMissingConnectedAssessments(input);
-  const stageProven = deriveStageProven(input);
+  const stageProven = deriveStageProven(input, rootDir);
   const warnings = buildStageWarnings(stageProven);
   const allProven = Object.values(stageProven).every(Boolean);
 
@@ -233,7 +274,7 @@ export async function hydrateRuntimeFounderExecutionProofInput(
     return {
       readOnly: true,
       input,
-      hydration: buildHydrationMetadata(input, 'session-assessments'),
+      hydration: buildHydrationMetadata(input, 'session-assessments', rootDir),
     };
   }
 
@@ -243,7 +284,7 @@ export async function hydrateRuntimeFounderExecutionProofInput(
     return {
       readOnly: true,
       input,
-      hydration: buildHydrationMetadata(input, 'session-assessments'),
+      hydration: buildHydrationMetadata(input, 'session-assessments', rootDir),
     };
   }
 
@@ -253,17 +294,18 @@ export async function hydrateRuntimeFounderExecutionProofInput(
     return {
       readOnly: true,
       input,
-      hydration: buildHydrationMetadata(input, 'bounded-reassessment'),
+      hydration: buildHydrationMetadata(input, 'bounded-reassessment', rootDir),
     };
   }
 
   const input: AssessFounderExecutionProofInput = { rootDir, ...overrides };
+  const stageProven = deriveStageProven(input, rootDir);
   return {
     readOnly: true,
     input,
     hydration: {
       readOnly: true,
-      hydrated: false,
+      hydrated: stageProven.build || stageProven.runtime || stageProven.preview,
       source: 'insufficient-evidence',
       missing: [
         'connected-workspace-creation',
@@ -274,22 +316,10 @@ export async function hydrateRuntimeFounderExecutionProofInput(
       ],
       warnings: dedupeStrings([
         'No in-process connected execution assessment objects available',
-        ...buildStageWarnings({
-          workspace: false,
-          build: false,
-          runtime: false,
-          preview: false,
-          verification: false,
-        }),
+        ...buildStageWarnings(stageProven),
       ]),
-      executionConnectedSource: 'not-proven',
-      stageProven: {
-        workspace: false,
-        build: false,
-        runtime: false,
-        preview: false,
-        verification: false,
-      },
+      executionConnectedSource: Object.values(stageProven).every(Boolean) ? 'hydrated-proof' : 'not-proven',
+      stageProven,
     },
   };
 }
@@ -309,7 +339,7 @@ export function hydrateRuntimeFounderExecutionProofInputSync(
     return {
       readOnly: true,
       input,
-      hydration: buildHydrationMetadata(input, 'session-assessments'),
+      hydration: buildHydrationMetadata(input, 'session-assessments', rootDir),
     };
   }
 
@@ -319,7 +349,7 @@ export function hydrateRuntimeFounderExecutionProofInputSync(
     return {
       readOnly: true,
       input,
-      hydration: buildHydrationMetadata(input, 'session-assessments'),
+      hydration: buildHydrationMetadata(input, 'session-assessments', rootDir),
     };
   }
 

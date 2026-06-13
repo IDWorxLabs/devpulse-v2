@@ -24,6 +24,7 @@ export function recordVerificationExecutionProofAssessment(
     assessmentId: report.assessmentId,
     verificationProofLevel: report.verificationProofLevel,
     verificationState: report.verificationState,
+    verificationExecutionConnected: report.verificationExecutionConnected,
     verificationLinkageConnected: report.linkage.verificationLinkageConnected,
   });
   if (history.length > MAX_VERIFICATION_EXECUTION_PROOF_HISTORY) {

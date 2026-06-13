@@ -95,6 +95,56 @@ export function buildFounderTestIntegrationReportMarkdown(report: FounderTestRep
   }
   lines.push('');
 
+  const verificationProof = assessment.run.executionChainStageContext?.verificationExecutionProof;
+  if (verificationProof) {
+    lines.push('## Verification Execution Proof');
+    lines.push('');
+    lines.push(`| Field | Value |`);
+    lines.push(`|-------|-------|`);
+    lines.push(`| Verification command | ${verificationProof.session.verificationCommand ?? 'none'} |`);
+    lines.push(`| Execution observed | ${verificationProof.session.executionObserved} |`);
+    lines.push(`| Exit code | ${verificationProof.session.exitCode ?? 'none'} |`);
+    lines.push(`| Pass count | ${verificationProof.session.passCount} |`);
+    lines.push(`| Fail count | ${verificationProof.session.failCount} |`);
+    lines.push(`| Skipped count | ${verificationProof.session.skippedCount} |`);
+    lines.push(`| Proof level | ${verificationProof.session.proofLevel} |`);
+    lines.push('');
+    lines.push('### First Broken Verification Link');
+    lines.push('');
+    lines.push(verificationProof.linkage.firstBrokenVerificationLink ?? 'none');
+    lines.push('');
+  }
+
+  const launchProof = assessment.run.executionChainStageContext?.launchReadinessProof;
+  if (launchProof) {
+    lines.push('## Connected Launch Readiness Proof');
+    lines.push('');
+    lines.push(`| Field | Value |`);
+    lines.push(`|-------|-------|`);
+    lines.push(`| Requirements proven | ${launchProof.evidence.requirementsProven} |`);
+    lines.push(`| Plan proven | ${launchProof.evidence.planProven} |`);
+    lines.push(`| Build proven | ${launchProof.evidence.buildProven} |`);
+    lines.push(`| Runtime proven | ${launchProof.evidence.runtimeProven} |`);
+    lines.push(`| Preview proven | ${launchProof.evidence.previewProven} |`);
+    lines.push(`| Verification proven | ${launchProof.evidence.verificationProven} |`);
+    lines.push(`| Launch criteria satisfied | ${launchProof.launchCriteriaSatisfied} |`);
+    lines.push(`| Readiness score | ${launchProof.readiness.readinessScore}/100 |`);
+    lines.push(`| Proof level | ${launchProof.launchProofLevel} |`);
+    lines.push('');
+    lines.push('### First Launch Blocker');
+    lines.push('');
+    if (launchProof.evidence.firstLaunchBlocker) {
+      lines.push(
+        `[${launchProof.evidence.firstLaunchBlocker.severity}] ${launchProof.evidence.firstLaunchBlocker.blockerTitle}: ${launchProof.evidence.firstLaunchBlocker.blockerReason}`,
+      );
+    } else if (launchProof.launchProofLevel === 'PROVEN') {
+      lines.push('Launch Ready');
+    } else {
+      lines.push('none reported');
+    }
+    lines.push('');
+  }
+
   lines.push('## Blockers');
   lines.push('');
   if (assessment.blockers.length === 0) {

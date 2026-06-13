@@ -5,6 +5,7 @@
 import {
   CONNECTED_VERIFICATION_EXECUTION_PROOF_CORE_QUESTION,
   CONNECTED_VERIFICATION_EXECUTION_PROOF_PASS_TOKEN,
+  CONNECTED_VERIFICATION_EXECUTION_PROOF_REPAIR_V1_PASS,
   CONNECTED_VERIFICATION_EXECUTION_PROOF_PHASE,
   CONNECTED_VERIFICATION_EXECUTION_PROOF_REPORT_TITLE,
   SAFETY_GUARANTEES,
@@ -32,6 +33,25 @@ export function buildVerificationExecutionProofReportMarkdown(
     `**Verification proof level:** ${report.verificationProofLevel}`,
     `**Verification state:** ${report.verificationState}`,
     `**Preview experience proven:** ${report.previewExperienceProven ? 'YES' : 'NO'}`,
+    '',
+    '## Verification Execution Proof',
+    '',
+    `- verification proof level: **${report.verificationProofLevel}**`,
+    `- verification execution connected: ${report.verificationExecutionConnected}`,
+    '',
+    '### Verification Session Evidence',
+    '',
+    `- verification command: ${report.session.verificationCommand ?? 'none'}`,
+    `- execution observed: ${report.session.executionObserved}`,
+    `- exit code: ${report.session.exitCode ?? 'none'}`,
+    `- pass count: ${report.session.passCount}`,
+    `- fail count: ${report.session.failCount}`,
+    `- skipped count: ${report.session.skippedCount}`,
+    `- proof level: **${report.session.proofLevel}**`,
+    '',
+    '### First Broken Verification Link',
+    '',
+    report.linkage.firstBrokenVerificationLink ?? 'none',
     '',
     '## Verification State',
     '',
@@ -114,7 +134,12 @@ export function buildVerificationExecutionProofReportMarkdown(
   }
 
   lines.push('');
+  if (report.repairToken) {
+    lines.push(`Repair token: \`${report.repairToken}\``);
+    lines.push('');
+  }
   lines.push(`Pass token: \`${CONNECTED_VERIFICATION_EXECUTION_PROOF_PASS_TOKEN}\``);
+  lines.push(`Repair pass token: \`${CONNECTED_VERIFICATION_EXECUTION_PROOF_REPAIR_V1_PASS}\``);
   lines.push('');
 
   return lines.join('\n');

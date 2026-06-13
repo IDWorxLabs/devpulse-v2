@@ -33,6 +33,8 @@ import type {
   FounderTestShellSources,
   RunFounderTestIntegrationInput,
 } from './founder-test-integration-types.js';
+import { resolveExecutionChainStageContext } from './connected-execution-chain-stage-resolver.js';
+import { assessConnectedLaunchReadinessProof } from '../connected-launch-readiness-proof/index.js';
 
 let runCounter = 0;
 
@@ -211,11 +213,23 @@ function collectFounderSimulation(shellSources: FounderTestShellSources): Founde
   );
 }
 
-function collectLivePreviewReality(rootDir: string, executionConnected: boolean): FounderTestAuthorityResult {
+function collectLivePreviewReality(
+  rootDir: string,
+  executionConnected: boolean,
+  chainContext: import('./connected-execution-chain-stage-resolver.js').ExecutionChainStageContext,
+): FounderTestAuthorityResult {
   const legacyInput = buildLeafPreviewInput();
   const legacyAssessment = assessLivePreviewReality(legacyInput);
+  const workspace = buildPreviewWorkspaceSignalsFromLegacy(legacyInput, executionConnected, legacyAssessment);
+  if (chainContext.previewProven) {
+    workspace.previewRuntimeActive = true;
+    workspace.loadRealityPassed = true;
+    workspace.validationReady = true;
+    workspace.connected = true;
+    workspace.interactivityPassed = true;
+  }
   const assessment = assessLivePreviewRealityAuthority({
-    workspace: buildPreviewWorkspaceSignalsFromLegacy(legacyInput, executionConnected, legacyAssessment),
+    workspace,
     moduleEvidence: detectPreviewModulePresenceEvidence(rootDir),
     legacyInput,
   });
@@ -253,10 +267,23 @@ function collectMobileRuntimeReality(rootDir: string): FounderTestAuthorityResul
   );
 }
 
-function collectVerificationReality(rootDir: string, executionConnected: boolean): FounderTestAuthorityResult {
+function collectVerificationReality(
+  rootDir: string,
+  executionConnected: boolean,
+  chainContext: import('./connected-execution-chain-stage-resolver.js').ExecutionChainStageContext,
+): FounderTestAuthorityResult {
   const moduleEvidence = detectVerificationModulePresenceEvidence(rootDir);
   const assessment = assessVerificationReality({
-    workspace: buildVerificationWorkspaceSignalsForValidation(moduleEvidence, { executionConnected }),
+    workspace: buildVerificationWorkspaceSignalsForValidation(moduleEvidence, {
+      executionConnected: executionConnected || chainContext.verificationExecutionConnected,
+      previewValidationReady: chainContext.previewProven,
+      previewRuntimeActive: chainContext.previewProven,
+      previewRealityState: chainContext.previewProven ? 'PREVIEW_READY' : 'NO_PREVIEW',
+      verificationResultsLinked:
+        chainContext.verificationProven || moduleEvidence.verificationResultsLinked,
+      runtimeDiagnosticsActive: chainContext.runtimeProven,
+      verificationReadiness: chainContext.verificationProven ? 'ready' : undefined,
+    }),
     moduleEvidence,
   });
   const criticalBlockers = assessment.blockers.filter((b) => b.severity === 'CRITICAL');
@@ -397,15 +424,16 @@ function executeParticipatingAuthorities(
   rootDir: string,
   shellSources: FounderTestShellSources,
   executionConnected: boolean,
+  chainContext: import('./connected-execution-chain-stage-resolver.js').ExecutionChainStageContext,
 ): FounderTestAuthorityResult[] {
   const partial: FounderTestAuthorityResult[] = [
     collectFounderReality(rootDir, executionConnected),
     collectUiReality(shellSources),
     collectRequirementReality(rootDir, executionConnected),
     collectFounderSimulation(shellSources),
-    collectLivePreviewReality(rootDir, executionConnected),
+    collectLivePreviewReality(rootDir, executionConnected, chainContext),
     collectMobileRuntimeReality(rootDir),
-    collectVerificationReality(rootDir, executionConnected),
+    collectVerificationReality(rootDir, executionConnected, chainContext),
   ];
 
   partial.push(collectExecutionProofEvolution(partial));
@@ -421,10 +449,47 @@ export function runFounderTestIntegration(
   const rootDir = input.rootDir ?? process.cwd();
   const shellSources = input.shellSources ?? loadFounderTestShellSources(rootDir);
 
-  const executionConnected = input.resolvedExecutionConnected ?? false;
+  const chainContextBase =
+    input.executionChainStageContext ??
+    resolveExecutionChainStageContext(rootDir, {
+      skipVerificationProofGapActivation: input.skipVerificationProofGapActivation,
+    });
+
+  let launchReadinessProof = chainContextBase.launchReadinessProof;
+  if (
+    !input.skipLaunchProofGapResolution &&
+    chainContextBase.verificationProven &&
+    !launchReadinessProof
+  ) {
+    launchReadinessProof = assessConnectedLaunchReadinessProof({
+      rootDir,
+      verificationExecutionProof: chainContextBase.verificationExecutionProof,
+      buildMaterializationReport: chainContextBase.buildMaterializationReport ?? undefined,
+      skipFounderTestReassessment: true,
+    }).report;
+  }
+
+  const chainContext =
+    input.executionChainStageContext ??
+    resolveExecutionChainStageContext(rootDir, {
+      skipVerificationProofGapActivation: input.skipVerificationProofGapActivation,
+      verificationExecutionProof: chainContextBase.verificationExecutionProof,
+      buildMaterializationReport: chainContextBase.buildMaterializationReport ?? undefined,
+      launchReadinessProof,
+      launchProven: launchReadinessProof?.launchProofLevel === 'PROVEN',
+      launchExecutionConnected: launchReadinessProof?.launchExecutionConnected ?? false,
+    });
+  const builderMaterializationConnected =
+    input.resolvedBuilderMaterializationConnected ?? chainContext.builderMaterializationConnected;
+  const previewExperienceConnected =
+    input.resolvedPreviewExperienceConnected ?? chainContext.previewExperienceConnected;
+  const executionConnected =
+    input.resolvedExecutionConnected === true
+      ? true
+      : previewExperienceConnected || builderMaterializationConnected;
   const authorityResults =
     input.authorityResults ??
-    executeParticipatingAuthorities(rootDir, shellSources, executionConnected);
+    executeParticipatingAuthorities(rootDir, shellSources, executionConnected, chainContext);
 
   return {
     readOnly: true,
@@ -433,5 +498,6 @@ export function runFounderTestIntegration(
     completedAt: new Date().toISOString(),
     rootDir,
     authorityResults,
+    executionChainStageContext: chainContext,
   };
 }

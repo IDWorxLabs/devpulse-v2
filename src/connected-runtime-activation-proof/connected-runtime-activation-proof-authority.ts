@@ -19,6 +19,7 @@ import type {
   RuntimeActivationProofArtifacts,
   RuntimeActivationProofReport,
   RuntimeActivationFounderQuestions,
+  RuntimeActivationEvidence,
   RuntimeActivationState,
   RuntimeProofLevel,
 } from './connected-runtime-activation-proof-types.js';
@@ -29,6 +30,7 @@ import { analyzeRuntimeManifest } from './runtime-manifest-analyzer.js';
 import { analyzeRuntimePort, isPortReachable } from './runtime-port-analyzer.js';
 import { analyzeRuntimeProcess, isProcessObserved } from './runtime-process-analyzer.js';
 import { resolveRuntimeCommand } from './runtime-command-resolver.js';
+import { activateRuntimeProofGap } from './runtime-proof-gap-activator.js';
 
 let assessmentCounter = 0;
 
@@ -112,6 +114,39 @@ function deriveProofLevel(input: {
     return 'PARTIAL';
   }
   return 'NOT_PROVEN';
+}
+
+function buildEmptyActivationEvidence(
+  workspacePath: string | null,
+  reason: string,
+): RuntimeActivationEvidence {
+  return {
+    readOnly: true,
+    workspaceId: 'none',
+    workspacePath: workspacePath ?? 'none',
+    runtimeCommand: null,
+    commandExists: false,
+    packageJsonDetected: false,
+    scriptDetected: false,
+    activationAttempted: false,
+    activationSucceeded: false,
+    generatedAt: new Date().toISOString(),
+    processId: null,
+    observedStartTime: null,
+    processState: 'NOT_STARTED',
+    exitCode: null,
+    expectedPort: null,
+    detectedPort: null,
+    portReachable: false,
+    portCheckedAt: null,
+    healthUrl: null,
+    healthChecked: false,
+    healthResponded: false,
+    responseCode: null,
+    healthCheckedAt: null,
+    proofLevel: 'NOT_PROVEN',
+    firstBrokenRuntimeLink: reason.includes('BUILD') ? 'contract→workspace' : 'workspace→command',
+  };
 }
 
 function buildEmptyReport(assessmentId: string, reason: string): RuntimeActivationProofReport {
@@ -216,6 +251,7 @@ function buildEmptyReport(assessmentId: string, reason: string): RuntimeActivati
       exactMissingRuntimeEvidence: [reason],
       whatShouldBeBuiltNext: ['Complete BUILD materialization proof first.'],
     },
+    activationEvidence: buildEmptyActivationEvidence(null, reason),
     cacheKey: stableCacheKey(assessmentId, 'NOT_PROVEN'),
   };
 }
@@ -244,7 +280,30 @@ export function assessConnectedRuntimeActivationProof(
   }
 
   const workspacePath = resolveWorkspacePath(buildMaterialization, input.workspacePath);
-  const sessionEvidence = input.runtimeSessionEvidence;
+  let sessionEvidence = input.runtimeSessionEvidence;
+  let activationEvidence: RuntimeActivationEvidence | null = null;
+
+  const shouldActivateGap =
+    sessionEvidence === undefined &&
+    input.skipRuntimeProofGapActivation !== true &&
+    workspacePath !== null;
+
+  if (shouldActivateGap) {
+    const workspaceId =
+      buildMaterialization.buildMaterialization.contractId ||
+      workspacePath.split('/').pop() ||
+      'unknown';
+    const activation = activateRuntimeProofGap({
+      projectRootDir: rootDir,
+      workspacePath,
+      workspaceId,
+      buildMaterialization,
+    });
+    activationEvidence = activation.activationEvidence;
+    if (activation.sessionEvidence) {
+      sessionEvidence = activation.sessionEvidence;
+    }
+  }
 
   const command = resolveRuntimeCommand({ rootDir, workspacePath, sessionEvidence });
   const runtimeProcess = analyzeRuntimeProcess({ command, sessionEvidence });
@@ -346,6 +405,39 @@ export function assessConnectedRuntimeActivationProof(
     recommendedFix,
     recommendedNextActions: founderQuestions.whatShouldBeBuiltNext,
     founderQuestions,
+    activationEvidence:
+      activationEvidence ??
+      (sessionEvidence
+        ? {
+            readOnly: true,
+            workspaceId: buildMaterialization.buildMaterialization.contractId,
+            workspacePath: workspacePath ?? 'none',
+            runtimeCommand: command.command,
+            commandExists: command.runtimeCommandFound,
+            packageJsonDetected: command.workingDirectory !== null,
+            scriptDetected: command.scriptName !== null,
+            activationAttempted: command.executionObserved,
+            activationSucceeded: runtimeProofLevel === 'PROVEN',
+            generatedAt: new Date().toISOString(),
+            processId: runtimeProcess.processId,
+            observedStartTime: runtimeProcess.startTime,
+            processState: runtimeProcess.processState,
+            exitCode: runtimeProcess.exitStatus,
+            expectedPort: port.port,
+            detectedPort: port.port,
+            portReachable: portReachable,
+            portCheckedAt: portReachable ? new Date().toISOString() : null,
+            healthUrl: health.healthEndpoint,
+            healthChecked: health.healthState !== 'NOT_CHECKED',
+            healthResponded: healthOk,
+            responseCode: health.statusCode,
+            healthCheckedAt: health.healthState !== 'NOT_CHECKED' ? new Date().toISOString() : null,
+            proofLevel: runtimeProofLevel,
+            firstBrokenRuntimeLink: linkage.runtimeLinkageConnected
+              ? null
+              : linkage.firstBrokenRuntimeLink,
+          }
+        : buildEmptyActivationEvidence(workspacePath, 'Runtime activation not attempted')),
     cacheKey: stableCacheKey(assessmentId, runtimeProofLevel),
   };
 

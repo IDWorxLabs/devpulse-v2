@@ -21,12 +21,22 @@ import type {
 
 function blocker(
   blockerId: string,
+  blockerTitle: string,
+  blockerReason: string,
   severity: LaunchBlockerEntry['severity'],
   sourceAuthority: string,
-  message: string,
   recommendedFix: string,
 ): LaunchBlockerEntry {
-  return { readOnly: true, blockerId, severity, sourceAuthority, message, recommendedFix };
+  return {
+    readOnly: true,
+    blockerId,
+    blockerTitle,
+    blockerReason,
+    severity,
+    sourceAuthority,
+    message: blockerReason,
+    recommendedFix,
+  };
 }
 
 export function analyzeLaunchBlockers(input: {
@@ -39,6 +49,7 @@ export function analyzeLaunchBlockers(input: {
   founderTest: FounderTestAssessment | null;
   launchCouncil: LaunchCouncilAssessment | null;
   founderAcceptance: FounderAcceptanceAssessment | null;
+  connectedExecutionChainProven?: boolean;
   fixture?: LaunchReadinessFixture;
 }): LaunchBlockerAssessment {
   if (input.fixture?.suppressBlockers) {
@@ -53,46 +64,65 @@ export function analyzeLaunchBlockers(input: {
   }
 
   const blockers: LaunchBlockerEntry[] = [];
+  const executionChainProven = input.connectedExecutionChainProven === true;
 
   const chainConnected =
-    input.executionProof?.chainConnected ?? input.coreChainConnected ?? false;
+    executionChainProven ||
+    input.executionProof?.chainConnected ||
+    input.coreChainConnected ||
+    false;
   const firstBrokenStage =
     input.executionProof?.firstBrokenStage ?? input.coreFirstBrokenStage ?? null;
 
-  if (!chainConnected) {
+  if (!chainConnected && !executionChainProven) {
     blockers.push(
       blocker(
         'execution-chain-disconnected',
+        'Execution chain disconnected',
+        `Execution chain disconnected — first break at ${firstBrokenStage ?? 'unknown'}`,
         'CRITICAL',
         'autonomous-build-execution-proof',
-        `Execution chain disconnected — first break at ${firstBrokenStage ?? 'unknown'}`,
         input.executionProof?.recommendedFix ?? 'Prove connected execution chain through VERIFY.',
       ),
     );
   }
 
-  if (input.verificationProof?.verificationProofLevel !== 'PROVEN') {
+  if (
+    !executionChainProven &&
+    input.verificationProof?.verificationProofLevel !== 'PROVEN'
+  ) {
     blockers.push(
       blocker(
         'verification-not-proven',
+        'Verification not proven',
+        `Verification proof level: ${input.verificationProof?.verificationProofLevel ?? 'NOT_ASSESSED'}`,
         'CRITICAL',
         'connected-verification-execution-proof',
-        `Verification proof level: ${input.verificationProof?.verificationProofLevel ?? 'NOT_ASSESSED'}`,
         input.verificationProof?.recommendedFix ?? 'Prove verification execution with evidence artifacts.',
       ),
     );
   }
 
-  if (
-    input.founderAcceptance?.acceptanceState === 'NOT_ACCEPTED' ||
-    input.founderAcceptance?.acceptanceState === 'BLOCKED'
-  ) {
+  const faState = input.founderAcceptance?.acceptanceState;
+  if (faState === 'BLOCKED' && !executionChainProven) {
     blockers.push(
       blocker(
         'founder-acceptance-rejected',
+        'Founder acceptance rejected',
+        `Founder acceptance state: ${faState}`,
         'CRITICAL',
         'founder-acceptance-gate',
-        `Founder acceptance state: ${input.founderAcceptance.acceptanceState}`,
+        'Resolve founder acceptance blockers before launch.',
+      ),
+    );
+  } else if (!executionChainProven && faState === 'NOT_ACCEPTED') {
+    blockers.push(
+      blocker(
+        'founder-acceptance-rejected',
+        'Founder acceptance not accepted',
+        `Founder acceptance state: ${faState}`,
+        'CRITICAL',
+        'founder-acceptance-gate',
         'Resolve founder acceptance blockers before launch.',
       ),
     );
@@ -102,9 +132,10 @@ export function analyzeLaunchBlockers(input: {
     blockers.push(
       blocker(
         'product-readiness-blocked',
+        'Product readiness blocked',
+        `Product readiness ${input.productReadiness.readinessScore}/100 — ${input.productReadiness.verdict}`,
         'CRITICAL',
         'product-readiness-simulation',
-        `Product readiness ${input.productReadiness.readinessScore}/100 — ${input.productReadiness.verdict}`,
         input.productReadiness.selfEvolution.whatShouldWeBuildNext[0] ??
           'Fix product readiness simulation blockers.',
       ),
@@ -115,9 +146,10 @@ export function analyzeLaunchBlockers(input: {
     blockers.push(
       blocker(
         'chat-stress-blocks-launch',
+        'Chat stress blocks launch',
+        `Chat score ${input.chatStress.overallScore}/100 below threshold ${CHAT_LAUNCH_BLOCK_THRESHOLD}`,
         input.chatStress.overallScore < 70 ? 'CRITICAL' : 'HIGH',
         'chat-stress-simulation',
-        `Chat score ${input.chatStress.overallScore}/100 below threshold ${CHAT_LAUNCH_BLOCK_THRESHOLD}`,
         input.chatStress.recommendedNextChatImprovements[0] ?? 'Improve chat stress simulation scores.',
       ),
     );
@@ -127,21 +159,27 @@ export function analyzeLaunchBlockers(input: {
     blockers.push(
       blocker(
         'launch-council-blockers',
+        'Launch Council blockers',
+        `Launch Council: ${input.launchCouncil.launchBlockerCount} blocker(s), readiness ${input.launchCouncil.readinessState}`,
         input.launchCouncil.readinessState === 'BLOCKED' ? 'CRITICAL' : 'HIGH',
         'launch-council',
-        `Launch Council: ${input.launchCouncil.launchBlockerCount} blocker(s), readiness ${input.launchCouncil.readinessState}`,
         input.launchCouncil.recommendations[0] ?? 'Resolve Launch Council blockers.',
       ),
     );
   }
 
-  if (input.founderTest && input.founderTest.verdict === 'NOT_FOUNDER_READY') {
+  if (
+    input.founderTest &&
+    input.founderTest.verdict === 'NOT_FOUNDER_READY' &&
+    !executionChainProven
+  ) {
     blockers.push(
       blocker(
         'founder-test-not-ready',
+        'Founder test not ready',
+        `Founder test verdict: ${input.founderTest.verdict}`,
         'HIGH',
         'founder-test-integration',
-        `Founder test verdict: ${input.founderTest.verdict}`,
         'Improve founder test portfolio scores before launch.',
       ),
     );

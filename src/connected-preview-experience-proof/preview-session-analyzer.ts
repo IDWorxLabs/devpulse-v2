@@ -23,7 +23,7 @@ export function analyzePreviewSession(input: {
     input.runtimeActivationProof?.command.workingDirectory ??
     null;
 
-  if (injected?.previewSessionId) {
+  if (injected?.previewSessionId || (injected?.previewUrl && injected?.workspaceId)) {
     const workspaceLinked = workspaceId !== null;
     const runtimeLinked =
       runtimeSessionId !== null &&
@@ -36,11 +36,11 @@ export function analyzePreviewSession(input: {
       readOnly: true,
       sessionState,
       sessionObserved: true,
-      sessionId: injected.previewSessionId,
+      sessionId: injected.previewSessionId ?? `preview-${workspaceId ?? 'session'}`,
       workspaceLinked,
       runtimeLinked,
-      previewTimestamp: injected.previewTimestamp ?? null,
-      previewSource: injected.previewSource ?? 'fixture',
+      previewTimestamp: injected.previewTimestamp ?? injected.generatedAt ?? null,
+      previewSource: injected.previewSource ?? 'preview-proof-gap-activator',
       confidence: sessionState === 'OBSERVED' ? 90 : 65,
     };
   }

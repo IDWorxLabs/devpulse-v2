@@ -12,7 +12,7 @@ export function analyzeVerificationRun(input: {
   fixture?: VerificationEvidenceFixture;
 }): VerificationRunAssessment {
   const f = input.fixture;
-  if (!f?.verificationRunId && f?.runStatus !== 'STARTED') {
+  if (!f?.verificationRunId && f?.runStatus !== 'STARTED' && f?.runStatus !== 'COMPLETED' && f?.runStatus !== 'FAILED') {
     return {
       readOnly: true,
       runState: 'NOT_OBSERVED',

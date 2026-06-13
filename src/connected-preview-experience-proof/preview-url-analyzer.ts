@@ -18,7 +18,7 @@ export function analyzePreviewUrl(input: {
   const injected = input.sessionEvidence;
   const runtimeUrl = input.runtimeActivationProof?.port.url ?? null;
 
-  if (!input.session.sessionObserved && !injected?.previewUrl) {
+  if (!input.session.sessionObserved && !injected?.previewUrl && !runtimeUrl) {
     return {
       readOnly: true,
       urlState: 'NOT_OBSERVED',

@@ -110,6 +110,28 @@ export interface PreviewExperienceFounderQuestions {
   whatShouldBeBuiltNext: string[];
 }
 
+/** Step-by-step preview activation contract evidence (Phase 26.75). */
+export interface PreviewActivationEvidence {
+  readOnly: true;
+  workspaceId: string;
+  workspacePath: string;
+  previewUrl: string | null;
+  runtimePort: number | null;
+  previewDetected: boolean;
+  generatedAt: string;
+  urlChecked: boolean;
+  httpStatus: number | null;
+  reachable: boolean;
+  checkedAt: string | null;
+  renderEvidenceType: string | null;
+  renderObserved: boolean;
+  responseLength: number | null;
+  contentType: string | null;
+  renderCheckedAt: string | null;
+  proofLevel: PreviewProofLevel;
+  firstBrokenPreviewLink: string | null;
+}
+
 export interface PreviewExperienceProofReport {
   readOnly: true;
   advisoryOnly: true;
@@ -129,6 +151,7 @@ export interface PreviewExperienceProofReport {
   recommendedFix: string;
   recommendedNextActions: string[];
   founderQuestions: PreviewExperienceFounderQuestions;
+  activationEvidence: PreviewActivationEvidence | null;
   cacheKey: string;
 }
 
@@ -151,6 +174,17 @@ export interface PreviewSessionEvidence {
   port?: number;
   protocol?: string;
   urlReachable?: boolean;
+  urlChecked?: boolean;
+  httpStatus?: number;
+  responseCode?: number;
+  responseLength?: number;
+  contentType?: string;
+  renderEvidenceType?: string;
+  renderObserved?: boolean;
+  renderCheckedAt?: string;
+  checkedAt?: string;
+  generatedAt?: string;
+  proofLevel?: PreviewProofLevel;
   htmlResponse?: boolean;
   applicationTitle?: string;
   applicationRoot?: string;
@@ -165,6 +199,8 @@ export interface AssessConnectedPreviewExperienceProofInput {
   rootDir?: string;
   runtimeActivationProof?: RuntimeActivationProofReport | null;
   previewSessionEvidence?: PreviewSessionEvidence;
+  /** Skip bounded gap activation (fixtures / tests). */
+  skipPreviewProofGapActivation?: boolean;
 }
 
 export interface PreviewExperienceProofHistoryEntry {

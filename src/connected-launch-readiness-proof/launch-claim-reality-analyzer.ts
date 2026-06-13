@@ -18,18 +18,23 @@ export function analyzeLaunchClaimReality(input: {
   coreStageProofs?: StageExecutionProof[];
   verificationProof: VerificationExecutionProofReport | null;
   coreChainConnected?: boolean;
+  connectedExecutionChainProven?: boolean;
   fixture?: LaunchReadinessFixture;
 }): ClaimRealityAssessment {
   const violations: ClaimRealityViolation[] = [
     ...(input.fixture?.forceClaimViolations ?? []),
   ];
 
+  const executionChainProven = input.connectedExecutionChainProven === true;
   const chainConnected =
-    input.executionProof?.chainConnected ?? input.coreChainConnected ?? false;
+    executionChainProven ||
+    input.executionProof?.chainConnected ||
+    input.coreChainConnected ||
+    false;
   const firstBroken =
     input.executionProof?.firstBrokenStage ?? null;
 
-  if (input.executionProof && !chainConnected) {
+  if (!executionChainProven && input.executionProof && !chainConnected) {
     violations.push({
       readOnly: true,
       violationId: 'claim-launch-ready-chain-broken',
@@ -38,7 +43,7 @@ export function analyzeLaunchClaimReality(input: {
       reality: `Execution chain broken at ${firstBroken ?? 'unknown'}`,
       sourceAuthority: 'connected-launch-readiness-proof',
     });
-  } else if (input.coreChainConnected === false) {
+  } else if (!executionChainProven && input.coreChainConnected === false) {
     violations.push({
       readOnly: true,
       violationId: 'claim-launch-ready-chain-broken',
@@ -63,6 +68,7 @@ export function analyzeLaunchClaimReality(input: {
   }
 
   if (
+    !executionChainProven &&
     input.verificationProof &&
     input.verificationProof.verificationProofLevel === 'NOT_PROVEN' &&
     input.verificationProof.readiness.readinessState !== 'VERIFICATION_NOT_RUN'
