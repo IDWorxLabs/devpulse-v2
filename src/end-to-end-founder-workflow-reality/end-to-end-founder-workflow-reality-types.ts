@@ -121,6 +121,8 @@ export interface AssessFounderWorkflowRealityInput {
   rootDir: string;
   upstream: UpstreamRealityBundle;
   workflowModuleEvidence: WorkflowModulePresenceEvidence;
+  /** Connected execution chain truth — authoritative stage proven flags (Phase 26.78). */
+  executionChainTruth?: import('../founder-test-integration/connected-execution-chain-truth.js').ConnectedExecutionChainTruth;
 }
 
 export interface WorkflowModulePresenceEvidence {

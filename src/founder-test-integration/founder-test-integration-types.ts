@@ -11,6 +11,8 @@ import type {
 
 import type { FounderAcceptanceBridgeSnapshot } from '../foundation/founder-acceptance-integration-bridge.js';
 import type { ExecutionChainStageContext } from './connected-execution-chain-stage-resolver.js';
+import type { ConnectedExecutionChainTruth } from './connected-execution-chain-truth.js';
+import type { ExecutionProofSynchronizationReport } from './execution-proof-contradiction-detector.js';
 
 export type FounderTestAuthorityId =
   | 'FOUNDER_REALITY'
@@ -104,6 +106,8 @@ export interface FounderTestRun {
   rootDir: string;
   authorityResults: FounderTestAuthorityResult[];
   executionChainStageContext?: ExecutionChainStageContext;
+  executionChainTruth?: ConnectedExecutionChainTruth;
+  executionProofSynchronization?: ExecutionProofSynchronizationReport;
 }
 
 export interface FounderTestAssessment {

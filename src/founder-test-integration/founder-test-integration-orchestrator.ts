@@ -14,7 +14,6 @@ import type { LaunchCouncilAuthorityResult } from '../launch-council/index.js';
 import {
   assessLivePreviewReality,
   assessLivePreviewRealityAuthority,
-  buildPreviewWorkspaceSignalsFromLegacy,
   detectPreviewModulePresenceEvidence,
 } from '../live-preview-reality/index.js';
 import type { LivePreviewRealityInput } from '../live-preview-reality/index.js';
@@ -22,7 +21,6 @@ import { assessMobileRuntimeExperienceReality } from '../mobile-runtime-experien
 import { assessVisualQualityAuthority } from '../visual-quality-authority/index.js';
 import {
   assessVerificationReality,
-  buildVerificationWorkspaceSignalsForValidation,
   detectVerificationModulePresenceEvidence,
 } from '../verification-reality/index.js';
 import { getFounderTestAuthorityWeight, normalizeAuthorityScore } from './founder-test-integration-registry.js';
@@ -33,7 +31,14 @@ import type {
   FounderTestShellSources,
   RunFounderTestIntegrationInput,
 } from './founder-test-integration-types.js';
-import { resolveExecutionChainStageContext } from './connected-execution-chain-stage-resolver.js';
+import { resolveExecutionChainStageContext, resetExecutionChainStageResolverCacheForTests } from './connected-execution-chain-stage-resolver.js';
+import { resolveConnectedExecutionChainTruth } from './connected-execution-chain-truth.js';
+import { detectExecutionProofContradictions } from './execution-proof-contradiction-detector.js';
+import {
+  buildPreviewWorkspaceFromChainTruth,
+  buildVerificationSignalsFromChainTruth,
+} from './execution-proof-authority-sync.js';
+import type { ConnectedExecutionChainTruth } from './connected-execution-chain-truth.js';
 import { assessConnectedLaunchReadinessProof } from '../connected-launch-readiness-proof/index.js';
 
 let runCounter = 0;
@@ -119,8 +124,11 @@ function buildLeafPreviewInput(): LivePreviewRealityInput {
   };
 }
 
-function collectFounderReality(rootDir: string, executionConnected: boolean): FounderTestAuthorityResult {
-  const assessment = assessFounderWorkflowReality(rootDir, { builderExecutionConnected: executionConnected });
+function collectFounderReality(
+  rootDir: string,
+  chainTruth: ConnectedExecutionChainTruth,
+): FounderTestAuthorityResult {
+  const assessment = assessFounderWorkflowReality(rootDir, { executionChainTruth: chainTruth });
   const criticalBlockers = assessment.blockers.filter((b) => b.severity === 'CRITICAL');
   return buildAuthorityResult(
     'FOUNDER_REALITY',
@@ -155,17 +163,20 @@ function collectUiReality(shellSources: FounderTestShellSources): FounderTestAut
   );
 }
 
-function collectRequirementReality(rootDir: string, executionConnected: boolean): FounderTestAuthorityResult {
+function collectRequirementReality(
+  rootDir: string,
+  chainTruth: ConnectedExecutionChainTruth,
+): FounderTestAuthorityResult {
   const moduleEvidence = detectModulePresenceEvidence(rootDir);
   const assessment = assessAutonomousBuilderReality({
     workspace: {
       world2FoundationComplete: true,
-      executionConnected,
-      readiness: executionConnected ? 'partial' : 'foundation',
-      readinessLabel: executionConnected
-        ? 'Bounded founder execution proof connected — full isolated workspace execution not yet active'
+      executionConnected: chainTruth.buildProven,
+      readiness: chainTruth.buildProven ? 'partial' : 'foundation',
+      readinessLabel: chainTruth.buildProven
+        ? 'Connected execution chain truth — build materialization proven'
         : 'Foundation complete — isolated workspace execution not fully active',
-      livePreviewConnected: false,
+      livePreviewConnected: chainTruth.previewProven,
     },
     moduleEvidence,
   });
@@ -215,19 +226,11 @@ function collectFounderSimulation(shellSources: FounderTestShellSources): Founde
 
 function collectLivePreviewReality(
   rootDir: string,
-  executionConnected: boolean,
-  chainContext: import('./connected-execution-chain-stage-resolver.js').ExecutionChainStageContext,
+  chainTruth: ConnectedExecutionChainTruth,
 ): FounderTestAuthorityResult {
   const legacyInput = buildLeafPreviewInput();
   const legacyAssessment = assessLivePreviewReality(legacyInput);
-  const workspace = buildPreviewWorkspaceSignalsFromLegacy(legacyInput, executionConnected, legacyAssessment);
-  if (chainContext.previewProven) {
-    workspace.previewRuntimeActive = true;
-    workspace.loadRealityPassed = true;
-    workspace.validationReady = true;
-    workspace.connected = true;
-    workspace.interactivityPassed = true;
-  }
+  const workspace = buildPreviewWorkspaceFromChainTruth(legacyInput, chainTruth);
   const assessment = assessLivePreviewRealityAuthority({
     workspace,
     moduleEvidence: detectPreviewModulePresenceEvidence(rootDir),
@@ -269,21 +272,11 @@ function collectMobileRuntimeReality(rootDir: string): FounderTestAuthorityResul
 
 function collectVerificationReality(
   rootDir: string,
-  executionConnected: boolean,
-  chainContext: import('./connected-execution-chain-stage-resolver.js').ExecutionChainStageContext,
+  chainTruth: ConnectedExecutionChainTruth,
 ): FounderTestAuthorityResult {
   const moduleEvidence = detectVerificationModulePresenceEvidence(rootDir);
   const assessment = assessVerificationReality({
-    workspace: buildVerificationWorkspaceSignalsForValidation(moduleEvidence, {
-      executionConnected: executionConnected || chainContext.verificationExecutionConnected,
-      previewValidationReady: chainContext.previewProven,
-      previewRuntimeActive: chainContext.previewProven,
-      previewRealityState: chainContext.previewProven ? 'PREVIEW_READY' : 'NO_PREVIEW',
-      verificationResultsLinked:
-        chainContext.verificationProven || moduleEvidence.verificationResultsLinked,
-      runtimeDiagnosticsActive: chainContext.runtimeProven,
-      verificationReadiness: chainContext.verificationProven ? 'ready' : undefined,
-    }),
+    workspace: buildVerificationSignalsFromChainTruth(moduleEvidence, chainTruth),
     moduleEvidence,
   });
   const criticalBlockers = assessment.blockers.filter((b) => b.severity === 'CRITICAL');
@@ -423,17 +416,16 @@ function collectLaunchCouncil(authorityResults: FounderTestAuthorityResult[]): F
 function executeParticipatingAuthorities(
   rootDir: string,
   shellSources: FounderTestShellSources,
-  executionConnected: boolean,
-  chainContext: import('./connected-execution-chain-stage-resolver.js').ExecutionChainStageContext,
+  chainTruth: ConnectedExecutionChainTruth,
 ): FounderTestAuthorityResult[] {
   const partial: FounderTestAuthorityResult[] = [
-    collectFounderReality(rootDir, executionConnected),
+    collectFounderReality(rootDir, chainTruth),
     collectUiReality(shellSources),
-    collectRequirementReality(rootDir, executionConnected),
+    collectRequirementReality(rootDir, chainTruth),
     collectFounderSimulation(shellSources),
-    collectLivePreviewReality(rootDir, executionConnected, chainContext),
+    collectLivePreviewReality(rootDir, chainTruth),
     collectMobileRuntimeReality(rootDir),
-    collectVerificationReality(rootDir, executionConnected, chainContext),
+    collectVerificationReality(rootDir, chainTruth),
   ];
 
   partial.push(collectExecutionProofEvolution(partial));
@@ -479,17 +471,11 @@ export function runFounderTestIntegration(
       launchProven: launchReadinessProof?.launchProofLevel === 'PROVEN',
       launchExecutionConnected: launchReadinessProof?.launchExecutionConnected ?? false,
     });
-  const builderMaterializationConnected =
-    input.resolvedBuilderMaterializationConnected ?? chainContext.builderMaterializationConnected;
-  const previewExperienceConnected =
-    input.resolvedPreviewExperienceConnected ?? chainContext.previewExperienceConnected;
-  const executionConnected =
-    input.resolvedExecutionConnected === true
-      ? true
-      : previewExperienceConnected || builderMaterializationConnected;
+  const chainTruth = resolveConnectedExecutionChainTruth(chainContext);
   const authorityResults =
     input.authorityResults ??
-    executeParticipatingAuthorities(rootDir, shellSources, executionConnected, chainContext);
+    executeParticipatingAuthorities(rootDir, shellSources, chainTruth);
+  const executionProofSynchronization = detectExecutionProofContradictions(chainTruth, authorityResults);
 
   return {
     readOnly: true,
@@ -499,5 +485,7 @@ export function runFounderTestIntegration(
     rootDir,
     authorityResults,
     executionChainStageContext: chainContext,
+    executionChainTruth: chainTruth,
+    executionProofSynchronization,
   };
 }

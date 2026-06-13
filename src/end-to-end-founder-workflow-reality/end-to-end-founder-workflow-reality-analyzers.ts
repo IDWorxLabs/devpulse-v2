@@ -176,7 +176,12 @@ export function collectUpstreamRealityBundle(
   };
 }
 
-function toTruthLabel(stage: FounderWorkflowStageId, status: StageEvidenceLevel, upstream: UpstreamRealityBundle): WorkflowTruthMapLabel {
+function toTruthLabel(stage: FounderWorkflowStageId, status: StageEvidenceLevel, upstream: UpstreamRealityBundle, executionChainTruth?: AssessFounderWorkflowRealityInput['executionChainTruth']): WorkflowTruthMapLabel {
+  if (stage === 'BUILD' && executionChainTruth?.buildProven) return 'PROVEN';
+  if (stage === 'RUNTIME' && executionChainTruth?.runtimeProven) return 'PROVEN';
+  if (stage === 'PREVIEW' && executionChainTruth?.previewProven) return 'PROVEN';
+  if (stage === 'VERIFY' && executionChainTruth?.verificationProven) return 'PROVEN';
+  if (stage === 'LAUNCH_READINESS' && executionChainTruth?.launchProven) return 'PROVEN';
   if (stage === 'BUILD' && !upstream.builderExecutionConnected) return 'BLOCKED';
   if (stage === 'LAUNCH_READINESS' && status !== 'PROVEN') {
     return status === 'OBSERVED' || status === 'CLAIMED' ? 'PARTIAL' : 'UNAVAILABLE';
@@ -242,7 +247,10 @@ function evaluateStageStatus(
       }
       break;
     case 'BUILD':
-      if (upstream.builderExecutionConnected && upstream.builderBuildCapability === 'BUILD_CAPABILITY_PROVEN') {
+      if (input.executionChainTruth?.buildProven) {
+        status = 'PROVEN';
+        detail = 'Connected execution chain truth — build materialization proven';
+      } else if (upstream.builderExecutionConnected && upstream.builderBuildCapability === 'BUILD_CAPABILITY_PROVEN') {
         status = 'PROVEN';
         detail = 'Builder execution connected with proven build capability';
       } else if (!upstream.builderExecutionConnected) {
@@ -254,7 +262,10 @@ function evaluateStageStatus(
       }
       break;
     case 'RUNTIME':
-      if (upstream.previewRuntimeLevel === 'RUNTIME_PROVEN') {
+      if (input.executionChainTruth?.runtimeProven) {
+        status = 'PROVEN';
+        detail = 'Connected execution chain truth — runtime activation proven';
+      } else if (upstream.previewRuntimeLevel === 'RUNTIME_PROVEN') {
         status = 'PROVEN';
         detail = 'Runtime proven via live preview reality (24A.2)';
       } else if (upstream.previewRuntimeLevel === 'RUNTIME_OBSERVED') {
@@ -266,7 +277,10 @@ function evaluateStageStatus(
       }
       break;
     case 'PREVIEW':
-      if (upstream.previewScore >= 70 && upstream.previewBottleneck === 'NONE') {
+      if (input.executionChainTruth?.previewProven) {
+        status = 'PROVEN';
+        detail = 'Connected execution chain truth — preview experience proven';
+      } else if (upstream.previewScore >= 70 && upstream.previewBottleneck === 'NONE') {
         status = 'PROVEN';
         detail = 'Preview proven with no founder bottleneck';
       } else if (m.hasLivePreviewReality && upstream.previewScore > 30) {
@@ -278,7 +292,10 @@ function evaluateStageStatus(
       }
       break;
     case 'VERIFY':
-      if (upstream.verificationStatus === 'VERIFICATION_PROVEN') {
+      if (input.executionChainTruth?.verificationProven) {
+        status = 'PROVEN';
+        detail = 'Connected execution chain truth — verification execution proven';
+      } else if (upstream.verificationStatus === 'VERIFICATION_PROVEN') {
         status = 'PROVEN';
         detail = 'Verification proven tied to execution outcomes (24A.3)';
       } else if (upstream.verificationStatus === 'VERIFICATION_OBSERVED') {
@@ -290,7 +307,10 @@ function evaluateStageStatus(
       }
       break;
     case 'LAUNCH_READINESS':
-      if (
+      if (input.executionChainTruth?.launchProven) {
+        status = 'PROVEN';
+        detail = 'Connected execution chain truth — launch readiness proven';
+      } else if (
         upstream.builderExecutionConnected &&
         upstream.previewRuntimeLevel === 'RUNTIME_PROVEN' &&
         upstream.verificationStatus === 'VERIFICATION_PROVEN'
@@ -312,7 +332,7 @@ function evaluateStageStatus(
   return {
     stage,
     status,
-    truthLabel: toTruthLabel(stage, status, upstream),
+    truthLabel: toTruthLabel(stage, status, upstream, input.executionChainTruth),
     detail,
   };
 }
@@ -496,7 +516,7 @@ export function collectFounderWorkflowEvidence(input: AssessFounderWorkflowReali
   push('OBSERVED', `24A.3 verification score ${upstream.verificationScore}/100 status=${upstream.verificationStatus}`, 'verification-reality');
   if (m.hasIdeaCaptureSignals) push('PROVEN', 'Idea capture signals in Command Center shell', 'founder-reality-ui');
   if (m.hasBuildTaskRuntime) push('OBSERVED', 'Task breakdown runtime module present', 'build-task-runtime');
-  if (!upstream.builderExecutionConnected) {
+  if (!upstream.builderExecutionConnected && !input.executionChainTruth?.buildProven) {
     push('OBSERVED', 'Build stage blocked — executionConnected=false (24A.1)', 'autonomous-builder-reality');
   }
   if (m.hasControlledBuilderExecutionEngine) {

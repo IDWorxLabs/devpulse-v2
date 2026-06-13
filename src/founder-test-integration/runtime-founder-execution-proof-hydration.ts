@@ -4,6 +4,8 @@
  */
 
 import { assessConnectedVerificationExecutionProof } from '../connected-verification-execution-proof/index.js';
+import { resolveExecutionChainStageContext } from './connected-execution-chain-stage-resolver.js';
+import { resolveConnectedExecutionChainTruth } from './connected-execution-chain-truth.js';
 import { assessConnectedVerificationExecution } from '../connected-verification-execution/index.js';
 import { assessConnectedPreviewExperienceProof } from '../connected-preview-experience-proof/index.js';
 import { assessConnectedBuildExecution } from '../connected-build-execution/index.js';
@@ -115,6 +117,17 @@ function deriveStageProven(
 
   let verificationProven = extractVerificationEvidence(verification).proven;
   let launchProven = false;
+
+  if (rootDir && !buildProven) {
+    const chainTruth = resolveConnectedExecutionChainTruth(
+      resolveExecutionChainStageContext(rootDir),
+    );
+    if (chainTruth.buildProven) buildProven = true;
+    if (chainTruth.runtimeProven) runtimeProven = true;
+    if (chainTruth.previewProven) previewProven = true;
+    if (chainTruth.verificationProven) verificationProven = true;
+    if (chainTruth.launchProven) launchProven = true;
+  }
 
   if (rootDir && !buildProven) {
     const buildMaterialization = assessConnectedBuildExecution({ rootDir }).report;

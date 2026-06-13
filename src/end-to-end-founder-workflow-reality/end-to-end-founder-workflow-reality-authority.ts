@@ -20,6 +20,8 @@ import {
   resolveLastProvenStage,
   runAllFounderWorkflowRealityAnalyzers,
 } from './end-to-end-founder-workflow-reality-analyzers.js';
+import { buildUpstreamBundleFromChainTruth } from '../founder-test-integration/execution-proof-authority-sync.js';
+import type { ConnectedExecutionChainTruth } from '../founder-test-integration/connected-execution-chain-truth.js';
 import { recordFounderWorkflowHistory } from './end-to-end-founder-workflow-reality-history.js';
 import { storeFounderWorkflowRegistryEntry } from './end-to-end-founder-workflow-reality-registry.js';
 import type {
@@ -60,9 +62,10 @@ function computeSubscores(input: AssessFounderWorkflowRealityInput): FounderWork
   const analyzers = runAllFounderWorkflowRealityAnalyzers(input);
   const byStage = new Map(analyzers.stages.map((s) => [s.stage, s.status]));
 
-  const build = !input.upstream.builderExecutionConnected
-    ? 12
-    : scoreFromStageStatus(byStage.get('BUILD') ?? 'MISSING', 88, 42, 18, 8);
+  const build =
+    !input.upstream.builderExecutionConnected && !input.executionChainTruth?.buildProven
+      ? 12
+      : scoreFromStageStatus(byStage.get('BUILD') ?? 'MISSING', 88, 42, 18, 8);
 
   let runtime = scoreFromStageStatus(byStage.get('RUNTIME') ?? 'MISSING', 86, 38, 12, 6);
   let preview = scoreFromStageStatus(byStage.get('PREVIEW') ?? 'MISSING', 84, 44, 16, 8);
@@ -94,7 +97,7 @@ function buildBlockers(
   const blockers: FounderWorkflowBlocker[] = [];
   let rank = 1;
 
-  if (!input.upstream.builderExecutionConnected) {
+  if (!input.upstream.builderExecutionConnected && !input.executionChainTruth?.buildProven) {
     blockers.push({
       id: `workflow-blocker-${rank}`,
       severity: 'CRITICAL',
@@ -171,7 +174,7 @@ function buildFounderConclusion(
     return `Yes — a founder can go from idea to launch inside DevPulse today with proven evidence (score ${score}/100).`;
   }
 
-  if (!input.upstream.builderExecutionConnected) {
+  if (!input.upstream.builderExecutionConnected && !input.executionChainTruth?.buildProven) {
     return `No — a founder cannot go from idea to launch inside DevPulse today. Planning and early workflow stages are proven through ${lastProvenStage}, but BUILD is blocked (executionConnected=false from 24A.1). Live preview and verification infrastructure exist (24A.2/24A.3) but cannot be proven as outcomes of a completed build. Primary bottleneck: BUILD.`;
   }
 
@@ -270,11 +273,22 @@ ${assessment.founderConclusion}
 
 export function assessFounderWorkflowReality(
   rootDir: string,
-  options?: { builderExecutionConnected?: boolean },
+  options?: {
+    builderExecutionConnected?: boolean;
+    executionChainTruth?: ConnectedExecutionChainTruth;
+  },
 ): FounderWorkflowRealityAssessment {
-  const upstream = collectUpstreamRealityBundle(rootDir, options?.builderExecutionConnected ?? false);
+  const upstream =
+    options?.executionChainTruth != null
+      ? buildUpstreamBundleFromChainTruth(rootDir, options.executionChainTruth)
+      : collectUpstreamRealityBundle(rootDir, options?.builderExecutionConnected ?? false);
   const workflowModuleEvidence = detectWorkflowModulePresenceEvidence(rootDir);
-  const input: AssessFounderWorkflowRealityInput = { rootDir, upstream, workflowModuleEvidence };
+  const input: AssessFounderWorkflowRealityInput = {
+    rootDir,
+    upstream,
+    workflowModuleEvidence,
+    executionChainTruth: options?.executionChainTruth,
+  };
   const analyzers = runAllFounderWorkflowRealityAnalyzers(input);
   const portfolio = computeSubscores(input);
   const evidence = collectFounderWorkflowEvidence(input).slice(0, MAX_WORKFLOW_EVIDENCE);
@@ -296,7 +310,7 @@ export function assessFounderWorkflowReality(
       portfolio.launchReadiness * 0.1,
   );
 
-  if (!upstream.builderExecutionConnected) {
+  if (!upstream.builderExecutionConnected && !input.executionChainTruth?.buildProven) {
     founderWorkflowRealityScore = Math.min(founderWorkflowRealityScore, 46);
   }
   founderWorkflowRealityScore = Math.min(founderWorkflowRealityScore, portfolio.build + 18);
@@ -310,9 +324,13 @@ export function assessFounderWorkflowReality(
     .map((e) => `[${e.level}] ${e.description} (${e.source})`);
 
   const missingEvidence = [
-    !upstream.builderExecutionConnected ? 'Connected builder execution (24A.1 executionConnected=false)' : '',
-    upstream.previewRuntimeLevel !== 'RUNTIME_PROVEN' ? 'Proven running application runtime (24A.2)' : '',
-    upstream.verificationStatus !== 'VERIFICATION_PROVEN'
+    !upstream.builderExecutionConnected && !input.executionChainTruth?.buildProven
+      ? 'Connected builder execution (24A.1 executionConnected=false)'
+      : '',
+    upstream.previewRuntimeLevel !== 'RUNTIME_PROVEN' && !input.executionChainTruth?.runtimeProven
+      ? 'Proven running application runtime (24A.2)'
+      : '',
+    upstream.verificationStatus !== 'VERIFICATION_PROVEN' && !input.executionChainTruth?.verificationProven
       ? 'Verification proven tied to execution outcomes (24A.3)'
       : '',
     launchReadinessStatus !== 'LAUNCH_READINESS_PROVEN'

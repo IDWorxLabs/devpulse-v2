@@ -94,4 +94,34 @@ export type {
   RuntimeFounderExecutionProofHydration,
 } from './founder-execution-connected-resolver.js';
 
-export type { RuntimeProofHydrationSource } from './runtime-founder-execution-proof-hydration.js';
+export {
+  resolveExecutionChainStageContext,
+  resetExecutionChainStageResolverCacheForTests,
+} from './connected-execution-chain-stage-resolver.js';
+
+export type {
+  ExecutionChainBrokenStage,
+  ExecutionChainStageContext,
+} from './connected-execution-chain-stage-resolver.js';
+
+export {
+  resolveConnectedExecutionChainTruth,
+  CONNECTED_EXECUTION_CHAIN_TRUTH_SOURCE,
+} from './connected-execution-chain-truth.js';
+
+export type { ConnectedExecutionChainTruth } from './connected-execution-chain-truth.js';
+
+export {
+  detectExecutionProofContradictions,
+  EXECUTION_PROOF_CONTRADICTION,
+} from './execution-proof-contradiction-detector.js';
+
+export type {
+  ExecutionProofContradiction,
+  ExecutionProofSynchronizationReport,
+} from './execution-proof-contradiction-detector.js';
+
+export {
+  EXECUTION_PROOF_AUTHORITY_SYNCHRONIZATION_V1_PASS,
+  EXECUTION_PROOF_SYNCHRONIZATION_PHASE,
+} from './execution-proof-authority-synchronization-registry.js';

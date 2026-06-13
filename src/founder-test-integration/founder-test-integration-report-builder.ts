@@ -145,6 +145,45 @@ export function buildFounderTestIntegrationReportMarkdown(report: FounderTestRep
     lines.push('');
   }
 
+  const sync = assessment.run.executionProofSynchronization;
+  const chainTruth = assessment.run.executionChainTruth;
+  if (sync && chainTruth) {
+    lines.push('## Execution Proof Synchronization');
+    lines.push('');
+    lines.push('### Truth Source');
+    lines.push('');
+    lines.push(`| Stage | Proven |`);
+    lines.push(`|-------|--------|`);
+    lines.push(`| Requirements | ${chainTruth.requirementsProven} |`);
+    lines.push(`| Plan | ${chainTruth.planProven} |`);
+    lines.push(`| Build | ${chainTruth.buildProven} |`);
+    lines.push(`| Runtime | ${chainTruth.runtimeProven} |`);
+    lines.push(`| Preview | ${chainTruth.previewProven} |`);
+    lines.push(`| Verify | ${chainTruth.verificationProven} |`);
+    lines.push(`| Launch | ${chainTruth.launchProven} |`);
+    lines.push(`| Chain connected | ${chainTruth.chainConnected} |`);
+    lines.push(`| First broken stage | ${chainTruth.firstBrokenStage ?? 'none'} |`);
+    lines.push('');
+    lines.push('### Authorities Consuming Truth Source');
+    lines.push('');
+    for (const authority of sync.authoritiesConsumingTruthSource) {
+      lines.push(`- ${authority}`);
+    }
+    lines.push('');
+    lines.push(`**Contradiction count:** ${sync.contradictionCount}`);
+    lines.push('');
+    lines.push('### Stale Authorities');
+    lines.push('');
+    if (sync.staleAuthorities.length === 0) {
+      lines.push('- None');
+    } else {
+      for (const authority of sync.staleAuthorities) {
+        lines.push(`- ${authority}`);
+      }
+    }
+    lines.push('');
+  }
+
   lines.push('## Blockers');
   lines.push('');
   if (assessment.blockers.length === 0) {
