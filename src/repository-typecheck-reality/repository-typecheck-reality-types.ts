@@ -33,6 +33,14 @@ export interface RepositoryTypecheckAssessment {
   recommendations: string[];
   founderProofNotes: readonly string[];
   cacheKey: string;
+  /** Live baseline execution evidence (Phase 26.72). */
+  exitCode: number | null;
+  durationMs: number | null;
+  startedAt: string | null;
+  completedAt: string | null;
+  generatedAt: string | null;
+  stdoutSummary: string | null;
+  stderrSummary: string | null;
 }
 
 export interface AssessRepositoryTypecheckRealityInput {
@@ -42,6 +50,13 @@ export interface AssessRepositoryTypecheckRealityInput {
   checkedCommand?: string;
   checkedAt?: number;
   source?: 'BASELINE' | 'SUPPLIED' | 'NOT_RUN';
+  exitCode?: number | null;
+  durationMs?: number | null;
+  startedAt?: string | null;
+  completedAt?: string | null;
+  generatedAt?: string | null;
+  stdoutSummary?: string | null;
+  stderrSummary?: string | null;
 }
 
 export interface RepositoryTypecheckVisibilityScore {

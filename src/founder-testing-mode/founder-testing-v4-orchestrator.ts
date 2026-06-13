@@ -107,7 +107,7 @@ import {
 import {
   assessRepositoryTypecheckReality,
   evaluateRepositoryTypecheckVisibility,
-  getLatestRepositoryTypecheckBaseline,
+  runRepositoryTypecheckBaseline,
 } from '../repository-typecheck-reality/index.js';
 import { buildVerificationResultsFromV4Report } from '../verification-results-visibility/index.js';
 import { computeLaunchReadinessReality, deriveV4Verdict } from './founder-testing-v4-scorer.js';
@@ -180,13 +180,15 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
 
   const chatIntelligenceReality = assessChatIntelligenceReality({
     deadlineMs: Math.min(remaining(), 18000),
+    rootDir,
   });
   const chatIntelligenceRealityScore = evaluateChatIntelligenceVisibility(chatIntelligenceReality);
 
   const repositoryTypecheckReality =
     input.repositoryTypecheckReality ??
-    getLatestRepositoryTypecheckBaseline() ??
-    assessRepositoryTypecheckReality({ source: 'NOT_RUN' });
+    (input.skipRepositoryTypecheckBaseline
+      ? assessRepositoryTypecheckReality({ source: 'NOT_RUN' })
+      : runRepositoryTypecheckBaseline({ projectRootDir: rootDir }).assessment);
   const repositoryTypecheckRealityScore = evaluateRepositoryTypecheckVisibility(repositoryTypecheckReality);
 
   const autonomousBuilderReality = evaluateAutonomousBuilderReality(workspace);

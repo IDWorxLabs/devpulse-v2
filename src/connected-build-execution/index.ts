@@ -21,6 +21,7 @@ export type {
   ArtifactEvidenceLevel,
   ExpectedArtifactEntry,
   BuildMaterializationAssessment,
+  BuildArtifactToFileProof,
   GeneratedFileEvidence,
   BuildManifestAssessment,
   ArtifactEvidenceAssessment,
@@ -59,6 +60,12 @@ export {
   materializeBuildContractExpectations,
   deriveMaterializationStateFromEvidence,
 } from './build-contract-materializer.js';
+export {
+  BUILD_PROOF_GAP_MATERIALIZATION_REPAIR_V1_PASS,
+  materializeBuildProofGapArtifacts,
+  computeArtifactToFileProof,
+  isPathUnderGeneratedBuilderWorkspaces,
+} from './build-proof-gap-materializer.js';
 export { analyzeGeneratedFiles, scanObservedFileEvidence, mergeObservedEvidence } from './generated-file-analyzer.js';
 export { analyzeBuildManifest } from './build-manifest-analyzer.js';
 export { analyzeArtifactEvidence } from './artifact-evidence-analyzer.js';

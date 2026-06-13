@@ -125,10 +125,6 @@ export function buildBuildPlan(input: GenerateBuildPlanInput): BuildPlan | null 
     dependencyMap,
     buildPriorityOrder,
     buildPlanRisks,
-    buildComplexityScore: 0,
-    buildComplexityCategory: 'LOW',
-    buildPlanReadiness: 'NOT_READY',
-    buildPlanConfidence: 0,
     evidenceSources: bundle.sources,
   };
 

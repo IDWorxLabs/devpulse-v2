@@ -70,7 +70,7 @@ export function detectSemanticAgreements(input: {
     push(
       'WORKFLOW',
       `Workflows support same product journeys: ${input.workflowAlignment.workflows.slice(0, 4).join(', ')}`,
-      input.bundle.sources,
+      [...input.bundle.sources],
       input.workflowAlignment.workflowAlignmentScore,
     );
   }

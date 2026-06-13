@@ -84,13 +84,16 @@ export interface ChatIntelligenceRealityAssessment {
   founderProofNotes: readonly string[];
   selfEvolution: ChatSelfEvolutionTriggerResult;
   operationalSelfAwarenessStandard: string;
+  operationalEvidenceSnapshot: import('../chat-operational-self-knowledge/chat-operational-self-knowledge-types.js').OperationalEvidenceSnapshot;
   cognitiveArchitecture: import('../chat-cognitive-architecture/chat-cognitive-types.js').ChatCognitiveArchitectureAssessment;
   cacheKey: string;
 }
 
 export interface AssessChatIntelligenceRealityInput {
   deadlineMs?: number;
+  rootDir?: string;
   responseProvider?: (prompt: string) => string;
+  operationalEvidenceSnapshot?: import('../chat-operational-self-knowledge/chat-operational-self-knowledge-types.js').OperationalEvidenceSnapshot;
 }
 
 export interface ChatIntelligenceVisibilityScore {

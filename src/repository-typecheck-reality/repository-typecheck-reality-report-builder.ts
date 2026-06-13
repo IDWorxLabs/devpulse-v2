@@ -15,8 +15,13 @@ Blocks launch readiness: **${assessment.blocksLaunchReadiness ? 'Yes' : 'No'}**
 
 Checked command: \`${assessment.checkedCommand}\`
 
+Exit code: ${assessment.exitCode ?? 'not recorded'} | Duration: ${assessment.durationMs ?? 'not recorded'} ms
+
+Started: ${assessment.startedAt ?? 'not recorded'} | Completed: ${assessment.completedAt ?? 'not recorded'}
+
 Errors: ${assessment.errorCount} | Warnings: ${assessment.warningCount}
 
+${assessment.stdoutSummary ? `\n## Stdout summary\n\n\`\`\`\n${assessment.stdoutSummary}\n\`\`\`\n` : ''}${assessment.stderrSummary ? `\n## Stderr summary\n\n\`\`\`\n${assessment.stderrSummary}\n\`\`\`\n` : ''}
 ${assessment.founderProofNotes.map((note) => `- ${note}`).join('\n')}
 
 ## Findings

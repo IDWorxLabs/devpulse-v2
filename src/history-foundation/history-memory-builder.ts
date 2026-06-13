@@ -56,7 +56,7 @@ export function buildHistoryMemorySummary(query = 'default'): HistoryMemorySumma
   ];
 
   const savedCheckpoints: HistoryMemoryEntry[] = snapshot.checkpoints.slice(-6).map((c, i) =>
-    entry(`checkpoint-${i}`, 'CHECKPOINT', c.label, 'PARTIAL'),
+    entry(`checkpoint-${i}`, 'CHECKPOINT', c.summary, 'PARTIAL'),
   );
 
   if (!savedCheckpoints.length) {

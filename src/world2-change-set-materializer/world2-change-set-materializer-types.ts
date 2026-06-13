@@ -110,7 +110,8 @@ export interface World2ChangeSetMaterializerReport {
   passToken: string;
 }
 
-export interface AssessWorld2ChangeSetMaterializerInput extends AssessWorld2RepositorySnapshotMaterializerInput {
+export interface AssessWorld2ChangeSetMaterializerInput
+  extends Omit<AssessWorld2RepositorySnapshotMaterializerInput, 'materializationModeOverride'> {
   snapshotMaterializerAssessment?: World2RepositorySnapshotMaterializerAssessment;
   materializationModeOverride?: World2ChangeMaterializationOverride;
 }

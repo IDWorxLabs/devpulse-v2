@@ -4,10 +4,10 @@
 
 import type { AutonomousBuildExecutionProofReport } from '../autonomous-build-execution-proof/autonomous-build-execution-proof-types.js';
 import type { ConnectedBuildExecutionReport } from '../connected-build-execution/connected-build-execution-types.js';
-import type { ConnectedLaunchReadinessProofReport } from '../connected-launch-readiness-proof/connected-launch-readiness-proof-types.js';
-import type { ConnectedPreviewExperienceProofReport } from '../connected-preview-experience-proof/connected-preview-experience-proof-types.js';
-import type { ConnectedRuntimeActivationProofReport } from '../connected-runtime-activation-proof/connected-runtime-activation-proof-types.js';
-import type { ConnectedVerificationExecutionProofReport } from '../connected-verification-execution-proof/connected-verification-execution-proof-types.js';
+import type { LaunchReadinessProofReport } from '../connected-launch-readiness-proof/connected-launch-readiness-proof-types.js';
+import type { PreviewExperienceProofReport } from '../connected-preview-experience-proof/connected-preview-experience-proof-types.js';
+import type { RuntimeActivationProofReport } from '../connected-runtime-activation-proof/connected-runtime-activation-proof-types.js';
+import type { VerificationExecutionProofReport } from '../connected-verification-execution-proof/connected-verification-execution-proof-types.js';
 import type { FounderTestAssessment } from '../founder-test-integration/founder-test-integration-types.js';
 import type { FounderTestLaunchReadinessReport } from '../founder-test-launch-readiness/founder-test-launch-readiness-types.js';
 import type { RequirementsToPlanContractReport } from '../requirements-to-plan-execution-contract/requirements-to-plan-contract-types.js';
@@ -81,10 +81,10 @@ export interface LiveExecutionRunnerInputSnapshot {
   founderTestAssessment: FounderTestAssessment | null;
   autonomousBuildExecutionProof: AutonomousBuildExecutionProofReport | null;
   connectedBuildExecution: ConnectedBuildExecutionReport | null;
-  connectedVerificationExecutionProof: ConnectedVerificationExecutionProofReport | null;
-  connectedRuntimeActivationProof: ConnectedRuntimeActivationProofReport | null;
-  connectedPreviewExperienceProof: ConnectedPreviewExperienceProofReport | null;
-  connectedLaunchReadinessProof: ConnectedLaunchReadinessProofReport | null;
+  connectedVerificationExecutionProof: VerificationExecutionProofReport | null;
+  connectedRuntimeActivationProof: RuntimeActivationProofReport | null;
+  connectedPreviewExperienceProof: PreviewExperienceProofReport | null;
+  connectedLaunchReadinessProof: LaunchReadinessProofReport | null;
   founderTestLaunchReadiness: FounderTestLaunchReadinessReport | null;
   projectVaultProjectCount: number;
 }
@@ -126,10 +126,10 @@ export interface AssessLiveIdeaToLaunchExecutionRunnerInput {
   founderTestAssessment?: FounderTestAssessment | null;
   autonomousBuildExecutionProof?: AutonomousBuildExecutionProofReport | null;
   connectedBuildExecution?: ConnectedBuildExecutionReport | null;
-  connectedVerificationExecutionProof?: ConnectedVerificationExecutionProofReport | null;
-  connectedRuntimeActivationProof?: ConnectedRuntimeActivationProofReport | null;
-  connectedPreviewExperienceProof?: ConnectedPreviewExperienceProofReport | null;
-  connectedLaunchReadinessProof?: ConnectedLaunchReadinessProofReport | null;
+  connectedVerificationExecutionProof?: VerificationExecutionProofReport | null;
+  connectedRuntimeActivationProof?: RuntimeActivationProofReport | null;
+  connectedPreviewExperienceProof?: PreviewExperienceProofReport | null;
+  connectedLaunchReadinessProof?: LaunchReadinessProofReport | null;
   founderTestLaunchReadiness?: FounderTestLaunchReadinessReport | null;
   /** Inject observed build/runtime/preview/verify fixtures for bounded validation. */
   observedBuildEvidence?: import('../connected-build-execution/connected-build-execution-types.js').ObservedFileEvidence;

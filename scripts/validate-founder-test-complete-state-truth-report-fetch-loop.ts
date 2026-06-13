@@ -171,7 +171,7 @@ const contradictorySnapshot = {
     elapsedLine: 'Elapsed: 02:00',
     remainingLine: 'Remaining: —',
   },
-} as never;
+} as unknown as import('../src/founder-test-runtime-monitor/founder-test-runtime-types.js').FounderTestRuntimeSnapshot;
 
 resetFounderTestRunResultStoreForTests();
 const reconciledWithoutStore = reconcilePublicFounderTestRuntimeSnapshot(contradictorySnapshot);

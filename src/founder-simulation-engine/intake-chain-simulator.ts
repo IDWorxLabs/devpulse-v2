@@ -188,7 +188,7 @@ export function simulateIntakeChain(input: {
       skipHistoryRecording: true,
     });
 
-    if (intakeAlignmentAnalysis) {
+    if (intakeAlignmentAnalysis && unifiedIntakeAnalysisBeforeRepair) {
       alignmentImpact = computeSimulationAlignmentImpact({
         scenarioType: input.scenario.scenarioType,
         unifiedIntakeAnalysis: unifiedIntakeAnalysisBeforeRepair,

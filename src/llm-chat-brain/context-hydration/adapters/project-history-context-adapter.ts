@@ -39,7 +39,7 @@ export function retrieveProjectHistoryContext(message: string): ContextSection[]
       readOnly: true,
       id: 'history-checkpoints',
       label: 'Checkpoints',
-      content: snapshot.checkpoints.slice(-4).map((c) => c.label).join('; '),
+      content: snapshot.checkpoints.slice(-4).map((c) => c.summary).join('; '),
       confidence: 'MEDIUM',
       proofLevel: 'PARTIAL',
       source: 'PROJECT_HISTORY',

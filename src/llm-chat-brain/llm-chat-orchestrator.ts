@@ -31,11 +31,9 @@ import { metadataFromContextPackage } from './llm-chat-types.js';
 import type { DevPulseContextPackage } from './devpulse-context-package.js';
 
 import type { LlmProvider } from './llm-provider-types.js';
-
-
+import { enhanceChatWithOperationalSelfKnowledge } from '../chat-operational-self-knowledge/index.js';
 
 function buildMetadata(
-
   base: Partial<LlmChatBrainMetadata> & Pick<LlmChatBrainMetadata, 'usedLlm'>,
 
   contextPackage?: DevPulseContextPackage,
@@ -283,6 +281,37 @@ export async function generateLlmBackedChatResponseAsync(
 
 
     if (!judgement.passed) {
+      const operational = enhanceChatWithOperationalSelfKnowledge({
+        message,
+        draftAnswer: answer,
+        rootDir,
+      });
+
+      if (operational.usedOperationalSelfKnowledge) {
+        return {
+          readOnly: true,
+          finalAnswer: operational.finalAnswer,
+          metadata: buildMetadata(
+            {
+              usedLlm: true,
+              llmConnected: true,
+              fallbackUsed: false,
+              provider: provider.name,
+              model: provider.model,
+              judgeScore: judgement.score,
+              warnings: [
+                ...judgement.failureReasons,
+                `Operational self-knowledge override (${operational.questionKind})`,
+              ],
+              repairAttempted,
+              repaired,
+            },
+            contextPackage,
+          ),
+          judgement,
+          contextPackage,
+        };
+      }
 
       const fallback = generateLocalChatFallback({
 
@@ -344,11 +373,20 @@ export async function generateLlmBackedChatResponseAsync(
 
 
 
+    const operational = enhanceChatWithOperationalSelfKnowledge({
+      message,
+      draftAnswer: answer,
+      rootDir,
+    });
+    const finalAnswer = operational.usedOperationalSelfKnowledge
+      ? operational.finalAnswer
+      : answer;
+
     return {
 
       readOnly: true,
 
-      finalAnswer: answer,
+      finalAnswer,
 
       metadata: buildMetadata(
 
@@ -366,7 +404,9 @@ export async function generateLlmBackedChatResponseAsync(
 
           judgeScore: judgement.score,
 
-          warnings: judgement.failureReasons,
+          warnings: operational.usedOperationalSelfKnowledge
+            ? [...judgement.failureReasons, `Operational self-knowledge enriched (${operational.questionKind})`]
+            : judgement.failureReasons,
 
           repaired,
 

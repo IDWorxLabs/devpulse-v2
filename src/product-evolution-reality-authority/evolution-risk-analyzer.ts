@@ -63,7 +63,7 @@ export function analyzeEvolutionRisk(input: {
     readOnly: true,
     stagnationRisk: evolutionRiskScore >= 50 || input.improvementVelocity.improvementVelocityScore < 20,
     feedbackIgnoringRisk: input.feedbackLearning.feedbackLearningScore < 25,
-    innovationRisk: input.roadmapOnly || input.featureAdditionsOnly,
+    innovationRisk: Boolean(input.roadmapOnly || input.featureAdditionsOnly),
     adaptationRisk: input.usageLearning.usageLearningScore < 30 && input.productLaunched,
     competitiveDriftRisk: input.improvementVelocity.improvementVelocityScore < 30,
     evolutionRiskScore,

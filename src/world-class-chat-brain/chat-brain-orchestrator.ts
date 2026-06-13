@@ -383,7 +383,7 @@ export function generateWorldClassChatResponse(input: ChatBrainInput): ChatBrain
 }
 
 export function assessWorldClassChatBrain(
-  input: ChatBrainInput & { responseProvider?: (message: string) => string } = {},
+  input: Partial<ChatBrainInput> & { responseProvider?: (message: string) => string } = {},
 ): ChatBrainArchitectureAssessment {
   const results: ChatBrainScenarioResult[] = [];
 

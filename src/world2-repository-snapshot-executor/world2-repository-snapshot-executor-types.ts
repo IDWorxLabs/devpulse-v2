@@ -104,7 +104,8 @@ export interface World2RepositorySnapshotExecutorReport {
   passToken: string;
 }
 
-export interface AssessWorld2RepositorySnapshotExecutorInput extends AssessWorld2RepositorySnapshotInput {
+export interface AssessWorld2RepositorySnapshotExecutorInput
+  extends Omit<AssessWorld2RepositorySnapshotInput, 'executionModeOverride'> {
   repositorySnapshotAssessment?: World2RepositorySnapshotAssessment;
   executionModeOverride?: World2SnapshotExecutionOverride;
 }

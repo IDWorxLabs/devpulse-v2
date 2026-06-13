@@ -82,6 +82,7 @@ const crmPrompt =
 function getObservedPostLaunchFixture() {
   const now = new Date().toISOString();
   return {
+    readOnly: true as const,
     traffic: {
       readOnly: true as const,
       evidenceSource: 'analytics-reports',

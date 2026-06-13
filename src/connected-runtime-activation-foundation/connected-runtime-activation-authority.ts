@@ -162,7 +162,7 @@ function resolveAssessments(input: AssessConnectedRuntimeActivationInput): {
   const dryRunVerifierAssessment =
     input.dryRunVerifierAssessment ??
     assessWorld2DryRunExecutionVerifier({
-      dryRunComposerAssessment:
+      composerAssessment:
         connectedBuildExecutionAssessment.report.inputSnapshot.dryRunComposerAssessment,
     });
 

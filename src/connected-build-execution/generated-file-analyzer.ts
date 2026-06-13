@@ -86,12 +86,36 @@ export function analyzeGeneratedFiles(input: {
   rootDir: string;
   expectedPaths: string[];
   observed: ObservedFileEvidence;
+  /** When true, paths must exist on disk and be non-empty. */
+  verifyOnDisk?: boolean;
 }): GeneratedFileEvidence {
   const normalizedExpected = input.expectedPaths.map((p) => p.replace(/\\/g, '/'));
   const observedSet = new Set(input.observed.paths.map((p) => p.replace(/\\/g, '/')));
 
-  const generatedPaths = normalizedExpected.filter((p) => observedSet.has(p));
-  const missingPaths = normalizedExpected.filter((p) => !observedSet.has(p));
+  const generatedPaths: string[] = [];
+  const missingPaths: string[] = [];
+
+  for (const path of normalizedExpected) {
+    if (!observedSet.has(path)) {
+      missingPaths.push(path);
+      continue;
+    }
+    if (input.verifyOnDisk) {
+      const abs = join(input.rootDir, path);
+      try {
+        const stat = statSync(abs);
+        if (stat.isFile() && stat.size > 0) {
+          generatedPaths.push(path);
+        } else {
+          missingPaths.push(path);
+        }
+      } catch {
+        missingPaths.push(path);
+      }
+    } else {
+      generatedPaths.push(path);
+    }
+  }
 
   const byCategory: Record<string, number> = {};
   for (const path of generatedPaths) {

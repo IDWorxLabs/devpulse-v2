@@ -35,6 +35,7 @@ import { buildWorld2DisposableWorkspaceCreatorReportMarkdown } from './world2-di
 import type {
   AssessWorld2DisposableWorkspaceCreatorInput,
   CreationStateContext,
+  World2CreationBounds,
   World2CreationSafetyAudit,
   World2CreationState,
   World2CreatorInputSnapshot,

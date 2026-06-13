@@ -95,7 +95,7 @@ function extractExecutionPlannerFromDryRun(
   const disposable = changeSet.inputSnapshot.disposableWorkspaceAssessment;
   const engine = disposable.inputSnapshot.engineAssessment;
   const runtime = engine.inputSnapshot.runtimeAssessment;
-  return runtime.inputSnapshot.sandboxAssessment.executionPlannerAssessment;
+  return runtime.inputSnapshot.sandboxAssessment.inputSnapshot.executionPlannerAssessment;
 }
 
 function resolveAssessments(input: AssessConnectedBuildExecutionInput): {

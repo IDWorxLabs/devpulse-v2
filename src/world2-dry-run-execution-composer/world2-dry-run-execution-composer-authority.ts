@@ -199,10 +199,13 @@ function detectRealExecution(snapshot: World2DryRunExecutionComposerInputSnapsho
   const snapshotOp = snapshot.snapshotMaterializerAssessment.materializationOperation;
   const changeOp = snapshot.changeSetMaterializerAssessment.materializationOperation;
 
-  if (snapshotOp?.repositoryCopyPerformed === true) {
+  const snapshotCopy = snapshotOp?.repositoryCopyPerformed as boolean | undefined;
+  const changeMutation = changeOp?.realFileMutationPerformed as boolean | undefined;
+
+  if (snapshotCopy === true) {
     return true;
   }
-  if (changeOp?.realFileMutationPerformed === true) {
+  if (changeMutation === true) {
     return true;
   }
 
@@ -478,8 +481,8 @@ export function performWorld2DryRunExecutionSafetyChecks(
       checkId: 'no-repository-copy',
       label: 'No repository copy',
       passed:
-        snapshot.snapshotMaterializerAssessment.materializationOperation?.repositoryCopyPerformed !==
-        true,
+        (snapshot.snapshotMaterializerAssessment.materializationOperation
+          ?.repositoryCopyPerformed as boolean | undefined) !== true,
       detail: 'Repository copy not performed.',
     },
     {

@@ -224,7 +224,9 @@ function resolveInputSnapshot(input: AssessFounderTestRealitySweepInput): Founde
       const executionConnected =
         founderExecutionProof.report.questionAnswers.founderExecutionProven === true;
       verificationReality = assessVerificationReality({
-        workspace: buildVerificationWorkspaceSignalsForValidation(rootDir, {
+        workspace: buildVerificationWorkspaceSignalsForValidation(
+          detectVerificationModulePresenceEvidence(rootDir),
+          {
           executionConnected,
         }),
         moduleEvidence: detectVerificationModulePresenceEvidence(rootDir),

@@ -3,8 +3,8 @@
  */
 
 import type { AutonomousBuildExecutionProofReport } from '../autonomous-build-execution-proof/autonomous-build-execution-proof-types.js';
-import type { ConnectedPreviewExperienceProofReport } from '../connected-preview-experience-proof/connected-preview-experience-proof-types.js';
-import type { ConnectedRuntimeActivationProofReport } from '../connected-runtime-activation-proof/connected-runtime-activation-proof-types.js';
+import type { PreviewExperienceProofReport } from '../connected-preview-experience-proof/connected-preview-experience-proof-types.js';
+import type { RuntimeActivationProofReport } from '../connected-runtime-activation-proof/connected-runtime-activation-proof-types.js';
 import { STAGE_CONFIRM_THRESHOLD, STAGE_PARTIAL_THRESHOLD } from './live-idea-to-launch-execution-runner-registry.js';
 import type {
   StageAnalysis,
@@ -22,8 +22,8 @@ function entry(
 }
 
 export function analyzeRuntimeStage(input: {
-  runtimeProof: ConnectedRuntimeActivationProofReport | null;
-  previewProof: ConnectedPreviewExperienceProofReport | null;
+  runtimeProof: RuntimeActivationProofReport | null;
+  previewProof: PreviewExperienceProofReport | null;
   executionProof: AutonomousBuildExecutionProofReport | null;
   validationConfirmed: boolean;
 }): StageAnalysis {

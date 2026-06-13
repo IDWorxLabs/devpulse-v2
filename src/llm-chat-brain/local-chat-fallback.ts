@@ -68,6 +68,18 @@ export function generateLocalChatFallback(input: LocalChatFallbackInput): LocalC
       lastContextHydration: ctxMeta.lastContextHydration,
       hydratedFactCount: ctxMeta.hydratedFactCount,
       contextConfidence: ctxMeta.contextConfidence,
+      identityLoaded: ctxMeta.identityLoaded,
+      founderLoaded: ctxMeta.founderLoaded,
+      productLoaded: ctxMeta.productLoaded,
+      historyLoaded: ctxMeta.historyLoaded,
+      selfEvolutionLoaded: ctxMeta.selfEvolutionLoaded,
+      identityVersion: ctxMeta.identityVersion,
+      founderVersion: ctxMeta.founderVersion,
+      productVersion: ctxMeta.productVersion,
+      currentProductIdentity: ctxMeta.currentProductIdentity,
+      founderIdentity: ctxMeta.founderIdentity,
+      companyIdentity: ctxMeta.companyIdentity,
+      legacyIdentity: ctxMeta.legacyIdentity,
     },
   };
 }

@@ -168,7 +168,7 @@ assert(
 );
 assert(
   'runtime failure heading distinct from handoff',
-  FOUNDER_TEST_RUNTIME_FAILURE_REPORT_HEADING !== FOUNDER_TEST_HANDOFF_DIAGNOSTIC_HEADING,
+  FOUNDER_TEST_RUNTIME_FAILURE_REPORT_HEADING as string !== FOUNDER_TEST_HANDOFF_DIAGNOSTIC_HEADING,
   'headings',
 );
 

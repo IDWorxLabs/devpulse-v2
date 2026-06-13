@@ -42,10 +42,12 @@ export function analyzeVerificationEvidence(input: {
     evidenceState = 'PARTIAL';
   }
 
+  const evidenceObserved = paths.length >= 1 || logCount > 0;
+
   return {
     readOnly: true,
     evidenceState,
-    evidenceObserved: evidenceState !== 'NOT_OBSERVED',
+    evidenceObserved,
     evidenceTypes: inferredTypes,
     evidencePaths: paths,
     evidenceCount: totalCount,

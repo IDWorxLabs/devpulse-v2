@@ -27,7 +27,7 @@ export function retrieveExecutionProofContext(rootDir?: string): ContextSection[
       label: 'Founder Execution Proof',
       content: `Score: ${entry.founderExecutionScore}/100. State: ${entry.founderExecutionState}. Launch recommendation: ${entry.launchRecommendation}. Blockers: ${entry.blockerCount}. Warnings: ${entry.warningCount}.`,
       confidence: 'HIGH',
-      proofLevel: entry.founderExecutionState === 'PROVEN' ? 'PROVEN' : 'PARTIAL',
+      proofLevel: entry.founderExecutionState === 'FOUNDER_EXECUTION_PROVEN' ? 'PROVEN' : 'PARTIAL',
       source: 'EXECUTION_PROOF',
     });
   }

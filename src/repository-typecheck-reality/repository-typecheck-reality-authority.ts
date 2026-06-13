@@ -88,6 +88,13 @@ export function assessRepositoryTypecheckReality(
     recommendations,
     founderProofNotes: REPOSITORY_TYPECHECK_PROOF_NOTES,
     cacheKey: buildCacheKey(errorCount, warningCount, findings.length),
+    exitCode: source === 'NOT_RUN' ? null : (input.exitCode ?? (errorCount > 0 ? 1 : 0)),
+    durationMs: source === 'NOT_RUN' ? null : (input.durationMs ?? null),
+    startedAt: source === 'NOT_RUN' ? null : (input.startedAt ?? null),
+    completedAt: source === 'NOT_RUN' ? null : (input.completedAt ?? null),
+    generatedAt: source === 'NOT_RUN' ? null : (input.generatedAt ?? input.completedAt ?? null),
+    stdoutSummary: source === 'NOT_RUN' ? null : (input.stdoutSummary ?? null),
+    stderrSummary: source === 'NOT_RUN' ? null : (input.stderrSummary ?? null),
   };
 
   if (source !== 'NOT_RUN') {

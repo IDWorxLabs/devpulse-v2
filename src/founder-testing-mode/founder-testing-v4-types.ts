@@ -387,6 +387,8 @@ export interface RunFounderTestingModeV4Input {
   liveResults?: import('./founder-testing-types.js').LiveScreenResultInput[];
   liveSection?: string;
   repositoryTypecheckReality?: import('../repository-typecheck-reality/repository-typecheck-reality-types.js').RepositoryTypecheckAssessment;
+  /** When true, skips live npm run typecheck (validation fixtures only). */
+  skipRepositoryTypecheckBaseline?: boolean;
 }
 
 export type FounderTestV4ReportCore = Omit<

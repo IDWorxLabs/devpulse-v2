@@ -3,7 +3,7 @@
  */
 
 import type { AutonomousBuildExecutionProofReport } from '../autonomous-build-execution-proof/autonomous-build-execution-proof-types.js';
-import type { ConnectedVerificationExecutionProofReport } from '../connected-verification-execution-proof/connected-verification-execution-proof-types.js';
+import type { VerificationExecutionProofReport } from '../connected-verification-execution-proof/connected-verification-execution-proof-types.js';
 import type { FounderTestAssessment } from '../founder-test-integration/founder-test-integration-types.js';
 import type { FounderTestLaunchReadinessReport } from '../founder-test-launch-readiness/founder-test-launch-readiness-types.js';
 import { STAGE_CONFIRM_THRESHOLD, STAGE_PARTIAL_THRESHOLD } from './live-idea-to-launch-execution-runner-registry.js';
@@ -23,7 +23,7 @@ function entry(
 }
 
 export function analyzeValidationStage(input: {
-  verificationProof: ConnectedVerificationExecutionProofReport | null;
+  verificationProof: VerificationExecutionProofReport | null;
   executionProof: AutonomousBuildExecutionProofReport | null;
   founderTest: FounderTestAssessment | null;
   launchReadiness: FounderTestLaunchReadinessReport | null;

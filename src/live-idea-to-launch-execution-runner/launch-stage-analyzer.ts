@@ -2,7 +2,7 @@
  * LAUNCH stage analyzer — launch council, founder sweep, launch readiness assessments.
  */
 
-import type { ConnectedLaunchReadinessProofReport } from '../connected-launch-readiness-proof/connected-launch-readiness-proof-types.js';
+import type { LaunchReadinessProofReport } from '../connected-launch-readiness-proof/connected-launch-readiness-proof-types.js';
 import type { FounderTestLaunchReadinessReport } from '../founder-test-launch-readiness/founder-test-launch-readiness-types.js';
 import type { AutonomousBuildExecutionProofReport } from '../autonomous-build-execution-proof/autonomous-build-execution-proof-types.js';
 import { STAGE_CONFIRM_THRESHOLD, STAGE_PARTIAL_THRESHOLD } from './live-idea-to-launch-execution-runner-registry.js';
@@ -22,7 +22,7 @@ function entry(
 }
 
 export function analyzeLaunchStage(input: {
-  launchReadinessProof: ConnectedLaunchReadinessProofReport | null;
+  launchReadinessProof: LaunchReadinessProofReport | null;
   founderLaunchReadiness: FounderTestLaunchReadinessReport | null;
   executionProof: AutonomousBuildExecutionProofReport | null;
   runtimeConfirmed: boolean;

@@ -605,6 +605,10 @@ Typecheck clean: **${report.repositoryTypecheckReality.typecheckClean ? 'Yes' : 
 
 Blocks launch readiness: **${report.repositoryTypecheckReality.blocksLaunchReadiness ? 'Yes' : 'No'}**
 
+Command: \`${report.repositoryTypecheckReality.checkedCommand}\`
+
+Exit code: ${report.repositoryTypecheckReality.exitCode ?? 'not recorded'} | Duration: ${report.repositoryTypecheckReality.durationMs ?? 'not recorded'} ms
+
 Errors: ${report.repositoryTypecheckReality.errorCount} | Warnings: ${report.repositoryTypecheckReality.warningCount}
 
 ${report.repositoryTypecheckReality.founderProofNotes.map((n) => `- ${n}`).join('\n')}

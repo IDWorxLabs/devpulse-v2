@@ -1,163 +1,165 @@
 /**
- * Phase 24D.1 — Repository Typecheck Reality validation (leaf mode).
+ * Phase 26.72 — Repository Typecheck Reality repair validation (leaf mode).
  */
 
-import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { runFounderTestingModeV4 } from '../src/founder-testing-mode/index.js';
 import {
   REPOSITORY_TYPECHECK_REALITY_PASS_TOKEN,
+  REPOSITORY_TYPECHECK_REALITY_REPAIR_V1_PASS,
+  NPM_TYPECHECK_SCRIPT,
   TYPECHECK_COMMAND,
   assessRepositoryTypecheckReality,
   buildRepositoryTypecheckRealityReport,
-  getLatestRepositoryTypecheckBaseline,
   getRepositoryTypecheckHistorySize,
   parseBoundedTypecheckOutput,
   resetRepositoryTypecheckHistoryForTests,
+  runRepositoryTypecheckBaseline,
 } from '../src/repository-typecheck-reality/index.js';
 
-interface ScenarioResult {
+interface CheckResult {
   name: string;
   passed: boolean;
   detail: string;
 }
 
-const results: ScenarioResult[] = [];
+const results: CheckResult[] = [];
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
-const START = Date.now();
-const MAX_RUNTIME_MS = 120_000;
-
-const REQUIRED_FILES = [
-  'src/repository-typecheck-reality/repository-typecheck-reality-bounds.ts',
-  'src/repository-typecheck-reality/repository-typecheck-reality-types.ts',
-  'src/repository-typecheck-reality/repository-typecheck-reality-authority.ts',
-  'src/repository-typecheck-reality/repository-typecheck-reality-report-builder.ts',
-  'src/repository-typecheck-reality/repository-typecheck-reality-history.ts',
-  'src/repository-typecheck-reality/repository-typecheck-reality-validator.ts',
-  'src/repository-typecheck-reality/index.ts',
-] as const;
 
 function assert(name: string, condition: boolean, detail: string): void {
   results.push({ name, passed: condition, detail });
 }
 
-function checkpoint(label: string): void {
-  const elapsed = Date.now() - START;
-  console.log(`[checkpoint ${elapsed}ms] ${label}`);
-  if (elapsed > MAX_RUNTIME_MS) {
-    throw new Error(`Runtime guard exceeded at "${label}" (${elapsed}ms > ${MAX_RUNTIME_MS}ms)`);
-  }
+const REQUIRED = [
+  'src/repository-typecheck-reality/repository-typecheck-reality-runner.ts',
+  'src/repository-typecheck-reality/repository-typecheck-reality-authority.ts',
+  'src/repository-typecheck-reality/repository-typecheck-reality-types.ts',
+  'src/repository-typecheck-reality/repository-typecheck-reality-bounds.ts',
+  'src/founder-testing-mode/founder-testing-v4-orchestrator.ts',
+  'scripts/validate-repository-typecheck-reality.ts',
+  'architecture/REPOSITORY_TYPECHECK_REALITY_REPAIR_REPORT.md',
+];
+
+for (const file of REQUIRED) {
+  assert(`file: ${file}`, existsSync(join(ROOT, file)), existsSync(join(ROOT, file)) ? 'present' : 'missing');
 }
 
-function runTypecheck(): { exitCode: number; output: string } {
-  const result = spawnSync('npx', ['tsc', '--noEmit'], {
-    cwd: ROOT,
-    encoding: 'utf8',
-    shell: true,
-    maxBuffer: 512_000,
-  });
-  return {
-    exitCode: result.status ?? 1,
-    output: `${result.stdout ?? ''}\n${result.stderr ?? ''}`,
-  };
+const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { scripts?: Record<string, string> };
+assert('package.json typecheck script', pkg.scripts?.[NPM_TYPECHECK_SCRIPT] === 'tsc --noEmit', pkg.scripts?.[NPM_TYPECHECK_SCRIPT] ?? 'missing');
+assert('validate script registered', Boolean(pkg.scripts?.['validate:repository-typecheck-reality']), 'registered');
+
+resetRepositoryTypecheckHistoryForTests();
+
+const notRun = assessRepositoryTypecheckReality({ source: 'NOT_RUN' });
+assert('NOT_RUN when evidence absent', notRun.readinessState === 'TYPECHECK_NOT_RUN', notRun.readinessState);
+assert('NOT_RUN blocks launch', notRun.blocksLaunchReadiness, String(notRun.blocksLaunchReadiness));
+assert('NOT_RUN no exitCode', notRun.exitCode === null, String(notRun.exitCode));
+
+const failed = assessRepositoryTypecheckReality({
+  source: 'SUPPLIED',
+  errorCount: 2,
+  warningCount: 0,
+  exitCode: 2,
+  durationMs: 1200,
+  startedAt: '2026-01-01T00:00:00.000Z',
+  completedAt: '2026-01-01T00:00:02.000Z',
+  generatedAt: '2026-01-01T00:00:02.000Z',
+  findings: [
+    {
+      file: 'src/example.ts',
+      line: 1,
+      column: 1,
+      code: 'TS2322',
+      message: 'Example compile error',
+      severity: 'ERROR',
+      recommendedAction: 'Fix TS2322 in src/example.ts:1',
+    },
+  ],
+});
+assert('FAILED preserves errors', failed.readinessState === 'TYPECHECK_FAILED', failed.readinessState);
+assert('FAILED blocks launch', failed.blocksLaunchReadiness, String(failed.blocksLaunchReadiness));
+assert('FAILED records exitCode', failed.exitCode === 2, String(failed.exitCode));
+assert('FAILED records durationMs', failed.durationMs === 1200, String(failed.durationMs));
+assert('FAILED no fake clean', !failed.typecheckClean, String(failed.typecheckClean));
+
+const parsed = parseBoundedTypecheckOutput(
+  'src/example.ts(10,5): error TS2322: Type string is not assignable to type number.',
+);
+assert('parser finds error', parsed.errorCount === 1, String(parsed.errorCount));
+
+const live = runRepositoryTypecheckBaseline({ projectRootDir: ROOT });
+assert('live baseline command recorded', live.assessment.checkedCommand.includes('typecheck'), live.assessment.checkedCommand);
+assert('live baseline generatedAt', Boolean(live.assessment.generatedAt), String(live.assessment.generatedAt));
+assert('live baseline durationMs recorded', (live.assessment.durationMs ?? 0) > 0, String(live.assessment.durationMs));
+assert('live baseline exitCode recorded', live.assessment.exitCode === 0, String(live.assessment.exitCode));
+assert(
+  'TYPECHECK_CLEAN requires successful command',
+  live.assessment.readinessState === 'TYPECHECK_CLEAN' && live.assessment.exitCode === 0,
+  live.assessment.readinessState,
+);
+assert('clean does not block launch', !live.assessment.blocksLaunchReadiness, String(live.assessment.blocksLaunchReadiness));
+
+const founderSkipped = runFounderTestingModeV4({
+  rootDir: ROOT,
+  skipRepositoryTypecheckBaseline: true,
+  validatorScripts: [],
+});
+assert(
+  'founder skip fixture can use NOT_RUN',
+  founderSkipped.repositoryTypecheckReality.readinessState === 'TYPECHECK_NOT_RUN',
+  founderSkipped.repositoryTypecheckReality.readinessState,
+);
+
+const founderLive = runFounderTestingModeV4({
+  rootDir: ROOT,
+  validatorScripts: [],
+});
+assert(
+  'founder test consumes live typecheck proof',
+  founderLive.repositoryTypecheckReality.readinessState === 'TYPECHECK_CLEAN',
+  founderLive.repositoryTypecheckReality.readinessState,
+);
+assert(
+  'founder test typecheck no longer NOT_RUN by default',
+  founderLive.repositoryTypecheckReality.readinessState !== 'TYPECHECK_NOT_RUN',
+  founderLive.repositoryTypecheckReality.readinessState,
+);
+assert(
+  'founder test launch blocker cleared when clean',
+  !founderLive.repositoryTypecheckReality.blocksLaunchReadiness,
+  String(founderLive.repositoryTypecheckReality.blocksLaunchReadiness),
+);
+
+const orchSource = readFileSync(join(ROOT, 'src/founder-testing-mode/founder-testing-v4-orchestrator.ts'), 'utf8');
+assert('orchestrator uses runRepositoryTypecheckBaseline', orchSource.includes('runRepositoryTypecheckBaseline'), 'wired');
+assert('orchestrator skip flag', orchSource.includes('skipRepositoryTypecheckBaseline'), 'skip flag');
+
+const report = buildRepositoryTypecheckRealityReport(live.assessment);
+assert('report includes command evidence', report.includes('Exit code'), 'report');
+
+resetRepositoryTypecheckHistoryForTests();
+assessRepositoryTypecheckReality({ source: 'SUPPLIED', errorCount: 0, warningCount: 0, findings: [], exitCode: 0 });
+assessRepositoryTypecheckReality({ source: 'SUPPLIED', errorCount: 1, warningCount: 0, findings: [], exitCode: 1 });
+assert('history bounded', getRepositoryTypecheckHistorySize() <= 12, String(getRepositoryTypecheckHistorySize()));
+
+assert('legacy pass token preserved', REPOSITORY_TYPECHECK_REALITY_PASS_TOKEN === 'REPOSITORY_TYPECHECK_REALITY_PASS', 'token');
+
+const tsconfig = readFileSync(join(ROOT, 'tsconfig.json'), 'utf8');
+assert('no global strictness weakening', tsconfig.includes('"strict": true'), 'strict');
+
+const failedResults = results.filter((r) => !r.passed);
+console.log('\n--- Repository Typecheck Reality Repair Validation ---');
+for (const r of results) {
+  console.log(`${r.passed ? 'PASS' : 'FAIL'} — ${r.name}: ${r.detail}`);
 }
 
-function main(): void {
-  console.log('');
-  console.log('Repository Typecheck Reality — Validation (leaf mode)');
-  console.log('====================================================');
-  console.log('');
-
-  resetRepositoryTypecheckHistoryForTests();
-
-  for (const rel of REQUIRED_FILES) {
-    assert(`file ${rel}`, existsSync(join(ROOT, rel)), rel);
-  }
-  checkpoint('required files');
-
-  const clean = assessRepositoryTypecheckReality({
-    source: 'SUPPLIED',
-    errorCount: 0,
-    warningCount: 0,
-    findings: [],
-  });
-  assert('01. clean state', clean.readinessState === 'TYPECHECK_CLEAN', clean.readinessState);
-  assert('02. clean does not block', !clean.blocksLaunchReadiness, String(clean.blocksLaunchReadiness));
-  assert('03. clean typecheckClean', clean.typecheckClean, String(clean.typecheckClean));
-
-  const failed = assessRepositoryTypecheckReality({
-    source: 'SUPPLIED',
-    errorCount: 2,
-    warningCount: 0,
-    findings: [
-      {
-        file: 'src/example.ts',
-        line: 1,
-        column: 1,
-        code: 'TS2322',
-        message: 'Example compile error',
-        severity: 'ERROR',
-        recommendedAction: 'Fix TS2322 in src/example.ts:1',
-      },
-    ],
-  });
-  assert('04. failed state', failed.readinessState === 'TYPECHECK_FAILED', failed.readinessState);
-  assert('05. failed blocks launch', failed.blocksLaunchReadiness, String(failed.blocksLaunchReadiness));
-  assert('06. no fake clean on errors', !failed.typecheckClean, String(failed.typecheckClean));
-
-  const parsed = parseBoundedTypecheckOutput(
-    'src/example.ts(10,5): error TS2322: Type string is not assignable to type number.',
-  );
-  assert('07. parser finds error', parsed.errorCount === 1, String(parsed.errorCount));
-  assert('08. parser bounded findings', parsed.findings.length === 1, parsed.findings[0]?.code ?? 'none');
-
-  const report = buildRepositoryTypecheckRealityReport(failed);
-  assert('09. report generation', report.includes('Repository Typecheck Reality'), 'report');
-
-  resetRepositoryTypecheckHistoryForTests();
-  assessRepositoryTypecheckReality({ source: 'SUPPLIED', errorCount: 0, warningCount: 0, findings: [] });
-  assessRepositoryTypecheckReality({ source: 'SUPPLIED', errorCount: 1, warningCount: 0, findings: [] });
-  assert('10. history bounded', getRepositoryTypecheckHistorySize() <= 12, String(getRepositoryTypecheckHistorySize()));
-  assert('11. latest baseline stored', getLatestRepositoryTypecheckBaseline()?.readinessState === 'TYPECHECK_FAILED', 'baseline');
-
-  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { scripts?: Record<string, string> };
-  assert('12. npm script', Boolean(pkg.scripts?.['validate:repository-typecheck-reality']), 'package script');
-
-  const orch = readFileSync(join(ROOT, 'src/founder-testing-mode/founder-testing-v4-orchestrator.ts'), 'utf8');
-  assert('13. founder testing wired', orch.includes('assessRepositoryTypecheckReality'), 'orchestrator');
-
-  checkpoint('authority checks');
-
-  const typecheck = runTypecheck();
-  const liveAssessment = assessRepositoryTypecheckReality({
-    source: 'BASELINE',
-    ...parseBoundedTypecheckOutput(typecheck.output),
-    checkedCommand: TYPECHECK_COMMAND,
-    checkedAt: Date.now(),
-  });
-  assert('14. live typecheck exit matches assessment', typecheck.exitCode === 0 ? liveAssessment.typecheckClean : !liveAssessment.typecheckClean, `exit=${typecheck.exitCode}, state=${liveAssessment.readinessState}`);
-  assert('15. live repo clean', liveAssessment.readinessState === 'TYPECHECK_CLEAN', liveAssessment.readinessState);
-
-  checkpoint('live typecheck');
-
-  const failedResults = results.filter((r) => !r.passed);
-  console.log(`Scenarios: ${results.length}`);
-  console.log(`Passed: ${results.length - failedResults.length}`);
-  console.log(`Failed: ${failedResults.length}`);
-  console.log('');
-
-  if (failedResults.length > 0) {
-    for (const item of failedResults) {
-      console.log(`  ✗ ${item.name}: ${item.detail}`);
-    }
-    process.exitCode = 1;
-    return;
-  }
-
-  console.log(REPOSITORY_TYPECHECK_REALITY_PASS_TOKEN);
-  console.log('');
-  console.log('npm run validate:repository-typecheck-reality');
+if (failedResults.length === 0) {
+  console.log(`\n${REPOSITORY_TYPECHECK_REALITY_REPAIR_V1_PASS}`);
+  console.log(`\n${REPOSITORY_TYPECHECK_REALITY_PASS_TOKEN}`);
+  process.exit(0);
 }
 
-main();
+console.log(`\n${failedResults.length} check(s) failed.`);
+process.exit(1);

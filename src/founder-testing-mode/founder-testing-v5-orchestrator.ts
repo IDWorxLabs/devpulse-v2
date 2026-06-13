@@ -21,6 +21,7 @@ export function runFounderTestingModeV5(input: RunFounderTestingModeV5Input = {}
     liveResults: input.liveResults,
     liveSection: input.liveSection,
     repositoryTypecheckReality: input.repositoryTypecheckReality,
+    skipRepositoryTypecheckBaseline: input.skipRepositoryTypecheckBaseline,
   });
 
   const unifiedSummary = buildUnifiedFounderSummary(v4);

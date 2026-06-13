@@ -28,7 +28,7 @@ import {
 import {
   assessWorld2ControlledExecutionRuntime,
 } from '../world2-controlled-execution-runtime/index.js';
-import type { World2ControlledExecutionRuntimeAssessment } from '../world2-controlled-execution-runtime/world2-controlled-execution-runtime-types.js';
+import type { World2RuntimeAssessment } from '../world2-controlled-execution-runtime/world2-controlled-execution-runtime-types.js';
 import {
   assessWorld2DryRunExecutionVerifier,
 } from '../world2-dry-run-execution-verifier/index.js';
@@ -115,7 +115,7 @@ function resolveRuntimeActivationAssessment(
 function resolveWorld2RuntimeAssessment(
   buildAssessment: ConnectedBuildExecutionAssessment | null,
   workspaceAssessment: ConnectedWorkspaceCreationAssessment | null,
-): World2ControlledExecutionRuntimeAssessment {
+): World2RuntimeAssessment {
   const workspaceRuntime =
     workspaceAssessment?.report.inputSnapshot.creatorAssessment.inputSnapshot
       .disposableWorkspaceAssessment.inputSnapshot.engineAssessment.inputSnapshot.runtimeAssessment;
@@ -124,7 +124,7 @@ function resolveWorld2RuntimeAssessment(
   }
   if (buildAssessment?.report.inputSnapshot.dryRunComposerAssessment) {
     const composer = buildAssessment.report.inputSnapshot.dryRunComposerAssessment;
-    const sandbox = composer.inputSnapshot.sandboxAssessment;
+    const sandbox = composer.inputSnapshot.runtimeAssessment.inputSnapshot.sandboxAssessment;
     return assessWorld2ControlledExecutionRuntime({ sandboxAssessment: sandbox });
   }
   return assessWorld2ControlledExecutionRuntime({ rootDir: process.cwd() });
@@ -135,7 +135,7 @@ function buildInputSnapshot(
   buildContract: ConnectedBuildExecutionContract | null,
   buildFoundation: ConnectedBuildExecutionAssessment | null,
   runtimeActivation: ConnectedRuntimeActivationAssessment,
-  world2Runtime: World2ControlledExecutionRuntimeAssessment,
+  world2Runtime: World2RuntimeAssessment,
   founderAcceptance: FounderAcceptanceAssessment | null,
   executionProof: AssessConnectedRuntimeExecutionInput['executionProofAssessment'],
 ): ConnectedRuntimeExecutionInputSnapshot {
@@ -319,7 +319,7 @@ export async function assessConnectedRuntimeExecution(
   if (!workspaceAssessment && input.performRealActivation) {
     workspaceAssessment = assessConnectedWorkspaceCreation({
       rootDir: projectRootDir,
-      connectedBuildExecutionFoundationAssessment: buildFoundation ?? undefined,
+      connectedBuildExecutionAssessment: buildFoundation ?? undefined,
       founderAcceptanceAssessment: founderAcceptance,
       executionProofAssessment: input.executionProofAssessment,
       founderTestAssessment: input.founderTestAssessment,

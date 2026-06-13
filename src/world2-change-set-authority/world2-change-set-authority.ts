@@ -160,8 +160,8 @@ export function computeChangeSetImpactAnalysis(input: ChangeSetImpactInput): Wor
   if (
     deleteCount >= MAX_DELETE_OPERATIONS ||
     input.planRiskLevel === 'HIGH' ||
-    (input.rollbackComplexity >= 3 && input.planRiskLevel === 'HIGH') ||
-    opCount > 12
+    opCount > 12 ||
+    (input.rollbackComplexity >= 3 && input.planRiskLevel !== 'LOW')
   ) {
     return 'HIGH';
   }
@@ -171,7 +171,7 @@ export function computeChangeSetImpactAnalysis(input: ChangeSetImpactInput): Wor
     input.planRiskLevel === 'MEDIUM' ||
     opCount > 5 ||
     scopeCount > 4 ||
-    (input.rollbackComplexity >= 3 && input.planRiskLevel === 'MEDIUM')
+    input.rollbackComplexity >= 3
   ) {
     return 'MEDIUM';
   }

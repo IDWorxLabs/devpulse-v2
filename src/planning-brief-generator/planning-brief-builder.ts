@@ -48,9 +48,6 @@ export function buildPlanningBrief(input: GeneratePlanningBriefInput): PlanningB
     integrations: summarizeIntegrations(bundle),
     knownGaps,
     evidenceSources: bundle.sources,
-    planningBriefConfidence: 0,
-    planningBriefQuality: 'INSUFFICIENT',
-    planningBriefReadiness: 'NOT_READY',
   };
 
   const validation = validatePlanningBrief({

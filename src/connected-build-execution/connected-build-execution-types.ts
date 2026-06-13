@@ -83,12 +83,29 @@ export interface BuildOutputLinkageAnalysis {
   filesToWorkspace: boolean;
 }
 
+export interface BuildArtifactToFileProof {
+  readOnly: true;
+  materializationAttempted: boolean;
+  planId: string;
+  buildManifestId: string;
+  workspaceId: string;
+  workspacePath: string;
+  expectedArtifactCount: number;
+  materializedFileCount: number;
+  missingArtifactCount: number;
+  materializedFiles: string[];
+  missingArtifacts: string[];
+  generatedAt: string;
+  proofLevel: BuildExecutionProofLevel;
+}
+
 export interface ConnectedBuildExecutionReport {
   readOnly: true;
   advisoryOnly: true;
   assessmentId: string;
   generatedAt: string;
   proofLevel: BuildExecutionProofLevel;
+  artifactToFileProof: BuildArtifactToFileProof | null;
   buildMaterialization: BuildMaterializationAssessment;
   generatedFileEvidence: GeneratedFileEvidence;
   buildManifest: BuildManifestAssessment;
@@ -128,6 +145,8 @@ export interface AssessConnectedBuildExecutionInput {
   buildReadyContract?: BuildReadyExecutionContract | null;
   /** Inject observed paths for bounded validation fixtures. */
   observedEvidence?: ObservedFileEvidence;
+  /** When false, skips bounded artifact-to-file materialization (validation fixtures). */
+  attemptBuildProofGapMaterialization?: boolean;
 }
 
 export interface ConnectedBuildExecutionHistoryEntry {

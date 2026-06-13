@@ -29,8 +29,9 @@ export const ORCHESTRATION_FLOW = [
 ] as const;
 
 export const SAFETY_GUARANTEES = [
-  'Read-only — does not generate or mutate project files',
-  'PROVEN requires observed files on disk with full traceability',
-  'No synthetic execution claims or roadmap assumptions',
+  'Bounded writes only under .generated-builder-workspaces/ when gap materialization runs',
+  'No .env, credentials, or secret files generated during materialization',
+  'PROVEN requires observed non-empty files on disk with full traceability',
+  'No synthetic runtime/preview/verify execution claims',
   'PARTIAL reports exact missing artifacts and broken links',
 ] as const;

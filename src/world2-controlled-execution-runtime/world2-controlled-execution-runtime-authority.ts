@@ -207,7 +207,7 @@ export function deriveWorld2TerminationAssessment(
       proof.regressionDetected);
   const acceptanceFailureDetected =
     context.founderAcceptanceBlocked ||
-    snapshot.founderAcceptanceState === 'REJECTED' ||
+    snapshot.founderAcceptanceState === 'NOT_ACCEPTED' ||
     snapshot.founderAcceptanceState === 'BLOCKED';
   const regressionDetected = snapshot.regressionPresent || proof?.regressionDetected === true;
   const loopRiskDetected = snapshot.loopRiskPresent || snapshot.budgetExceeded;

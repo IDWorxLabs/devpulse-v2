@@ -142,9 +142,6 @@ export function buildArchitectureBrief(input: GenerateArchitectureBriefInput): A
     securitySummary: summarizeSecurityArchitecture(bundle),
     architectureRiskAnalysis,
     evidenceSources: bundle.sources,
-    architectureBriefConfidence: 0,
-    architectureBriefQuality: 'INSUFFICIENT',
-    architectureBriefReadiness: 'NOT_READY',
   };
 
   const validation = validateArchitectureBrief({

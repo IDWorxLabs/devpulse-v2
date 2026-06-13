@@ -87,6 +87,17 @@ export function analyzeBuildStage(
     ),
   ];
 
+  if (report.artifactToFileProof) {
+    evidence.push(
+      entry(
+        'Artifact-to-file proof',
+        `${report.artifactToFileProof.proofLevel} (${report.artifactToFileProof.materializedFileCount}/${report.artifactToFileProof.expectedArtifactCount})`,
+        report.artifactToFileProof.proofLevel === 'PROVEN',
+        'build-proof-gap-materializer',
+      ),
+    );
+  }
+
   const missingEvidence = [...report.missingEvidence];
   if (report.linkageAnalysis.firstBrokenLink) {
     missingEvidence.unshift(`First broken link: ${report.linkageAnalysis.firstBrokenLink}`);

@@ -158,7 +158,7 @@ export function generatePlanningGateQuestions(input: {
 
   for (const q of input.gateInput.unifiedIntakeAnalysis?.intakeRecommendations ?? []) {
     if (q.priority === 'CRITICAL' || q.priority === 'HIGH') {
-      push(q.title, 'INTAKE', q.priority, q.evidence);
+      push(q.title, 'INTAKE', q.priority, [...q.evidence]);
     }
   }
 

@@ -38,6 +38,44 @@ export function buildConnectedBuildExecutionReportMarkdown(
     `- expected artifacts: ${report.buildMaterialization.expectedArtifacts.length}`,
     `- workspace targets: ${report.buildMaterialization.workspaceTargets.join(', ') || 'none'}`,
     '',
+  ];
+
+  if (report.artifactToFileProof) {
+    const proof = report.artifactToFileProof;
+    lines.push('## BUILD Artifact-to-File Materialization');
+    lines.push('');
+    lines.push(`- materialization attempted: **${proof.materializationAttempted ? 'YES' : 'NO'}**`);
+    lines.push(`- workspace path: \`${proof.workspacePath}\``);
+    lines.push(`- planId: ${proof.planId}`);
+    lines.push(`- buildManifestId: ${proof.buildManifestId}`);
+    lines.push(`- proof level: **${proof.proofLevel}**`);
+    lines.push(`- expected artifacts: ${proof.expectedArtifactCount}`);
+    lines.push(`- materialized files: ${proof.materializedFileCount}`);
+    lines.push(`- missing artifacts: ${proof.missingArtifactCount}`);
+    lines.push('');
+    lines.push('### Materialized files');
+    lines.push('');
+    if (proof.materializedFiles.length === 0) {
+      lines.push('- none');
+    } else {
+      for (const file of proof.materializedFiles.slice(0, 16)) {
+        lines.push(`- ${file}`);
+      }
+    }
+    lines.push('');
+    lines.push('### Missing files');
+    lines.push('');
+    if (proof.missingArtifacts.length === 0) {
+      lines.push('- none');
+    } else {
+      for (const item of proof.missingArtifacts.slice(0, 16)) {
+        lines.push(`- ${item}`);
+      }
+    }
+    lines.push('');
+  }
+
+  lines.push(
     '## Generated File Evidence',
     '',
     `- proofLevel: ${report.generatedFileEvidence.proofLevel}`,
@@ -70,7 +108,7 @@ export function buildConnectedBuildExecutionReportMarkdown(
     '',
     '## Missing Evidence',
     '',
-  ];
+  );
 
   for (const item of report.missingEvidence) {
     lines.push(`- ${item}`);
@@ -104,10 +142,14 @@ export function buildConnectedBuildExecutionReportMarkdown(
 }
 
 export function formatConnectedBuildExecutionSummary(report: ConnectedBuildExecutionReport): string {
+  const materializationNote = report.artifactToFileProof
+    ? `, artifact-to-file ${report.artifactToFileProof.proofLevel} @ ${report.artifactToFileProof.workspacePath}`
+    : '';
   return (
     `Connected Build Execution: ${report.proofLevel} — ` +
     `materialization ${report.buildMaterialization.materializationState}, ` +
     `linkage ${report.linkageAnalysis.linkageConnected ? 'connected' : 'broken'} ` +
-    `(${report.generatedFileEvidence.fileCount}/${report.buildMaterialization.expectedArtifacts.length} artifacts).`
+    `(${report.generatedFileEvidence.fileCount}/${report.buildMaterialization.expectedArtifacts.length} artifacts)` +
+    `${materializationNote}.`
   );
 }

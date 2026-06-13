@@ -72,6 +72,9 @@ const sampleRun = await simulateChatStressResponse({
   scenario: listChatStressScenarios(1)[0]!,
   rootDir: ROOT,
 });
+if (!sampleRun) {
+  throw new Error('sampleRun missing from simulateChatStressResponse');
+}
 assert('captures actual answer', sampleRun.finalAnswer.length > 10, String(sampleRun.finalAnswer.length));
 assert('uses command-center+llm path', sampleRun.brainPath === 'command-center-brain+llm-chat-brain', sampleRun.brainPath);
 
@@ -102,10 +105,10 @@ if (withFailures.length >= 2) {
 const weakSample = report.evaluations.find((entry) => entry.weak || !entry.passed);
 assert(
   'failed/weak detail fields',
-  !weakSample ||
+  weakSample == null ||
     (Boolean(weakSample.prompt) &&
       Boolean(weakSample.actualAnswer) &&
-      (weakSample.failureReasons.length > 0 || weakSample.recommendedFix)),
+      (weakSample.failureReasons.length > 0 || Boolean(weakSample.recommendedFix))),
   weakSample?.scenarioId ?? 'none',
 );
 

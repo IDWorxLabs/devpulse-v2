@@ -6,7 +6,7 @@ import { buildWorkspaceSnapshot } from '../../../workspace-intelligence/workspac
 import type { ContextSection } from '../context-hydration-types.js';
 
 export function retrieveWorkspaceContext(): ContextSection[] {
-  const snapshot = buildWorkspaceSnapshot('');
+  const snapshot = buildWorkspaceSnapshot();
   const active = snapshot.workspaces.find((w) => w.active) ?? snapshot.workspaces[0];
 
   const sections: ContextSection[] = [
@@ -28,7 +28,7 @@ export function retrieveWorkspaceContext(): ContextSection[] {
       readOnly: true,
       id: 'workspace-risks',
       label: 'Workspace risks',
-      content: snapshot.risks.slice(0, 4).map((r) => `${r.riskType}: ${r.description}`).join('; '),
+      content: snapshot.risks.slice(0, 4).map((r) => `${r.riskType}: ${r.summary}`).join('; '),
       confidence: 'MEDIUM',
       proofLevel: 'PARTIAL',
       source: 'WORKSPACE',

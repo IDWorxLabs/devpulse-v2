@@ -131,10 +131,10 @@ export function retrieveDevPulseIntelligenceSnapshot(rootDir?: string): DevPulse
 
   const requirementSummary = getLatestRequirementSummary();
   let requirementReality = unknown('Requirement Reality');
-  if (requirementSummary?.trim()) {
+  if (requirementSummary?.summary?.trim()) {
     requirementReality = {
       status: 'AVAILABLE',
-      detail: requirementSummary.slice(0, 160),
+      detail: requirementSummary.summary.slice(0, 160),
       source: 'requirement-brain-bridge',
     };
     sourcesUsed.push('Project Memory / Requirements');
@@ -147,7 +147,7 @@ export function retrieveDevPulseIntelligenceSnapshot(rootDir?: string): DevPulse
   if (launchCouncil) {
     launchCouncilSnap = {
       status: `${launchCouncil.overallScore}/100`,
-      detail: launchCouncil.verdict,
+      detail: launchCouncil.readinessState,
       source: 'launch-council-history',
     };
     sourcesUsed.push('Launch Council');
@@ -158,7 +158,7 @@ export function retrieveDevPulseIntelligenceSnapshot(rootDir?: string): DevPulse
   if (launchReadiness) {
     launchReadinessSnap = {
       status: launchReadiness.readinessState,
-      detail: `${launchReadiness.readinessScore}/100`,
+      detail: `${launchReadiness.launchReadinessAuthorityScore}/100`,
       source: 'launch-readiness-authority-history',
     };
     sourcesUsed.push('Launch Readiness Authority');

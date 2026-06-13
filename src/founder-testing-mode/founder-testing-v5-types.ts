@@ -68,6 +68,8 @@ export interface FounderTestV5Report {
   digitalFounderBoard: import('../digital-founder-board/digital-founder-board-types.js').DigitalFounderBoardAssessment;
   verdict: string;
   reportMarkdown: string;
+  launchReadiness?: import('../founder-test-launch-readiness/founder-test-launch-readiness-types.js').FounderTestLaunchReadinessReport;
+  founderTestLaunchReadiness?: import('../founder-test-launch-readiness/founder-test-launch-readiness-types.js').FounderTestLaunchReadinessReport;
 }
 
 export interface RunFounderTestingModeV5Input {
@@ -76,4 +78,5 @@ export interface RunFounderTestingModeV5Input {
   liveResults?: import('./founder-testing-types.js').LiveScreenResultInput[];
   liveSection?: string;
   repositoryTypecheckReality?: import('../repository-typecheck-reality/repository-typecheck-reality-types.js').RepositoryTypecheckAssessment;
+  skipRepositoryTypecheckBaseline?: boolean;
 }

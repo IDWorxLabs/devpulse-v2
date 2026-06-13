@@ -124,7 +124,7 @@ const failureMarkdown = buildFounderTestRuntimeFailureReport({
     handlerAlive: false,
     postTimedOut: false,
     stage2CompletionGap: false,
-  } as Parameters<typeof buildFounderTestRuntimeFailureReport>[0]['snapshot'],
+  } as unknown as Parameters<typeof buildFounderTestRuntimeFailureReport>[0]['snapshot'],
   errorMessage: 'simulated failure',
 });
 

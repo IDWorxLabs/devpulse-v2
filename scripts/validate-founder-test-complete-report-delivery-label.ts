@@ -112,7 +112,7 @@ const pending = buildCompleteFounderTestResultPendingResponse(
     progress: { elapsedMs: 120_000, totalStages: 11, currentStageOrder: 11, currentStageLabel: 'Complete' },
     stages: [],
     elapsedMs: 120_000,
-  } as Parameters<typeof buildCompleteFounderTestResultPendingResponse>[0],
+  } as unknown as Parameters<typeof buildCompleteFounderTestResultPendingResponse>[0],
   'complete-delivery-run',
 );
 assert('pending response state COMPLETE', pending.state === 'COMPLETE', String(pending.state));
@@ -133,7 +133,7 @@ assert(
       progress: { elapsedMs: 1000, totalStages: 11, currentStageOrder: 11, currentStageLabel: 'Complete' },
       stages: [{ stageId: 'COMPLETE', label: 'Complete', order: 11, status: 'PASSED' }],
       elapsedMs: 1000,
-    } as Parameters<typeof buildFounderTestCompletePreparingDiagnosticMarkdown>[0]['snapshot'],
+    } as unknown as Parameters<typeof buildFounderTestCompletePreparingDiagnosticMarkdown>[0]['snapshot'],
   }).includes('Runtime Failure Report'),
   'diagnostic',
 );

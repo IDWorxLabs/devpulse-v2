@@ -1,6 +1,6 @@
 /**
  * Connected Build Execution — materialization proof authority.
- * Read-only — scans filesystem for real artifact evidence; does not generate code.
+ * Scans filesystem for artifact evidence; optionally materializes bounded build gaps.
  */
 
 import { createHash } from 'node:crypto';
@@ -10,6 +10,10 @@ import {
 } from '../requirements-to-plan-execution-contract/index.js';
 import type { BuildReadyExecutionContract } from '../requirements-to-plan-execution-contract/requirements-to-plan-contract-types.js';
 import { analyzeArtifactEvidence } from './artifact-evidence-analyzer.js';
+import {
+  computeArtifactToFileProof,
+  materializeBuildProofGapArtifacts,
+} from './build-proof-gap-materializer.js';
 import {
   deriveMaterializationStateFromEvidence,
   materializeBuildContractExpectations,
@@ -26,6 +30,7 @@ import { recordConnectedBuildExecutionAssessment } from './connected-build-execu
 import { buildConnectedBuildExecutionReportMarkdown } from './connected-build-execution-report-builder.js';
 import type {
   AssessConnectedBuildExecutionInput,
+  BuildArtifactToFileProof,
   BuildExecutionProofLevel,
   ConnectedBuildExecutionArtifacts,
   ConnectedBuildExecutionAssessment,
@@ -109,6 +114,7 @@ function buildEmptyReport(assessmentId: string, reason: string): ConnectedBuildE
     assessmentId,
     generatedAt: new Date().toISOString(),
     proofLevel: 'NOT_PROVEN',
+    artifactToFileProof: null,
     buildMaterialization: emptyMaterialization,
     generatedFileEvidence: {
       readOnly: true,
@@ -196,14 +202,36 @@ export function assessConnectedBuildExecution(
   }
 
   const materialization = materializeBuildContractExpectations(contract);
+
+  let artifactToFileProof: BuildArtifactToFileProof | null = null;
+  const shouldMaterialize =
+    input.attemptBuildProofGapMaterialization !== false &&
+    input.observedEvidence === undefined &&
+    contract.readinessState === 'BUILD_READY';
+
+  if (shouldMaterialize) {
+    artifactToFileProof = materializeBuildProofGapArtifacts({
+      projectRootDir: rootDir,
+      contract,
+    });
+  } else if (input.observedEvidence === undefined) {
+    artifactToFileProof = computeArtifactToFileProof({
+      contract,
+      projectRootDir: rootDir,
+      materializationAttempted: false,
+    });
+  }
+
   const scanned = scanObservedFileEvidence(rootDir);
-  const observed = mergeObservedEvidence(scanned, input.observedEvidence);
+  const observed =
+    input.observedEvidence !== undefined ? input.observedEvidence : scanned;
   const workspacePrefix = `${WORKSPACE_ROOT_DIR}/${contract.contractId}`;
 
   const generatedFileEvidence = analyzeGeneratedFiles({
     rootDir,
     expectedPaths: materialization.expectedFiles,
     observed,
+    verifyOnDisk: input.observedEvidence === undefined,
   });
 
   const buildManifest = analyzeBuildManifest({
@@ -296,6 +324,7 @@ export function assessConnectedBuildExecution(
     assessmentId,
     generatedAt: new Date().toISOString(),
     proofLevel,
+    artifactToFileProof,
     buildMaterialization,
     generatedFileEvidence,
     buildManifest,

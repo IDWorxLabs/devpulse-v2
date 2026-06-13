@@ -222,7 +222,7 @@ const completenessFixture = {
   completenessCategory: 'READY_WITH_GAPS' as const,
   readinessScore: 88,
   projectRequirementReadiness: 'READY_WITH_GAPS' as const,
-  missingRequirements: { readOnly: true as const, missingScreens: [], missingFlows: [], missingBusinessLogic: [], unclearRequirements: [] },
+  missingRequirements: [],
   riskLevel: 'LOW' as const,
   confidenceScore: 85,
   clarifyingQuestions: [],

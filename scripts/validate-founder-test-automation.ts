@@ -189,13 +189,24 @@ const requirementCompletenessFixture = {
   completenessCategory: 'PARTIAL' as const,
   readinessScore: 48,
   projectRequirementReadiness: 'NEEDS_CLARIFICATION' as const,
-  missingRequirements: {
-    readOnly: true as const,
-    missingScreens: ['LOGIN_OR_SIGNIN_SCREEN_FOR_ONBOARDING_FLOW'],
-    missingFlows: ['CHECKOUT_WORKFLOW_UNDEFINED'],
-    missingBusinessLogic: [],
-    unclearRequirements: [],
-  },
+  missingRequirements: [
+    {
+      readOnly: true as const,
+      domain: 'UI_REQUIREMENTS' as const,
+      gapId: 'gap-login',
+      description: 'LOGIN_OR_SIGNIN_SCREEN_FOR_ONBOARDING_FLOW',
+      severity: 'HIGH' as const,
+      evidence: ['LOGIN_NOT_DEFINED'],
+    },
+    {
+      readOnly: true as const,
+      domain: 'WORKFLOW' as const,
+      gapId: 'gap-checkout',
+      description: 'CHECKOUT_WORKFLOW_UNDEFINED',
+      severity: 'HIGH' as const,
+      evidence: ['CHECKOUT_NOT_DEFINED'],
+    },
+  ],
   riskLevel: 'HIGH' as const,
   confidenceScore: 64,
   clarifyingQuestions: [
@@ -208,7 +219,7 @@ const requirementCompletenessFixture = {
     },
   ],
   safeToProceed: false,
-};
+} as import('../src/requirement-completeness-intelligence/requirement-completeness-types.js').RequirementCompletenessAnalysis;
 
 resetFounderTestAutomationModuleForTests();
 resetFounderTestAutomationHistoryForTests();

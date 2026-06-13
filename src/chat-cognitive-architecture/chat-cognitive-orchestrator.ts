@@ -243,7 +243,7 @@ export function generateChatCognitiveResponse(input: ChatCognitiveInput): ChatCo
 }
 
 export function assessChatCognitiveArchitecture(
-  input: ChatCognitiveInput & {
+  input: Partial<ChatCognitiveInput> & {
     responseProvider?: (message: string) => string;
   } = {},
 ): ChatCognitiveArchitectureAssessment {

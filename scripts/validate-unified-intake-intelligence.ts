@@ -84,9 +84,15 @@ const voiceMobileFixture = {
     featureInventory: ['Screen: dashboard'],
     confidenceScore: 82,
   },
-  missingRequirements: { readOnly: true as const, missingScreens: [], missingFlows: [], missingBusinessLogic: [], unclearRequirements: [] },
+  missingRequirements: {
+    readOnly: true as const,
+    missingScreens: [],
+    missingFlows: [],
+    missingBusinessLogic: [],
+    unclearRequirements: [],
+  },
   clarifyingQuestions: [],
-};
+} as import('../src/voice-notes-intelligence/voice-notes-types.js').VoiceNotesAnalysis;
 
 const visualMobileFixture = {
   readOnly: true as const,
@@ -136,7 +142,7 @@ const completenessFixture = {
   completenessCategory: 'READY_WITH_GAPS' as const,
   readinessScore: 78,
   projectRequirementReadiness: 'READY_WITH_GAPS' as const,
-  missingRequirements: { readOnly: true as const, missingScreens: [], missingFlows: [], missingBusinessLogic: [], unclearRequirements: [] },
+  missingRequirements: [],
   riskLevel: 'LOW' as const,
   confidenceScore: 75,
   clarifyingQuestions: [],
@@ -180,7 +186,7 @@ const alignedAnalysis = assessUnifiedIntake({
     userRoles: ['admin', 'user'],
     workflows: ['onboarding', 'checkout', 'authentication'],
     integrations: ['Stripe'],
-    platformTargets: ['iOS', 'Android'],
+    platformTargets: ['IOS', 'ANDROID'] as const,
     dataEntities: ['user', 'order'],
     businessRules: ['Admin must approve checkout'],
   },

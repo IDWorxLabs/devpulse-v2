@@ -271,7 +271,7 @@ export interface AssessScaleReadinessRealityInput {
   postLaunchEvidenceFixture?: import('../post-launch-reality-authority/post-launch-reality-types.js').PostLaunchEvidenceBundle | null;
   adoptionEvidenceFixture?: import('../adoption-reality-authority/adoption-reality-types.js').AdoptionEvidenceBundle | null;
   revenueEvidenceFixture?: import('../revenue-reality-authority/revenue-reality-types.js').RevenueEvidenceBundle | null;
-  evolutionEvidenceFixture?: import('../product-evolution-reality-authority/product-evolution-reality-types.js').Partial<
+  evolutionEvidenceFixture?: Partial<
     import('../product-evolution-reality-authority/product-evolution-reality-types.js').EvolutionEvidenceBundle
   > | null;
   /** Revenue alone — must not create SCALE_READY. */

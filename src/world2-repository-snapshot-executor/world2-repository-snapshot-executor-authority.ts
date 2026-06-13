@@ -105,7 +105,10 @@ function resolveInputSnapshot(
   input: AssessWorld2RepositorySnapshotExecutorInput,
 ): World2SnapshotExecutorInputSnapshot {
   const repositorySnapshotAssessment =
-    input.repositorySnapshotAssessment ?? assessWorld2RepositorySnapshot(input);
+    input.repositorySnapshotAssessment ??
+    assessWorld2RepositorySnapshot(
+      input as import('../world2-repository-snapshot/world2-repository-snapshot-types.js').AssessWorld2RepositorySnapshotInput,
+    );
 
   const instantiatorAssessment = repositorySnapshotAssessment.inputSnapshot.instantiatorAssessment;
   const creatorAssessment = instantiatorAssessment.inputSnapshot.creatorAssessment;

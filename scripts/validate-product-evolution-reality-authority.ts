@@ -91,6 +91,7 @@ const crmPrompt =
 function getObservedPostLaunchFixture() {
   const now = new Date().toISOString();
   return {
+    readOnly: true as const,
     traffic: {
       readOnly: true as const,
       evidenceSource: 'analytics-reports',
@@ -149,6 +150,7 @@ function getObservedPostLaunchFixture() {
 function getObservedAdoptionFixture() {
   const now = new Date().toISOString();
   return {
+    readOnly: true as const,
     repeatUsage: {
       readOnly: true as const,
       evidenceSource: 'repeat-session-reports',
@@ -198,6 +200,7 @@ function getObservedAdoptionFixture() {
 function getObservedRevenueFixture() {
   const now = new Date().toISOString();
   return {
+    readOnly: true as const,
     revenue: {
       readOnly: true as const,
       evidenceSource: 'payment-reports',

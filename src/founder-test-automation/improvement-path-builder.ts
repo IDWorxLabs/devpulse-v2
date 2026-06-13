@@ -51,7 +51,7 @@ export function buildImprovementPath(input: {
       authBlocker.explanation,
       authBlocker.priority,
       authBlocker.blockerId,
-      authBlocker.evidence,
+      authBlocker.evidence ? [...authBlocker.evidence] : [],
     );
   }
 
@@ -65,7 +65,11 @@ export function buildImprovementPath(input: {
       onboardingBlocker?.explanation ?? onboardingRec?.rationale ?? 'Onboarding evidence is incomplete.',
       onboardingBlocker?.priority ?? 'HIGH',
       onboardingBlocker?.blockerId ?? onboardingRec?.relatedBlockerId ?? null,
-      onboardingBlocker?.evidence ?? onboardingRec?.evidence ?? ['ONBOARDING_GAP'],
+      onboardingBlocker?.evidence
+        ? [...onboardingBlocker.evidence]
+        : onboardingRec?.evidence
+          ? [...onboardingRec.evidence]
+          : ['ONBOARDING_GAP'],
     );
   }
 
@@ -78,7 +82,7 @@ export function buildImprovementPath(input: {
       navBlocker.explanation,
       navBlocker.priority,
       navBlocker.blockerId,
-      navBlocker.evidence,
+      navBlocker.evidence ? [...navBlocker.evidence] : [],
     );
   }
 
@@ -89,7 +93,7 @@ export function buildImprovementPath(input: {
       blocker.explanation,
       blocker.priority,
       blocker.blockerId,
-      blocker.evidence,
+      blocker.evidence ? [...blocker.evidence] : [],
     );
     if (steps.length >= 8) break;
   }

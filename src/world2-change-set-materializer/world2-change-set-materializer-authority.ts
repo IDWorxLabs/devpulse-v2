@@ -101,7 +101,10 @@ function resolveInputSnapshot(
   input: AssessWorld2ChangeSetMaterializerInput,
 ): World2ChangeSetMaterializerInputSnapshot {
   const snapshotMaterializerAssessment =
-    input.snapshotMaterializerAssessment ?? assessWorld2RepositorySnapshotMaterializer(input);
+    input.snapshotMaterializerAssessment ??
+    assessWorld2RepositorySnapshotMaterializer(
+      input as import('../world2-repository-snapshot-materializer/world2-repository-snapshot-materializer-types.js').AssessWorld2RepositorySnapshotMaterializerInput,
+    );
 
   const creator =
     snapshotMaterializerAssessment.inputSnapshot.instantiatorAssessment.inputSnapshot

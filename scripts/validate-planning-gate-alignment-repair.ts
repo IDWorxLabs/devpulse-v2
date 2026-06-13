@@ -96,7 +96,7 @@ function buildMinimalPlanningBrief(): PlanningBrief {
     planningBriefConfidence: 0,
     planningBriefQuality: 'PARTIAL',
     planningBriefReadiness: 'NOT_READY',
-  };
+  } as unknown as PlanningBrief;
 }
 
 function buildMinimalArchitectureBrief(): ArchitectureBrief {
@@ -120,7 +120,7 @@ function buildMinimalArchitectureBrief(): ArchitectureBrief {
     architectureBriefConfidence: 0,
     architectureBriefQuality: 'PARTIAL',
     architectureBriefReadiness: 'NOT_READY',
-  };
+  } as unknown as ArchitectureBrief;
 }
 
 function buildMinimalBuildPlan(): BuildPlan {
@@ -145,7 +145,7 @@ function buildMinimalBuildPlan(): BuildPlan {
     buildPlanReadiness: 'NOT_READY',
     buildPlanConfidence: 0,
     evidenceSources: ['TYPED_PROMPT'],
-  };
+  } as unknown as BuildPlan;
 }
 
 function buildStrongSweep(): FounderTestRealitySweepReport {
@@ -182,7 +182,7 @@ function buildStrongSweep(): FounderTestRealitySweepReport {
     inputSnapshot: {
       readOnly: true,
       founderTestAssessment: null,
-      founderTestExecutionProofAssessment: null,
+      founderExecutionProofAssessment: null,
       founderTestLaunchReadinessAssessment: null,
       founderAcceptanceAssessment: null,
       launchCouncilAssessment: null,
@@ -355,20 +355,20 @@ const clarificationGaps = buildKnownGaps({
         readOnly: true,
         planningReadinessCategory: 'NEEDS_CLARIFICATION',
         planningReadinessScore: 55,
-        summary: 'Needs clarification',
       },
       planningGateExplanation: {
         readOnly: true,
         confidence: 92,
         summary: 'Clarification required',
-        rationale: 'Missing scope',
-        evidenceHighlights: [],
+        evidenceUsed: [],
+        risksFound: [],
+        missingInformation: ['Missing scope'],
       },
       planningRiskAnalysis: {
         readOnly: true,
         riskCount: 1,
         risks: [],
-        highestSeverity: 'HIGH',
+        overallRiskLevel: 'HIGH',
       },
       planningGateQuestions: [
         {
@@ -390,10 +390,9 @@ const clarificationGaps = buildKnownGaps({
       ],
       evidenceSufficiency: {
         readOnly: true,
-        sufficient: false,
-        coverageScore: 60,
-        dimensionResults: [],
-        missingDimensions: [],
+        evidenceSufficiencyScore: 60,
+        dimensions: [],
+        activeSourceCount: 1,
       },
       safeToPlan: false,
     },
@@ -407,6 +406,10 @@ const clarificationGaps = buildKnownGaps({
     businessRules: [],
     integrations: [],
     platforms: ['WEB'],
+    productType: 'WEB_APP',
+    productName: 'Fixture Product',
+    objective: 'Validate planning gate alignment',
+    targetUsers: ['founder'],
   },
 });
 const clarificationPreserved = clarificationGaps.filter((gap) => gap.category === 'CLARIFICATION_REQUEST');
@@ -515,7 +518,8 @@ assert(
 );
 assert(
   '9 capReadinessToGatePermission helper',
-  capReadinessToGatePermission('REQUEST_CLARIFICATION', 'PLANNING_BRIEF', 'PLANNING_READY') === 'DRAFT_READY',
+  (capReadinessToGatePermission('REQUEST_CLARIFICATION', 'PLANNING_BRIEF', 'PLANNING_READY') as string) ===
+    'DRAFT_READY',
   'DRAFT_READY',
 );
 

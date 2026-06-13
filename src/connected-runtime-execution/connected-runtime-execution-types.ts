@@ -10,7 +10,7 @@ import type { ExecutionProofAssessment } from '../execution-proof-evolution/exec
 import type { ExecutionPackageRuntimeReport } from '../execution-runtime/types.js';
 import type { ExecutionVerificationReport } from '../execution-verification/types.js';
 import type { FounderAcceptanceAssessment } from '../founder-acceptance-gate/founder-acceptance-gate-types.js';
-import type { World2ControlledExecutionRuntimeAssessment } from '../world2-controlled-execution-runtime/world2-controlled-execution-runtime-types.js';
+import type { World2RuntimeAssessment } from '../world2-controlled-execution-runtime/world2-controlled-execution-runtime-types.js';
 
 /** Real build output contract (Phase 25.27 Connected Build Execution). */
 export interface ConnectedBuildExecutionContract {
@@ -105,7 +105,7 @@ export interface ConnectedRuntimeExecutionInputSnapshot {
   connectedRuntimeActivationAssessment: ConnectedRuntimeActivationAssessment;
   executionPackageRuntimeReport: ExecutionPackageRuntimeReport;
   executionVerificationReport: ExecutionVerificationReport;
-  world2RuntimeAssessment: World2ControlledExecutionRuntimeAssessment;
+  world2RuntimeAssessment: World2RuntimeAssessment;
   executionProofAssessment: ExecutionProofAssessment | null;
   founderAcceptanceAssessment: FounderAcceptanceAssessment | null;
   missingAuthorities: string[];

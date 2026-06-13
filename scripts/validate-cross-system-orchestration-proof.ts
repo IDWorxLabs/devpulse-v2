@@ -263,7 +263,7 @@ assert(
 const readinessSnapshots = extractAuthoritySnapshots({
   unifiedIntakeAnalysis: {
     ...intake5,
-    intakeReadinessCategory: 'NEEDS_CLARIFICATION',
+    intakeReadinessCategory: 'PARTIAL_UNDERSTANDING',
     unifiedIntakeConfidence: 55,
   },
   planningBrief: {

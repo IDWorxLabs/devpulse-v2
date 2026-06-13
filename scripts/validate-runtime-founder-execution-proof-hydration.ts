@@ -131,7 +131,7 @@ function buildProvenWorkspaceAssessment(): ConnectedWorkspaceCreationAssessment 
       inputSnapshot: {} as never,
       cacheKey: 'hydration-ws',
     },
-  };
+  } as unknown as ConnectedWorkspaceCreationAssessment;
 }
 
 function buildProvenRuntimeAssessment(
@@ -210,7 +210,7 @@ function buildProvenRuntimeAssessment(
       },
       cacheKey: 'hydration-runtime',
     },
-  };
+  } as unknown as ConnectedRuntimeExecutionAssessment;
 }
 
 function buildProvenPreviewAssessment(
@@ -274,7 +274,7 @@ function buildProvenPreviewAssessment(
       },
       cacheKey: 'hydration-preview',
     },
-  };
+  } as unknown as ConnectedLivePreviewExecutionAssessment;
 }
 
 function buildProvenVerificationAssessment(
@@ -356,7 +356,7 @@ function buildProvenVerificationAssessment(
       },
       cacheKey: 'hydration-verification',
     },
-  };
+  } as unknown as ConnectedVerificationExecutionAssessment;
 }
 
 function buildFullProvenChainInput() {

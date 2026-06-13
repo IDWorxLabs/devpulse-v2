@@ -33,7 +33,6 @@ import {
   type FounderSensemakingAssessment,
 } from '../src/founder-sensemaking-engine/index.js';
 import { readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
 import {
   buildVerificationResultsFromWorkspace,
   type VerificationResultsVisibilityAssessment,

@@ -598,7 +598,7 @@ export function assessWorld2RepositorySnapshotMaterializer(
       pathMatchesPatterns(p, WORLD2_PRODUCTION_PATH_PATTERNS),
     ),
     unboundedRootCopy: includedPaths.some((p) => isUnboundedRootCopyPath(p)),
-    repositoryCopyPerformed: request?.repositoryCopyPerformed === true,
+    repositoryCopyPerformed: (request?.repositoryCopyPerformed as boolean | undefined) === true,
     liveFileReadPerformed: false,
   };
 

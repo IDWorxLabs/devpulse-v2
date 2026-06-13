@@ -19,6 +19,12 @@ import { CHAT_COGNITIVE_LAUNCH_RELIABILITY_THRESHOLD } from '../chat-cognitive-a
 import { evaluateChatIntelligenceScenario } from './chat-intelligence-analyzers.js';
 import { CHAT_INTELLIGENCE_SCENARIOS } from './chat-intelligence-scenarios.js';
 import { evaluateChatSelfEvolutionTrigger } from './chat-self-evolution-trigger.js';
+import {
+  getOperationalEvidenceSnapshot,
+  resetOperationalEvidenceSnapshotCacheForTests,
+  resolveOperationalSelfKnowledgeChatResponse,
+} from '../chat-operational-self-knowledge/index.js';
+import type { OperationalEvidenceSnapshot } from '../chat-operational-self-knowledge/chat-operational-self-knowledge-types.js';
 import type {
   AssessChatIntelligenceRealityInput,
   ChatIntelligenceRealityAssessment,
@@ -27,8 +33,7 @@ import type {
   ChatLaunchVerdict,
 } from './chat-intelligence-reality-types.js';
 
-const OPERATIONAL_SELF_AWARENESS_STANDARD =
-  'Operational self-awareness means the chat knows its role, limits, connected/disconnected systems, unverified claims, weak intelligence, and when escalation is needed — not consciousness or sentience.';
+import { OPERATIONAL_SELF_AWARENESS_STANDARD } from '../chat-operational-self-knowledge/chat-operational-self-knowledge-registry.js';
 
 function clamp(n: number): number {
   return Math.max(0, Math.min(100, Math.round(n)));
@@ -62,14 +67,24 @@ export function assessChatIntelligenceReality(
   input: AssessChatIntelligenceRealityInput = {},
 ): ChatIntelligenceRealityAssessment {
   const deadlineMs = input.deadlineMs ?? 20_000;
+  const rootDir = input.rootDir ?? process.cwd();
   const start = Date.now();
   const scenarioResults: ChatIntelligenceScenarioResult[] = [];
+
+  resetOperationalEvidenceSnapshotCacheForTests();
+  const operationalSnapshot: OperationalEvidenceSnapshot = input.operationalEvidenceSnapshot ??
+    getOperationalEvidenceSnapshot(rootDir);
 
   const responseProvider =
     input.responseProvider ??
     ((prompt: string) => {
       const brain = processBrainRequest({ message: prompt, timestamp: Date.now() });
-      return brain.brainResponse ?? '';
+      return resolveOperationalSelfKnowledgeChatResponse({
+        message: prompt,
+        draftResponse: brain.brainResponse,
+        rootDir,
+        snapshot: operationalSnapshot,
+      });
     });
 
   resetChatCognitiveSelfEvolutionForTests();
@@ -151,6 +166,7 @@ export function assessChatIntelligenceReality(
     founderProofNotes: CHAT_INTELLIGENCE_PROOF_NOTES,
     selfEvolution,
     operationalSelfAwarenessStandard: OPERATIONAL_SELF_AWARENESS_STANDARD,
+    operationalEvidenceSnapshot: operationalSnapshot,
     cognitiveArchitecture,
     cacheKey: buildCacheKey(scenarioResults),
   };
