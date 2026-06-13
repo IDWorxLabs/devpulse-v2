@@ -268,8 +268,11 @@ ${assessment.founderConclusion}
   };
 }
 
-export function assessFounderWorkflowReality(rootDir: string): FounderWorkflowRealityAssessment {
-  const upstream = collectUpstreamRealityBundle(rootDir);
+export function assessFounderWorkflowReality(
+  rootDir: string,
+  options?: { builderExecutionConnected?: boolean },
+): FounderWorkflowRealityAssessment {
+  const upstream = collectUpstreamRealityBundle(rootDir, options?.builderExecutionConnected ?? false);
   const workflowModuleEvidence = detectWorkflowModulePresenceEvidence(rootDir);
   const input: AssessFounderWorkflowRealityInput = { rootDir, upstream, workflowModuleEvidence };
   const analyzers = runAllFounderWorkflowRealityAnalyzers(input);

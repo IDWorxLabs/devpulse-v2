@@ -10,6 +10,9 @@ import {
   ORCHESTRATION_FLOW,
   REQUIRED_ORCHESTRATION_AUTHORITIES,
 } from './founder-test-launch-readiness-registry.js';
+import { buildChatStressSimulationReportMarkdown } from '../founder-test-chat-stress-simulation/index.js';
+import { buildProductReadinessReportMarkdown } from '../founder-test-product-readiness/index.js';
+import { buildAutonomousBuildExecutionProofReportMarkdown } from '../autonomous-build-execution-proof/index.js';
 import type { FounderTestLaunchReadinessReport } from './founder-test-launch-readiness-types.js';
 
 export function buildFounderTestLaunchReadinessReportMarkdown(
@@ -67,14 +70,62 @@ export function buildFounderTestLaunchReadinessReportMarkdown(
   }
 
   lines.push('');
-  lines.push('## Execution Proof Summary');
+  lines.push('## Execution Proof Evolution (24E) Summary');
   lines.push('');
   lines.push(report.executionProofSummary);
+  lines.push('');
+  lines.push('## Founder Execution Proof (25.31) Summary');
+  lines.push('');
+  lines.push(report.founderExecutionProofSummary);
+  lines.push('');
+  lines.push('## Runtime Founder Execution Proof Hydration');
+  lines.push('');
+  lines.push(report.runtimeProofHydrationSummary);
+  lines.push('');
+  lines.push(`- hydrated: ${report.runtimeProofHydration.hydrated ? 'yes' : 'no'}`);
+  lines.push(`- source: ${report.runtimeProofHydration.source}`);
+  if (report.runtimeProofHydration.missing.length > 0) {
+    lines.push(`- missing evidence: ${report.runtimeProofHydration.missing.join(', ')}`);
+  }
+  if (report.runtimeProofHydration.warnings.length > 0) {
+    lines.push(`- warnings: ${report.runtimeProofHydration.warnings.slice(0, 5).join('; ')}`);
+  }
+  lines.push(
+    `- executionConnected source: ${report.runtimeProofHydration.executionConnectedSource}`,
+  );
   lines.push('');
   lines.push('## Founder Simulation Summary');
   lines.push('');
   lines.push(report.founderSimulationSummary);
   lines.push('');
+
+  if (report.chatStressSimulation) {
+    lines.push(buildChatStressSimulationReportMarkdown(report.chatStressSimulation));
+  } else {
+    lines.push('## Chat Stress Simulation');
+    lines.push('');
+    lines.push('Not run in this assessment.');
+    lines.push('');
+  }
+
+  if (report.productReadinessSimulation) {
+    lines.push(buildProductReadinessReportMarkdown(report.productReadinessSimulation));
+  } else {
+    lines.push('## FULL PRODUCT READINESS SIMULATION');
+    lines.push('');
+    lines.push('Not run in this assessment.');
+    lines.push('');
+  }
+
+  if (report.autonomousBuildExecutionProof) {
+    lines.push(buildAutonomousBuildExecutionProofReportMarkdown(report.autonomousBuildExecutionProof));
+  } else {
+    lines.push('## AUTONOMOUS BUILD EXECUTION PROOF');
+    lines.push('');
+    lines.push('Not run in this assessment.');
+    lines.push('');
+  }
+
   lines.push('## Requirement Reality Summary');
   lines.push('');
   lines.push(report.requirementRealitySummary);

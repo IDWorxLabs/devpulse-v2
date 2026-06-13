@@ -3,6 +3,12 @@
  * One button → one execution → one report → one founder verdict.
  */
 
+import type {
+  AssessFounderExecutionProofInput,
+  FounderExecutionProofAssessment,
+  FounderTestExecutionProofSummary,
+} from '../founder-execution-proof/founder-execution-proof-types.js';
+
 import type { FounderAcceptanceBridgeSnapshot } from '../foundation/founder-acceptance-integration-bridge.js';
 
 export type FounderTestAuthorityId =
@@ -112,6 +118,8 @@ export interface FounderTestAssessment {
   missingCapabilities: string[];
   cacheKey: string;
   portfolioAcceptanceBridge?: FounderAcceptanceBridgeSnapshot;
+  /** Unified founder execution proof summary (Phase 25.31) — set by assessFounderTestIntegration. */
+  executionProofSummary?: FounderTestExecutionProofSummary;
 }
 
 export interface FounderTestReport {
@@ -127,6 +135,12 @@ export interface RunFounderTestIntegrationInput {
   shellSources?: FounderTestShellSources;
   /** Inject authority results for tests — skips live authority execution when set. */
   authorityResults?: FounderTestAuthorityResult[];
+  /** Optional connected execution assessments for founder execution proof aggregation. */
+  founderExecutionProofInput?: AssessFounderExecutionProofInput;
+  /** Pre-assessed proof — skips initial proof pass when injected (tests). */
+  founderExecutionProofAssessment?: FounderExecutionProofAssessment;
+  /** Pre-resolved executionConnected — skips resolver when injected (tests). */
+  resolvedExecutionConnected?: boolean;
 }
 
 export interface FounderTestHistorySummary {

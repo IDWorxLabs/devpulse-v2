@@ -57,6 +57,44 @@ export function buildFounderTestIntegrationReportMarkdown(report: FounderTestRep
   lines.push(`**${assessment.verdict}**`);
   lines.push('');
 
+  lines.push('## Founder Execution Proof');
+  lines.push('');
+  if (assessment.executionProofSummary) {
+    const proof = assessment.executionProofSummary;
+    lines.push(`| Field | Value |`);
+    lines.push(`|-------|-------|`);
+    lines.push(`| Founder Execution State | ${proof.founderExecutionState} |`);
+    lines.push(`| Launch Recommendation | ${proof.launchRecommendation} |`);
+    lines.push(`| Launch Confidence | ${proof.launchConfidence}/100 |`);
+    lines.push(`| Overall Founder Proof | ${proof.overallFounderProofPercent}% |`);
+    lines.push(`| Execution Completeness | ${proof.executionCompletenessPercent}% |`);
+    lines.push('');
+
+    lines.push('### Top Evidence');
+    lines.push('');
+    if (proof.topEvidence.length === 0) {
+      lines.push('- None');
+    } else {
+      for (const item of proof.topEvidence) {
+        lines.push(`- ${item}`);
+      }
+    }
+    lines.push('');
+
+    lines.push('### Execution Proof Blockers');
+    lines.push('');
+    if (proof.topBlockers.length === 0) {
+      lines.push('- None');
+    } else {
+      for (const blocker of proof.topBlockers) {
+        lines.push(`- ${blocker}`);
+      }
+    }
+  } else {
+    lines.push('- Not aggregated — re-run founder test integration');
+  }
+  lines.push('');
+
   lines.push('## Blockers');
   lines.push('');
   if (assessment.blockers.length === 0) {

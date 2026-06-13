@@ -52,6 +52,7 @@ export {
 export {
   runFounderTestLaunchReadiness,
   buildFounderTestLaunchReadinessArtifacts,
+  buildFounderTestLaunchReadinessArtifactsAsync,
   aggregateTopBlockers,
   aggregateTopWarnings,
   aggregateTopRecommendedActions,

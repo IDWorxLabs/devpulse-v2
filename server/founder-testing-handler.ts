@@ -21,7 +21,8 @@ import { assessFounderActionCenter } from '../src/founder-action-center/index.js
 import { buildProductWorkspaceSnapshot } from './product-workspace-snapshot.js';
 import { setLastVerificationResultsFromV4Report } from '../src/verification-results-visibility/index.js';
 import type { LiveScreenResultInput } from '../src/founder-testing-mode/founder-testing-types.js';
-import { buildFounderTestLaunchReadinessArtifacts } from '../src/founder-test-launch-readiness/index.js';
+import { buildFounderTestLaunchReadinessArtifactsAsync } from '../src/founder-test-launch-readiness/index.js';
+import { buildRuntimeFounderExecutionProofInputAsync } from '../src/founder-test-integration/index.js';
 import { readRequestBody } from './brain-api-handler.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -68,7 +69,7 @@ function executeUnifiedFounderTestV5(
     liveSection,
   });
   const verificationResults = setLastVerificationResultsFromV4Report(report.v4);
-  const workspace = buildProductWorkspaceSnapshot(validatorScripts);
+  const workspace = buildProductWorkspaceSnapshot(validatorScripts, { rootDir: ROOT_DIR });
   recordFounderTestChangeSnapshot(
     { ...workspace, verificationResults },
     verificationResults.summary.readinessScore,
@@ -91,8 +92,13 @@ function executeUnifiedFounderTestV5(
   };
 }
 
-function executeFounderTestLaunchReadinessOrchestration() {
-  return buildFounderTestLaunchReadinessArtifacts({ rootDir: ROOT_DIR });
+async function executeFounderTestLaunchReadinessOrchestration() {
+  const hydrated = await buildRuntimeFounderExecutionProofInputAsync(ROOT_DIR);
+  return buildFounderTestLaunchReadinessArtifactsAsync({
+    rootDir: ROOT_DIR,
+    founderExecutionProofInput: hydrated.input,
+    runtimeProofHydration: hydrated.hydration,
+  });
 }
 
 /** Primary founder validation entry — unified V5 orchestration. */
@@ -103,7 +109,7 @@ export async function handleFounderTestRunRequest(
 ): Promise<void> {
   try {
     const { liveResults, liveSection } = await parseFounderTestBody(req);
-    const launchReadinessArtifacts = executeFounderTestLaunchReadinessOrchestration();
+    const launchReadinessArtifacts = await executeFounderTestLaunchReadinessOrchestration();
     const result = executeUnifiedFounderTestV5(validatorScripts, liveResults, liveSection);
     const launchReport = launchReadinessArtifacts.founderTestLaunchReadinessAssessment.report;
 

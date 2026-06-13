@@ -201,7 +201,7 @@ export interface BrainConfirmation {
   noDeploymentPerformed: true;
   noAutoFixPerformed: true;
   noRuntimeMutation: true;
-  noExternalAiCalls: true;
+  noExternalAiCalls: boolean;
   noPersistence: true;
   noSystemReplacement: true;
 }
@@ -297,6 +297,7 @@ export interface BrainResponseResult {
   verificationReportingReports?: import('../verification-reporting-engine/verification-report-types.js').VerificationReport[];
   unifiedVerificationEntryDiagnostics?: import('../unified-verification-entry/unified-verification-types.js').UnifiedVerificationEntryDiagnostics;
   unifiedVerificationResponses?: import('../unified-verification-entry/unified-verification-types.js').VerificationResponse[];
+  llmChatBrainDiagnostics?: import('../llm-chat-brain/llm-chat-types.js').LlmChatBrainDiagnostics;
   pipelineStages: BrainPipelineStage[];
   operatorFeedEvents: OperatorFeedEvent[];
   confirmation: BrainConfirmation;

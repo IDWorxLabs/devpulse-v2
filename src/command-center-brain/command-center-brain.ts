@@ -28,6 +28,10 @@ import {
 import { resolveProductIdentityResponse } from './product-identity-responses.js';
 import { resolveRunningApplicationResponse } from './running-application-responses.js';
 import { resolveChangeIntelligenceResponse } from './change-intelligence-responses.js';
+import {
+  generateLlmBackedChatResponse,
+  toLlmChatBrainDiagnostics,
+} from '../llm-chat-brain/index.js';
 import { resolveVerificationResultsResponse } from './verification-results-responses.js';
 import { resolveFounderActionCenterResponse } from './founder-action-center-responses.js';
 import { resolveFounderSensemakingResponse } from './founder-sensemaking-responses.js';
@@ -921,6 +925,24 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
               ? crossSystemResult!.responseText
               : generateBrainResponse(message, classification, systems, roadmap);
 
+  let finalBrainResponse = brainResponse;
+  let llmChatBrainDiagnostics: import('../llm-chat-brain/llm-chat-types.js').LlmChatBrainDiagnostics | undefined;
+  if (!blocked) {
+    try {
+      const chatBrain = generateLlmBackedChatResponse({
+        message,
+        draftResponse: brainResponse,
+        timestamp,
+      });
+      if (chatBrain.finalAnswer.trim()) {
+        finalBrainResponse = chatBrain.finalAnswer;
+      }
+      llmChatBrainDiagnostics = toLlmChatBrainDiagnostics(chatBrain.metadata);
+    } catch {
+      finalBrainResponse = brainResponse;
+    }
+  }
+
   const pipelineStages = buildPipelineStages(
     blocked,
     Boolean(memoryContext?.lookupPerformed),
@@ -1228,7 +1250,7 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
   return {
     responseId: nextBrainResponseId(),
     userMessage: message,
-    brainResponse,
+    brainResponse: finalBrainResponse,
     category: classification.category,
     classification,
     systemsReferenced: referenced,
@@ -1320,6 +1342,7 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
     verificationRegistryReports,
     verificationRuntimeDiagnostics,
     verificationRuntimeReports,
+    llmChatBrainDiagnostics,
     pipelineStages,
     operatorFeedEvents,
     confirmation: {
@@ -1331,7 +1354,7 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
       noDeploymentPerformed: true,
       noAutoFixPerformed: true,
       noRuntimeMutation: true,
-      noExternalAiCalls: true,
+      noExternalAiCalls: !llmChatBrainDiagnostics?.usedLlm,
       noPersistence: true,
       noSystemReplacement: true,
     },

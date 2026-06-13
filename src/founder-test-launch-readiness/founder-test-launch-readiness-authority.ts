@@ -9,6 +9,8 @@ import type { FounderAcceptanceAssessment } from '../founder-acceptance-gate/fou
 import { evaluateFounderAcceptanceOrchestrator } from '../founder-acceptance-validation/founder-acceptance-orchestrator/index.js';
 import type { FounderAcceptanceResultBundle } from '../founder-acceptance-validation/founder-acceptance-orchestrator/index.js';
 import { assessFounderTestIntegration, resetFounderTestIntegrationModuleForTests } from '../founder-test-integration/index.js';
+import { hydrateRuntimeFounderExecutionProofInputSync } from '../founder-test-integration/runtime-founder-execution-proof-hydration.js';
+import type { RuntimeFounderExecutionProofHydration } from '../founder-test-integration/runtime-founder-execution-proof-hydration.js';
 import type {
   FounderTestAssessment,
   FounderTestAuthorityResult,
@@ -17,6 +19,21 @@ import { assessLaunchCouncil } from '../launch-council/index.js';
 import type { LaunchCouncilAssessment, LaunchCouncilAuthorityResult } from '../launch-council/index.js';
 import { recordFounderTestLaunchReadinessAssessment, resetFounderTestLaunchReadinessHistoryForTests } from './founder-test-launch-readiness-history.js';
 import { buildFounderTestLaunchReadinessReportMarkdown } from './founder-test-launch-readiness-report-builder.js';
+import {
+  runFounderTestChatStressSimulation,
+  formatChatStressSimulationSummary,
+} from '../founder-test-chat-stress-simulation/index.js';
+import type { ChatStressSimulationReport } from '../founder-test-chat-stress-simulation/chat-stress-simulation-types.js';
+import {
+  runFullProductReadinessSimulation,
+  formatProductReadinessSummary,
+} from '../founder-test-product-readiness/index.js';
+import type { ProductReadinessReport } from '../founder-test-product-readiness/product-readiness-types.js';
+import {
+  assessAutonomousBuildExecutionProof,
+  formatAutonomousBuildExecutionProofSummary,
+} from '../autonomous-build-execution-proof/index.js';
+import type { AutonomousBuildExecutionProofReport } from '../autonomous-build-execution-proof/autonomous-build-execution-proof-types.js';
 import {
   FOUNDER_TEST_LAUNCH_READINESS_CACHE_KEY_PREFIX,
   FOUNDER_TEST_LAUNCH_READINESS_CORE_QUESTION,
@@ -119,6 +136,40 @@ function authoritySummaryText(
   const blockerNote = result.blockers.length > 0 ? ` Blockers: ${result.blockers[0]}.` : '';
   const warningNote = result.warnings.length > 0 ? ` Warnings: ${result.warnings[0]}.` : '';
   return `${result.displayName} score ${result.normalizedScore}/100.${blockerNote}${warningNote}`;
+}
+
+function formatFounderExecutionProofSummary(founderTestAssessment: FounderTestAssessment): string {
+  const summary = founderTestAssessment.executionProofSummary;
+  if (!summary) {
+    return 'Founder Execution Proof (25.31): not assessed.';
+  }
+  const blockerNote =
+    summary.topBlockers.length > 0 ? ` Blockers: ${summary.topBlockers.slice(0, 2).join('; ')}.` : '';
+  return (
+    `Founder Execution Proof (25.31): ${summary.founderExecutionState} — ` +
+    `launch recommendation ${summary.launchRecommendation}; ` +
+    `overall founder proof ${summary.overallFounderProofPercent}%.${blockerNote}`
+  );
+}
+
+function formatRuntimeProofHydrationSummary(
+  hydration: RuntimeFounderExecutionProofHydration,
+  founderTestAssessment: FounderTestAssessment,
+): string {
+  const proven =
+    founderTestAssessment.executionProofSummary?.founderExecutionState === 'FOUNDER_EXECUTION_PROVEN' ||
+    founderTestAssessment.executionProofSummary?.founderExecutionState ===
+      'FOUNDER_EXECUTION_PROVEN_WITH_WARNINGS';
+  const executionConnectedSource =
+    proven && hydration.hydrated ? 'hydrated-proof' : 'not-proven';
+  const missingNote =
+    hydration.missing.length > 0 ? ` Missing: ${hydration.missing.join(', ')}.` : '';
+  const warningsNote =
+    hydration.warnings.length > 0 ? ` Warnings: ${hydration.warnings.slice(0, 3).join('; ')}.` : '';
+  return (
+    `Hydrated: ${hydration.hydrated ? 'yes' : 'no'}; source: ${hydration.source}; ` +
+    `executionConnected from ${executionConnectedSource}.${missingNote}${warningsNote}`
+  );
 }
 
 function deriveLaunchReadinessVerdict(
@@ -372,10 +423,22 @@ export function runFounderTestLaunchReadiness(
 ): FounderTestLaunchReadinessAssessment {
   const rootDir = input.rootDir ?? process.cwd();
 
+  const hydratedBundle =
+    input.runtimeProofHydration && input.founderExecutionProofInput
+      ? {
+          input: input.founderExecutionProofInput,
+          hydration: input.runtimeProofHydration,
+        }
+      : hydrateRuntimeFounderExecutionProofInputSync(rootDir, input.founderExecutionProofInput ?? {});
+
+  const founderExecutionProofInput = input.founderExecutionProofInput ?? hydratedBundle.input;
+  const runtimeProofHydration = input.runtimeProofHydration ?? hydratedBundle.hydration;
+
   const founderTestAssessment =
     input.founderTestAssessment ??
     assessFounderTestIntegration({
       rootDir,
+      founderExecutionProofInput,
     });
 
   const founderAcceptanceAssessment = assessFounderAcceptanceGate({
@@ -410,6 +473,102 @@ export function runFounderTestLaunchReadiness(
     launchCouncilAssessment,
   );
 
+  const chatStressSimulation = input.chatStressSimulation ?? null;
+  const chatBlocksLaunchReadiness = chatStressSimulation?.chatBlocksLaunchReadiness ?? false;
+  const chatStressSummary = chatStressSimulation
+    ? formatChatStressSimulationSummary(chatStressSimulation)
+    : null;
+
+  let resolvedVerdict = launchReadinessVerdict;
+  if (chatBlocksLaunchReadiness && resolvedVerdict === 'LAUNCH_READY') {
+    resolvedVerdict = 'NOT_LAUNCH_READY';
+  }
+  if (chatBlocksLaunchReadiness && resolvedVerdict === 'LAUNCH_READY_WITH_WARNINGS') {
+    resolvedVerdict = 'NOT_LAUNCH_READY';
+  }
+
+  const topBlockers = aggregateTopBlockers(
+    founderTestAssessment,
+    founderAcceptanceAssessment,
+    orchestratorBundle,
+  );
+
+  if (chatBlocksLaunchReadiness && chatStressSimulation) {
+    topBlockers.unshift({
+      readOnly: true,
+      sourceAuthority: 'Chat Stress Simulation',
+      severity: chatStressSimulation.overallScore < 70 ? 'CRITICAL' : 'HIGH',
+      explanation:
+        `Chat score ${chatStressSimulation.overallScore}/100 blocks launch readiness (threshold 85). ` +
+        `${chatStressSimulation.failedCount} failed and ${chatStressSimulation.weakCount} weak chat answers.`,
+      recommendedAction:
+        chatStressSimulation.recommendedNextChatImprovements[0] ??
+        'Review Chat Stress Simulation failures and improve grounded chat responses.',
+    });
+  }
+
+  const productReadinessSimulation = input.productReadinessSimulation ?? null;
+  const productReadinessSummary = productReadinessSimulation
+    ? formatProductReadinessSummary(productReadinessSimulation)
+    : null;
+  const productReadinessScore = productReadinessSimulation?.readinessScore ?? null;
+
+  let autonomousBuildExecutionProof: AutonomousBuildExecutionProofReport | null =
+    input.autonomousBuildExecutionProof ?? null;
+  if (!input.skipAutonomousBuildExecutionProof && !autonomousBuildExecutionProof) {
+    autonomousBuildExecutionProof = assessAutonomousBuildExecutionProof({
+      rootDir,
+      founderTestAssessment,
+    }).report;
+  }
+  const autonomousBuildExecutionProofSummary = autonomousBuildExecutionProof
+    ? formatAutonomousBuildExecutionProofSummary(autonomousBuildExecutionProof)
+    : null;
+  const executionChainConnected = autonomousBuildExecutionProof?.chainConnected ?? false;
+  const executionChainBlocksLaunch = autonomousBuildExecutionProof?.launchBlockedByChain ?? false;
+  const firstBrokenExecutionStage = autonomousBuildExecutionProof?.firstBrokenStage ?? null;
+
+  if (executionChainBlocksLaunch && autonomousBuildExecutionProof) {
+    topBlockers.unshift({
+      readOnly: true,
+      sourceAuthority: 'Autonomous Build Execution Proof',
+      severity: 'CRITICAL',
+      explanation:
+        `Execution chain NOT CONNECTED — first break at ${autonomousBuildExecutionProof.firstBrokenStage ?? 'unknown'}. ` +
+        `${autonomousBuildExecutionProof.missingEvidence.slice(0, 2).join('; ')}`,
+      recommendedAction: autonomousBuildExecutionProof.recommendedFix,
+    });
+    if (
+      resolvedVerdict === 'LAUNCH_READY' ||
+      resolvedVerdict === 'LAUNCH_READY_WITH_WARNINGS'
+    ) {
+      resolvedVerdict = 'NOT_LAUNCH_READY';
+    }
+  }
+
+  if (productReadinessSimulation?.launchBlocked) {
+    topBlockers.unshift({
+      readOnly: true,
+      sourceAuthority: 'Product Readiness Simulation',
+      severity: 'CRITICAL',
+      explanation:
+        `Product readiness ${productReadinessSimulation.readinessScore}/100 — ${productReadinessSimulation.verdict.replace(/_/g, ' ')}. Real users would hit blockers.`,
+      recommendedAction:
+        productReadinessSimulation.selfEvolution.whatShouldWeBuildNext[0] ??
+        'Review FULL PRODUCT READINESS SIMULATION failures.',
+    });
+    if (resolvedVerdict === 'LAUNCH_READY' || resolvedVerdict === 'LAUNCH_READY_WITH_WARNINGS') {
+      resolvedVerdict = 'NOT_LAUNCH_READY';
+    }
+  }
+
+  const topMissingCapabilities = dedupeStrings([
+    ...founderTestAssessment.missingCapabilities,
+    ...(chatStressSimulation?.missingCapabilities ?? []),
+    ...(productReadinessSimulation?.selfEvolution.topMissingCapabilities ?? []),
+    ...(autonomousBuildExecutionProof?.founderQuestions.mustBuildNext ?? []),
+  ]).slice(0, MAX_TOP_MISSING_CAPABILITIES);
+
   const report: FounderTestLaunchReadinessReport = {
     readOnly: true,
     advisoryOnly: true,
@@ -419,13 +578,19 @@ export function runFounderTestLaunchReadiness(
     panelState: 'COMPLETE',
     founderReadinessScore: founderTestAssessment.score.overall,
     founderAcceptanceState: founderAcceptanceAssessment.acceptanceState,
-    launchReadinessVerdict,
+    launchReadinessVerdict: resolvedVerdict,
     confidenceLevel: deriveConfidenceLevel(founderTestAssessment, founderAcceptanceAssessment),
     executionProofSummary: authoritySummaryText(
       authorityResults,
       'EXECUTION_PROOF_EVOLUTION',
       'Execution Proof Evolution (24E)',
     ),
+    founderExecutionProofSummary: formatFounderExecutionProofSummary(founderTestAssessment),
+    runtimeProofHydrationSummary: formatRuntimeProofHydrationSummary(
+      runtimeProofHydration,
+      founderTestAssessment,
+    ),
+    runtimeProofHydration,
     founderSimulationSummary: authoritySummaryText(
       authorityResults,
       'FOUNDER_SIMULATION',
@@ -454,21 +619,25 @@ export function runFounderTestLaunchReadiness(
     launchCouncilSummary: `Launch Council score ${launchCouncilAssessment.overallScore}/100 — readiness ${launchCouncilAssessment.readinessState}, ${launchCouncilAssessment.launchBlockerCount} launch blocker(s).`,
     orchestratorVerdict: orchestratorBundle.verdict,
     orchestratorScore: orchestratorBundle.score.overallScore,
-    topBlockers: aggregateTopBlockers(
-      founderTestAssessment,
-      founderAcceptanceAssessment,
-      orchestratorBundle,
-    ),
+    topBlockers: topBlockers.slice(0, MAX_TOP_BLOCKERS),
     topWarnings: aggregateTopWarnings(founderTestAssessment, founderAcceptanceAssessment),
     topRecommendedActions: aggregateTopRecommendedActions(
       founderTestAssessment,
       founderAcceptanceAssessment,
       orchestratorBundle,
     ),
-    topMissingCapabilities: dedupeStrings(founderTestAssessment.missingCapabilities).slice(
-      0,
-      MAX_TOP_MISSING_CAPABILITIES,
-    ),
+    topMissingCapabilities,
+    chatStressSimulation,
+    chatStressSummary,
+    chatBlocksLaunchReadiness,
+    productReadinessSimulation,
+    productReadinessSummary,
+    productReadinessScore,
+    autonomousBuildExecutionProof,
+    autonomousBuildExecutionProofSummary,
+    executionChainConnected,
+    executionChainBlocksLaunch,
+    firstBrokenExecutionStage,
     inputSnapshot: {
       readOnly: true,
       founderTestAssessment,
@@ -482,7 +651,7 @@ export function runFounderTestLaunchReadiness(
     },
     cacheKey: stableCacheKey(
       founderTestAssessment.run.runId,
-      launchReadinessVerdict,
+      resolvedVerdict,
       founderTestAssessment.score.overall,
     ),
   };
@@ -494,7 +663,9 @@ export function runFounderTestLaunchReadiness(
     report,
   };
 
-  recordFounderTestLaunchReadinessAssessment(assessment);
+  if (!input.skipHistoryRecording) {
+    recordFounderTestLaunchReadinessAssessment(assessment);
+  }
   return assessment;
 }
 
@@ -502,6 +673,54 @@ export function buildFounderTestLaunchReadinessArtifacts(
   input: RunFounderTestLaunchReadinessInput = {},
 ): FounderTestLaunchReadinessArtifacts {
   const founderTestLaunchReadinessAssessment = runFounderTestLaunchReadiness(input);
+  return {
+    founderTestLaunchReadinessAssessment,
+    founderTestLaunchReadinessReportMarkdown: buildFounderTestLaunchReadinessReportMarkdown(
+      founderTestLaunchReadinessAssessment.report,
+    ),
+  };
+}
+
+export async function buildFounderTestLaunchReadinessArtifactsAsync(
+  input: RunFounderTestLaunchReadinessInput = {},
+): Promise<FounderTestLaunchReadinessArtifacts> {
+  const rootDir = input.rootDir ?? process.cwd();
+
+  let autonomousBuildExecutionProof: AutonomousBuildExecutionProofReport | null =
+    input.autonomousBuildExecutionProof ?? null;
+  if (!input.skipAutonomousBuildExecutionProof && !autonomousBuildExecutionProof) {
+    autonomousBuildExecutionProof = assessAutonomousBuildExecutionProof({ rootDir }).report;
+  }
+
+  let productReadinessSimulation: ProductReadinessReport | null =
+    input.productReadinessSimulation ?? null;
+  let chatStressSimulation = input.chatStressSimulation ?? null;
+
+  if (!input.skipProductReadinessSimulation && !productReadinessSimulation) {
+    const productReadiness = await runFullProductReadinessSimulation({
+      rootDir,
+      skipChatStressSimulation: input.skipChatStressSimulation,
+      chatStressMaxScenarios: input.chatStressMaxScenarios,
+      founderReviewerConfidence: null,
+    });
+    productReadinessSimulation = productReadiness.report;
+    chatStressSimulation = productReadiness.report.chatStressSimulation;
+  } else if (!input.skipChatStressSimulation && !chatStressSimulation) {
+    const chatStress = await runFounderTestChatStressSimulation({
+      rootDir,
+      maxScenarios: input.chatStressMaxScenarios,
+    });
+    chatStressSimulation = chatStress.report;
+  }
+
+  const founderTestLaunchReadinessAssessment = runFounderTestLaunchReadiness({
+    ...input,
+    chatStressSimulation,
+    productReadinessSimulation,
+    autonomousBuildExecutionProof,
+    skipAutonomousBuildExecutionProof: true,
+  });
+
   return {
     founderTestLaunchReadinessAssessment,
     founderTestLaunchReadinessReportMarkdown: buildFounderTestLaunchReadinessReportMarkdown(

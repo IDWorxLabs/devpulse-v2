@@ -122,14 +122,19 @@ function buildLeafPreviewInput(): LivePreviewRealityInput {
 }
 
 /** Collect scores/signals from 24A.1 / 24A.2 / 24A.3 using leaf inputs only. */
-export function collectUpstreamRealityBundle(rootDir: string): UpstreamRealityBundle {
+export function collectUpstreamRealityBundle(
+  rootDir: string,
+  builderExecutionConnected = false,
+): UpstreamRealityBundle {
   const builderModule = detectBuilderModuleEvidence(rootDir);
   const builder = assessAutonomousBuilderReality({
     workspace: {
       world2FoundationComplete: true,
-      executionConnected: false,
-      readiness: 'foundation',
-      readinessLabel: 'Foundation complete — isolated workspace execution not fully active',
+      executionConnected: builderExecutionConnected,
+      readiness: builderExecutionConnected ? 'partial' : 'foundation',
+      readinessLabel: builderExecutionConnected
+        ? 'Bounded founder execution proof connected — full isolated workspace execution not yet active'
+        : 'Foundation complete — isolated workspace execution not fully active',
       livePreviewConnected: false,
     },
     moduleEvidence: builderModule,
@@ -139,20 +144,26 @@ export function collectUpstreamRealityBundle(rootDir: string): UpstreamRealityBu
   const legacyInput = buildLeafPreviewInput();
   const legacyAssessment = assessLivePreviewReality(legacyInput);
   const preview = assessLivePreviewRealityAuthority({
-    workspace: buildPreviewWorkspaceSignalsFromLegacy(legacyInput, false, legacyAssessment),
+    workspace: buildPreviewWorkspaceSignalsFromLegacy(
+      legacyInput,
+      builderExecutionConnected,
+      legacyAssessment,
+    ),
     moduleEvidence: previewModule,
     legacyInput,
   });
 
   const verificationModule = detectVerificationModulePresenceEvidence(rootDir);
   const verification = assessVerificationReality({
-    workspace: buildVerificationWorkspaceSignalsForValidation(verificationModule),
+    workspace: buildVerificationWorkspaceSignalsForValidation(verificationModule, {
+      executionConnected: builderExecutionConnected,
+    }),
     moduleEvidence: verificationModule,
   });
 
   return {
     builderScore: builder.builderRealityScore,
-    builderExecutionConnected: false,
+    builderExecutionConnected,
     builderStopPoint: builder.analyzers.stopPoint,
     builderPlanning: builder.analyzers.planningReality,
     builderBuildCapability: builder.analyzers.buildCapabilityLevel,

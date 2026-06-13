@@ -24,6 +24,15 @@ import {
   runFounderTestIntegration,
 } from './founder-test-integration-orchestrator.js';
 import { buildFounderTestIntegrationReportMarkdown } from './founder-test-integration-report-builder.js';
+import {
+  assessFounderExecutionProof,
+  buildFounderExecutionProofSummary,
+  resetFounderExecutionProofModuleForTests,
+} from '../founder-execution-proof/index.js';
+import {
+  resolveFounderExecutionConnected,
+  type ResolvedFounderExecutionConnected,
+} from './founder-execution-connected-resolver.js';
 import { resetExecutionProofEvolutionModuleForTests } from '../execution-proof-evolution/index.js';
 import {
   buildFounderAcceptanceBridgeSnapshot,
@@ -281,7 +290,40 @@ function buildRecommendations(
 export function assessFounderTestIntegration(
   input: RunFounderTestIntegrationInput = {},
 ): FounderTestAssessment {
-  const run = runFounderTestIntegration(input);
+  const rootDir = input.rootDir ?? process.cwd();
+
+  const founderExecutionProofPre =
+    input.founderExecutionProofAssessment ??
+    assessFounderExecutionProof({
+      rootDir,
+      ...input.founderExecutionProofInput,
+      founderAcceptanceAssessment:
+        input.founderExecutionProofInput?.founderAcceptanceAssessment ?? undefined,
+    });
+
+  const resolvedExecutionConnected: ResolvedFounderExecutionConnected =
+    input.resolvedExecutionConnected !== undefined
+      ? {
+          readOnly: true,
+          executionConnected: input.resolvedExecutionConnected,
+          source: input.resolvedExecutionConnected
+            ? 'founder-execution-proof-25.31'
+            : 'not-proven',
+          proofId: founderExecutionProofPre.report.proofId,
+          founderExecutionProven: input.resolvedExecutionConnected,
+          resolvedAt: new Date().toISOString(),
+        }
+      : resolveFounderExecutionConnected({
+          founderExecutionProofAssessment: founderExecutionProofPre,
+        });
+
+  const run = runFounderTestIntegration({
+    ...input,
+    rootDir,
+    resolvedExecutionConnected: resolvedExecutionConnected.executionConnected,
+    founderExecutionProofAssessment: founderExecutionProofPre,
+  });
+
   const score = computeFounderTestScore(run.authorityResults);
   const summary = buildSummary(run, score);
   const findings = aggregateFindings(run.authorityResults);
@@ -315,7 +357,7 @@ export function assessFounderTestIntegration(
     false,
   );
 
-  const assessment: FounderTestAssessment = {
+  const assessmentWithoutProof: Omit<FounderTestAssessment, 'executionProofSummary'> = {
     readOnly: true,
     advisoryOnly: true,
     run,
@@ -329,6 +371,19 @@ export function assessFounderTestIntegration(
     missingCapabilities,
     portfolioAcceptanceBridge,
     cacheKey: stableCacheKey(run.runId, score.overall, verdict),
+  };
+
+  const founderExecutionProof = assessFounderExecutionProof({
+    rootDir,
+    ...input.founderExecutionProofInput,
+    founderTestAssessment: assessmentWithoutProof as FounderTestAssessment,
+    founderAcceptanceAssessment:
+      input.founderExecutionProofInput?.founderAcceptanceAssessment ?? undefined,
+  });
+
+  const assessment: FounderTestAssessment = {
+    ...assessmentWithoutProof,
+    executionProofSummary: buildFounderExecutionProofSummary(founderExecutionProof),
   };
 
   recordFounderTestAssessment(assessment);
@@ -367,4 +422,5 @@ export function resetFounderTestIntegrationModuleForTests(): void {
   resetFounderTestIntegrationHistoryForTests();
   resetFounderTestIntegrationRunCounterForTests();
   resetExecutionProofEvolutionModuleForTests();
+  resetFounderExecutionProofModuleForTests();
 }

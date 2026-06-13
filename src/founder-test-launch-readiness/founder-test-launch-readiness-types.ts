@@ -6,7 +6,12 @@
 import type { FounderAcceptanceAssessment } from '../founder-acceptance-gate/founder-acceptance-gate-types.js';
 import type { FounderAcceptanceResultBundle } from '../founder-acceptance-validation/founder-acceptance-orchestrator/index.js';
 import type { FounderTestAssessment } from '../founder-test-integration/founder-test-integration-types.js';
+import type { AssessFounderExecutionProofInput } from '../founder-execution-proof/founder-execution-proof-types.js';
 import type { LaunchCouncilAssessment } from '../launch-council/launch-council-types.js';
+import type { RuntimeFounderExecutionProofHydration } from '../founder-test-integration/runtime-founder-execution-proof-hydration.js';
+import type { ChatStressSimulationReport } from '../founder-test-chat-stress-simulation/chat-stress-simulation-types.js';
+import type { ProductReadinessReport } from '../founder-test-product-readiness/product-readiness-types.js';
+import type { AutonomousBuildExecutionProofReport } from '../autonomous-build-execution-proof/autonomous-build-execution-proof-types.js';
 
 export type FounderTestPanelState = 'READY' | 'RUNNING' | 'COMPLETE' | 'FAILED';
 
@@ -81,6 +86,11 @@ export interface FounderTestLaunchReadinessReport {
   launchReadinessVerdict: LaunchReadinessVerdict;
   confidenceLevel: LaunchReadinessConfidence;
   executionProofSummary: string;
+  /** Founder Execution Proof (25.31) — distinct from Execution Proof Evolution (24E). */
+  founderExecutionProofSummary: string;
+  /** Phase 25.36 — runtime proof input hydration status. */
+  runtimeProofHydrationSummary: string;
+  runtimeProofHydration: RuntimeFounderExecutionProofHydration;
   founderSimulationSummary: string;
   requirementRealitySummary: string;
   verificationRealitySummary: string;
@@ -93,6 +103,17 @@ export interface FounderTestLaunchReadinessReport {
   topWarnings: FounderTestLaunchWarning[];
   topRecommendedActions: FounderTestLaunchRecommendedAction[];
   topMissingCapabilities: string[];
+  chatStressSimulation: ChatStressSimulationReport | null;
+  chatStressSummary: string | null;
+  chatBlocksLaunchReadiness: boolean;
+  productReadinessSimulation: ProductReadinessReport | null;
+  productReadinessSummary: string | null;
+  productReadinessScore: number | null;
+  autonomousBuildExecutionProof: AutonomousBuildExecutionProofReport | null;
+  autonomousBuildExecutionProofSummary: string | null;
+  executionChainConnected: boolean;
+  executionChainBlocksLaunch: boolean;
+  firstBrokenExecutionStage: AutonomousBuildExecutionProofReport['firstBrokenStage'];
   inputSnapshot: FounderTestLaunchReadinessInputSnapshot;
   cacheKey: string;
 }
@@ -111,6 +132,20 @@ export interface RunFounderTestLaunchReadinessInput {
   governanceBlocked?: boolean;
   /** Inject for bounded validator fixtures — skips live authority execution when set. */
   founderTestAssessment?: FounderTestAssessment;
+  /** Same proof source as validator — wired into assessFounderTestIntegration. */
+  founderExecutionProofInput?: AssessFounderExecutionProofInput;
+  /** Hydration metadata from buildRuntimeFounderExecutionProofInputAsync (25.36). */
+  runtimeProofHydration?: RuntimeFounderExecutionProofHydration;
+  /** Phase 26.4 — inject or skip chat stress simulation. */
+  chatStressSimulation?: ChatStressSimulationReport | null;
+  skipChatStressSimulation?: boolean;
+  skipProductReadinessSimulation?: boolean;
+  productReadinessSimulation?: ProductReadinessReport | null;
+  skipAutonomousBuildExecutionProof?: boolean;
+  autonomousBuildExecutionProof?: AutonomousBuildExecutionProofReport | null;
+  /** Skip bounded history write — used for internal chain stubs. */
+  skipHistoryRecording?: boolean;
+  chatStressMaxScenarios?: number;
 }
 
 export interface FounderTestLaunchReadinessHistoryEntry {

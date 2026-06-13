@@ -3,6 +3,10 @@
  * Aggregates vault, live preview, and verification readiness without execution.
  */
 
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { resolveExecutionConnectedForRoot } from '../src/founder-test-integration/index.js';
+
 import { INTELLIGENCE_CONSOLE_CAPABILITIES } from '../src/intelligence-console/capability-registry.js';
 import {
   assessLivePreviewReality,
@@ -179,7 +183,15 @@ export interface ProductWorkspaceSnapshot {
 
 export type ProductWorkspaceSnapshotWithoutSensemaking = Omit<ProductWorkspaceSnapshot, 'founderSensemaking'>;
 
-export function buildProductWorkspaceSnapshot(validatorScripts: string[]): ProductWorkspaceSnapshot {
+const DEFAULT_ROOT_DIR = join(fileURLToPath(new URL('.', import.meta.url)), '..');
+
+export function buildProductWorkspaceSnapshot(
+  validatorScripts: string[],
+  options?: { rootDir?: string },
+): ProductWorkspaceSnapshot {
+  const rootDir = options?.rootDir ?? DEFAULT_ROOT_DIR;
+  const resolvedExecution = resolveExecutionConnectedForRoot(rootDir);
+  const executionConnected = resolvedExecution.executionConnected;
   const vault = getDevPulseV2ProjectVaultAuthority();
   const vaultState = vault.getVaultState();
   const projects = vault.listProjects();
@@ -322,10 +334,12 @@ export function buildProductWorkspaceSnapshot(validatorScripts: string[]): Produ
     },
     autonomousBuilder: {
       description: AUTONOMOUS_BUILDER_DESCRIPTION,
-      readiness: 'foundation' as const,
-      readinessLabel: 'Foundation complete — isolated workspace execution not fully active',
+      readiness: executionConnected ? ('partial' as const) : ('foundation' as const),
+      readinessLabel: executionConnected
+        ? 'Bounded founder execution proof connected — full isolated workspace execution not yet active'
+        : 'Foundation complete — isolated workspace execution not fully active',
       world2FoundationComplete: true,
-      executionConnected: false,
+      executionConnected,
     },
     projects: {
       count: projects.length,

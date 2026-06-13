@@ -117,8 +117,8 @@ function buildLeafPreviewInput(): LivePreviewRealityInput {
   };
 }
 
-function collectFounderReality(rootDir: string): FounderTestAuthorityResult {
-  const assessment = assessFounderWorkflowReality(rootDir);
+function collectFounderReality(rootDir: string, executionConnected: boolean): FounderTestAuthorityResult {
+  const assessment = assessFounderWorkflowReality(rootDir, { builderExecutionConnected: executionConnected });
   const criticalBlockers = assessment.blockers.filter((b) => b.severity === 'CRITICAL');
   return buildAuthorityResult(
     'FOUNDER_REALITY',
@@ -153,14 +153,16 @@ function collectUiReality(shellSources: FounderTestShellSources): FounderTestAut
   );
 }
 
-function collectRequirementReality(rootDir: string): FounderTestAuthorityResult {
+function collectRequirementReality(rootDir: string, executionConnected: boolean): FounderTestAuthorityResult {
   const moduleEvidence = detectModulePresenceEvidence(rootDir);
   const assessment = assessAutonomousBuilderReality({
     workspace: {
       world2FoundationComplete: true,
-      executionConnected: false,
-      readiness: 'foundation',
-      readinessLabel: 'Foundation complete — isolated workspace execution not fully active',
+      executionConnected,
+      readiness: executionConnected ? 'partial' : 'foundation',
+      readinessLabel: executionConnected
+        ? 'Bounded founder execution proof connected — full isolated workspace execution not yet active'
+        : 'Foundation complete — isolated workspace execution not fully active',
       livePreviewConnected: false,
     },
     moduleEvidence,
@@ -209,11 +211,11 @@ function collectFounderSimulation(shellSources: FounderTestShellSources): Founde
   );
 }
 
-function collectLivePreviewReality(rootDir: string): FounderTestAuthorityResult {
+function collectLivePreviewReality(rootDir: string, executionConnected: boolean): FounderTestAuthorityResult {
   const legacyInput = buildLeafPreviewInput();
   const legacyAssessment = assessLivePreviewReality(legacyInput);
   const assessment = assessLivePreviewRealityAuthority({
-    workspace: buildPreviewWorkspaceSignalsFromLegacy(legacyInput, false, legacyAssessment),
+    workspace: buildPreviewWorkspaceSignalsFromLegacy(legacyInput, executionConnected, legacyAssessment),
     moduleEvidence: detectPreviewModulePresenceEvidence(rootDir),
     legacyInput,
   });
@@ -251,10 +253,10 @@ function collectMobileRuntimeReality(rootDir: string): FounderTestAuthorityResul
   );
 }
 
-function collectVerificationReality(rootDir: string): FounderTestAuthorityResult {
+function collectVerificationReality(rootDir: string, executionConnected: boolean): FounderTestAuthorityResult {
   const moduleEvidence = detectVerificationModulePresenceEvidence(rootDir);
   const assessment = assessVerificationReality({
-    workspace: buildVerificationWorkspaceSignalsForValidation(moduleEvidence),
+    workspace: buildVerificationWorkspaceSignalsForValidation(moduleEvidence, { executionConnected }),
     moduleEvidence,
   });
   const criticalBlockers = assessment.blockers.filter((b) => b.severity === 'CRITICAL');
@@ -394,15 +396,16 @@ function collectLaunchCouncil(authorityResults: FounderTestAuthorityResult[]): F
 function executeParticipatingAuthorities(
   rootDir: string,
   shellSources: FounderTestShellSources,
+  executionConnected: boolean,
 ): FounderTestAuthorityResult[] {
   const partial: FounderTestAuthorityResult[] = [
-    collectFounderReality(rootDir),
+    collectFounderReality(rootDir, executionConnected),
     collectUiReality(shellSources),
-    collectRequirementReality(rootDir),
+    collectRequirementReality(rootDir, executionConnected),
     collectFounderSimulation(shellSources),
-    collectLivePreviewReality(rootDir),
+    collectLivePreviewReality(rootDir, executionConnected),
     collectMobileRuntimeReality(rootDir),
-    collectVerificationReality(rootDir),
+    collectVerificationReality(rootDir, executionConnected),
   ];
 
   partial.push(collectExecutionProofEvolution(partial));
@@ -418,9 +421,10 @@ export function runFounderTestIntegration(
   const rootDir = input.rootDir ?? process.cwd();
   const shellSources = input.shellSources ?? loadFounderTestShellSources(rootDir);
 
+  const executionConnected = input.resolvedExecutionConnected ?? false;
   const authorityResults =
     input.authorityResults ??
-    executeParticipatingAuthorities(rootDir, shellSources);
+    executeParticipatingAuthorities(rootDir, shellSources, executionConnected);
 
   return {
     readOnly: true,

@@ -73,3 +73,25 @@ export {
   buildFounderTestIntegrationReportMarkdown,
   buildFounderTestIntegrationPhaseReportMarkdown,
 } from './founder-test-integration-report-builder.js';
+
+export {
+  resolveFounderExecutionConnected,
+  buildRuntimeFounderExecutionProofInput,
+  buildRuntimeFounderExecutionProofInputAsync,
+  resolveExecutionConnectedForRoot,
+  resolveExecutionConnectedFromHydration,
+} from './founder-execution-connected-resolver.js';
+
+export {
+  hydrateRuntimeFounderExecutionProofInput,
+  hydrateRuntimeFounderExecutionProofInputSync,
+} from './runtime-founder-execution-proof-hydration.js';
+
+export type {
+  ResolveFounderExecutionConnectedInput,
+  ResolvedFounderExecutionConnected,
+  HydratedRuntimeFounderExecutionProofInput,
+  RuntimeFounderExecutionProofHydration,
+} from './founder-execution-connected-resolver.js';
+
+export type { RuntimeProofHydrationSource } from './runtime-founder-execution-proof-hydration.js';

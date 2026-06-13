@@ -575,6 +575,28 @@ Triggered: ${report.chatIntelligenceReality.selfEvolution.triggered ? 'Yes' : 'N
 
 ${report.chatIntelligenceReality.selfEvolution.improvementPlan.length ? report.chatIntelligenceReality.selfEvolution.improvementPlan.map((step) => `- [${step.priority}] ${step.missingCapability}: ${step.action}`).join('\n') : 'No repeated category failures reached threshold.'}
 
+### Chat Cognitive Architecture & Self-Diagnosis
+
+Cognitive score: **${report.chatIntelligenceReality.cognitiveArchitecture.cognitiveScore}/100**
+
+Reviewer reliability: **${report.chatIntelligenceReality.cognitiveArchitecture.reviewerReliability}**
+
+${report.chatIntelligenceReality.cognitiveArchitecture.founderTestingMessage ? `**${report.chatIntelligenceReality.cognitiveArchitecture.founderTestingMessage}**` : 'Cognitive reviewer meets reliability threshold.'}
+
+Generic fallback violations: ${report.chatIntelligenceReality.cognitiveArchitecture.genericFallbackViolations}
+
+Self-awareness failures: ${report.chatIntelligenceReality.cognitiveArchitecture.selfAwarenessFailures}
+
+Capability overclaim failures: ${report.chatIntelligenceReality.cognitiveArchitecture.capabilityOverclaimFailures}
+
+Software reasoning failures: ${report.chatIntelligenceReality.cognitiveArchitecture.softwareReasoningFailures}
+
+Self-evolution required: **${report.chatIntelligenceReality.cognitiveArchitecture.selfEvolutionRequired ? 'Yes' : 'No'}**
+
+Cognitive scenarios passed: ${report.chatIntelligenceReality.cognitiveArchitecture.scenariosPassed}/${report.chatIntelligenceReality.cognitiveArchitecture.scenariosRun}
+
+${report.chatIntelligenceReality.cognitiveArchitecture.missingKnowledgeCategories.length ? `Missing knowledge categories:\n${report.chatIntelligenceReality.cognitiveArchitecture.missingKnowledgeCategories.map((c) => `- ${c}`).join('\n')}` : ''}
+
 ## Repository Typecheck Reality
 
 Readiness state: **${report.repositoryTypecheckReality.readinessState}**

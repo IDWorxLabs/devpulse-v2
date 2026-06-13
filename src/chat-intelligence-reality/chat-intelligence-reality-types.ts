@@ -84,6 +84,7 @@ export interface ChatIntelligenceRealityAssessment {
   founderProofNotes: readonly string[];
   selfEvolution: ChatSelfEvolutionTriggerResult;
   operationalSelfAwarenessStandard: string;
+  cognitiveArchitecture: import('../chat-cognitive-architecture/chat-cognitive-types.js').ChatCognitiveArchitectureAssessment;
   cacheKey: string;
 }
 

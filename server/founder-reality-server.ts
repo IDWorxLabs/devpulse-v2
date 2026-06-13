@@ -3,6 +3,8 @@
  * Serves static surface and local brain API. No execution, no file writes.
  */
 
+import './load-env.js';
+
 import { readFileSync, statSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';

@@ -242,6 +242,7 @@ function main(): void {
         FOUNDER_TEST_AUTHORITY_REGISTRATIONS.map((entry) => [entry.authorityId, 92]),
       ) as Partial<Record<FounderTestAuthorityId, number>>,
     ),
+    skipAutonomousBuildExecutionProof: true,
   });
 
   assert(
@@ -276,6 +277,7 @@ function main(): void {
         },
       },
     ),
+    skipAutonomousBuildExecutionProof: true,
   });
 
   assert(
@@ -295,6 +297,7 @@ function main(): void {
       })),
       rootDir: ROOT,
     }),
+    skipAutonomousBuildExecutionProof: true,
   });
 
   assert(
@@ -356,9 +359,11 @@ function main(): void {
   resetFounderTestLaunchReadinessModuleForTests();
   runFounderTestLaunchReadiness({
     founderTestAssessment: buildFixtureFounderTestAssessment({ UI_REALITY: 90 }),
+    skipAutonomousBuildExecutionProof: true,
   });
   runFounderTestLaunchReadiness({
     founderTestAssessment: buildFixtureFounderTestAssessment({ REQUIREMENT_REALITY: 90 }),
+    skipAutonomousBuildExecutionProof: true,
   });
 
   assert(

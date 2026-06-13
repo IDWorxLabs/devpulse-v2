@@ -670,6 +670,81 @@
     }
   }
 
+  function renderLlmChatBrainDiagnostics(diag) {
+    if (!diag) return;
+    if (el('llm-connected')) el('llm-connected').textContent = diag.llmConnected ? 'YES' : 'NO';
+    if (el('llm-fallback-used')) el('llm-fallback-used').textContent = diag.fallbackUsed ? 'YES' : 'NO';
+    if (el('llm-provider-model')) {
+      el('llm-provider-model').textContent =
+        diag.provider && diag.model ? diag.provider + ' / ' + diag.model : 'None';
+    }
+    if (el('llm-context-included')) {
+      el('llm-context-included').textContent = diag.contextIncluded ? 'YES' : 'NO';
+    }
+    if (el('llm-context-sources')) {
+      var sources = diag.contextSourcesUsed && diag.contextSourcesUsed.length
+        ? diag.contextSourcesUsed.join(', ')
+        : (diag.contextSourcesLabel || 'None');
+      el('llm-context-sources').textContent = sources;
+    }
+    if (el('llm-context-hydration')) {
+      el('llm-context-hydration').textContent = diag.lastContextHydration || '—';
+    }
+    if (el('llm-hydrated-facts')) {
+      el('llm-hydrated-facts').textContent =
+        diag.hydratedFactCount === undefined || diag.hydratedFactCount === null
+          ? '0'
+          : String(diag.hydratedFactCount);
+    }
+    if (el('llm-context-confidence')) {
+      el('llm-context-confidence').textContent = diag.contextConfidence || '—';
+    }
+    if (el('llm-identity-loaded')) {
+      el('llm-identity-loaded').textContent = diag.identityLoaded ? 'YES' : 'NO';
+    }
+    if (el('llm-founder-loaded')) {
+      el('llm-founder-loaded').textContent = diag.founderLoaded ? 'YES' : 'NO';
+    }
+    if (el('llm-product-loaded')) {
+      el('llm-product-loaded').textContent = diag.productLoaded ? 'YES' : 'NO';
+    }
+    if (el('llm-history-loaded')) {
+      el('llm-history-loaded').textContent = diag.historyLoaded ? 'YES' : 'NO';
+    }
+    if (el('llm-self-evolution-loaded')) {
+      el('llm-self-evolution-loaded').textContent = diag.selfEvolutionLoaded ? 'YES' : 'NO';
+    }
+    if (el('llm-identity-version')) {
+      el('llm-identity-version').textContent = diag.identityVersion ? '(v' + diag.identityVersion + ')' : '';
+    }
+    if (el('llm-founder-version')) {
+      el('llm-founder-version').textContent = diag.founderVersion ? '(v' + diag.founderVersion + ')' : '';
+    }
+    if (el('llm-product-version')) {
+      el('llm-product-version').textContent = diag.productVersion ? '(v' + diag.productVersion + ')' : '';
+    }
+    if (el('llm-current-product-identity')) {
+      el('llm-current-product-identity').textContent = diag.currentProductIdentity || '—';
+    }
+    if (el('llm-founder-identity')) {
+      el('llm-founder-identity').textContent = diag.founderIdentity || '—';
+    }
+    if (el('llm-company-identity')) {
+      el('llm-company-identity').textContent = diag.companyIdentity || '—';
+    }
+    if (el('llm-legacy-identity')) {
+      el('llm-legacy-identity').textContent = diag.legacyIdentity || '—';
+    }
+    if (el('llm-judge-score')) {
+      el('llm-judge-score').textContent =
+        diag.judgeScore === null || diag.judgeScore === undefined ? '—' : String(diag.judgeScore);
+    }
+    if (el('llm-warnings')) {
+      el('llm-warnings').textContent =
+        diag.warnings && diag.warnings.length ? diag.warnings.join('; ') : 'None';
+    }
+  }
+
   function renderRuntimeDiagnostics() {
     var list = el('runtime-diagnostics-list');
     if (!list) return;
@@ -3719,6 +3794,34 @@
           setLastError('Brain health payload missing expected capability');
         }
         renderRuntimeDiagnostics();
+        if (payload && typeof payload.llmConnected === 'boolean') {
+          renderLlmChatBrainDiagnostics({
+            llmConnected: payload.llmConnected,
+            fallbackUsed: !payload.llmConnected,
+            provider: payload.llmProvider || null,
+            model: payload.llmModel || null,
+            contextIncluded: payload.contextIncluded === true,
+            contextSourcesUsed: payload.contextSourcesUsed || [],
+            contextSourcesLabel: payload.contextSourcesLabel || null,
+            lastContextHydration: payload.lastContextHydration || null,
+            hydratedFactCount: payload.hydratedFactCount || 0,
+            contextConfidence: payload.contextConfidence || null,
+            identityLoaded: payload.identityLoaded === true,
+            founderLoaded: payload.founderLoaded === true,
+            productLoaded: payload.productLoaded === true,
+            historyLoaded: payload.historyLoaded === true,
+            selfEvolutionLoaded: payload.selfEvolutionLoaded === true,
+            identityVersion: payload.identityVersion || null,
+            founderVersion: payload.founderVersion || null,
+            productVersion: payload.productVersion || null,
+            currentProductIdentity: payload.currentProductIdentity || null,
+            founderIdentity: payload.founderIdentity || null,
+            companyIdentity: payload.companyIdentity || null,
+            legacyIdentity: payload.legacyIdentity || null,
+            judgeScore: null,
+            warnings: payload.llmApiKeyConfigured ? [] : ['LLM_API_KEY not configured in process.env'],
+          });
+        }
         return ok;
       })
       .catch(function () {
@@ -3912,6 +4015,9 @@
           pushNotification('Brain Request Completed');
           setLastError('None');
           renderRuntimeDiagnostics();
+          if (result.llmChatBrainDiagnostics) {
+            renderLlmChatBrainDiagnostics(result.llmChatBrainDiagnostics);
+          }
           if (result.crossSystemDiagnostics) {
             renderCrossSystemDiagnostics(result.crossSystemDiagnostics);
           }
@@ -4115,6 +4221,121 @@
         '</strong> · Warnings: <strong>' +
         String((launchReadiness.topWarnings || []).length) +
         '</strong></p>';
+      if (launchReadiness.chatStressSimulation) {
+        var chatStress = launchReadiness.chatStressSimulation;
+        html +=
+          '<div class="founder-test-chat-stress"><h4>Chat Stress Simulation</h4>' +
+          '<p>Overall chat score: <strong>' +
+          String(chatStress.overallScore) +
+          '/100</strong> · Passed: <strong>' +
+          String(chatStress.passedCount) +
+          '</strong> · Failed: <strong>' +
+          String(chatStress.failedCount) +
+          '</strong> · Weak: <strong>' +
+          String(chatStress.weakCount) +
+          '</strong></p>' +
+          '<p>Chat blocks launch readiness: <strong>' +
+          (chatStress.chatBlocksLaunchReadiness ? 'YES' : 'NO') +
+          '</strong> · Self-evolution required: <strong>' +
+          (chatStress.selfEvolutionRequired ? 'YES' : 'NO') +
+          '</strong></p>';
+        var failedOrWeak = (chatStress.failedAnswers || []).concat(chatStress.weakAnswers || []);
+        if (failedOrWeak.length) {
+          html += '<ul class="chat-stress-failures">';
+          for (var cs = 0; cs < Math.min(failedOrWeak.length, 6); cs += 1) {
+            var entry = failedOrWeak[cs];
+            html +=
+              '<li><strong>Prompt:</strong> ' +
+              escapeHtml(entry.prompt) +
+              '<br><strong>Answer:</strong> ' +
+              escapeHtml(entry.actualAnswer.slice(0, 220)) +
+              (entry.actualAnswer.length > 220 ? '…' : '') +
+              '<br><strong>Failure:</strong> ' +
+              escapeHtml((entry.failureReasons || []).join('; ') || entry.band) +
+              (entry.missingCapability
+                ? '<br><strong>Missing:</strong> ' + escapeHtml(entry.missingCapability)
+                : '') +
+              (entry.recommendedFix
+                ? '<br><strong>Fix:</strong> ' + escapeHtml(entry.recommendedFix)
+                : '') +
+              '</li>';
+          }
+          html += '</ul>';
+        }
+        if (chatStress.repeatedFailurePatterns && chatStress.repeatedFailurePatterns.length) {
+          html += '<p><strong>Repeated patterns:</strong> ' +
+            escapeHtml(
+              chatStress.repeatedFailurePatterns
+                .slice(0, 3)
+                .map(function (p) {
+                  return p.pattern + ' (' + p.count + '×)';
+                })
+                .join(' · '),
+            ) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (launchReadiness.productReadinessSimulation) {
+        var pr = launchReadiness.productReadinessSimulation;
+        html +=
+          '<div class="founder-test-product-readiness"><h4>Full Product Readiness Simulation</h4>' +
+          '<p>Readiness score: <strong>' +
+          String(pr.readinessScore) +
+          '/100</strong> · Verdict: <strong>' +
+          escapeHtml(String(pr.verdict).replace(/_/g, ' ')) +
+          '</strong> · Launch blocked: <strong>' +
+          (pr.launchBlocked ? 'YES' : 'NO') +
+          '</strong></p>' +
+          '<table class="product-readiness-table"><thead><tr><th>Simulation</th><th>Score</th><th>Top failure</th></tr></thead><tbody>';
+        for (var pi = 0; pi < Math.min(pr.simulations.length, 8); pi += 1) {
+          var ps = pr.simulations[pi];
+          html +=
+            '<tr><td>' +
+            escapeHtml(ps.label) +
+            '</td><td>' +
+            String(ps.score) +
+            '</td><td>' +
+            escapeHtml(ps.topFailures[0] || '—') +
+            '</td></tr>';
+        }
+        html += '</tbody></table>';
+        if (pr.selfEvolution && pr.selfEvolution.whatShouldWeBuildNext.length) {
+          html += '<p><strong>Build next:</strong> ' +
+            escapeHtml(pr.selfEvolution.whatShouldWeBuildNext.slice(0, 3).join(' · ')) +
+            '</p>';
+        }
+        html += '</div>';
+      }
+      if (launchReadiness.autonomousBuildExecutionProof) {
+        var ep = launchReadiness.autonomousBuildExecutionProof;
+        html +=
+          '<div class="founder-test-execution-proof"><h4>Autonomous Build Execution Proof</h4>' +
+          '<p>Chain connected: <strong>' +
+          (ep.chainConnected ? 'YES' : 'NO') +
+          '</strong> · First break: <strong>' +
+          escapeHtml(ep.firstBrokenStage || '—') +
+          '</strong> · Launch blocked: <strong>' +
+          (ep.launchBlockedByChain ? 'YES' : 'NO') +
+          '</strong></p>' +
+          '<table class="execution-proof-table"><thead><tr><th>Stage</th><th>Proof</th><th>Score</th></tr></thead><tbody>';
+        for (var ei = 0; ei < ep.stageProofs.length; ei += 1) {
+          var st = ep.stageProofs[ei];
+          html +=
+            '<tr><td>' +
+            escapeHtml(st.stage) +
+            '</td><td>' +
+            escapeHtml(st.proofLevel) +
+            '</td><td>' +
+            String(st.score) +
+            '</td></tr>';
+        }
+        html += '</tbody></table>';
+        if (ep.recommendedFix) {
+          html += '<p><strong>Recommended fix:</strong> ' + escapeHtml(ep.recommendedFix) + '</p>';
+        }
+        html += '</div>';
+      }
       if (launchReadiness.topBlockers && launchReadiness.topBlockers.length) {
         html += '<div class="founder-test-blockers"><h4>Top launch blockers</h4><ul>';
         for (var lb = 0; lb < Math.min(launchReadiness.topBlockers.length, 5); lb += 1) {
