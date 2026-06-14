@@ -285,6 +285,8 @@ export async function generateLlmBackedChatResponseAsync(
         message,
         draftAnswer: answer,
         rootDir,
+        forceLivePath: true,
+        forceSnapshotRefresh: true,
       });
 
       if (operational.usedOperationalSelfKnowledge) {
@@ -377,6 +379,8 @@ export async function generateLlmBackedChatResponseAsync(
       message,
       draftAnswer: answer,
       rootDir,
+      forceLivePath: true,
+      forceSnapshotRefresh: true,
     });
     const finalAnswer = operational.usedOperationalSelfKnowledge
       ? operational.finalAnswer

@@ -61,9 +61,12 @@ export {
   markChatStressSimulationAggregateComplete,
   getChatStressCompletionSnapshot,
   allStartedChatStressScenariosSettled,
+  allChatStressScenariosSettled,
   resolveChatStressScenarioTerminalStatus,
   setActiveChatStressScenario,
   clearActiveChatStressScenarioIfMatches,
+  registerChatStressPostWatchdogHealthReconciler,
+  clearChatStressPostWatchdogHealthReconcilers,
   forceSettlePendingStartedChatStressScenarios,
   isChatStressScenarioSettled,
   getChatStressScenarioTerminalStatus,
@@ -76,6 +79,55 @@ export {
   stopChatStressWatchdogHealthSweep,
   shouldFlagChatStressPendingStage2Gap,
   formatChatStressPendingStallReason,
+  getChatStressTotalScenarios,
+  listChatStressOrderedScenarioIds,
+  getChatStressScenarioLifecycleState,
+  getChatStressScenarioLastUpdateTimeMs,
   type ChatStressScenarioTerminalStatus,
+  type ChatStressScenarioLifecycleState,
   type ChatStressCompletionSnapshot,
 } from './chat-stress-completion-tracker.js';
+
+export {
+  buildChatStressSettlementSummary,
+  detectChatStressPendingLeak,
+  isChatStressSimulationComplete,
+  CHAT_STRESS_SETTLEMENT_BOUNDARY_REPAIR_V1_PASS,
+  type ChatStressPendingLeak,
+} from './chat-stress-settlement-boundary.js';
+
+export {
+  CHAT_STRESS_COMPLETION_PROPAGATION_REPAIR_V1_PASS,
+  CHAT_STRESS_COMPLETION_CHAIN_BOUNDARIES,
+  resetChatStressCompletionPropagationForTests,
+  recordChatStressCompletionConditionSatisfied,
+  recordChatStressSimulationCompleteEmitted,
+  recordProductReadinessSimulationCompleteEmitted,
+  recordIntakeValidationCompleteEmitted,
+  recordPlanningGateStarted,
+  recordIntakeCompletionBoundaryOperation,
+  hasChatStressCompletionConditionSatisfied,
+  hasChatStressSimulationCompletePropagated,
+  hasProductReadinessSimulationCompletePropagated,
+  hasIntakeValidationCompletePropagated,
+  hasPlanningGateStartedPropagated,
+  hasIntakeValidationCompletionBoundaryInRegistry,
+  getChatStressCompletionPropagationSnapshot,
+  type ChatStressCompletionChainBoundary,
+  type ChatStressCompletionPropagationSnapshot,
+} from './chat-stress-completion-propagation.js';
+
+export {
+  LIVE_CHAT_STRESS_RUNNER_PATH_ALIGNMENT_V1_PASS,
+  LIVE_CHAT_STRESS_RUNNER_PATH_MARKER,
+  LIVE_CHAT_STRESS_RUNNER_PATH_CALL_CHAIN,
+  CHAT_STRESS_RUNNER_IDLE_WITH_PENDING_KIND,
+  resetLiveChatStressRunnerPathForTests,
+  registerChatStressRunnerIdleWithPendingHandler,
+  reconcileChatStressRunnerIdleWithPending,
+  shouldPropagateLiveChatStressRuntimeFeed,
+  buildLiveChatStressRunnerPathStatus,
+  getLastChatStressRunnerIdleWithPending,
+  type ChatStressRunnerIdleWithPending,
+} from './live-chat-stress-runner-path.js';
+export type { ChatStressSettlementSummary } from './chat-stress-simulation-types.js';

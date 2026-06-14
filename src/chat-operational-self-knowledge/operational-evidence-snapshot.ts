@@ -1,9 +1,15 @@
 /**
- * Operational evidence snapshot — aggregates proof chain, typecheck, and launch blockers.
+ * Operational evidence snapshot — aggregates synchronized chain truth, typecheck, and launch blockers.
  */
 
 import { assessAutonomousBuildExecutionProof } from '../autonomous-build-execution-proof/index.js';
 import { assessConnectedBuildExecution } from '../connected-build-execution/index.js';
+import {
+  resolveConnectedExecutionChainTruth,
+  CONNECTED_EXECUTION_CHAIN_TRUTH_SOURCE,
+} from '../founder-test-integration/connected-execution-chain-truth.js';
+import { resolveExecutionChainStageContext } from '../founder-test-integration/connected-execution-chain-stage-resolver.js';
+import { getLatestFounderTestAssessment } from '../founder-test-integration/founder-test-integration-history.js';
 import {
   getLatestRepositoryTypecheckBaseline,
   assessRepositoryTypecheckReality,
@@ -13,6 +19,8 @@ import {
   highestImpactWeakness,
   listCapabilitiesByTruthLevel,
 } from './capability-truth-registry.js';
+import { detectOperationalTruthSourceContradictions } from './operational-truth-source-contradiction-detector.js';
+import { buildOperationalTruthContext } from './operational-truth-context.js';
 import { deriveUncertaintyLevel } from './uncertainty-model.js';
 import type {
   BuildOperationalEvidenceSnapshotInput,
@@ -20,17 +28,48 @@ import type {
   OperationalLaunchBlocker,
 } from './chat-operational-self-knowledge-types.js';
 
+function emptyExecutionChainTruth(generatedAt: string) {
+  return resolveConnectedExecutionChainTruth({
+    readOnly: true,
+    buildMaterializationProven: false,
+    runtimeProven: false,
+    previewProven: false,
+    verificationProven: false,
+    launchProven: false,
+    firstBrokenStage: null,
+    builderMaterializationConnected: false,
+    previewExperienceConnected: false,
+    verificationExecutionConnected: false,
+    launchExecutionConnected: false,
+    buildMaterializationReport: null,
+    verificationExecutionProof: null,
+    launchReadinessProof: null,
+    resolvedAt: generatedAt,
+  });
+}
+
+function finalizeSnapshot(
+  base: Omit<OperationalEvidenceSnapshot, 'operationalTruthContext'>,
+): OperationalEvidenceSnapshot {
+  return {
+    ...base,
+    operationalTruthContext: buildOperationalTruthContext(base),
+  };
+}
+
 export function buildOperationalEvidenceSnapshot(
   input: BuildOperationalEvidenceSnapshotInput = {},
 ): OperationalEvidenceSnapshot {
   const rootDir = input.rootDir ?? process.cwd();
-  const capabilityTruth = buildCapabilityTruthRegistry(rootDir);
+  const generatedAt = new Date().toISOString();
 
   if (input.skipHeavyAuthorities) {
+    const executionChainTruth = emptyExecutionChainTruth(generatedAt);
+    const capabilityTruth = buildCapabilityTruthRegistry(rootDir, executionChainTruth);
     const typecheck = assessRepositoryTypecheckReality({ source: 'NOT_RUN' });
-    return {
+    return finalizeSnapshot({
       readOnly: true,
-      generatedAt: new Date().toISOString(),
+      generatedAt,
       capabilityTruth,
       overallUncertainty: deriveUncertaintyLevel({
         provenCount: capabilityTruth.provenCount,
@@ -38,40 +77,57 @@ export function buildOperationalEvidenceSnapshot(
         unknownCount: capabilityTruth.unknownCount,
         hasLiveEvidence: false,
       }),
-      firstBrokenStage: null,
-      executionChainConnected: false,
+      executionChainTruth,
+      executionTruthGeneratedAt: executionChainTruth.generatedAt,
+      executionTruthSource: executionChainTruth.sourceAuthority,
+      firstBrokenStage: executionChainTruth.firstBrokenStage,
+      executionChainConnected: executionChainTruth.chainConnected,
       launchBlockers: [],
       typecheckState: typecheck.readinessState,
       typecheckClean: false,
       buildProofLevel: 'UNKNOWN',
       chatIntelligenceNote: 'Heavy authorities skipped',
-      evidenceSources: ['capability-truth-registry'],
-    };
+      founderTestVerdict: null,
+      truthSourceContradictions: [],
+      evidenceSources: ['connected-execution-chain-truth', 'capability-truth-registry'],
+    });
   }
 
-  const executionProof = assessAutonomousBuildExecutionProof({ rootDir });
+  const chainContext = resolveExecutionChainStageContext(rootDir);
+  const executionChainTruth = resolveConnectedExecutionChainTruth(chainContext);
+  const capabilityTruth = buildCapabilityTruthRegistry(rootDir, executionChainTruth);
+  const legacyExecutionProof = assessAutonomousBuildExecutionProof({ rootDir });
   const buildAssessment = assessConnectedBuildExecution({ rootDir });
   const typecheck =
     getLatestRepositoryTypecheckBaseline() ??
     assessRepositoryTypecheckReality({ source: 'NOT_RUN' });
+  const latestFounderTest = getLatestFounderTestAssessment();
+
+  const legacyStageProofLevels = Object.fromEntries(
+    legacyExecutionProof.report.stageProofs.map((stage) => [stage.stage, stage.proofLevel]),
+  );
+  const truthSourceContradictions = detectOperationalTruthSourceContradictions({
+    executionChainTruth,
+    legacyStageProofLevels,
+  });
 
   const launchBlockers: OperationalLaunchBlocker[] = [];
 
-  if (executionProof.report.firstBrokenStage) {
+  if (executionChainTruth.firstBrokenStage) {
     launchBlockers.push({
       readOnly: true,
-      label: `Execution chain break at ${executionProof.report.firstBrokenStage}`,
+      label: `Execution chain break at ${executionChainTruth.firstBrokenStage}`,
       impact: 'HIGH',
-      evidenceSource: 'autonomous-build-execution-proof',
+      evidenceSource: CONNECTED_EXECUTION_CHAIN_TRUTH_SOURCE,
     });
   }
 
-  if (!executionProof.report.chainConnected) {
+  if (!executionChainTruth.chainConnected) {
     launchBlockers.push({
       readOnly: true,
       label: 'Execution chain not fully connected',
       impact: 'HIGH',
-      evidenceSource: 'autonomous-build-execution-proof',
+      evidenceSource: CONNECTED_EXECUTION_CHAIN_TRUTH_SOURCE,
     });
   }
 
@@ -84,7 +140,7 @@ export function buildOperationalEvidenceSnapshot(
     });
   }
 
-  if (buildAssessment.report.proofLevel !== 'PROVEN') {
+  if (!executionChainTruth.buildProven && buildAssessment.report.proofLevel !== 'PROVEN') {
     launchBlockers.push({
       readOnly: true,
       label: `Build materialization ${buildAssessment.report.proofLevel}`,
@@ -109,13 +165,22 @@ export function buildOperationalEvidenceSnapshot(
       readOnly: true,
       label: `${notProven.length} capability area(s) not proven`,
       impact: 'MEDIUM',
-      evidenceSource: 'capability-truth-registry',
+      evidenceSource: CONNECTED_EXECUTION_CHAIN_TRUTH_SOURCE,
     });
   }
 
-  return {
+  if (latestFounderTest?.verdict === 'NOT_FOUNDER_READY' && !executionChainTruth.launchProven) {
+    launchBlockers.push({
+      readOnly: true,
+      label: `Latest Founder Test verdict: ${latestFounderTest.verdict}`,
+      impact: 'MEDIUM',
+      evidenceSource: 'founder-test-integration',
+    });
+  }
+
+  return finalizeSnapshot({
     readOnly: true,
-    generatedAt: new Date().toISOString(),
+    generatedAt,
     capabilityTruth,
     overallUncertainty: deriveUncertaintyLevel({
       provenCount: capabilityTruth.provenCount,
@@ -123,18 +188,24 @@ export function buildOperationalEvidenceSnapshot(
       unknownCount: capabilityTruth.unknownCount,
       hasLiveEvidence: true,
     }),
-    firstBrokenStage: executionProof.report.firstBrokenStage,
-    executionChainConnected: executionProof.report.chainConnected,
+    executionChainTruth,
+    executionTruthGeneratedAt: executionChainTruth.generatedAt,
+    executionTruthSource: executionChainTruth.sourceAuthority,
+    firstBrokenStage: executionChainTruth.firstBrokenStage,
+    executionChainConnected: executionChainTruth.chainConnected,
     launchBlockers,
     typecheckState: typecheck.readinessState,
     typecheckClean: typecheck.typecheckClean,
-    buildProofLevel: buildAssessment.report.proofLevel,
+    buildProofLevel: executionChainTruth.buildProven ? 'PROVEN' : buildAssessment.report.proofLevel,
     chatIntelligenceNote: null,
+    founderTestVerdict: latestFounderTest?.verdict ?? null,
+    truthSourceContradictions,
     evidenceSources: [
-      'autonomous-build-execution-proof',
+      CONNECTED_EXECUTION_CHAIN_TRUTH_SOURCE,
       'connected-build-execution',
       'repository-typecheck-reality',
       'capability-truth-registry',
+      ...(latestFounderTest ? ['founder-test-integration'] : []),
     ],
-  };
+  });
 }

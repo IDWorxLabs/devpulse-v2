@@ -50,7 +50,7 @@ for (const file of REQUIRED) {
 
 resetOperationalEvidenceSnapshotCacheForTests();
 const snapshot = getOperationalEvidenceSnapshot(ROOT);
-const registry = buildCapabilityTruthRegistry(ROOT);
+const registry = snapshot.capabilityTruth;
 
 assert('capability truth registry exists', registry.entries.length >= 8, String(registry.entries.length));
 assert(

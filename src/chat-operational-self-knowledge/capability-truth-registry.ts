@@ -1,13 +1,14 @@
 /**
- * Capability truth registry — PROVEN / PARTIALLY_PROVEN / NOT_PROVEN / UNKNOWN from authorities.
+ * Capability truth registry — PROVEN / PARTIALLY_PROVEN / NOT_PROVEN / UNKNOWN from synchronized chain truth.
  */
 
-import { assessAutonomousBuildExecutionProof } from '../autonomous-build-execution-proof/index.js';
-import { assessConnectedBuildExecution } from '../connected-build-execution/index.js';
 import {
   assessRepositoryTypecheckReality,
   getLatestRepositoryTypecheckBaseline,
 } from '../repository-typecheck-reality/index.js';
+import type { ConnectedExecutionChainTruth } from '../founder-test-integration/connected-execution-chain-truth.js';
+import { CONNECTED_EXECUTION_CHAIN_TRUTH_SOURCE } from '../founder-test-integration/connected-execution-chain-truth.js';
+import { assessConnectedBuildExecution } from '../connected-build-execution/index.js';
 import { CORE_CAPABILITY_DEFINITIONS } from './chat-operational-self-knowledge-registry.js';
 import type {
   CapabilityTruthEntry,
@@ -15,84 +16,89 @@ import type {
   CapabilityTruthRegistry,
 } from './chat-operational-self-knowledge-types.js';
 
-function stageTruth(proofLevel: string | undefined): CapabilityTruthLevel {
-  if (proofLevel === 'PROVEN') return 'PROVEN';
-  if (proofLevel === 'PARTIAL') return 'PARTIALLY_PROVEN';
-  if (proofLevel === 'NOT_PROVEN') return 'NOT_PROVEN';
-  return 'UNKNOWN';
+function truthFromProven(proven: boolean): CapabilityTruthLevel {
+  return proven ? 'PROVEN' : 'NOT_PROVEN';
 }
 
 function countByLevel(entries: CapabilityTruthEntry[], level: CapabilityTruthLevel): number {
   return entries.filter((e) => e.truthLevel === level).length;
 }
 
-export function buildCapabilityTruthRegistry(rootDir: string): CapabilityTruthRegistry {
-  const executionProof = assessAutonomousBuildExecutionProof({ rootDir });
+export function buildCapabilityTruthRegistry(
+  rootDir: string,
+  executionChainTruth: ConnectedExecutionChainTruth,
+): CapabilityTruthRegistry {
   const buildMaterialization = assessConnectedBuildExecution({ rootDir });
   const typecheck =
     getLatestRepositoryTypecheckBaseline() ??
     assessRepositoryTypecheckReality({ source: 'NOT_RUN' });
 
-  const stageByName = new Map(
-    executionProof.report.stageProofs.map((stage) => [stage.stage, stage.proofLevel]),
-  );
+  const truthSource = CONNECTED_EXECUTION_CHAIN_TRUTH_SOURCE;
+  const buildTruth =
+    executionChainTruth.buildProven && buildMaterialization.report.proofLevel === 'PROVEN'
+      ? 'PROVEN'
+      : executionChainTruth.buildProven
+        ? 'PROVEN'
+        : buildMaterialization.report.proofLevel === 'PARTIAL'
+          ? 'PARTIALLY_PROVEN'
+          : 'NOT_PROVEN';
 
   const entries: CapabilityTruthEntry[] = [
     {
       readOnly: true,
       capabilityId: 'requirements_extraction',
       label: 'Requirements extraction',
-      truthLevel: stageTruth(stageByName.get('REQUIREMENTS')),
-      evidenceSource: 'autonomous-build-execution-proof',
-      detail: `Stage REQUIREMENTS: ${stageByName.get('REQUIREMENTS') ?? 'UNKNOWN'}`,
+      truthLevel: truthFromProven(executionChainTruth.requirementsProven),
+      evidenceSource: truthSource,
+      detail: `Requirements proven: ${executionChainTruth.requirementsProven}`,
     },
     {
       readOnly: true,
       capabilityId: 'planning',
       label: 'Planning',
-      truthLevel: stageTruth(stageByName.get('PLAN')),
-      evidenceSource: 'autonomous-build-execution-proof',
-      detail: `Stage PLAN: ${stageByName.get('PLAN') ?? 'UNKNOWN'}`,
+      truthLevel: truthFromProven(executionChainTruth.planProven),
+      evidenceSource: truthSource,
+      detail: `Plan proven: ${executionChainTruth.planProven}`,
     },
     {
       readOnly: true,
       capabilityId: 'build_materialization',
       label: 'Build materialization',
-      truthLevel: stageTruth(stageByName.get('BUILD')),
-      evidenceSource: 'connected-build-execution',
-      detail: `BUILD proof ${buildMaterialization.report.proofLevel}; materialization ${buildMaterialization.report.buildMaterialization.materializationState}`,
+      truthLevel: buildTruth,
+      evidenceSource: truthSource,
+      detail: `BUILD proven: ${executionChainTruth.buildProven}; materialization ${buildMaterialization.report.buildMaterialization.materializationState}`,
     },
     {
       readOnly: true,
       capabilityId: 'runtime_execution',
       label: 'Runtime execution',
-      truthLevel: stageTruth(stageByName.get('RUNTIME')),
-      evidenceSource: 'autonomous-build-execution-proof',
-      detail: `Stage RUNTIME: ${stageByName.get('RUNTIME') ?? 'UNKNOWN'}`,
+      truthLevel: truthFromProven(executionChainTruth.runtimeProven),
+      evidenceSource: truthSource,
+      detail: `Runtime proven: ${executionChainTruth.runtimeProven}`,
     },
     {
       readOnly: true,
       capabilityId: 'preview_execution',
       label: 'Preview execution',
-      truthLevel: stageTruth(stageByName.get('PREVIEW')),
-      evidenceSource: 'autonomous-build-execution-proof',
-      detail: `Stage PREVIEW: ${stageByName.get('PREVIEW') ?? 'UNKNOWN'}`,
+      truthLevel: truthFromProven(executionChainTruth.previewProven),
+      evidenceSource: truthSource,
+      detail: `Preview proven: ${executionChainTruth.previewProven}`,
     },
     {
       readOnly: true,
       capabilityId: 'verification_execution',
       label: 'Verification execution',
-      truthLevel: stageTruth(stageByName.get('VERIFY')),
-      evidenceSource: 'autonomous-build-execution-proof',
-      detail: `Stage VERIFY: ${stageByName.get('VERIFY') ?? 'UNKNOWN'}`,
+      truthLevel: truthFromProven(executionChainTruth.verificationProven),
+      evidenceSource: truthSource,
+      detail: `Verification proven: ${executionChainTruth.verificationProven}`,
     },
     {
       readOnly: true,
       capabilityId: 'launch_execution',
       label: 'Launch execution',
-      truthLevel: stageTruth(stageByName.get('LAUNCH')),
-      evidenceSource: 'autonomous-build-execution-proof',
-      detail: `Stage LAUNCH: ${stageByName.get('LAUNCH') ?? 'UNKNOWN'}`,
+      truthLevel: truthFromProven(executionChainTruth.launchProven),
+      evidenceSource: truthSource,
+      detail: `Launch proven: ${executionChainTruth.launchProven}`,
     },
     {
       readOnly: true,
@@ -115,7 +121,7 @@ export function buildCapabilityTruthRegistry(rootDir: string): CapabilityTruthRe
       label: 'Chat operational intelligence',
       truthLevel: 'PARTIALLY_PROVEN',
       evidenceSource: 'chat-operational-self-knowledge',
-      detail: 'Operational self-knowledge layer active with bounded evidence snapshot',
+      detail: 'Operational self-knowledge synchronized to connected execution chain truth',
     },
   ];
 
@@ -151,7 +157,13 @@ export function listCapabilitiesByTruthLevel(
 }
 
 export function highestImpactWeakness(registry: CapabilityTruthRegistry): CapabilityTruthEntry | null {
-  const priority = ['runtime_execution', 'preview_execution', 'verification_execution', 'launch_execution', 'build_materialization'];
+  const priority = [
+    'runtime_execution',
+    'preview_execution',
+    'verification_execution',
+    'launch_execution',
+    'build_materialization',
+  ];
   for (const id of priority) {
     const entry = registry.entries.find((e) => e.capabilityId === id);
     if (entry && (entry.truthLevel === 'NOT_PROVEN' || entry.truthLevel === 'UNKNOWN')) {
@@ -159,4 +171,11 @@ export function highestImpactWeakness(registry: CapabilityTruthRegistry): Capabi
     }
   }
   return registry.entries.find((e) => e.truthLevel === 'NOT_PROVEN') ?? null;
+}
+
+export function getCapabilityTruthEntry(
+  registry: CapabilityTruthRegistry,
+  capabilityId: string,
+): CapabilityTruthEntry | null {
+  return registry.entries.find((e) => e.capabilityId === capabilityId) ?? null;
 }

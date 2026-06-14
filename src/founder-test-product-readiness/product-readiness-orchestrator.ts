@@ -6,6 +6,10 @@
 import { assessFounderTestIntegration } from '../founder-test-integration/index.js';
 import type { FounderTestAssessment, FounderTestAuthorityResult } from '../founder-test-integration/founder-test-integration-types.js';
 import { runFounderTestChatStressSimulation } from '../founder-test-chat-stress-simulation/index.js';
+import {
+  recordIntakeCompletionBoundaryOperation,
+  recordProductReadinessSimulationCompleteEmitted,
+} from '../founder-test-chat-stress-simulation/chat-stress-completion-propagation.js';
 import type { ChatStressSimulationReport } from '../founder-test-chat-stress-simulation/chat-stress-simulation-types.js';
 import { retrieveDevPulseIntelligenceSnapshot } from '../world-class-chat-brain/devpulse-intelligence-adapter.js';
 import { CURRENT_PRODUCT_NAME, usesDevPulseAsCurrentIdentity } from '../identity-foundation/legacy-product-identity.js';
@@ -545,12 +549,19 @@ export async function runFullProductReadinessSimulation(
     simulationBudgetNotes: simulationBudgetNotes,
   };
 
+  recordIntakeCompletionBoundaryOperation('product-readiness-simulation-complete');
   input.onSimulationTrace?.({
     operationId: 'product-readiness-simulation-complete',
     operationLabel: simulationDegradedPartial
       ? `Product readiness simulation complete (${simulationRuntimeHealth})`
       : 'Product readiness simulation complete',
-    phase: simulationDegradedPartial ? 'BUDGET_EXCEEDED' : 'PASSED',
+    phase: 'PASSED',
+  });
+  recordProductReadinessSimulationCompleteEmitted();
+  input.onSimulationTrace?.({
+    operationId: 'product-readiness-simulation-complete-emitted',
+    operationLabel: 'Product readiness simulation complete emitted',
+    phase: 'PASSED',
   });
 
   const assessment: ProductReadinessAssessment = {

@@ -250,7 +250,7 @@ assert('F builder materialization connected', chainContext.builderMaterializatio
 assert(
   'F first broken stage PREVIEW or VERIFY',
   chainContext.firstBrokenStage === 'PREVIEW' || chainContext.firstBrokenStage === 'VERIFY',
-  chainContext.firstBrokenStage,
+  String(chainContext.firstBrokenStage),
 );
 
 const founderTest = assessFounderTestIntegration({ rootDir: ROOT });

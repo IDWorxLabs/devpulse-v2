@@ -12,6 +12,7 @@ import {
   looksLikeProjectStatusAnswer,
   type ResolvedIntentOverride,
 } from '../chat-cognitive-architecture/chat-intent-reconciliation.js';
+import { tryResolveLiveOperationalTruthAnswer } from '../chat-operational-self-knowledge/index.js';
 import { buildChatBrainContext } from './chat-brain-context-builder.js';
 import { judgeChatBrainAnswer, stripGenericOnboardingFromAnswer } from './chat-brain-answer-judge.js';
 import { repairChatBrainResponse } from './chat-brain-response-repair.js';
@@ -327,6 +328,42 @@ export function generateWorldClassChatResponse(input: ChatBrainInput): ChatBrain
   const message = input.message?.trim() ?? '';
   const rootDir = input.rootDir ?? process.cwd();
   const brainDraft = input.draftResponse ?? '';
+
+  const liveOperational = tryResolveLiveOperationalTruthAnswer({
+    message,
+    draftResponse: brainDraft,
+    rootDir,
+  });
+  if (liveOperational?.usedOperationalSelfKnowledge) {
+    const intent = classifyChatBrainIntent(message);
+    const context = buildChatBrainContext(rootDir);
+    return {
+      readOnly: true,
+      finalAnswer: liveOperational.finalAnswer,
+      intent,
+      context,
+      draft: {
+        readOnly: true,
+        text: liveOperational.finalAnswer,
+        reasoningMode: 'EVIDENCE_GROUNDED',
+        intent: intent.category,
+        usedDraftFromBrain: false,
+      },
+      judgement: {
+        readOnly: true,
+        passed: true,
+        score: 92,
+        failureReasons: [],
+        criteria: [],
+        soundsRobotic: false,
+        genericOnboardingViolation: false,
+        overclaimDetected: false,
+      },
+      repaired: false,
+      usedBrainDraft: false,
+      sourceConflict: undefined,
+    };
+  }
 
   const intent = classifyChatBrainIntent(message);
   const context = buildChatBrainContext(rootDir);

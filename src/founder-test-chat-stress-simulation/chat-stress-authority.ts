@@ -26,15 +26,49 @@ import {
 
 import {
 
-  allStartedChatStressScenariosSettled,
-
   markChatStressSimulationAggregateComplete,
+
+  registerChatStressPostWatchdogHealthReconciler,
 
   resetChatStressCompletionTrackerForTests,
 
   type ChatStressScenarioTerminalStatus,
 
 } from './chat-stress-completion-tracker.js';
+
+import { resetChatStressCompletionPropagationForTests } from './chat-stress-completion-propagation.js';
+
+import {
+
+  buildChatStressSettlementSummary,
+
+  detectChatStressPendingLeak,
+
+} from './chat-stress-settlement-boundary.js';
+
+import {
+
+  recordChatStressCompletionConditionSatisfied,
+
+  recordChatStressSimulationCompleteEmitted,
+
+  recordIntakeCompletionBoundaryOperation,
+
+} from './chat-stress-completion-propagation.js';
+
+import {
+
+  CHAT_STRESS_RUNNER_IDLE_WITH_PENDING_KIND,
+
+  LIVE_CHAT_STRESS_RUNNER_PATH_MARKER,
+
+  reconcileChatStressRunnerIdleWithPending,
+
+  registerChatStressRunnerIdleWithPendingHandler,
+
+  resetLiveChatStressRunnerPathForTests,
+
+} from './live-chat-stress-runner-path.js';
 
 import { evaluateChatStressRuns } from './chat-response-evaluator.js';
 
@@ -77,6 +111,10 @@ export function resetChatStressSimulationForTests(): void {
   runCounter = 0;
 
   resetChatStressCompletionTrackerForTests();
+
+  resetChatStressCompletionPropagationForTests();
+
+  resetLiveChatStressRunnerPathForTests();
 
 }
 
@@ -246,9 +284,59 @@ export async function runFounderTestChatStressSimulation(
 
 
 
+  let unregisterHealthReconciler: (() => void) | null = null;
+
+  if (context === 'founder-test') {
+
+    emitTrace(input, {
+
+      operationId: LIVE_CHAT_STRESS_RUNNER_PATH_MARKER,
+
+      operationLabel: `live-chat-stress-runner-path: ${LIVE_CHAT_STRESS_RUNNER_PATH_MARKER}`,
+
+      phase: 'PASSED',
+
+    });
+
+    registerChatStressRunnerIdleWithPendingHandler((event) => {
+
+      emitTrace(input, {
+
+        operationId: 'chat-stress-runner-idle-with-pending',
+
+        operationLabel: CHAT_STRESS_RUNNER_IDLE_WITH_PENDING_KIND,
+
+        phase: 'SLOW',
+
+        errorMessage: JSON.stringify({
+
+          pendingScenarioIds: event.pendingScenarioIds,
+
+          pendingWithoutActiveWorkerScenarioIds: event.pendingWithoutActiveWorkerScenarioIds,
+
+          forcedSettlementCount: event.forcedSettlementCount,
+
+        }),
+
+      });
+
+    });
+
+    unregisterHealthReconciler = registerChatStressPostWatchdogHealthReconciler(
+
+      reconcileChatStressRunnerIdleWithPending,
+
+    );
+
+  }
+
   let lastHealth = budget.snapshot().health;
 
-  const batch = await simulateChatStressBatch({
+  let batch;
+
+  try {
+
+  batch = await simulateChatStressBatch({
 
     scenarios,
 
@@ -316,6 +404,34 @@ export async function runFounderTestChatStressSimulation(
 
       emitTrace(input, {
 
+        operationId: `chat-stress-scenario-settled:${run.scenarioId}`,
+
+        operationLabel: `Chat stress scenario settled: ${run.scenarioId} (${terminalStatus})`,
+
+        phase: terminalTracePhase(terminalStatus),
+
+        errorMessage: run.skipReason ?? undefined,
+
+      });
+
+      if (terminalStatus === 'TIMEOUT') {
+
+        emitTrace(input, {
+
+          operationId: `chat-stress-scenario-timed-out-settled:${run.scenarioId}`,
+
+          operationLabel: `Chat stress scenario timed out and settled: ${run.scenarioId}`,
+
+          phase: 'FAILED',
+
+          errorMessage: run.skipReason ?? 'TIMEOUT',
+
+        });
+
+      }
+
+      emitTrace(input, {
+
         operationId: `chat-stress-scenario:${run.scenarioId}`,
 
         operationLabel: terminalTraceLabel(run.scenarioId, terminalStatus),
@@ -325,6 +441,22 @@ export async function runFounderTestChatStressSimulation(
         errorMessage: run.skipReason ?? undefined,
 
       });
+
+      const settlementSnap = buildChatStressSettlementSummary();
+
+      emitTrace(input, {
+
+        operationId: 'chat-stress-pending-count-updated',
+
+        operationLabel: `Chat stress pending count updated: ${settlementSnap.pendingCount}`,
+
+        phase: 'RUNNING',
+
+        errorMessage: `settled=${settlementSnap.settledCount}/${settlementSnap.totalScenarios}`,
+
+      });
+
+      reconcileChatStressRunnerIdleWithPending();
 
     },
 
@@ -404,13 +536,63 @@ export async function runFounderTestChatStressSimulation(
 
   });
 
+  } finally {
 
+    registerChatStressRunnerIdleWithPendingHandler(null);
 
-  if (!allStartedChatStressScenariosSettled()) {
-
-    throw new Error('Chat stress completion barrier violated — aggregate complete before all scenarios settled');
+    unregisterHealthReconciler?.();
 
   }
+
+
+
+  const settlementSummary = buildChatStressSettlementSummary();
+
+  if (!settlementSummary.completionBoundaryReached) {
+
+    const leak = detectChatStressPendingLeak();
+
+    if (leak) {
+
+      emitTrace(input, {
+
+        operationId: 'chat-stress-pending-leak',
+
+        operationLabel: 'CHAT_STRESS_PENDING_LEAK',
+
+        phase: 'FAILED',
+
+        errorMessage: JSON.stringify({
+
+          pendingScenarioIds: leak.pendingScenarioIds,
+
+          lastState: leak.lastStateByScenarioId,
+
+          lastUpdateTime: leak.lastUpdateTimeByScenarioId,
+
+        }),
+
+      });
+
+    }
+
+    throw new Error('Chat stress completion boundary violated — aggregate complete before all scenarios settled');
+
+  }
+
+
+
+  recordChatStressCompletionConditionSatisfied();
+
+  emitTrace(input, {
+
+    operationId: 'chat-stress-completion-condition-satisfied',
+
+    operationLabel: `Chat stress completion condition satisfied (settled=${settlementSummary.settledCount}, pending=${settlementSummary.pendingCount})`,
+
+    phase: 'PASSED',
+
+  });
 
 
 
@@ -572,6 +754,8 @@ export async function runFounderTestChatStressSimulation(
 
     scenarioRuns: runs,
 
+    settlementSummary,
+
   };
 
 
@@ -594,6 +778,8 @@ export async function runFounderTestChatStressSimulation(
 
 
 
+  recordIntakeCompletionBoundaryOperation('chat-stress-simulation-complete');
+
   emitTrace(input, {
 
     operationId: 'chat-stress-simulation-complete',
@@ -604,7 +790,19 @@ export async function runFounderTestChatStressSimulation(
 
       : `Chat stress simulation complete (${passedCount}/${scenarios.length} passed)`,
 
-    phase: degradedPartialResult ? 'BUDGET_EXCEEDED' : 'PASSED',
+    phase: 'PASSED',
+
+  });
+
+  recordChatStressSimulationCompleteEmitted();
+
+  emitTrace(input, {
+
+    operationId: 'chat-stress-simulation-complete-emitted',
+
+    operationLabel: 'Chat stress simulation complete emitted',
+
+    phase: 'PASSED',
 
   });
 

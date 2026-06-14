@@ -937,8 +937,11 @@ export async function buildFounderTestLaunchReadinessArtifactsAsync(
       errorMessage?: string;
     }) => {
       const completionBoundary =
+        event.operationId === 'chat-stress-completion-condition-satisfied' ||
         event.operationId === 'chat-stress-simulation-complete' ||
+        event.operationId === 'chat-stress-simulation-complete-emitted' ||
         event.operationId === 'product-readiness-simulation-complete' ||
+        event.operationId === 'product-readiness-simulation-complete-emitted' ||
         event.operationId === 'launch-readiness-assessment-complete' ||
         event.operationId === 'launch-readiness-artifacts-built';
       emitLaunchReadinessBuildTrace(input, {

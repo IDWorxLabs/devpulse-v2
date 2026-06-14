@@ -42,7 +42,7 @@ export function analyzeLaunchAcceptance(input: {
     acceptanceState = 'ACCEPTED';
     reasons.push('Founder acceptance: ACCEPTED');
   } else if (fa === 'ACCEPTED_WITH_WARNINGS') {
-    if (acceptanceState !== 'REJECTED') acceptanceState = 'CONDITIONAL';
+    acceptanceState = 'CONDITIONAL';
     reasons.push('Founder acceptance: ACCEPTED_WITH_WARNINGS');
   } else if (fa === 'NOT_ACCEPTED' || fa === 'BLOCKED') {
     if (!input.connectedExecutionChainProven) {

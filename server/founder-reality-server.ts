@@ -16,7 +16,7 @@ import {
   FOUNDER_REALITY_PORT,
   FOUNDER_REALITY_URL,
 } from './founder-reality-manifest.js';
-import { handleBrainRespondRequest, sendBrainHealth } from './brain-api-handler.js';
+import { handleBrainRespondRequest, sendBrainHealth, sendBrainOperationalTruth } from './brain-api-handler.js';
 import {
   handleFounderTestRunRequest,
   handleFounderTestRunV2Request,
@@ -121,6 +121,16 @@ export function createFounderRealityServer() {
         return;
       }
       sendBrainHealth(res);
+      return;
+    }
+
+    if (urlPath === '/api/brain/operational-truth' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendBrainOperationalTruth(res);
       return;
     }
 

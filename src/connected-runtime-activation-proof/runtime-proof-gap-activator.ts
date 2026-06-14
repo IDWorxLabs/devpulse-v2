@@ -293,7 +293,9 @@ export function activateRuntimeProofGap(input: {
     health: {
       readOnly: true,
       healthState:
-        probe.healthResponded && probe.responseCode !== null && probe.responseCode < 400
+        probe.healthResponded &&
+        typeof probe.responseCode === 'number' &&
+        probe.responseCode < 400
           ? 'HEALTHY'
           : probe.healthChecked
             ? 'FAILED'

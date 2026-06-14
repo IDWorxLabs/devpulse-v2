@@ -116,6 +116,11 @@ import {
 
 } from '../src/founder-test-runtime-monitor/index.js';
 
+import {
+  recordIntakeValidationCompleteEmitted,
+  recordPlanningGateStarted,
+} from '../src/founder-test-chat-stress-simulation/chat-stress-completion-propagation.js';
+
 import type { StoredFounderTestRunResult } from '../src/founder-test-runtime-monitor/founder-test-run-result-store.js';
 
 import type { FounderTestRuntimeSnapshot } from '../src/founder-test-runtime-monitor/founder-test-runtime-types.js';
@@ -485,6 +490,20 @@ async function executeFounderTestRunCore(input: {
 
   });
 
+  recordIntakeValidationCompleteEmitted();
+
+  emitFounderTestRuntimeTrace({
+
+    operationId: 'intake-validation-complete-emitted',
+
+    stageId: 'INTAKE_VALIDATION',
+
+    operationLabel: 'Intake validation complete emitted',
+
+    status: 'PASSED',
+
+  });
+
   completeFounderTestRuntimeStage({
 
     stageId: 'INTAKE_VALIDATION',
@@ -510,6 +529,20 @@ async function executeFounderTestRunCore(input: {
         status: 'RUNNING',
 
       });
+
+      emitFounderTestRuntimeTrace({
+
+        operationId: 'planning-gate-started',
+
+        stageId: 'PLANNING_GATE',
+
+        operationLabel: 'Planning gate started',
+
+        status: 'PASSED',
+
+      });
+
+      recordPlanningGateStarted();
 
     }
 

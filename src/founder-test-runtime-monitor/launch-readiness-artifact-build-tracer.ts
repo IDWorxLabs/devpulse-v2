@@ -3,6 +3,8 @@
  */
 
 import type { LaunchReadinessBuildTraceCallback } from '../founder-test-launch-readiness/founder-test-launch-readiness-types.js';
+import { shouldPropagateLiveChatStressRuntimeFeed } from '../founder-test-chat-stress-simulation/live-chat-stress-runner-path.js';
+import { PINNED_RUNTIME_TRACE_OPERATION_IDS } from './runtime-trace-registry.js';
 import {
   STALL_SLOW_THRESHOLD_MS,
   STALL_STALLED_THRESHOLD_MS,
@@ -168,6 +170,16 @@ export function createLaunchReadinessArtifactBuildTraceBridge(handlers: {
 }): LaunchReadinessBuildTraceCallback {
   const stageId = 'INTAKE_VALIDATION';
 
+  function skipsRuntimeTracePropagation(operationId: string): boolean {
+    if (PINNED_RUNTIME_TRACE_OPERATION_IDS.has(operationId)) {
+      return false;
+    }
+    if (shouldPropagateLiveChatStressRuntimeFeed(operationId)) {
+      return false;
+    }
+    return skipsArtifactSubstepMutation(operationId);
+  }
+
   function skipsArtifactSubstepMutation(operationId: string): boolean {
     return (
       operationId.startsWith('chat-stress-scenario:') ||
@@ -176,10 +188,17 @@ export function createLaunchReadinessArtifactBuildTraceBridge(handlers: {
       operationId === 'chat-stress-simulation-stalled' ||
       operationId === 'chat-stress-simulation-budget-exceeded' ||
       operationId === 'chat-stress-simulation-complete' ||
+      operationId === 'chat-stress-completion-condition-satisfied' ||
+      operationId === 'chat-stress-simulation-complete-emitted' ||
+      operationId === 'product-readiness-simulation-complete-emitted' ||
       operationId.startsWith('chat-stress-scenario-slow:') ||
       operationId.startsWith('chat-stress-scenario-duplicate-ignored:') ||
       operationId.startsWith('chat-stress-watchdog-armed:') ||
       operationId.startsWith('chat-stress-watchdog-fired:') ||
+      operationId.startsWith('chat-stress-scenario-settled:') ||
+      operationId.startsWith('chat-stress-scenario-timed-out-settled:') ||
+      operationId === 'chat-stress-pending-count-updated' ||
+      operationId === 'chat-stress-pending-leak' ||
       operationId === 'product-readiness-chat-stress-complete'
     );
   }
@@ -205,11 +224,13 @@ export function createLaunchReadinessArtifactBuildTraceBridge(handlers: {
           operationLabel: event.operationLabel,
         });
       }
-      handlers.onSubstepRunning({
-        operationId: event.operationId,
-        operationLabel: event.operationLabel,
-        stageId,
-      });
+      if (!skipsRuntimeTracePropagation(event.operationId)) {
+        handlers.onSubstepRunning({
+          operationId: event.operationId,
+          operationLabel: event.operationLabel,
+          stageId,
+        });
+      }
       return;
     }
     if (event.phase === 'PASSED') {
@@ -225,11 +246,13 @@ export function createLaunchReadinessArtifactBuildTraceBridge(handlers: {
           status: 'PASSED',
         });
       }
-      handlers.onSubstepPassed({
-        operationId: event.operationId,
-        operationLabel: event.operationLabel,
-        stageId,
-      });
+      if (!skipsRuntimeTracePropagation(event.operationId)) {
+        handlers.onSubstepPassed({
+          operationId: event.operationId,
+          operationLabel: event.operationLabel,
+          stageId,
+        });
+      }
       return;
     }
     if (event.operationId === 'product-readiness-chat-stress-complete') {
@@ -246,11 +269,13 @@ export function createLaunchReadinessArtifactBuildTraceBridge(handlers: {
         errorMessage: event.errorMessage,
       });
     }
-    handlers.onSubstepFailed({
-      operationId: event.operationId,
-      operationLabel: event.operationLabel,
-      stageId,
-      errorMessage: event.errorMessage,
-    });
+    if (!skipsRuntimeTracePropagation(event.operationId)) {
+      handlers.onSubstepFailed({
+        operationId: event.operationId,
+        operationLabel: event.operationLabel,
+        stageId,
+        errorMessage: event.errorMessage,
+      });
+    }
   };
 }

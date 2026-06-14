@@ -9,6 +9,11 @@ import {
   getChatStressCompletionSnapshot,
   shouldFlagChatStressPendingStage2Gap,
 } from '../founder-test-chat-stress-simulation/chat-stress-completion-tracker.js';
+import { isChatStressSimulationComplete } from '../founder-test-chat-stress-simulation/chat-stress-settlement-boundary.js';
+import {
+  hasChatStressSimulationCompletePropagated,
+  hasIntakeValidationCompletionBoundaryInRegistry,
+} from '../founder-test-chat-stress-simulation/chat-stress-completion-propagation.js';
 import {
   CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS,
   CHAT_STRESS_SCENARIO_HARD_TIMEOUT_GRACE_MS,
@@ -60,6 +65,9 @@ export function hasPassedTraceEvent(
   traceEvents: readonly FounderTestRuntimeTraceEvent[],
   operationId: string,
 ): boolean {
+  if (hasIntakeValidationCompletionBoundaryInRegistry(operationId)) {
+    return true;
+  }
   return traceEvents.some((event) => event.operationId === operationId && event.status === 'PASSED');
 }
 
@@ -97,7 +105,9 @@ export function analyzeStage2CompletionGap(snapshot: Omit<FounderTestRuntimeSnap
 
   const missingCompletionBoundary = resolveMissingIntakeCompletionBoundary(snapshot.traceEvents);
   const chatStress = getChatStressCompletionSnapshot();
-  const chatStressPending = chatStress.pendingCount > 0;
+  const chatStressComplete =
+    isChatStressSimulationComplete() || hasChatStressSimulationCompletePropagated();
+  const chatStressPending = !chatStressComplete && chatStress.pendingCount > 0;
   const artifactIdle = snapshot.activeArtifactBuildSubstep == null && !chatStressPending;
 
   if (

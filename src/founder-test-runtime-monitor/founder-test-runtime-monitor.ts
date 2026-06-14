@@ -3,6 +3,8 @@
  */
 
 import { FOUNDER_TEST_ALREADY_RUNNING, FOUNDER_TEST_RUNTIME_STAGES } from './founder-test-runtime-registry.js';
+import { recordIntakeCompletionBoundaryOperation, resetChatStressCompletionPropagationForTests } from '../founder-test-chat-stress-simulation/chat-stress-completion-propagation.js';
+import { PINNED_RUNTIME_TRACE_OPERATION_IDS } from './runtime-trace-registry.js';
 import type {
   BeginFounderTestRuntimeResult,
   FounderTestRuntimeFeedEvent,
@@ -94,6 +96,7 @@ export function resetFounderTestRuntimeMonitorForTests(): void {
   resetFounderTestRuntimeHistoryForTests();
   resetLaunchReadinessArtifactBuildTracerForTests();
   resetFounderTestRunResultStoreForTests();
+  resetChatStressCompletionPropagationForTests();
 }
 
 function emitSessionTrace(input: {
@@ -111,6 +114,10 @@ function emitSessionTrace(input: {
     status: input.status,
   });
   activeSession.traceEvents = result.events;
+
+  if (input.status === 'PASSED' && PINNED_RUNTIME_TRACE_OPERATION_IDS.has(input.operationId)) {
+    recordIntakeCompletionBoundaryOperation(input.operationId);
+  }
 
   if (input.status === 'RUNNING' || input.status === 'SLOW' || input.status === 'STALLED') {
     activeSession.currentOperation = input.operationLabel;

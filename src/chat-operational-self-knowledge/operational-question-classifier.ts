@@ -27,6 +27,29 @@ const RULES: Rule[] = [
     weight: 10,
   },
   {
+    kind: 'TRUTH_SOURCE',
+    patterns: [
+      /\bwhat execution truth source\b/i,
+      /\bexecution truth source are you (currently )?using\b/i,
+      /\bwhat evidence are you using\b/i,
+      /\bhow do you know this\b/i,
+      /\bwhat (?:is your|are your) (?:current )?truth source\b/i,
+      /\bwhere does (?:this|your) (?:operational )?truth come from\b/i,
+    ],
+    weight: 11,
+  },
+  {
+    kind: 'EXECUTION_STAGE_INVENTORY',
+    patterns: [
+      /\blist all execution stages\b/i,
+      /\bexecution stages and their (?:current )?status\b/i,
+      /\ball execution stages\b/i,
+      /\bshow (?:me )?(?:all )?execution stages\b/i,
+      /\bexecution stage inventory\b/i,
+    ],
+    weight: 11,
+  },
+  {
     kind: 'PROOF_REQUEST',
     patterns: [
       /\bcan you prove (that|this)\b/i,
@@ -39,6 +62,7 @@ const RULES: Rule[] = [
     kind: 'FIRST_BROKEN_STAGE',
     patterns: [
       /\bfirst broken stage\b/i,
+      /\bcurrent first broken stage\b/i,
       /\bwhere (does|is) the chain break\b/i,
       /\bwhat stage is broken\b/i,
     ],
@@ -51,6 +75,7 @@ const RULES: Rule[] = [
       /\bwhat(?:'s| is) blocking launch\b/i,
       /\bwhy can(?:'|no)t we launch\b/i,
       /\blaunch blockers?\b/i,
+      /\btop (three|3) launch blockers?\b/i,
     ],
     weight: 9,
   },
@@ -58,6 +83,8 @@ const RULES: Rule[] = [
     kind: 'WEAKNESS',
     patterns: [
       /\bbiggest weakness\b/i,
+      /\bbiggest blocker\b/i,
+      /\bwhat blocks launch\b/i,
       /\bweakest (part|area|capability)\b/i,
       /\bwhat are you bad at\b/i,
       /\bwhere are you weakest\b/i,
@@ -99,8 +126,11 @@ const RULES: Rule[] = [
     kind: 'LAUNCH_READINESS',
     patterns: [
       /\bare we ready to launch\b/i,
+      /\bare you ready to (be )?launch/i,
+      /\bready to be launch/i,
       /\blaunch readiness\b/i,
       /\bcan we launch\b/i,
+      /\bcan you be launch/i,
     ],
     weight: 8,
   },
@@ -119,6 +149,9 @@ const RULES: Rule[] = [
       /\bwhat can you do\b/i,
       /\bwhat are your capabilities\b/i,
       /\bwhat are you able to do\b/i,
+      /\bcan you run applications?\b/i,
+      /\bcan you preview applications?\b/i,
+      /\bcapability inventory\b/i,
     ],
     weight: 7,
   },

@@ -277,7 +277,9 @@ const notProvenLaunch = assessConnectedLaunchReadinessProof({
 assert('G LAUNCH isolated check uses injected NOT_PROVEN', notProvenLaunch.launchProofLevel !== 'PROVEN' || notProvenLaunch.launchCriteriaSatisfied === false, notProvenLaunch.launchProofLevel);
 
 const chainContext = resolveExecutionChainStageContext(ROOT, {
-  skipLaunchProofGapResolution: true,
+  verificationExecutionProof: liveVerify.report,
+  launchReadinessProof: notProvenLaunch,
+  launchProven: false,
 });
 assert('H verification execution connected', chainContext.verificationExecutionConnected, String(chainContext.verificationExecutionConnected));
 assert('H first broken LAUNCH when launch skipped', chainContext.firstBrokenStage === 'LAUNCH', String(chainContext.firstBrokenStage));

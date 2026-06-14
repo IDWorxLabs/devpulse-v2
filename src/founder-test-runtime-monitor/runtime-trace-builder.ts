@@ -6,6 +6,7 @@ import { FOUNDER_TEST_RUNTIME_STAGES } from './founder-test-runtime-registry.js'
 import {
   MAX_FOUNDER_TEST_TRACE_EVENTS,
   OPERATION_NEXT_EXPECTED,
+  PINNED_RUNTIME_TRACE_OPERATION_IDS,
   STAGE_NEXT_EXPECTED,
 } from './runtime-trace-registry.js';
 import type {
@@ -94,7 +95,32 @@ export function appendRuntimeTraceEvent(input: {
   traceEventCounter += 1;
   const next = [...input.events, event];
   if (next.length > MAX_FOUNDER_TEST_TRACE_EVENTS) {
-    next.splice(0, next.length - MAX_FOUNDER_TEST_TRACE_EVENTS);
+    const pinned = next.filter((entry) => PINNED_RUNTIME_TRACE_OPERATION_IDS.has(entry.operationId));
+    const unpinned = next.filter((entry) => !PINNED_RUNTIME_TRACE_OPERATION_IDS.has(entry.operationId));
+    const trimmedUnpinned =
+      unpinned.length > MAX_FOUNDER_TEST_TRACE_EVENTS
+        ? unpinned.slice(unpinned.length - MAX_FOUNDER_TEST_TRACE_EVENTS)
+        : unpinned;
+    const merged = [...trimmedUnpinned];
+    for (const pinnedEvent of pinned) {
+      const existingPinnedIndex = merged.findIndex(
+        (entry) => entry.operationId === pinnedEvent.operationId && entry.status === pinnedEvent.status,
+      );
+      if (existingPinnedIndex >= 0) {
+        merged[existingPinnedIndex] = pinnedEvent;
+      } else {
+        merged.push(pinnedEvent);
+      }
+    }
+    if (merged.length > MAX_FOUNDER_TEST_TRACE_EVENTS) {
+      const mergedPinned = merged.filter((entry) => PINNED_RUNTIME_TRACE_OPERATION_IDS.has(entry.operationId));
+      const mergedUnpinned = merged.filter((entry) => !PINNED_RUNTIME_TRACE_OPERATION_IDS.has(entry.operationId));
+      const finalUnpinned = mergedUnpinned.slice(
+        Math.max(0, mergedUnpinned.length - (MAX_FOUNDER_TEST_TRACE_EVENTS - mergedPinned.length)),
+      );
+      return { events: [...finalUnpinned, ...mergedPinned], event, appended: true };
+    }
+    return { events: merged, event, appended: true };
   }
   return { events: next, event, appended: true };
 }

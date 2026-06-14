@@ -3,6 +3,7 @@
  */
 
 import { generateWorldClassChatResponse } from '../world-class-chat-brain/index.js';
+import { tryResolveLiveOperationalTruthAnswer } from '../chat-operational-self-knowledge/index.js';
 import { buildDevPulseContextPackage } from './devpulse-context-package.js';
 import { metadataFromContextPackage } from './llm-chat-types.js';
 import { LLM_NOT_CONNECTED_MESSAGE } from './llm-provider.js';
@@ -24,6 +25,62 @@ export interface LocalChatFallbackResult {
 }
 
 export function generateLocalChatFallback(input: LocalChatFallbackInput): LocalChatFallbackResult {
+  const liveOperational = tryResolveLiveOperationalTruthAnswer({
+    message: input.message,
+    draftResponse: input.draftResponse,
+    rootDir: input.rootDir,
+  });
+
+  const contextPackage = buildDevPulseContextPackage({
+    rootDir: input.rootDir,
+    message: input.message,
+  });
+  const ctxMeta = metadataFromContextPackage(contextPackage);
+  const mode = input.mode ?? 'disconnected';
+
+  if (liveOperational?.usedOperationalSelfKnowledge) {
+    let finalAnswer = liveOperational.finalAnswer.trim();
+    const warnings = [input.reason];
+    if (mode === 'disconnected' && !finalAnswer.toLowerCase().includes('llm brain is not connected')) {
+      finalAnswer = `${LLM_NOT_CONNECTED_MESSAGE}\n\n${finalAnswer}`;
+      warnings.push(LLM_NOT_CONNECTED_MESSAGE);
+    }
+    return {
+      readOnly: true,
+      finalAnswer,
+      metadata: {
+        readOnly: true,
+        usedLlm: false,
+        llmConnected: false,
+        fallbackUsed: true,
+        provider: null,
+        model: null,
+        contextIncluded: ctxMeta.contextIncluded,
+        evidenceIncluded: ctxMeta.evidenceIncluded,
+        judgeScore: 90,
+        warnings,
+        repaired: false,
+        repairAttempted: false,
+        contextSourcesUsed: ctxMeta.contextSourcesUsed,
+        lastContextHydration: ctxMeta.lastContextHydration,
+        hydratedFactCount: ctxMeta.hydratedFactCount,
+        contextConfidence: ctxMeta.contextConfidence,
+        identityLoaded: ctxMeta.identityLoaded,
+        founderLoaded: ctxMeta.founderLoaded,
+        productLoaded: ctxMeta.productLoaded,
+        historyLoaded: ctxMeta.historyLoaded,
+        selfEvolutionLoaded: ctxMeta.selfEvolutionLoaded,
+        identityVersion: ctxMeta.identityVersion,
+        founderVersion: ctxMeta.founderVersion,
+        productVersion: ctxMeta.productVersion,
+        currentProductIdentity: ctxMeta.currentProductIdentity,
+        founderIdentity: ctxMeta.founderIdentity,
+        companyIdentity: ctxMeta.companyIdentity,
+        legacyIdentity: ctxMeta.legacyIdentity,
+      },
+    };
+  }
+
   const worldClass = generateWorldClassChatResponse({
     message: input.message,
     draftResponse: input.draftResponse ?? '',
@@ -33,7 +90,6 @@ export function generateLocalChatFallback(input: LocalChatFallbackInput): LocalC
 
   let finalAnswer = worldClass.finalAnswer.trim();
   const warnings = [input.reason];
-  const mode = input.mode ?? 'disconnected';
 
   if (!finalAnswer) {
     finalAnswer = mode === 'disconnected' ? LLM_NOT_CONNECTED_MESSAGE : worldClass.finalAnswer;
@@ -41,12 +97,6 @@ export function generateLocalChatFallback(input: LocalChatFallbackInput): LocalC
     finalAnswer = `${LLM_NOT_CONNECTED_MESSAGE}\n\n${finalAnswer}`;
     warnings.push(LLM_NOT_CONNECTED_MESSAGE);
   }
-
-  const contextPackage = buildDevPulseContextPackage({
-    rootDir: input.rootDir,
-    message: input.message,
-  });
-  const ctxMeta = metadataFromContextPackage(contextPackage);
 
   return {
     readOnly: true,

@@ -96,7 +96,7 @@ const validatorSource = readFileSync(join(ROOT, 'scripts', `${VALIDATOR_BASENAME
 assert('Promise.allSettled barrier', simulatorSource.includes('Promise.allSettled'), 'allSettled');
 assert('completion tracker wired', simulatorSource.includes('beginChatStressSimulation'), 'tracker');
 assert('terminal status resolver', simulatorSource.includes('resolveChatStressScenarioTerminalStatus'), 'terminal');
-assert('aggregate complete guard', authoritySource.includes('allStartedChatStressScenariosSettled'), 'guard');
+assert('aggregate complete guard', authoritySource.includes('isChatStressSimulationComplete'), 'guard');
 assert('chat-stress-simulation-complete emit', authoritySource.includes("'chat-stress-simulation-complete'"), 'complete');
 assert('terminal trace labels', authoritySource.includes('SKIPPED_BUDGET'), 'skipped budget label');
 assert('product readiness waits for chat', orchestratorSource.includes('await runFounderTestChatStressSimulation'), 'await');
@@ -358,7 +358,7 @@ const report = [
   '## Concurrency / Completion Barrier Fix',
   '',
   '- Batch simulator uses indexed worker pool + `Promise.allSettled` and tracks every scenario to a terminal status.',
-  '- Aggregate `chat-stress-simulation-complete` fires only after `allStartedChatStressScenariosSettled()`.',
+  '- Aggregate `chat-stress-simulation-complete` fires only after `isChatStressSimulationComplete()`.',
   '- Artifact tracer ignores per-scenario chat stress traces for sub-step mutation.',
   '',
   '## Scenario Lifecycle Proof',

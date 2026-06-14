@@ -205,7 +205,7 @@ const chainContext = resolveExecutionChainStageContext(ROOT, {
   verificationExecutionProof: notProvenVerify,
 });
 assert('G preview experience connected', chainContext.previewExperienceConnected, String(chainContext.previewExperienceConnected));
-assert('G first broken VERIFY', chainContext.firstBrokenStage === 'VERIFY', chainContext.firstBrokenStage);
+assert('G first broken VERIFY', chainContext.firstBrokenStage === 'VERIFY', String(chainContext.firstBrokenStage));
 
 const founderTest = assessFounderTestIntegration({ rootDir: ROOT });
 const livePreviewAuthority = founderTest.run.authorityResults.find((r) => r.authorityId === 'LIVE_PREVIEW_REALITY');

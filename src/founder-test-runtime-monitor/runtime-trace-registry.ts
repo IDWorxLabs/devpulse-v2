@@ -8,6 +8,25 @@ export const FOUNDER_TEST_OPERATOR_FEED_TRACE_REPORT_TITLE = 'Founder Test Opera
 
 export const MAX_FOUNDER_TEST_TRACE_EVENTS = 48;
 
+/** Completion boundaries pinned against trace buffer eviction during chat stress. */
+export const PINNED_RUNTIME_TRACE_OPERATION_IDS = new Set<string>([
+  'chat-stress-completion-condition-satisfied',
+  'chat-stress-simulation-complete',
+  'chat-stress-simulation-complete-emitted',
+  'product-readiness-simulation-complete',
+  'product-readiness-simulation-complete-emitted',
+  'launch-readiness-assessment-complete',
+  'launch-readiness-artifacts-built',
+  'intake-validation-complete',
+  'intake-validation-complete-emitted',
+  'planning-gate-started',
+  'planning-gate-entered',
+  'live-chat-stress-runner-path:repaired-settlement-v1',
+  'chat-stress-runner-idle-with-pending',
+  'running-product-readiness-simulation',
+  'founder-input-hydrated',
+]);
+
 export const TRACE_EVENT_STATUSES = [
   'RUNNING',
   'SLOW',

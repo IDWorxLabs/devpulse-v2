@@ -2,6 +2,11 @@
  * Chat Operational Self-Knowledge — evidence-backed operational intelligence types.
  */
 
+import type { ConnectedExecutionChainTruth } from '../founder-test-integration/connected-execution-chain-truth.js';
+
+export const OPERATIONAL_TRUTH_SOURCE_CONTRADICTION = 'OPERATIONAL_TRUTH_SOURCE_CONTRADICTION' as const;
+export const CHAT_OPERATIONAL_CONTRADICTION = 'CHAT_OPERATIONAL_CONTRADICTION' as const;
+
 export type CapabilityTruthLevel = 'PROVEN' | 'PARTIALLY_PROVEN' | 'NOT_PROVEN' | 'UNKNOWN';
 
 export type UncertaintyLevel = 'KNOWN' | 'LIKELY' | 'UNVERIFIED' | 'UNKNOWN';
@@ -16,6 +21,8 @@ export type OperationalQuestionKind =
   | 'FIRST_BROKEN_STAGE'
   | 'LAUNCH_BLOCKERS'
   | 'PROOF_REQUEST'
+  | 'TRUTH_SOURCE'
+  | 'EXECUTION_STAGE_INVENTORY'
   | 'CAPABILITIES'
   | 'LAUNCH_READINESS'
   | 'DISCONNECTED_SYSTEMS'
@@ -55,11 +62,90 @@ export interface OperationalLaunchBlocker {
   evidenceSource: string;
 }
 
+export interface OperationalTruthSourceContradiction {
+  readOnly: true;
+  kind: typeof OPERATIONAL_TRUTH_SOURCE_CONTRADICTION;
+  capability: string;
+  staleSource: string;
+  truthSource: string;
+  staleValue: 'NOT_PROVEN' | 'PARTIAL' | 'UNKNOWN';
+  truthValue: 'PROVEN';
+}
+
+export interface ChatOperationalContradiction {
+  readOnly: true;
+  kind: typeof CHAT_OPERATIONAL_CONTRADICTION;
+  questionCategory: string;
+  conflictingSources: string[];
+  conflictingValues: string[];
+  detail: string;
+}
+
+export interface ExecutionStageInventoryEntry {
+  readOnly: true;
+  stageId: string;
+  label: string;
+  proven: boolean;
+  status: string;
+  source: string;
+}
+
+export interface RepositoryTypecheckReality {
+  readOnly: true;
+  state: string;
+  clean: boolean;
+  source: string;
+}
+
+export interface FounderTestReality {
+  readOnly: true;
+  available: boolean;
+  verdict: string | null;
+  score: number | null;
+  source: string;
+}
+
+export interface ProductReadinessReality {
+  readOnly: true;
+  available: boolean;
+  verdict: string | null;
+  launchBlocked: boolean | null;
+  source: string;
+}
+
+export interface ChatIntelligenceReality {
+  readOnly: true;
+  available: boolean;
+  note: string;
+  source: string;
+}
+
+export interface OperationalTruthContext {
+  readOnly: true;
+  version: string;
+  executionChainTruth: ConnectedExecutionChainTruth;
+  repositoryTypecheckReality: RepositoryTypecheckReality;
+  founderTestReality: FounderTestReality;
+  productReadinessReality: ProductReadinessReality;
+  chatIntelligenceReality: ChatIntelligenceReality;
+  executionTruthSource: string;
+  executionTruthGeneratedAt: string;
+  firstBrokenStage: string | null;
+  chainConnected: boolean;
+  generatedAt: string;
+  stageInventory: ExecutionStageInventoryEntry[];
+  contradictionCount: number;
+  contradictions: ChatOperationalContradiction[];
+}
+
 export interface OperationalEvidenceSnapshot {
   readOnly: true;
   generatedAt: string;
   capabilityTruth: CapabilityTruthRegistry;
   overallUncertainty: UncertaintyAssessment;
+  executionChainTruth: ConnectedExecutionChainTruth;
+  executionTruthGeneratedAt: string;
+  executionTruthSource: string;
   firstBrokenStage: string | null;
   executionChainConnected: boolean;
   launchBlockers: OperationalLaunchBlocker[];
@@ -67,6 +153,9 @@ export interface OperationalEvidenceSnapshot {
   typecheckClean: boolean;
   buildProofLevel: string;
   chatIntelligenceNote: string | null;
+  founderTestVerdict: string | null;
+  truthSourceContradictions: OperationalTruthSourceContradiction[];
+  operationalTruthContext: OperationalTruthContext;
   evidenceSources: string[];
 }
 
@@ -80,6 +169,12 @@ export interface OperationalSelfKnowledgeAssessment {
   referencesProofSystems: boolean;
   referencesFirstBrokenStage: boolean;
   consciousnessClaimBlocked: boolean;
+  executionTruthSource: string;
+  executionTruthGeneratedAt: string;
+  chainConnected: boolean;
+  firstBrokenStage: string | null;
+  truthSourceContradictionCount: number;
+  chatOperationalContradictionCount: number;
 }
 
 export interface EnhanceChatWithOperationalSelfKnowledgeInput {
@@ -87,6 +182,8 @@ export interface EnhanceChatWithOperationalSelfKnowledgeInput {
   draftAnswer?: string;
   rootDir?: string;
   snapshot?: OperationalEvidenceSnapshot;
+  forceLivePath?: boolean;
+  forceSnapshotRefresh?: boolean;
 }
 
 export interface EnhanceChatWithOperationalSelfKnowledgeResult {
@@ -95,9 +192,42 @@ export interface EnhanceChatWithOperationalSelfKnowledgeResult {
   usedOperationalSelfKnowledge: boolean;
   questionKind: OperationalQuestionKind;
   assessment: OperationalSelfKnowledgeAssessment | null;
+  operationalTruthPath: OperationalTruthPath;
+  liveTruthBypasses: LiveOperationalTruthBypass[];
+  liveTruthDiagnostics: LiveOperationalTruthDiagnostics | null;
 }
 
-export interface BuildOperationalEvidenceSnapshotInput {
+export type BuildOperationalEvidenceSnapshotInput = {
   rootDir?: string;
   skipHeavyAuthorities?: boolean;
+  forceSnapshotRefresh?: boolean;
+};
+
+export type OperationalTruthPath = 'legacy-autonomous-proof' | 'connected-execution-truth';
+
+export const LIVE_OPERATIONAL_TRUTH_BYPASS = 'LIVE_OPERATIONAL_TRUTH_BYPASS' as const;
+
+export interface LiveOperationalTruthBypass {
+  readOnly: true;
+  kind: typeof LIVE_OPERATIONAL_TRUTH_BYPASS;
+  staleSource: string;
+  truthSource: string;
+  capability?: string;
+  staleValue?: string;
+  truthValue?: string;
+  detail: string;
+}
+
+export interface LiveOperationalTruthDiagnostics {
+  readOnly: true;
+  operationalTruthPath: OperationalTruthPath;
+  operationalTruthContextVersion: string;
+  operationalTruthSource: string;
+  operationalTruthGeneratedAt: string;
+  executionTruthSource: string;
+  firstBrokenStage: string | null;
+  chainConnected: boolean;
+  generatedAt: string;
+  executionTruthGeneratedAt: string;
+  contradictionCount: number;
 }

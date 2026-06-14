@@ -128,6 +128,20 @@ export interface ChatStressSimulationReport {
   categoryScores: Record<ChatStressCategory, number>;
   evaluations: ChatStressEvaluation[];
   scenarioRuns: ChatStressScenarioRun[];
+  settlementSummary?: ChatStressSettlementSummary;
+}
+
+export interface ChatStressSettlementSummary {
+  readOnly: true;
+  totalScenarios: number;
+  startedCount: number;
+  settledCount: number;
+  passedCount: number;
+  failedCount: number;
+  timedOutCount: number;
+  pendingCount: number;
+  completionBoundaryReached: boolean;
+  generatedAt: string;
 }
 
 export interface ChatStressSimulationAssessment {

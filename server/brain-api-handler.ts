@@ -9,6 +9,7 @@ import {
   buildBrainHealthPayload,
   buildBrainRuntimeVerificationReportFromResult,
 } from '../src/command-center-brain/runtime-verification/index.js';
+import { getLiveOperationalTruthDiagnostics } from '../src/chat-operational-self-knowledge/index.js';
 import {
   generateLlmBackedChatResponseAsync,
   getLlmProviderStatus,
@@ -20,6 +21,16 @@ import {
 } from '../src/llm-chat-brain/index.js';
 
 const MAX_BODY_BYTES = 16_384;
+
+export function sendBrainOperationalTruth(res: ServerResponse): void {
+  const payload = getLiveOperationalTruthDiagnostics();
+  res.writeHead(200, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Cache-Control': 'no-store',
+    'X-DevPulse-Brain': 'command-center',
+  });
+  res.end(JSON.stringify(payload));
+}
 
 export function sendBrainHealth(res: ServerResponse): void {
   const payload = buildBrainHealthPayload();
