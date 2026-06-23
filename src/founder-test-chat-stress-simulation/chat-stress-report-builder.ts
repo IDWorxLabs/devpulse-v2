@@ -67,6 +67,28 @@ export function buildChatStressSimulationReportMarkdown(report: ChatStressSimula
     '',
     'Broad chat intelligence stress test using the same Command Center Brain + LLM Chat Brain path as the live UI.',
     '',
+  ];
+
+  if (report.runtimeHealth === 'DEGRADED_INCOMPLETE') {
+    lines.push(
+      '> **Degraded:** Chat stress did not fully complete inside the Founder Test runtime budget, so this section is degraded.',
+      '',
+    );
+    if (report.settlementSummary) {
+      lines.push(
+        `- Started: ${report.settlementSummary.startedCount}`,
+        `- Settled: ${report.settlementSummary.settledCount}`,
+        `- Pending: ${report.settlementSummary.pendingCount}`,
+        '',
+      );
+    }
+    const pendingNote = report.budgetNotes.find((note) => note.startsWith('Pending scenario IDs:'));
+    if (pendingNote) {
+      lines.push(`- ${pendingNote}`, '');
+    }
+  }
+
+  lines.push(
     `Total scenarios: ${report.totalScenarios}`,
     `Passed: ${report.passedCount}`,
     `Failed: ${report.failedCount}`,
@@ -82,7 +104,7 @@ export function buildChatStressSimulationReportMarkdown(report: ChatStressSimula
     '- 70–79: Usable but not launch-ready',
     '- Below 70: Chat blocks launch',
     '',
-  ];
+  );
 
   const timedOutRuns = report.scenarioRuns.filter((run) => run.timedOut);
   if (timedOutRuns.length) {

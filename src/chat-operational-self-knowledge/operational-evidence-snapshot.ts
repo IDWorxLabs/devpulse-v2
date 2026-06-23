@@ -8,7 +8,10 @@ import {
   resolveConnectedExecutionChainTruth,
   CONNECTED_EXECUTION_CHAIN_TRUTH_SOURCE,
 } from '../founder-test-integration/connected-execution-chain-truth.js';
-import { resolveExecutionChainStageContext } from '../founder-test-integration/connected-execution-chain-stage-resolver.js';
+import { assessConnectedLaunchReadinessProof } from '../connected-launch-readiness-proof/index.js';
+import {
+  resolveExecutionChainStageContext,
+} from '../founder-test-integration/connected-execution-chain-stage-resolver.js';
 import { getLatestFounderTestAssessment } from '../founder-test-integration/founder-test-integration-history.js';
 import {
   getLatestRepositoryTypecheckBaseline,
@@ -93,7 +96,23 @@ export function buildOperationalEvidenceSnapshot(
     });
   }
 
-  const chainContext = resolveExecutionChainStageContext(rootDir);
+  const chainContextBase = resolveExecutionChainStageContext(rootDir);
+  let launchReadinessProof = chainContextBase.launchReadinessProof;
+  if (chainContextBase.verificationProven && !launchReadinessProof) {
+    launchReadinessProof = assessConnectedLaunchReadinessProof({
+      rootDir,
+      verificationExecutionProof: chainContextBase.verificationExecutionProof,
+      buildMaterializationReport: chainContextBase.buildMaterializationReport ?? undefined,
+      skipFounderTestReassessment: true,
+    }).report;
+  }
+  const chainContext = resolveExecutionChainStageContext(rootDir, {
+    verificationExecutionProof: chainContextBase.verificationExecutionProof,
+    buildMaterializationReport: chainContextBase.buildMaterializationReport ?? undefined,
+    launchReadinessProof,
+    launchProven: launchReadinessProof?.launchProofLevel === 'PROVEN',
+    launchExecutionConnected: launchReadinessProof?.launchExecutionConnected ?? false,
+  });
   const executionChainTruth = resolveConnectedExecutionChainTruth(chainContext);
   const capabilityTruth = buildCapabilityTruthRegistry(rootDir, executionChainTruth);
   const legacyExecutionProof = assessAutonomousBuildExecutionProof({ rootDir });
@@ -167,6 +186,18 @@ export function buildOperationalEvidenceSnapshot(
       impact: 'MEDIUM',
       evidenceSource: CONNECTED_EXECUTION_CHAIN_TRUTH_SOURCE,
     });
+  }
+
+  if (launchReadinessProof && !executionChainTruth.launchProven) {
+    for (const blocker of launchReadinessProof.blockers.blockers.slice(0, 3)) {
+      if (launchBlockers.length >= 8) break;
+      launchBlockers.push({
+        readOnly: true,
+        label: blocker.blockerTitle,
+        impact: blocker.severity === 'CRITICAL' ? 'HIGH' : 'MEDIUM',
+        evidenceSource: blocker.sourceAuthority,
+      });
+    }
   }
 
   if (latestFounderTest?.verdict === 'NOT_FOUNDER_READY' && !executionChainTruth.launchProven) {

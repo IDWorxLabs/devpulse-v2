@@ -225,3 +225,67 @@ export interface LaunchReadinessProofArtifacts {
   launchReadinessProofAssessment: LaunchReadinessProofAssessment;
   launchReadinessProofReportMarkdown: string;
 }
+
+export type LaunchProofDependencyProofLevel = 'PROVEN' | 'PARTIAL' | 'NOT_PROVEN' | 'NOT_ASSESSED';
+
+export interface LaunchProofDependencyEntry {
+  readOnly: true;
+  dependencyId: string;
+  dependencyName: string;
+  status: string;
+  source: string;
+  proofLevel: LaunchProofDependencyProofLevel;
+  blocksLaunch: boolean;
+  reason: string;
+}
+
+export interface FirstLaunchBlockerResolution {
+  readOnly: true;
+  blockerId: string;
+  blockerName: string;
+  authority: string;
+  proofSource: string;
+  reason: string;
+  severity: LaunchBlockerSeverity;
+}
+
+export interface LaunchNotProvenExplanation {
+  readOnly: true;
+  launchProven: false;
+  launchProofLevel: LaunchProofLevel;
+  conditions: string[];
+  primaryBlocker: FirstLaunchBlockerResolution | null;
+}
+
+export const LAUNCH_PROOF_CONTRADICTION = 'LAUNCH_PROOF_CONTRADICTION' as const;
+
+export interface LaunchProofContradiction {
+  readOnly: true;
+  kind: typeof LAUNCH_PROOF_CONTRADICTION;
+  detail: string;
+  conflictingSources: string[];
+  conflictingValues: string[];
+}
+
+export interface LaunchProofDependencyGraph {
+  readOnly: true;
+  generatedAt: string;
+  launchTruthGeneratedAt: string;
+  launchProven: boolean;
+  launchProofLevel: LaunchProofLevel;
+  executionTruthSource: string;
+  dependencies: LaunchProofDependencyEntry[];
+  launchDependencyCount: number;
+  launchBlockingDependencyCount: number;
+  firstLaunchBlocker: FirstLaunchBlockerResolution | null;
+  notProvenExplanation: LaunchNotProvenExplanation | null;
+  contradictions: LaunchProofContradiction[];
+  contradictionCount: number;
+  launchReport: LaunchReadinessProofReport | null;
+}
+
+export interface BuildLaunchProofDependencyGraphInput {
+  rootDir?: string;
+  launchReport?: LaunchReadinessProofReport | null;
+  skipLaunchProofAssessment?: boolean;
+}

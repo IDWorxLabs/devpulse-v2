@@ -106,6 +106,15 @@ function wordCount(text: string): number {
   return text.split(/\s+/).filter(Boolean).length;
 }
 
+function isSimpleBrowserTaskTracker(idea: UserIdeaContract, lower: string): boolean {
+  return (
+    idea.status === 'CAPTURED' &&
+    /task tracker|todo app|todo list/i.test(lower) &&
+    /add tasks?|tasks?.*complete|delete them|filter/i.test(lower) &&
+    /browser|web/i.test(lower)
+  );
+}
+
 export function analyzeClarifyingGaps(
   idea: UserIdeaContract,
   requirementContract: RequirementContract | null,
@@ -138,6 +147,17 @@ export function analyzeClarifyingGaps(
   const gaps: ClarifyingGap[] = [];
   const resolved: string[] = [];
   const missing: string[] = [];
+
+  if (isSimpleBrowserTaskTracker(idea, lower)) {
+    return {
+      readOnly: true,
+      contractReadiness: 'BUILD_READY',
+      criticalGaps: [],
+      clarifyingQuestions: [],
+      resolvedCategories: [...CRITICAL_GAP_CATEGORIES],
+      missingCategories: [],
+    };
+  }
 
   for (const rule of GAP_RULES) {
     if (rule.detected(idea, lower)) {

@@ -204,6 +204,76 @@ function extractFromBookingPrompt(idea: UserIdeaContract): RequirementContractEn
   ];
 }
 
+function extractFromTaskTrackerPrompt(idea: UserIdeaContract): RequirementContractEntry[] {
+  return [
+    req(
+      idea.ideaId,
+      'FUNCTIONAL',
+      'Add new tasks from user input',
+      'CRITICAL',
+      ['User can type a task and add it to the list', 'Added task appears immediately'],
+      'prompt:add tasks',
+    ),
+    req(
+      idea.ideaId,
+      'FUNCTIONAL',
+      'Mark tasks complete or incomplete',
+      'CRITICAL',
+      ['User can toggle task completion', 'Completed tasks are visually distinct'],
+      'prompt:mark them complete',
+    ),
+    req(
+      idea.ideaId,
+      'FUNCTIONAL',
+      'Delete tasks from the list',
+      'CRITICAL',
+      ['User can delete a task', 'Deleted task is removed from all views'],
+      'prompt:delete them',
+    ),
+    req(
+      idea.ideaId,
+      'FUNCTIONAL',
+      'Filter tasks by all, active, and completed',
+      'CRITICAL',
+      ['User can view all tasks', 'User can view active tasks only', 'User can view completed tasks only'],
+      'prompt:filter by all/active/completed',
+    ),
+    req(
+      idea.ideaId,
+      'FUNCTIONAL',
+      'Display count of remaining active tasks',
+      'HIGH',
+      ['Active task count updates when tasks change', 'Count reflects incomplete tasks only'],
+      'prompt:count of remaining active tasks',
+    ),
+    req(
+      idea.ideaId,
+      'UI_UX',
+      'Clean modern browser UI for task management',
+      'HIGH',
+      ['Layout is readable on desktop browser', 'Primary actions are obvious'],
+      'prompt:clean modern UI',
+    ),
+    req(
+      idea.ideaId,
+      'PLATFORM',
+      'Browser-based task tracker application',
+      'CRITICAL',
+      ['Application runs in a modern web browser', 'Primary flows work without page reload'],
+      'prompt:work in the browser',
+    ),
+    req(
+      idea.ideaId,
+      'DATA',
+      'In-browser task state for session usage',
+      'MEDIUM',
+      ['Tasks persist while the app is open', 'Task list state remains consistent during filtering'],
+      'inferred:client state',
+      'INFERRED',
+    ),
+  ];
+}
+
 export function buildRequirementContract(idea: UserIdeaContract): RequirementContract | null {
   if (idea.status === 'INSUFFICIENT_INPUT') return null;
 
@@ -214,6 +284,8 @@ export function buildRequirementContract(idea: UserIdeaContract): RequirementCon
     requirements = extractFromCrmPrompt(idea);
   } else if (/booking|salon|appointment/i.test(lower)) {
     requirements = extractFromBookingPrompt(idea);
+  } else if (/task tracker|todo app|todo list/i.test(lower) && /tasks?/i.test(lower)) {
+    requirements = extractFromTaskTrackerPrompt(idea);
   } else if (wordCount(idea.rawPrompt) >= 8) {
     requirements = [
       req(

@@ -27,6 +27,7 @@ import type {
   FinalLaunchVerdict,
   LaunchVerdictGovernanceAssessment,
 } from './launch-verdict-governance-types.js';
+import { normalizeLaunchVerdictGovernanceSourceSync } from '../launch-verdict-governance-source-normalization/index.js';
 
 function buildGovernanceReasoning(input: {
   finalLaunchVerdict: FinalLaunchVerdict;
@@ -173,7 +174,12 @@ export function assessLaunchVerdictGovernance(
   };
 
   recordLaunchVerdictGovernanceAssessment(assessment);
-  return assessment;
+  const normalized = normalizeLaunchVerdictGovernanceSourceSync({
+    governance: assessment,
+    sourcePath: 'launch-verdict-governance-authority.assessLaunchVerdictGovernance',
+    upstreamProducer: 'LAUNCH_VERDICT_GOVERNANCE_AUTHORITY',
+  });
+  return normalized.governance;
 }
 
 export function buildLaunchVerdictGovernanceArtifacts(

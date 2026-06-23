@@ -64,7 +64,7 @@ export function buildFounderTestRuntimeFailureReport(input: {
     '',
   ];
 
-  for (const event of input.snapshot.traceEvents.filter((entry) =>
+  for (const event of (input.snapshot.traceEvents ?? []).filter((entry) =>
     entry.operationId.includes('launch-readiness') ||
     entry.operationId.includes('loading-') ||
     entry.operationId.includes('running-') ||
@@ -77,14 +77,18 @@ export function buildFounderTestRuntimeFailureReport(input: {
 
   lines.push('', '## Stage Timings', '');
 
-  for (const stage of input.snapshot.stages) {
+  for (const stage of input.snapshot.stages ?? []) {
     lines.push(
       `- ${stage.order}. ${stage.label}: ${stage.status}${stage.durationMs != null ? ` (${stage.durationMs} ms)` : ''}`,
     );
   }
 
   lines.push('', '## Runtime Feed', '');
-  for (const line of formatRuntimeFeedLines(input.snapshot.feed)) {
+  for (const line of formatRuntimeFeedLines(
+    input.snapshot.feed?.events
+      ? input.snapshot.feed
+      : { readOnly: true as const, events: [] },
+  )) {
     lines.push(`- ${line}`);
   }
 

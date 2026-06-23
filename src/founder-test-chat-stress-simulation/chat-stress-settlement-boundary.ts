@@ -12,6 +12,13 @@ import {
   listChatStressOrderedScenarioIds,
   type ChatStressScenarioLifecycleState,
 } from './chat-stress-completion-tracker.js';
+import {
+  hasChatStressCompletionConditionSatisfied,
+  hasChatStressSimulationCompletePropagated,
+  recordChatStressCompletionConditionSatisfied,
+  recordChatStressSimulationCompleteEmitted,
+  recordIntakeCompletionBoundaryOperation,
+} from './chat-stress-completion-propagation.js';
 import type { ChatStressSettlementSummary } from './chat-stress-simulation-types.js';
 
 export const CHAT_STRESS_SETTLEMENT_BOUNDARY_REPAIR_V1_PASS =
@@ -66,10 +73,56 @@ export function isChatStressSimulationComplete(nowMs = Date.now()): boolean {
   return buildChatStressSettlementSummary(nowMs).completionBoundaryReached;
 }
 
+export type ChatStressSimulationCompleteBoundaryEmit = {
+  operationId: string;
+  operationLabel: string;
+  phase: 'PASSED';
+};
+
+/**
+ * Emit chat-stress-simulation-complete when settlement is terminal but the live path
+ * has not yet recorded/propagated the Stage 2 completion boundary.
+ */
+export function emitChatStressSimulationCompleteBoundaryIfNeeded(
+  onEmit?: (event: ChatStressSimulationCompleteBoundaryEmit) => void,
+  nowMs = Date.now(),
+): boolean {
+  if (!isChatStressSimulationComplete(nowMs)) return false;
+  if (hasChatStressSimulationCompletePropagated()) return false;
+
+  const summary = buildChatStressSettlementSummary(nowMs);
+  const at = new Date(nowMs);
+
+  if (!hasChatStressCompletionConditionSatisfied()) {
+    recordChatStressCompletionConditionSatisfied(at);
+  }
+  recordIntakeCompletionBoundaryOperation('chat-stress-simulation-complete', at);
+
+  const operationLabel =
+    summary.startedCount < summary.totalScenarios
+      ? `Chat stress simulation complete (settled=${summary.settledCount}/${summary.totalScenarios}, pending=${summary.pendingCount})`
+      : `Chat stress simulation complete (${summary.passedCount}/${summary.totalScenarios} passed)`;
+
+  onEmit?.({
+    operationId: 'chat-stress-simulation-complete',
+    operationLabel,
+    phase: 'PASSED',
+  });
+
+  recordChatStressSimulationCompleteEmitted(at);
+  onEmit?.({
+    operationId: 'chat-stress-simulation-complete-emitted',
+    operationLabel: 'Chat stress simulation complete emitted',
+    phase: 'PASSED',
+  });
+
+  return true;
+}
+
 export function detectChatStressPendingLeak(nowMs = Date.now()): ChatStressPendingLeak | null {
   const snap = getChatStressCompletionSnapshot(nowMs);
   if (snap.pendingCount <= 0) return null;
-  if (snap.activeScenarioId != null) return null;
+  if (snap.activeScenarioCount > 0) return null;
 
   const lastStateByScenarioId: Record<string, ChatStressScenarioLifecycleState> = {};
   const lastUpdateTimeByScenarioId: Record<string, string | null> = {};

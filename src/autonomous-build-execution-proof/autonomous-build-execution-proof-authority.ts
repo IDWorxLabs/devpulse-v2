@@ -25,6 +25,11 @@ import {
   resetFounderTestIntegrationModuleForTests,
 } from '../founder-test-integration/index.js';
 import type { FounderTestAssessment } from '../founder-test-integration/founder-test-integration-types.js';
+import {
+  buildFounderTestIntegrationRecursionFallback,
+  guardHeavyOrchestrationCall,
+  runWithAuthorityGuard,
+} from '../authority-recursion-guard/index.js';
 import { hydrateRuntimeFounderExecutionProofInputSync } from '../founder-test-integration/runtime-founder-execution-proof-hydration.js';
 import { runFounderTestLaunchReadiness } from '../founder-test-launch-readiness/index.js';
 import {
@@ -107,10 +112,16 @@ function resolveFounderTestAssessment(
   if (input.founderTestAssessment) return input.founderTestAssessment;
 
   const hydrated = hydrateRuntimeFounderExecutionProofInputSync(rootDir, {});
-  return assessFounderTestIntegration({
-    rootDir,
-    founderExecutionProofInput: hydrated.input,
+  const result = guardHeavyOrchestrationCall({
+    authorityName: 'FOUNDER_TEST_INTEGRATION',
+    invoke: () =>
+      assessFounderTestIntegration({
+        rootDir,
+        founderExecutionProofInput: hydrated.input,
+      }),
+    onBlocked: (detection) => buildFounderTestIntegrationRecursionFallback(detection, rootDir),
   });
+  return result!;
 }
 
 function resolveAssessments(input: AssessAutonomousBuildExecutionProofInput, rootDir: string): {
@@ -233,6 +244,22 @@ function buildFounderQuestions(
 
 export function assessAutonomousBuildExecutionProof(
   input: AssessAutonomousBuildExecutionProofInput = {},
+): AutonomousBuildExecutionProofAssessment {
+  return runWithAuthorityGuard({
+    authorityName: 'AUTONOMOUS_BUILD_EXECUTION_PROOF',
+    options: { allowHeavyOrchestration: true },
+    invoke: () => assessAutonomousBuildExecutionProofCore(input),
+    onRecursion: (detection) => assessAutonomousBuildExecutionProofCore({
+      ...input,
+      founderTestAssessment:
+        input.founderTestAssessment ??
+        buildFounderTestIntegrationRecursionFallback(detection, input.rootDir ?? process.cwd()),
+    }),
+  });
+}
+
+function assessAutonomousBuildExecutionProofCore(
+  input: AssessAutonomousBuildExecutionProofInput,
 ): AutonomousBuildExecutionProofAssessment {
   const rootDir = input.rootDir ?? process.cwd();
   const resolved = resolveAssessments(input, rootDir);

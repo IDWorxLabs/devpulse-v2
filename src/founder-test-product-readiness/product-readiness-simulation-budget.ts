@@ -5,15 +5,23 @@
 export const PRODUCT_READINESS_SIMULATION_STALL_REPAIR_V1_PASS =
   'PRODUCT_READINESS_SIMULATION_STALL_REPAIR_V1_PASS';
 
+export const CHAT_STRESS_DEADLINE_STALL_ALIGNMENT_V1_PASS =
+  'CHAT_STRESS_DEADLINE_STALL_ALIGNMENT_V1_PASS';
+
 export const SIMULATION_SLOW_THRESHOLD_MS = 15_000;
 export const SIMULATION_STALLED_THRESHOLD_MS = 45_000;
 export const SIMULATION_BUDGET_MS = 60_000;
+/** Founder Test must not wait on chat stress beyond this window — evidence only, not a gate. */
+export const FOUNDER_TEST_CHAT_STRESS_NON_BLOCKING_BUDGET_MS = 25_000;
 /** Soft warning when a single chat stress scenario exceeds this duration. */
 export const CHAT_STRESS_SCENARIO_SOFT_WARNING_MS = 8_000;
 /** Hard timeout — scenario must settle as TIMEOUT after this duration. */
 export const CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS = 15_000;
 /** Grace after hard timeout before Stage 2 pending stall is flagged. */
 export const CHAT_STRESS_SCENARIO_HARD_TIMEOUT_GRACE_MS = 2_000;
+/** Overhead added to worst-case bounded chat stress batch deadline. */
+export const CHAT_STRESS_BATCH_DEADLINE_OVERHEAD_MS = 5_000;
+export const CHAT_STRESS_DEFAULT_CONCURRENCY = 4;
 export const DEFAULT_FOUNDER_TEST_CHAT_STRESS_MAX_SCENARIOS = 12;
 export const CHAT_STRESS_SCENARIOS_HARD_CAP = 60;
 
@@ -21,7 +29,8 @@ export type SimulationRuntimeHealth =
   | 'HEALTHY'
   | 'SIMULATION_SLOW'
   | 'SIMULATION_STALLED'
-  | 'SIMULATION_BUDGET_EXCEEDED';
+  | 'SIMULATION_BUDGET_EXCEEDED'
+  | 'DEGRADED_INCOMPLETE';
 
 export interface SimulationBudgetSnapshot {
   readOnly: true;
@@ -52,6 +61,34 @@ export function resolveEffectiveChatStressMaxScenarios(
     return DEFAULT_FOUNDER_TEST_CHAT_STRESS_MAX_SCENARIOS;
   }
   return registryCap;
+}
+
+/** Worst-case bounded batch window: ceil(scenarios / concurrency) * (timeout + grace) + overhead. */
+export function resolveChatStressWorstCaseBatchDeadlineMs(input: {
+  scenarioCount?: number;
+  concurrency?: number;
+  perScenarioTimeoutMs?: number;
+  graceMs?: number;
+  overheadMs?: number;
+} = {}): number {
+  const scenarioCount = input.scenarioCount ?? DEFAULT_FOUNDER_TEST_CHAT_STRESS_MAX_SCENARIOS;
+  const concurrency = Math.max(1, input.concurrency ?? CHAT_STRESS_DEFAULT_CONCURRENCY);
+  const perScenarioTimeoutMs = input.perScenarioTimeoutMs ?? CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS;
+  const graceMs = input.graceMs ?? CHAT_STRESS_SCENARIO_HARD_TIMEOUT_GRACE_MS;
+  const overheadMs = input.overheadMs ?? CHAT_STRESS_BATCH_DEADLINE_OVERHEAD_MS;
+  const waves = Math.ceil(scenarioCount / concurrency);
+  return waves * (perScenarioTimeoutMs + graceMs) + overheadMs;
+}
+
+/** Default founder-test chat stress worst-case batch deadline (12 scenarios, concurrency 4). */
+export const CHAT_STRESS_WORST_CASE_BATCH_DEADLINE_MS = resolveChatStressWorstCaseBatchDeadlineMs();
+
+export function resolveChatStressSimulationStalledThresholdMs(input: {
+  scenarioCount?: number;
+  concurrency?: number;
+  perScenarioTimeoutMs?: number;
+} = {}): number {
+  return resolveChatStressWorstCaseBatchDeadlineMs(input);
 }
 
 export function createSimulationBudgetTracker(options: SimulationBudgetOptions = {}): {

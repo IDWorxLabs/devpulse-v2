@@ -62,8 +62,12 @@ export {
 } from './build-contract-materializer.js';
 export {
   BUILD_PROOF_GAP_MATERIALIZATION_REPAIR_V1_PASS,
+  GENERATED_UI_RUNTIME_EXPOSURE_REPAIR_PASS,
+  RUNTIME_DEV_SERVER_SOURCE,
+  RUNTIME_DEV_SERVER_RELATIVE_PATH,
   materializeBuildProofGapArtifacts,
   computeArtifactToFileProof,
+  refreshGeneratedRuntimeDevServer,
   isPathUnderGeneratedBuilderWorkspaces,
 } from './build-proof-gap-materializer.js';
 export { analyzeGeneratedFiles, scanObservedFileEvidence, mergeObservedEvidence } from './generated-file-analyzer.js';

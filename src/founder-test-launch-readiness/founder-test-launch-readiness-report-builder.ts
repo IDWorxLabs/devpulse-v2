@@ -55,6 +55,12 @@ export function buildFounderTestLaunchReadinessReportMarkdown(
     '## Launch Readiness Verdict',
     '',
     `**${report.launchReadinessVerdict}**`,
+    ...(report.preReconciliationVerdict !== report.launchReadinessVerdict
+      ? [
+          '',
+          `Pre-reconciliation verdict: **${report.preReconciliationVerdict}** (reconciled by FOUNDER_TRUTH_MATRIX_RECONCILIATION)`,
+        ]
+      : []),
     '',
     '## Confidence Level',
     '',
@@ -210,6 +216,92 @@ export function buildFounderTestLaunchReadinessReportMarkdown(
       lines.push(
         `- **[${blocker.severity}] ${blocker.sourceAuthority}:** ${blocker.explanation} → ${blocker.recommendedAction}`,
       );
+    }
+  }
+
+  lines.push('');
+  lines.push('## launchBlockersProduct');
+  lines.push('');
+  if (report.launchBlockersProduct.length === 0) {
+    lines.push('- None');
+  } else {
+    for (const blocker of report.launchBlockersProduct) {
+      lines.push(`- **[${blocker.severity}] ${blocker.sourceAuthority}:** ${blocker.explanation}`);
+    }
+  }
+
+  lines.push('');
+  lines.push('## launchBlockersTesting');
+  lines.push('');
+  if (report.launchBlockersTesting.length === 0) {
+    lines.push('- None');
+  } else {
+    for (const blocker of report.launchBlockersTesting) {
+      lines.push(`- **[${blocker.severity}] ${blocker.sourceAuthority}:** ${blocker.explanation}`);
+    }
+  }
+
+  lines.push('');
+  lines.push('## launchBlockersAuthorityDisagreement');
+  lines.push('');
+  if (report.launchBlockersAuthorityDisagreement.length === 0) {
+    lines.push('- None');
+  } else {
+    for (const blocker of report.launchBlockersAuthorityDisagreement) {
+      lines.push(`- **[${blocker.severity}] ${blocker.sourceAuthority}:** ${blocker.explanation}`);
+    }
+  }
+
+  if (report.founderTruthSummary) {
+    lines.push('');
+    lines.push('## FOUNDER_TRUTH_SUMMARY');
+    lines.push('');
+    lines.push('### What Is Actually True');
+    lines.push('');
+    for (const entry of report.founderTruthSummary.whatIsActuallyTrue) {
+      lines.push(`- ${entry}`);
+    }
+    lines.push('');
+    lines.push('### What Is Actually Broken');
+    lines.push('');
+    for (const entry of report.founderTruthSummary.whatIsActuallyBroken) {
+      lines.push(`- ${entry}`);
+    }
+    lines.push('');
+    lines.push('### Product Gaps');
+    lines.push('');
+    for (const entry of report.founderTruthSummary.productGaps) {
+      lines.push(`- ${entry}`);
+    }
+    lines.push('');
+    lines.push('### Testing-System Gaps');
+    lines.push('');
+    for (const entry of report.founderTruthSummary.testingSystemGaps) {
+      lines.push(`- ${entry}`);
+    }
+    lines.push('');
+    lines.push('### Authority Disagreements');
+    lines.push('');
+    for (const entry of report.founderTruthSummary.authorityDisagreements) {
+      lines.push(`- ${entry}`);
+    }
+    lines.push('');
+    lines.push('### Launch Blocking Product Gaps');
+    lines.push('');
+    for (const entry of report.founderTruthSummary.launchBlockingProductGaps) {
+      lines.push(`- ${entry}`);
+    }
+    lines.push('');
+    lines.push('### Non-Blocking Testing Defects');
+    lines.push('');
+    for (const entry of report.founderTruthSummary.nonBlockingTestingDefects) {
+      lines.push(`- ${entry}`);
+    }
+    lines.push('');
+    lines.push('### Founder Questions (TRUTH_MATRIX_FINAL_ANSWER)');
+    lines.push('');
+    for (const q of report.founderTruthSummary.founderQuestions) {
+      lines.push(`- **${q.question}** → ${q.answerToken}: ${q.answer} — ${q.reason}`);
     }
   }
 

@@ -25,6 +25,7 @@ import {
   handleFounderTestRuntimeStatusRequest,
   handleFounderTestResultRequest,
   handleFounderTestResultDebugRequest,
+  handleFounderTestClientDeliveryTraceRequest,
   handleFounderTestPingRequest,
   handleFounderTestResultReportRequest,
   handleFounderTestResultDownloadRequest,
@@ -181,6 +182,11 @@ export function createFounderRealityServer() {
         return;
       }
       handleFounderTestResultDebugRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/founder-test/delivery-trace-client' && req.method === 'POST') {
+      await handleFounderTestClientDeliveryTraceRequest(req, res);
       return;
     }
 

@@ -198,7 +198,7 @@ export function buildBoundedFounderTestResultDebugResponse(input: {
     readOnly: true,
     routeReached: true,
     requestedRunId: input.requestedRunId,
-    runId: input.requestedRunId,
+    runId: input.stored?.runId ?? input.requestedRunId,
     hasStoredResult: Boolean(input.stored),
     hasReportMarkdown: Boolean(storedMarkdown?.trim()),
     reportMarkdownLength,
@@ -241,4 +241,291 @@ export function resolveStoredFounderTestReportMarkdownForDelivery(
 export function buildFounderTestResultDownloadFilename(runId: string): string {
   const safeRunId = runId.replace(/[^a-zA-Z0-9_-]+/g, '-').slice(0, 80);
   return `founder-test-report-${safeRunId}.md`;
+}
+
+export const FOUNDER_TEST_RESULT_HANDOFF_MAX_TRACE_EVENTS = 48;
+
+export const FOUNDER_TEST_RESULT_HANDOFF_MAX_FEED_EVENTS = 24;
+
+export const FOUNDER_TEST_RESULT_HANDOFF_MAX_TRACE_LINE_CHARS = 320;
+
+const HANDOFF_PRESERVED_TOP_LEVEL_KEYS = new Set([
+  'ok',
+  'readOnly',
+  'mode',
+  'runId',
+  'runtime',
+  'report',
+  'reportMarkdown',
+  'founderTestLaunchReadinessReportMarkdown',
+  'founderTestLaunchReadinessAssessment',
+  'launchReadiness',
+  'finalReportReady',
+  'finalReportPreparing',
+  'finalReportPreparingReason',
+  'payloadTruncationNotes',
+  'executionHandoffSummary',
+]);
+
+const HEAVY_HANDOFF_EXTRA_KEYS = new Set([
+  'verificationResults',
+  'phaseFeedEvents',
+  'changeIntelligence',
+  'founderActionCenter',
+  'founderSensemaking',
+  'founderFrictionHeatmap',
+  'chatStressSimulation',
+  'productReadinessSimulation',
+  'artifactBuildTrace',
+  'runtimeTrace',
+  'debugPayload',
+  'traceEvents',
+  'feed',
+  'report',
+  'reportMarkdown',
+  'founderTestLaunchReadinessReportMarkdown',
+]);
+
+function truncateHandoffString(value: string, maxChars: number): string {
+  if (value.length <= maxChars) return value;
+  return `${value.slice(0, maxChars)}…`;
+}
+
+function resolveHandoffReportMarkdown(payload: Record<string, unknown>): string | null {
+  const report = payload.report as { reportMarkdown?: string } | undefined;
+  if (typeof report?.reportMarkdown === 'string' && report.reportMarkdown.trim()) {
+    return report.reportMarkdown;
+  }
+  if (typeof payload.reportMarkdown === 'string' && payload.reportMarkdown.trim()) {
+    return payload.reportMarkdown;
+  }
+  if (
+    typeof payload.founderTestLaunchReadinessReportMarkdown === 'string' &&
+    payload.founderTestLaunchReadinessReportMarkdown.trim()
+  ) {
+    return payload.founderTestLaunchReadinessReportMarkdown;
+  }
+  return null;
+}
+
+function summarizeLaunchReadinessAssessmentForStorage(assessment: unknown): Record<string, unknown> | null {
+  if (assessment == null) return null;
+  if (typeof assessment !== 'object') {
+    return { readOnly: true, truncated: true, valueType: typeof assessment };
+  }
+  const record = assessment as Record<string, unknown>;
+  const report = record.report as Record<string, unknown> | undefined;
+  return {
+    readOnly: true,
+    truncated: true,
+    launchReadinessVerdict: report?.launchReadinessVerdict ?? null,
+    productReadinessScore: report?.productReadinessScore ?? null,
+    blockingIssueCount: Array.isArray(report?.blockingIssues) ? report.blockingIssues.length : null,
+    topRecommendedActionCount: Array.isArray(report?.topRecommendedActions)
+      ? report.topRecommendedActions.length
+      : null,
+  };
+}
+
+function summarizeLaunchReadinessForStorage(launchReadiness: unknown): Record<string, unknown> | null {
+  if (launchReadiness == null) return null;
+  if (typeof launchReadiness !== 'object') {
+    return { readOnly: true, truncated: true, valueType: typeof launchReadiness };
+  }
+  const record = launchReadiness as Record<string, unknown>;
+  return {
+    readOnly: true,
+    truncated: true,
+    launchReadinessVerdict: record.launchReadinessVerdict ?? null,
+    productReadinessScore: record.productReadinessScore ?? null,
+    blockingIssueCount: Array.isArray(record.blockingIssues) ? record.blockingIssues.length : null,
+    topRecommendedActionCount: Array.isArray(record.topRecommendedActions)
+      ? record.topRecommendedActions.length
+      : null,
+  };
+}
+
+function buildExecutionHandoffSummaryForStorage(
+  payload: Record<string, unknown>,
+  notes: string[],
+): Record<string, unknown> {
+  const summary: Record<string, unknown> = { readOnly: true, truncated: true };
+  let stripped = 0;
+
+  for (const [key, value] of Object.entries(payload)) {
+    if (HANDOFF_PRESERVED_TOP_LEVEL_KEYS.has(key)) continue;
+    if (value == null) continue;
+
+    if (HEAVY_HANDOFF_EXTRA_KEYS.has(key)) {
+      stripped++;
+      summary[`${key}Present`] = true;
+      if (Array.isArray(value)) summary[`${key}Count`] = value.length;
+      continue;
+    }
+
+    if (typeof value === 'string') {
+      if (value.length > 500) {
+        stripped++;
+        summary[`${key}Length`] = value.length;
+        continue;
+      }
+      summary[key] = value;
+      continue;
+    }
+
+    if (typeof value === 'number' || typeof value === 'boolean') {
+      summary[key] = value;
+      continue;
+    }
+
+    stripped++;
+    summary[`${key}Present`] = true;
+    if (Array.isArray(value)) summary[`${key}Count`] = value.length;
+  }
+
+  if (stripped > 0) {
+    notes.push(`execution handoff: ${stripped} oversized extra field(s) summarized`);
+  }
+
+  return summary;
+}
+
+export function boundFounderTestRuntimeSnapshotForStorage(
+  runtime: FounderTestRuntimeSnapshot | null | undefined,
+  notes: string[] = [],
+): FounderTestRuntimeSnapshot | null {
+  if (!runtime || typeof runtime !== 'object') return runtime ?? null;
+
+  const originalTraceCount = runtime.traceEvents?.length ?? 0;
+  const traceEvents = (runtime.traceEvents ?? [])
+    .slice(-FOUNDER_TEST_RESULT_HANDOFF_MAX_TRACE_EVENTS)
+    .map((event) => ({
+      ...event,
+      displayLine: truncateHandoffString(
+        event.displayLine,
+        FOUNDER_TEST_RESULT_HANDOFF_MAX_TRACE_LINE_CHARS,
+      ),
+    }));
+  if (originalTraceCount > traceEvents.length) {
+    notes.push(
+      `runtime.traceEvents capped from ${originalTraceCount} to ${traceEvents.length} events`,
+    );
+  }
+
+  const originalFeedCount = runtime.feed?.events?.length ?? 0;
+  const feedEvents = (runtime.feed?.events ?? [])
+    .slice(-FOUNDER_TEST_RESULT_HANDOFF_MAX_FEED_EVENTS)
+    .map((event) => ({
+      ...event,
+      message: truncateHandoffString(event.message, FOUNDER_TEST_RESULT_HANDOFF_MAX_TRACE_LINE_CHARS),
+    }));
+  if (originalFeedCount > feedEvents.length) {
+    notes.push(`runtime.feed.events capped from ${originalFeedCount} to ${feedEvents.length} events`);
+  }
+
+  return {
+    ...runtime,
+    traceEvents,
+    feed: {
+      ...runtime.feed,
+      events: feedEvents,
+    },
+  };
+}
+
+export function boundFounderTestResultHandoffPayloadForStorage(payload: Record<string, unknown>): {
+  payload: Record<string, unknown>;
+  truncationNotes: string[];
+} {
+  const notes: string[] = [];
+  const reportMarkdown = resolveHandoffReportMarkdown(payload);
+  const launchMarkdown =
+    typeof payload.founderTestLaunchReadinessReportMarkdown === 'string'
+      ? payload.founderTestLaunchReadinessReportMarkdown
+      : null;
+  const dedupedLaunchMarkdown =
+    launchMarkdown && reportMarkdown && launchMarkdown === reportMarkdown ? null : launchMarkdown;
+
+  if (launchMarkdown && dedupedLaunchMarkdown == null && reportMarkdown) {
+    notes.push('founderTestLaunchReadinessReportMarkdown deduplicated (same as reportMarkdown)');
+  }
+
+  const boundedRuntime = boundFounderTestRuntimeSnapshotForStorage(
+    payload.runtime as FounderTestRuntimeSnapshot | undefined,
+    notes,
+  );
+
+  if (payload.founderTestLaunchReadinessAssessment != null) {
+    notes.push('founderTestLaunchReadinessAssessment summarized for storage');
+  }
+  if (payload.launchReadiness != null) {
+    notes.push('launchReadiness summarized for storage');
+  }
+
+  const executionHandoffSummary = buildExecutionHandoffSummaryForStorage(payload, notes);
+
+  const bounded: Record<string, unknown> = {
+    ok: payload.ok,
+    readOnly: payload.readOnly ?? true,
+    mode: payload.mode ?? 'founder-testing-v5',
+    runId: payload.runId,
+    runtime: boundedRuntime,
+    report: reportMarkdown ? { reportMarkdown } : payload.report ?? null,
+    reportMarkdown,
+    founderTestLaunchReadinessReportMarkdown: dedupedLaunchMarkdown,
+    founderTestLaunchReadinessAssessment: summarizeLaunchReadinessAssessmentForStorage(
+      payload.founderTestLaunchReadinessAssessment,
+    ),
+    launchReadiness: summarizeLaunchReadinessForStorage(payload.launchReadiness),
+    finalReportReady: payload.finalReportReady,
+    finalReportPreparing: payload.finalReportPreparing,
+    finalReportPreparingReason: payload.finalReportPreparingReason ?? null,
+    executionHandoffSummary,
+  };
+
+  if (notes.length > 0) {
+    bounded.payloadTruncationNotes = notes;
+  }
+
+  return { payload: bounded, truncationNotes: notes };
+}
+
+function estimateBoundedRuntimeSnapshotBytes(runtime: unknown): number {
+  if (!runtime || typeof runtime !== 'object') return 0;
+  const snapshot = runtime as FounderTestRuntimeSnapshot;
+  let bytes = 512;
+  for (const event of snapshot.traceEvents ?? []) {
+    bytes += Buffer.byteLength(event.displayLine ?? '', 'utf8') + 128;
+  }
+  for (const event of snapshot.feed?.events ?? []) {
+    bytes += Buffer.byteLength(event.message ?? '', 'utf8') + 96;
+  }
+  bytes += (snapshot.stages?.length ?? 0) * 160;
+  return bytes;
+}
+
+export function estimateStoredFounderTestResultPayloadBytesSafely(
+  stored: StoredFounderTestRunResult,
+): number {
+  const payload = stored.payload as Record<string, unknown>;
+  const reportMarkdown = resolveStoredFounderTestReportMarkdown(stored) ?? '';
+  let bytes = Buffer.byteLength(reportMarkdown, 'utf8');
+  bytes += Buffer.byteLength(stored.runId, 'utf8');
+  bytes += Buffer.byteLength(stored.completedAt, 'utf8');
+  bytes += stored.errorMessage ? Buffer.byteLength(stored.errorMessage, 'utf8') : 0;
+  bytes += estimateBoundedRuntimeSnapshotBytes(payload.runtime);
+
+  const launchMarkdown = payload.founderTestLaunchReadinessReportMarkdown;
+  if (typeof launchMarkdown === 'string' && launchMarkdown !== reportMarkdown) {
+    bytes += Buffer.byteLength(launchMarkdown, 'utf8');
+  }
+
+  bytes += 4_096;
+  if (Array.isArray(payload.payloadTruncationNotes)) {
+    for (const note of payload.payloadTruncationNotes) {
+      if (typeof note === 'string') bytes += Buffer.byteLength(note, 'utf8');
+    }
+  }
+
+  return bytes;
 }

@@ -83,7 +83,6 @@ export function buildStageInventoryFromChainTruth(
     stageId: string;
     label: string;
     proven: boolean;
-    status: string;
   }> = [
     { stageId: 'REQUIREMENTS', label: 'Requirements', proven: truth.requirementsProven },
     { stageId: 'PLAN', label: 'Plan', proven: truth.planProven },

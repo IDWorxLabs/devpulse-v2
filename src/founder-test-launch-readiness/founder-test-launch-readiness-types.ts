@@ -17,6 +17,10 @@ import type { RuntimeActivationProofReport } from '../connected-runtime-activati
 import type { PreviewExperienceProofReport } from '../connected-preview-experience-proof/connected-preview-experience-proof-types.js';
 import type { VerificationExecutionProofReport } from '../connected-verification-execution-proof/connected-verification-execution-proof-types.js';
 import type { LaunchReadinessProofReport } from '../connected-launch-readiness-proof/connected-launch-readiness-proof-types.js';
+import type {
+  FounderTruthMatrixReconciliation,
+  FounderTruthSummary,
+} from '../founder-truth-matrix-integration/founder-truth-matrix-integration-types.js';
 
 export type FounderTestPanelState = 'READY' | 'RUNNING' | 'COMPLETE' | 'FAILED';
 
@@ -105,6 +109,12 @@ export interface FounderTestLaunchReadinessReport {
   orchestratorVerdict: string;
   orchestratorScore: number;
   topBlockers: FounderTestLaunchBlocker[];
+  /** Phase 26.71 — product gaps that block launch after truth matrix reconciliation. */
+  launchBlockersProduct: FounderTestLaunchBlocker[];
+  /** Phase 26.71 — testing-system defects (do not block product launch). */
+  launchBlockersTesting: FounderTestLaunchBlocker[];
+  /** Phase 26.71 — authority disagreements reconciled by truth matrix. */
+  launchBlockersAuthorityDisagreement: FounderTestLaunchBlocker[];
   topWarnings: FounderTestLaunchWarning[];
   topRecommendedActions: FounderTestLaunchRecommendedAction[];
   topMissingCapabilities: string[];
@@ -129,6 +139,12 @@ export interface FounderTestLaunchReadinessReport {
   connectedVerificationExecutionProofSummary: string | null;
   connectedLaunchReadinessProof: LaunchReadinessProofReport | null;
   connectedLaunchReadinessProofSummary: string | null;
+  /** Phase 26.71 — verdict before FOUNDER_TRUTH_MATRIX_RECONCILIATION. */
+  preReconciliationVerdict: LaunchReadinessVerdict;
+  /** Phase 26.71 — truth matrix reconciliation applied before launch verdict emission. */
+  truthMatrixReconciliation: FounderTruthMatrixReconciliation | null;
+  /** Phase 26.71 — FOUNDER_TRUTH_SUMMARY for founder reports. */
+  founderTruthSummary: FounderTruthSummary | null;
   inputSnapshot: FounderTestLaunchReadinessInputSnapshot;
   cacheKey: string;
 }
@@ -170,12 +186,22 @@ export interface RunFounderTestLaunchReadinessInput {
   connectedLaunchReadinessProof?: LaunchReadinessProofReport | null;
   /** Skip bounded history write — used for internal chain stubs. */
   skipHistoryRecording?: boolean;
+  /** Phase 26.71 — skip truth matrix reconciliation (validator fixtures only). */
+  skipTruthMatrixReconciliation?: boolean;
   chatStressMaxScenarios?: number;
+  /** Inject for validator fixtures — never-resolving LLM simulates hung batch workers. */
+  chatStressProviderOverride?: import('../llm-chat-brain/llm-provider-types.js').LlmProvider;
   /** Read-only runtime trace hook — observability only; does not affect scoring. */
   onBuildTrace?: LaunchReadinessBuildTraceCallback;
 }
 
-export type LaunchReadinessBuildTracePhase = 'RUNNING' | 'PASSED' | 'FAILED';
+export type LaunchReadinessBuildTracePhase =
+  | 'RUNNING'
+  | 'PASSED'
+  | 'FAILED'
+  | 'SLOW'
+  | 'STALLED'
+  | 'BUDGET_EXCEEDED';
 
 export interface LaunchReadinessBuildTraceEvent {
   operationId: string;

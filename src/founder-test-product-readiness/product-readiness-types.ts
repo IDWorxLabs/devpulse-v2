@@ -103,6 +103,10 @@ export interface RunProductReadinessSimulationInput {
     phase: 'RUNNING' | 'PASSED' | 'FAILED' | 'SLOW' | 'STALLED' | 'BUDGET_EXCEEDED';
     errorMessage?: string;
   }) => void;
+  /** Inject for validator fixtures — never-resolving LLM simulates hung batch workers. */
+  chatStressProviderOverride?: import('../llm-chat-brain/llm-provider-types.js').LlmProvider;
+  /** Phase 26.73 — distinguishes real Founder Test launch-readiness path from isolated validators. */
+  productReadinessRuntimePath?: 'real-founder' | 'isolated-validation';
 }
 
 export interface ProductReadinessHistoryEntry {

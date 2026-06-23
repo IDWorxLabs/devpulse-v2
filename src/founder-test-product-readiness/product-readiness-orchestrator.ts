@@ -5,13 +5,17 @@
 
 import { assessFounderTestIntegration } from '../founder-test-integration/index.js';
 import type { FounderTestAssessment, FounderTestAuthorityResult } from '../founder-test-integration/founder-test-integration-types.js';
-import { runFounderTestChatStressSimulation } from '../founder-test-chat-stress-simulation/index.js';
+import {
+  recoverFounderTestChatStressSimulationFromSettlement,
+  runFounderTestChatStressSimulation,
+} from '../founder-test-chat-stress-simulation/index.js';
+import { runChatStressNonBlockingForFounderTest } from '../founder-test-chat-stress-simulation/chat-stress-non-blocking-founder-test.js';
 import {
   recordIntakeCompletionBoundaryOperation,
   recordProductReadinessSimulationCompleteEmitted,
+  hasProductReadinessSimulationCompletePropagated,
 } from '../founder-test-chat-stress-simulation/chat-stress-completion-propagation.js';
 import type { ChatStressSimulationReport } from '../founder-test-chat-stress-simulation/chat-stress-simulation-types.js';
-import { retrieveDevPulseIntelligenceSnapshot } from '../world-class-chat-brain/devpulse-intelligence-adapter.js';
 import { CURRENT_PRODUCT_NAME, usesDevPulseAsCurrentIdentity } from '../identity-foundation/legacy-product-identity.js';
 import {
   loadProductMemoryFoundationsCached,
@@ -23,13 +27,48 @@ import {
   type SimulationRuntimeHealth,
 } from './product-readiness-simulation-budget.js';
 import {
+  PRODUCT_READINESS_PROPAGATION_COMPLETE,
+  PRODUCT_READINESS_PROPAGATION_FAILURE,
+  PRODUCT_READINESS_PROPAGATION_STEP,
+  propagateProductReadinessAfterCompletionBoundary,
+  waitForProductReadinessCompletionBoundary,
+} from './product-readiness-propagation.js';
+import {
+  emitProductReadinessPathMismatchIfNeeded,
+  emitRealFounderPathDiagnostic,
+  isProductReadinessCompletionCheckSatisfied,
+  markRealFounderCompletionTailCompleted,
+  markRealFounderCompletionTailInvoked,
+  observeRealFounderCompletionCheck,
+  REAL_FOUNDER_PRODUCT_READINESS_PATH_SELECTED,
+  REAL_FOUNDER_STAGE2_EXIT_CONFIRMED,
+  recordProductReadinessCompletionMechanism,
+  selectProductReadinessRuntimePath,
+} from './product-readiness-real-founder-path.js';
+import { retrieveDevPulseIntelligenceSnapshot } from '../world-class-chat-brain/devpulse-intelligence-adapter.js';
+import {
+  resetProductReadinessCompletionCheckEmissionForTests,
+  CHAT_STRESS_SETTLEMENT_DRAIN_GRACE_MS,
+  emitProductReadinessCompletionDiagnostic,
+  PRODUCT_READINESS_COMPLETED,
+  PRODUCT_READINESS_FORCED_COMPLETION,
+  reconcileProductReadinessCompletionCheck,
+  shouldForceCompleteProductReadiness,
+} from './product-readiness-completion-boundary.js';
+import {
+  emitProductReadinessCompleteOnce,
+} from '../product-readiness-completion-boundary-repair/product-readiness-completion-boundary-repair-authority.js';
+import { getChatStressCompletionSnapshot } from '../founder-test-chat-stress-simulation/chat-stress-completion-tracker.js';
+import { emitChatStressSimulationCompleteBoundaryIfNeeded } from '../founder-test-chat-stress-simulation/chat-stress-settlement-boundary.js';
+import { isProductReadinessRule1Satisfied } from '../product-readiness-completion-boundary-repair/chat-stress-settlement-auditor.js';
+import { recordProductReadinessAssessment } from './product-readiness-history.js';
+import {
   attachWeights,
   buildWeightedReadinessScore,
   CHAT_INTELLIGENCE_LAUNCH_GATE,
   simulationVerdictFromScore,
   verdictFromScore,
 } from './product-readiness-score-builder.js';
-import { recordProductReadinessAssessment } from './product-readiness-history.js';
 import type {
   ProductReadinessAssessment,
   ProductReadinessAutomaticBlocker,
@@ -43,6 +82,7 @@ let runCounter = 0;
 
 export function resetProductReadinessSimulationForTests(): void {
   runCounter = 0;
+  resetProductReadinessCompletionCheckEmissionForTests();
 }
 
 function nextRunId(): string {
@@ -389,96 +429,42 @@ function buildAutomaticBlockers(input: {
   return blockers;
 }
 
-function buildSelfEvolution(
-  simulations: ProductReadinessSimulationResult[],
-  blockers: ProductReadinessAutomaticBlocker[],
-): ProductReadinessSelfEvolution {
-  const weak = [...simulations].sort((a, b) => a.score - b.score);
-  return {
-    readOnly: true,
-    topProductRisks: weak.slice(0, 4).map((s) => `${s.label}: ${s.score}/100 — ${s.topFailures[0] ?? 'needs polish'}`),
-    topMissingCapabilities: [
-      ...new Set(simulations.flatMap((s) => s.topFailures).filter(Boolean)),
-    ].slice(0, 6),
-    topUserFrustrations: simulations
-      .filter((s) => s.id === 'FRUSTRATED_USER' || s.id === 'FIRST_TIME_USER' || s.id === 'LAUNCH_DAY')
-      .flatMap((s) => s.topFailures)
-      .slice(0, 5),
-    topLaunchBlockers: blockers.map((b) => b.explanation).slice(0, 6),
-    whatShouldWeBuildNext: simulations
-      .flatMap((s) => s.recommendedFixes)
-      .filter(Boolean)
-      .slice(0, 8),
-  };
+interface CompleteProductReadinessContext {
+  rootDir: string;
+  founderTest: FounderTestAssessment;
+  chatStress: ChatStressSimulationReport | null;
+  budget: ReturnType<typeof createSimulationBudgetTracker>;
+  simulationBudgetNotes: string[];
+  founderReviewerConfidence: number | null;
+  onSimulationTrace?: RunProductReadinessSimulationInput['onSimulationTrace'];
+  forced?: boolean;
 }
 
-export async function runFullProductReadinessSimulation(
-  input: RunProductReadinessSimulationInput = {},
-): Promise<ProductReadinessAssessment> {
-  const rootDir = input.rootDir ?? process.cwd();
-  const budgetMs = input.simulationBudgetMs ?? SIMULATION_BUDGET_MS;
-  const budget = createSimulationBudgetTracker({ budgetMs, startedAtMs: Date.now() });
-  const simulationBudgetNotes: string[] = [];
-  const founderTestContext = input.founderTestContext !== false;
-
-  input.onSimulationTrace?.({
-    operationId: 'product-readiness-simulation-started',
-    operationLabel: 'Product readiness simulation started',
-    phase: 'RUNNING',
-  });
-
-  const founderTest =
-    input.founderTestAssessment ??
-    assessFounderTestIntegration({ rootDir });
-
-  let chatStress = input.chatStressSimulation ?? null;
-  if (!input.skipChatStressSimulation && !chatStress) {
-    if (budget.isBudgetExceeded()) {
-      simulationBudgetNotes.push('Chat stress skipped — product readiness budget already exceeded.');
-    } else {
-      input.onSimulationTrace?.({
-        operationId: 'product-readiness-chat-stress-started',
-        operationLabel: 'Running bounded chat stress inside product readiness',
-        phase: 'RUNNING',
-      });
-      const chat = await runFounderTestChatStressSimulation({
-        rootDir,
-        maxScenarios: input.chatStressMaxScenarios,
-        concurrency: 4,
-        founderTestContext,
-        budgetMs: budget.remainingMs(),
-        onTrace: input.onSimulationTrace,
-      });
-      chatStress = chat.report;
-      simulationBudgetNotes.push(...chat.report.budgetNotes);
-      input.onSimulationTrace?.({
-        operationId: 'product-readiness-chat-stress-complete',
-        operationLabel: chat.report.degradedPartialResult
-          ? `Chat stress partial (${chat.report.scenariosExecuted}/${chat.report.scenariosRequested} executed)`
-          : 'Chat stress complete',
-        phase: chat.report.degradedPartialResult ? 'BUDGET_EXCEEDED' : 'PASSED',
-      });
-    }
-  }
-
+function completeProductReadinessAssessment(
+  input: CompleteProductReadinessContext,
+): ProductReadinessAssessment {
+  const { rootDir, founderTest, chatStress, budget, simulationBudgetNotes, onSimulationTrace } = input;
   const budgetSnap = budget.snapshot();
   if (budgetSnap.health === 'SIMULATION_SLOW') {
-    input.onSimulationTrace?.({
+    onSimulationTrace?.({
       operationId: 'product-readiness-simulation-slow',
       operationLabel: budgetSnap.reason ?? 'Product readiness simulation slow',
       phase: 'SLOW',
     });
   }
   if (budgetSnap.health === 'SIMULATION_STALLED' || budgetSnap.health === 'SIMULATION_BUDGET_EXCEEDED') {
-    input.onSimulationTrace?.({
+    onSimulationTrace?.({
       operationId: 'product-readiness-simulation-stalled',
-      operationLabel: budgetSnap.reason ?? 'Product readiness simulation stalled',
+      operationLabel:
+        budgetSnap.health === 'SIMULATION_BUDGET_EXCEEDED'
+          ? (budgetSnap.reason ?? 'Product readiness simulation budget exceeded — continuing with degraded evidence')
+          : (budgetSnap.reason ?? 'Product readiness simulation stalled'),
       phase: budgetSnap.health === 'SIMULATION_BUDGET_EXCEEDED' ? 'BUDGET_EXCEEDED' : 'STALLED',
     });
   }
 
   const snapshot = retrieveDevPulseIntelligenceSnapshot(rootDir);
-  input.onSimulationTrace?.({
+  onSimulationTrace?.({
     operationId: 'building-product-readiness-scoring',
     operationLabel: 'Building product readiness simulation scores',
     phase: 'RUNNING',
@@ -493,7 +479,7 @@ export async function runFullProductReadinessSimulation(
   const readinessScore = buildWeightedReadinessScore(simulations);
   let verdict = verdictFromScore(readinessScore);
 
-  input.onSimulationTrace?.({
+  onSimulationTrace?.({
     operationId: 'building-product-readiness-scoring',
     operationLabel: 'Building product readiness simulation scores',
     phase: 'PASSED',
@@ -502,7 +488,9 @@ export async function runFullProductReadinessSimulation(
   const launchDaySim = simulations.find((s) => s.id === 'LAUNCH_DAY');
   const claimSim = simulations.find((s) => s.id === 'CLAIM_VS_REALITY');
   const simulationDegradedPartial =
-    chatStress?.degradedPartialResult === true || budgetSnap.budgetExceeded;
+    chatStress?.degradedPartialResult === true ||
+    chatStress?.runtimeHealth === 'DEGRADED_INCOMPLETE' ||
+    budgetSnap.budgetExceeded;
   const simulationRuntimeHealth =
     chatStress?.runtimeHealth && chatStress.runtimeHealth !== 'HEALTHY'
       ? chatStress.runtimeHealth
@@ -546,11 +534,11 @@ export async function runFullProductReadinessSimulation(
     simulationRuntimeHealth,
     simulationBudgetElapsedMs: budgetSnap.elapsedMs,
     simulationDegradedPartial,
-    simulationBudgetNotes: simulationBudgetNotes,
+    simulationBudgetNotes,
   };
 
   recordIntakeCompletionBoundaryOperation('product-readiness-simulation-complete');
-  input.onSimulationTrace?.({
+  onSimulationTrace?.({
     operationId: 'product-readiness-simulation-complete',
     operationLabel: simulationDegradedPartial
       ? `Product readiness simulation complete (${simulationRuntimeHealth})`
@@ -558,11 +546,20 @@ export async function runFullProductReadinessSimulation(
     phase: 'PASSED',
   });
   recordProductReadinessSimulationCompleteEmitted();
-  input.onSimulationTrace?.({
+  onSimulationTrace?.({
     operationId: 'product-readiness-simulation-complete-emitted',
     operationLabel: 'Product readiness simulation complete emitted',
     phase: 'PASSED',
   });
+  emitProductReadinessCompletionDiagnostic(
+    { onSimulationTrace },
+    input.forced ? PRODUCT_READINESS_FORCED_COMPLETION : PRODUCT_READINESS_COMPLETED,
+    input.forced
+      ? `forced completion after settlement (score=${readinessScore})`
+      : `product readiness simulation complete (score=${readinessScore})`,
+    'PASSED',
+  );
+  emitProductReadinessCompleteOnce({ onSimulationTrace });
 
   const assessment: ProductReadinessAssessment = {
     readOnly: true,
@@ -572,6 +569,443 @@ export async function runFullProductReadinessSimulation(
 
   recordProductReadinessAssessment(assessment);
   return assessment;
+}
+
+/** Shared completion tail — must run once completionBoundary=true is observed. */
+export async function invokeProductReadinessCompletionTail(
+  input: RunProductReadinessSimulationInput & {
+    founderTest: FounderTestAssessment;
+    chatStress: ChatStressSimulationReport | null;
+    budget: ReturnType<typeof createSimulationBudgetTracker>;
+    simulationBudgetNotes: string[];
+    chatStressForced?: boolean;
+  },
+): Promise<ProductReadinessAssessment> {
+  observeRealFounderCompletionCheck(input);
+  markRealFounderCompletionTailInvoked(input);
+
+  input.onSimulationTrace?.({
+    operationId: PRODUCT_READINESS_PROPAGATION_STEP,
+    operationLabel: `${PRODUCT_READINESS_PROPAGATION_STEP}: invoking completion tail`,
+    phase: 'PASSED',
+  });
+
+  let chatStress = input.chatStress;
+  let forced = input.chatStressForced ?? false;
+  if (
+    !chatStress &&
+    (isProductReadinessCompletionCheckSatisfied() || shouldForceCompleteProductReadiness())
+  ) {
+    const recovered = await recoverFounderTestChatStressSimulationFromSettlement({
+      rootDir: input.rootDir ?? process.cwd(),
+      maxScenarios: input.chatStressMaxScenarios,
+      founderTestContext: input.founderTestContext !== false,
+      budgetMs: input.budget.remainingMs(),
+      onTrace: input.onSimulationTrace,
+    });
+    chatStress = recovered?.report ?? null;
+    if (chatStress) {
+      forced = true;
+    }
+  }
+
+  input.onSimulationTrace?.({
+    operationId: PRODUCT_READINESS_PROPAGATION_COMPLETE,
+    operationLabel: `${PRODUCT_READINESS_PROPAGATION_COMPLETE}: ready for ${PRODUCT_READINESS_COMPLETED}`,
+    phase: 'PASSED',
+  });
+
+  const assessment = completeProductReadinessAssessment({
+    rootDir: input.rootDir ?? process.cwd(),
+    founderTest: input.founderTest,
+    chatStress,
+    budget: input.budget,
+    simulationBudgetNotes: input.simulationBudgetNotes,
+    founderReviewerConfidence: input.founderReviewerConfidence ?? null,
+    onSimulationTrace: input.onSimulationTrace,
+    forced,
+  });
+
+  markRealFounderCompletionTailCompleted(
+    input,
+    `product-readiness-simulation-complete score=${assessment.report.readinessScore}`,
+  );
+  if (input.productReadinessRuntimePath === 'real-founder') {
+    emitRealFounderPathDiagnostic(
+      input,
+      REAL_FOUNDER_STAGE2_EXIT_CONFIRMED,
+      'product-readiness-simulation-complete propagated',
+    );
+  }
+  return assessment;
+}
+
+/** Force product readiness completion when chat stress settlement is satisfied but pipeline stalled. */
+export function forceCompleteProductReadiness(
+  input: RunProductReadinessSimulationInput & {
+    founderTest: FounderTestAssessment;
+    chatStress: ChatStressSimulationReport | null;
+    budget: ReturnType<typeof createSimulationBudgetTracker>;
+    simulationBudgetNotes: string[];
+  },
+): ProductReadinessAssessment {
+  emitProductReadinessPathMismatchIfNeeded(input, 'direct-complete');
+  recordProductReadinessCompletionMechanism('direct-complete');
+  reconcileProductReadinessCompletionCheck(input);
+  emitProductReadinessCompletionDiagnostic(
+    input,
+    PRODUCT_READINESS_FORCED_COMPLETION,
+    'forcing product readiness completion after chat stress settlement',
+    'PASSED',
+  );
+  return completeProductReadinessAssessment({
+    rootDir: input.rootDir ?? process.cwd(),
+    founderTest: input.founderTest,
+    chatStress: input.chatStress,
+    budget: input.budget,
+    simulationBudgetNotes: input.simulationBudgetNotes,
+    founderReviewerConfidence: input.founderReviewerConfidence ?? null,
+    onSimulationTrace: input.onSimulationTrace,
+    forced: true,
+  });
+}
+
+async function recoverChatStressReportFromSettlement(input: {
+  rootDir: string;
+  maxScenarios?: number;
+  founderTestContext: boolean;
+  budgetMs: number;
+  onSimulationTrace?: RunProductReadinessSimulationInput['onSimulationTrace'];
+}): Promise<ChatStressSimulationReport | null> {
+  if (!isProductReadinessCompletionCheckSatisfied() && !shouldForceCompleteProductReadiness()) {
+    return null;
+  }
+  const recovered = await recoverFounderTestChatStressSimulationFromSettlement({
+    rootDir: input.rootDir,
+    maxScenarios: input.maxScenarios,
+    founderTestContext: input.founderTestContext,
+    budgetMs: input.budgetMs,
+    onTrace: input.onSimulationTrace,
+  });
+  return recovered?.report ?? null;
+}
+
+async function runChatStressWithCompletionBoundary(input: {
+  rootDir: string;
+  maxScenarios?: number;
+  founderTestContext: boolean;
+  budgetMs: number;
+  providerOverride?: RunProductReadinessSimulationInput['chatStressProviderOverride'];
+  onSimulationTrace?: RunProductReadinessSimulationInput['onSimulationTrace'];
+  productReadinessRuntimePath?: RunProductReadinessSimulationInput['productReadinessRuntimePath'];
+}): Promise<{ report: ChatStressSimulationReport | null; forced: boolean }> {
+  const chatTask = runFounderTestChatStressSimulation({
+    rootDir: input.rootDir,
+    maxScenarios: input.maxScenarios,
+    concurrency: 4,
+    founderTestContext: input.founderTestContext,
+    budgetMs: input.budgetMs,
+    providerOverride: input.providerOverride,
+    onTrace: input.onSimulationTrace,
+  })
+    .then((assessment) => ({ kind: 'chat' as const, assessment }))
+    .catch(() => ({ kind: 'chat' as const, assessment: null }));
+
+  const settlementTask = waitForProductReadinessCompletionBoundary({
+    onSimulationTrace: input.onSimulationTrace,
+  })
+    .then(() => ({ kind: 'settlement' as const }))
+    .catch(() => ({ kind: 'settlement' as const }));
+
+  const raced = await Promise.race([chatTask, settlementTask]);
+
+  const completionEligible =
+    isProductReadinessCompletionCheckSatisfied() || shouldForceCompleteProductReadiness();
+
+  if (completionEligible) {
+    observeRealFounderCompletionCheck({
+      onSimulationTrace: input.onSimulationTrace,
+      productReadinessRuntimePath: input.productReadinessRuntimePath,
+    });
+
+    if (raced.kind === 'chat' && raced.assessment !== null) {
+      input.onSimulationTrace?.({
+        operationId: PRODUCT_READINESS_PROPAGATION_COMPLETE,
+        operationLabel: `${PRODUCT_READINESS_PROPAGATION_COMPLETE}: chat-stress-batch-returned`,
+        phase: 'PASSED',
+      });
+      return { report: raced.assessment.report, forced: false };
+    }
+
+    const recovered = await recoverChatStressReportFromSettlement(input);
+    input.onSimulationTrace?.({
+      operationId: PRODUCT_READINESS_PROPAGATION_COMPLETE,
+      operationLabel: recovered
+        ? `${PRODUCT_READINESS_PROPAGATION_COMPLETE}: settlement-recovery`
+        : `${PRODUCT_READINESS_PROPAGATION_COMPLETE}: boundary-satisfied-no-chat-report`,
+      phase: 'PASSED',
+    });
+    return { report: recovered, forced: true };
+  }
+
+  if (raced.kind === 'chat' && raced.assessment !== null) {
+    input.onSimulationTrace?.({
+      operationId: PRODUCT_READINESS_PROPAGATION_COMPLETE,
+      operationLabel: `${PRODUCT_READINESS_PROPAGATION_COMPLETE}: chat-stress-batch-returned`,
+      phase: 'PASSED',
+    });
+    return { report: raced.assessment.report, forced: false };
+  }
+
+  const snap = getChatStressCompletionSnapshot();
+  if (
+    isProductReadinessRule1Satisfied({
+      startedCount: snap.startedCount,
+      settledCount: snap.settledCount,
+      pendingCount: snap.pendingCount,
+    })
+  ) {
+    const recovered = await recoverChatStressReportFromSettlement(input);
+    input.onSimulationTrace?.({
+      operationId: PRODUCT_READINESS_PROPAGATION_COMPLETE,
+      operationLabel: recovered
+        ? `${PRODUCT_READINESS_PROPAGATION_COMPLETE}: rule1-settlement-recovery`
+        : `${PRODUCT_READINESS_PROPAGATION_COMPLETE}: rule1-settled-no-chat-report`,
+      phase: 'PASSED',
+    });
+    return { report: recovered, forced: true };
+  }
+
+  if (!shouldForceCompleteProductReadiness()) {
+    const fallback = await Promise.race([
+      chatTask,
+      new Promise<{ kind: 'timeout'; assessment: null }>((resolve) =>
+        setTimeout(() => resolve({ kind: 'timeout', assessment: null }), CHAT_STRESS_SETTLEMENT_DRAIN_GRACE_MS),
+      ),
+    ]);
+    if (fallback.kind === 'chat' && fallback.assessment !== null) {
+      return { report: fallback.assessment.report, forced: false };
+    }
+    return { report: null, forced: false };
+  }
+
+  const recovered = await recoverChatStressReportFromSettlement(input);
+  if (recovered) {
+    input.onSimulationTrace?.({
+      operationId: PRODUCT_READINESS_PROPAGATION_COMPLETE,
+      operationLabel: `${PRODUCT_READINESS_PROPAGATION_COMPLETE}: settlement-recovery-fallback`,
+      phase: 'PASSED',
+    });
+    return { report: recovered, forced: true };
+  }
+
+  const propagated = await propagateProductReadinessAfterCompletionBoundary({
+    rootDir: input.rootDir,
+    maxScenarios: input.maxScenarios,
+    founderTestContext: input.founderTestContext,
+    budgetMs: input.budgetMs,
+    onSimulationTrace: input.onSimulationTrace,
+    skipBoundaryWait: true,
+  });
+
+  if (propagated.chatStressReport) {
+    return { report: propagated.chatStressReport, forced: propagated.forced };
+  }
+
+  input.onSimulationTrace?.({
+    operationId: PRODUCT_READINESS_PROPAGATION_FAILURE,
+    operationLabel:
+      propagated.failureReason ??
+      `${PRODUCT_READINESS_PROPAGATION_FAILURE}: settlement recovery failed`,
+    phase: 'FAILED',
+  });
+  return { report: null, forced: propagated.forced };
+}
+
+function buildSelfEvolution(
+  simulations: ProductReadinessSimulationResult[],
+  blockers: ProductReadinessAutomaticBlocker[],
+): ProductReadinessSelfEvolution {
+  const weak = [...simulations].sort((a, b) => a.score - b.score);
+  return {
+    readOnly: true,
+    topProductRisks: weak.slice(0, 4).map((s) => `${s.label}: ${s.score}/100 — ${s.topFailures[0] ?? 'needs polish'}`),
+    topMissingCapabilities: [
+      ...new Set(simulations.flatMap((s) => s.topFailures).filter(Boolean)),
+    ].slice(0, 6),
+    topUserFrustrations: simulations
+      .filter((s) => s.id === 'FRUSTRATED_USER' || s.id === 'FIRST_TIME_USER' || s.id === 'LAUNCH_DAY')
+      .flatMap((s) => s.topFailures)
+      .slice(0, 5),
+    topLaunchBlockers: blockers.map((b) => b.explanation).slice(0, 6),
+    whatShouldWeBuildNext: simulations
+      .flatMap((s) => s.recommendedFixes)
+      .filter(Boolean)
+      .slice(0, 8),
+  };
+}
+
+export async function runFullProductReadinessSimulation(
+  input: RunProductReadinessSimulationInput = {},
+): Promise<ProductReadinessAssessment> {
+  const rootDir = input.rootDir ?? process.cwd();
+  const budgetMs = input.simulationBudgetMs ?? SIMULATION_BUDGET_MS;
+  const budget = createSimulationBudgetTracker({ budgetMs, startedAtMs: Date.now() });
+  const simulationBudgetNotes: string[] = [];
+  const founderTestContext = input.founderTestContext !== false;
+  const runtimePath =
+    input.productReadinessRuntimePath ?? (founderTestContext ? 'isolated-validation' : undefined);
+
+  if (runtimePath) {
+    selectProductReadinessRuntimePath(runtimePath);
+    if (runtimePath === 'real-founder') {
+      emitRealFounderPathDiagnostic(
+        input,
+        REAL_FOUNDER_PRODUCT_READINESS_PATH_SELECTED,
+        'buildFounderTestLaunchReadinessArtifactsAsync',
+      );
+    }
+  }
+
+  input.onSimulationTrace?.({
+    operationId: 'product-readiness-simulation-started',
+    operationLabel: 'Product readiness simulation started',
+    phase: 'RUNNING',
+  });
+
+  const founderTest =
+    input.founderTestAssessment ??
+    assessFounderTestIntegration({ rootDir });
+
+  let chatStress = input.chatStressSimulation ?? null;
+  let chatStressForced = false;
+  const useNonBlockingChatStress = runtimePath === 'real-founder';
+  if (!input.skipChatStressSimulation && !chatStress) {
+    if (budget.isBudgetExceeded()) {
+      simulationBudgetNotes.push('Chat stress skipped — product readiness budget already exceeded.');
+    } else {
+      input.onSimulationTrace?.({
+        operationId: 'product-readiness-chat-stress-started',
+        operationLabel: 'Running bounded chat stress inside product readiness',
+        phase: 'RUNNING',
+      });
+      if (useNonBlockingChatStress) {
+        const chat = await runChatStressNonBlockingForFounderTest({
+          rootDir,
+          maxScenarios: input.chatStressMaxScenarios,
+          founderTestContext,
+          budgetMs: budget.remainingMs(),
+          providerOverride: input.chatStressProviderOverride,
+          onTrace: input.onSimulationTrace,
+        });
+        chatStress = chat.report;
+        chatStressForced = chat.degradedIncomplete;
+        simulationBudgetNotes.push(...chat.report.budgetNotes);
+      } else {
+        const chat = await runChatStressWithCompletionBoundary({
+          rootDir,
+          maxScenarios: input.chatStressMaxScenarios,
+          founderTestContext,
+          budgetMs: budget.remainingMs(),
+          providerOverride: input.chatStressProviderOverride,
+          onSimulationTrace: input.onSimulationTrace,
+          productReadinessRuntimePath: runtimePath,
+        });
+        chatStress = chat.report;
+        chatStressForced = chat.forced;
+        if (chatStress) {
+          simulationBudgetNotes.push(...chatStress.budgetNotes);
+        }
+        emitChatStressSimulationCompleteBoundaryIfNeeded((event) => {
+          input.onSimulationTrace?.({
+            operationId: event.operationId,
+            operationLabel: event.operationLabel,
+            phase: event.phase,
+          });
+        });
+      }
+      const chatSnap = getChatStressCompletionSnapshot();
+      const chatSettled = isProductReadinessRule1Satisfied({
+        startedCount: chatSnap.startedCount,
+        settledCount: chatSnap.settledCount,
+        pendingCount: chatSnap.pendingCount,
+      });
+      input.onSimulationTrace?.({
+        operationId: 'product-readiness-chat-stress-complete',
+        operationLabel:
+          chatStress?.runtimeHealth === 'DEGRADED_INCOMPLETE'
+            ? `Chat stress DEGRADED_INCOMPLETE (${chatSnap.settledCount}/${chatSnap.startedCount} settled, pending=${chatSnap.pendingCount})`
+            : chatStress?.degradedPartialResult
+              ? `Chat stress partial (${chatStress.scenariosExecuted}/${chatStress.scenariosRequested} executed)`
+              : chatSettled
+                ? `Chat stress complete (${chatSnap.settledCount}/${chatSnap.startedCount} settled)`
+                : 'Chat stress complete',
+        phase: 'PASSED',
+        errorMessage:
+          chatStress?.runtimeHealth === 'DEGRADED_INCOMPLETE' ||
+          chatStress?.degradedPartialResult ||
+          budget.isBudgetExceeded()
+            ? chatStress?.budgetNotes.join(' ') ??
+              budget.snapshot().reason ??
+              'SIMULATION_BUDGET_EXCEEDED'
+            : undefined,
+      });
+    }
+  }
+
+  reconcileProductReadinessCompletionCheck(input);
+
+  if (useNonBlockingChatStress) {
+    recordProductReadinessCompletionMechanism('non-blocking-chat-stress');
+    const assessment = completeProductReadinessAssessment({
+      rootDir,
+      founderTest,
+      chatStress,
+      budget,
+      simulationBudgetNotes,
+      founderReviewerConfidence: input.founderReviewerConfidence ?? null,
+      onSimulationTrace: input.onSimulationTrace,
+      forced: chatStressForced,
+    });
+    if (runtimePath === 'real-founder') {
+      emitRealFounderPathDiagnostic(
+        input,
+        REAL_FOUNDER_STAGE2_EXIT_CONFIRMED,
+        'non-blocking chat stress — product-readiness-simulation-complete propagated',
+      );
+    }
+    return assessment;
+  }
+
+  const shouldInvokeCompletionTail =
+    (isProductReadinessCompletionCheckSatisfied() || shouldForceCompleteProductReadiness()) &&
+    !hasProductReadinessSimulationCompletePropagated();
+
+  if (shouldInvokeCompletionTail) {
+    return invokeProductReadinessCompletionTail({
+      ...input,
+      rootDir,
+      founderTest,
+      chatStress,
+      budget,
+      simulationBudgetNotes,
+      chatStressForced,
+      productReadinessRuntimePath: runtimePath,
+    });
+  }
+
+  emitProductReadinessPathMismatchIfNeeded(input, 'direct-complete');
+  recordProductReadinessCompletionMechanism('direct-complete');
+  return completeProductReadinessAssessment({
+    rootDir,
+    founderTest,
+    chatStress,
+    budget,
+    simulationBudgetNotes,
+    founderReviewerConfidence: input.founderReviewerConfidence ?? null,
+    onSimulationTrace: input.onSimulationTrace,
+    forced: chatStressForced,
+  });
 }
 
 export function formatProductReadinessSummary(report: ProductReadinessReport): string {

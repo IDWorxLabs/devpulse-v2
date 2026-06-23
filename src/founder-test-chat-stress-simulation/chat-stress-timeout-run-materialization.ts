@@ -11,6 +11,7 @@ import type {
 import {
   getChatStressScenarioTerminalStatus,
   isChatStressScenarioSettled,
+  listChatStressOrderedScenarioIds,
   listStartedChatStressScenarioIds,
   tryMarkChatStressScenarioSettled,
   type ChatStressScenarioTerminalStatus,
@@ -129,7 +130,12 @@ export function materializeMissingChatStressRuns(input: {
   const runById = new Map(input.runs.map((run) => [run.scenarioId, run]));
   const out = [...input.runs];
 
-  for (const scenarioId of listStartedChatStressScenarioIds()) {
+  const scenarioIdsToMaterialize = new Set([
+    ...listStartedChatStressScenarioIds(),
+    ...listChatStressOrderedScenarioIds().filter((scenarioId) => isChatStressScenarioSettled(scenarioId)),
+  ]);
+
+  for (const scenarioId of scenarioIdsToMaterialize) {
     if (runById.has(scenarioId)) continue;
 
     const scenario = scenarioById.get(scenarioId);

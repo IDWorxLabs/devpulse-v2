@@ -30,6 +30,10 @@ import {
   resetFounderExecutionProofModuleForTests,
 } from '../founder-execution-proof/index.js';
 import {
+  buildFounderTestIntegrationRecursionFallback,
+  runWithAuthorityGuard,
+} from '../authority-recursion-guard/index.js';
+import {
   resolveFounderExecutionConnected,
   type ResolvedFounderExecutionConnected,
 } from './founder-execution-connected-resolver.js';
@@ -293,7 +297,18 @@ export function assessFounderTestIntegration(
   input: RunFounderTestIntegrationInput = {},
 ): FounderTestAssessment {
   const rootDir = input.rootDir ?? process.cwd();
+  return runWithAuthorityGuard({
+    authorityName: 'FOUNDER_TEST_INTEGRATION',
+    options: { allowHeavyOrchestration: true },
+    invoke: () => assessFounderTestIntegrationCore(input, rootDir),
+    onRecursion: (detection) => buildFounderTestIntegrationRecursionFallback(detection, rootDir),
+  });
+}
 
+function assessFounderTestIntegrationCore(
+  input: RunFounderTestIntegrationInput,
+  rootDir: string,
+): FounderTestAssessment {
   const founderExecutionProofPre =
     input.founderExecutionProofAssessment ??
     assessFounderExecutionProof({

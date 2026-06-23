@@ -13,6 +13,10 @@ import {
   REPAIR_LOOP_CORE_QUESTION,
 } from './autonomous-repair-loop-registry.js';
 import { buildRepairLoopInputSnapshot } from './autonomous-repair-loop-orchestrator.js';
+import {
+  buildAutonomousRepairLoopRecursionFallback,
+  runWithAuthorityGuard,
+} from '../authority-recursion-guard/index.js';
 import { recordAutonomousRepairLoopAssessment, resetAutonomousRepairLoopHistoryForTests } from './autonomous-repair-loop-history.js';
 import { resetFounderAcceptanceGateModuleForTests } from '../founder-acceptance-gate/index.js';
 import { buildAutonomousRepairLoopReportMarkdown } from './autonomous-repair-loop-report-builder.js';
@@ -249,6 +253,16 @@ function buildAttempts(
 
 export function assessAutonomousRepairLoop(
   input: AssessAutonomousRepairLoopInput = {},
+): AutonomousRepairLoopAssessment {
+  return runWithAuthorityGuard({
+    authorityName: 'AUTONOMOUS_REPAIR_LOOP',
+    invoke: () => assessAutonomousRepairLoopCore(input),
+    onRecursion: buildAutonomousRepairLoopRecursionFallback,
+  });
+}
+
+function assessAutonomousRepairLoopCore(
+  input: AssessAutonomousRepairLoopInput,
 ): AutonomousRepairLoopAssessment {
   const inputSnapshot = buildRepairLoopInputSnapshot(input);
 

@@ -31,6 +31,7 @@ import {
   analyzeStage2CompletionGap,
   getFounderTestRuntimeStatus,
   resetFounderTestRuntimeMonitorForTests,
+  STAGE2_CHAT_STRESS_RUNTIME_FIELD_DEFAULTS,
 } from '../src/founder-test-runtime-monitor/index.js';
 import { createLaunchReadinessArtifactBuildTraceBridge, getActiveArtifactBuildSubstep } from '../src/founder-test-runtime-monitor/launch-readiness-artifact-build-tracer.js';
 import { resetLaunchReadinessArtifactBuildTracerForTests } from '../src/founder-test-runtime-monitor/index.js';
@@ -99,7 +100,12 @@ assert('terminal status resolver', simulatorSource.includes('resolveChatStressSc
 assert('aggregate complete guard', authoritySource.includes('isChatStressSimulationComplete'), 'guard');
 assert('chat-stress-simulation-complete emit', authoritySource.includes("'chat-stress-simulation-complete'"), 'complete');
 assert('terminal trace labels', authoritySource.includes('SKIPPED_BUDGET'), 'skipped budget label');
-assert('product readiness waits for chat', orchestratorSource.includes('await runFounderTestChatStressSimulation'), 'await');
+assert(
+  'product readiness waits for chat',
+  orchestratorSource.includes('runFounderTestChatStressSimulation') &&
+    orchestratorSource.includes('await Promise.race([chatTask'),
+  'await',
+);
 assert('product readiness complete after chat', orchestratorSource.indexOf('product-readiness-simulation-complete') > orchestratorSource.indexOf('runFounderTestChatStressSimulation'), 'order');
 assert('scenario traces skip artifact mutation', tracerSource.includes('chat-stress-scenario:'), 'skip scenario');
 assert('parent substep preserved', tracerSource.includes('chat-stress-simulation-complete'), 'parent');
@@ -325,6 +331,7 @@ const gap = analyzeStage2CompletionGap({
   chatStressWatchdogDeadlineByScenarioId: earlyPendingSnap.chatStressWatchdogDeadlineByScenarioId,
   chatStressWatchdogOverdueScenarioIds: earlyPendingSnap.chatStressWatchdogOverdueScenarioIds,
   chatStressMaxPendingElapsedMs: earlyPendingSnap.chatStressMaxPendingElapsedMs,
+  ...STAGE2_CHAT_STRESS_RUNTIME_FIELD_DEFAULTS,
 });
 assert(
   'analyzeStage2 gap false before grace while cap-03 pending',

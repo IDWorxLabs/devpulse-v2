@@ -66,6 +66,9 @@ export {
   buildRuntimeCapabilityAnswer,
   buildPreviewCapabilityAnswer,
   buildFirstBrokenStageAnswer,
+  buildLaunchNotProvenAnswerFromContext,
+  buildFirstLaunchBlockerAnswer,
+  buildLaunchFixRequiredAnswer,
 } from './operational-status-builder.js';
 
 export {

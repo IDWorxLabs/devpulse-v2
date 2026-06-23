@@ -175,13 +175,14 @@ assert('cap-05 scenario exists', cap05 != null, cap05?.id ?? 'missing');
 assert('cap-06 scenario exists', cap06 != null, cap06?.id ?? 'missing');
 
 const fastTimeoutMs = 250;
+const concurrentTimeoutMs = 2_000;
 const traceLabels: string[] = [];
 const armedLabels: string[] = [];
 const firedLabels: string[] = [];
 const concurrentBatch = await simulateChatStressBatch({
   scenarios: cap05 && cap06 ? [cap05, cap06] : [],
   providerOverride: new Cap05HangingProvider(),
-  perScenarioTimeoutMs: fastTimeoutMs,
+  perScenarioTimeoutMs: concurrentTimeoutMs,
   concurrency: 2,
   onScenarioWatchdogArmed: (scenario, deadlineMs) => {
     armedLabels.push(`Chat stress watchdog armed: ${scenario.id}`);

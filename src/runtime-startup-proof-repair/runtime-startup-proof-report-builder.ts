@@ -1,0 +1,120 @@
+/**
+ * Runtime Startup Proof Repair — report builder (Phase 26.77).
+ */
+
+import {
+  ORCHESTRATION_FLOW,
+  RUNTIME_STARTUP_FAILURE_CLASSIFICATION_REPORT_TITLE,
+  RUNTIME_STARTUP_PROOF_REPAIR_CORE_QUESTION,
+  RUNTIME_STARTUP_PROOF_REPAIR_PHASE,
+  RUNTIME_STARTUP_PROOF_REPAIR_REPORT_TITLE,
+  SAFETY_GUARANTEES,
+  STARTUP_COMMAND_RESOLUTION_PRIORITY,
+} from './runtime-startup-proof-repair-registry.js';
+import type { RuntimeStartupProofRepairReport } from './runtime-startup-proof-repair-types.js';
+
+export function buildRuntimeStartupProofRepairReportMarkdown(
+  report: RuntimeStartupProofRepairReport,
+): string {
+  return [
+    `# ${RUNTIME_STARTUP_PROOF_REPAIR_REPORT_TITLE}`,
+    '',
+    `**Repair:** ${report.repairId}`,
+    `**Generated:** ${report.generatedAt}`,
+    `**Application boots:** ${report.applicationBoots}`,
+    `**Failure class:** ${report.failureClass}`,
+    '',
+    '## Core question',
+    '',
+    RUNTIME_STARTUP_PROOF_REPAIR_CORE_QUESTION,
+    '',
+    '## Phase',
+    '',
+    RUNTIME_STARTUP_PROOF_REPAIR_PHASE,
+    '',
+    '## Entrypoint discovery',
+    '',
+    `- appType: **${report.entrypoint.appType}**`,
+    `- workspaceRoot: **${report.entrypoint.workspaceRoot}**`,
+    `- entryFile: **${report.entrypoint.entryFile ?? 'none'}**`,
+    `- confidence: **${report.entrypoint.confidence}**`,
+    `- discoverySources: ${report.entrypoint.discoverySources.join(', ')}`,
+    `- missingPrerequisites: ${report.entrypoint.missingPrerequisites.join(', ') || 'none'}`,
+    '',
+    '## Resolved startup command',
+    '',
+    `- command: **${report.resolvedCommand.command ?? 'none'}**`,
+    `- cwd: **${report.resolvedCommand.cwd}**`,
+    `- expectedPort: **${report.resolvedCommand.expectedPort}**`,
+    `- evidenceSource: **${report.resolvedCommand.evidenceSource}**`,
+    `- evidenceDetail: ${report.resolvedCommand.evidenceDetail}`,
+    '',
+    '## Startup probe',
+    '',
+    `- processStarted: ${report.probe.processStarted}`,
+    `- portBound: ${report.probe.portBound}`,
+    `- healthResponded: ${report.probe.healthResponded}`,
+    `- firstResponseStatus: ${report.probe.firstResponseStatus ?? 'n/a'}`,
+    `- timedOut: ${report.probe.timedOut}`,
+    `- cleanupStatus: **${report.probe.cleanupStatus}**`,
+    `- elapsedMs: ${report.probe.elapsedMs}`,
+    '',
+    '## Recommended fix',
+    '',
+    report.recommendedFix,
+    '',
+    ...report.recommendedNextActions.map((a) => `- ${a}`),
+  ].join('\n');
+}
+
+export function buildRuntimeStartupFailureClassificationReportMarkdown(
+  report: RuntimeStartupProofRepairReport,
+): string {
+  return [
+    `# ${RUNTIME_STARTUP_FAILURE_CLASSIFICATION_REPORT_TITLE}`,
+    '',
+    `Generated: ${report.generatedAt}`,
+    '',
+    '## FILES_EXIST → APPLICATION_BOOTS',
+    '',
+    `| Check | Result |`,
+    `|-------|--------|`,
+    `| Workspace | ${report.workspaceRoot} |`,
+    `| Command resolved | ${report.resolvedCommand.resolved ? 'yes' : 'no'} |`,
+    `| Evidence source | ${report.resolvedCommand.evidenceSource} |`,
+    `| Process started | ${report.probe.processStarted} |`,
+    `| Port bound | ${report.probe.portBound} |`,
+    `| Health responded | ${report.probe.healthResponded} |`,
+    `| **applicationBoots** | **${report.applicationBoots}** |`,
+    `| **failureClass** | **${report.failureClass}** |`,
+    '',
+    '## Resolution priority',
+    '',
+    ...STARTUP_COMMAND_RESOLUTION_PRIORITY.map((p, i) => `${i + 1}. ${p}`),
+    '',
+    '## Failure reason',
+    '',
+    report.failureReason,
+    '',
+    '## Startup logs',
+    '',
+    ...(report.probe.startupLogs.length
+      ? report.probe.startupLogs.map((l) => `- ${l}`)
+      : ['- none']),
+    '',
+    '## Fatal errors',
+    '',
+    ...(report.probe.fatalErrors.length
+      ? report.probe.fatalErrors.map((e) => `- ${e}`)
+      : ['- none']),
+    '',
+    '## Safety guarantees',
+    '',
+    ...SAFETY_GUARANTEES.map((g) => `- ${g}`),
+    '',
+    '## Orchestration',
+    '',
+    ...ORCHESTRATION_FLOW.map((s, i) => `${i + 1}. ${s}`),
+    '',
+  ].join('\n');
+}

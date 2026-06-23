@@ -24,6 +24,7 @@ export const EXECUTION_STAGE_OPERATIONAL_KINDS = new Set<OperationalQuestionKind
   'LAUNCH_BLOCKERS',
   'WEAKNESS',
   'CAPABILITIES',
+  'IDENTITY',
   'SELF_AWARENESS',
   'LIMITATIONS',
   'TRUST',
@@ -31,6 +32,9 @@ export const EXECUTION_STAGE_OPERATIONAL_KINDS = new Set<OperationalQuestionKind
   'TRUTH_SOURCE',
   'EXECUTION_STAGE_INVENTORY',
   'PROOF_REQUEST',
+  'LAUNCH_NOT_PROVEN',
+  'FIRST_LAUNCH_BLOCKER',
+  'LAUNCH_FIX_REQUIRED',
 ]);
 
 const EXECUTION_STAGE_MESSAGE_PATTERNS: RegExp[] = [
@@ -52,6 +56,15 @@ const EXECUTION_STAGE_MESSAGE_PATTERNS: RegExp[] = [
   /\bexecution stages and their (?:current )?status\b/i,
   /\bsystem status\b/i,
   /\bcapability inventory\b/i,
+  /\bwhat is aidevengine\b/i,
+  /\bwho built you\b/i,
+  /\bwhat can you do\b/i,
+  /\bbuild my whole (app|application)\b/i,
+  /\bfrom one prompt\b/i,
+  /\bwhy is launch not proven\b/i,
+  /\bwhat is preventing launch\b/i,
+  /\bfirst launch blocker\b/i,
+  /\bwhat do i need to fix before launch\b/i,
 ];
 
 export function inferExecutionStageQuestionKind(message: string): OperationalQuestionKind {
@@ -70,6 +83,11 @@ export function inferExecutionStageQuestionKind(message: string): OperationalQue
     return 'LAUNCH_BLOCKERS';
   }
   if (/\b(ready to launch|launch readiness|can you be launch)\b/i.test(message)) return 'LAUNCH_READINESS';
+  if (/\b(why is launch not proven|what is preventing launch|why can't we launch)\b/i.test(message)) {
+    return 'LAUNCH_NOT_PROVEN';
+  }
+  if (/\b(first launch blocker|primary launch blocker)\b/i.test(message)) return 'FIRST_LAUNCH_BLOCKER';
+  if (/\bwhat do i need to fix before launch\b/i.test(message)) return 'LAUNCH_FIX_REQUIRED';
   if (/\bexecution status\b/i.test(message)) return 'TRUST';
   if (/\bbiggest blocker\b/i.test(message)) return 'WEAKNESS';
   return 'GENERAL';

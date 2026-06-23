@@ -1,6 +1,6 @@
 # Founder Test Runtime Monitor Report
 
-Generated: 2026-06-13T12:10:55.354Z
+Generated: 2026-06-21T10:07:07.685Z
 
 ## Summary
 
@@ -41,7 +41,7 @@ Generated: 2026-06-13T12:10:55.354Z
 - Completed stages: 3
 - Remaining stages: 8
 - Elapsed: 0 ms
-- Estimated remaining: 22100 ms
+- Estimated remaining: 280100 ms
 
 ## Stall Behavior
 
@@ -50,8 +50,8 @@ Generated: 2026-06-13T12:10:55.354Z
 
 ## Feed Samples
 
-- [14:10:55] Founder Test Started
-- [14:10:55] Founder Test Complete
+- [12:07:07] Founder Test Started
+- [12:07:07] Founder Test Complete
 
 ---
 

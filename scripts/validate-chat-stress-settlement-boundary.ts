@@ -9,8 +9,10 @@ import type { LlmChatRequest, LlmChatResponse, LlmProvider } from '../src/llm-ch
 import { loadLlmModelConfig } from '../src/llm-chat-brain/llm-provider.js';
 import {
   CHAT_STRESS_SETTLEMENT_BOUNDARY_REPAIR_V1_PASS,
+  CHAT_STRESS_TERMINAL_SETTLEMENT_SWEEP_V1_PASS,
   allChatStressScenariosSettled,
   allStartedChatStressScenariosSettled,
+  beginChatStressBatchDeadline,
   beginChatStressSimulation,
   buildChatStressSettlementSummary,
   countChatStressScenarios,
@@ -25,6 +27,7 @@ import {
   markChatStressScenarioSkippedBudget,
   markChatStressScenarioSettled,
   markChatStressSimulationAggregateComplete,
+  reconcileChatStressTerminalSettlementSweep,
   reconcileChatStressWatchdogHealth,
   resetChatStressCompletionTrackerForTests,
   resetChatStressSimulationForTests,
@@ -32,8 +35,10 @@ import {
   setActiveChatStressScenario,
   simulateChatStressBatch,
 } from '../src/founder-test-chat-stress-simulation/index.js';
+import { reconcileChatStressRunnerIdleWithPending } from '../src/founder-test-chat-stress-simulation/live-chat-stress-runner-path.js';
 import {
   analyzeStage2CompletionGap,
+  STAGE2_CHAT_STRESS_RUNTIME_FIELD_DEFAULTS,
   hasPassedTraceEvent,
   INTAKE_VALIDATION_COMPLETION_BOUNDARIES,
   resetFounderTestRuntimeMonitorForTests,
@@ -115,6 +120,14 @@ const orchestratorSource = readFileSync(
   'utf8',
 );
 const stage2Source = readFileSync(join(ROOT, 'src/founder-test-runtime-monitor/stage2-completion-tracker.ts'), 'utf8');
+const simulatorSource = readFileSync(
+  join(ROOT, 'src/founder-test-chat-stress-simulation/chat-response-simulator.ts'),
+  'utf8',
+);
+const liveRunnerSource = readFileSync(
+  join(ROOT, 'src/founder-test-chat-stress-simulation/live-chat-stress-runner-path.ts'),
+  'utf8',
+);
 const tracerSource = readFileSync(
   join(ROOT, 'src/founder-test-runtime-monitor/launch-readiness-artifact-build-tracer.ts'),
   'utf8',
@@ -146,10 +159,79 @@ assert('no scoring manipulation', !authoritySource.includes('overrideLaunchVerdi
 assert('no verdict manipulation', !orchestratorSource.includes('setLaunchVerdictOverride'), 'verdict');
 assert('no auto-pass failed scenarios', !trackerSource.includes("terminalStatus: 'PASSED'") || trackerSource.includes("'TIMEOUT'"), 'auto-pass');
 assert('no validator recursion', !validatorSource.includes(`execSync('npm run validate:${VALIDATOR_BASENAME}`), 'recursion');
+assert('terminal settlement sweep function', trackerSource.includes('reconcileChatStressTerminalSettlementSweep'), 'sweep fn');
+assert('sweep requires forceUnresolved', trackerSource.includes('forceUnresolved'), 'force flag');
+assert('batch settlement poll loop', simulatorSource.includes('SETTLEMENT_POLL_MS'), 'poll loop');
+assert('batch does not block forever on workers only', simulatorSource.includes('reconcileChatStressBatchDeadlineFinalizer'), 'batch finalizer in loop');
+assert('idle reconciler allows batch deadline expired with active worker', liveRunnerSource.includes('batchDeadlineExpired'), 'idle batch deadline');
 assert(
   'package script registered',
   packageJson.includes(`validate:chat-stress-settlement-boundary": "tsx scripts/${VALIDATOR_BASENAME}.ts"`),
   'script',
+);
+
+resetChatStressCompletionTrackerForTests();
+const partialScenarioIds = listChatStressScenarios(12).map((scenario) => scenario.id);
+beginChatStressSimulation(partialScenarioIds);
+beginChatStressBatchDeadline({
+  scenarioCount: 12,
+  concurrency: 4,
+  perScenarioTimeoutMs: 15_000,
+  startedAtMs: Date.now(),
+});
+for (const id of ['identity-01', 'identity-02', 'identity-03']) {
+  markChatStressScenarioStarted(id);
+  markChatStressScenarioSettled(id, 'PASSED');
+}
+markChatStressScenarioStarted('identity-04');
+setActiveChatStressScenario('identity-04');
+const partialBefore = getChatStressCompletionSnapshot();
+assert('partial settlement settled=3/12', partialBefore.settledCount === 3, String(partialBefore.settledCount));
+assert('partial settlement pending=9', partialBefore.pendingCount === 9, String(partialBefore.pendingCount));
+assert(
+  'partial pending includes identity-04 through cap-06',
+  partialBefore.pendingScenarioIds.includes('identity-04') &&
+    partialBefore.pendingScenarioIds.includes('cap-06'),
+  partialBefore.pendingScenarioIds.join(','),
+);
+
+const sweepResult = reconcileChatStressTerminalSettlementSweep({
+  forceUnresolved: true,
+  reason: 'PARTIAL_SETTLEMENT_3_OF_12',
+});
+assert('terminal sweep clears pending', sweepResult.pendingCount === 0, String(sweepResult.pendingCount));
+assert('terminal sweep settles all 12', allChatStressScenariosSettled(), 'not all terminal');
+assert(
+  'never-started scenarios finalized as SKIPPED_BUDGET',
+  getChatStressScenarioTerminalStatus('identity-05') === 'SKIPPED_BUDGET',
+  getChatStressScenarioTerminalStatus('identity-05') ?? 'null',
+);
+assert(
+  'active started scenario finalized as TIMEOUT',
+  getChatStressScenarioTerminalStatus('identity-04') === 'TIMEOUT',
+  getChatStressScenarioTerminalStatus('identity-04') ?? 'null',
+);
+assert('completion boundary after partial sweep', isChatStressSimulationComplete() === true, 'not complete');
+
+resetChatStressCompletionTrackerForTests();
+beginChatStressSimulation(partialScenarioIds);
+beginChatStressBatchDeadline({
+  scenarioCount: 12,
+  concurrency: 4,
+  perScenarioTimeoutMs: 15_000,
+  startedAtMs: Date.now() - 120_000,
+});
+for (const id of ['identity-01', 'identity-02', 'identity-03']) {
+  markChatStressScenarioStarted(id);
+  markChatStressScenarioSettled(id, 'PASSED');
+}
+markChatStressScenarioStarted('identity-04');
+setActiveChatStressScenario('identity-04');
+reconcileChatStressRunnerIdleWithPending(Date.now());
+assert(
+  'idle-with-pending reconciler clears partial stall on expired batch deadline',
+  getChatStressCompletionSnapshot().pendingCount === 0,
+  String(getChatStressCompletionSnapshot().pendingCount),
 );
 
 resetChatStressCompletionTrackerForTests();
@@ -356,6 +438,7 @@ const stage2Gap = analyzeStage2CompletionGap({
   chatStressWatchdogDeadlineByScenarioId: {},
   chatStressWatchdogOverdueScenarioIds: [],
   chatStressMaxPendingElapsedMs: 0,
+  ...STAGE2_CHAT_STRESS_RUNTIME_FIELD_DEFAULTS,
 });
 assert(
   'Stage 2 not stalled when chat stress complete with zero pending',
@@ -364,15 +447,19 @@ assert(
 );
 
 const batchScenarios = listChatStressScenarios(12);
+const batchStartMs = Date.now();
 const batch = await simulateChatStressBatch({
   scenarios: batchScenarios,
   providerOverride: new HangingLlmProvider(),
   perScenarioTimeoutMs: fastTimeoutMs,
   concurrency: 4,
 });
+const batchElapsedMs = Date.now() - batchStartMs;
+assert('full batch completes in bounded time', batchElapsedMs < 35_000, String(batchElapsedMs));
 assert('full scenario count preserved', batchScenarios.length === 12, String(batchScenarios.length));
 assert('batch pending zero after timeouts', getChatStressCompletionSnapshot().pendingCount === 0, String(getChatStressCompletionSnapshot().pendingCount));
 assert('batch all settled', allChatStressScenariosSettled(), 'batch not settled');
+assert('terminal settlement sweep pass token exported', CHAT_STRESS_TERMINAL_SETTLEMENT_SWEEP_V1_PASS.length > 0, 'token');
 
 const failed = results.filter((entry) => !entry.passed);
 const passToken = CHAT_STRESS_SETTLEMENT_BOUNDARY_REPAIR_V1_PASS;

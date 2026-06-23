@@ -20,6 +20,8 @@ import {
 
   resolveEffectiveChatStressMaxScenarios,
 
+  resolveChatStressSimulationStalledThresholdMs,
+
   SIMULATION_BUDGET_MS,
 
 } from '../founder-test-product-readiness/product-readiness-simulation-budget.js';
@@ -30,7 +32,17 @@ import {
 
   registerChatStressPostWatchdogHealthReconciler,
 
+  registerChatStressBatchDeadlineArmedHandler,
+
+  registerChatStressTerminalSettlementSweepHandler,
+
   resetChatStressCompletionTrackerForTests,
+
+  forceSettlePendingStartedChatStressScenarios,
+
+  listChatStressOrderedScenarioIds,
+
+  getChatStressCompletionSnapshot,
 
   type ChatStressScenarioTerminalStatus,
 
@@ -43,6 +55,8 @@ import {
   buildChatStressSettlementSummary,
 
   detectChatStressPendingLeak,
+
+  isChatStressSimulationComplete,
 
 } from './chat-stress-settlement-boundary.js';
 
@@ -66,13 +80,23 @@ import {
 
   registerChatStressRunnerIdleWithPendingHandler,
 
+  registerLiveChatStressCompletionBoundaryEmitter,
+
+  reconcileLiveChatStressSettlementAndBoundary,
+
+  registerLiveChatStressRuntimeTraceHandler,
+
+  startLiveChatStressSettlementDriver,
+
+  stopLiveChatStressSettlementDriver,
+
   resetLiveChatStressRunnerPathForTests,
 
 } from './live-chat-stress-runner-path.js';
 
 import { evaluateChatStressRuns } from './chat-response-evaluator.js';
 
-import { simulateChatStressBatch } from './chat-response-simulator.js';
+import { simulateChatStressBatch, type ChatStressBatchResult } from './chat-response-simulator.js';
 
 import {
 
@@ -99,6 +123,10 @@ import type {
 } from './chat-stress-simulation-types.js';
 
 import { CHAT_STRESS_LAUNCH_BLOCK_THRESHOLD } from './chat-stress-simulation-types.js';
+import {
+  materializeMissingChatStressRuns,
+} from './chat-stress-timeout-run-materialization.js';
+import { PRODUCT_READINESS_FORCED_COMPLETION } from '../founder-test-product-readiness/product-readiness-completion-boundary.js';
 
 
 
@@ -261,8 +289,17 @@ export async function runFounderTestChatStressSimulation(
   const scenarios = listChatStressScenarios(scenariosRequested);
 
   const budgetMs = input.budgetMs ?? SIMULATION_BUDGET_MS;
+  const concurrency = input.concurrency ?? 4;
 
-  const budget = createSimulationBudgetTracker({ budgetMs, startedAtMs: Date.now() });
+  const budget = createSimulationBudgetTracker({
+    budgetMs,
+    startedAtMs: Date.now(),
+    stalledThresholdMs: resolveChatStressSimulationStalledThresholdMs({
+      scenarioCount: scenarios.length,
+      concurrency,
+      perScenarioTimeoutMs: input.perScenarioTimeoutMs ?? CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS,
+    }),
+  });
 
   const budgetNotes: string[] = [
 
@@ -285,6 +322,8 @@ export async function runFounderTestChatStressSimulation(
 
 
   let unregisterHealthReconciler: (() => void) | null = null;
+  let stopLiveSettlementDriver: (() => void) | null = null;
+  let terminalSweepStartedEmitted = false;
 
   if (context === 'founder-test') {
 
@@ -296,6 +335,44 @@ export async function runFounderTestChatStressSimulation(
 
       phase: 'PASSED',
 
+    });
+
+    registerLiveChatStressRuntimeTraceHandler((event) => {
+      emitTrace(input, {
+        operationId: event.operationId,
+        operationLabel: event.operationLabel,
+        phase: event.phase === 'PASSED' ? 'PASSED' : event.phase === 'RUNNING' ? 'RUNNING' : 'FAILED',
+        errorMessage: event.errorMessage,
+      });
+    });
+
+    registerChatStressBatchDeadlineArmedHandler((armed) => {
+      emitTrace(input, {
+        operationId: 'chat-stress-batch-deadline-armed',
+        operationLabel: `Chat stress batch deadline armed (${armed.batchDeadlineMs}ms)`,
+        phase: 'RUNNING',
+        errorMessage: `endsAtMs=${armed.batchEndsAtMs} scenarios=${armed.scenarioCount} concurrency=${armed.concurrency}`,
+      });
+    });
+
+    registerChatStressTerminalSettlementSweepHandler((sweep) => {
+      if (sweep.forcedCount === 0) {
+        if (terminalSweepStartedEmitted) return;
+        terminalSweepStartedEmitted = true;
+        emitTrace(input, {
+          operationId: 'chat-stress-terminal-sweep-started',
+          operationLabel: `Chat stress terminal sweep started (${sweep.reason})`,
+          phase: 'RUNNING',
+          errorMessage: `settled=${sweep.settledCount} pending=${sweep.pendingCount}`,
+        });
+        return;
+      }
+      emitTrace(input, {
+        operationId: 'chat-stress-terminal-sweep-settled',
+        operationLabel: `Chat stress terminal sweep settled (${sweep.settledCount}/${sweep.settledCount + sweep.pendingCount})`,
+        phase: sweep.pendingCount === 0 ? 'PASSED' : 'SLOW',
+        errorMessage: `forced=${sweep.forcedCount} pending=${sweep.pendingCount} reason=${sweep.reason}`,
+      });
     });
 
     registerChatStressRunnerIdleWithPendingHandler((event) => {
@@ -314,6 +391,10 @@ export async function runFounderTestChatStressSimulation(
 
           pendingWithoutActiveWorkerScenarioIds: event.pendingWithoutActiveWorkerScenarioIds,
 
+          activeScenarioIds: event.activeScenarioIds,
+
+          activeScenarioCount: event.activeScenarioCount,
+
           forcedSettlementCount: event.forcedSettlementCount,
 
         }),
@@ -322,11 +403,21 @@ export async function runFounderTestChatStressSimulation(
 
     });
 
+    registerLiveChatStressCompletionBoundaryEmitter((event) => {
+      emitTrace(input, {
+        operationId: event.operationId,
+        operationLabel: event.operationLabel,
+        phase: event.phase,
+      });
+    });
+
     unregisterHealthReconciler = registerChatStressPostWatchdogHealthReconciler(
 
-      reconcileChatStressRunnerIdleWithPending,
+      (nowMs) => reconcileLiveChatStressSettlementAndBoundary(nowMs),
 
     );
+
+    stopLiveSettlementDriver = startLiveChatStressSettlementDriver(250);
 
   }
 
@@ -538,7 +629,19 @@ export async function runFounderTestChatStressSimulation(
 
   } finally {
 
+    stopLiveSettlementDriver?.();
+
+    stopLiveChatStressSettlementDriver();
+
     registerChatStressRunnerIdleWithPendingHandler(null);
+
+    registerLiveChatStressCompletionBoundaryEmitter(null);
+
+    registerLiveChatStressRuntimeTraceHandler(null);
+
+    registerChatStressBatchDeadlineArmedHandler(null);
+
+    registerChatStressTerminalSettlementSweepHandler(null);
 
     unregisterHealthReconciler?.();
 
@@ -593,6 +696,20 @@ export async function runFounderTestChatStressSimulation(
     phase: 'PASSED',
 
   });
+
+  if (isChatStressSimulationComplete()) {
+
+    emitTrace(input, {
+
+      operationId: 'chat-stress-boundary-satisfied-by-settlement',
+
+      operationLabel: `Chat stress boundary satisfied by settlement (settled=${settlementSummary.settledCount}, pending=${settlementSummary.pendingCount})`,
+
+      phase: 'PASSED',
+
+    });
+
+  }
 
 
 
@@ -822,6 +939,169 @@ export async function runFounderTestChatStressSimulation(
 
 
 
+/** Recover chat stress assessment when settlement tracker is complete but batch workers have not returned. */
+export async function recoverFounderTestChatStressSimulationFromSettlement(
+  input: RunChatStressSimulationInput = {},
+): Promise<ChatStressSimulationAssessment | null> {
+  if (!isChatStressSimulationComplete()) {
+    const snap = getChatStressCompletionSnapshot();
+    const eligible =
+      snap.pendingCount === 0 &&
+      snap.startedCount > 0 &&
+      snap.settledCount >= snap.startedCount;
+    if (!eligible) return null;
+  }
+
+  const context = input.founderTestContext === false ? 'full' : 'founder-test';
+  const scenariosRequested = resolveEffectiveChatStressMaxScenarios(input.maxScenarios, context);
+  const registryScenarios = listChatStressScenarios(scenariosRequested);
+  const orderedIds = [...listChatStressOrderedScenarioIds()];
+  const fullRegistry = listChatStressScenarios(
+    Math.max(scenariosRequested, orderedIds.length, registryScenarios.length),
+  );
+  const scenarios =
+    orderedIds.length > 0
+      ? orderedIds
+          .map(
+            (id) =>
+              fullRegistry.find((scenario) => scenario.id === id) ??
+              registryScenarios.find((scenario) => scenario.id === id),
+          )
+          .filter((scenario): scenario is (typeof registryScenarios)[number] => scenario != null)
+      : registryScenarios;
+  const perScenarioTimeoutMs = input.perScenarioTimeoutMs ?? CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS;
+  const budgetMs = input.budgetMs ?? SIMULATION_BUDGET_MS;
+  const budget = createSimulationBudgetTracker({
+    budgetMs,
+    startedAtMs: Date.now(),
+    stalledThresholdMs: resolveChatStressSimulationStalledThresholdMs({
+      scenarioCount: scenarios.length,
+      concurrency: input.concurrency ?? 4,
+      perScenarioTimeoutMs,
+    }),
+  });
+  const budgetNotes = [
+    `Recovered chat stress from settlement tracker (${PRODUCT_READINESS_FORCED_COMPLETION}).`,
+  ];
+
+  forceSettlePendingStartedChatStressScenarios(PRODUCT_READINESS_FORCED_COMPLETION);
+  const settlementSummary = buildChatStressSettlementSummary();
+  const runs = materializeMissingChatStressRuns({
+    scenarios,
+    runs: [],
+    perScenarioTimeoutMs,
+  });
+  const batch: ChatStressBatchResult = {
+    runs,
+    scenariosExecuted: runs.filter((run) => !run.skipped).length,
+    scenariosSkipped: runs.filter((run) => run.skipped).length,
+    scenariosTimedOut: runs.filter((run) => run.timedOut).length,
+    budgetExceeded: runs.some((run) => run.skipReason?.includes('BUDGET')),
+    budgetNotes: [
+      `Settlement recovery: ${settlementSummary.settledCount}/${settlementSummary.totalScenarios} settled.`,
+    ],
+  };
+
+  recordChatStressCompletionConditionSatisfied();
+  emitTrace(input, {
+    operationId: 'chat-stress-completion-condition-satisfied',
+    operationLabel: `Chat stress completion condition satisfied (recovered: settled=${settlementSummary.settledCount}, pending=${settlementSummary.pendingCount})`,
+    phase: 'PASSED',
+  });
+
+  budgetNotes.push(...batch.budgetNotes);
+  const finalBudget = budget.snapshot();
+  const degradedPartialResult =
+    batch.budgetExceeded ||
+    batch.scenariosSkipped > 0 ||
+    batch.scenariosTimedOut > 0 ||
+    finalBudget.health === 'SIMULATION_BUDGET_EXCEEDED';
+
+  const evaluations = evaluateChatStressRuns({ scenarios, runs: batch.runs });
+  const executedEvaluations = evaluations.filter((entry) => {
+    const run = batch.runs.find((candidate) => candidate.scenarioId === entry.scenarioId);
+    return run != null && !run.skipped;
+  });
+  const overallScore = averageScore(
+    (executedEvaluations.length ? executedEvaluations : evaluations).map((entry) => entry.score),
+  );
+  const passedCount = evaluations.filter((entry) => entry.passed).length;
+  const failedCount = evaluations.filter((entry) => !entry.passed && !entry.weak).length;
+  const weakCount = evaluations.filter((entry) => entry.weak).length;
+  const sorted = [...evaluations].sort((a, b) => b.score - a.score);
+  const missingCapabilities = [
+    ...new Set(
+      evaluations
+        .filter((entry) => !entry.passed)
+        .map((entry) => entry.missingCapability)
+        .filter((entry): entry is string => Boolean(entry)),
+    ),
+  ];
+  const repeatedFailurePatterns = buildRepeatedFailurePatterns(evaluations);
+  const chatBlocksLaunchReadiness =
+    overallScore < CHAT_STRESS_LAUNCH_BLOCK_THRESHOLD || degradedPartialResult;
+  const selfEvolutionRequired =
+    chatBlocksLaunchReadiness ||
+    missingCapabilities.some((entry) => /identity|weakness|honesty|tone/i.test(entry)) ||
+    repeatedFailurePatterns.some((entry) => /legacy|identity|overclaim/i.test(entry.pattern));
+
+  const report: ChatStressSimulationReport = {
+    readOnly: true,
+    advisoryOnly: true,
+    runId: nextRunId(),
+    generatedAt: new Date().toISOString(),
+    totalScenarios: scenarios.length,
+    scenariosRequested,
+    scenariosExecuted: batch.scenariosExecuted,
+    scenariosSkipped: batch.scenariosSkipped,
+    scenariosTimedOut: batch.scenariosTimedOut,
+    passedCount,
+    failedCount,
+    weakCount,
+    overallScore,
+    chatBlocksLaunchReadiness,
+    selfEvolutionRequired,
+    runtimeHealth: finalBudget.health,
+    budgetElapsedMs: finalBudget.elapsedMs,
+    degradedPartialResult,
+    budgetNotes,
+    strongestAnswers: sorted.slice(0, 5),
+    worstAnswers: sorted.slice(-5).reverse(),
+    weakAnswers: evaluations.filter((entry) => entry.weak),
+    failedAnswers: evaluations.filter((entry) => !entry.passed && !entry.weak),
+    repeatedFailurePatterns,
+    missingCapabilities,
+    recommendedNextChatImprovements: [],
+    categoryScores: buildCategoryScores(evaluations),
+    evaluations,
+    scenarioRuns: batch.runs,
+    settlementSummary,
+  };
+
+  report.recommendedNextChatImprovements = deriveRecommendedChatImprovements(report);
+  markChatStressSimulationAggregateComplete();
+  recordIntakeCompletionBoundaryOperation('chat-stress-simulation-complete');
+  emitTrace(input, {
+    operationId: 'chat-stress-simulation-complete',
+    operationLabel: `Chat stress simulation complete (recovered: ${passedCount}/${scenarios.length} passed)`,
+    phase: 'PASSED',
+  });
+  recordChatStressSimulationCompleteEmitted();
+  emitTrace(input, {
+    operationId: 'chat-stress-simulation-complete-emitted',
+    operationLabel: 'Chat stress simulation complete emitted',
+    phase: 'PASSED',
+  });
+
+  return {
+    readOnly: true,
+    advisoryOnly: true,
+    report,
+  };
+}
+
+
+
 export function buildChatStressSimulationCacheKey(report: ChatStressSimulationReport): string {
 
   const digest = createHash('sha256')
@@ -841,9 +1121,9 @@ export function buildChatStressSimulationCacheKey(report: ChatStressSimulationRe
 export function formatChatStressSimulationSummary(report: ChatStressSimulationReport): string {
 
   const partial = report.degradedPartialResult
-
-    ? ` PARTIAL (${report.scenariosExecuted}/${report.scenariosRequested} executed).`
-
+    ? report.runtimeHealth === 'DEGRADED_INCOMPLETE'
+      ? ` DEGRADED_INCOMPLETE (${report.settlementSummary?.settledCount ?? report.scenariosExecuted}/${report.scenariosRequested} settled).`
+      : ` PARTIAL (${report.scenariosExecuted}/${report.scenariosRequested} executed).`
     : '';
 
   return (

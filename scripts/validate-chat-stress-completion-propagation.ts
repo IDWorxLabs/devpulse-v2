@@ -24,6 +24,7 @@ import { runFullProductReadinessSimulation } from '../src/founder-test-product-r
 import {
   appendRuntimeTraceEvent,
   analyzeStage2CompletionGap,
+  STAGE2_CHAT_STRESS_RUNTIME_FIELD_DEFAULTS,
   buildLaunchReadinessArtifactBuildTraceBridge,
   beginFounderTestRuntime,
   getFounderTestRuntimeStatus,
@@ -325,6 +326,7 @@ const stage2Gap = analyzeStage2CompletionGap({
   chatStressWatchdogDeadlineByScenarioId: {},
   chatStressWatchdogOverdueScenarioIds: [],
   chatStressMaxPendingElapsedMs: 0,
+  ...STAGE2_CHAT_STRESS_RUNTIME_FIELD_DEFAULTS,
 });
 assert(
   'stage2 not stalled on chat pending when registry has chat complete',

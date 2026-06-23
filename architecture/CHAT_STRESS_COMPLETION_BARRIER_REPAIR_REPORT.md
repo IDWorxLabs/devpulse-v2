@@ -9,7 +9,7 @@
 ## Concurrency / Completion Barrier Fix
 
 - Batch simulator uses indexed worker pool + `Promise.allSettled` and tracks every scenario to a terminal status.
-- Aggregate `chat-stress-simulation-complete` fires only after `allStartedChatStressScenariosSettled()`.
+- Aggregate `chat-stress-simulation-complete` fires only after `isChatStressSimulationComplete()`.
 - Artifact tracer ignores per-scenario chat stress traces for sub-step mutation.
 
 ## Scenario Lifecycle Proof

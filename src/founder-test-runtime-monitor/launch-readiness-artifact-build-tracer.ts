@@ -2,13 +2,19 @@
  * Launch Readiness Artifact Build Tracer — bridges build trace to runtime monitor (V1).
  */
 
-import type { LaunchReadinessBuildTraceCallback } from '../founder-test-launch-readiness/founder-test-launch-readiness-types.js';
+import type {
+  LaunchReadinessBuildTraceCallback,
+  LaunchReadinessBuildTraceEvent,
+} from '../founder-test-launch-readiness/founder-test-launch-readiness-types.js';
+import { getChatStressCompletionSnapshot } from '../founder-test-chat-stress-simulation/chat-stress-completion-tracker.js';
 import { shouldPropagateLiveChatStressRuntimeFeed } from '../founder-test-chat-stress-simulation/live-chat-stress-runner-path.js';
+import { isChatStressSimulationComplete } from '../founder-test-chat-stress-simulation/chat-stress-settlement-boundary.js';
 import { PINNED_RUNTIME_TRACE_OPERATION_IDS } from './runtime-trace-registry.js';
 import {
   STALL_SLOW_THRESHOLD_MS,
   STALL_STALLED_THRESHOLD_MS,
 } from './founder-test-runtime-registry.js';
+import { resolveChatStressWorstCaseBatchDeadlineMs } from '../founder-test-product-readiness/product-readiness-simulation-budget.js';
 import type { FounderTestTraceEventStatus } from './founder-test-runtime-types.js';
 
 export const LAUNCH_READINESS_ARTIFACT_BUILD_TRACE_V1_PASS =
@@ -68,6 +74,40 @@ export function beginArtifactBuildSubstep(input: {
   };
 }
 
+const PRODUCT_READINESS_CHAT_STRESS_SUBSTEP_ID = 'product-readiness-chat-stress-started';
+
+export function clearChatStressArtifactSubstepIfSettled(input: {
+  operationLabel?: string;
+  withWarnings?: boolean;
+} = {}): boolean {
+  const active = getActiveArtifactBuildSubstep();
+  if (active?.operationId !== PRODUCT_READINESS_CHAT_STRESS_SUBSTEP_ID) {
+    return false;
+  }
+  const snap = getChatStressCompletionSnapshot();
+  const chatStressComplete = isChatStressSimulationComplete();
+  if (!chatStressComplete) {
+    return false;
+  }
+  completeArtifactBuildSubstep({
+    operationId: PRODUCT_READINESS_CHAT_STRESS_SUBSTEP_ID,
+    operationLabel:
+      input.operationLabel ??
+      (input.withWarnings
+        ? 'Chat stress complete (degraded — budget exceeded)'
+        : 'Chat stress complete'),
+    status: 'PASSED',
+  });
+  return true;
+}
+
+export function reconcileActiveArtifactSubstepAfterChatStressSettled(nowMs = Date.now()): boolean {
+  const snap = getChatStressCompletionSnapshot(nowMs);
+  return clearChatStressArtifactSubstepIfSettled({
+    withWarnings: snap.pendingCount > 0 || snap.startedCount !== snap.settledCount,
+  });
+}
+
 export function completeArtifactBuildSubstep(input: {
   operationId: string;
   operationLabel: string;
@@ -110,8 +150,14 @@ export function analyzeArtifactBuildSubstepStall(nowMs = Date.now()): {
   );
   const label = activeArtifactBuildSubstep.operationLabel;
   const opId = activeArtifactBuildSubstep.operationId;
+  const stalledThresholdMs =
+    opId === 'product-readiness-chat-stress-started' ||
+    opId.startsWith('product-readiness-chat-stress') ||
+    opId === SUSPECTED_LAUNCH_READINESS_BLOCKING_OPERATION
+      ? resolveChatStressWorstCaseBatchDeadlineMs()
+      : STALL_STALLED_THRESHOLD_MS;
 
-  if (elapsedMs >= STALL_STALLED_THRESHOLD_MS) {
+  if (elapsedMs >= stalledThresholdMs) {
     return {
       health: 'STALLED',
       operationId: opId,
@@ -199,7 +245,19 @@ export function createLaunchReadinessArtifactBuildTraceBridge(handlers: {
       operationId.startsWith('chat-stress-scenario-timed-out-settled:') ||
       operationId === 'chat-stress-pending-count-updated' ||
       operationId === 'chat-stress-pending-leak' ||
-      operationId === 'product-readiness-chat-stress-complete'
+      operationId === 'chat-stress-batch-deadline-armed' ||
+      operationId === 'chat-stress-terminal-sweep-started' ||
+      operationId === 'chat-stress-terminal-sweep-settled' ||
+      operationId === 'product-readiness-chat-stress-complete' ||
+      operationId === 'PRODUCT_READINESS_COMPLETION_CHECK' ||
+      operationId === 'PRODUCT_READINESS_COMPLETED' ||
+      operationId === 'PRODUCT_READINESS_COMPLETE' ||
+      operationId === 'PRODUCT_READINESS_FORCED_COMPLETION' ||
+      operationId === 'PRODUCT_READINESS_PROPAGATION_START' ||
+      operationId === 'PRODUCT_READINESS_PROPAGATION_STEP' ||
+      operationId === 'PRODUCT_READINESS_PROPAGATION_COMPLETE' ||
+      operationId === 'PRODUCT_READINESS_PROPAGATION_FAILURE' ||
+      operationId.startsWith('REAL_FOUNDER_')
     );
   }
 
@@ -209,10 +267,39 @@ export function createLaunchReadinessArtifactBuildTraceBridge(handlers: {
     errorMessage?: string;
   }): void {
     completeArtifactBuildSubstep({
-      operationId: 'product-readiness-chat-stress-started',
+      operationId: PRODUCT_READINESS_CHAT_STRESS_SUBSTEP_ID,
       operationLabel: input.operationLabel,
       status: input.status,
       errorMessage: input.errorMessage,
+    });
+  }
+
+  function handleProductReadinessChatStressComplete(event: {
+    operationLabel: string;
+    phase: LaunchReadinessBuildTraceEvent['phase'];
+    errorMessage?: string;
+  }): void {
+    const snap = getChatStressCompletionSnapshot();
+    const chatSettled = isChatStressSimulationComplete();
+    const degraded =
+      event.phase === 'BUDGET_EXCEEDED' || event.phase === 'STALLED' || event.phase === 'SLOW';
+
+    if (degraded || event.phase === 'PASSED' || chatSettled) {
+      completeParentProductReadinessChatStressSubstep({
+        operationLabel:
+          degraded && event.phase === 'BUDGET_EXCEEDED'
+            ? `${event.operationLabel} (degraded — budget exceeded)`
+            : event.operationLabel,
+        status: 'PASSED',
+        errorMessage: event.errorMessage,
+      });
+      return;
+    }
+
+    completeParentProductReadinessChatStressSubstep({
+      operationLabel: event.operationLabel,
+      status: 'FAILED',
+      errorMessage: event.errorMessage,
     });
   }
 
@@ -233,12 +320,37 @@ export function createLaunchReadinessArtifactBuildTraceBridge(handlers: {
       }
       return;
     }
-    if (event.phase === 'PASSED') {
+    if (event.phase === 'BUDGET_EXCEEDED' || event.phase === 'STALLED' || event.phase === 'SLOW') {
       if (event.operationId === 'product-readiness-chat-stress-complete') {
-        completeParentProductReadinessChatStressSubstep({
+        handleProductReadinessChatStressComplete(event);
+      } else if (
+        event.operationId === 'product-readiness-simulation-stalled' ||
+        event.operationId === 'product-readiness-simulation-slow'
+      ) {
+        reconcileActiveArtifactSubstepAfterChatStressSettled();
+      } else if (!skipsArtifactSubstepMutation(event.operationId)) {
+        completeArtifactBuildSubstep({
+          operationId: event.operationId,
           operationLabel: event.operationLabel,
           status: 'PASSED',
+          errorMessage: event.errorMessage,
         });
+      }
+      if (!skipsRuntimeTracePropagation(event.operationId)) {
+        handlers.onSubstepPassed({
+          operationId: event.operationId,
+          operationLabel: event.operationLabel,
+          stageId,
+        });
+      }
+      return;
+    }
+    if (event.phase === 'PASSED') {
+      if (event.operationId === 'product-readiness-chat-stress-complete') {
+        handleProductReadinessChatStressComplete(event);
+      } else if (event.operationId === 'chat-stress-simulation-complete') {
+        handleProductReadinessChatStressComplete(event);
+        reconcileActiveArtifactSubstepAfterChatStressSettled();
       } else if (!skipsArtifactSubstepMutation(event.operationId)) {
         completeArtifactBuildSubstep({
           operationId: event.operationId,
@@ -256,9 +368,9 @@ export function createLaunchReadinessArtifactBuildTraceBridge(handlers: {
       return;
     }
     if (event.operationId === 'product-readiness-chat-stress-complete') {
-      completeParentProductReadinessChatStressSubstep({
+      handleProductReadinessChatStressComplete({
         operationLabel: event.operationLabel,
-        status: 'FAILED',
+        phase: 'FAILED',
         errorMessage: event.errorMessage,
       });
     } else if (!skipsArtifactSubstepMutation(event.operationId)) {

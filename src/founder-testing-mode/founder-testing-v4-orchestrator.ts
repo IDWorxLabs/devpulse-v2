@@ -104,6 +104,7 @@ import {
   assessChatIntelligenceReality,
   evaluateChatIntelligenceVisibility,
 } from '../chat-intelligence-reality/index.js';
+import { reconcileChatIntelligenceForFounderTest } from '../chat-intelligence-scenario-consumption-audit/index.js';
 import {
   assessRepositoryTypecheckReality,
   evaluateRepositoryTypecheckVisibility,
@@ -178,9 +179,13 @@ export function runFounderTestingModeV4(input: RunFounderTestingModeV4Input = {}
       ? Math.round(ideaToAppResults.reduce((s, r) => s + r.ideaToAppScore, 0) / ideaToAppResults.length)
       : 0;
 
-  const chatIntelligenceReality = assessChatIntelligenceReality({
+  const rawChatIntelligenceReality = assessChatIntelligenceReality({
     deadlineMs: Math.min(remaining(), 18000),
     rootDir,
+  });
+  const chatIntelligenceReality = reconcileChatIntelligenceForFounderTest({
+    rootDir,
+    chatIntelligenceReality: rawChatIntelligenceReality,
   });
   const chatIntelligenceRealityScore = evaluateChatIntelligenceVisibility(chatIntelligenceReality);
 

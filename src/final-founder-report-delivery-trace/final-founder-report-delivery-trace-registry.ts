@@ -1,0 +1,50 @@
+/**
+ * Phase 27.07 — Final Founder Report Delivery Trace registry (diagnostic only).
+ */
+
+import type { DeliveryTraceBoundaryId } from './final-founder-report-delivery-trace-types.js';
+
+export const FINAL_FOUNDER_REPORT_DELIVERY_TRACE_PASS = 'FINAL_FOUNDER_REPORT_DELIVERY_TRACE_PASS';
+
+export const FINAL_FOUNDER_REPORT_DELIVERY_TRACE_REPORT_TITLE = 'FINAL_FOUNDER_REPORT_DELIVERY_TRACE';
+
+export const FINAL_FOUNDER_REPORT_DELIVERY_TRACE_CORE_QUESTION =
+  'Where does the final Founder Test report stop before it reaches the founder-facing UI?';
+
+export const DELIVERY_TRACE_BOUNDARY_ORDER: readonly DeliveryTraceBoundaryId[] = [
+  'FOUNDER_TEST_START',
+  'INTAKE_VALIDATION',
+  'PLANNING_GATE',
+  'PLANNING_BRIEF',
+  'ARCHITECTURE_BRIEF',
+  'BUILD_PLAN',
+  'FOUNDER_SIMULATION_ENGINE',
+  'CROSS_SYSTEM_ORCHESTRATION_PROOF',
+  'EXECUTION_READINESS_GATE',
+  'REPORT_GENERATION',
+  'RESULT_STORE_WRITE',
+  'RESULT_RETRIEVAL_API',
+  'CLIENT_CACHE',
+  'FOUNDER_REPORT_RENDER',
+] as const;
+
+export const RUNTIME_STAGE_TO_DELIVERY_BOUNDARY: Record<string, DeliveryTraceBoundaryId> = {
+  FOUNDER_TEST_STARTED: 'FOUNDER_TEST_START',
+  INTAKE_VALIDATION: 'INTAKE_VALIDATION',
+  PLANNING_GATE: 'PLANNING_GATE',
+  PLANNING_BRIEF: 'PLANNING_BRIEF',
+  ARCHITECTURE_BRIEF: 'ARCHITECTURE_BRIEF',
+  BUILD_PLAN: 'BUILD_PLAN',
+  FOUNDER_SIMULATION_ENGINE: 'FOUNDER_SIMULATION_ENGINE',
+  CROSS_SYSTEM_ORCHESTRATION_PROOF: 'CROSS_SYSTEM_ORCHESTRATION_PROOF',
+  EXECUTION_READINESS_GATE: 'EXECUTION_READINESS_GATE',
+  REPORT_GENERATION: 'REPORT_GENERATION',
+};
+
+export function nextDeliveryTraceBoundary(
+  boundaryId: DeliveryTraceBoundaryId,
+): DeliveryTraceBoundaryId | null {
+  const index = DELIVERY_TRACE_BOUNDARY_ORDER.indexOf(boundaryId);
+  if (index < 0 || index >= DELIVERY_TRACE_BOUNDARY_ORDER.length - 1) return null;
+  return DELIVERY_TRACE_BOUNDARY_ORDER[index + 1] ?? null;
+}

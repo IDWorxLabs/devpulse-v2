@@ -10,20 +10,29 @@ import { generateLlmBackedChatResponseAsync } from '../llm-chat-brain/index.js';
 import type { LlmProvider } from '../llm-chat-brain/llm-provider-types.js';
 import {
   CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS,
+  CHAT_STRESS_SCENARIO_HARD_TIMEOUT_GRACE_MS,
   CHAT_STRESS_SCENARIO_SOFT_WARNING_MS,
+  resolveChatStressWorstCaseBatchDeadlineMs,
   withScenarioTimeout,
 } from '../founder-test-product-readiness/product-readiness-simulation-budget.js';
 import {
+  allChatStressScenariosSettled,
   beginChatStressSimulation,
+  beginChatStressBatchDeadline,
   CHAT_STRESS_BATCH_FINALIZER_TIMEOUT_REASON,
   forceSettlePendingStartedChatStressScenarios,
   isChatStressScenarioSettled,
   markChatStressScenarioSkippedBudget,
   markChatStressScenarioStarted,
+  addActiveChatStressScenario,
   clearActiveChatStressScenarioIfMatches,
+  removeActiveChatStressScenario,
   registerChatStressScenarioHardWatchdog,
+  reconcileChatStressBatchDeadlineFinalizer,
+  reconcileChatStressTerminalSettlementIfNeeded,
+  reconcileChatStressTerminalSettlementSweep,
+  reconcileChatStressWatchdogHealth,
   resolveChatStressScenarioTerminalStatus,
-  setActiveChatStressScenario,
   tryMarkChatStressScenarioSettled,
   type ChatStressScenarioTerminalStatus,
 } from './chat-stress-completion-tracker.js';
@@ -182,6 +191,12 @@ export async function simulateChatStressBatch(input: {
   let budgetExceeded = false;
 
   beginChatStressSimulation(input.scenarios.map((scenario) => scenario.id));
+  beginChatStressBatchDeadline({
+    scenarioCount: input.scenarios.length,
+    concurrency,
+    perScenarioTimeoutMs,
+    startedAtMs: budgetStartedAtMs,
+  });
 
   function budgetRemainingMs(): number {
     return budgetMs - (Date.now() - budgetStartedAtMs);
@@ -231,7 +246,8 @@ export async function simulateChatStressBatch(input: {
     if (isChatStressScenarioSettled(scenario.id) && runs.some((run) => run.scenarioId === scenario.id)) {
       return;
     }
-    setActiveChatStressScenario(null);
+    removeActiveChatStressScenario(scenario.id);
+    clearActiveChatStressScenarioIfMatches(scenario.id);
     const timeoutRun = buildTimeoutRun(
       scenario,
       perScenarioTimeoutMs,
@@ -248,7 +264,7 @@ export async function simulateChatStressBatch(input: {
 
   async function runOneScenario(scenario: ChatStressScenarioDefinition): Promise<void> {
     markChatStressScenarioStarted(scenario.id);
-    setActiveChatStressScenario(scenario.id);
+    addActiveChatStressScenario(scenario.id);
     input.onScenarioStart?.(scenario);
 
     registerChatStressScenarioHardWatchdog({
@@ -308,7 +324,8 @@ export async function simulateChatStressBatch(input: {
           settled = true;
         }
       }
-      clearActiveChatStressScenarioIfMatches(scenario.id);
+      removeActiveChatStressScenario(scenario.id);
+    clearActiveChatStressScenarioIfMatches(scenario.id);
     }
   }
 
@@ -335,7 +352,65 @@ export async function simulateChatStressBatch(input: {
   }
 
   const workers = Array.from({ length: Math.min(concurrency, input.scenarios.length) }, () => worker());
-  await Promise.allSettled(workers);
+
+  const workersPromise = Promise.allSettled(workers);
+  const batchDeadlineMs = resolveChatStressWorstCaseBatchDeadlineMs({
+    scenarioCount: input.scenarios.length,
+    concurrency,
+    perScenarioTimeoutMs,
+  });
+  const hardStopAtMs =
+    budgetStartedAtMs +
+    Math.min(
+      budgetMs,
+      batchDeadlineMs + CHAT_STRESS_SCENARIO_HARD_TIMEOUT_GRACE_MS,
+    );
+  const SETTLEMENT_POLL_MS = 250;
+
+  while (!allChatStressScenariosSettled()) {
+    const nowMs = Date.now();
+    reconcileChatStressWatchdogHealth(nowMs);
+    reconcileChatStressBatchDeadlineFinalizer(nowMs);
+    reconcileChatStressTerminalSettlementIfNeeded(nowMs);
+
+    const remainingBudgetMs = budgetRemainingMs();
+    if (remainingBudgetMs <= 0) {
+      budgetExceeded = true;
+      forceSettlePendingStartedChatStressScenarios('SIMULATION_BUDGET_EXCEEDED');
+    }
+
+    if (allChatStressScenariosSettled()) {
+      break;
+    }
+
+    if (nowMs >= hardStopAtMs) {
+      reconcileChatStressTerminalSettlementSweep({
+        nowMs,
+        forceUnresolved: true,
+        reason: CHAT_STRESS_BATCH_FINALIZER_TIMEOUT_REASON,
+      });
+      break;
+    }
+
+    await Promise.race([
+      new Promise<void>((resolve) => setTimeout(resolve, SETTLEMENT_POLL_MS)),
+      workersPromise.then(() => undefined),
+    ]);
+
+    if (allChatStressScenariosSettled()) {
+      break;
+    }
+  }
+
+  if (!allChatStressScenariosSettled()) {
+    reconcileChatStressTerminalSettlementSweep({
+      nowMs: Date.now(),
+      forceUnresolved: true,
+      reason: CHAT_STRESS_BATCH_FINALIZER_TIMEOUT_REASON,
+    });
+  }
+
+  void workersPromise.catch(() => undefined);
 
   const forcedSettlements = forceSettlePendingStartedChatStressScenarios(
     CHAT_STRESS_BATCH_FINALIZER_TIMEOUT_REASON,

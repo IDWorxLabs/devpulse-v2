@@ -25,6 +25,10 @@ import type { ConnectedVerificationExecutionAssessment } from '../connected-veri
 import type { ConnectedWorkspaceCreationAssessment } from '../connected-workspace-creation/connected-workspace-creation-types.js';
 import type { FounderExecutionChainAssessment } from '../founder-test-execution-chain-integration/founder-test-execution-chain-integration-types.js';
 import type { FounderTestLaunchReadinessAssessment } from '../founder-test-launch-readiness/founder-test-launch-readiness-types.js';
+import {
+  buildFounderExecutionProofBundleRecursionFallback,
+  runWithAuthorityGuard,
+} from '../authority-recursion-guard/index.js';
 
 function clamp(n: number): number {
   return Math.max(0, Math.min(100, Math.round(n)));
@@ -565,6 +569,32 @@ export function buildQuestionAnswers(
 }
 
 export function aggregateFounderExecutionProofBundle(
+  input: AssessFounderExecutionProofInput,
+  proofBundleId: string,
+  launchReadiness: FounderTestLaunchReadinessAssessment | null,
+): {
+  bundle: FounderExecutionProofBundle;
+  completeness: ExecutionCompletenessBreakdown;
+  questionAnswers: FounderExecutionProofQuestionAnswers;
+  proofWarnings: string[];
+  proofBlockers: string[];
+  inputSnapshot: FounderExecutionProofInputSnapshot;
+} {
+  return runWithAuthorityGuard({
+    authorityName: 'FOUNDER_EXECUTION_PROOF_BUNDLE',
+    invoke: () => aggregateFounderExecutionProofBundleCore(input, proofBundleId, launchReadiness),
+    onRecursion: (detection) => {
+      const { safeFallback: _ignored, ...result } = buildFounderExecutionProofBundleRecursionFallback({
+        detection,
+        proofBundleId,
+        assessInput: input,
+      });
+      return result;
+    },
+  });
+}
+
+function aggregateFounderExecutionProofBundleCore(
   input: AssessFounderExecutionProofInput,
   proofBundleId: string,
   launchReadiness: FounderTestLaunchReadinessAssessment | null,

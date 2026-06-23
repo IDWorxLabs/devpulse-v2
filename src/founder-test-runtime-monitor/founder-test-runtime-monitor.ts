@@ -4,6 +4,15 @@
 
 import { FOUNDER_TEST_ALREADY_RUNNING, FOUNDER_TEST_RUNTIME_STAGES } from './founder-test-runtime-registry.js';
 import { recordIntakeCompletionBoundaryOperation, resetChatStressCompletionPropagationForTests } from '../founder-test-chat-stress-simulation/chat-stress-completion-propagation.js';
+import { reconcileProductReadinessCompletionBoundaryOnSnapshot, resetProductReadinessCompletionBoundaryRepairModuleForTests } from '../product-readiness-completion-boundary-repair/product-readiness-completion-boundary-repair-authority.js';
+import { reconcileLaunchReadinessArtifactCompletionBarrierOnSnapshot, resetLaunchReadinessArtifactCompletionBarrierRepairModuleForTests } from '../launch-readiness-artifact-completion-barrier-repair/launch-readiness-artifact-completion-barrier-repair-authority.js';
+import { reconcileLaunchReadinessArtifactCompletionBoundaryOnSnapshot, resetLaunchReadinessArtifactCompletionBoundaryRepairModuleForTests } from '../launch-readiness-artifact-completion-boundary-repair/launch-readiness-artifact-completion-boundary-repair-authority.js';
+import {
+  reconcileIntakeValidationStageTransitionOnSnapshot,
+  resetIntakeValidationStageTransitionRepairModuleForTests,
+} from '../intake-validation-stage-transition-repair/intake-validation-stage-transition-repair-authority.js';
+import { getChatStressCompletionSnapshot } from '../founder-test-chat-stress-simulation/chat-stress-completion-tracker.js';
+import { emitChatStressSimulationCompleteBoundaryIfNeeded, isChatStressSimulationComplete } from '../founder-test-chat-stress-simulation/chat-stress-settlement-boundary.js';
 import { PINNED_RUNTIME_TRACE_OPERATION_IDS } from './runtime-trace-registry.js';
 import type {
   BeginFounderTestRuntimeResult,
@@ -40,9 +49,13 @@ import {
 import { analyzeRuntimeStall } from './runtime-stall-detector.js';
 import {
   analyzeStage2CompletionGap,
+  hasPassedTraceEvent,
   resolveChatStressRuntimeFields,
   resolveIntakeValidationNextExpected,
+  resolveMissingIntakeCompletionBoundary,
 } from './stage2-completion-tracker.js';
+import { reconcilePlanningGateTransitionOnSnapshot } from './planning-gate-transition.js';
+import { reconcileBriefStageTransitionsOnSnapshot } from './brief-stage-transitions.js';
 import {
   getFounderTestHandlerLastAliveAt,
   isFounderTestHandlerAlive,
@@ -97,6 +110,10 @@ export function resetFounderTestRuntimeMonitorForTests(): void {
   resetLaunchReadinessArtifactBuildTracerForTests();
   resetFounderTestRunResultStoreForTests();
   resetChatStressCompletionPropagationForTests();
+  resetProductReadinessCompletionBoundaryRepairModuleForTests();
+  resetLaunchReadinessArtifactCompletionBarrierRepairModuleForTests();
+  resetLaunchReadinessArtifactCompletionBoundaryRepairModuleForTests();
+  resetIntakeValidationStageTransitionRepairModuleForTests();
 }
 
 function emitSessionTrace(input: {
@@ -288,6 +305,13 @@ function composeSnapshot(session: ActiveRuntimeSession | null, nowMs = Date.now(
       chatStressWatchdogDeadlineByScenarioId: {},
       chatStressWatchdogOverdueScenarioIds: [],
       chatStressMaxPendingElapsedMs: 0,
+      chatStressActiveScenarioIds: [],
+      chatStressActiveScenarioCount: 0,
+      chatStressOldestPendingElapsedMs: 0,
+      chatStressNextScenarioDeadlineMs: null,
+      chatStressMsUntilNextDeadline: null,
+      chatStressBatchDeadlineMs: null,
+      chatStressMsUntilBatchDeadline: null,
       uiSummary: buildUiSummary({
         readOnly: true,
         runId: null,
@@ -334,6 +358,13 @@ function composeSnapshot(session: ActiveRuntimeSession | null, nowMs = Date.now(
         chatStressWatchdogDeadlineByScenarioId: {},
         chatStressWatchdogOverdueScenarioIds: [],
         chatStressMaxPendingElapsedMs: 0,
+        chatStressActiveScenarioIds: [],
+        chatStressActiveScenarioCount: 0,
+        chatStressOldestPendingElapsedMs: 0,
+        chatStressNextScenarioDeadlineMs: null,
+        chatStressMsUntilNextDeadline: null,
+        chatStressBatchDeadlineMs: null,
+        chatStressMsUntilBatchDeadline: null,
       }),
     };
   }
@@ -372,10 +403,69 @@ function composeSnapshot(session: ActiveRuntimeSession | null, nowMs = Date.now(
     });
   }
 
+  const chatStressSnap = getChatStressCompletionSnapshot(nowMs);
+  const hasActiveOverdueWatchdog = chatStressSnap.activeScenarioIds.some((scenarioId) => {
+    const deadline = chatStressSnap.chatStressWatchdogDeadlineByScenarioId[scenarioId];
+    return deadline != null && nowMs >= deadline;
+  });
+
+  const intakeMissingCompletionBoundary = resolveMissingIntakeCompletionBoundary(
+    session.traceEvents,
+  );
+
+  if (session.state === 'RUNNING') {
+    reconcilePlanningGateTransitionOnSnapshot(
+      {
+        state: session.state,
+        stages: session.stages,
+        traceEvents: session.traceEvents,
+        activeArtifactBuildSubstep: artifactSubstepStall.operationLabel,
+        missingCompletionBoundary: intakeMissingCompletionBoundary,
+        handlerAlive: isFounderTestHandlerAlive(),
+      },
+      {
+        onCompletePlanningGate: () => {
+          completeFounderTestRuntimeStage({
+            stageId: 'PLANNING_GATE',
+            message: 'Planning Gate Passed',
+          });
+        },
+        onAdvancePlanningBrief: () => {
+          advanceFounderTestRuntimeStage({ stageId: 'PLANNING_BRIEF' });
+        },
+      },
+    );
+
+    reconcileBriefStageTransitionsOnSnapshot({
+      getSnapshot: () => ({
+        state: session.state,
+        stages: session.stages,
+        traceEvents: session.traceEvents,
+        activeArtifactBuildSubstep: artifactSubstepStall.operationLabel,
+        missingCompletionBoundary: intakeMissingCompletionBoundary,
+        handlerAlive: isFounderTestHandlerAlive(),
+      }),
+      handlers: {
+        onCompleteStage: (stageId, message) => {
+          completeFounderTestRuntimeStage({ stageId, message });
+        },
+        onAdvanceStage: (stageId) => {
+          advanceFounderTestRuntimeStage({ stageId });
+        },
+      },
+    });
+  }
+
   const stallAnalysis = analyzeRuntimeStall({
     stages: session.stages,
     lastHeartbeatAt: session.lastHeartbeatAt,
     now: nowMs,
+    intakeChatStressContext: {
+      pendingCount: chatStressSnap.pendingCount,
+      activeScenarioCount: chatStressSnap.activeScenarioCount,
+      msUntilBatchDeadline: chatStressSnap.msUntilBatchDeadline,
+      hasActiveOverdueWatchdog,
+    },
   });
   if (
     stallAnalysis.health === 'STALLED' &&
@@ -427,6 +517,118 @@ function composeSnapshot(session: ActiveRuntimeSession | null, nowMs = Date.now(
   const traceFields = buildTraceFields(session, state, stallAnalysis.health);
   const failedArtifact = getLastFailedArtifactSubstep();
   const chatStressFields = resolveChatStressRuntimeFields();
+
+  if (
+    session.state === 'RUNNING' &&
+    isChatStressSimulationComplete(nowMs)
+  ) {
+    emitChatStressSimulationCompleteBoundaryIfNeeded(({ operationId, operationLabel, phase }) => {
+      emitSessionTrace({
+        operationId,
+        stageId: 'INTAKE_VALIDATION',
+        operationLabel,
+        status: phase,
+      });
+    }, nowMs);
+
+    reconcileProductReadinessCompletionBoundaryOnSnapshot(
+      {
+        state,
+        stages: session.stages,
+        traceEvents: session.traceEvents,
+        missingCompletionBoundary: null,
+        stage2CompletionGap: false,
+      },
+      ({ operationId, operationLabel, stageId, status }) => {
+        emitSessionTrace({
+          operationId,
+          stageId,
+          operationLabel,
+          status,
+        });
+      },
+    );
+
+    reconcileLaunchReadinessArtifactCompletionBarrierOnSnapshot(
+      {
+        state,
+        stages: session.stages,
+        traceEvents: session.traceEvents,
+        missingCompletionBoundary: null,
+        stage2CompletionGap: false,
+        activeArtifactBuildSubstep: artifactSubstepStall.operationLabel,
+        chatStressStartedCount: chatStressFields.chatStressStartedCount,
+        chatStressSettledCount: chatStressFields.chatStressSettledCount,
+        chatStressPendingCount: chatStressFields.chatStressPendingCount,
+      },
+      {
+        onRuntimeTrace: ({ operationId, operationLabel, stageId, status }) => {
+          emitSessionTrace({
+            operationId,
+            stageId,
+            operationLabel,
+            status,
+          });
+        },
+      },
+    );
+
+    reconcileLaunchReadinessArtifactCompletionBoundaryOnSnapshot(
+      {
+        state,
+        stages: session.stages,
+        traceEvents: session.traceEvents,
+        missingCompletionBoundary: null,
+        stage2CompletionGap: false,
+        activeArtifactBuildSubstep: artifactSubstepStall.operationLabel,
+        activeArtifactBuildSubstepOperationId: artifactSubstepStall.operationId,
+      },
+      {
+        onRuntimeTrace: ({ operationId, operationLabel, stageId, status }) => {
+          emitSessionTrace({
+            operationId,
+            stageId,
+            operationLabel,
+            status,
+          });
+        },
+      },
+    );
+  }
+
+  const intakeStageRunning =
+    session.stages.find((stage) => stage.stageId === 'INTAKE_VALIDATION')?.status === 'RUNNING';
+  if (session.state === 'RUNNING' && intakeStageRunning) {
+    reconcileIntakeValidationStageTransitionOnSnapshot(
+      {
+        state,
+        stages: session.stages,
+        traceEvents: session.traceEvents,
+        missingCompletionBoundary: null,
+        stage2CompletionGap: false,
+      },
+      {
+        onRuntimeTrace: ({ operationId, operationLabel, stageId, status }) => {
+          emitSessionTrace({
+            operationId,
+            stageId,
+            operationLabel,
+            status,
+          });
+        },
+        onCompleteIntakeStage: () => {
+          completeFounderTestRuntimeStage({
+            stageId: 'INTAKE_VALIDATION',
+            message: 'Intake Validation Passed',
+          });
+        },
+        onAdvancePlanningGate: () => {
+          advanceFounderTestRuntimeStage({ stageId: 'PLANNING_GATE' });
+        },
+      },
+    );
+  }
+
   const stage2Gap = analyzeStage2CompletionGap({
     readOnly: true,
     runId: session.runId,
@@ -671,6 +873,12 @@ export function advanceFounderTestRuntimeStage(input: {
 }): FounderTestRuntimeSnapshot {
   if (!activeSession) return composeSnapshot(null);
 
+  const existing = activeSession.stages.find((stage) => stage.stageId === input.stageId);
+  if (existing?.status === 'RUNNING' || existing?.status === 'PASSED') {
+    touchSessionHeartbeat(input.stageId);
+    return composeSnapshot(activeSession);
+  }
+
   activeSession.stages = markStageRunning(activeSession.stages, input.stageId);
   touchSessionHeartbeat(input.stageId);
   activeSession.feedEvents = appendRuntimeFeedEvent({
@@ -695,6 +903,16 @@ export function completeFounderTestRuntimeStage(input: {
   skipFeed?: boolean;
 }): FounderTestRuntimeSnapshot {
   if (!activeSession) return composeSnapshot(null);
+
+  const existing = activeSession.stages.find((stage) => stage.stageId === input.stageId);
+  const passedOperationId = `${slugStageId(input.stageId)}-${(input.status ?? 'PASSED') === 'FAILED' ? 'failed' : 'passed'}`;
+  if (
+    existing?.status === 'PASSED' &&
+    (input.status ?? 'PASSED') !== 'FAILED' &&
+    hasPassedTraceEvent(activeSession.traceEvents, passedOperationId)
+  ) {
+    return composeSnapshot(activeSession);
+  }
 
   activeSession.stages = markStageComplete(activeSession.stages, input.stageId, input.status ?? 'PASSED');
   touchSessionHeartbeat(input.stageId);

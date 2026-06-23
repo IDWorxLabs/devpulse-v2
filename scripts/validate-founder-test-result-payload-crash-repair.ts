@@ -16,6 +16,8 @@ import {
   buildFounderTestRunHandoffPayload,
   safeStringifyFounderTestJson,
   estimateFounderTestResultPayloadTooLarge,
+  boundFounderTestResultHandoffPayloadForStorage,
+  FOUNDER_TEST_RESULT_HANDOFF_MAX_TRACE_EVENTS,
 } from '../src/founder-test-runtime-monitor/index.js';
 import {
   resetFounderTestRunResultStoreForTests,
@@ -41,6 +43,7 @@ const REQUIRED = [
   'server/founder-testing-handler.ts',
   'server/founder-reality-server.ts',
   'src/founder-test-runtime-monitor/founder-test-result-payload-crash-repair.ts',
+  'src/founder-test-runtime-monitor/founder-result-store-delivery-repair.ts',
   'public/founder-reality/app.js',
   'scripts/validate-founder-test-result-payload-crash-repair.ts',
 ];
@@ -53,6 +56,10 @@ const handlerSource = readFileSync(join(ROOT, 'server/founder-testing-handler.ts
 const serverSource = readFileSync(join(ROOT, 'server/founder-reality-server.ts'), 'utf8').replace(/\r\n/g, '\n');
 const crashRepairSource = readFileSync(
   join(ROOT, 'src/founder-test-runtime-monitor/founder-test-result-payload-crash-repair.ts'),
+  'utf8',
+);
+const deliveryRepairSource = readFileSync(
+  join(ROOT, 'src/founder-test-runtime-monitor/founder-result-store-delivery-repair.ts'),
   'utf8',
 );
 const appJs = readFileSync(join(ROOT, 'public/founder-reality/app.js'), 'utf8');
@@ -68,6 +75,13 @@ assert('result-download route', serverSource.includes("urlPath === '/api/founder
 assert('result-report handler', handlerSource.includes('handleFounderTestResultReportRequest'), 'report handler');
 assert('result-download handler', handlerSource.includes('handleFounderTestResultDownloadRequest'), 'download handler');
 assert('bounded debug builder', handlerSource.includes('buildBoundedFounderTestResultDebugResponse'), 'debug');
+assert('delivery repair bounds handoff payload', deliveryRepairSource.includes('boundFounderTestResultHandoffPayloadForStorage'), 'bound');
+assert('delivery repair safe payload bytes', deliveryRepairSource.includes('estimateStoredFounderTestResultPayloadBytesSafely'), 'bytes');
+assert(
+  'delivery repair no unsafe stringify existing',
+  !/Buffer\.byteLength\(JSON\.stringify\(existing\)/.test(deliveryRepairSource),
+  'unsafe',
+);
 assert('text markdown sender', handlerSource.includes('sendFounderTestMarkdown'), 'markdown send');
 assert('client metadata first fetch', appJs.includes('fetchFounderTestResultWithRetry'), 'fetch retry');
 assert('client markdown endpoint fetch', appJs.includes('fetchFounderTestReportMarkdownFromEndpoint'), 'report fetch');
@@ -165,6 +179,61 @@ assert(
   'estimate payload too large',
   estimateFounderTestResultPayloadTooLarge(FOUNDER_TEST_RESULT_INLINE_MARKDOWN_MAX_CHARS + 1),
   'too large',
+);
+
+const oversizedHandoff = buildFounderTestRunHandoffPayload({
+  runId: 'payload-crash-oversized',
+  ok: true,
+  runtime: {
+    runId: 'payload-crash-oversized',
+    state: 'COMPLETE',
+    traceEvents: Array.from({ length: 300 }, (_, index) => ({
+      readOnly: true as const,
+      traceEventId: `trace-${index}`,
+      operationId: `op-${index}`,
+      stageId: 'REPORT_GENERATION',
+      stageOrder: 11,
+      stageLabel: 'Report',
+      operationLabel: `Operation ${index}`,
+      status: 'PASSED' as const,
+      timestamp: '2026-06-23T12:00:00.000Z',
+      displayTime: '12:00',
+      displayLine: 'T'.repeat(10_000),
+    })),
+  } as never,
+  reportMarkdown: smallMarkdown,
+  extra: {
+    debugPayload: { nested: { blob: 'Z'.repeat(400_000) } },
+    verificationResults: [{ rawOutput: 'V'.repeat(120_000) }],
+  },
+  finalReportReady: true,
+});
+const boundedHandoff = boundFounderTestResultHandoffPayloadForStorage(oversizedHandoff);
+const boundedStored = {
+  readOnly: true as const,
+  runId: 'payload-crash-oversized',
+  ok: true,
+  completedAt: '2026-06-23T12:02:00.000Z',
+  payload: boundedHandoff.payload,
+  errorMessage: null,
+};
+const boundedSerialize = safeStringifyFounderTestJson(boundedStored);
+assert('bounded oversized handoff serializes', boundedSerialize.ok === true, boundedSerialize.ok ? 'ok' : boundedSerialize.error);
+assert(
+  'bounded handoff preserves markdown',
+  boundedHandoff.payload.reportMarkdown === smallMarkdown,
+  'markdown',
+);
+assert(
+  'bounded handoff caps trace events',
+  ((boundedHandoff.payload.runtime as { traceEvents?: unknown[] }).traceEvents?.length ?? 0) <=
+    FOUNDER_TEST_RESULT_HANDOFF_MAX_TRACE_EVENTS,
+  String((boundedHandoff.payload.runtime as { traceEvents?: unknown[] }).traceEvents?.length),
+);
+assert(
+  'bounded handoff records truncation notes',
+  boundedHandoff.truncationNotes.length > 0,
+  String(boundedHandoff.truncationNotes.length),
 );
 
 async function liveEndpointProof(): Promise<void> {

@@ -3,6 +3,8 @@
  * Durable completion boundaries independent of trace buffer eviction.
  */
 
+import { isChatStressSimulationComplete } from './chat-stress-settlement-boundary.js';
+
 export const CHAT_STRESS_COMPLETION_PROPAGATION_REPAIR_V1_PASS =
   'CHAT_STRESS_COMPLETION_PROPAGATION_REPAIR_V1_PASS';
 
@@ -41,9 +43,12 @@ let productReadinessSimulationCompleteEmitted = false;
 let intakeValidationCompleteEmitted = false;
 let planningGateStarted = false;
 
+let chatStressDegradedIncompleteEmitted = false;
+
 export function resetChatStressCompletionPropagationForTests(): void {
   completionConditionSatisfied = false;
   chatStressSimulationCompleteEmitted = false;
+  chatStressDegradedIncompleteEmitted = false;
   productReadinessSimulationCompleteEmitted = false;
   intakeValidationCompleteEmitted = false;
   planningGateStarted = false;
@@ -56,6 +61,11 @@ export function resetChatStressCompletionPropagationForTests(): void {
 export function recordIntakeCompletionBoundaryOperation(operationId: string, at = new Date()): void {
   satisfiedBoundaryOperationIds.add(operationId);
   const iso = at.toISOString();
+  if (operationId === 'chat-stress-degraded-incomplete') {
+    chatStressDegradedIncompleteEmitted = true;
+    recordedAtByBoundary['chat-stress-simulation-complete'] = iso;
+    recordedAtByBoundary['chat-stress-simulation-complete-emitted'] = iso;
+  }
   if (operationId === 'chat-stress-simulation-complete') {
     chatStressSimulationCompleteEmitted = true;
     recordedAtByBoundary['chat-stress-simulation-complete'] = iso;
@@ -74,6 +84,13 @@ export function recordIntakeCompletionBoundaryOperation(operationId: string, at 
   if (operationId === 'planning-gate-started' || operationId === 'planning-gate-entered') {
     planningGateStarted = true;
     recordedAtByBoundary['planning-gate-started'] = iso;
+  }
+  if (
+    operationId === 'launch-readiness-assessment-complete' ||
+    operationId === 'launch-readiness-assessment-complete-with-warnings' ||
+    operationId === 'launch-readiness-artifacts-built'
+  ) {
+    satisfiedBoundaryOperationIds.add(operationId);
   }
 }
 
@@ -109,6 +126,10 @@ function recordChainBoundary(boundary: ChatStressCompletionChainBoundary, at = n
 
 export function recordChatStressCompletionConditionSatisfied(at?: Date): void {
   recordChainBoundary('chat-stress-completion-condition-satisfied', at);
+  const nowMs = at?.getTime() ?? Date.now();
+  if (isChatStressSimulationComplete(nowMs)) {
+    recordIntakeCompletionBoundaryOperation('chat-stress-simulation-complete', at ?? new Date(nowMs));
+  }
 }
 
 export function recordChatStressSimulationCompleteEmitted(at?: Date): void {
@@ -131,8 +152,20 @@ export function hasChatStressCompletionConditionSatisfied(): boolean {
   return completionConditionSatisfied;
 }
 
+export function recordChatStressDegradedIncomplete(at = new Date()): void {
+  chatStressDegradedIncompleteEmitted = true;
+  recordIntakeCompletionBoundaryOperation('chat-stress-degraded-incomplete', at);
+  recordIntakeCompletionBoundaryOperation('chat-stress-simulation-complete', at);
+  recordChainBoundary('chat-stress-completion-condition-satisfied', at);
+  recordChainBoundary('chat-stress-simulation-complete-emitted', at);
+}
+
+export function hasChatStressDegradedIncompletePropagated(): boolean {
+  return chatStressDegradedIncompleteEmitted;
+}
+
 export function hasChatStressSimulationCompletePropagated(): boolean {
-  return chatStressSimulationCompleteEmitted;
+  return chatStressSimulationCompleteEmitted || chatStressDegradedIncompleteEmitted;
 }
 
 export function hasProductReadinessSimulationCompletePropagated(): boolean {

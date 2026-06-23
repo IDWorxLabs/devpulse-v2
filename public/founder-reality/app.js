@@ -339,6 +339,19 @@
     }
   }
 
+  function postFounderTestDeliveryTraceClientEvent(payload) {
+    if (!payload || !payload.runId || !payload.boundaryId) return;
+    try {
+      fetch('/api/founder-test/delivery-trace-client', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: true,
+        cache: 'no-store',
+      }).catch(function () {});
+    } catch (_) {}
+  }
+
   function pushNotification(text) {
     var exists = false;
     for (var i = 0; i < runtimeNotifications.length; i += 1) {
@@ -559,11 +572,39 @@
 
   function applyFounderTestFinalReport(runId, markdown, source, options) {
     options = options || {};
-    if (!markdown || !String(markdown).trim()) return false;
-    if (!isFounderTestFinalReportMarkdown(markdown)) return false;
+    if (!markdown || !String(markdown).trim()) {
+      postFounderTestDeliveryTraceClientEvent({
+        boundaryId: 'FOUNDER_REPORT_RENDER',
+        runId: runId,
+        succeeded: false,
+        exception: 'empty report markdown',
+        missingArtifact: 'report markdown',
+        details: { fetchStarted: true, fetchCompleted: true, reportParsed: false, reportRendered: false, source: source || 'unknown' },
+      });
+      return false;
+    }
+    if (!isFounderTestFinalReportMarkdown(markdown)) {
+      postFounderTestDeliveryTraceClientEvent({
+        boundaryId: 'FOUNDER_REPORT_RENDER',
+        runId: runId,
+        succeeded: false,
+        exception: 'markdown failed final report shape check',
+        missingArtifact: 'valid founder report markdown',
+        details: { reportMarkdownLength: String(markdown).length, source: source || 'unknown', reportRendered: false },
+      });
+      return false;
+    }
     runId = normalizeFounderTestDeliveryRunId(runId, options.runtime);
     if (!runId) {
       traceFounderTestDelivery('bridge-runid-missing', source || 'unknown');
+      postFounderTestDeliveryTraceClientEvent({
+        boundaryId: 'FOUNDER_REPORT_RENDER',
+        runId: options.runtime && options.runtime.runId ? options.runtime.runId : null,
+        succeeded: false,
+        exception: 'runId missing for report render',
+        missingArtifact: 'runId',
+        details: { source: source || 'unknown', reportRendered: false },
+      });
       return false;
     }
     var normalized = String(markdown);
@@ -606,6 +647,20 @@
     founderTestCompletePreparingSinceMs = null;
     founderTestResultDebugSnapshot = null;
     stopFounderTestReportHandoffStallGuard();
+    postFounderTestDeliveryTraceClientEvent({
+      boundaryId: 'FOUNDER_REPORT_RENDER',
+      runId: runId,
+      succeeded: true,
+      details: {
+        fetchStarted: true,
+        fetchCompleted: true,
+        reportParsed: true,
+        reportRendered: true,
+        reportMarkdownLength: normalized.length,
+        responseSize: normalized.length,
+        source: source || 'unknown',
+      },
+    });
     return true;
   }
 
@@ -7535,6 +7590,23 @@
     var lastContentType = null;
     var lastJsonParseFailed = false;
     var lastNonJsonPreview = null;
+    function recordClientCacheDeliveryTrace(succeeded, detail) {
+      detail = detail || {};
+      postFounderTestDeliveryTraceClientEvent({
+        boundaryId: 'CLIENT_CACHE',
+        runId: runId,
+        succeeded: succeeded,
+        details: {
+          fetchStarted: true,
+          fetchCompleted: true,
+          httpStatus: lastHttpStatus,
+          responseSize: detail.responseSize != null ? detail.responseSize : null,
+          reportParsed: detail.reportParsed === true,
+        },
+        exception: succeeded ? null : detail.errorMessage || lastError,
+        missingArtifact: succeeded ? null : 'report markdown',
+      });
+    }
     for (var attempt = 0; attempt < attempts; attempt += 1) {
       if (attempt > 0) {
         await waitMs(FOUNDER_TEST_RESULT_FETCH_DELAY_MS);
@@ -7595,6 +7667,10 @@
               generatedAt: data.generatedAt,
             },
           );
+          recordClientCacheDeliveryTrace(true, {
+            reportParsed: true,
+            responseSize: inlineMarkdown.length,
+          });
           return {
             data: data,
             fetchFailed: false,
@@ -7615,6 +7691,10 @@
                 generatedAt: data.generatedAt,
               },
             );
+            recordClientCacheDeliveryTrace(true, {
+              reportParsed: true,
+              responseSize: reportFetch.markdown.length,
+            });
             return {
               data: data,
               fetchFailed: false,
@@ -7680,6 +7760,10 @@
       refreshFounderTestFinalReportDeliverySurfaces(
         founderTestRuntimeCardSnapshot || resolveActiveFounderTestRuntimeSnapshot(),
       );
+      recordClientCacheDeliveryTrace(false, {
+        reportParsed: false,
+        errorMessage: lastError || 'Final report not available after bounded retries.',
+      });
     }
     return {
       data: lastData,

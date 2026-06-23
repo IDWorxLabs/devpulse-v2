@@ -3,14 +3,26 @@
  */
 
 import { FOUNDER_TEST_V5_REPORT_TITLE } from './founder-testing-v5-bounds.js';
+import { deepDefaultPayloadArrays, defaultAuthorityArrayFields } from '../founder-simulation-payload-guard/founder-simulation-payload-normalizer.js';
+import { applyLaunchVerdictGovernanceSourceNormalizationSync } from '../launch-verdict-governance-source-normalization/index.js';
+import {
+  isUndefinedLengthCrashError,
+  locateAndPatchFounderSimulationCrash,
+} from '../founder-simulation-crash-locator/index.js';
 import type { FounderTestV5Report } from './founder-testing-v5-types.js';
 
-function listSection(title: string, items: string[]): string {
-  if (!items.length) return `## ${title}\n\nNone identified.\n`;
-  return `## ${title}\n\n${items.map((i) => `- ${i}`).join('\n')}\n`;
+function listSection(title: string, items: string[] | undefined | null): string {
+  const safe = Array.isArray(items) ? items : [];
+  if (!safe.length) return `## ${title}\n\nNone identified.\n`;
+  return `## ${title}\n\n${safe.map((i) => `- ${i}`).join('\n')}\n`;
 }
 
-export function buildFounderTestV5ReportMarkdown(report: Omit<FounderTestV5Report, 'reportMarkdown'>): string {
+export function buildFounderTestV5ReportMarkdown(inputReport: Omit<FounderTestV5Report, 'reportMarkdown'>): string {
+  const report = applyLaunchVerdictGovernanceSourceNormalizationSync({
+    partial: inputReport,
+    sourcePath: 'founder-testing-v5-report-builder.buildFounderTestV5ReportMarkdown',
+    upstreamProducer: 'V5_REPORT_ASSEMBLY',
+  }).partial;
   const date = new Date(report.generatedAt).toISOString();
   const s = report.unifiedSummary;
 
@@ -58,15 +70,15 @@ Blocks launch readiness: **${report.v4.chatIntelligenceReality.blocksLaunchReadi
 
 Scenarios passed: ${report.v4.chatIntelligenceReality.scenariosPassed}/${report.v4.chatIntelligenceReality.scenariosRun}
 
-${report.v4.chatIntelligenceReality.founderProofNotes.map((n) => `- ${n}`).join('\n')}
+${(report.v4.chatIntelligenceReality.founderProofNotes ?? []).map((n) => `- ${n}`).join('\n')}
 
 ### Failed Chat Scenarios
 
-${report.v4.chatIntelligenceReality.failedScenarios.length ? report.v4.chatIntelligenceReality.failedScenarios.map((s) => `- **"${s.prompt}"** — ${s.whyFailed.join('; ') || 'Criteria not met'}`).join('\n') : 'None — all bounded scenarios passed.'}
+${(report.v4.chatIntelligenceReality.failedScenarios ?? []).length ? (report.v4.chatIntelligenceReality.failedScenarios ?? []).map((s) => `- **"${s.prompt}"** — ${(s.whyFailed ?? []).join('; ') || 'Criteria not met'}`).join('\n') : 'None — all bounded scenarios passed.'}
 
 ### Required Fixes Before Launch
 
-${report.v4.chatIntelligenceReality.requiredFixesBeforeLaunch.length ? report.v4.chatIntelligenceReality.requiredFixesBeforeLaunch.map((f) => `- ${f}`).join('\n') : 'None identified.'}
+${(report.v4.chatIntelligenceReality.requiredFixesBeforeLaunch ?? []).length ? (report.v4.chatIntelligenceReality.requiredFixesBeforeLaunch ?? []).map((f) => `- ${f}`).join('\n') : 'None identified.'}
 
 ## Repository Typecheck Reality
 
@@ -78,11 +90,11 @@ Blocks launch readiness: **${report.v4.repositoryTypecheckReality.blocksLaunchRe
 
 Errors: ${report.v4.repositoryTypecheckReality.errorCount} | Warnings: ${report.v4.repositoryTypecheckReality.warningCount}
 
-${report.v4.repositoryTypecheckReality.founderProofNotes.map((n) => `- ${n}`).join('\n')}
+${(report.v4.repositoryTypecheckReality.founderProofNotes ?? []).map((n) => `- ${n}`).join('\n')}
 
 ### Typecheck Findings
 
-${report.v4.repositoryTypecheckReality.findings.length ? report.v4.repositoryTypecheckReality.findings.map((f) => `- **${f.file}:${f.line}:${f.column}** [${f.code}] ${f.message}`).join('\n') : 'No compile findings recorded.'}
+${(report.v4.repositoryTypecheckReality.findings ?? []).length ? (report.v4.repositoryTypecheckReality.findings ?? []).map((f) => `- **${f.file}:${f.line}:${f.column}** [${f.code}] ${f.message}`).join('\n') : 'No compile findings recorded.'}
 
 ## Skeptical Founder Simulator
 
@@ -96,7 +108,7 @@ Blocks launch readiness: **${report.v4.skepticalFounderSimulator.blocksLaunchRea
 
 Objections: ${report.v4.skepticalFounderSimulator.objectionCount}
 
-${report.v4.skepticalFounderSimulator.objections.slice(0, 5).map((objection) => `- ${objection}`).join('\n') || '- None recorded.'}
+${(report.v4.skepticalFounderSimulator.objections ?? []).slice(0, 5).map((objection) => `- ${objection}`).join('\n') || '- None recorded.'}
 
 Recommendations:
 
@@ -450,9 +462,9 @@ Satisfied Rules: **${report.v4.launchVerdictGovernance.satisfiedRuleCount}**
 
 Failed Rules: **${report.v4.launchVerdictGovernance.failedRuleCount}**
 
-Missing Evidence: ${report.v4.launchVerdictGovernance.requiredEvidenceMissing.length > 0 ? report.v4.launchVerdictGovernance.requiredEvidenceMissing.slice(0, 2).join('; ') : 'None recorded.'}
+Missing Evidence: ${(report.v4.launchVerdictGovernance.requiredEvidenceMissing ?? []).length > 0 ? (report.v4.launchVerdictGovernance.requiredEvidenceMissing ?? []).slice(0, 2).join('; ') : 'None recorded.'}
 
-Blocking Authorities: ${report.v4.launchVerdictGovernance.blockingAuthorities.length > 0 ? report.v4.launchVerdictGovernance.blockingAuthorities.join(', ') : 'None'}
+Blocking Authorities: ${(report.v4.launchVerdictGovernance.blockingAuthorities ?? []).length > 0 ? (report.v4.launchVerdictGovernance.blockingAuthorities ?? []).join(', ') : 'None'}
 
 ## Adaptive AutoFix Intelligence
 
@@ -849,5 +861,83 @@ Change Intelligence history: ${report.changeIntelligence.historyCount} snapshot(
 export function assembleFounderTestV5Report(
   partial: Omit<FounderTestV5Report, 'reportMarkdown'>,
 ): FounderTestV5Report {
-  return { ...partial, reportMarkdown: buildFounderTestV5ReportMarkdown(partial) };
+  const governanceNormalized = applyLaunchVerdictGovernanceSourceNormalizationSync({
+    partial,
+    sourcePath: 'founder-testing-v5-report-builder.assembleFounderTestV5Report',
+    upstreamProducer: 'V5_REPORT_ASSEMBLY',
+  }).partial;
+  const safePartial = defaultAuthorityArrayFields(deepDefaultPayloadArrays(governanceNormalized));
+  try {
+    return { ...safePartial, reportMarkdown: buildFounderTestV5ReportMarkdown(safePartial) };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Report build failed';
+
+    if (isUndefinedLengthCrashError(err)) {
+      const located = locateAndPatchFounderSimulationCrash({
+        error: err,
+        rawResult: { report: safePartial },
+        degraded: true,
+        guardApplied: true,
+      });
+      const repatchedPayload = located.patchedResult as { report?: typeof safePartial };
+      const repatched = defaultAuthorityArrayFields(
+        deepDefaultPayloadArrays(repatchedPayload.report ?? safePartial),
+      );
+      try {
+        return { ...safePartial, reportMarkdown: buildFounderTestV5ReportMarkdown(repatched) };
+      } catch (retryErr) {
+        const retryMessage = retryErr instanceof Error ? retryErr.message : message;
+        return {
+          ...safePartial,
+          reportMarkdown: buildDegradedAssemblyMarkdown({
+            message: retryMessage,
+            crashContext: located.assessment.report.context,
+          }),
+        };
+      }
+    }
+
+    return {
+      ...safePartial,
+      reportMarkdown: buildDegradedAssemblyMarkdown({ message }),
+    };
+  }
+}
+
+function buildDegradedAssemblyMarkdown(input: {
+  message: string;
+  crashContext?: {
+    originalError: string;
+    originalStack: string | null;
+    crashLocation: string | null;
+    crashFieldPath: string | null;
+    patchApplied: boolean;
+    patchedFieldPath: string | null;
+  };
+}): string {
+  const lines = [
+    '# Founder Test Report (Degraded Assembly)',
+    '',
+    `Generated: ${new Date().toISOString()}`,
+    '',
+    'Founder Simulation completed with warnings. Full V5 markdown assembly failed safely.',
+    '',
+    `Assembly error: ${input.message}`,
+  ];
+  if (input.crashContext) {
+    lines.push(
+      '',
+      '## Crash Locator',
+      '',
+      `- Original error: ${input.crashContext.originalError}`,
+      `- Crash location: ${input.crashContext.crashLocation ?? 'unknown'}`,
+      `- Crash field path: ${input.crashContext.crashFieldPath ?? 'unknown'}`,
+      `- Patch applied: ${input.crashContext.patchApplied ? input.crashContext.patchedFieldPath ?? 'yes' : 'no'}`,
+    );
+  }
+  lines.push(
+    '',
+    'The run result was normalized and stored as a diagnostic report instead of crashing the pipeline.',
+  );
+  return lines.join('\n');
 }

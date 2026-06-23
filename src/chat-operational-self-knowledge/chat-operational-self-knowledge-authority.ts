@@ -19,6 +19,10 @@ import {
   isExecutionStageOperationalQuestion,
   resolveOperationalTruthPath,
 } from './live-operational-truth-path.js';
+import {
+  matchCapabilityAnswerScenario,
+  resolveRepairedCapabilityAnswerForMessage,
+} from '../chat-capability-answer-quality/index.js';
 import type {
   EnhanceChatWithOperationalSelfKnowledgeInput,
   EnhanceChatWithOperationalSelfKnowledgeResult,
@@ -109,8 +113,41 @@ export function enhanceChatWithOperationalSelfKnowledge(
   const rootDir = input.rootDir ?? process.cwd();
   const message = input.message?.trim() ?? '';
   const forceLivePath = input.forceLivePath ?? false;
-  const kind = resolveEffectiveQuestionKind(message, forceLivePath);
+  const capabilityScenarioId = matchCapabilityAnswerScenario(message);
   const emptyPath: OperationalTruthPath = 'legacy-autonomous-proof';
+
+  if (capabilityScenarioId) {
+    const snapshot =
+      input.snapshot ??
+      getOperationalEvidenceSnapshot(rootDir, { forceRefresh: input.forceSnapshotRefresh ?? forceLivePath });
+    const repaired = resolveRepairedCapabilityAnswerForMessage({ message, snapshot, rootDir });
+    if (repaired) {
+      const kind: OperationalQuestionKind =
+        capabilityScenarioId === 'what-is-aidevengine' || capabilityScenarioId === 'who-built-you'
+          ? 'IDENTITY'
+          : 'CAPABILITIES';
+      const finalAnswer = stripConsciousnessClaims(repaired.answer);
+      const operationalTruthPath = resolveOperationalTruthPath(snapshot);
+      return {
+        readOnly: true,
+        finalAnswer,
+        usedOperationalSelfKnowledge: true,
+        questionKind: kind,
+        assessment: buildOperationalSelfKnowledgeAssessment({ message, kind, snapshot, rootDir }),
+        operationalTruthPath,
+        liveTruthBypasses: detectLiveOperationalTruthBypass({
+          message,
+          responseText: finalAnswer,
+          snapshot,
+          operationalTruthPath,
+          draftAnswer: input.draftAnswer?.trim() ?? '',
+        }),
+        liveTruthDiagnostics: buildLiveOperationalTruthDiagnostics(snapshot),
+      };
+    }
+  }
+
+  const kind = resolveEffectiveQuestionKind(message, forceLivePath);
 
   if (!shouldUseOperationalSelfKnowledge(kind, message, forceLivePath)) {
     const draft = stripConsciousnessClaims(input.draftAnswer ?? '');
@@ -130,7 +167,7 @@ export function enhanceChatWithOperationalSelfKnowledge(
     input.snapshot ??
     getOperationalEvidenceSnapshot(rootDir, { forceRefresh: input.forceSnapshotRefresh ?? forceLivePath });
   const operationalTruthPath = resolveOperationalTruthPath(snapshot);
-  const assessment = buildOperationalSelfKnowledgeAssessment({ message, kind, snapshot });
+  const assessment = buildOperationalSelfKnowledgeAssessment({ message, kind, snapshot, rootDir });
   let finalAnswer = assessment.responseText;
 
   const skipDraftMerge =

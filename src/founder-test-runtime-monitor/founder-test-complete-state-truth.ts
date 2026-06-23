@@ -22,6 +22,7 @@ export const FOUNDER_TEST_PUBLIC_COMPLETE_OPERATION = 'Complete';
 export const FOUNDER_TEST_REPORT_HANDOFF_FAILED_OPERATION = 'Report Handoff Failed';
 
 export const FOUNDER_TEST_HANDOFF_STATE_LABELS = {
+  founder_test_running: 'Founder Test running',
   report_markdown_building: 'Report markdown building',
   report_markdown_built: 'Report markdown built',
   report_persisted_to_result_store: 'Report persisted to result store',
@@ -74,6 +75,12 @@ export function resolveFounderTestHandoffState(
   if (hasTrace('final-report-markdown-built')) return 'report_markdown_built';
   if (isExecutionTerminalComplete(snapshot)) return 'report_handoff_failed';
   if (snapshot.progress?.currentStage === 'REPORT_GENERATION') return 'report_markdown_building';
+  if (snapshot.state === 'RUNNING' || snapshot.state === 'STARTING') {
+    const stage = snapshot.progress?.currentStage;
+    if (stage && stage !== 'REPORT_GENERATION' && stage !== 'REPORT_HANDOFF' && stage !== 'COMPLETE') {
+      return 'founder_test_running';
+    }
+  }
   return 'report_markdown_building';
 }
 
@@ -92,6 +99,9 @@ export function resolveFounderTestPublicState(snapshot: FounderTestRuntimeSnapsh
 
   if (snapshot.state === 'RUNNING' || snapshot.state === 'STARTING') {
     const handoff = resolveFounderTestHandoffState(snapshot);
+    if (handoff === 'founder_test_running') {
+      return snapshot.state;
+    }
     if (handoff !== 'report_markdown_building' && !storeReady) {
       return FOUNDER_TEST_PUBLIC_STATE_REPORT_HANDOFF_PENDING;
     }

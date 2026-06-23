@@ -2,6 +2,8 @@
  * Runtime Trace Registry — founder test operator trace constants (V1).
  */
 
+import { FOUNDER_SIMULATION_RUNNING } from '../founder-simulation-completion-boundary-repair/founder-simulation-completion-boundary-repair-registry.js';
+
 export const FOUNDER_TEST_OPERATOR_FEED_TRACE_V1_PASS = 'FOUNDER_TEST_OPERATOR_FEED_TRACE_V1_PASS';
 
 export const FOUNDER_TEST_OPERATOR_FEED_TRACE_REPORT_TITLE = 'Founder Test Operator Feed Trace Report';
@@ -11,6 +13,7 @@ export const MAX_FOUNDER_TEST_TRACE_EVENTS = 48;
 /** Completion boundaries pinned against trace buffer eviction during chat stress. */
 export const PINNED_RUNTIME_TRACE_OPERATION_IDS = new Set<string>([
   'chat-stress-completion-condition-satisfied',
+  'chat-stress-boundary-satisfied-by-settlement',
   'chat-stress-simulation-complete',
   'chat-stress-simulation-complete-emitted',
   'product-readiness-simulation-complete',
@@ -21,10 +24,39 @@ export const PINNED_RUNTIME_TRACE_OPERATION_IDS = new Set<string>([
   'intake-validation-complete-emitted',
   'planning-gate-started',
   'planning-gate-entered',
+  'planning-gate-passed',
+  'planning-brief-passed',
+  'architecture-brief-passed',
+  'build-plan-passed',
   'live-chat-stress-runner-path:repaired-settlement-v1',
+  'chat-stress-degraded-incomplete',
+  'chat-stress-non-blocking-started',
+  'chat-stress-non-blocking-window-elapsed',
+  'chat-stress-non-blocking-complete',
+  'chat-stress-terminal-sweep-started',
+  'chat-stress-terminal-sweep-settled',
   'chat-stress-runner-idle-with-pending',
   'running-product-readiness-simulation',
   'founder-input-hydrated',
+  'PRODUCT_READINESS_COMPLETION_CHECK',
+  'PRODUCT_READINESS_COMPLETED',
+  'PRODUCT_READINESS_COMPLETE',
+  'PRODUCT_READINESS_PROPAGATION_START',
+  'PRODUCT_READINESS_PROPAGATION_STEP',
+  'PRODUCT_READINESS_PROPAGATION_COMPLETE',
+  'PRODUCT_READINESS_PROPAGATION_FAILURE',
+  'REAL_FOUNDER_PRODUCT_READINESS_PATH_SELECTED',
+  'REAL_FOUNDER_COMPLETION_CHECK_OBSERVED',
+  'REAL_FOUNDER_COMPLETION_TAIL_INVOKED',
+  'REAL_FOUNDER_COMPLETION_TAIL_COMPLETED',
+  'REAL_FOUNDER_STAGE2_EXIT_CONFIRMED',
+  'PRODUCT_READINESS_PROPAGATION_PATH_MISMATCH',
+  FOUNDER_SIMULATION_RUNNING,
+  'FOUNDER_SIMULATION_COMPLETE',
+  'FOUNDER_SIMULATION_COMPLETE_WITH_WARNINGS',
+  'FOUNDER_SIMULATION_COMPLETE-emitted',
+  'FOUNDER_SIMULATION_COMPLETE_WITH_WARNINGS-emitted',
+  'founder-simulation-complete',
 ]);
 
 export const TRACE_EVENT_STATUSES = [

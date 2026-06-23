@@ -121,8 +121,29 @@ export {
   analyzeStage2CompletionGap,
   resolveChatStressRuntimeFields,
   CHAT_STRESS_COMPLETION_BARRIER_REPAIR_V1_PASS,
+  STAGE2_CHAT_STRESS_BOUNDARY_OBSERVABILITY_REPAIR_V1_PASS,
   hasPassedTraceEvent,
+  STAGE2_CHAT_STRESS_RUNTIME_FIELD_DEFAULTS,
 } from './stage2-completion-tracker.js';
+export {
+  PLANNING_GATE_TRANSITION_PASS,
+  PLANNING_GATE_PASSED_MESSAGE,
+  PLANNING_GATE_PASSED_OPERATION_ID,
+  reconcilePlanningGateTransitionOnSnapshot,
+  shouldAutoCompletePlanningGate,
+} from './planning-gate-transition.js';
+export {
+  ARCHITECTURE_BRIEF_PASSED_MESSAGE,
+  ARCHITECTURE_BRIEF_PASSED_OPERATION_ID,
+  BRIEF_STAGE_TRANSITIONS,
+  BRIEF_STAGE_TRANSITIONS_PASS,
+  BUILD_PLAN_PASSED_MESSAGE,
+  BUILD_PLAN_PASSED_OPERATION_ID,
+  PLANNING_BRIEF_PASSED_MESSAGE,
+  PLANNING_BRIEF_PASSED_OPERATION_ID,
+  reconcileBriefStageTransitionsOnSnapshot,
+  shouldAutoCompleteBriefStage,
+} from './brief-stage-transitions.js';
 export {
   COMPLETE_REPORT_PREPARING_STALL_REPAIR_V1_PASS,
   COMPLETE_REPORT_HANDOFF_STALL_MS,
@@ -245,6 +266,12 @@ export {
   resolveStoredFounderTestReportMarkdownForDelivery,
   buildFounderTestResultDownloadFilename,
   buildFounderTestStoreVolatilityFields,
+  boundFounderTestResultHandoffPayloadForStorage,
+  boundFounderTestRuntimeSnapshotForStorage,
+  estimateStoredFounderTestResultPayloadBytesSafely,
+  FOUNDER_TEST_RESULT_HANDOFF_MAX_TRACE_EVENTS,
+  FOUNDER_TEST_RESULT_HANDOFF_MAX_FEED_EVENTS,
+  FOUNDER_TEST_RESULT_HANDOFF_MAX_TRACE_LINE_CHARS,
   type FounderTestResultDeliveryMode,
 } from './founder-test-result-payload-crash-repair.js';
 export {
@@ -322,6 +349,7 @@ export {
   analyzeArtifactBuildSubstepStall,
   createLaunchReadinessArtifactBuildTraceBridge,
   resetLaunchReadinessArtifactBuildTracerForTests,
+  getActiveArtifactBuildSubstep,
   getLastSuccessfulArtifactSubstep,
   getLastFailedArtifactSubstep,
 } from './launch-readiness-artifact-build-tracer.js';
@@ -333,3 +361,16 @@ export {
   resolveNextExpectedOperation,
   resolveTraceStageStatus,
 } from './runtime-trace-builder.js';
+export {
+  FOUNDER_RESULT_STORE_DELIVERY_REPAIR_PASS,
+  FOUNDER_RESULT_STORE_DELIVERY_RULES,
+  assessFounderTestResultStoreDelivery,
+  buildFounderTestRuntimeStatusDeliveryFields,
+  getFounderTestFinalDeliveryWriteCount,
+  persistFounderTestResultHandoff,
+  resetFounderResultStoreDeliveryRepairForTests,
+  resolveFounderTestResultStoreRunId,
+  type FounderTestResultHandoffPhase,
+  type FounderTestResultStoreDeliveryAssessment,
+  type PersistFounderTestResultHandoffResult,
+} from './founder-result-store-delivery-repair.js';

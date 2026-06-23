@@ -5,6 +5,7 @@
 export {
   CONNECTED_LAUNCH_READINESS_PROOF_PASS_TOKEN,
   CONNECTED_LAUNCH_READINESS_PROOF_REPAIR_V1_PASS,
+  CONNECTED_LAUNCH_STAGE_FINAL_BLOCKER_REPAIR_V1_PASS,
   CONNECTED_LAUNCH_READINESS_PROOF_OWNER_MODULE,
   CONNECTED_LAUNCH_READINESS_PROOF_PHASE,
   CONNECTED_LAUNCH_READINESS_PROOF_REPORT_TITLE,
@@ -41,7 +42,16 @@ export type {
   LaunchReadinessProofHistoryEntry,
   LaunchReadinessProofHistorySummary,
   LaunchReadinessProofArtifacts,
+  LaunchProofDependencyProofLevel,
+  LaunchProofDependencyEntry,
+  FirstLaunchBlockerResolution,
+  LaunchNotProvenExplanation,
+  LaunchProofContradiction,
+  LaunchProofDependencyGraph,
+  BuildLaunchProofDependencyGraphInput,
 } from './connected-launch-readiness-proof-types.js';
+
+export { LAUNCH_PROOF_CONTRADICTION } from './connected-launch-readiness-proof-types.js';
 
 export {
   assessConnectedLaunchReadinessProof,
@@ -74,3 +84,13 @@ export {
 export { analyzeLaunchManifest } from './launch-manifest-analyzer.js';
 export { analyzeLaunchLinkage } from './launch-linkage-analyzer.js';
 export { resolveLaunchReadinessEvidence } from './launch-proof-chain-resolver.js';
+export {
+  buildLaunchProofDependencyGraph,
+  resolveFirstLaunchBlocker,
+  buildLaunchNotProvenExplanation,
+  buildLaunchNotProvenAnswer,
+  getLaunchProofDiagnostics,
+} from './launch-proof-dependency-graph.js';
+export {
+  detectLaunchProofContradictions,
+} from './launch-proof-contradiction-detector.js';

@@ -2,6 +2,10 @@
  * Operational Status Builder — shared execution truth formatting (Phase 26.84).
  */
 
+import {
+  buildLaunchNotProvenAnswer,
+  buildLaunchProofDependencyGraph,
+} from '../connected-launch-readiness-proof/index.js';
 import type { OperationalTruthContext } from './chat-operational-self-knowledge-types.js';
 
 function bullet(items: string[]): string {
@@ -102,9 +106,13 @@ export function buildPreviewCapabilityAnswer(context: OperationalTruthContext): 
 
 export function buildFirstBrokenStageAnswer(context: OperationalTruthContext): string {
   if (!context.firstBrokenStage) {
-    return context.chainConnected
-      ? 'No broken stage recorded — connected execution chain truth reports chain connected. Verify with Founder Test before launch claims.'
-      : 'Execution chain is not fully connected, but no single first-broken stage was recorded. Run Founder Test for the authoritative chain report.';
+    return [
+      context.chainConnected
+        ? 'No broken stage recorded — connected execution chain truth reports chain connected. Verify with Founder Test before launch claims.'
+        : 'Execution chain is not fully connected, but no single first-broken stage was recorded. Run Founder Test for the authoritative chain report.',
+      '',
+      `Evidence source: ${context.executionTruthSource}.`,
+    ].join('\n');
   }
   return [
     `First broken execution stage: ${context.firstBrokenStage}.`,
@@ -114,4 +122,73 @@ export function buildFirstBrokenStageAnswer(context: OperationalTruthContext): s
     '',
     `Evidence source: ${context.executionTruthSource}.`,
   ].join('\n');
+}
+
+export function buildLaunchNotProvenAnswerFromContext(
+  context: OperationalTruthContext,
+  rootDir?: string,
+): string {
+  const graph = buildLaunchProofDependencyGraph({ rootDir });
+  return buildLaunchNotProvenAnswer(graph);
+}
+
+export function buildFirstLaunchBlockerAnswer(
+  context: OperationalTruthContext,
+  rootDir?: string,
+): string {
+  const graph = buildLaunchProofDependencyGraph({ rootDir });
+  if (graph.launchProven) {
+    return [
+      'No launch blocker — connected launch readiness proof reports Launch as PROVEN.',
+      `Truth source: ${context.executionTruthSource}.`,
+      `Launch proof level: ${graph.launchProofLevel}.`,
+    ].join('\n');
+  }
+  const blocker = graph.firstLaunchBlocker;
+  if (!blocker) {
+    return buildLaunchNotProvenAnswer(graph);
+  }
+  return [
+    'Primary launch blocker from LaunchProofDependencyGraph:',
+    '',
+    bullet([
+      `Blocker: ${blocker.blockerName} (${blocker.severity})`,
+      `Authority: ${blocker.authority}`,
+      `Proof source: ${blocker.proofSource}`,
+      `Reason: ${blocker.reason}`,
+    ]),
+    '',
+    `Launch proof level: ${graph.launchProofLevel}.`,
+    `First broken execution stage: ${context.firstBrokenStage ?? 'LAUNCH'}.`,
+    '',
+    `Truth source: ${context.executionTruthSource}.`,
+    `Launch truth generated: ${graph.launchTruthGeneratedAt}.`,
+  ].join('\n');
+}
+
+export function buildLaunchFixRequiredAnswer(
+  context: OperationalTruthContext,
+  rootDir?: string,
+): string {
+  const graph = buildLaunchProofDependencyGraph({ rootDir });
+  if (graph.launchProven) {
+    return 'Launch is already PROVEN in connected execution chain truth — run Founder Test before external launch.';
+  }
+  const fixes = graph.dependencies
+    .filter((d) => d.blocksLaunch)
+    .map((d) => `${d.dependencyName}: ${d.reason}`);
+  const reportFixes = graph.launchReport?.recommendedNextActions ?? [];
+  return [
+    'Fix before launch (from LaunchProofDependencyGraph):',
+    '',
+    bullet([...fixes, ...reportFixes].slice(0, 8)),
+    '',
+    graph.firstLaunchBlocker
+      ? `Start with primary blocker: ${graph.firstLaunchBlocker.blockerName} — ${graph.firstLaunchBlocker.reason}`
+      : '',
+    '',
+    `Truth source: ${context.executionTruthSource}.`,
+  ]
+    .filter(Boolean)
+    .join('\n');
 }

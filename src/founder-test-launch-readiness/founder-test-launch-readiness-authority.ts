@@ -28,6 +28,12 @@ import {
   runFullProductReadinessSimulation,
   formatProductReadinessSummary,
 } from '../founder-test-product-readiness/index.js';
+import {
+  emitLaunchReadinessAssessmentCompleteOnce,
+  LAUNCH_READINESS_ASSESSMENT_COMPLETE,
+  LAUNCH_READINESS_ASSESSMENT_COMPLETE_WITH_WARNINGS,
+} from '../launch-readiness-artifact-completion-barrier-repair/index.js';
+import { applyLaunchReadinessArtifactCompletionBoundaryRepairSync } from '../launch-readiness-artifact-completion-boundary-repair/index.js';
 import type { ProductReadinessReport } from '../founder-test-product-readiness/product-readiness-types.js';
 import {
   assessAutonomousBuildExecutionProof,
@@ -59,6 +65,15 @@ import {
   formatLaunchReadinessProofSummary,
 } from '../connected-launch-readiness-proof/index.js';
 import type { LaunchReadinessProofReport } from '../connected-launch-readiness-proof/connected-launch-readiness-proof-types.js';
+import {
+  assessRuntimeMaterializationTruthBridge,
+  shouldSuppressRuntimeFailureBlocker,
+} from '../runtime-materialization-truth-bridge/index.js';
+import {
+  assessBuildMaterializationTruthBridge,
+  shouldSuppressArtifactsBrokenBlocker,
+} from '../build-materialization-truth-bridge/index.js';
+import { applyTruthMatrixLaunchReconciliationSync } from '../founder-truth-matrix-integration/index.js';
 import {
   FOUNDER_TEST_LAUNCH_READINESS_CACHE_KEY_PREFIX,
   FOUNDER_TEST_LAUNCH_READINESS_CORE_QUESTION,
@@ -548,7 +563,8 @@ export function runFounderTestLaunchReadiness(
     launchCouncilAssessment,
   );
 
-  const chatStressSimulation = input.chatStressSimulation ?? null;
+  const chatStressSimulation =
+    input.chatStressSimulation ?? input.productReadinessSimulation?.chatStressSimulation ?? null;
   const chatBlocksLaunchReadiness = chatStressSimulation?.chatBlocksLaunchReadiness ?? false;
   const chatStressSummary = chatStressSimulation
     ? formatChatStressSimulationSummary(chatStressSimulation)
@@ -568,7 +584,18 @@ export function runFounderTestLaunchReadiness(
     orchestratorBundle,
   );
 
-  if (chatBlocksLaunchReadiness && chatStressSimulation) {
+  if (chatStressSimulation?.runtimeHealth === 'DEGRADED_INCOMPLETE') {
+    topBlockers.unshift({
+      readOnly: true,
+      sourceAuthority: 'Chat Stress Simulation',
+      severity: 'HIGH',
+      explanation:
+        `Chat stress did not fully complete inside the Founder Test runtime budget (started=${chatStressSimulation.settlementSummary?.startedCount ?? '?'}, settled=${chatStressSimulation.settlementSummary?.settledCount ?? '?'}, pending=${chatStressSimulation.settlementSummary?.pendingCount ?? '?'}).`,
+      recommendedAction:
+        chatStressSimulation.budgetNotes.find((note) => note.startsWith('Pending scenario IDs:')) ??
+        'Re-run chat stress outside Founder Test with a full budget before trusting chat readiness evidence.',
+    });
+  } else if (chatBlocksLaunchReadiness && chatStressSimulation) {
     topBlockers.unshift({
       readOnly: true,
       sourceAuthority: 'Chat Stress Simulation',
@@ -755,6 +782,74 @@ export function runFounderTestLaunchReadiness(
     ...(connectedLaunchReadinessProof?.founderQuestions.whatMustBeFixedNext ?? []),
   ]).slice(0, MAX_TOP_MISSING_CAPABILITIES);
 
+  const preReconciliationVerdict = resolvedVerdict;
+
+  let truthMatrixReconciliation = null;
+  let founderTruthSummary = null;
+  let launchBlockersProduct: FounderTestLaunchBlocker[] = [];
+  let launchBlockersTesting: FounderTestLaunchBlocker[] = [];
+  let launchBlockersAuthorityDisagreement: FounderTestLaunchBlocker[] = [];
+
+  if (!input.skipTruthMatrixReconciliation) {
+    const buildMaterializationTruthBridge = assessBuildMaterializationTruthBridge({
+      rootDir,
+      connectedBuild: connectedBuildExecution,
+      autonomousBuildProof: autonomousBuildExecutionProof,
+      skipHistoryRecording: input.skipHistoryRecording,
+    });
+
+    const runtimeMaterializationTruthBridge = assessRuntimeMaterializationTruthBridge({
+      rootDir,
+      buildMaterializationTruthBridge,
+      buildMaterializationReport: connectedBuildExecution,
+      runtimeActivationProof: connectedRuntimeActivationProof,
+      previewExperienceProof: connectedPreviewExperienceProof,
+      skipHistoryRecording: input.skipHistoryRecording,
+    });
+
+    const buildTruthReconciliation = buildMaterializationTruthBridge.report.reconciliation;
+    const runtimeTruthReconciliation = runtimeMaterializationTruthBridge.report.reconciliation;
+    let blockersForTruthMatrix = topBlockers.slice(0, MAX_TOP_BLOCKERS);
+    if (shouldSuppressArtifactsBrokenBlocker(buildTruthReconciliation)) {
+      blockersForTruthMatrix = blockersForTruthMatrix.filter(
+        (b) =>
+          !b.explanation.includes('artifacts→files') &&
+          !b.explanation.includes('artifacts -> files') &&
+          !(b.sourceAuthority.includes('Connected Build') && b.explanation.includes('First broken link')),
+      );
+    }
+    if (shouldSuppressRuntimeFailureBlocker(runtimeTruthReconciliation)) {
+      blockersForTruthMatrix = blockersForTruthMatrix.filter(
+        (b) =>
+          !b.sourceAuthority.includes('Runtime Activation') &&
+          !b.explanation.includes('RUNTIME') &&
+          !(b.sourceAuthority.includes('Autonomous Build Execution Proof') && b.explanation.includes('RUNTIME')),
+      );
+    }
+
+    const truthResult = applyTruthMatrixLaunchReconciliationSync({
+      rootDir,
+      founderTestAssessment,
+      preReconciliationVerdict,
+      founderReadinessScore: founderTestAssessment.score.overall,
+      topBlockers: blockersForTruthMatrix,
+      chatStressSimulation,
+      productReadinessSimulation,
+      autonomousBuildExecutionProof,
+      runId: founderTestAssessment.run.runId,
+      buildMaterializationTruthBridge,
+      runtimeMaterializationTruthBridge,
+      skipHistoryRecording: input.skipHistoryRecording,
+    });
+    resolvedVerdict = truthResult.postReconciliationVerdict;
+    truthMatrixReconciliation = truthResult.integration.report.reconciliation;
+    founderTruthSummary = truthResult.integration.report.founderTruthSummary;
+    launchBlockersProduct = truthResult.integration.report.categorizedBlockers.launchBlockersProduct;
+    launchBlockersTesting = truthResult.integration.report.categorizedBlockers.launchBlockersTesting;
+    launchBlockersAuthorityDisagreement =
+      truthResult.integration.report.categorizedBlockers.launchBlockersAuthorityDisagreement;
+  }
+
   const report: FounderTestLaunchReadinessReport = {
     readOnly: true,
     advisoryOnly: true,
@@ -806,6 +901,9 @@ export function runFounderTestLaunchReadiness(
     orchestratorVerdict: orchestratorBundle.verdict,
     orchestratorScore: orchestratorBundle.score.overallScore,
     topBlockers: topBlockers.slice(0, MAX_TOP_BLOCKERS),
+    launchBlockersProduct,
+    launchBlockersTesting,
+    launchBlockersAuthorityDisagreement,
     topWarnings: aggregateTopWarnings(founderTestAssessment, founderAcceptanceAssessment),
     topRecommendedActions: aggregateTopRecommendedActions(
       founderTestAssessment,
@@ -834,6 +932,9 @@ export function runFounderTestLaunchReadiness(
     connectedVerificationExecutionProofSummary,
     connectedLaunchReadinessProof,
     connectedLaunchReadinessProofSummary,
+    preReconciliationVerdict,
+    truthMatrixReconciliation,
+    founderTruthSummary,
     inputSnapshot: {
       readOnly: true,
       founderTestAssessment,
@@ -942,7 +1043,18 @@ export async function buildFounderTestLaunchReadinessArtifactsAsync(
         event.operationId === 'chat-stress-simulation-complete-emitted' ||
         event.operationId === 'product-readiness-simulation-complete' ||
         event.operationId === 'product-readiness-simulation-complete-emitted' ||
+        event.operationId === 'PRODUCT_READINESS_PROPAGATION_COMPLETE' ||
+        event.operationId === 'PRODUCT_READINESS_COMPLETED' ||
+        event.operationId === 'PRODUCT_READINESS_COMPLETE' ||
+        event.operationId === 'PRODUCT_READINESS_COMPLETION_CHECK' ||
+        event.operationId === 'REAL_FOUNDER_COMPLETION_TAIL_COMPLETED' ||
+        event.operationId === 'chat-stress-degraded-incomplete' ||
+        event.operationId === 'chat-stress-non-blocking-window-elapsed' ||
+        event.operationId === 'REAL_FOUNDER_STAGE2_EXIT_CONFIRMED' ||
+        event.operationId === LAUNCH_READINESS_ASSESSMENT_COMPLETE ||
+        event.operationId === LAUNCH_READINESS_ASSESSMENT_COMPLETE_WITH_WARNINGS ||
         event.operationId === 'launch-readiness-assessment-complete' ||
+        event.operationId === 'launch-readiness-assessment-complete-with-warnings' ||
         event.operationId === 'launch-readiness-artifacts-built';
       emitLaunchReadinessBuildTrace(input, {
         operationId: event.operationId,
@@ -968,9 +1080,11 @@ export async function buildFounderTestLaunchReadinessArtifactsAsync(
         rootDir,
         skipChatStressSimulation: input.skipChatStressSimulation,
         chatStressMaxScenarios: input.chatStressMaxScenarios,
+        chatStressProviderOverride: input.chatStressProviderOverride,
         founderReviewerConfidence: null,
         founderTestAssessment,
         founderTestContext: true,
+        productReadinessRuntimePath: 'real-founder',
         onSimulationTrace: mapSimulationTrace,
       });
       productReadinessSimulation = productReadiness.report;
@@ -1033,35 +1147,54 @@ export async function buildFounderTestLaunchReadinessArtifactsAsync(
       skipConnectedLaunchReadinessProof: true,
     });
 
-    emitLaunchReadinessBuildTrace(input, {
-      operationId: 'launch-readiness-assessment-complete',
-      operationLabel: 'Launch readiness assessment complete',
-      phase: 'PASSED',
+    const launchReadinessDegraded =
+      productReadinessSimulation?.simulationDegradedPartial === true ||
+      productReadinessSimulation?.simulationRuntimeHealth === 'SIMULATION_BUDGET_EXCEEDED';
+
+    emitLaunchReadinessAssessmentCompleteOnce({
+      withWarnings: launchReadinessDegraded,
+      detail: launchReadinessDegraded
+        ? productReadinessSimulation?.simulationBudgetNotes.join(' ') ?? 'SIMULATION_BUDGET_EXCEEDED'
+        : null,
+      onBuildTrace: (event) =>
+        emitLaunchReadinessBuildTrace(input, {
+          operationId: event.operationId,
+          operationLabel: event.operationLabel,
+          phase:
+            event.phase === 'RUNNING' ||
+            event.phase === 'PASSED' ||
+            event.phase === 'FAILED' ||
+            event.phase === 'SLOW' ||
+            event.phase === 'STALLED' ||
+            event.phase === 'BUDGET_EXCEEDED'
+              ? event.phase
+              : 'PASSED',
+          errorMessage: launchReadinessDegraded
+            ? productReadinessSimulation?.simulationBudgetNotes.join(' ')
+            : undefined,
+        }),
     });
 
-    emitLaunchReadinessBuildTrace(input, {
-      operationId: 'building-launch-readiness-report-markdown',
-      operationLabel: 'Building launch readiness report markdown',
-      phase: 'RUNNING',
-    });
-    const founderTestLaunchReadinessReportMarkdown = buildFounderTestLaunchReadinessReportMarkdown(
-      founderTestLaunchReadinessAssessment.report,
-    );
-    emitLaunchReadinessBuildTrace(input, {
-      operationId: 'building-launch-readiness-report-markdown',
-      operationLabel: 'Building launch readiness report markdown',
-      phase: 'PASSED',
-    });
-
-    emitLaunchReadinessBuildTrace(input, {
-      operationId: 'launch-readiness-artifacts-built',
-      operationLabel: 'Launch readiness artifacts built',
-      phase: 'PASSED',
+    const artifactChain = applyLaunchReadinessArtifactCompletionBoundaryRepairSync({
+      launchReadinessReport: founderTestLaunchReadinessAssessment.report,
+      degraded: launchReadinessDegraded,
+      degradedDetail: launchReadinessDegraded
+        ? productReadinessSimulation?.simulationBudgetNotes.join(' ') ?? 'SIMULATION_BUDGET_EXCEEDED'
+        : null,
+      onBuildTrace: (event) =>
+        emitLaunchReadinessBuildTrace(input, {
+          operationId: event.operationId,
+          operationLabel: event.operationLabel,
+          phase: event.phase,
+          errorMessage: event.errorMessage,
+        }),
+      buildMarkdown: () =>
+        buildFounderTestLaunchReadinessReportMarkdown(founderTestLaunchReadinessAssessment.report),
     });
 
     return {
       founderTestLaunchReadinessAssessment,
-      founderTestLaunchReadinessReportMarkdown,
+      founderTestLaunchReadinessReportMarkdown: artifactChain.markdown,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : 'launch readiness artifact build failed';

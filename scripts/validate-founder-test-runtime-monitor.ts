@@ -133,17 +133,20 @@ const stallSnap = getFounderTestRuntimeStatus();
 const simulationStage = stallSnap.stages.find((s) => s.stageId === 'FOUNDER_SIMULATION_ENGINE');
 if (simulationStage && simulationStage.startedAt) {
   const startedMs = new Date(simulationStage.startedAt).getTime();
-  const stalledAnalysis = analyzeRuntimeStall({
-    stages: stallSnap.stages.map((stage) =>
+  const simulationStagesAt = (elapsedMs: number) =>
+    stallSnap.stages.map((stage) =>
       stage.stageId === 'FOUNDER_SIMULATION_ENGINE'
-        ? { ...stage, startedAt: new Date(startedMs - 60_000).toISOString() }
+        ? { ...stage, startedAt: new Date(startedMs - elapsedMs).toISOString() }
         : stage,
-    ),
-    now: startedMs + 1000,
-  });
+    );
+  const at61s = analyzeRuntimeStall({ stages: simulationStagesAt(61_000), now: startedMs + 1000 });
+  const at190s = analyzeRuntimeStall({ stages: simulationStagesAt(190_000), now: startedMs + 1000 });
+  const at310s = analyzeRuntimeStall({ stages: simulationStagesAt(310_000), now: startedMs + 1000 });
   assert('stall detection healthy short', analyzeRuntimeStall({ stages: stallSnap.stages }).health === 'HEALTHY', 'healthy');
-  assert('stall detection stalled long', stalledAnalysis.health === 'STALLED', stalledAnalysis.health);
-  assert('stall warning message', stalledAnalysis.warningMessage != null, 'null');
+  assert('simulation at 61s not stalled', at61s.health !== 'STALLED', at61s.health);
+  assert('simulation at 190s slow', at190s.health === 'SLOW', at190s.health);
+  assert('simulation beyond 300s stalled', at310s.health === 'STALLED', at310s.health);
+  assert('simulation stall warning message', at310s.warningMessage != null, 'null');
 } else {
   assert('stall stage present', false, 'missing simulation stage');
 }

@@ -10,6 +10,7 @@ import {
   buildBrainRuntimeVerificationReportFromResult,
 } from '../src/command-center-brain/runtime-verification/index.js';
 import { getLiveOperationalTruthDiagnostics } from '../src/chat-operational-self-knowledge/index.js';
+import { getLaunchProofDiagnostics } from '../src/connected-launch-readiness-proof/index.js';
 import {
   generateLlmBackedChatResponseAsync,
   getLlmProviderStatus,
@@ -23,7 +24,10 @@ import {
 const MAX_BODY_BYTES = 16_384;
 
 export function sendBrainOperationalTruth(res: ServerResponse): void {
-  const payload = getLiveOperationalTruthDiagnostics();
+  const payload = {
+    ...getLiveOperationalTruthDiagnostics(),
+    launchProof: getLaunchProofDiagnostics(),
+  };
   res.writeHead(200, {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',

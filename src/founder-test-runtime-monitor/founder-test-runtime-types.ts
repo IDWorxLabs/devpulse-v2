@@ -146,6 +146,13 @@ export interface FounderTestRuntimeSnapshot {
   chatStressWatchdogDeadlineByScenarioId: Readonly<Record<string, number>>;
   chatStressWatchdogOverdueScenarioIds: readonly string[];
   chatStressMaxPendingElapsedMs: number;
+  chatStressActiveScenarioIds: readonly string[];
+  chatStressActiveScenarioCount: number;
+  chatStressOldestPendingElapsedMs: number;
+  chatStressNextScenarioDeadlineMs: number | null;
+  chatStressMsUntilNextDeadline: number | null;
+  chatStressBatchDeadlineMs: number | null;
+  chatStressMsUntilBatchDeadline: number | null;
   uiSummary: {
     headline: string;
     stageLine: string;

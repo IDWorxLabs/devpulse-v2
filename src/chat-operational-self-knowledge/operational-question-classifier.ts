@@ -123,6 +123,35 @@ const RULES: Rule[] = [
     weight: 8,
   },
   {
+    kind: 'LAUNCH_NOT_PROVEN',
+    patterns: [
+      /\bwhy is launch not proven\b/i,
+      /\bwhy isn't launch proven\b/i,
+      /\bwhat is preventing launch\b/i,
+      /\bwhat(?:'s| is) preventing launch\b/i,
+      /\bwhy can(?:'|no)t we launch\b/i,
+    ],
+    weight: 11,
+  },
+  {
+    kind: 'FIRST_LAUNCH_BLOCKER',
+    patterns: [
+      /\bfirst launch blocker\b/i,
+      /\bwhat is the first launch blocker\b/i,
+      /\bprimary launch blocker\b/i,
+    ],
+    weight: 11,
+  },
+  {
+    kind: 'LAUNCH_FIX_REQUIRED',
+    patterns: [
+      /\bwhat do i need to fix before launch\b/i,
+      /\bwhat must be fixed before launch\b/i,
+      /\bwhat needs to be fixed before launch\b/i,
+    ],
+    weight: 10,
+  },
+  {
     kind: 'LAUNCH_READINESS',
     patterns: [
       /\bare we ready to launch\b/i,
@@ -144,6 +173,21 @@ const RULES: Rule[] = [
     weight: 8,
   },
   {
+    kind: 'IDENTITY',
+    patterns: [
+      /\bwhat is aidevengine\b/i,
+      /\bwhat's aidevengine\b/i,
+      /\bexplain aidevengine\b/i,
+      /\btell me about aidevengine\b/i,
+      /\bwho built you\b/i,
+      /\bwho created you\b/i,
+      /\bwho made you\b/i,
+      /\bwhat product do you represent\b/i,
+      /\bwho are you and what product\b/i,
+    ],
+    weight: 12,
+  },
+  {
     kind: 'CAPABILITIES',
     patterns: [
       /\bwhat can you do\b/i,
@@ -152,6 +196,9 @@ const RULES: Rule[] = [
       /\bcan you run applications?\b/i,
       /\bcan you preview applications?\b/i,
       /\bcapability inventory\b/i,
+      /\bbuild my whole (app|application)\b/i,
+      /\bfrom one prompt\b/i,
+      /\bentire application from (a )?single prompt\b/i,
     ],
     weight: 7,
   },

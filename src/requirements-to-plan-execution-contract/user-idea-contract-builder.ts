@@ -41,6 +41,10 @@ function detectProductType(lower: string): string {
 
 function detectTargetUsers(lower: string): string[] {
   const users: string[] = [];
+  if (/task tracker|todo app|todo list/i.test(lower) && /tasks?/i.test(lower)) {
+    users.push('Individual users managing personal tasks');
+    return users;
+  }
   if (/sales team|small sales/i.test(lower)) users.push('Small sales team members');
   if (/admin role|administrator/i.test(lower)) users.push('Administrators');
   if (/salon|stylist|staff/i.test(lower)) users.push('Salon staff');
@@ -116,6 +120,11 @@ export function buildUserIdeaContract(rawPrompt: string, ideaId?: string): UserI
     normalizedGoal = 'Booking application for salon appointments';
     problemStatement = 'Salon needs appointment scheduling for staff and customers';
     desiredOutcome = 'Customers can book; staff can manage schedule';
+  } else if (/task tracker|todo app|todo list/i.test(lower) && /tasks?/i.test(lower)) {
+    normalizedGoal =
+      'Simple browser task tracker with add, complete, delete, filter, and active task count';
+    problemStatement = 'User needs a lightweight way to manage daily tasks in the browser';
+    desiredOutcome = 'Working task tracker with filters and remaining active task count';
   }
 
   return {

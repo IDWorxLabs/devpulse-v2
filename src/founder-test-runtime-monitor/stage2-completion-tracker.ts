@@ -22,6 +22,9 @@ import {
 export const CHAT_STRESS_COMPLETION_BARRIER_REPAIR_V1_PASS =
   'CHAT_STRESS_COMPLETION_BARRIER_REPAIR_V1_PASS';
 
+export const STAGE2_CHAT_STRESS_BOUNDARY_OBSERVABILITY_REPAIR_V1_PASS =
+  'STAGE2_CHAT_STRESS_BOUNDARY_OBSERVABILITY_REPAIR_V1_PASS';
+
 export const OPERATOR_FEED_UNIFIED_LAYOUT_STAGE2_COMPLETION_V1_PASS =
   'OPERATOR_FEED_UNIFIED_LAYOUT_STAGE2_COMPLETION_V1_PASS';
 
@@ -52,6 +55,10 @@ export const INTAKE_VALIDATION_COMPLETION_BOUNDARIES = [
     label: 'Launch readiness assessment complete',
   },
   {
+    operationId: 'launch-readiness-assessment-complete-with-warnings',
+    label: 'Launch readiness assessment complete with warnings',
+  },
+  {
     operationId: 'launch-readiness-artifacts-built',
     label: 'Launch readiness artifacts built',
   },
@@ -61,10 +68,36 @@ export const INTAKE_VALIDATION_COMPLETION_BOUNDARIES = [
   },
 ] as const;
 
+const LAUNCH_READINESS_ASSESSMENT_BOUNDARY_IDS = new Set([
+  'launch-readiness-assessment-complete',
+  'launch-readiness-assessment-complete-with-warnings',
+]);
+
+function isChatStressSimulationCompleteBoundarySatisfied(): boolean {
+  return isChatStressSimulationComplete() || hasChatStressSimulationCompletePropagated();
+}
+
+/** Default chat-stress runtime fields for validator stage-2 fixture snapshots. */
+export const STAGE2_CHAT_STRESS_RUNTIME_FIELD_DEFAULTS = {
+  chatStressActiveScenarioIds: [] as readonly string[],
+  chatStressActiveScenarioCount: 0,
+  chatStressOldestPendingElapsedMs: 0,
+  chatStressNextScenarioDeadlineMs: null as number | null,
+  chatStressMsUntilNextDeadline: null as number | null,
+  chatStressBatchDeadlineMs: null as number | null,
+  chatStressMsUntilBatchDeadline: null as number | null,
+};
+
 export function hasPassedTraceEvent(
   traceEvents: readonly FounderTestRuntimeTraceEvent[],
   operationId: string,
 ): boolean {
+  if (
+    operationId === 'chat-stress-simulation-complete' &&
+    isChatStressSimulationCompleteBoundarySatisfied()
+  ) {
+    return true;
+  }
   if (hasIntakeValidationCompletionBoundaryInRegistry(operationId)) {
     return true;
   }
@@ -75,6 +108,14 @@ export function resolveMissingIntakeCompletionBoundary(
   traceEvents: readonly FounderTestRuntimeTraceEvent[],
 ): string | null {
   for (const boundary of INTAKE_VALIDATION_COMPLETION_BOUNDARIES) {
+    if (LAUNCH_READINESS_ASSESSMENT_BOUNDARY_IDS.has(boundary.operationId)) {
+      const launchAssessmentSatisfied = [...LAUNCH_READINESS_ASSESSMENT_BOUNDARY_IDS].some((operationId) =>
+        hasPassedTraceEvent(traceEvents, operationId),
+      );
+      if (launchAssessmentSatisfied) {
+        continue;
+      }
+    }
     if (!hasPassedTraceEvent(traceEvents, boundary.operationId)) {
       return boundary.label;
     }
@@ -114,11 +155,13 @@ export function analyzeStage2CompletionGap(snapshot: Omit<FounderTestRuntimeSnap
     chatStressPending &&
     shouldFlagChatStressPendingStage2Gap({
       pendingCount: chatStress.pendingCount,
+      activeScenarioCount: chatStress.activeScenarioCount,
       chatStressWatchdogOverdueScenarioIds: chatStress.chatStressWatchdogOverdueScenarioIds,
       chatStressMaxPendingElapsedMs: chatStress.chatStressMaxPendingElapsedMs,
       hardTimeoutMs: CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS,
       graceMs: CHAT_STRESS_SCENARIO_HARD_TIMEOUT_GRACE_MS,
       secondsSinceLastHeartbeat: snapshot.secondsSinceLastHeartbeat,
+      msUntilBatchDeadline: chatStress.msUntilBatchDeadline,
     })
   ) {
     return {
@@ -157,6 +200,13 @@ export function resolveChatStressRuntimeFields(): {
   chatStressWatchdogDeadlineByScenarioId: Readonly<Record<string, number>>;
   chatStressWatchdogOverdueScenarioIds: readonly string[];
   chatStressMaxPendingElapsedMs: number;
+  chatStressActiveScenarioIds: readonly string[];
+  chatStressActiveScenarioCount: number;
+  chatStressOldestPendingElapsedMs: number;
+  chatStressNextScenarioDeadlineMs: number | null;
+  chatStressMsUntilNextDeadline: number | null;
+  chatStressBatchDeadlineMs: number | null;
+  chatStressMsUntilBatchDeadline: number | null;
 } {
   const chatStress = getChatStressCompletionSnapshot();
   return {
@@ -173,5 +223,12 @@ export function resolveChatStressRuntimeFields(): {
     chatStressWatchdogDeadlineByScenarioId: chatStress.chatStressWatchdogDeadlineByScenarioId,
     chatStressWatchdogOverdueScenarioIds: chatStress.chatStressWatchdogOverdueScenarioIds,
     chatStressMaxPendingElapsedMs: chatStress.chatStressMaxPendingElapsedMs,
+    chatStressActiveScenarioIds: chatStress.activeScenarioIds,
+    chatStressActiveScenarioCount: chatStress.activeScenarioCount,
+    chatStressOldestPendingElapsedMs: chatStress.oldestPendingElapsedMs,
+    chatStressNextScenarioDeadlineMs: chatStress.nextScenarioDeadlineMs,
+    chatStressMsUntilNextDeadline: chatStress.msUntilNextDeadline,
+    chatStressBatchDeadlineMs: chatStress.batchDeadlineMs,
+    chatStressMsUntilBatchDeadline: chatStress.msUntilBatchDeadline,
   };
 }

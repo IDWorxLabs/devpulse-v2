@@ -4,6 +4,13 @@
  * Phase 26.56 — watchdog runtime firing + health reconciliation.
  */
 
+import {
+  CHAT_STRESS_DEFAULT_CONCURRENCY,
+  CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS,
+  CHAT_STRESS_SCENARIO_HARD_TIMEOUT_GRACE_MS,
+  resolveChatStressWorstCaseBatchDeadlineMs,
+} from '../founder-test-product-readiness/product-readiness-simulation-budget.js';
+
 export const CHAT_STRESS_COMPLETION_BARRIER_REPAIR_V1_PASS =
   'CHAT_STRESS_COMPLETION_BARRIER_REPAIR_V1_PASS';
 
@@ -17,6 +24,17 @@ export const CHAT_STRESS_WATCHDOG_RUNTIME_FIRING_REPAIR_V1_PASS =
   'CHAT_STRESS_WATCHDOG_RUNTIME_FIRING_REPAIR_V1_PASS';
 
 export const CHAT_STRESS_BATCH_FINALIZER_TIMEOUT_REASON = 'BATCH_FINALIZER_TIMEOUT';
+
+export const CHAT_STRESS_CONCURRENT_ACTIVE_WORKER_TRACKING_REPAIR_V1_PASS =
+  'CHAT_STRESS_CONCURRENT_ACTIVE_WORKER_TRACKING_REPAIR_V1_PASS';
+
+export const CHAT_STRESS_BATCH_DEADLINE_EXCEEDED_REASON = 'CHAT_STRESS_BATCH_DEADLINE_EXCEEDED';
+
+export const CHAT_STRESS_TERMINAL_SETTLEMENT_SWEEP_V1_PASS =
+  'CHAT_STRESS_TERMINAL_SETTLEMENT_SWEEP_V1_PASS';
+
+export const CHAT_STRESS_TERMINAL_SETTLEMENT_SWEEP_REASON =
+  'CHAT_STRESS_TERMINAL_SETTLEMENT_SWEEP';
 
 export type ChatStressScenarioLifecycleState = 'PENDING' | 'RUNNING' | 'SETTLED';
 
@@ -37,7 +55,10 @@ export interface ChatStressCompletionSnapshot {
   pendingCount: number;
   lastScenarioId: string | null;
   pendingScenarioIds: string[];
+  /** Compatibility — most recently started active scenario; not used for concurrency decisions. */
   activeScenarioId: string | null;
+  activeScenarioIds: readonly string[];
+  activeScenarioCount: number;
   lastSettledScenarioId: string | null;
   timeoutScenarioIds: string[];
   failedScenarioIds: string[];
@@ -46,6 +67,11 @@ export interface ChatStressCompletionSnapshot {
   chatStressWatchdogDeadlineByScenarioId: Readonly<Record<string, number>>;
   chatStressWatchdogOverdueScenarioIds: string[];
   chatStressMaxPendingElapsedMs: number;
+  oldestPendingElapsedMs: number;
+  nextScenarioDeadlineMs: number | null;
+  msUntilNextDeadline: number | null;
+  batchDeadlineMs: number | null;
+  msUntilBatchDeadline: number | null;
 }
 
 interface ScenarioRecord {
@@ -68,7 +94,8 @@ interface WatchdogRecord {
 let totalScenarios = 0;
 let aggregateComplete = false;
 let lastScenarioId: string | null = null;
-let activeScenarioId: string | null = null;
+let lastActiveScenarioId: string | null = null;
+const activeScenarioIds = new Set<string>();
 let lastSettledScenarioId: string | null = null;
 let orderedScenarioIds: string[] = [];
 const timeoutScenarioIds: string[] = [];
@@ -77,6 +104,32 @@ const scenarios = new Map<string, ScenarioRecord>();
 const watchdogRecords = new Map<string, WatchdogRecord>();
 let healthSweepInterval: ReturnType<typeof setInterval> | null = null;
 const postWatchdogHealthReconcilers: Array<(nowMs: number) => void> = [];
+let batchStartedAtMs: number | null = null;
+let batchDeadlineMs: number | null = null;
+let batchFinalizerCompleted = false;
+let batchDeadlineArmedTimer: ReturnType<typeof setTimeout> | null = null;
+let batchDeadlineArmedNotified = false;
+
+export const CHAT_STRESS_BATCH_DEADLINE_ARMED_OPERATION_ID = 'chat-stress-batch-deadline-armed';
+export const CHAT_STRESS_TERMINAL_SWEEP_STARTED_OPERATION_ID = 'chat-stress-terminal-sweep-started';
+export const CHAT_STRESS_TERMINAL_SWEEP_SETTLED_OPERATION_ID = 'chat-stress-terminal-sweep-settled';
+
+type BatchDeadlineArmedHandler = (input: {
+  batchDeadlineMs: number;
+  batchEndsAtMs: number;
+  scenarioCount: number;
+  concurrency: number;
+}) => void;
+
+type TerminalSettlementSweepHandler = (input: {
+  reason: string;
+  settledCount: number;
+  pendingCount: number;
+  forcedCount: number;
+}) => void;
+
+let batchDeadlineArmedHandler: BatchDeadlineArmedHandler | null = null;
+let terminalSettlementSweepHandler: TerminalSettlementSweepHandler | null = null;
 
 const WATCHDOG_HEALTH_SWEEP_MS = 500;
 
@@ -94,35 +147,138 @@ export function clearChatStressPostWatchdogHealthReconcilers(): void {
   postWatchdogHealthReconcilers.length = 0;
 }
 
-export function resetChatStressCompletionTrackerForTests(): void {
+export function registerChatStressBatchDeadlineArmedHandler(
+  handler: BatchDeadlineArmedHandler | null,
+): void {
+  batchDeadlineArmedHandler = handler;
+}
+
+export function registerChatStressTerminalSettlementSweepHandler(
+  handler: TerminalSettlementSweepHandler | null,
+): void {
+  terminalSettlementSweepHandler = handler;
+}
+
+function clearChatStressBatchDeadlineArmedTimer(): void {
+  if (batchDeadlineArmedTimer != null) {
+    clearTimeout(batchDeadlineArmedTimer);
+    batchDeadlineArmedTimer = null;
+  }
+}
+
+function resetChatStressScenarioStateForBatch(): void {
   stopChatStressWatchdogHealthSweep();
   clearAllChatStressScenarioHardWatchdogs();
+  clearChatStressBatchDeadlineArmedTimer();
+  batchDeadlineArmedNotified = false;
   totalScenarios = 0;
   aggregateComplete = false;
   lastScenarioId = null;
-  activeScenarioId = null;
+  lastActiveScenarioId = null;
+  activeScenarioIds.clear();
   lastSettledScenarioId = null;
   orderedScenarioIds = [];
   timeoutScenarioIds.length = 0;
   failedScenarioIds.length = 0;
   scenarios.clear();
+  batchStartedAtMs = null;
+  batchDeadlineMs = null;
+  batchFinalizerCompleted = false;
+}
+
+export function resetChatStressCompletionTrackerForTests(): void {
+  resetChatStressScenarioStateForBatch();
   clearChatStressPostWatchdogHealthReconcilers();
 }
 
 export function beginChatStressSimulation(scenarioIds: readonly string[]): void {
-  resetChatStressCompletionTrackerForTests();
+  resetChatStressScenarioStateForBatch();
   orderedScenarioIds = [...scenarioIds];
   totalScenarios = orderedScenarioIds.length;
 }
 
+export function beginChatStressBatchDeadline(input: {
+  scenarioCount: number;
+  concurrency?: number;
+  perScenarioTimeoutMs?: number;
+  startedAtMs?: number;
+}): void {
+  clearChatStressBatchDeadlineArmedTimer();
+  batchDeadlineArmedNotified = false;
+  batchStartedAtMs = input.startedAtMs ?? Date.now();
+  batchDeadlineMs = resolveChatStressWorstCaseBatchDeadlineMs({
+    scenarioCount: input.scenarioCount,
+    concurrency: input.concurrency,
+    perScenarioTimeoutMs: input.perScenarioTimeoutMs,
+  });
+  batchFinalizerCompleted = false;
+
+  const batchEndsAtMs = batchStartedAtMs + batchDeadlineMs;
+  if (!batchDeadlineArmedNotified) {
+    batchDeadlineArmedNotified = true;
+    batchDeadlineArmedHandler?.({
+      batchDeadlineMs: batchDeadlineMs,
+      batchEndsAtMs,
+      scenarioCount: input.scenarioCount,
+      concurrency: input.concurrency ?? CHAT_STRESS_DEFAULT_CONCURRENCY,
+    });
+  }
+
+  batchDeadlineArmedTimer = setTimeout(() => {
+    const nowMs = Date.now();
+    reconcileChatStressTerminalSettlementSweep({
+      nowMs,
+      forceUnresolved: true,
+      reason: CHAT_STRESS_BATCH_DEADLINE_EXCEEDED_REASON,
+    });
+  }, Math.max(0, batchEndsAtMs - Date.now()));
+}
+
+export function isChatStressBatchFinalizerCompleted(): boolean {
+  return batchFinalizerCompleted;
+}
+
+function syncCompatibilityActiveScenarioId(): void {
+  if (activeScenarioIds.size === 0) {
+    lastActiveScenarioId = null;
+    return;
+  }
+  if (lastActiveScenarioId != null && activeScenarioIds.has(lastActiveScenarioId)) {
+    return;
+  }
+  lastActiveScenarioId = [...activeScenarioIds].at(-1) ?? null;
+}
+
+export function addActiveChatStressScenario(scenarioId: string): void {
+  activeScenarioIds.add(scenarioId);
+  lastActiveScenarioId = scenarioId;
+}
+
+export function removeActiveChatStressScenario(scenarioId: string): void {
+  activeScenarioIds.delete(scenarioId);
+  syncCompatibilityActiveScenarioId();
+}
+
+export function getActiveChatStressScenarioIds(): readonly string[] {
+  return [...activeScenarioIds];
+}
+
+export function getActiveChatStressScenarioCount(): number {
+  return activeScenarioIds.size;
+}
+
+/** Compatibility — replaces entire active set when null; adds when id provided. */
 export function setActiveChatStressScenario(scenarioId: string | null): void {
-  activeScenarioId = scenarioId;
+  if (scenarioId == null) {
+    activeScenarioIds.clear();
+    lastActiveScenarioId = null;
+    return;
+  }
+  addActiveChatStressScenario(scenarioId);
 }
 
 export function clearActiveChatStressScenarioIfMatches(scenarioId: string): void {
-  if (activeScenarioId === scenarioId) {
-    activeScenarioId = null;
-  }
+  removeActiveChatStressScenario(scenarioId);
 }
 
 export function getChatStressTotalScenarios(): number {
@@ -160,7 +316,7 @@ export function listStartedChatStressScenarioIds(): readonly string[] {
 
 export function markChatStressScenarioStarted(scenarioId: string): void {
   lastScenarioId = scenarioId;
-  activeScenarioId = scenarioId;
+  addActiveChatStressScenario(scenarioId);
   const existing = scenarios.get(scenarioId);
   if (existing?.started) return;
   scenarios.set(scenarioId, {
@@ -182,9 +338,7 @@ function recordTerminalStatus(scenarioId: string, terminalStatus: ChatStressScen
   ) {
     failedScenarioIds.push(scenarioId);
   }
-  if (activeScenarioId === scenarioId) {
-    activeScenarioId = null;
-  }
+  removeActiveChatStressScenario(scenarioId);
 }
 
 export function tryMarkChatStressScenarioSettled(
@@ -223,7 +377,7 @@ export function markChatStressScenarioSkippedBudget(scenarioId: string): void {
   clearChatStressScenarioHardWatchdog(scenarioId);
   lastScenarioId = scenarioId;
   scenarios.set(scenarioId, {
-    started: false,
+    started: true,
     settled: true,
     terminalStatus: 'SKIPPED_BUDGET',
     lastUpdateTimeMs: Date.now(),
@@ -260,7 +414,6 @@ function ensureWatchdogHealthSweep(): void {
   healthSweepInterval = setInterval(() => {
     reconcileChatStressWatchdogHealth(Date.now());
   }, WATCHDOG_HEALTH_SWEEP_MS);
-  healthSweepInterval.unref?.();
 }
 
 export function stopChatStressWatchdogHealthSweep(): void {
@@ -284,7 +437,6 @@ export function registerChatStressScenarioHardWatchdog(input: {
     if (!record || isChatStressScenarioSettled(input.scenarioId)) return;
     fireWatchdogForScenario(input.scenarioId, record);
   }, input.timeoutMs);
-  timer.unref?.();
 
   watchdogRecords.set(input.scenarioId, {
     armedAtMs,
@@ -347,39 +499,207 @@ export function reconcileChatStressWatchdogHealth(nowMs = Date.now()): string[] 
     }
   }
 
-  for (const reconciler of postWatchdogHealthReconcilers) {
-    reconciler(nowMs);
+  reconcileChatStressOverdueRunningScenarios(nowMs, firedScenarioIds);
+
+  if (!suppressPostWatchdogHealthReconcilers) {
+    for (const reconciler of postWatchdogHealthReconcilers) {
+      reconciler(nowMs);
+    }
   }
 
   return firedScenarioIds;
 }
 
+export function shouldForceChatStressTerminalSettlementSweep(
+  snap: Pick<
+    ChatStressCompletionSnapshot,
+    | 'pendingCount'
+    | 'msUntilBatchDeadline'
+    | 'batchDeadlineMs'
+    | 'chatStressWatchdogOverdueScenarioIds'
+    | 'oldestPendingElapsedMs'
+  >,
+  perScenarioTimeoutMs = CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS,
+  graceMs = CHAT_STRESS_SCENARIO_HARD_TIMEOUT_GRACE_MS,
+): boolean {
+  if (snap.pendingCount <= 0) return false;
+  if (snap.batchDeadlineMs != null && (snap.msUntilBatchDeadline ?? 0) <= 0) return true;
+  if (snap.chatStressWatchdogOverdueScenarioIds.length > 0) return true;
+  return snap.oldestPendingElapsedMs >= perScenarioTimeoutMs + graceMs;
+}
+
+function reconcileChatStressOverdueRunningScenarios(
+  nowMs: number,
+  firedScenarioIds: string[],
+  perScenarioTimeoutMs = CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS,
+): void {
+  for (const scenarioId of orderedScenarioIds) {
+    if (isChatStressScenarioSettled(scenarioId)) continue;
+    const entry = scenarios.get(scenarioId);
+    if (!entry?.started) continue;
+    const elapsedMs = Math.max(0, nowMs - entry.lastUpdateTimeMs);
+    if (elapsedMs < perScenarioTimeoutMs) continue;
+    const record = watchdogRecords.get(scenarioId);
+    if (record) {
+      if (nowMs >= record.deadlineMs) {
+        fireWatchdogForScenario(scenarioId, record);
+        if (!firedScenarioIds.includes(scenarioId)) {
+          firedScenarioIds.push(scenarioId);
+        }
+      }
+      continue;
+    }
+    tryMarkChatStressScenarioSettled(scenarioId, 'TIMEOUT');
+    if (!firedScenarioIds.includes(scenarioId)) {
+      firedScenarioIds.push(scenarioId);
+    }
+  }
+}
+
+export function reconcileChatStressTerminalSettlementIfNeeded(nowMs = Date.now()): boolean {
+  if (aggregateComplete || suppressPostWatchdogHealthReconcilers) return false;
+  const snap = buildChatStressCompletionSnapshot(nowMs);
+  if (!shouldForceChatStressTerminalSettlementSweep(snap)) return false;
+  reconcileChatStressTerminalSettlementSweep({
+    nowMs,
+    forceUnresolved: true,
+    reason: CHAT_STRESS_TERMINAL_SETTLEMENT_SWEEP_REASON,
+  });
+  return true;
+}
+
 export function forceSettlePendingStartedChatStressScenarios(
   reason: string,
 ): Array<{ scenarioId: string; reason: string }> {
-  reconcileChatStressWatchdogHealth(Date.now());
-  const forced: Array<{ scenarioId: string; reason: string }> = [];
-  for (const scenarioId of orderedScenarioIds) {
-    const entry = scenarios.get(scenarioId);
-    if (entry?.started && !entry.settled) {
-      const record = watchdogRecords.get(scenarioId);
-      if (record) {
-        fireWatchdogForScenario(scenarioId, record);
-      }
-      if (!isChatStressScenarioSettled(scenarioId)) {
-        tryMarkChatStressScenarioSettled(scenarioId, 'TIMEOUT');
-        if (isChatStressScenarioSettled(scenarioId)) {
-          forced.push({ scenarioId, reason: `${reason} (force TIMEOUT settle)` });
-        } else {
-          forced.push({ scenarioId, reason });
+  return withChatStressPostWatchdogHealthReconcilersSuppressed(() => {
+    reconcileChatStressWatchdogHealth(Date.now());
+    const forced: Array<{ scenarioId: string; reason: string }> = [];
+    for (const scenarioId of orderedScenarioIds) {
+      const entry = scenarios.get(scenarioId);
+      if (entry?.started && !entry.settled) {
+        const record = watchdogRecords.get(scenarioId);
+        if (record) {
+          fireWatchdogForScenario(scenarioId, record);
         }
+        if (!isChatStressScenarioSettled(scenarioId)) {
+          tryMarkChatStressScenarioSettled(scenarioId, 'TIMEOUT');
+          if (isChatStressScenarioSettled(scenarioId)) {
+            forced.push({ scenarioId, reason: `${reason} (force TIMEOUT settle)` });
+          } else {
+            forced.push({ scenarioId, reason });
+          }
+        }
+      } else if (!entry?.settled) {
+        markChatStressScenarioSkippedBudget(scenarioId);
+        forced.push({ scenarioId, reason: `${reason} (never started)` });
       }
-    } else if (!entry?.settled) {
-      markChatStressScenarioSkippedBudget(scenarioId);
-      forced.push({ scenarioId, reason: `${reason} (never started)` });
     }
+    return forced;
+  });
+}
+
+export function reconcileChatStressTerminalSettlementSweep(
+  input: {
+    nowMs?: number;
+    reason?: string;
+    budgetRemainingMs?: number | null;
+    forceUnresolved?: boolean;
+  } = {},
+): {
+  forced: Array<{ scenarioId: string; reason: string }>;
+  pendingCount: number;
+} {
+  const nowMs = input.nowMs ?? Date.now();
+  suppressPostWatchdogHealthReconcilers = true;
+  try {
+    reconcileChatStressWatchdogHealth(nowMs);
+    reconcileChatStressBatchDeadlineFinalizer(nowMs);
+
+    let forced: Array<{ scenarioId: string; reason: string }> = [];
+
+    if (input.budgetRemainingMs != null && input.budgetRemainingMs <= 0) {
+      forced = forceSettlePendingStartedChatStressScenarios('SIMULATION_BUDGET_EXCEEDED');
+    }
+
+    if (input.forceUnresolved === true && !allChatStressScenariosSettled()) {
+      const sweepReason = input.reason ?? CHAT_STRESS_TERMINAL_SETTLEMENT_SWEEP_REASON;
+      const settledBefore = buildChatStressCompletionSnapshot(nowMs).settledCount;
+      terminalSettlementSweepHandler?.({
+        reason: sweepReason,
+        settledCount: settledBefore,
+        pendingCount: buildChatStressCompletionSnapshot(nowMs).pendingCount,
+        forcedCount: 0,
+      });
+      forced = [
+        ...forced,
+        ...forceSettlePendingStartedChatStressScenarios(sweepReason),
+      ];
+      const snapAfter = buildChatStressCompletionSnapshot(nowMs);
+      terminalSettlementSweepHandler?.({
+        reason: sweepReason,
+        settledCount: snapAfter.settledCount,
+        pendingCount: snapAfter.pendingCount,
+        forcedCount: forced.length,
+      });
+    }
+
+    return {
+      forced,
+      pendingCount: buildChatStressCompletionSnapshot(nowMs).pendingCount,
+    };
+  } finally {
+    suppressPostWatchdogHealthReconcilers = false;
   }
-  return forced;
+}
+
+export function reconcileChatStressBatchDeadlineFinalizer(nowMs = Date.now()): boolean {
+  if (batchFinalizerCompleted || aggregateComplete) return false;
+  if (batchStartedAtMs == null || batchDeadlineMs == null) return false;
+  if (nowMs < batchStartedAtMs + batchDeadlineMs) return false;
+
+  const pendingBefore = orderedScenarioIds.filter((id) => !isChatStressScenarioSettled(id)).length;
+  if (pendingBefore <= 0) {
+    batchFinalizerCompleted = true;
+    clearChatStressBatchDeadlineArmedTimer();
+    return false;
+  }
+
+  forceSettlePendingStartedChatStressScenarios(CHAT_STRESS_BATCH_DEADLINE_EXCEEDED_REASON);
+  if (buildChatStressCompletionSnapshot(nowMs).pendingCount <= 0) {
+    batchFinalizerCompleted = true;
+    clearChatStressBatchDeadlineArmedTimer();
+  }
+  return true;
+}
+
+export function resolveChatStressStallHealth(
+  snapshot: Pick<
+    ChatStressCompletionSnapshot,
+    | 'pendingCount'
+    | 'activeScenarioCount'
+    | 'activeScenarioIds'
+    | 'chatStressWatchdogDeadlineByScenarioId'
+    | 'msUntilBatchDeadline'
+    | 'batchDeadlineMs'
+  >,
+  nowMs = Date.now(),
+): 'HEALTHY' | 'SLOW' | 'STALLED' {
+  if (snapshot.pendingCount <= 0) return 'HEALTHY';
+
+  const activeOverdue = snapshot.activeScenarioIds.some((scenarioId) => {
+    const deadline = snapshot.chatStressWatchdogDeadlineByScenarioId[scenarioId];
+    return deadline != null && nowMs >= deadline;
+  });
+
+  if (snapshot.activeScenarioCount > 0) {
+    return activeOverdue ? 'STALLED' : 'SLOW';
+  }
+
+  if (snapshot.batchDeadlineMs != null && (snapshot.msUntilBatchDeadline ?? 0) > 0) {
+    return 'SLOW';
+  }
+
+  return 'STALLED';
 }
 
 export function formatChatStressPendingStallReason(snapshot: ChatStressCompletionSnapshot): string {
@@ -401,9 +721,11 @@ export function formatChatStressPendingStallReason(snapshot: ChatStressCompletio
 
 export function markChatStressSimulationAggregateComplete(): void {
   aggregateComplete = true;
-  activeScenarioId = null;
+  activeScenarioIds.clear();
+  lastActiveScenarioId = null;
   stopChatStressWatchdogHealthSweep();
   clearAllChatStressScenarioHardWatchdogs();
+  clearChatStressBatchDeadlineArmedTimer();
 }
 
 function buildChatStressCompletionSnapshot(nowMs = Date.now()): ChatStressCompletionSnapshot {
@@ -415,8 +737,10 @@ function buildChatStressCompletionSnapshot(nowMs = Date.now()): ChatStressComple
   });
   const pendingCount = pendingScenarioIds.length;
   const pendingWithoutActiveWorkerScenarioIds = pendingScenarioIds.filter(
-    (id) => activeScenarioId == null || id !== activeScenarioId,
+    (id) => !activeScenarioIds.has(id),
   );
+  const activeScenarioIdsSnapshot = [...activeScenarioIds];
+  const activeScenarioCount = activeScenarioIdsSnapshot.length;
 
   const chatStressWatchdogArmedScenarioIds = [...watchdogRecords.keys()].filter(
     (id) => !isChatStressScenarioSettled(id),
@@ -424,6 +748,8 @@ function buildChatStressCompletionSnapshot(nowMs = Date.now()): ChatStressComple
   const chatStressWatchdogDeadlineByScenarioId: Record<string, number> = {};
   const chatStressWatchdogOverdueScenarioIds: string[] = [];
   let chatStressMaxPendingElapsedMs = 0;
+  let oldestPendingElapsedMs = 0;
+  let nextScenarioDeadlineMs: number | null = null;
 
   for (const scenarioId of chatStressWatchdogArmedScenarioIds) {
     const record = watchdogRecords.get(scenarioId)!;
@@ -440,9 +766,39 @@ function buildChatStressCompletionSnapshot(nowMs = Date.now()): ChatStressComple
       chatStressMaxPendingElapsedMs = elapsedMs;
     }
     if (!record && scenarios.get(scenarioId)?.started) {
-      chatStressWatchdogOverdueScenarioIds.push(scenarioId);
+      const startedAtMs = scenarios.get(scenarioId)?.lastUpdateTimeMs;
+      const pendingElapsedMs =
+        startedAtMs != null ? Math.max(0, nowMs - startedAtMs) : 0;
+      if (pendingElapsedMs >= CHAT_STRESS_PER_SCENARIO_TIMEOUT_MS) {
+        chatStressWatchdogOverdueScenarioIds.push(scenarioId);
+      }
+    }
+    const startedAtMs = scenarios.get(scenarioId)?.lastUpdateTimeMs;
+    if (startedAtMs != null) {
+      const pendingElapsedMs = Math.max(0, nowMs - startedAtMs);
+      if (pendingElapsedMs > oldestPendingElapsedMs) {
+        oldestPendingElapsedMs = pendingElapsedMs;
+      }
+    }
+    const deadlineMs = record?.deadlineMs;
+    if (deadlineMs != null && (nextScenarioDeadlineMs == null || deadlineMs < nextScenarioDeadlineMs)) {
+      nextScenarioDeadlineMs = deadlineMs;
     }
   }
+
+  if (batchStartedAtMs != null && batchDeadlineMs != null) {
+    const batchEndMs = batchStartedAtMs + batchDeadlineMs;
+    if (nextScenarioDeadlineMs == null || batchEndMs < nextScenarioDeadlineMs) {
+      nextScenarioDeadlineMs = batchEndMs;
+    }
+  }
+
+  const msUntilNextDeadline =
+    nextScenarioDeadlineMs != null ? Math.max(0, nextScenarioDeadlineMs - nowMs) : null;
+  const msUntilBatchDeadline =
+    batchStartedAtMs != null && batchDeadlineMs != null
+      ? Math.max(0, batchStartedAtMs + batchDeadlineMs - nowMs)
+      : null;
 
   return {
     readOnly: true,
@@ -453,7 +809,9 @@ function buildChatStressCompletionSnapshot(nowMs = Date.now()): ChatStressComple
     pendingCount,
     lastScenarioId,
     pendingScenarioIds,
-    activeScenarioId,
+    activeScenarioId: lastActiveScenarioId,
+    activeScenarioIds: activeScenarioIdsSnapshot,
+    activeScenarioCount,
     lastSettledScenarioId,
     timeoutScenarioIds: [...timeoutScenarioIds],
     failedScenarioIds: [...failedScenarioIds],
@@ -462,12 +820,41 @@ function buildChatStressCompletionSnapshot(nowMs = Date.now()): ChatStressComple
     chatStressWatchdogDeadlineByScenarioId,
     chatStressWatchdogOverdueScenarioIds: [...new Set(chatStressWatchdogOverdueScenarioIds)],
     chatStressMaxPendingElapsedMs,
+    oldestPendingElapsedMs,
+    nextScenarioDeadlineMs,
+    msUntilNextDeadline,
+    batchDeadlineMs,
+    msUntilBatchDeadline,
   };
 }
 
+let snapshotReconcileDepth = 0;
+let suppressPostWatchdogHealthReconcilers = false;
+
+export function withChatStressPostWatchdogHealthReconcilersSuppressed<T>(fn: () => T): T {
+  const previous = suppressPostWatchdogHealthReconcilers;
+  suppressPostWatchdogHealthReconcilers = true;
+  try {
+    return fn();
+  } finally {
+    suppressPostWatchdogHealthReconcilers = previous;
+  }
+}
+
 export function getChatStressCompletionSnapshot(nowMs?: number): ChatStressCompletionSnapshot {
-  reconcileChatStressWatchdogHealth(nowMs ?? Date.now());
-  return buildChatStressCompletionSnapshot(nowMs ?? Date.now());
+  const at = nowMs ?? Date.now();
+  if (snapshotReconcileDepth > 0) {
+    return buildChatStressCompletionSnapshot(at);
+  }
+  snapshotReconcileDepth += 1;
+  try {
+    reconcileChatStressWatchdogHealth(at);
+    reconcileChatStressBatchDeadlineFinalizer(at);
+    reconcileChatStressTerminalSettlementIfNeeded(at);
+    return buildChatStressCompletionSnapshot(at);
+  } finally {
+    snapshotReconcileDepth -= 1;
+  }
 }
 
 export function allStartedChatStressScenariosSettled(): boolean {
@@ -496,13 +883,17 @@ export function resolveChatStressScenarioTerminalStatus(run: {
 
 export function shouldFlagChatStressPendingStage2Gap(input: {
   pendingCount: number;
+  activeScenarioCount?: number;
   chatStressWatchdogOverdueScenarioIds: readonly string[];
   chatStressMaxPendingElapsedMs: number;
   hardTimeoutMs: number;
   graceMs: number;
   secondsSinceLastHeartbeat: number;
+  msUntilBatchDeadline?: number | null;
 }): boolean {
   if (input.pendingCount <= 0) return false;
+  if ((input.activeScenarioCount ?? 0) > 0) return false;
+  if (input.msUntilBatchDeadline != null && input.msUntilBatchDeadline > 0) return false;
   if (input.chatStressWatchdogOverdueScenarioIds.length > 0) {
     return input.secondsSinceLastHeartbeat >= 3;
   }

@@ -1,0 +1,51 @@
+# Founder Result Store Delivery Validation
+
+Result: FOUNDER_RESULT_STORE_DELIVERY_REPAIR_PASS
+
+- [x] file: src/founder-test-runtime-monitor/founder-result-store-delivery-repair.ts: present
+- [x] file: server/founder-testing-handler.ts: present
+- [x] file: scripts/validate-founder-result-store-delivery-repair.ts: present
+- [x] PASS token in repair module: missing
+- [x] handler uses persistFounderTestResultHandoff: missing
+- [x] persist uses bounded handoff payload: missing
+- [x] persist uses safe payload bytes: missing
+- [x] persist avoids unsafe full stringify for existing: unsafe stringify
+- [x] runtime status exposes delivery fields: missing
+- [x] no nested validator in repair module: nested
+- [x] no writeFileSync in repair module: mutates files
+- [x] package script registered: script
+- [x] no validator recursion: recursion
+- [x] staging write realigns runId: founder-result-store-delivery-run
+- [x] staging write runIdRealigned: true
+- [x] canonical runId resolves over stale runtime runId: mismatch
+- [x] COMPLETE writes final result to store: missing entry
+- [x] duplicate complete write skipped: not skipped
+- [x] no duplicate final delivery writes: 1
+- [x] final report retrievable by runId: null
+- [x] stored markdown resolved: markdown mismatch
+- [x] stored payload runId aligned: founder-result-store-delivery-run
+- [x] runtime payload runId aligned: founder-result-store-delivery-run
+- [x] resultStoreEntryExists=true: true
+- [x] hasStoredResult=true: true
+- [x] finalReportReady=true: true
+- [x] finalReportDelivered=true: true
+- [x] runIdAligned=true: true
+- [x] runtime status HTTP 200: 200
+- [x] runtime status finalReportReady=true: true
+- [x] runtime status hasStoredResult=true: true
+- [x] result endpoint HTTP 200: 200
+- [x] result endpoint ready=true: true
+- [x] result endpoint hasReportMarkdown=true: true
+- [x] complete result http200 gate: true
+- [x] founder flow sees finalReportDelivered=true: true
+- [x] founderFlowProven=true after delivery repair: true
+- [x] APPLICATION_PROVEN after full delivery chain: APPLICATION_PROVEN
+- [x] failureBoundary NONE after full delivery chain: NONE
+- [x] oversized handoff serializes without RangeError: ok
+- [x] oversized markdown preserved: markdown mismatch
+- [x] oversized traceEvents capped: 48
+- [x] oversized truncation notes recorded: missing notes
+- [x] oversized duplicate complete does not crash: duplicate path failed
+- [x] oversized safe byte estimate finite: 44697
+- [x] oversized result endpoint HTTP 200: 200
+- [x] oversized result hasReportMarkdown=true: true

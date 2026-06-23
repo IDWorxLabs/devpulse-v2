@@ -17,8 +17,15 @@ import {
   buildPreviewCapabilityAnswer,
   buildRuntimeCapabilityAnswer,
   buildTruthSourceAnswer,
+  buildLaunchNotProvenAnswerFromContext,
+  buildFirstLaunchBlockerAnswer,
+  buildLaunchFixRequiredAnswer,
 } from './operational-status-builder.js';
 import { responseContradictsExecutionTruth } from './operational-truth-source-contradiction-detector.js';
+import {
+  buildRepairedCapabilityAnswer,
+  matchCapabilityAnswerScenario,
+} from '../chat-capability-answer-quality/index.js';
 import type {
   OperationalEvidenceSnapshot,
   OperationalQuestionKind,
@@ -218,7 +225,26 @@ function composeTruthSource(context: OperationalTruthContext, message?: string):
   return buildTruthSourceAnswer(context);
 }
 
-function composeCapabilities(context: OperationalTruthContext, message?: string): string {
+function composeIdentity(_context: OperationalTruthContext, snapshot: OperationalEvidenceSnapshot, message?: string): string {
+  const scenarioId = message ? matchCapabilityAnswerScenario(message) : null;
+  if (scenarioId === 'what-is-aidevengine' || scenarioId === 'who-built-you') {
+    return buildRepairedCapabilityAnswer({ scenarioId, snapshot });
+  }
+  return buildRepairedCapabilityAnswer({ scenarioId: 'what-is-aidevengine', snapshot });
+}
+
+function composeCapabilities(
+  context: OperationalTruthContext,
+  snapshot: OperationalEvidenceSnapshot,
+  message?: string,
+): string {
+  if (message) {
+    const scenarioId = matchCapabilityAnswerScenario(message);
+    if (scenarioId === 'what-can-you-do' || scenarioId === 'build-from-one-prompt') {
+      return buildRepairedCapabilityAnswer({ scenarioId, snapshot });
+    }
+  }
+
   if (message && /\bcan you run applications?\b/i.test(message)) {
     return buildRuntimeCapabilityAnswer(context);
   }
@@ -301,6 +327,7 @@ export function composeOperationalSelfKnowledgeResponse(input: {
   kind: OperationalQuestionKind;
   snapshot: OperationalEvidenceSnapshot;
   message?: string;
+  rootDir?: string;
 }): string {
   const context = resolveTruthContext(input.snapshot);
 
@@ -327,10 +354,18 @@ export function composeOperationalSelfKnowledgeResponse(input: {
       return composeTruthSource(context, input.message);
     case 'EXECUTION_STAGE_INVENTORY':
       return buildExecutionStageInventoryAnswer(context);
+    case 'IDENTITY':
+      return composeIdentity(context, input.snapshot, input.message);
     case 'CAPABILITIES':
-      return composeCapabilities(context, input.message);
+      return composeCapabilities(context, input.snapshot, input.message);
     case 'LAUNCH_READINESS':
       return composeLaunchReadiness(context, input.snapshot);
+    case 'LAUNCH_NOT_PROVEN':
+      return buildLaunchNotProvenAnswerFromContext(context, input.rootDir);
+    case 'FIRST_LAUNCH_BLOCKER':
+      return buildFirstLaunchBlockerAnswer(context, input.rootDir);
+    case 'LAUNCH_FIX_REQUIRED':
+      return buildLaunchFixRequiredAnswer(context, input.rootDir);
     case 'DISCONNECTED_SYSTEMS':
       return composeDisconnected(context, input.snapshot);
     default:
@@ -342,12 +377,14 @@ export function buildOperationalSelfKnowledgeAssessment(input: {
   message: string;
   kind: OperationalQuestionKind;
   snapshot: OperationalEvidenceSnapshot;
+  rootDir?: string;
 }): OperationalSelfKnowledgeAssessment {
   const context = resolveTruthContext(input.snapshot);
   const responseText = composeOperationalSelfKnowledgeResponse({
     kind: input.kind,
     snapshot: input.snapshot,
     message: input.message,
+    rootDir: input.rootDir,
   });
 
   const responseContradictions = responseContradictsExecutionTruth({

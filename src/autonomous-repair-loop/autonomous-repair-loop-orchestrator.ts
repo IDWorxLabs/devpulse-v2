@@ -8,6 +8,10 @@ import { assessFounderAcceptanceGate } from '../founder-acceptance-gate/index.js
 import type { FounderAcceptanceAssessment } from '../founder-acceptance-gate/founder-acceptance-gate-types.js';
 import { assessFounderTestIntegration } from '../founder-test-integration/index.js';
 import type { FounderTestAssessment } from '../founder-test-integration/founder-test-integration-types.js';
+import {
+  buildFounderTestIntegrationRecursionFallback,
+  guardHeavyOrchestrationCall,
+} from '../authority-recursion-guard/index.js';
 import type {
   AssessAutonomousRepairLoopInput,
   RepairLoopFinding,
@@ -107,7 +111,12 @@ export function buildRepairLoopInputSnapshot(
   const founderTestAssessment =
     input.founderTestAssessment ??
     (input.rootDir || input.founderAcceptanceAssessment
-      ? assessFounderTestIntegration({ rootDir: input.rootDir ?? process.cwd() })
+      ? guardHeavyOrchestrationCall({
+          authorityName: 'FOUNDER_TEST_INTEGRATION',
+          invoke: () => assessFounderTestIntegration({ rootDir: input.rootDir ?? process.cwd() }),
+          onBlocked: (detection) =>
+            buildFounderTestIntegrationRecursionFallback(detection, input.rootDir ?? process.cwd()),
+        })
       : null);
 
   const founderAcceptanceAssessment =
