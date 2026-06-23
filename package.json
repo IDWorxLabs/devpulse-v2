@@ -121,6 +121,7 @@
     "validate:universal-feature-contract-intelligence-v1": "tsx scripts/validate-universal-feature-contract-intelligence-v1.ts",
     "validate:engineering-reality-v1": "tsx scripts/validate-engineering-reality-v1.ts",
     "validate:autonomous-founder-launch-authority-v1": "tsx scripts/validate-autonomous-founder-launch-authority-v1.ts",
+    "validate:capability-audit-v1": "tsx scripts/validate-capability-audit-v1.ts",
     "proof:direct-build-task-tracker": "tsx scripts/direct-build-proof-task-tracker.ts",
     "validate:one-prompt-live-preview-proof": "tsx scripts/validate-one-prompt-live-preview-proof.ts",
     "validate:one-prompt-chat-build-proof": "tsx scripts/validate-one-prompt-chat-build-proof.ts",
