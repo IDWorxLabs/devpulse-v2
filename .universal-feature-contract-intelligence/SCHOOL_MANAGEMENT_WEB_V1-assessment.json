@@ -1,0 +1,513 @@
+{
+  "readOnly": true,
+  "passed": true,
+  "verdict": "FEATURE_REALITY_EXCELLENT",
+  "passToken": "UNIVERSAL_FEATURE_CONTRACT_INTELLIGENCE_V1_PASS",
+  "scores": {
+    "contractCompletenessScore": 100,
+    "featureCoverageScore": 100,
+    "executionScore": 100,
+    "workflowScore": 100,
+    "persistenceScore": 100,
+    "overallFeatureRealityScore": 100
+  },
+  "contract": {
+    "contractVersion": "1.0",
+    "contractId": "build-ready-idea-1",
+    "productProfile": "SCHOOL_MANAGEMENT_WEB_V1",
+    "productName": "School Management System",
+    "generatedAt": "2026-06-23T21:22:48.950Z",
+    "sourcePrompt": "Build a school management system for students, teachers, and classes with create, edit, delete, and assign workflows.",
+    "entities": [
+      {
+        "id": "student",
+        "label": "Student",
+        "pluralLabel": "Students",
+        "navLabel": "Students",
+        "slug": "student",
+        "storageKey": "student-records-v1",
+        "primary": true
+      },
+      {
+        "id": "teacher",
+        "label": "Teacher",
+        "pluralLabel": "Teachers",
+        "navLabel": "Teachers",
+        "slug": "teacher",
+        "storageKey": "teacher-records-v1",
+        "primary": false
+      },
+      {
+        "id": "class",
+        "label": "Class",
+        "pluralLabel": "Classes",
+        "navLabel": "Classes",
+        "slug": "class",
+        "storageKey": "class-records-v1",
+        "primary": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "create-student",
+        "entityId": "student",
+        "verb": "create",
+        "label": "Create Student",
+        "required": true
+      },
+      {
+        "id": "update-student",
+        "entityId": "student",
+        "verb": "update",
+        "label": "Edit Student",
+        "required": true
+      },
+      {
+        "id": "delete-student",
+        "entityId": "student",
+        "verb": "delete",
+        "label": "Delete Student",
+        "required": true
+      },
+      {
+        "id": "search-student",
+        "entityId": "student",
+        "verb": "search",
+        "label": "Search Student",
+        "required": true
+      },
+      {
+        "id": "assign-student",
+        "entityId": "student",
+        "verb": "assign",
+        "label": "Assign Student",
+        "required": true
+      },
+      {
+        "id": "create-teacher",
+        "entityId": "teacher",
+        "verb": "create",
+        "label": "Create Teacher",
+        "required": true
+      },
+      {
+        "id": "create-class",
+        "entityId": "class",
+        "verb": "create",
+        "label": "Create Class",
+        "required": true
+      }
+    ],
+    "rules": [
+      {
+        "id": "student-name-required",
+        "entityId": "student",
+        "label": "Student must have a name",
+        "required": true
+      }
+    ],
+    "workflows": [
+      {
+        "id": "student-class-assignment",
+        "entityId": "student",
+        "label": "Student → Class assignment",
+        "stages": [
+          "unassigned",
+          "assigned"
+        ],
+        "required": true
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "student-created",
+        "entityId": "student",
+        "label": "Student record exists",
+        "required": true
+      },
+      {
+        "id": "relationships-persist",
+        "entityId": "student",
+        "label": "Relationships persist correctly",
+        "required": true
+      }
+    ]
+  },
+  "plan": {
+    "planVersion": "1.0",
+    "contractId": "build-ready-idea-1",
+    "productProfile": "SCHOOL_MANAGEMENT_WEB_V1",
+    "primaryEntityId": "student",
+    "navLabel": "Students",
+    "featureRootSelector": ".universal-feature",
+    "storageKey": "student-records-v1",
+    "steps": [
+      {
+        "id": "discover-primary-feature",
+        "kind": "discover",
+        "entityId": "student",
+        "actionId": null,
+        "label": "User can locate Students feature via navigation",
+        "critical": true,
+        "selectors": {
+          "sidenav": ".blueprint-sidenav",
+          "featureRoot": ".universal-feature"
+        },
+        "sampleText": "Jane Student"
+      },
+      {
+        "id": "execute-create",
+        "kind": "create",
+        "entityId": "student",
+        "actionId": "create-student",
+        "label": "Create Student executes successfully",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"student-input\"]",
+          "addButton": "[data-testid=\"add-student-button\"]",
+          "recordText": "[data-testid=\"student-text\"]",
+          "editButton": "[data-testid=\"edit-student-button\"]",
+          "editInput": "[data-testid=\"edit-student-input\"]",
+          "saveButton": "[data-testid=\"save-student-button\"]",
+          "deleteButton": "[data-testid=\"delete-student-button\"]",
+          "formError": "[data-testid=\"student-form-error\"]",
+          "statusMessage": "[data-testid=\"student-status-message\"]",
+          "count": "[data-testid=\"student-count\"]",
+          "completeToggle": "[data-testid=\"complete-student-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed",
+          "searchInput": "[data-testid=\"search-student-input\"]"
+        },
+        "sampleText": "Jane Student"
+      },
+      {
+        "id": "execute-edit",
+        "kind": "edit",
+        "entityId": "student",
+        "actionId": "update-student",
+        "label": "Edit Student updates rendered record",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"student-input\"]",
+          "addButton": "[data-testid=\"add-student-button\"]",
+          "recordText": "[data-testid=\"student-text\"]",
+          "editButton": "[data-testid=\"edit-student-button\"]",
+          "editInput": "[data-testid=\"edit-student-input\"]",
+          "saveButton": "[data-testid=\"save-student-button\"]",
+          "deleteButton": "[data-testid=\"delete-student-button\"]",
+          "formError": "[data-testid=\"student-form-error\"]",
+          "statusMessage": "[data-testid=\"student-status-message\"]",
+          "count": "[data-testid=\"student-count\"]",
+          "completeToggle": "[data-testid=\"complete-student-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed",
+          "searchInput": "[data-testid=\"search-student-input\"]"
+        },
+        "sampleText": "Draft record",
+        "editedText": "Jane Smith"
+      },
+      {
+        "id": "execute-delete",
+        "kind": "delete",
+        "entityId": "student",
+        "actionId": "delete-student",
+        "label": "Delete Student removes rendered record",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"student-input\"]",
+          "addButton": "[data-testid=\"add-student-button\"]",
+          "recordText": "[data-testid=\"student-text\"]",
+          "editButton": "[data-testid=\"edit-student-button\"]",
+          "editInput": "[data-testid=\"edit-student-input\"]",
+          "saveButton": "[data-testid=\"save-student-button\"]",
+          "deleteButton": "[data-testid=\"delete-student-button\"]",
+          "formError": "[data-testid=\"student-form-error\"]",
+          "statusMessage": "[data-testid=\"student-status-message\"]",
+          "count": "[data-testid=\"student-count\"]",
+          "completeToggle": "[data-testid=\"complete-student-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed",
+          "searchInput": "[data-testid=\"search-student-input\"]"
+        },
+        "sampleText": "Temporary record"
+      },
+      {
+        "id": "execute-search",
+        "kind": "search",
+        "entityId": "student",
+        "actionId": "search-student",
+        "label": "Search locates created records",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"student-input\"]",
+          "addButton": "[data-testid=\"add-student-button\"]",
+          "recordText": "[data-testid=\"student-text\"]",
+          "editButton": "[data-testid=\"edit-student-button\"]",
+          "editInput": "[data-testid=\"edit-student-input\"]",
+          "saveButton": "[data-testid=\"save-student-button\"]",
+          "deleteButton": "[data-testid=\"delete-student-button\"]",
+          "formError": "[data-testid=\"student-form-error\"]",
+          "statusMessage": "[data-testid=\"student-status-message\"]",
+          "count": "[data-testid=\"student-count\"]",
+          "completeToggle": "[data-testid=\"complete-student-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed",
+          "searchInput": "[data-testid=\"search-student-input\"]"
+        },
+        "sampleText": "Jane Student"
+      },
+      {
+        "id": "persistence-route-change",
+        "kind": "persistence-route",
+        "entityId": "student",
+        "actionId": null,
+        "label": "Record state persists across route change",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"student-input\"]",
+          "addButton": "[data-testid=\"add-student-button\"]",
+          "recordText": "[data-testid=\"student-text\"]",
+          "editButton": "[data-testid=\"edit-student-button\"]",
+          "editInput": "[data-testid=\"edit-student-input\"]",
+          "saveButton": "[data-testid=\"save-student-button\"]",
+          "deleteButton": "[data-testid=\"delete-student-button\"]",
+          "formError": "[data-testid=\"student-form-error\"]",
+          "statusMessage": "[data-testid=\"student-status-message\"]",
+          "count": "[data-testid=\"student-count\"]",
+          "completeToggle": "[data-testid=\"complete-student-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed",
+          "searchInput": "[data-testid=\"search-student-input\"]"
+        },
+        "sampleText": "Persist me"
+      },
+      {
+        "id": "persistence-reload",
+        "kind": "persistence-reload",
+        "entityId": "student",
+        "actionId": null,
+        "label": "Record state persists after reload",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"student-input\"]",
+          "addButton": "[data-testid=\"add-student-button\"]",
+          "recordText": "[data-testid=\"student-text\"]",
+          "editButton": "[data-testid=\"edit-student-button\"]",
+          "editInput": "[data-testid=\"edit-student-input\"]",
+          "saveButton": "[data-testid=\"save-student-button\"]",
+          "deleteButton": "[data-testid=\"delete-student-button\"]",
+          "formError": "[data-testid=\"student-form-error\"]",
+          "statusMessage": "[data-testid=\"student-status-message\"]",
+          "count": "[data-testid=\"student-count\"]",
+          "completeToggle": "[data-testid=\"complete-student-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed",
+          "searchInput": "[data-testid=\"search-student-input\"]"
+        },
+        "sampleText": "Persist me"
+      },
+      {
+        "id": "recovery-invalid-input",
+        "kind": "recovery",
+        "entityId": "student",
+        "actionId": null,
+        "label": "Invalid input shows validation and app remains usable",
+        "critical": false,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"student-input\"]",
+          "addButton": "[data-testid=\"add-student-button\"]",
+          "recordText": "[data-testid=\"student-text\"]",
+          "editButton": "[data-testid=\"edit-student-button\"]",
+          "editInput": "[data-testid=\"edit-student-input\"]",
+          "saveButton": "[data-testid=\"save-student-button\"]",
+          "deleteButton": "[data-testid=\"delete-student-button\"]",
+          "formError": "[data-testid=\"student-form-error\"]",
+          "statusMessage": "[data-testid=\"student-status-message\"]",
+          "count": "[data-testid=\"student-count\"]",
+          "completeToggle": "[data-testid=\"complete-student-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed",
+          "searchInput": "[data-testid=\"search-student-input\"]"
+        },
+        "sampleText": "Recovered record"
+      },
+      {
+        "id": "ux-action-feedback",
+        "kind": "ux-feedback",
+        "entityId": "student",
+        "actionId": null,
+        "label": "Feature action feedback shown to user",
+        "critical": false,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"student-input\"]",
+          "addButton": "[data-testid=\"add-student-button\"]",
+          "recordText": "[data-testid=\"student-text\"]",
+          "editButton": "[data-testid=\"edit-student-button\"]",
+          "editInput": "[data-testid=\"edit-student-input\"]",
+          "saveButton": "[data-testid=\"save-student-button\"]",
+          "deleteButton": "[data-testid=\"delete-student-button\"]",
+          "formError": "[data-testid=\"student-form-error\"]",
+          "statusMessage": "[data-testid=\"student-status-message\"]",
+          "count": "[data-testid=\"student-count\"]",
+          "completeToggle": "[data-testid=\"complete-student-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed",
+          "searchInput": "[data-testid=\"search-student-input\"]"
+        },
+        "sampleText": "Jane Student"
+      },
+      {
+        "id": "ux-no-dead-end",
+        "kind": "ux-actionable",
+        "entityId": "student",
+        "actionId": null,
+        "label": "Feature surface remains actionable",
+        "critical": false,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"student-input\"]",
+          "addButton": "[data-testid=\"add-student-button\"]",
+          "recordText": "[data-testid=\"student-text\"]",
+          "editButton": "[data-testid=\"edit-student-button\"]",
+          "editInput": "[data-testid=\"edit-student-input\"]",
+          "saveButton": "[data-testid=\"save-student-button\"]",
+          "deleteButton": "[data-testid=\"delete-student-button\"]",
+          "formError": "[data-testid=\"student-form-error\"]",
+          "statusMessage": "[data-testid=\"student-status-message\"]",
+          "count": "[data-testid=\"student-count\"]",
+          "completeToggle": "[data-testid=\"complete-student-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed",
+          "searchInput": "[data-testid=\"search-student-input\"]"
+        },
+        "sampleText": "Jane Student"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "discover-primary-feature",
+      "category": "discoverability",
+      "entityId": "student",
+      "actionId": null,
+      "label": "User can locate Students feature via navigation",
+      "passed": true,
+      "detail": "Students route reachable from app shell",
+      "critical": true
+    },
+    {
+      "id": "execute-create",
+      "category": "execution",
+      "entityId": "student",
+      "actionId": "create-student",
+      "label": "Create Student executes successfully",
+      "passed": true,
+      "detail": "Record created (Active: 1 visible)",
+      "critical": true
+    },
+    {
+      "id": "execute-edit",
+      "category": "edit",
+      "entityId": "student",
+      "actionId": "update-student",
+      "label": "Edit Student updates rendered record",
+      "passed": true,
+      "detail": "Edited record text visible",
+      "critical": true
+    },
+    {
+      "id": "execute-delete",
+      "category": "delete",
+      "entityId": "student",
+      "actionId": "delete-student",
+      "label": "Delete Student removes rendered record",
+      "passed": true,
+      "detail": "Deleted record no longer visible",
+      "critical": true
+    },
+    {
+      "id": "execute-search",
+      "category": "search",
+      "entityId": "student",
+      "actionId": "search-student",
+      "label": "Search locates created records",
+      "passed": true,
+      "detail": "Search located created record",
+      "critical": true
+    },
+    {
+      "id": "recovery-invalid-input",
+      "category": "recovery",
+      "entityId": "student",
+      "actionId": null,
+      "label": "Invalid input shows validation and app remains usable",
+      "passed": true,
+      "detail": "Validation message shown; subsequent valid action succeeded",
+      "critical": false
+    },
+    {
+      "id": "ux-action-feedback",
+      "category": "ux",
+      "entityId": "student",
+      "actionId": null,
+      "label": "Feature action feedback shown to user",
+      "passed": true,
+      "detail": "Status: Record added.",
+      "critical": false
+    },
+    {
+      "id": "ux-no-dead-end",
+      "category": "ux",
+      "entityId": "student",
+      "actionId": null,
+      "label": "Feature surface remains actionable",
+      "passed": true,
+      "detail": "Primary actions still available",
+      "critical": false
+    },
+    {
+      "id": "persistence-route-change",
+      "category": "persistence",
+      "entityId": "student",
+      "actionId": null,
+      "label": "Record state persists across route change",
+      "passed": true,
+      "detail": "Record survived route change",
+      "critical": true
+    },
+    {
+      "id": "persistence-reload",
+      "category": "persistence",
+      "entityId": "student",
+      "actionId": null,
+      "label": "Record state persists after reload",
+      "passed": true,
+      "detail": "Record restored after page reload",
+      "critical": true
+    }
+  ],
+  "failedChecks": [],
+  "blocksLaunchReadiness": false,
+  "blocksLaunchReadinessReason": null,
+  "previewUrl": "http://127.0.0.1:5176/",
+  "contractId": "build-ready-idea-1",
+  "generatedAt": "2026-06-23T21:23:17.813Z",
+  "reportMarkdown": "# Universal Feature Contract Validation Report\n\nGenerated: 2026-06-23T21:23:17.813Z\nContract ID: build-ready-idea-1\nProduct: School Management System (SCHOOL_MANAGEMENT_WEB_V1)\nPreview URL: http://127.0.0.1:5176/\nVerdict: **FEATURE_REALITY_EXCELLENT**\nPass token: UNIVERSAL_FEATURE_CONTRACT_INTELLIGENCE_V1_PASS\nLaunch readiness blocked: No\n\n## Contract Intelligence\n- Entities: Student, Teacher, Class\n- Actions: Create Student, Edit Student, Delete Student, Search Student, Assign Student, Create Teacher, Create Class\n- Rules: Student must have a name\n- Workflows: Student → Class assignment\n- Outcomes: Student record exists, Relationships persist correctly\n\n## Scores\n- Contract Completeness Score: 100/100\n- Feature Coverage Score: 100/100\n- Execution Score: 100/100\n- Workflow Score: 100/100\n- Persistence Score: 100/100\n- Overall Feature Reality Score: 100/100\n\n## Runtime Checks\n- [x] **User can locate Students feature via navigation** (discoverability): Students route reachable from app shell\n- [x] **Create Student executes successfully** (execution): Record created (Active: 1 visible)\n- [x] **Edit Student updates rendered record** (edit): Edited record text visible\n- [x] **Delete Student removes rendered record** (delete): Deleted record no longer visible\n- [x] **Search locates created records** (search): Search located created record\n- [x] **Invalid input shows validation and app remains usable** (recovery): Validation message shown; subsequent valid action succeeded\n- [x] **Feature action feedback shown to user** (ux): Status: Record added.\n- [x] **Feature surface remains actionable** (ux): Primary actions still available\n- [x] **Record state persists across route change** (persistence): Record survived route change\n- [x] **Record state persists after reload** (persistence): Record restored after page reload\n"
+}

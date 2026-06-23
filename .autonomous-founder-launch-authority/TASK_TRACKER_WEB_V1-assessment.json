@@ -1,0 +1,194 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "passed": true,
+  "verdict": "LAUNCH_READY",
+  "passToken": "AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY_V1_PASS",
+  "scores": {
+    "seniorEngineeringScore": 100,
+    "qaScore": 100,
+    "uxScore": 100,
+    "productScore": 100,
+    "launchScore": 100,
+    "founderScore": 100,
+    "overallFounderScore": 100
+  },
+  "reviewers": [
+    {
+      "readOnly": true,
+      "role": "senior-engineer",
+      "reviewerName": "Senior Engineer",
+      "score": 100,
+      "findings": [
+        "Workspace present: yes",
+        "npm install: pass",
+        "Checked artifacts: 25",
+        "Engineering reality evidence supports maintainable architecture."
+      ],
+      "risks": []
+    },
+    {
+      "readOnly": true,
+      "role": "qa",
+      "reviewerName": "QA Lead",
+      "score": 100,
+      "findings": [
+        "Core workflows validated by Feature Reality evidence.",
+        "Universal Feature Contract checks passed."
+      ],
+      "risks": []
+    },
+    {
+      "readOnly": true,
+      "role": "ux",
+      "reviewerName": "UX Reviewer",
+      "score": 100,
+      "findings": [
+        "Blueprint visual evidence supports understandable onboarding and navigation.",
+        "Required blueprint screens are structurally present."
+      ],
+      "risks": []
+    },
+    {
+      "readOnly": true,
+      "role": "product",
+      "reviewerName": "Product Reviewer",
+      "score": 100,
+      "findings": [
+        "Entities, actions, and workflows appear complete in contract evidence.",
+        "Feature reality satisfied via Universal Feature Contract (FEATURE_REALITY_EXCELLENT)"
+      ],
+      "risks": []
+    },
+    {
+      "readOnly": true,
+      "role": "launch",
+      "reviewerName": "Launch Reviewer",
+      "score": 100,
+      "findings": [
+        "Launch readiness evidence supports customer use.",
+        "Synthesized launch confidence from pipeline evidence: 100/100",
+        "No launch blockers detected across consumed evidence."
+      ],
+      "risks": []
+    },
+    {
+      "readOnly": true,
+      "role": "founder",
+      "reviewerName": "Founder",
+      "score": 100,
+      "findings": [
+        "Would personally launch this product with confidence.",
+        "Workspace present: yes",
+        "Core workflows validated by Feature Reality evidence.",
+        "Blueprint visual evidence supports understandable onboarding and navigation.",
+        "Entities, actions, and workflows appear complete in contract evidence.",
+        "Launch readiness evidence supports customer use."
+      ],
+      "risks": [],
+      "founderConfidence": 100
+    }
+  ],
+  "evidence": {
+    "readOnly": true,
+    "buildReality": {
+      "readOnly": true,
+      "sourceId": "build-reality",
+      "sourceName": "Build Reality",
+      "available": true,
+      "passed": true,
+      "score": 100,
+      "blockers": [],
+      "warnings": [],
+      "findings": [
+        "Workspace present: yes",
+        "npm install: pass",
+        "npm build: pass",
+        "Dev server: pass"
+      ]
+    },
+    "blueprintStructure": {
+      "readOnly": true,
+      "sourceId": "blueprint-structure",
+      "sourceName": "Blueprint Structure",
+      "available": true,
+      "passed": true,
+      "score": 100,
+      "blockers": [],
+      "warnings": [],
+      "findings": [
+        "Checked artifacts: 25"
+      ]
+    },
+    "blueprintVisual": {
+      "readOnly": true,
+      "sourceId": "blueprint-visual",
+      "sourceName": "Blueprint Visual",
+      "available": true,
+      "passed": true,
+      "score": 100,
+      "blockers": [],
+      "warnings": [],
+      "findings": []
+    },
+    "featureReality": {
+      "readOnly": true,
+      "sourceId": "feature-reality",
+      "sourceName": "Feature Reality",
+      "available": true,
+      "passed": true,
+      "score": 100,
+      "blockers": [],
+      "warnings": [],
+      "findings": [
+        "Feature reality satisfied via Universal Feature Contract (FEATURE_REALITY_EXCELLENT)"
+      ]
+    },
+    "universalFeatureContract": {
+      "readOnly": true,
+      "sourceId": "universal-feature-contract",
+      "sourceName": "Universal Feature Contract",
+      "available": true,
+      "passed": true,
+      "score": 100,
+      "blockers": [],
+      "warnings": [],
+      "findings": []
+    },
+    "engineeringReality": {
+      "readOnly": true,
+      "sourceId": "engineering-reality",
+      "sourceName": "Engineering Reality",
+      "available": true,
+      "passed": true,
+      "score": 100,
+      "blockers": [],
+      "warnings": [],
+      "findings": []
+    },
+    "launchReadiness": {
+      "readOnly": true,
+      "sourceId": "launch-readiness",
+      "sourceName": "Launch Readiness",
+      "available": true,
+      "passed": true,
+      "score": 100,
+      "blockers": [],
+      "warnings": [],
+      "findings": [
+        "Synthesized launch confidence from pipeline evidence: 100/100"
+      ]
+    },
+    "allPrerequisitesPassed": true,
+    "missingPrerequisites": []
+  },
+  "remediationPlan": null,
+  "blocksLaunch": false,
+  "blocksLaunchReason": null,
+  "userPhase": "LAUNCH_READY",
+  "userLabel": "✓ Launch Ready",
+  "contractId": "build-ready-idea-1",
+  "productName": "Task Tracker",
+  "generatedAt": "2026-06-23T22:32:15.269Z",
+  "reportMarkdown": "# Autonomous Founder Launch Authority V1\n\nGenerated: 2026-06-23T22:32:15.269Z\nProduct: Task Tracker\nContract: build-ready-idea-1\nVerdict: **LAUNCH_READY**\nPass token: `AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY_V1_PASS`\n\n## Scores\n\n- Senior Engineering Score: 100/100\n- QA Score: 100/100\n- UX Score: 100/100\n- Product Score: 100/100\n- Launch Score: 100/100\n- Founder Score: 100/100\n- Overall Founder Score: 100/100\n\n## Evidence Inputs\n\n- **Build Reality**: PASS — 100/100\n- **Blueprint Structure**: PASS — 100/100\n- **Blueprint Visual**: PASS — 100/100\n- **Feature Reality**: PASS — 100/100\n- **Universal Feature Contract**: PASS — 100/100\n- **Engineering Reality**: PASS — 100/100\n- **Launch Readiness**: PASS — 100/100\n\n## Reviewer Panel\n\n### Senior Engineer — 100/100\n\nFindings:\n- Workspace present: yes\n- npm install: pass\n- Checked artifacts: 25\n- Engineering reality evidence supports maintainable architecture.\n\n### QA Lead — 100/100\n\nFindings:\n- Core workflows validated by Feature Reality evidence.\n- Universal Feature Contract checks passed.\n\n### UX Reviewer — 100/100\n\nFindings:\n- Blueprint visual evidence supports understandable onboarding and navigation.\n- Required blueprint screens are structurally present.\n\n### Product Reviewer — 100/100\n\nFindings:\n- Entities, actions, and workflows appear complete in contract evidence.\n- Feature reality satisfied via Universal Feature Contract (FEATURE_REALITY_EXCELLENT)\n\n### Launch Reviewer — 100/100\n\nFindings:\n- Launch readiness evidence supports customer use.\n- Synthesized launch confidence from pipeline evidence: 100/100\n- No launch blockers detected across consumed evidence.\n\n### Founder — 100/100\nFounder Confidence: 100/100\n\nFindings:\n- Would personally launch this product with confidence.\n- Workspace present: yes\n- Core workflows validated by Feature Reality evidence.\n- Blueprint visual evidence supports understandable onboarding and navigation.\n- Entities, actions, and workflows appear complete in contract evidence.\n- Launch readiness evidence supports customer use.\n\n## User Surface\n\nUser sees: ✓ Launch Ready\n\nExpected pass token when launch-ready: `AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY_V1_PASS`"
+}

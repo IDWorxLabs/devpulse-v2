@@ -1165,6 +1165,69 @@ body {
   overflow: hidden;
 }
 
+.workspace-tabs-shell {
+  padding: 0.75rem 1rem 0.5rem;
+  border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  background: var(--surface-elevated, rgba(0, 0, 0, 0.15));
+}
+
+.workspace-tabs-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.workspace-tabs-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.workspace-tabs,
+.preview-workspace-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.workspace-tab {
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.12));
+  background: transparent;
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.workspace-tab.active {
+  background: var(--accent-soft, rgba(96, 165, 250, 0.18));
+  border-color: var(--accent, #60a5fa);
+}
+
+.workspace-tab-add {
+  white-space: nowrap;
+}
+
+.workspace-linked-indicator {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
+.preview-workspace-tabs-shell {
+  margin-bottom: 1rem;
+}
+
+.preview-project-meta {
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
 .chat-messages-panel {
   flex: 1;
   display: flex;

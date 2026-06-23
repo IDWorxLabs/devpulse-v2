@@ -1,0 +1,37 @@
+[
+  {
+    "profile": "TASK_TRACKER_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "FEATURE_REALITY_EXCELLENT",
+    "score": 100,
+    "passed": true
+  },
+  {
+    "profile": "CRM_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "FEATURE_REALITY_EXCELLENT",
+    "score": 100,
+    "passed": true
+  },
+  {
+    "profile": "INVENTORY_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "FEATURE_REALITY_EXCELLENT",
+    "score": 98,
+    "passed": true
+  },
+  {
+    "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "FEATURE_REALITY_EXCELLENT",
+    "score": 100,
+    "passed": true
+  },
+  {
+    "profile": "PROJECT_MANAGEMENT_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "FEATURE_REALITY_EXCELLENT",
+    "score": 100,
+    "passed": true
+  }
+]

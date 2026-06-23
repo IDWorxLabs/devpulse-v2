@@ -9,11 +9,9 @@ import { resolveExecutionConnectedForRoot } from '../src/founder-test-integratio
 
 import { INTELLIGENCE_CONSOLE_CAPABILITIES } from '../src/intelligence-console/capability-registry.js';
 import {
-  assessLivePreviewReality,
   type LivePreviewRealityAssessment,
 } from '../src/live-preview-reality/index.js';
 import {
-  assessRunningApplicationVisibility,
   type RunningApplicationVisibilityAssessment,
 } from '../src/running-application-visibility/index.js';
 import {
@@ -45,6 +43,12 @@ import {
 import { getDevPulseV2ProjectVaultAuthority } from '../src/project-vault/index.js';
 import { ALL_UVL_ROWS } from '../src/unified-verification-lab/uvl-row-registry.js';
 import { buildPortfolioInsightsDemo, type PortfolioInsightsDemo } from './portfolio-demo-data.js';
+import { resolveCanonicalLivePreviewState } from '../src/one-prompt-live-preview/canonical-live-preview-state.js';
+import {
+  getActiveProjectId,
+  listMultiProjectWorkspaces,
+  type MultiProjectWorkspaceSession,
+} from '../src/one-prompt-live-preview/workspace-tab-registry.js';
 
 export const PROJECT_MEMORY_DESCRIPTION =
   'Project Memory stores everything AiDevEngine knows about a project: the idea, requirements, decisions, files, history, plans, validations, and context, so the AI does not forget what it is building.';
@@ -141,6 +145,18 @@ export interface ProductWorkspaceSnapshot {
     };
     buildStatus: string;
     lastVerificationHint: string | null;
+    onePromptReady?: boolean;
+    onePromptBuild: {
+      status: string;
+      workspaceId: string | null;
+      workspacePath: string | null;
+      generatedProfile: string | null;
+      buildResult: string | null;
+      previewUrl: string | null;
+      failureReason: string | null;
+      npmInstallOk: boolean;
+      npmBuildOk: boolean;
+    } | null;
   };
   runningApplication: RunningApplicationVisibilityAssessment;
   verificationResults: VerificationResultsVisibilityAssessment;
@@ -178,6 +194,8 @@ export interface ProductWorkspaceSnapshot {
     workspacesDisconnected: string[];
   };
   portfolioInsights: PortfolioInsightsDemo;
+  activeProjectId: string | null;
+  multiProjectWorkspaces: MultiProjectWorkspaceSession[];
 }
 
 export type ProductWorkspaceSnapshotWithoutSensemaking = Omit<ProductWorkspaceSnapshot, 'founderSensemaking'>;
@@ -199,7 +217,13 @@ export function buildProductWorkspaceSnapshot(
   const targets = listPreviewTargets();
   const previewDiag = getPreviewRuntimeDiagnostics();
 
+  const activeProjectId = getActiveProjectId();
+  const multiProjectWorkspaces = listMultiProjectWorkspaces();
+
   const readySession =
+    (activeProjectId
+      ? sessions.find((s) => s.projectId === activeProjectId && s.previewState === 'PREVIEW_READY')
+      : null) ??
     sessions.find((s) => s.previewState === 'PREVIEW_READY') ??
     sessions.find((s) => s.previewUrl) ??
     sessions[0] ??
@@ -234,13 +258,49 @@ export function buildProductWorkspaceSnapshot(
       }
     : null;
 
+  const previewDiagnostics = {
+    previewRuntimeActive: previewDiag.previewRuntimeActive,
+    previewSessionCount: previewDiag.previewSessionCount,
+    registeredTargetCount: previewDiag.registeredTargetCount,
+    readyPreviewCount: previewDiag.readyPreviewCount,
+    blockedPreviewCount: previewDiag.blockedPreviewCount,
+  };
+
+  const canonicalLivePreview = resolveCanonicalLivePreviewState(
+    {
+      sessions: livePreviewSessions,
+      activeSession: livePreviewActiveSession,
+      previewUrl,
+      connected: previewConnected,
+      diagnostics: previewDiagnostics,
+      targets: targets.map((t) => ({ targetName: t.targetName, targetType: t.targetType })),
+    },
+    {
+      latestProjectId: vaultState.latestProjectId,
+      projectCount: vaultState.projectCount,
+      projectName:
+        projects.find((p) => p.projectId === vaultState.latestProjectId)?.name ?? projects[0]?.name ?? null,
+      recentChangeSummary: (() => {
+        const latest =
+          projects.find((p) => p.projectId === vaultState.latestProjectId) ?? projects[0] ?? null;
+        if (!latest) return null;
+        const facts = latest.facts.slice(-1).map((f) => `${f.label}: ${f.value}`);
+        return facts.length > 0 ? `Latest known change: ${facts[0]}` : latest.summary;
+      })(),
+      generatedAt: Date.now(),
+      activeProjectId,
+    },
+  );
+
+  const livePreviewBlock = canonicalLivePreview.livePreview;
+
   const nextSuggestedActions: string[] = [];
   if (projects.length === 0) {
     nextSuggestedActions.push('Start or select a project in Command Center to populate Project Memory.');
   } else {
     nextSuggestedActions.push('Ask Command Center about project status, risks, or next build steps.');
   }
-  if (!previewConnected) {
+  if (!canonicalLivePreview.runtimeLivePreviewConnected) {
     nextSuggestedActions.push('Start or select a project to launch a live preview.');
   }
   if (validatorScripts.length > 0) {
@@ -249,10 +309,10 @@ export function buildProductWorkspaceSnapshot(
 
   const workspacesDisconnected: string[] = [];
   const workspacesConnected: string[] = ['Command Center', 'Project Insights'];
-  if (!previewDiag.previewRuntimeActive && sessions.length === 0) {
-    workspacesDisconnected.push('Live Preview');
-  } else {
+  if (canonicalLivePreview.runtimeLivePreviewConnected) {
     workspacesConnected.push('Live Preview');
+  } else {
+    workspacesDisconnected.push('Live Preview');
   }
   workspacesDisconnected.push('Autonomous Builder execution');
 
@@ -278,41 +338,6 @@ export function buildProductWorkspaceSnapshot(
     })),
     nextSuggestedActions,
   };
-
-  const livePreviewBlock = (() => {
-    const previewDiagnostics = {
-      previewRuntimeActive: previewDiag.previewRuntimeActive,
-      previewSessionCount: previewDiag.previewSessionCount,
-      registeredTargetCount: previewDiag.registeredTargetCount,
-      readyPreviewCount: previewDiag.readyPreviewCount,
-      blockedPreviewCount: previewDiag.blockedPreviewCount,
-    };
-    const reality = assessLivePreviewReality({
-      uiSurfacePresent: true,
-      connected: previewConnected,
-      previewUrl,
-      activeSession: livePreviewActiveSession,
-      sessions: livePreviewSessions,
-      diagnostics: previewDiagnostics,
-      latestProjectId: vaultState.latestProjectId,
-      projectCount: vaultState.projectCount,
-      generatedAt: Date.now(),
-    });
-    return {
-      connected: previewConnected,
-      statusLabel: reality.displayLabel,
-      previewUrl,
-      reality,
-      activeSession: livePreviewActiveSession,
-      sessions: livePreviewSessions,
-      targets: targets.map((t) => ({ targetName: t.targetName, targetType: t.targetType })),
-      diagnostics: previewDiagnostics,
-      buildStatus: previewDiag.lastState
-        ? `Last preview state: ${previewDiag.lastState}`
-        : 'No build output reported yet',
-      lastVerificationHint: previewDiag.readyPreviewCount > 0 ? 'Preview gates passed for ready sessions' : null,
-    };
-  })();
 
   const runningApplicationDraft = {
     productBrand: 'AiDevEngine' as const,
@@ -361,43 +386,7 @@ export function buildProductWorkspaceSnapshot(
     runningApplication: {} as RunningApplicationVisibilityAssessment,
   };
 
-  const runningApplication = assessRunningApplicationVisibility({
-    generatedAt: runningApplicationDraft.generatedAt,
-    previewRealityState: livePreviewBlock.reality.state,
-    previewReality: {
-      validationReady: livePreviewBlock.reality.validationReady,
-      freshness: livePreviewBlock.reality.freshness,
-      interactivity: livePreviewBlock.reality.interactivity,
-      loadReality: livePreviewBlock.reality.loadReality,
-      problems: livePreviewBlock.reality.problems,
-    },
-    activeSession: livePreviewActiveSession
-      ? {
-          previewSessionId: livePreviewActiveSession.previewSessionId,
-          projectId: livePreviewActiveSession.projectId,
-          previewState: livePreviewActiveSession.previewState,
-          previewUrl: livePreviewActiveSession.previewUrl,
-          previewTargetName: livePreviewActiveSession.previewTargetName,
-          createdAt: livePreviewActiveSession.createdAt,
-          warnings: livePreviewActiveSession.warnings,
-          blockedReasons: livePreviewActiveSession.blockedReasons,
-        }
-      : null,
-    previewUrl,
-    buildStatus: livePreviewBlock.buildStatus,
-    latestProjectId: vaultState.latestProjectId,
-    projectCount: vaultState.projectCount,
-    projectName:
-      projects.find((p) => p.projectId === vaultState.latestProjectId)?.name ?? projects[0]?.name ?? null,
-    recentChangeSummary: (() => {
-      const latest =
-        projects.find((p) => p.projectId === vaultState.latestProjectId) ?? projects[0] ?? null;
-      if (!latest) return null;
-      const facts = latest.facts.slice(-1).map((f) => `${f.label}: ${f.value}`);
-      return facts.length > 0 ? `Latest known change: ${facts[0]}` : latest.summary;
-    })(),
-    targetType: targets[0]?.targetType ?? null,
-  });
+  const runningApplication = canonicalLivePreview.runningApplication;
 
   const verificationResults = buildVerificationResultsFromWorkspace({
     productBrand: 'AiDevEngine',
@@ -414,6 +403,8 @@ export function buildProductWorkspaceSnapshot(
     notifications: runningApplicationDraft.notifications,
     runtime: runningApplicationDraft.runtime,
     portfolioInsights: runningApplicationDraft.portfolioInsights,
+    activeProjectId,
+    multiProjectWorkspaces,
   });
 
   const workspaceDraft = {
@@ -431,6 +422,8 @@ export function buildProductWorkspaceSnapshot(
     notifications: runningApplicationDraft.notifications,
     runtime: runningApplicationDraft.runtime,
     portfolioInsights: runningApplicationDraft.portfolioInsights,
+    activeProjectId,
+    multiProjectWorkspaces,
   };
 
   recordWorkspaceChangeSnapshot(workspaceDraft, 'Workspace snapshot');

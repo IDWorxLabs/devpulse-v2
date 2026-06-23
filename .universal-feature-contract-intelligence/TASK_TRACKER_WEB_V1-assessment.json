@@ -1,0 +1,522 @@
+{
+  "readOnly": true,
+  "passed": true,
+  "verdict": "FEATURE_REALITY_EXCELLENT",
+  "passToken": "UNIVERSAL_FEATURE_CONTRACT_INTELLIGENCE_V1_PASS",
+  "scores": {
+    "contractCompletenessScore": 100,
+    "featureCoverageScore": 100,
+    "executionScore": 100,
+    "workflowScore": 100,
+    "persistenceScore": 100,
+    "overallFeatureRealityScore": 100
+  },
+  "contract": {
+    "contractVersion": "1.0",
+    "contractId": "build-ready-idea-1",
+    "productProfile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "generatedAt": "2026-06-23T21:21:14.246Z",
+    "sourcePrompt": "Build a task tracker where I can add tasks, edit them, mark them complete, delete them, and filter by active or completed.",
+    "entities": [
+      {
+        "id": "task",
+        "label": "Task",
+        "pluralLabel": "Tasks",
+        "navLabel": "Tasks",
+        "slug": "task",
+        "storageKey": "task-records-v1",
+        "primary": true
+      }
+    ],
+    "actions": [
+      {
+        "id": "create-task",
+        "entityId": "task",
+        "verb": "create",
+        "label": "Create Task",
+        "required": true
+      },
+      {
+        "id": "update-task",
+        "entityId": "task",
+        "verb": "update",
+        "label": "Edit Task",
+        "required": true
+      },
+      {
+        "id": "delete-task",
+        "entityId": "task",
+        "verb": "delete",
+        "label": "Delete Task",
+        "required": true
+      },
+      {
+        "id": "search-task",
+        "entityId": "task",
+        "verb": "search",
+        "label": "Search Task",
+        "required": true
+      },
+      {
+        "id": "complete-task",
+        "entityId": "task",
+        "verb": "complete",
+        "label": "Complete Task",
+        "required": true
+      },
+      {
+        "id": "filter-tasks",
+        "entityId": "task",
+        "verb": "search",
+        "label": "Filter Tasks",
+        "required": true
+      }
+    ],
+    "rules": [
+      {
+        "id": "task-requires-title",
+        "entityId": "task",
+        "label": "Task must have title",
+        "required": true
+      }
+    ],
+    "workflows": [
+      {
+        "id": "task-status",
+        "entityId": "task",
+        "label": "Pending → Complete",
+        "stages": [
+          "active",
+          "completed"
+        ],
+        "required": true
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "task-created",
+        "entityId": "task",
+        "label": "Task appears in list",
+        "required": true
+      },
+      {
+        "id": "task-updated",
+        "entityId": "task",
+        "label": "Task updates persist",
+        "required": true
+      },
+      {
+        "id": "task-removed",
+        "entityId": "task",
+        "label": "Task can be removed",
+        "required": true
+      }
+    ]
+  },
+  "plan": {
+    "planVersion": "1.0",
+    "contractId": "build-ready-idea-1",
+    "productProfile": "TASK_TRACKER_WEB_V1",
+    "primaryEntityId": "task",
+    "navLabel": "Tasks",
+    "featureRootSelector": ".universal-feature",
+    "storageKey": "task-records-v1",
+    "steps": [
+      {
+        "id": "discover-primary-feature",
+        "kind": "discover",
+        "entityId": "task",
+        "actionId": null,
+        "label": "User can locate Tasks feature via navigation",
+        "critical": true,
+        "selectors": {
+          "sidenav": ".blueprint-sidenav",
+          "featureRoot": ".universal-feature"
+        },
+        "sampleText": "Buy groceries"
+      },
+      {
+        "id": "execute-create",
+        "kind": "create",
+        "entityId": "task",
+        "actionId": "create-task",
+        "label": "Create Task executes successfully",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"task-input\"]",
+          "addButton": "[data-testid=\"add-task-button\"]",
+          "recordText": "[data-testid=\"task-text\"]",
+          "editButton": "[data-testid=\"edit-task-button\"]",
+          "editInput": "[data-testid=\"edit-task-input\"]",
+          "saveButton": "[data-testid=\"save-task-button\"]",
+          "deleteButton": "[data-testid=\"delete-task-button\"]",
+          "formError": "[data-testid=\"task-form-error\"]",
+          "statusMessage": "[data-testid=\"task-status-message\"]",
+          "count": "[data-testid=\"task-count\"]",
+          "completeToggle": "[data-testid=\"complete-task-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed"
+        },
+        "sampleText": "Buy groceries"
+      },
+      {
+        "id": "execute-complete",
+        "kind": "complete",
+        "entityId": "task",
+        "actionId": "complete-task",
+        "label": "Complete action executes successfully",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"task-input\"]",
+          "addButton": "[data-testid=\"add-task-button\"]",
+          "recordText": "[data-testid=\"task-text\"]",
+          "editButton": "[data-testid=\"edit-task-button\"]",
+          "editInput": "[data-testid=\"edit-task-input\"]",
+          "saveButton": "[data-testid=\"save-task-button\"]",
+          "deleteButton": "[data-testid=\"delete-task-button\"]",
+          "formError": "[data-testid=\"task-form-error\"]",
+          "statusMessage": "[data-testid=\"task-status-message\"]",
+          "count": "[data-testid=\"task-count\"]",
+          "completeToggle": "[data-testid=\"complete-task-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed"
+        },
+        "sampleText": "Complete me"
+      },
+      {
+        "id": "execute-edit",
+        "kind": "edit",
+        "entityId": "task",
+        "actionId": "update-task",
+        "label": "Edit Task updates rendered record",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"task-input\"]",
+          "addButton": "[data-testid=\"add-task-button\"]",
+          "recordText": "[data-testid=\"task-text\"]",
+          "editButton": "[data-testid=\"edit-task-button\"]",
+          "editInput": "[data-testid=\"edit-task-input\"]",
+          "saveButton": "[data-testid=\"save-task-button\"]",
+          "deleteButton": "[data-testid=\"delete-task-button\"]",
+          "formError": "[data-testid=\"task-form-error\"]",
+          "statusMessage": "[data-testid=\"task-status-message\"]",
+          "count": "[data-testid=\"task-count\"]",
+          "completeToggle": "[data-testid=\"complete-task-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed"
+        },
+        "sampleText": "Draft record",
+        "editedText": "Published task"
+      },
+      {
+        "id": "execute-delete",
+        "kind": "delete",
+        "entityId": "task",
+        "actionId": "delete-task",
+        "label": "Delete Task removes rendered record",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"task-input\"]",
+          "addButton": "[data-testid=\"add-task-button\"]",
+          "recordText": "[data-testid=\"task-text\"]",
+          "editButton": "[data-testid=\"edit-task-button\"]",
+          "editInput": "[data-testid=\"edit-task-input\"]",
+          "saveButton": "[data-testid=\"save-task-button\"]",
+          "deleteButton": "[data-testid=\"delete-task-button\"]",
+          "formError": "[data-testid=\"task-form-error\"]",
+          "statusMessage": "[data-testid=\"task-status-message\"]",
+          "count": "[data-testid=\"task-count\"]",
+          "completeToggle": "[data-testid=\"complete-task-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed"
+        },
+        "sampleText": "Temporary record"
+      },
+      {
+        "id": "execute-filter",
+        "kind": "search",
+        "entityId": "task",
+        "actionId": "filter-tasks",
+        "label": "Filter locates records by state",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"task-input\"]",
+          "addButton": "[data-testid=\"add-task-button\"]",
+          "recordText": "[data-testid=\"task-text\"]",
+          "editButton": "[data-testid=\"edit-task-button\"]",
+          "editInput": "[data-testid=\"edit-task-input\"]",
+          "saveButton": "[data-testid=\"save-task-button\"]",
+          "deleteButton": "[data-testid=\"delete-task-button\"]",
+          "formError": "[data-testid=\"task-form-error\"]",
+          "statusMessage": "[data-testid=\"task-status-message\"]",
+          "count": "[data-testid=\"task-count\"]",
+          "completeToggle": "[data-testid=\"complete-task-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed"
+        },
+        "sampleText": "Active item",
+        "editedText": "Done item"
+      },
+      {
+        "id": "persistence-route-change",
+        "kind": "persistence-route",
+        "entityId": "task",
+        "actionId": null,
+        "label": "Record state persists across route change",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"task-input\"]",
+          "addButton": "[data-testid=\"add-task-button\"]",
+          "recordText": "[data-testid=\"task-text\"]",
+          "editButton": "[data-testid=\"edit-task-button\"]",
+          "editInput": "[data-testid=\"edit-task-input\"]",
+          "saveButton": "[data-testid=\"save-task-button\"]",
+          "deleteButton": "[data-testid=\"delete-task-button\"]",
+          "formError": "[data-testid=\"task-form-error\"]",
+          "statusMessage": "[data-testid=\"task-status-message\"]",
+          "count": "[data-testid=\"task-count\"]",
+          "completeToggle": "[data-testid=\"complete-task-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed"
+        },
+        "sampleText": "Persist me"
+      },
+      {
+        "id": "persistence-reload",
+        "kind": "persistence-reload",
+        "entityId": "task",
+        "actionId": null,
+        "label": "Record state persists after reload",
+        "critical": true,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"task-input\"]",
+          "addButton": "[data-testid=\"add-task-button\"]",
+          "recordText": "[data-testid=\"task-text\"]",
+          "editButton": "[data-testid=\"edit-task-button\"]",
+          "editInput": "[data-testid=\"edit-task-input\"]",
+          "saveButton": "[data-testid=\"save-task-button\"]",
+          "deleteButton": "[data-testid=\"delete-task-button\"]",
+          "formError": "[data-testid=\"task-form-error\"]",
+          "statusMessage": "[data-testid=\"task-status-message\"]",
+          "count": "[data-testid=\"task-count\"]",
+          "completeToggle": "[data-testid=\"complete-task-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed"
+        },
+        "sampleText": "Persist me"
+      },
+      {
+        "id": "recovery-invalid-input",
+        "kind": "recovery",
+        "entityId": "task",
+        "actionId": null,
+        "label": "Invalid input shows validation and app remains usable",
+        "critical": false,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"task-input\"]",
+          "addButton": "[data-testid=\"add-task-button\"]",
+          "recordText": "[data-testid=\"task-text\"]",
+          "editButton": "[data-testid=\"edit-task-button\"]",
+          "editInput": "[data-testid=\"edit-task-input\"]",
+          "saveButton": "[data-testid=\"save-task-button\"]",
+          "deleteButton": "[data-testid=\"delete-task-button\"]",
+          "formError": "[data-testid=\"task-form-error\"]",
+          "statusMessage": "[data-testid=\"task-status-message\"]",
+          "count": "[data-testid=\"task-count\"]",
+          "completeToggle": "[data-testid=\"complete-task-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed"
+        },
+        "sampleText": "Recovered record"
+      },
+      {
+        "id": "ux-action-feedback",
+        "kind": "ux-feedback",
+        "entityId": "task",
+        "actionId": null,
+        "label": "Feature action feedback shown to user",
+        "critical": false,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"task-input\"]",
+          "addButton": "[data-testid=\"add-task-button\"]",
+          "recordText": "[data-testid=\"task-text\"]",
+          "editButton": "[data-testid=\"edit-task-button\"]",
+          "editInput": "[data-testid=\"edit-task-input\"]",
+          "saveButton": "[data-testid=\"save-task-button\"]",
+          "deleteButton": "[data-testid=\"delete-task-button\"]",
+          "formError": "[data-testid=\"task-form-error\"]",
+          "statusMessage": "[data-testid=\"task-status-message\"]",
+          "count": "[data-testid=\"task-count\"]",
+          "completeToggle": "[data-testid=\"complete-task-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed"
+        },
+        "sampleText": "Buy groceries"
+      },
+      {
+        "id": "ux-no-dead-end",
+        "kind": "ux-actionable",
+        "entityId": "task",
+        "actionId": null,
+        "label": "Feature surface remains actionable",
+        "critical": false,
+        "selectors": {
+          "featureRoot": ".universal-feature",
+          "input": "[data-testid=\"task-input\"]",
+          "addButton": "[data-testid=\"add-task-button\"]",
+          "recordText": "[data-testid=\"task-text\"]",
+          "editButton": "[data-testid=\"edit-task-button\"]",
+          "editInput": "[data-testid=\"edit-task-input\"]",
+          "saveButton": "[data-testid=\"save-task-button\"]",
+          "deleteButton": "[data-testid=\"delete-task-button\"]",
+          "formError": "[data-testid=\"task-form-error\"]",
+          "statusMessage": "[data-testid=\"task-status-message\"]",
+          "count": "[data-testid=\"task-count\"]",
+          "completeToggle": "[data-testid=\"complete-task-toggle\"]",
+          "filterActive": "[data-testid=\"filter-active\"]",
+          "filterCompleted": "[data-testid=\"filter-completed\"]",
+          "completedItem": ".universal-record.is-completed"
+        },
+        "sampleText": "Buy groceries"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "discover-primary-feature",
+      "category": "discoverability",
+      "entityId": "task",
+      "actionId": null,
+      "label": "User can locate Tasks feature via navigation",
+      "passed": true,
+      "detail": "Tasks route reachable from app shell",
+      "critical": true
+    },
+    {
+      "id": "execute-create",
+      "category": "execution",
+      "entityId": "task",
+      "actionId": "create-task",
+      "label": "Create Task executes successfully",
+      "passed": true,
+      "detail": "Record created (Active: 1 visible)",
+      "critical": true
+    },
+    {
+      "id": "execute-complete",
+      "category": "workflow",
+      "entityId": "task",
+      "actionId": "complete-task",
+      "label": "Complete action executes successfully",
+      "passed": true,
+      "detail": "Record marked complete in rendered list",
+      "critical": true
+    },
+    {
+      "id": "execute-edit",
+      "category": "edit",
+      "entityId": "task",
+      "actionId": "update-task",
+      "label": "Edit Task updates rendered record",
+      "passed": true,
+      "detail": "Edited record text visible",
+      "critical": true
+    },
+    {
+      "id": "execute-delete",
+      "category": "delete",
+      "entityId": "task",
+      "actionId": "delete-task",
+      "label": "Delete Task removes rendered record",
+      "passed": true,
+      "detail": "Deleted record no longer visible",
+      "critical": true
+    },
+    {
+      "id": "execute-filter",
+      "category": "search",
+      "entityId": "task",
+      "actionId": "filter-tasks",
+      "label": "Filter locates records by state",
+      "passed": true,
+      "detail": "Filters show expected records",
+      "critical": true
+    },
+    {
+      "id": "recovery-invalid-input",
+      "category": "recovery",
+      "entityId": "task",
+      "actionId": null,
+      "label": "Invalid input shows validation and app remains usable",
+      "passed": true,
+      "detail": "Validation message shown; subsequent valid action succeeded",
+      "critical": false
+    },
+    {
+      "id": "ux-action-feedback",
+      "category": "ux",
+      "entityId": "task",
+      "actionId": null,
+      "label": "Feature action feedback shown to user",
+      "passed": true,
+      "detail": "Status: Record added.",
+      "critical": false
+    },
+    {
+      "id": "ux-no-dead-end",
+      "category": "ux",
+      "entityId": "task",
+      "actionId": null,
+      "label": "Feature surface remains actionable",
+      "passed": true,
+      "detail": "Primary actions still available",
+      "critical": false
+    },
+    {
+      "id": "persistence-route-change",
+      "category": "persistence",
+      "entityId": "task",
+      "actionId": null,
+      "label": "Record state persists across route change",
+      "passed": true,
+      "detail": "Record survived route change",
+      "critical": true
+    },
+    {
+      "id": "persistence-reload",
+      "category": "persistence",
+      "entityId": "task",
+      "actionId": null,
+      "label": "Record state persists after reload",
+      "passed": true,
+      "detail": "Record restored after page reload",
+      "critical": true
+    }
+  ],
+  "failedChecks": [],
+  "blocksLaunchReadiness": false,
+  "blocksLaunchReadinessReason": null,
+  "previewUrl": "http://127.0.0.1:5176/",
+  "contractId": "build-ready-idea-1",
+  "generatedAt": "2026-06-23T21:21:47.799Z",
+  "reportMarkdown": "# Universal Feature Contract Validation Report\n\nGenerated: 2026-06-23T21:21:47.799Z\nContract ID: build-ready-idea-1\nProduct: Task Tracker (TASK_TRACKER_WEB_V1)\nPreview URL: http://127.0.0.1:5176/\nVerdict: **FEATURE_REALITY_EXCELLENT**\nPass token: UNIVERSAL_FEATURE_CONTRACT_INTELLIGENCE_V1_PASS\nLaunch readiness blocked: No\n\n## Contract Intelligence\n- Entities: Task\n- Actions: Create Task, Edit Task, Delete Task, Search Task, Complete Task, Filter Tasks\n- Rules: Task must have title\n- Workflows: Pending → Complete\n- Outcomes: Task appears in list, Task updates persist, Task can be removed\n\n## Scores\n- Contract Completeness Score: 100/100\n- Feature Coverage Score: 100/100\n- Execution Score: 100/100\n- Workflow Score: 100/100\n- Persistence Score: 100/100\n- Overall Feature Reality Score: 100/100\n\n## Runtime Checks\n- [x] **User can locate Tasks feature via navigation** (discoverability): Tasks route reachable from app shell\n- [x] **Create Task executes successfully** (execution): Record created (Active: 1 visible)\n- [x] **Complete action executes successfully** (workflow): Record marked complete in rendered list\n- [x] **Edit Task updates rendered record** (edit): Edited record text visible\n- [x] **Delete Task removes rendered record** (delete): Deleted record no longer visible\n- [x] **Filter locates records by state** (search): Filters show expected records\n- [x] **Invalid input shows validation and app remains usable** (recovery): Validation message shown; subsequent valid action succeeded\n- [x] **Feature action feedback shown to user** (ux): Status: Record added.\n- [x] **Feature surface remains actionable** (ux): Primary actions still available\n- [x] **Record state persists across route change** (persistence): Record survived route change\n- [x] **Record state persists after reload** (persistence): Record restored after page reload\n"
+}

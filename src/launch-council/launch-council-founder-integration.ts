@@ -14,7 +14,12 @@ import type {
   FounderTestV4ReportWithAdoptionPrediction,
 } from '../founder-testing-mode/founder-testing-v4-types.js';
 import { getClarifyingLiveGateMetrics } from '../clarifying-question-intelligence/clarifying-question-live-gate.js';
-import { assessLaunchCouncil, buildLaunchCouncilArtifacts } from './launch-council-authority.js';
+import { mapUniversalAppBlueprintVisualLaunchCouncilAuthority } from '../universal-app-blueprint-visual/universal-app-blueprint-visual-integration.js';
+import { mapFeatureRealityLaunchCouncilAuthority } from '../feature-reality-validation/feature-reality-validation-integration.js';
+import { mapUniversalFeatureContractLaunchCouncilAuthority } from '../universal-feature-contract-intelligence/universal-feature-contract-integration.js';
+import { mapEngineeringRealityLaunchCouncilAuthority } from '../engineering-reality-authority/engineering-reality-integration.js';
+import { mapAutonomousFounderLaunchCouncilAuthority } from '../autonomous-founder-launch-authority/autonomous-founder-launch-integration.js';
+import { mapAutonomousFounderLaunchCouncilAuthority } from '../autonomous-founder-launch-authority/autonomous-founder-launch-integration.js';
 import { listLaunchCouncilAuthorities } from './launch-council-registry.js';
 import type {
   LaunchCouncilAssessment,
@@ -845,6 +850,11 @@ export function mapFounderTestV4ToLaunchCouncilAuthorities(
     mapLaunchReadinessAuthority(report),
     mapUiReviewerAuthority(report),
     mapClarifyingQuestionIntelligence(report),
+    mapUniversalAppBlueprintVisualLaunchCouncilAuthority(),
+    mapFeatureRealityLaunchCouncilAuthority(),
+    mapUniversalFeatureContractLaunchCouncilAuthority(),
+    mapEngineeringRealityLaunchCouncilAuthority(),
+    mapAutonomousFounderLaunchCouncilAuthority(),
   ];
   return mapped.filter((result) => registeredIds.includes(result.authorityId));
 }
@@ -862,6 +872,11 @@ export function mapFounderTestV4ToLaunchCouncilAuthoritiesWithAdaptive(
     mapUiReviewerAuthority(report),
     mapClarifyingQuestionIntelligence(report),
     mapAdaptiveAutofixIntelligence(report),
+    mapUniversalAppBlueprintVisualLaunchCouncilAuthority(),
+    mapFeatureRealityLaunchCouncilAuthority(),
+    mapUniversalFeatureContractLaunchCouncilAuthority(),
+    mapEngineeringRealityLaunchCouncilAuthority(),
+    mapAutonomousFounderLaunchCouncilAuthority(),
   ];
   return mapped.filter((result) => registeredIds.includes(result.authorityId));
 }

@@ -1,0 +1,248 @@
+{
+  "readOnly": true,
+  "passed": true,
+  "verdict": "ENGINEERING_EXCELLENT",
+  "passToken": "ENGINEERING_REALITY_V1_PASS",
+  "scores": {
+    "securityScore": 100,
+    "performanceScore": 100,
+    "accessibilityScore": 100,
+    "overallEngineeringScore": 100
+  },
+  "security": {
+    "verdict": "SECURITY_EXCELLENT",
+    "score": 100,
+    "criticalFindings": [],
+    "warnings": [],
+    "recommendations": [
+      "Security posture acceptable for generated app baseline."
+    ]
+  },
+  "performance": {
+    "verdict": "PERFORMANCE_EXCELLENT",
+    "score": 100,
+    "loadTimeAnalysis": {
+      "launchMs": 953,
+      "shellMs": 2537,
+      "navigationMs": 79,
+      "detail": "launch=953ms shell=2537ms nav=79ms"
+    },
+    "interactionAnalysis": "Navigation 79ms; build Build succeeded (168635 bytes)",
+    "runtimeHealth": {
+      "consoleErrors": [],
+      "consoleWarnings": [],
+      "detail": "0 errors, 0 warnings"
+    }
+  },
+  "accessibility": {
+    "verdict": "ACCESSIBILITY_EXCELLENT",
+    "score": 100,
+    "findings": [],
+    "recommendations": [
+      "Accessibility baseline acceptable for generated app shell."
+    ]
+  },
+  "checks": [
+    {
+      "id": "build-succeeds",
+      "category": "build",
+      "label": "Production build completes successfully",
+      "passed": true,
+      "detail": "npm run build exit 0",
+      "critical": true
+    },
+    {
+      "id": "build-output-present",
+      "category": "build",
+      "label": "Build output artifacts generated",
+      "passed": true,
+      "detail": "168635 bytes in dist/",
+      "critical": true
+    },
+    {
+      "id": "build-bundle-size-reasonable",
+      "category": "performance",
+      "label": "Bundle output size within reasonable bounds",
+      "passed": true,
+      "detail": "168635 bytes total build output",
+      "critical": false
+    },
+    {
+      "id": "artifact-secrets-not-exposed",
+      "category": "security",
+      "label": "Generated artifacts do not expose obvious secrets",
+      "passed": true,
+      "detail": "No secret patterns in key generated artifacts",
+      "critical": true
+    },
+    {
+      "id": "build-warnings-budget",
+      "category": "performance",
+      "label": "Build warnings within acceptable budget",
+      "passed": true,
+      "detail": "1 build warnings",
+      "critical": false
+    },
+    {
+      "id": "perf-initial-load",
+      "category": "performance",
+      "label": "Application loads within reasonable time",
+      "passed": true,
+      "detail": "Launch screen visible in 953ms",
+      "critical": true
+    },
+    {
+      "id": "security-auth-before-shell",
+      "category": "security",
+      "label": "Application shell gated behind authentication flow",
+      "passed": true,
+      "detail": "App shell not exposed before auth",
+      "critical": true
+    },
+    {
+      "id": "security-auth-configured",
+      "category": "security",
+      "label": "Authentication entry configured",
+      "passed": true,
+      "detail": "Guest auth path available",
+      "critical": true
+    },
+    {
+      "id": "security-guest-auth-works",
+      "category": "security",
+      "label": "Guest authentication path completes",
+      "passed": true,
+      "detail": "Guest auth reached app shell",
+      "critical": true
+    },
+    {
+      "id": "perf-shell-transition",
+      "category": "performance",
+      "label": "Auth and onboarding transition responsive",
+      "passed": true,
+      "detail": "Reached app shell in 2537ms",
+      "critical": false
+    },
+    {
+      "id": "security-no-secrets-in-dom",
+      "category": "security",
+      "label": "No obvious secrets exposed in rendered DOM",
+      "passed": true,
+      "detail": "No secret patterns in rendered DOM",
+      "critical": true
+    },
+    {
+      "id": "security-local-storage-safe",
+      "category": "security",
+      "label": "Local storage used safely for app data",
+      "passed": true,
+      "detail": "No credential-like values in localStorage",
+      "critical": true
+    },
+    {
+      "id": "security-no-inline-xss",
+      "category": "security",
+      "label": "No obvious inline XSS vectors in rendered DOM",
+      "passed": true,
+      "detail": "No suspicious inline script patterns",
+      "critical": true
+    },
+    {
+      "id": "perf-navigation-responsive",
+      "category": "performance",
+      "label": "Route navigation remains responsive",
+      "passed": true,
+      "detail": "Home → core feature in 79ms",
+      "critical": true
+    },
+    {
+      "id": "security-protected-routes-navigable",
+      "category": "security",
+      "label": "Protected shell routes reachable only after auth",
+      "passed": true,
+      "detail": "Authenticated shell navigation active",
+      "critical": false
+    },
+    {
+      "id": "perf-console-error-budget",
+      "category": "performance",
+      "label": "Runtime console errors within acceptable budget",
+      "passed": true,
+      "detail": "0 console errors",
+      "critical": false
+    },
+    {
+      "id": "security-no-dangerous-console-errors",
+      "category": "security",
+      "label": "No dangerous runtime console errors",
+      "passed": true,
+      "detail": "No console errors captured",
+      "critical": true
+    },
+    {
+      "id": "a11y-form-controls-labeled",
+      "category": "accessibility",
+      "label": "Form controls labeled for assistive technology",
+      "passed": true,
+      "detail": "2/2 inputs labeled",
+      "critical": true
+    },
+    {
+      "id": "a11y-buttons-discoverable",
+      "category": "accessibility",
+      "label": "Buttons discoverable and visible",
+      "passed": true,
+      "detail": "14 visible buttons",
+      "critical": true
+    },
+    {
+      "id": "a11y-navigation-understandable",
+      "category": "accessibility",
+      "label": "Primary navigation is understandable",
+      "passed": true,
+      "detail": "Side navigation has aria-label",
+      "critical": false
+    },
+    {
+      "id": "a11y-images-labeled",
+      "category": "accessibility",
+      "label": "Images labeled where present",
+      "passed": true,
+      "detail": "No images on core route",
+      "critical": false
+    },
+    {
+      "id": "a11y-keyboard-navigation",
+      "category": "accessibility",
+      "label": "Keyboard navigation reaches interactive elements",
+      "passed": true,
+      "detail": "21 focusable elements on core route",
+      "critical": true
+    },
+    {
+      "id": "a11y-interactive-elements-reachable",
+      "category": "accessibility",
+      "label": "Interactive elements reachable via keyboard",
+      "passed": true,
+      "detail": "Active element after Tab: BUTTON",
+      "critical": false
+    }
+  ],
+  "failedChecks": [],
+  "buildAnalysis": {
+    "passed": true,
+    "exitCode": 0,
+    "outputBytes": 168635,
+    "warnings": [
+      "npm warn Unknown env config \"devdir\". This will stop working in the next major version of npm."
+    ],
+    "detail": "Build succeeded (168635 bytes)"
+  },
+  "blocksLaunchReadiness": false,
+  "blocksLaunchReadinessReason": null,
+  "previewUrl": "http://127.0.0.1:5176/",
+  "contractId": "build-ready-idea-1",
+  "productName": "Project Management System",
+  "generatedAt": "2026-06-23T21:20:47.319Z",
+  "reportMarkdown": "# Engineering Reality Validation Report\n\nGenerated: 2026-06-23T21:20:47.319Z\nContract ID: build-ready-idea-1\nProduct: Project Management System\nPreview URL: http://127.0.0.1:5176/\nVerdict: **ENGINEERING_EXCELLENT**\nPass token: ENGINEERING_REALITY_V1_PASS\nLaunch readiness blocked: No\n\n## Combined Engineering Scores\n- Security Score: 100/100 (SECURITY_EXCELLENT)\n- Performance Score: 100/100 (PERFORMANCE_EXCELLENT)\n- Accessibility Score: 100/100 (ACCESSIBILITY_EXCELLENT)\n- Overall Engineering Score: 100/100\n\n## Security Reality\n- Critical findings: none\n- Warnings: none\n- Recommendations: Security posture acceptable for generated app baseline.\n\n## Performance Reality\n- Load time analysis: launch=953ms shell=2537ms nav=79ms\n- Interaction analysis: Navigation 79ms; build Build succeeded (168635 bytes)\n- Runtime health: 0 errors, 0 warnings\n- Build analysis: Build succeeded (168635 bytes)\n\n## Accessibility Reality\n- Findings: none\n- Recommendations: Accessibility baseline acceptable for generated app shell.\n\n## Runtime Checks\n- [x] **Production build completes successfully** (build): npm run build exit 0\n- [x] **Build output artifacts generated** (build): 168635 bytes in dist/\n- [x] **Bundle output size within reasonable bounds** (performance): 168635 bytes total build output\n- [x] **Generated artifacts do not expose obvious secrets** (security): No secret patterns in key generated artifacts\n- [x] **Build warnings within acceptable budget** (performance): 1 build warnings\n- [x] **Application loads within reasonable time** (performance): Launch screen visible in 953ms\n- [x] **Application shell gated behind authentication flow** (security): App shell not exposed before auth\n- [x] **Authentication entry configured** (security): Guest auth path available\n- [x] **Guest authentication path completes** (security): Guest auth reached app shell\n- [x] **Auth and onboarding transition responsive** (performance): Reached app shell in 2537ms\n- [x] **No obvious secrets exposed in rendered DOM** (security): No secret patterns in rendered DOM\n- [x] **Local storage used safely for app data** (security): No credential-like values in localStorage\n- [x] **No obvious inline XSS vectors in rendered DOM** (security): No suspicious inline script patterns\n- [x] **Route navigation remains responsive** (performance): Home → core feature in 79ms\n- [x] **Protected shell routes reachable only after auth** (security): Authenticated shell navigation active\n- [x] **Runtime console errors within acceptable budget** (performance): 0 console errors\n- [x] **No dangerous runtime console errors** (security): No console errors captured\n- [x] **Form controls labeled for assistive technology** (accessibility): 2/2 inputs labeled\n- [x] **Buttons discoverable and visible** (accessibility): 14 visible buttons\n- [x] **Primary navigation is understandable** (accessibility): Side navigation has aria-label\n- [x] **Images labeled where present** (accessibility): No images on core route\n- [x] **Keyboard navigation reaches interactive elements** (accessibility): 21 focusable elements on core route\n- [x] **Interactive elements reachable via keyboard** (accessibility): Active element after Tab: BUTTON\n"
+}

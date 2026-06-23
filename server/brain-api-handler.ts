@@ -3,8 +3,16 @@
  */
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { processBrainRequest } from '../src/command-center-brain/index.js';
 import type { BrainResponseResult } from '../src/command-center-brain/brain-types.js';
+import {
+  composeOnePromptBuildBrainApiPayload,
+  composeOnePromptBuildFailurePayload,
+  isOnePromptBuildRequest,
+  runOnePromptLivePreviewBuild,
+} from '../src/one-prompt-live-preview/index.js';
 import {
   buildBrainHealthPayload,
   buildBrainRuntimeVerificationReportFromResult,
@@ -22,6 +30,7 @@ import {
 } from '../src/llm-chat-brain/index.js';
 
 const MAX_BODY_BYTES = 16_384;
+const ROOT_DIR = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 
 export function sendBrainOperationalTruth(res: ServerResponse): void {
   const payload = {
@@ -125,14 +134,57 @@ async function applyLlmBrainLayer(
   }
 }
 
+function sendBuildBrainResponse(res: ServerResponse, payload: Record<string, unknown>, buildStatus: string): void {
+  res.writeHead(200, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Cache-Control': 'no-store',
+    'X-DevPulse-Brain': 'command-center',
+    'X-DevPulse-Phase': '27.2',
+    'X-DevPulse-Build': buildStatus,
+  });
+  res.end(JSON.stringify(payload));
+}
+
 export async function handleBrainRespondRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
   try {
     const raw = await readRequestBody(req);
-    const body = JSON.parse(raw) as { message?: string; timestamp?: number };
+    const body = JSON.parse(raw) as {
+      message?: string;
+      timestamp?: number;
+      activeProjectId?: string;
+      projectName?: string;
+    };
 
     if (!body.message?.trim()) {
       res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify({ error: 'message is required' }));
+      return;
+    }
+
+    if (isOnePromptBuildRequest(body.message)) {
+      try {
+        const buildResult = await runOnePromptLivePreviewBuild({
+          rawPrompt: body.message,
+          projectRootDir: ROOT_DIR,
+          source: 'chat',
+          projectId: body.activeProjectId,
+          projectName: body.projectName,
+        });
+        const payload = composeOnePromptBuildBrainApiPayload({
+          message: body.message,
+          buildResult,
+        });
+        sendBuildBrainResponse(res, payload, buildResult.status);
+      } catch (err) {
+        const failureReason = err instanceof Error ? err.message : String(err);
+        const payload = composeOnePromptBuildFailurePayload({
+          message: body.message,
+          failureReason,
+          projectId: body.activeProjectId,
+          projectName: body.projectName,
+        });
+        sendBuildBrainResponse(res, payload, 'FAILED');
+      }
       return;
     }
 
@@ -159,8 +211,9 @@ export async function handleBrainRespondRequest(req: IncomingMessage, res: Serve
       'X-DevPulse-Llm-Connected': llmConnected ? 'yes' : 'no',
     });
     res.end(JSON.stringify({ ...result, runtimeReport }));
-  } catch {
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Invalid brain request';
     res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-    res.end(JSON.stringify({ error: 'Invalid brain request' }));
+    res.end(JSON.stringify({ error: message }));
   }
 }

@@ -143,6 +143,36 @@ const REGISTERED_AUTHORITIES: readonly LaunchCouncilRegistryEntry[] = [
     authorityCategory: 'ADAPTIVE_AUTOFIX_INTELLIGENCE',
     registrationOrder: 23,
   },
+  {
+    authorityId: 'universal-app-blueprint-visual',
+    authorityName: 'Universal App Blueprint Visual Validation',
+    authorityCategory: 'PRODUCT_EXPERIENCE',
+    registrationOrder: 24,
+  },
+  {
+    authorityId: 'feature-reality-validation',
+    authorityName: 'Feature Reality Validation',
+    authorityCategory: 'PRODUCT_EXPERIENCE',
+    registrationOrder: 25,
+  },
+  {
+    authorityId: 'universal-feature-contract-intelligence',
+    authorityName: 'Universal Feature Contract Intelligence',
+    authorityCategory: 'PRODUCT_EXPERIENCE',
+    registrationOrder: 26,
+  },
+  {
+    authorityId: 'engineering-reality-authority',
+    authorityName: 'Engineering Reality Authority',
+    authorityCategory: 'ENGINEERING_REALITY',
+    registrationOrder: 27,
+  },
+  {
+    authorityId: 'autonomous-founder-launch-authority',
+    authorityName: 'Autonomous Founder Launch Authority',
+    authorityCategory: 'FOUNDER_LAUNCH_AUTHORITY',
+    registrationOrder: 28,
+  },
 ] as const;
 
 export function listLaunchCouncilAuthorities(): readonly LaunchCouncilRegistryEntry[] {
@@ -172,7 +202,7 @@ export function assertLaunchCouncilRegistryIntegrity(): boolean {
   const orders = REGISTERED_AUTHORITIES.map((entry) => entry.registrationOrder);
   const uniqueOrders = new Set(orders);
   return (
-    REGISTERED_AUTHORITIES.length === 23 &&
+    REGISTERED_AUTHORITIES.length === 26 &&
     uniqueOrders.size === REGISTERED_AUTHORITIES.length &&
     REGISTERED_AUTHORITIES.every((entry) => entry.authorityId.length > 0)
   );

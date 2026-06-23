@@ -15,6 +15,7 @@ import {
   materializeGeneratedApplication,
   usesViteReactRuntime,
 } from '../src/code-generation-engine/index.js';
+import { inspectUniversalAppBlueprint } from '../src/universal-app-blueprint/index.js';
 import {
   materializeBuildProofGapArtifacts,
   resetConnectedBuildExecutionModuleForTests,
@@ -105,10 +106,30 @@ if (contract) {
   const packageSource = readFileSync(packagePath, 'utf8');
 
   assert('App.tsx is not stub', !/return null/.test(appSource), 'real component generated');
-  assert('App.tsx has task features', isTaskTrackerAppSource(appSource), 'feature patterns present');
+  const appShellPath = join(workspaceDir, 'src/blueprint/AppShell.tsx');
+  const appShellSource = existsSync(appShellPath) ? readFileSync(appShellPath, 'utf8') : '';
+  assert(
+    'Universal blueprint shell',
+    /data-blueprint-router="universal-v1"/.test(appShellSource) || /LaunchScreen|AppShell/.test(appSource),
+    'universal shell present',
+  );
+  const featurePath = join(workspaceDir, 'src/features/task-tracker/TaskTrackerFeature.tsx');
+  const featureSource = existsSync(featurePath) ? readFileSync(featurePath, 'utf8') : '';
+  assert(
+    'TaskTrackerFeature has task features',
+    isTaskTrackerAppSource(featureSource) || isTaskTrackerAppSource(appSource),
+    'feature patterns present',
+  );
   assert('main.tsx mounts React root', isTaskTrackerMountEntry(mainSource), 'createRoot present');
   assert('index.html exists', existsSync(indexPath), indexPath);
   assert('vite runtime configured', usesViteReactRuntime(packageSource), 'vite scripts/deps present');
+
+  const blueprintInspection = inspectUniversalAppBlueprint(workspaceDir);
+  assert(
+    'Universal App Blueprint present',
+    blueprintInspection.passed,
+    blueprintInspection.passed ? 'all required sections' : blueprintInspection.missingPatterns.join(', ') || blueprintInspection.missingArtifacts.join(', '),
+  );
 
   const materializerSource = readFileSync(
     join(ROOT, 'src/connected-build-execution/build-proof-gap-materializer.ts'),

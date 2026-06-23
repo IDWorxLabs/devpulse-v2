@@ -1740,6 +1740,126 @@ export const AUTONOMOUS_TESTING_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'AUTONOMOUS_TESTING', module: 'autonomous_testing', phase: 19.4, description: 'Autonomous testing orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const UNIVERSAL_APP_BLUEPRINT_VISUAL_UVL_ROWS: readonly UvlRow[] = [
+  {
+    rowId: 'UNIVERSAL_APP_BLUEPRINT_VISUAL_TYPES',
+    module: 'universal_app_blueprint_visual',
+    phase: 27.2,
+    description: 'Blueprint visual validation types and scoring models',
+    extensionOnly: true,
+  },
+  {
+    rowId: 'UNIVERSAL_APP_BLUEPRINT_VISUAL_RUNNER',
+    module: 'universal_app_blueprint_visual',
+    phase: 27.2,
+    description: 'Rendered-app Playwright validation runner',
+    extensionOnly: true,
+  },
+  {
+    rowId: 'UNIVERSAL_APP_BLUEPRINT_VISUAL_AUTHORITY',
+    module: 'universal_app_blueprint_visual',
+    phase: 27.2,
+    description: 'Universal App Blueprint visual validation authority',
+    extensionOnly: true,
+  },
+] as const;
+
+export const FEATURE_REALITY_VALIDATION_UVL_ROWS: readonly UvlRow[] = [
+  {
+    rowId: 'FEATURE_REALITY_VALIDATION_TYPES',
+    module: 'feature_reality_validation',
+    phase: 27.3,
+    description: 'Feature contract and runtime validation types',
+    extensionOnly: true,
+  },
+  {
+    rowId: 'FEATURE_REALITY_VALIDATION_RUNNER',
+    module: 'feature_reality_validation',
+    phase: 27.3,
+    description: 'Rendered runtime feature validation runner',
+    extensionOnly: true,
+  },
+  {
+    rowId: 'FEATURE_REALITY_VALIDATION_AUTHORITY',
+    module: 'feature_reality_validation',
+    phase: 27.3,
+    description: 'Feature Reality Validation authority orchestrator',
+    extensionOnly: true,
+  },
+] as const;
+
+export const UNIVERSAL_FEATURE_CONTRACT_INTELLIGENCE_UVL_ROWS: readonly UvlRow[] = [
+  {
+    rowId: 'UNIVERSAL_FEATURE_CONTRACT_TYPES',
+    module: 'universal_feature_contract_intelligence',
+    phase: 27.4,
+    description: 'Universal feature contract intelligence types',
+    extensionOnly: true,
+  },
+  {
+    rowId: 'UNIVERSAL_FEATURE_CONTRACT_BUILDER',
+    module: 'universal_feature_contract_intelligence',
+    phase: 27.4,
+    description: 'Dynamic entity/action/workflow contract builder',
+    extensionOnly: true,
+  },
+  {
+    rowId: 'UNIVERSAL_FEATURE_CONTRACT_AUTHORITY',
+    module: 'universal_feature_contract_intelligence',
+    phase: 27.4,
+    description: 'Universal feature contract validation authority',
+    extensionOnly: true,
+  },
+] as const;
+
+export const ENGINEERING_REALITY_AUTHORITY_UVL_ROWS: readonly UvlRow[] = [
+  {
+    rowId: 'ENGINEERING_REALITY_TYPES',
+    module: 'engineering_reality_authority',
+    phase: 27.5,
+    description: 'Engineering reality authority types and verdicts',
+    extensionOnly: true,
+  },
+  {
+    rowId: 'ENGINEERING_REALITY_RUNNER',
+    module: 'engineering_reality_authority',
+    phase: 27.5,
+    description: 'Security, performance, and accessibility runtime runner',
+    extensionOnly: true,
+  },
+  {
+    rowId: 'ENGINEERING_REALITY_AUTHORITY',
+    module: 'engineering_reality_authority',
+    phase: 27.5,
+    description: 'Engineering Reality Authority orchestrator',
+    extensionOnly: true,
+  },
+] as const;
+
+export const AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY_UVL_ROWS: readonly UvlRow[] = [
+  {
+    rowId: 'AUTONOMOUS_FOUNDER_LAUNCH_TYPES',
+    module: 'aidevengine_autonomous_founder_launch_authority',
+    phase: 27.6,
+    description: 'Autonomous Founder Launch Authority types and verdicts',
+    extensionOnly: true,
+  },
+  {
+    rowId: 'AUTONOMOUS_FOUNDER_LAUNCH_REVIEWERS',
+    module: 'aidevengine_autonomous_founder_launch_authority',
+    phase: 27.6,
+    description: 'Six-reviewer evidence synthesis panel',
+    extensionOnly: true,
+  },
+  {
+    rowId: 'AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY',
+    module: 'aidevengine_autonomous_founder_launch_authority',
+    phase: 27.6,
+    description: 'Autonomous Founder Launch Authority orchestrator and verdict engine',
+    extensionOnly: true,
+  },
+] as const;
+
 export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   ...WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
@@ -1752,6 +1872,11 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...UI_INSPECTION_ENGINE_UVL_ROWS,
   ...INTERACTION_TESTING_ENGINE_UVL_ROWS,
   ...VISUAL_VERIFICATION_ENGINE_UVL_ROWS,
+  ...UNIVERSAL_APP_BLUEPRINT_VISUAL_UVL_ROWS,
+  ...FEATURE_REALITY_VALIDATION_UVL_ROWS,
+  ...UNIVERSAL_FEATURE_CONTRACT_INTELLIGENCE_UVL_ROWS,
+  ...ENGINEERING_REALITY_AUTHORITY_UVL_ROWS,
+  ...AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY_UVL_ROWS,
   ...UNIFIED_VERIFICATION_LAB_RUNTIME_UVL_ROWS,
   ...VERIFICATION_REGISTRY_UVL_ROWS,
   ...VERIFICATION_ORCHESTRATOR_UVL_ROWS,

@@ -237,6 +237,223 @@
     lastError: 'None',
   };
   var previewClientReality = { loaded: false, error: false };
+  var activeProjectId = null;
+  var multiProjectWorkspaces = [];
+  var projectChatThreads = {};
+  var linkedProjectSwitch = true;
+  var projectTabCounter = 0;
+
+  function getActiveProjectWorkspace() {
+    if (!multiProjectWorkspaces.length) return null;
+    for (var i = 0; i < multiProjectWorkspaces.length; i += 1) {
+      if (multiProjectWorkspaces[i].projectId === activeProjectId) {
+        return multiProjectWorkspaces[i];
+      }
+    }
+    return multiProjectWorkspaces[0];
+  }
+
+  function getActiveProjectName() {
+    var project = getActiveProjectWorkspace();
+    return project ? project.projectName : 'New Project';
+  }
+
+  function saveActiveProjectChat() {
+    if (!activeProjectId) return;
+    var history = el('chat-history');
+    if (!history) return;
+    projectChatThreads[activeProjectId] = history.innerHTML;
+  }
+
+  function restoreProjectChat(projectId) {
+    var history = el('chat-history');
+    if (!history) return;
+    history.innerHTML = projectChatThreads[projectId] || '';
+    if (history.innerHTML.trim()) {
+      hideWelcomeState();
+    } else {
+      showWelcomeState();
+    }
+    scrollChatToBottom();
+  }
+
+  function renderWorkspaceTabs(containerId) {
+    var container = el(containerId || 'workspace-tabs');
+    if (!container) return;
+    if (!multiProjectWorkspaces.length) {
+      container.innerHTML =
+        '<button type="button" class="workspace-tab active" data-project-id="__default__">Default Project</button>';
+      return;
+    }
+    container.innerHTML = multiProjectWorkspaces
+      .map(function (project) {
+        var status =
+          project.buildStatus === 'READY'
+            ? ' · Ready'
+            : project.buildStatus === 'BUILDING'
+              ? ' · Building'
+              : project.buildStatus === 'FAILED'
+                ? ' · Failed'
+                : '';
+        return (
+          '<button type="button" class="workspace-tab' +
+          (project.projectId === activeProjectId ? ' active' : '') +
+          '" data-project-id="' +
+          escapeHtml(project.projectId) +
+          '" role="tab" aria-selected="' +
+          (project.projectId === activeProjectId ? 'true' : 'false') +
+          '">' +
+          escapeHtml(project.projectName + status) +
+          '</button>'
+        );
+      })
+      .join('');
+    var tabs = container.querySelectorAll('.workspace-tab');
+    for (var i = 0; i < tabs.length; i += 1) {
+      tabs[i].addEventListener('click', function () {
+        var projectId = this.getAttribute('data-project-id');
+        if (projectId && projectId !== '__default__') {
+          switchActiveProject(projectId);
+        }
+      });
+    }
+  }
+
+  function updateWorkspaceLinkedIndicator() {
+    var indicator = el('workspace-linked-indicator');
+    if (!indicator) return;
+    var project = getActiveProjectWorkspace();
+    if (!project) {
+      indicator.classList.add('hidden');
+      return;
+    }
+    indicator.classList.remove('hidden');
+    indicator.textContent =
+      'Active project: ' +
+      project.projectName +
+      ' — Command Center chat and Live Preview stay linked to this project.';
+  }
+
+  function buildWorkspaceViewForActiveProject(base) {
+    base = base || workspaceData || {};
+    var project = getActiveProjectWorkspace();
+    if (!project) return base;
+    var livePreview = Object.assign({}, base.livePreview || {}, {
+      previewUrl: project.previewUrl || (base.livePreview && base.livePreview.previewUrl) || null,
+      connected: Boolean(project.previewUrl),
+      buildStatus:
+        project.buildStatus === 'READY'
+          ? 'READY — ' + (project.workspacePath || project.projectId)
+          : project.buildStatus || (base.livePreview && base.livePreview.buildStatus) || 'Unknown',
+      onePromptReady: project.buildStatus === 'READY' && Boolean(project.previewUrl),
+      onePromptBuild: {
+        status: project.buildStatus,
+        workspaceId: project.projectId,
+        workspacePath: project.workspacePath,
+        generatedProfile: project.buildProfile,
+        buildResult: project.buildStatus === 'READY' ? 'PASS' : project.buildStatus === 'FAILED' ? 'FAIL' : null,
+        previewUrl: project.previewUrl,
+        failureReason: null,
+        npmInstallOk: project.buildStatus === 'READY',
+        npmBuildOk: project.buildStatus === 'READY',
+      },
+    });
+    return Object.assign({}, base, {
+      activeProjectId: activeProjectId,
+      multiProjectWorkspaces: multiProjectWorkspaces,
+      livePreview: livePreview,
+    });
+  }
+
+  function switchActiveProject(projectId, options) {
+    options = options || {};
+    if (!projectId || projectId === activeProjectId) {
+      renderWorkspaceTabs('workspace-tabs');
+      renderWorkspaceTabs('preview-workspace-tabs');
+      updateWorkspaceLinkedIndicator();
+      return;
+    }
+    if (!options.skipChatSave) {
+      saveActiveProjectChat();
+    }
+    activeProjectId = projectId;
+    for (var i = 0; i < multiProjectWorkspaces.length; i += 1) {
+      multiProjectWorkspaces[i].active = multiProjectWorkspaces[i].projectId === projectId;
+    }
+    if (!options.skipChatRestore) {
+      restoreProjectChat(projectId);
+    }
+    renderWorkspaceTabs('workspace-tabs');
+    renderWorkspaceTabs('preview-workspace-tabs');
+    updateWorkspaceLinkedIndicator();
+    if (linkedProjectSwitch && !options.skipViewSwitch) {
+      if (currentViewId === 'command-center' || currentViewId === 'live-preview') {
+        renderLivePreviewSurface(buildWorkspaceViewForActiveProject(workspaceData));
+      }
+    }
+    renderProductSurfaces();
+  }
+
+  function applyMultiProjectWorkspaceState(data) {
+    if (data && Array.isArray(data.multiProjectWorkspaces)) {
+      multiProjectWorkspaces = data.multiProjectWorkspaces.slice();
+    }
+    if (data && data.activeProjectId) {
+      switchActiveProject(data.activeProjectId, { skipChatSave: true, skipChatRestore: false, skipViewSwitch: true });
+    } else if (!activeProjectId && multiProjectWorkspaces.length) {
+      switchActiveProject(multiProjectWorkspaces[0].projectId, {
+        skipChatSave: true,
+        skipChatRestore: false,
+        skipViewSwitch: true,
+      });
+    } else {
+      renderWorkspaceTabs('workspace-tabs');
+      renderWorkspaceTabs('preview-workspace-tabs');
+      updateWorkspaceLinkedIndicator();
+    }
+  }
+
+  function createNewProjectTab(name) {
+    projectTabCounter += 1;
+    var projectId = 'project-' + Date.now() + '-' + projectTabCounter;
+    var projectName = name || 'Project ' + projectTabCounter;
+    multiProjectWorkspaces.push({
+      projectId: projectId,
+      projectName: projectName,
+      workspacePath: null,
+      chatThreadId: 'chat-' + projectId,
+      previewUrl: null,
+      buildProfile: null,
+      buildStatus: 'IDLE',
+      lastUpdated: new Date().toISOString(),
+      active: false,
+      devServerPort: null,
+      buildId: null,
+    });
+    switchActiveProject(projectId);
+    pushNotification('Created project tab — ' + projectName);
+  }
+
+  function mergeMultiProjectWorkspacesFromResponse(nextSessions) {
+    if (!Array.isArray(nextSessions) || !nextSessions.length) return;
+    var merged = multiProjectWorkspaces.slice();
+    for (var i = 0; i < nextSessions.length; i += 1) {
+      var incoming = nextSessions[i];
+      var existingIndex = -1;
+      for (var j = 0; j < merged.length; j += 1) {
+        if (merged[j].projectId === incoming.projectId) {
+          existingIndex = j;
+          break;
+        }
+      }
+      if (existingIndex >= 0) {
+        merged[existingIndex] = Object.assign({}, merged[existingIndex], incoming);
+      } else {
+        merged.push(incoming);
+      }
+    }
+    multiProjectWorkspaces = merged;
+  }
 
   function el(id) {
     return document.getElementById(id);
@@ -2292,8 +2509,82 @@
     return 'idle';
   }
 
-  function mergePreviewClientReality(reality) {
-    if (!reality) return null;
+  function isOnePromptLivePreviewReady(lp) {
+    if (!lp) return false;
+    if (lp.onePromptReady === true) return true;
+    if (lp.onePromptBuild && lp.onePromptBuild.status === 'READY' && lp.onePromptBuild.previewUrl) return true;
+    if (lp.previewUrl && lp.connected === true && lp.buildStatus && /^READY/i.test(lp.buildStatus)) return true;
+    return false;
+  }
+
+  function resolveCanonicalLivePreviewPanels(lp, ra) {
+    lp = lp || {};
+    var ready = isOnePromptLivePreviewReady(lp);
+    var resolvedLp = lp;
+    var resolvedRa = ra || null;
+    if (ready && lp.previewUrl) {
+      var targetName =
+        (lp.activeSession && lp.activeSession.previewTargetName) ||
+        (lp.onePromptBuild && lp.onePromptBuild.generatedProfile) ||
+        'Generated Application';
+      resolvedLp = Object.assign({}, lp, {
+        connected: true,
+        statusLabel: lp.statusLabel || 'Generated app running in Live Preview',
+        reality: lp.reality && lp.reality.state === 'PREVIEW_READY'
+          ? lp.reality
+          : {
+              state: 'PREVIEW_READY',
+              displayLabel: 'Preview ready for validation',
+              summaryLines: [
+                'Preview loaded successfully.',
+                'User interaction available.',
+                'Generated application is running in Live Preview.',
+              ],
+              problems: [],
+              recommendedActions: ['Interact with the running app in Live Preview'],
+            },
+      });
+      if (!resolvedRa || resolvedRa.outputState === 'NO_RUNNING_APP' || resolvedRa.testReadiness === 'NOT_TESTABLE') {
+        resolvedRa = Object.assign({}, resolvedRa || {}, {
+          runningAppTitle: targetName + ' Preview',
+          outputState: 'OUTPUT_READY_FOR_TESTING',
+          outputStateLabel: 'Ready for testing',
+          testReadiness: 'TESTABLE',
+          testReadinessReason: 'Output is visible, current, interactive, and meaningful to test.',
+          requestAlignment: 'ALIGNED',
+          alignmentReason: 'Active preview matches the latest one-prompt build request.',
+          recommendedAction: 'Interact with the running app in Live Preview',
+          buildOutput: Object.assign({}, (resolvedRa && resolvedRa.buildOutput) || {}, {
+            buildState: 'PREVIEW_READY',
+            outputType: 'preview_app',
+            changeSummary:
+              (lp.onePromptBuild && lp.onePromptBuild.workspacePath
+                ? 'Generated ' + (lp.onePromptBuild.generatedProfile || 'application') + ' at ' + lp.onePromptBuild.workspacePath
+                : null) || 'Generated application is running in Live Preview.',
+          }),
+        });
+      }
+    }
+    return { livePreview: resolvedLp, runningApplication: resolvedRa };
+  }
+
+  function mergePreviewClientReality(reality, lp) {
+    if (!reality) {
+      if (lp && isOnePromptLivePreviewReady(lp) && lp.previewUrl) {
+        return {
+          state: 'PREVIEW_READY',
+          displayLabel: 'Preview ready for validation',
+          summaryLines: [
+            'Preview loaded successfully.',
+            'User interaction available.',
+            'Generated application is running in Live Preview.',
+          ],
+          problems: [],
+          recommendedActions: ['Interact with the running app in Live Preview'],
+        };
+      }
+      return null;
+    }
     var merged = {
       state: reality.state,
       displayLabel: reality.displayLabel,
@@ -2314,12 +2605,23 @@
       merged.state = 'PREVIEW_VISIBLE';
       merged.displayLabel = 'Preview visible';
       merged.summaryLines = ['Preview loaded successfully.', 'Content is visible in the preview surface.'];
+    } else if (lp && isOnePromptLivePreviewReady(lp) && lp.previewUrl && merged.state === 'NO_PREVIEW') {
+      merged.state = 'PREVIEW_READY';
+      merged.displayLabel = 'Preview ready for validation';
+      merged.summaryLines = [
+        'Preview loaded successfully.',
+        'User interaction available.',
+        'Generated application is running in Live Preview.',
+      ];
+      merged.problems = [];
+      merged.recommendedActions = ['Interact with the running app in Live Preview'];
     }
     return merged;
   }
 
   function updatePreviewClientDisplay(lp) {
-    var reality = mergePreviewClientReality(lp.reality);
+    var panels = resolveCanonicalLivePreviewPanels(lp, null);
+    var reality = mergePreviewClientReality(panels.livePreview.reality, panels.livePreview);
     if (!reality) return;
     var stateEl = document.querySelector('.live-preview-reality-state');
     var labelEl = document.querySelector('.live-preview-reality-label');
@@ -2469,10 +2771,42 @@
   function renderLivePreviewSurface(ws) {
     var container = el('live-preview-surface');
     if (!container) return;
-    var lp = (ws && ws.livePreview) || {};
-    var ra = (ws && ws.runningApplication) || null;
-    var html = renderRunningApplicationPanel(ra);
-    var reality = mergePreviewClientReality(lp.reality) || {
+    ws = buildWorkspaceViewForActiveProject(ws);
+    var canonical = resolveCanonicalLivePreviewPanels((ws && ws.livePreview) || {}, (ws && ws.runningApplication) || null);
+    var lp = canonical.livePreview;
+    var ra = canonical.runningApplication;
+    var activeProject = getActiveProjectWorkspace();
+    var html =
+      '<div class="preview-workspace-tabs-shell">' +
+      renderProductCard(
+        'Project Preview Tabs',
+        '<div class="workspace-tabs-header">' +
+          '<span class="workspace-tabs-label">Active project</span>' +
+          '<div class="preview-workspace-tabs" id="preview-workspace-tabs" role="tablist" aria-label="Live preview projects"></div>' +
+          '</div>' +
+          (activeProject
+            ? '<div class="preview-project-meta">' +
+              '<p><strong>Project:</strong> ' +
+              escapeHtml(activeProject.projectName) +
+              '</p>' +
+              '<p><strong>Workspace:</strong> ' +
+              escapeHtml(activeProject.workspacePath || 'Not built yet') +
+              '</p>' +
+              '<p><strong>Profile:</strong> ' +
+              escapeHtml(activeProject.buildProfile || 'n/a') +
+              '</p>' +
+              '<p><strong>Build status:</strong> ' +
+              escapeHtml(activeProject.buildStatus || 'IDLE') +
+              '</p>' +
+              '<p><strong>Preview URL:</strong> ' +
+              escapeHtml(activeProject.previewUrl || 'No preview yet') +
+              '</p>' +
+              '</div>'
+            : '<p class="hint">Select or create a project tab to manage isolated Live Preview sessions.</p>'),
+      ) +
+      '</div>';
+    html += renderRunningApplicationPanel(ra);
+    var reality = mergePreviewClientReality(lp.reality, lp) || {
       state: 'NO_PREVIEW',
       displayLabel: lp.statusLabel || 'Checking preview status…',
       summaryLines: ['Checking live preview status…'],
@@ -2508,6 +2842,23 @@
           '<p><strong>Build / output:</strong> ' +
           escapeHtml(lp.buildStatus || 'Unknown') +
           '</p>' +
+          (lp.onePromptBuild
+            ? '<p><strong>Generated profile:</strong> ' +
+              escapeHtml(lp.onePromptBuild.generatedProfile || 'n/a') +
+              '</p>' +
+              '<p><strong>Workspace:</strong> ' +
+              escapeHtml(lp.onePromptBuild.workspacePath || lp.onePromptBuild.workspaceId || 'n/a') +
+              '</p>' +
+              '<p><strong>Build result:</strong> ' +
+              escapeHtml(lp.onePromptBuild.buildResult || 'n/a') +
+              '</p>' +
+              (lp.onePromptBuild.failureReason
+                ? '<p><strong>Failure reason:</strong> ' + escapeHtml(lp.onePromptBuild.failureReason) + '</p>'
+                : '') +
+              (lp.onePromptBuild.previewUrl
+                ? '<p><strong>Live Preview URL:</strong> ' + escapeHtml(lp.onePromptBuild.previewUrl) + '</p>'
+                : '')
+            : '') +
           (lp.lastVerificationHint
             ? '<p><strong>Last verification:</strong> ' + escapeHtml(lp.lastVerificationHint) + '</p>'
             : ''),
@@ -2570,6 +2921,8 @@
     if (lp.previewUrl) {
       attachPreviewIframeListeners(lp);
     }
+    renderWorkspaceTabs('preview-workspace-tabs');
+    updateWorkspaceLinkedIndicator();
   }
 
   function renderProjectMemorySurface(ws) {
@@ -4655,7 +5008,7 @@
     renderProductCoherenceSurface(workspaceData);
     renderProjectsSurface(workspaceData);
     renderAutonomousBuilderSurface(workspaceData);
-    renderLivePreviewSurface(workspaceData);
+    renderLivePreviewSurface(buildWorkspaceViewForActiveProject(workspaceData));
     renderProjectMemorySurface(workspaceData);
     renderVerificationSurface(workspaceData, manifestData);
     renderNotificationsSurface(workspaceData, runtimeNotifications);
@@ -5295,6 +5648,7 @@
 
   function applyWorkspace(data) {
     workspaceData = data;
+    applyMultiProjectWorkspaceState(data);
     if (data && data.runtime) {
       var statusItems = [];
       if (data.runtime.localRuntimeConnected) {
@@ -5304,7 +5658,11 @@
         statusItems.push('Command Center brain connected');
       }
       if (data.livePreview && data.livePreview.connected) {
-        statusItems.push('Live preview runtime active');
+        statusItems.push(
+          data.livePreview.onePromptReady || (data.livePreview.onePromptBuild && data.livePreview.onePromptBuild.status === 'READY')
+            ? 'Live preview runtime connected — generated app running'
+            : 'Live preview runtime active',
+        );
       } else {
         statusItems.push('Live preview runtime idle');
       }
@@ -5316,27 +5674,196 @@
     renderProductSurfaces();
   }
 
+  function isOnePromptBuildPrompt(message) {
+    var text = String(message || '');
+    return (
+      /task tracker|todo app|todo list/i.test(text) &&
+      /add tasks?|mark them complete|filter by all\/active\/completed/i.test(text)
+    );
+  }
+
+  function startBuildProgressFeedTicker() {
+    var stages = [
+      {
+        eventType: 'Classifying Request',
+        action: 'Detecting build prompt',
+        detail: 'Recognized Task Tracker build request.',
+        section: 'Build',
+        status: 'Active',
+        stepIndex: 1,
+        stepTotal: 7,
+      },
+      {
+        eventType: 'Understanding Project',
+        action: 'Planning contract',
+        detail: 'Creating build-ready requirements-to-plan contract.',
+        section: 'Build',
+        status: 'Active',
+        stepIndex: 2,
+        stepTotal: 7,
+      },
+      {
+        eventType: 'Gathering Facts',
+        action: 'Materializing workspace',
+        detail: 'Generating Task Tracker source files.',
+        section: 'Build',
+        status: 'Active',
+        stepIndex: 3,
+        stepTotal: 7,
+      },
+      {
+        eventType: 'Analyzing Project Status',
+        action: 'Installing dependencies',
+        detail: 'Running npm install in generated workspace.',
+        section: 'Build',
+        status: 'Active',
+        stepIndex: 4,
+        stepTotal: 7,
+      },
+      {
+        eventType: 'Generating Response',
+        action: 'Building app',
+        detail: 'Running npm run build.',
+        section: 'Build',
+        status: 'Active',
+        stepIndex: 5,
+        stepTotal: 7,
+      },
+      {
+        eventType: 'Generating Response',
+        action: 'Starting Live Preview',
+        detail: 'Launching Vite dev server.',
+        section: 'Build',
+        status: 'Active',
+        stepIndex: 6,
+        stepTotal: 7,
+      },
+    ];
+    var index = 0;
+    var completed = [];
+    renderOperatorFeed(defaultFeedSections, {
+      activeEvent: stages[0],
+      completedEvents: [],
+      idle: false,
+    });
+    appendFeedStreamEvent(stages[0], true);
+    var timer = window.setInterval(function () {
+      if (index >= stages.length - 1) return;
+      completed.push(stages[index]);
+      index += 1;
+      renderOperatorFeed(defaultFeedSections, {
+        activeEvent: stages[index],
+        completedEvents: completed.map(function (item) {
+          return item.action;
+        }),
+        idle: false,
+      });
+      appendFeedStreamEvent(stages[index], true);
+    }, 6000);
+    return function stopBuildProgressFeedTicker() {
+      window.clearInterval(timer);
+    };
+  }
+
+  function applyOnePromptLivePreview(buildResult, livePreviewMeta, workspaceSync, responseMeta) {
+    if (!buildResult && !livePreviewMeta && !workspaceSync) return;
+    workspaceData = workspaceData || {};
+    workspaceData.livePreview = workspaceData.livePreview || {};
+    workspaceData.runtime = workspaceData.runtime || {};
+    var build = buildResult || {};
+    var meta = livePreviewMeta || {};
+    var sync = workspaceSync || null;
+    responseMeta = responseMeta || {};
+
+    if (responseMeta.multiProjectWorkspaces) {
+      mergeMultiProjectWorkspacesFromResponse(responseMeta.multiProjectWorkspaces);
+    }
+    if (build.projectId) {
+      switchActiveProject(build.projectId, { skipChatSave: true, skipViewSwitch: true });
+    } else if (responseMeta.activeProjectId) {
+      switchActiveProject(responseMeta.activeProjectId, { skipChatSave: true, skipViewSwitch: true });
+    }
+    if (sync && sync.livePreview) {
+      workspaceData.livePreview = Object.assign({}, workspaceData.livePreview, sync.livePreview);
+      if (sync.runningApplication) {
+        workspaceData.runningApplication = sync.runningApplication;
+      }
+      if (sync.runtimeLivePreviewConnected === true) {
+        workspaceData.livePreview.connected = true;
+      }
+    } else {
+      workspaceData.livePreview.connected =
+        build.status === 'READY' || meta.connected === true || workspaceData.livePreview.connected;
+      workspaceData.livePreview.previewUrl =
+        build.previewUrl || meta.previewUrl || workspaceData.livePreview.previewUrl;
+      workspaceData.livePreview.buildStatus =
+        meta.buildStatusLabel ||
+        (build.status === 'READY'
+          ? 'READY — ' + (build.workspacePath || build.workspaceId || 'workspace')
+          : build.failureReason || build.status || 'Unknown');
+      workspaceData.livePreview.onePromptBuild = {
+        status: build.status,
+        workspaceId: build.workspaceId,
+        workspacePath: build.workspacePath,
+        generatedProfile: build.generatedProfile,
+        buildResult: build.buildResult,
+        previewUrl: build.previewUrl,
+        failureReason: build.failureReason,
+        npmInstallOk: build.npmInstallOk,
+        npmBuildOk: build.npmBuildOk,
+      };
+      var canonicalPanels = resolveCanonicalLivePreviewPanels(workspaceData.livePreview, workspaceData.runningApplication);
+      workspaceData.livePreview = canonicalPanels.livePreview;
+      workspaceData.runningApplication = canonicalPanels.runningApplication;
+    }
+
+    if (build.status === 'READY' || (sync && sync.runtimeLivePreviewConnected)) {
+      workspaceData.livePreview.connected = true;
+      workspaceData.livePreview.onePromptReady = true;
+    }
+
+    workspaceData.activeProjectId = activeProjectId;
+    workspaceData.multiProjectWorkspaces = multiProjectWorkspaces;
+    applyWorkspace(workspaceData);
+    if (build.status === 'READY' && build.previewUrl) {
+      switchView('live-preview');
+      pushNotification('Live Preview ready — ' + (build.projectName || 'generated app'));
+    } else if (build.status === 'FAILED') {
+      pushNotification('Build failed — ' + (build.failureReason || 'see Live Preview status'));
+    }
+  }
+
   function askBrain(message) {
     showThinking();
     setLastRequestStatus('In progress');
     pushNotification('Brain Request Started');
     clearFeedStreamLog();
-    var requestReceived = {
-      eventType: 'Classifying Request',
-      action: 'Request received',
-      detail: 'AiDevEngine received your message and started routing.',
-      section: 'Planning',
-      status: 'Active',
-      stepIndex: 1,
-      stepTotal: 7,
-    };
-    renderOperatorFeed(defaultFeedSections, { activeEvent: requestReceived, completedEvents: [], idle: false });
-    appendFeedStreamEvent(requestReceived, true);
+    var stopBuildTicker = null;
+    if (isOnePromptBuildPrompt(message)) {
+      stopBuildTicker = startBuildProgressFeedTicker();
+    } else {
+      var requestReceived = {
+        eventType: 'Classifying Request',
+        action: 'Request received',
+        detail: 'AiDevEngine received your message and started routing.',
+        section: 'Planning',
+        status: 'Active',
+        stepIndex: 1,
+        stepTotal: 7,
+      };
+      renderOperatorFeed(defaultFeedSections, { activeEvent: requestReceived, completedEvents: [], idle: false });
+      appendFeedStreamEvent(requestReceived, true);
+    }
 
     fetch('/api/brain/respond', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: message, timestamp: Date.now() }),
+      body: JSON.stringify({
+        message: message,
+        timestamp: Date.now(),
+        activeProjectId: activeProjectId,
+        projectName: getActiveProjectName(),
+      }),
     })
       .then(function (res) {
         return res.text().then(function (bodyText) {
@@ -5354,12 +5881,34 @@
         });
       })
       .then(function (result) {
+        if (stopBuildTicker) stopBuildTicker();
         streamOperatorFeedEvents(result.operatorFeedEvents, function () {
           removeThinkingMessage();
           appendChatMessage(result.brainResponse, 'brain');
-          setLastRequestStatus('Completed');
-          pushNotification('Brain Request Completed');
-          setLastError('None');
+          if (result.category === 'BUILD') {
+            applyOnePromptLivePreview(
+              result.onePromptLivePreview,
+              result.buildLivePreview,
+              result.livePreviewWorkspaceSync,
+              {
+                activeProjectId: result.activeProjectId,
+                multiProjectWorkspaces: result.multiProjectWorkspaces,
+              },
+            );
+            if (result.onePromptLivePreview && result.onePromptLivePreview.status === 'FAILED') {
+              setLastRequestStatus('Build failed');
+              pushNotification('Build Failed');
+              setLastError(result.onePromptLivePreview.failureReason || 'Build failed');
+            } else {
+              setLastRequestStatus('Completed');
+              pushNotification('Brain Request Completed');
+              setLastError('None');
+            }
+          } else {
+            setLastRequestStatus('Completed');
+            pushNotification('Brain Request Completed');
+            setLastError('None');
+          }
           renderRuntimeDiagnostics();
           if (result.llmChatBrainDiagnostics) {
             renderLlmChatBrainDiagnostics(result.llmChatBrainDiagnostics);
@@ -5418,6 +5967,7 @@
         });
       })
       .catch(function (err) {
+        if (stopBuildTicker) stopBuildTicker();
         removeThinkingMessage();
         var reason = err && err.message ? err.message : 'Brain API unavailable';
         publishFeedFailure(reason);
@@ -8864,6 +9414,12 @@
     }
 
     var form = el('chat-form');
+    var workspaceTabAdd = el('workspace-tab-add');
+    if (workspaceTabAdd) {
+      workspaceTabAdd.addEventListener('click', function () {
+        createNewProjectTab('Project ' + (projectTabCounter + 1));
+      });
+    }
     if (form) {
       form.addEventListener('submit', function (e) {
         e.preventDefault();

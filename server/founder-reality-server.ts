@@ -18,6 +18,10 @@ import {
 } from './founder-reality-manifest.js';
 import { handleBrainRespondRequest, sendBrainHealth, sendBrainOperationalTruth } from './brain-api-handler.js';
 import {
+  handleBuildFromPromptRequest,
+  handleBuildLivePreviewStatusRequest,
+} from './build-from-prompt-handler.js';
+import {
   handleFounderTestRunRequest,
   handleFounderTestRunV2Request,
   handleFounderTestRunV3Request,
@@ -140,6 +144,21 @@ export function createFounderRealityServer() {
       return;
     }
 
+    if (urlPath === '/api/build/from-prompt' && req.method === 'POST') {
+      await handleBuildFromPromptRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/build/live-preview' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      handleBuildLivePreviewStatusRequest(req, res);
+      return;
+    }
+
     if (urlPath === '/api/founder-test/run' && req.method === 'POST') {
       await handleFounderTestRunRequest(req, res, VALIDATOR_SCRIPTS);
       return;
@@ -237,7 +256,7 @@ export function createFounderRealityServer() {
 
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       sendJson(res, 405, JSON.stringify({
-        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/brain/* and POST /api/founder-test/* are supported',
+        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/brain/*, GET /api/build/live-preview, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
         hint: 'Restart DevPulse with npm run dev if Brain POST returns read-only errors',
       }));
       return;
@@ -347,6 +366,7 @@ export function startFounderRealityServer(port = FOUNDER_REALITY_PORT, host = FO
     console.log('  POST /api/founder-test/run');
     console.log('');
     console.log('Phase 11.1A Brain Runtime — POST /api/brain/respond + GET /api/brain/health');
+    console.log('Phase 27.2 One-Prompt Live Preview — POST /api/build/from-prompt + GET /api/build/live-preview');
     console.log('If Brain fails with 405, stop stale servers on port 4321 and restart.');
     console.log('No execution, no external AI, no file modification.');
     console.log('');

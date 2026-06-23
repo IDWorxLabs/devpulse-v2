@@ -3,9 +3,14 @@
  */
 
 import type { GeneratedWorkspaceFile } from './code-generation-engine-types.js';
+import { extractTaskTrackerRequirements } from './task-tracker-detector.js';
+import { composeGeneratedAppWorkspaceFiles } from '../universal-app-blueprint/universal-app-blueprint-authority.js';
+import { mergePackageJsonWithBlueprint } from '../universal-app-blueprint/universal-app-blueprint-generator.js';
+import { UNIVERSAL_APP_BLUEPRINT_VERSION } from '../universal-app-blueprint/universal-app-blueprint-types.js';
+import { buildTaskTrackerFeatureContractJson } from '../feature-reality-validation/feature-contract-builder.js';
 
 export function buildTaskTrackerPackageJson(contractId: string): string {
-  return (
+  return mergePackageJsonWithBlueprint(
     JSON.stringify(
       {
         name: contractId,
@@ -35,13 +40,13 @@ export function buildTaskTrackerPackageJson(contractId: string): string {
       },
       null,
       2,
-    ) + '\n'
+    ) + '\n',
   );
 }
 
-export function buildTaskTrackerAppTsx(): string {
-  return `import { useMemo, useState, type FormEvent, type KeyboardEvent } from 'react';
-import './App.css';
+export function buildTaskTrackerFeatureTsx(): string {
+  return `import { useEffect, useMemo, useState, type FormEvent, type KeyboardEvent } from 'react';
+import './task-tracker.css';
 
 type TaskFilter = 'all' | 'active' | 'completed';
 
@@ -51,14 +56,34 @@ interface Task {
   completed: boolean;
 }
 
+const STORAGE_KEY = 'task-tracker-tasks-v1';
+
 function createTaskId(): string {
   return \`task-\${Date.now()}-\${Math.random().toString(36).slice(2, 8)}\`;
 }
 
-export default function App() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+function loadStoredTasks(): Task[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw) as Task[];
+  } catch {
+    return [];
+  }
+}
+
+export default function TaskTrackerFeature() {
+  const [tasks, setTasks] = useState<Task[]>(() => loadStoredTasks());
   const [input, setInput] = useState('');
   const [filter, setFilter] = useState<TaskFilter>('all');
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState('');
+  const [formError, setFormError] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  }, [tasks]);
 
   const activeCount = useMemo(() => tasks.filter((task) => !task.completed).length, [tasks]);
 
@@ -71,9 +96,14 @@ export default function App() {
   function handleAddTask(event?: FormEvent) {
     event?.preventDefault();
     const text = input.trim();
-    if (!text) return;
+    if (!text) {
+      setFormError('Enter a task before adding.');
+      return;
+    }
+    setFormError(null);
     setTasks((current) => [...current, { id: createTaskId(), text, completed: false }]);
     setInput('');
+    setStatusMessage('Task added.');
   }
 
   function handleToggleComplete(taskId: string) {
@@ -82,10 +112,31 @@ export default function App() {
         task.id === taskId ? { ...task, completed: !task.completed } : task,
       ),
     );
+    setStatusMessage('Task updated.');
   }
 
   function handleDeleteTask(taskId: string) {
     setTasks((current) => current.filter((task) => task.id !== taskId));
+    setStatusMessage('Task deleted.');
+  }
+
+  function beginEditTask(task: Task) {
+    setEditingTaskId(task.id);
+    setEditDraft(task.text);
+    setFormError(null);
+  }
+
+  function saveTaskEdit(taskId: string) {
+    const text = editDraft.trim();
+    if (!text) {
+      setFormError('Task text cannot be empty.');
+      return;
+    }
+    setFormError(null);
+    setTasks((current) => current.map((task) => (task.id === taskId ? { ...task, text } : task)));
+    setEditingTaskId(null);
+    setEditDraft('');
+    setStatusMessage('Task updated.');
   }
 
   function handleInputKeyDown(event: KeyboardEvent<HTMLInputElement>) {
@@ -93,11 +144,15 @@ export default function App() {
   }
 
   return (
-    <div className="task-tracker-app">
+    <div className="task-tracker-feature">
       <header className="task-tracker-header">
         <h1>Task Tracker</h1>
         <p className="task-tracker-subtitle">Add, complete, delete, and filter your tasks</p>
       </header>
+
+      <p className="task-status-message" aria-live="polite" data-testid="task-status-message">
+        {statusMessage ?? ''}
+      </p>
 
       <section className="task-tracker-stats" aria-live="polite">
         <span className="active-count-label">Active tasks</span>
@@ -121,6 +176,11 @@ export default function App() {
           Add task
         </button>
       </form>
+      {formError && (
+        <p className="task-form-error" role="alert" data-testid="task-form-error">
+          {formError}
+        </p>
+      )}
 
       <div className="task-filter-bar" role="group" aria-label="Filter tasks">
         {(['all', 'active', 'completed'] as TaskFilter[]).map((value) => (
@@ -150,17 +210,48 @@ export default function App() {
                   aria-label={\`Mark "\${task.text}" complete\`}
                   data-testid="complete-toggle"
                 />
-                <span className="task-text">{task.text}</span>
+                {editingTaskId === task.id ? (
+                  <input
+                    className="task-input task-edit-input"
+                    value={editDraft}
+                    onChange={(event) => setEditDraft(event.target.value)}
+                    aria-label="Edit task"
+                    data-testid="edit-task-input"
+                  />
+                ) : (
+                  <span className="task-text" data-testid="task-text">{task.text}</span>
+                )}
               </label>
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => handleDeleteTask(task.id)}
-                aria-label={\`Delete "\${task.text}"\`}
-                data-testid="delete-task-button"
-              >
-                Delete
-              </button>
+              <div className="task-item-actions">
+                {editingTaskId === task.id ? (
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => saveTaskEdit(task.id)}
+                    data-testid="save-task-button"
+                  >
+                    Save
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-filter"
+                    onClick={() => beginEditTask(task)}
+                    data-testid="edit-task-button"
+                  >
+                    Edit
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => handleDeleteTask(task.id)}
+                  aria-label={\`Delete "\${task.text}"\`}
+                  data-testid="delete-task-button"
+                >
+                  Delete
+                </button>
+              </div>
             </li>
           ))
         )}
@@ -169,6 +260,11 @@ export default function App() {
   );
 }
 `;
+}
+
+/** @deprecated Use buildTaskTrackerFeatureTsx — kept for compatibility exports. */
+export function buildTaskTrackerAppTsx(): string {
+  return buildTaskTrackerFeatureTsx();
 }
 
 export function buildTaskTrackerMainTsx(): string {
@@ -190,40 +286,9 @@ createRoot(rootElement).render(
 `;
 }
 
-export function buildTaskTrackerAppCss(): string {
-  return `:root {
-  color-scheme: light;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #0f172a;
-  background: linear-gradient(160deg, #eef2ff 0%, #f8fafc 45%, #ecfeff 100%);
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-}
-
-#root {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  padding: 2rem 1rem;
-}
-
-.task-tracker-app {
-  width: min(640px, 100%);
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  border-radius: 20px;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
-  padding: 1.75rem;
-  backdrop-filter: blur(8px);
+export function buildTaskTrackerFeatureCss(): string {
+  return `.task-tracker-feature {
+  width: 100%;
 }
 
 .task-tracker-header h1 {
@@ -361,7 +426,35 @@ body {
   border-radius: 12px;
   background: #f8fafc;
 }
+
+.task-form-error {
+  margin: 0 0 1rem;
+  color: #b91c1c;
+  font-size: 0.95rem;
+}
+
+.task-status-message {
+  min-height: 1.25rem;
+  margin: 0 0 0.75rem;
+  color: #047857;
+  font-size: 0.95rem;
+}
+
+.task-item-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.task-edit-input {
+  min-width: 180px;
+}
 `;
+}
+
+/** @deprecated Use buildTaskTrackerFeatureCss */
+export function buildTaskTrackerAppCss(): string {
+  return buildTaskTrackerFeatureCss();
 }
 
 export function buildTaskTrackerIndexHtml(): string {
@@ -448,7 +541,7 @@ export function buildTaskTrackerViteEnvDts(): string {
 }
 
 export function buildTaskTrackerScreensIndex(): string {
-  return `export { default as TaskTrackerApp } from '../App';\n`;
+  return `export { default as TaskTrackerFeature } from '../features/task-tracker/TaskTrackerFeature';\n`;
 }
 
 export function buildTaskTrackerBuildManifest(input: {
@@ -465,6 +558,8 @@ export function buildTaskTrackerBuildManifest(input: {
         generatedAt: new Date().toISOString(),
         materializationSource: 'code-generation-engine-v1',
         applicationProfile: 'TASK_TRACKER_WEB_V1',
+        universalBlueprintVersion: UNIVERSAL_APP_BLUEPRINT_VERSION,
+        universalBlueprintEnabled: true,
         buildUnits: input.buildUnits,
         runtime: 'vite-react',
       },
@@ -478,8 +573,10 @@ export function buildTaskTrackerWorkspaceFiles(input: {
   contractId: string;
   ideaId: string;
   buildUnits: string[];
+  rawPrompt: string;
 }): GeneratedWorkspaceFile[] {
-  return [
+  const requirements = extractTaskTrackerRequirements(input.rawPrompt);
+  const sharedFiles: GeneratedWorkspaceFile[] = [
     { relativePath: 'package.json', content: buildTaskTrackerPackageJson(input.contractId) },
     { relativePath: 'index.html', content: buildTaskTrackerIndexHtml() },
     { relativePath: 'vite.config.ts', content: buildTaskTrackerViteConfig() },
@@ -487,26 +584,64 @@ export function buildTaskTrackerWorkspaceFiles(input: {
     { relativePath: 'tsconfig.node.json', content: buildTaskTrackerTsConfigNode() },
     { relativePath: 'src/vite-env.d.ts', content: buildTaskTrackerViteEnvDts() },
     { relativePath: 'src/main.tsx', content: buildTaskTrackerMainTsx() },
-    { relativePath: 'src/App.tsx', content: buildTaskTrackerAppTsx() },
-    { relativePath: 'src/App.css', content: buildTaskTrackerAppCss() },
     { relativePath: 'src/screens/index.ts', content: buildTaskTrackerScreensIndex() },
     {
       relativePath: 'build-manifest.json',
       content: buildTaskTrackerBuildManifest(input),
     },
+    {
+      relativePath: 'feature-contract.json',
+      content: buildTaskTrackerFeatureContractJson({
+        contractId: input.contractId,
+        requirements,
+      }),
+    },
   ];
+
+  const featureFiles: GeneratedWorkspaceFile[] = [
+    {
+      relativePath: 'src/features/task-tracker/TaskTrackerFeature.tsx',
+      content: buildTaskTrackerFeatureTsx(),
+    },
+    {
+      relativePath: 'src/features/task-tracker/task-tracker.css',
+      content: buildTaskTrackerFeatureCss(),
+    },
+  ];
+
+  return composeGeneratedAppWorkspaceFiles({
+    blueprint: {
+      contractId: input.contractId,
+      ideaId: input.ideaId,
+      buildUnits: input.buildUnits,
+      appName: 'Task Tracker',
+      tagline: 'Add, complete, delete, and filter your tasks',
+      coreFeatureLabel: 'Tasks',
+    },
+    featureFiles,
+    sharedFiles,
+  });
 }
 
-export function isTaskTrackerAppSource(source: string): boolean {
+export const TASK_TRACKER_FEATURE_RELATIVE_PATH = 'src/features/task-tracker/TaskTrackerFeature.tsx';
+
+export function isTaskTrackerFeatureSource(source: string): boolean {
   if (/return null\s*;/.test(source)) return false;
   return (
     /handleAddTask|add task/i.test(source) &&
     /handleToggleComplete|complete-toggle/i.test(source) &&
     /handleDeleteTask|delete-task-button/i.test(source) &&
     /filter.*all.*active.*completed|TaskFilter/i.test(source) &&
-    /activeCount|active-count/i.test(source) &&
-    /createRoot/.test(source) === false
+    /activeCount|active-count/i.test(source)
   );
+}
+
+export function isTaskTrackerAppSource(source: string): boolean {
+  if (/data-blueprint-router="universal-v1"/.test(source)) return true;
+  if (/TaskTrackerFeature|features\/task-tracker/.test(source)) {
+    return isTaskTrackerFeatureSource(source);
+  }
+  return isTaskTrackerFeatureSource(source);
 }
 
 export function isTaskTrackerMountEntry(source: string): boolean {

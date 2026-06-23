@@ -1,0 +1,42 @@
+[
+  {
+    "profile": "TASK_TRACKER_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "LAUNCH_READY",
+    "overallFounderScore": 100,
+    "passed": true,
+    "userLabel": "✓ Launch Ready"
+  },
+  {
+    "profile": "CRM_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "LAUNCH_READY",
+    "overallFounderScore": 100,
+    "passed": true,
+    "userLabel": "✓ Launch Ready"
+  },
+  {
+    "profile": "INVENTORY_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "LAUNCH_READY",
+    "overallFounderScore": 99,
+    "passed": true,
+    "userLabel": "✓ Launch Ready"
+  },
+  {
+    "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "LAUNCH_READY",
+    "overallFounderScore": 100,
+    "passed": true,
+    "userLabel": "✓ Launch Ready"
+  },
+  {
+    "profile": "PROJECT_MANAGEMENT_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "LAUNCH_READY",
+    "overallFounderScore": 100,
+    "passed": true,
+    "userLabel": "✓ Launch Ready"
+  }
+]

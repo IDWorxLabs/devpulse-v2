@@ -19,9 +19,12 @@ import {
 } from '../src/connected-build-execution/index.js';
 import {
   isTaskTrackerAppSource,
+  isTaskTrackerFeatureSource,
   isTaskTrackerMountEntry,
   usesViteReactRuntime,
+  TASK_TRACKER_FEATURE_RELATIVE_PATH,
 } from '../src/code-generation-engine/index.js';
+import { inspectUniversalAppBlueprint } from '../src/universal-app-blueprint/index.js';
 import { GENERATED_BUILDER_WORKSPACES_DIR } from '../src/real-file-workspace-execution/real-file-workspace-execution-bounds.js';
 
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
@@ -156,11 +159,19 @@ for (const [key, hit] of Object.entries(featureHits)) {
 }
 
 const appTsxPath = join(workspaceDir, 'src/App.tsx');
+const featureTsxPath = join(workspaceDir, TASK_TRACKER_FEATURE_RELATIVE_PATH);
 const mainTsxPath = join(workspaceDir, 'src/main.tsx');
 const appContent = existsSync(appTsxPath) ? readFileSync(appTsxPath, 'utf8') : '';
+const featureContent = existsSync(featureTsxPath) ? readFileSync(featureTsxPath, 'utf8') : '';
 const mainContent = existsSync(mainTsxPath) ? readFileSync(mainTsxPath, 'utf8') : '';
-const isStubApp = /return null/.test(appContent) || !isTaskTrackerAppSource(appContent);
-record('Non-stub App.tsx', !isStubApp, isStubApp ? 'App.tsx is stub/empty — no real UI implementation' : 'App.tsx contains Task Tracker implementation');
+const hasFeature = isTaskTrackerFeatureSource(featureContent) || isTaskTrackerAppSource(appContent);
+const isStubApp = /return null/.test(appContent) || (!hasFeature && !/data-blueprint-router/.test(appContent));
+record('Non-stub generated app', !isStubApp, isStubApp ? 'App is stub/empty — no real UI implementation' : 'Blueprint shell and Task Tracker feature present');
+record(
+  'Universal App Blueprint',
+  inspectUniversalAppBlueprint(workspaceDir).passed,
+  inspectUniversalAppBlueprint(workspaceDir).passed ? 'all default sections present' : 'blueprint sections missing',
+);
 record(
   'React mount entry (src/main.tsx)',
   isTaskTrackerMountEntry(mainContent),

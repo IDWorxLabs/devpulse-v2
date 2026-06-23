@@ -184,6 +184,16 @@
 
       <div class="center-view" id="view-command-center">
         <div class="chat-surface" id="chat-surface">
+          <div class="workspace-tabs-shell">
+            <div class="workspace-tabs-header">
+              <span class="workspace-tabs-label">Projects</span>
+              <div class="workspace-tabs" id="workspace-tabs" role="tablist" aria-label="Project workspaces"></div>
+              <button type="button" class="btn-secondary workspace-tab-add" id="workspace-tab-add">+ New project</button>
+            </div>
+            <p class="workspace-linked-indicator hidden" id="workspace-linked-indicator">
+              Command Center and Live Preview are linked to the active project.
+            </p>
+          </div>
           <div class="chat-messages-panel" id="chat-messages-panel">
             <div class="chat-welcome-state" id="chat-welcome-state">
               <div class="welcome-content">

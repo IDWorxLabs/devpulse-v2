@@ -1,0 +1,52 @@
+[
+  {
+    "profile": "TASK_TRACKER_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "ENGINEERING_EXCELLENT",
+    "securityVerdict": "SECURITY_EXCELLENT",
+    "performanceVerdict": "PERFORMANCE_EXCELLENT",
+    "accessibilityVerdict": "ACCESSIBILITY_EXCELLENT",
+    "overallScore": 100,
+    "passed": true
+  },
+  {
+    "profile": "CRM_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "ENGINEERING_EXCELLENT",
+    "securityVerdict": "SECURITY_EXCELLENT",
+    "performanceVerdict": "PERFORMANCE_EXCELLENT",
+    "accessibilityVerdict": "ACCESSIBILITY_EXCELLENT",
+    "overallScore": 100,
+    "passed": true
+  },
+  {
+    "profile": "INVENTORY_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "ENGINEERING_EXCELLENT",
+    "securityVerdict": "SECURITY_EXCELLENT",
+    "performanceVerdict": "PERFORMANCE_EXCELLENT",
+    "accessibilityVerdict": "ACCESSIBILITY_EXCELLENT",
+    "overallScore": 100,
+    "passed": true
+  },
+  {
+    "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "ENGINEERING_EXCELLENT",
+    "securityVerdict": "SECURITY_EXCELLENT",
+    "performanceVerdict": "PERFORMANCE_EXCELLENT",
+    "accessibilityVerdict": "ACCESSIBILITY_EXCELLENT",
+    "overallScore": 100,
+    "passed": true
+  },
+  {
+    "profile": "PROJECT_MANAGEMENT_WEB_V1",
+    "contractId": "build-ready-idea-1",
+    "verdict": "ENGINEERING_EXCELLENT",
+    "securityVerdict": "SECURITY_EXCELLENT",
+    "performanceVerdict": "PERFORMANCE_EXCELLENT",
+    "accessibilityVerdict": "ACCESSIBILITY_EXCELLENT",
+    "overallScore": 100,
+    "passed": true
+  }
+]

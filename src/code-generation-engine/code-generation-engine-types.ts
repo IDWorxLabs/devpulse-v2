@@ -4,7 +4,12 @@
 
 import type { BuildReadyExecutionContract } from '../requirements-to-plan-execution-contract/requirements-to-plan-contract-types.js';
 
-export type GeneratedAppProfile = 'TASK_TRACKER_WEB_V1';
+export type GeneratedAppProfile =
+  | 'TASK_TRACKER_WEB_V1'
+  | 'CRM_WEB_V1'
+  | 'INVENTORY_WEB_V1'
+  | 'SCHOOL_MANAGEMENT_WEB_V1'
+  | 'PROJECT_MANAGEMENT_WEB_V1';
 
 export interface TaskTrackerRequirements {
   readOnly: true;

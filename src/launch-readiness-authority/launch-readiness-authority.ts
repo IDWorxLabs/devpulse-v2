@@ -2,7 +2,11 @@
  * Launch Readiness Authority — final synthesis from Launch Council evidence authorities.
  */
 
-import { createHash } from 'node:crypto';
+import { getLastBlueprintVisualAssessment } from '../universal-app-blueprint-visual/index.js';
+import { getLastFeatureRealityAssessment } from '../feature-reality-validation/index.js';
+import { getLastUniversalFeatureContractAssessment } from '../universal-feature-contract-intelligence/index.js';
+import { getLastAutonomousFounderLaunchAssessment } from '../autonomous-founder-launch-authority/index.js';
+import { getLastEngineeringRealityAssessment } from '../engineering-reality-authority/index.js';
 import type { FounderTestV4ReportWithAdoptionPrediction } from '../founder-testing-mode/founder-testing-v4-types.js';
 import type { AdoptionPredictionAssessment } from '../adoption-prediction-authority/adoption-prediction-types.js';
 import { mapEvidenceAuthoritiesFromFounderTestV4 } from '../launch-council/launch-council-founder-integration.js';
@@ -67,6 +71,26 @@ function detectCriticalBlockers(report: FounderTestV4ReportWithAdoptionPredictio
   if (report.gapDetectionAuthority.criticalGapCount > 0) blockers.push('Critical Gap Detection finding');
   if (report.unknownDiscoveryAuthority.criticalFindingCount > 0) {
     blockers.push('Critical Unknown Discovery finding');
+  }
+  const blueprintVisual = getLastBlueprintVisualAssessment();
+  if (blueprintVisual?.blocksLaunchReadiness) {
+    blockers.push('Universal App Blueprint Visual Validation');
+  }
+  const featureReality = getLastFeatureRealityAssessment();
+  if (featureReality?.blocksLaunchReadiness) {
+    blockers.push('Feature Reality Validation');
+  }
+  const universalFeatureContract = getLastUniversalFeatureContractAssessment();
+  if (universalFeatureContract?.blocksLaunchReadiness) {
+    blockers.push('Universal Feature Contract Intelligence');
+  }
+  const engineeringReality = getLastEngineeringRealityAssessment();
+  if (engineeringReality?.blocksLaunchReadiness) {
+    blockers.push('Engineering Reality Authority');
+  }
+  const founderLaunch = getLastAutonomousFounderLaunchAssessment();
+  if (founderLaunch?.blocksLaunch) {
+    blockers.push('Autonomous Founder Launch Authority');
   }
   return blockers.slice(0, MAX_BLOCKERS);
 }

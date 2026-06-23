@@ -27,9 +27,12 @@ export {
 export {
   buildTaskTrackerWorkspaceFiles,
   buildTaskTrackerAppTsx,
+  buildTaskTrackerFeatureTsx,
   buildTaskTrackerMainTsx,
   isTaskTrackerAppSource,
+  isTaskTrackerFeatureSource,
   isTaskTrackerMountEntry,
+  TASK_TRACKER_FEATURE_RELATIVE_PATH,
 } from './task-tracker-generator.js';
 
 export {

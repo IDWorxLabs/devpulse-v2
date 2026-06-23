@@ -29,7 +29,10 @@ export type LaunchCouncilAuthorityCategory =
   | 'LAUNCH_VERDICT_GOVERNANCE'
   | 'UI_REVIEWER'
   | 'CLARIFYING_QUESTION_INTELLIGENCE'
-  | 'ADAPTIVE_AUTOFIX_INTELLIGENCE';
+  | 'ADAPTIVE_AUTOFIX_INTELLIGENCE'
+  | 'PRODUCT_EXPERIENCE'
+  | 'ENGINEERING_REALITY'
+  | 'FOUNDER_LAUNCH_AUTHORITY';
 
 export interface LaunchCouncilAuthorityResult {
   authorityId: string;

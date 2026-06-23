@@ -1,0 +1,122 @@
+{
+  "readOnly": true,
+  "passed": true,
+  "verdict": "FEATURE_EXCELLENT",
+  "passToken": "FEATURE_REALITY_V1_PASS",
+  "scores": {
+    "featureCoverageScore": 100,
+    "featureExecutionScore": 100,
+    "persistenceScore": 100,
+    "recoveryScore": 100,
+    "featureUxScore": 100,
+    "overallFeatureScore": 100
+  },
+  "checks": [
+    {
+      "id": "discover-tasks-nav",
+      "category": "discoverability",
+      "featureId": "create-task",
+      "label": "User can locate Tasks feature via navigation",
+      "passed": true,
+      "detail": "Tasks route reachable from app shell",
+      "critical": true
+    },
+    {
+      "id": "execute-create-task",
+      "category": "execution",
+      "featureId": "create-task",
+      "label": "Create Task executes successfully",
+      "passed": true,
+      "detail": "Task created, active count 1",
+      "critical": true
+    },
+    {
+      "id": "execute-complete-task",
+      "category": "execution",
+      "featureId": "complete-task",
+      "label": "Complete Task executes successfully",
+      "passed": true,
+      "detail": "Task marked complete in rendered list",
+      "critical": true
+    },
+    {
+      "id": "edit-task-reflected",
+      "category": "edit",
+      "featureId": "edit-task",
+      "label": "Edit Task updates rendered record",
+      "passed": true,
+      "detail": "Edited task text visible",
+      "critical": true
+    },
+    {
+      "id": "delete-task-removes-record",
+      "category": "delete",
+      "featureId": "delete-task",
+      "label": "Delete Task removes rendered record",
+      "passed": true,
+      "detail": "Deleted task no longer visible",
+      "critical": true
+    },
+    {
+      "id": "search-filter-tasks",
+      "category": "search",
+      "featureId": "filter-tasks",
+      "label": "Filter Tasks locates records by state",
+      "passed": true,
+      "detail": "Active and completed filters show expected tasks",
+      "critical": true
+    },
+    {
+      "id": "persistence-route-change",
+      "category": "persistence",
+      "featureId": null,
+      "label": "Task state persists across route change",
+      "passed": true,
+      "detail": "Task survived Home → Tasks navigation",
+      "critical": true
+    },
+    {
+      "id": "persistence-reload",
+      "category": "persistence",
+      "featureId": null,
+      "label": "Task state persists after reload",
+      "passed": true,
+      "detail": "Task restored after page reload",
+      "critical": true
+    },
+    {
+      "id": "recovery-invalid-input",
+      "category": "recovery",
+      "featureId": null,
+      "label": "Invalid input shows validation and app remains usable",
+      "passed": true,
+      "detail": "Validation message shown; subsequent valid action succeeded",
+      "critical": false
+    },
+    {
+      "id": "ux-action-feedback",
+      "category": "ux",
+      "featureId": null,
+      "label": "Feature action feedback shown to user",
+      "passed": true,
+      "detail": "Status: Task added.",
+      "critical": false
+    },
+    {
+      "id": "ux-no-dead-end",
+      "category": "ux",
+      "featureId": null,
+      "label": "Feature surface remains actionable",
+      "passed": true,
+      "detail": "Primary actions still available",
+      "critical": false
+    }
+  ],
+  "failedChecks": [],
+  "blocksLaunchReadiness": false,
+  "blocksLaunchReadinessReason": null,
+  "previewUrl": "http://127.0.0.1:5175/",
+  "contractId": "build-ready-idea-1",
+  "generatedAt": "2026-06-23T20:57:33.123Z",
+  "reportMarkdown": "# Feature Reality Validation Report\n\nGenerated: 2026-06-23T20:57:33.123Z\nContract ID: build-ready-idea-1\nPreview URL: http://127.0.0.1:5175/\nVerdict: **FEATURE_EXCELLENT**\nPass token: FEATURE_REALITY_V1_PASS\nLaunch readiness blocked: No\n\n## Scores\n- Feature Coverage Score: 100/100\n- Feature Execution Score: 100/100\n- Persistence Score: 100/100\n- Recovery Score: 100/100\n- Feature UX Score: 100/100\n- Overall Feature Score: 100/100\n\n## Runtime Checks\n- [x] **User can locate Tasks feature via navigation** (discoverability): Tasks route reachable from app shell\n- [x] **Create Task executes successfully** (execution): Task created, active count 1\n- [x] **Complete Task executes successfully** (execution): Task marked complete in rendered list\n- [x] **Edit Task updates rendered record** (edit): Edited task text visible\n- [x] **Delete Task removes rendered record** (delete): Deleted task no longer visible\n- [x] **Filter Tasks locates records by state** (search): Active and completed filters show expected tasks\n- [x] **Task state persists across route change** (persistence): Task survived Home → Tasks navigation\n- [x] **Task state persists after reload** (persistence): Task restored after page reload\n- [x] **Invalid input shows validation and app remains usable** (recovery): Validation message shown; subsequent valid action succeeded\n- [x] **Feature action feedback shown to user** (ux): Status: Task added.\n- [x] **Feature surface remains actionable** (ux): Primary actions still available"
+}
