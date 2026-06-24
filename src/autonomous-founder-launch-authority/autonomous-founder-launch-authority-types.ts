@@ -48,6 +48,8 @@ export interface FounderEvidenceSnapshot {
   engineeringReality: FounderEvidenceSource;
   launchReadiness: FounderEvidenceSource;
   requirementDiscovery: FounderRequirementDiscoveryEvidence | null;
+  verificationHub: FounderVerificationHubEvidence | null;
+  productArchitecture: FounderProductArchitectureEvidence | null;
   allPrerequisitesPassed: boolean;
   missingPrerequisites: string[];
 }
@@ -59,6 +61,34 @@ export interface FounderRequirementDiscoveryEvidence {
   gapSummary: readonly string[];
   poorlyUnderstood: boolean;
   canProceedToPlanning: boolean;
+}
+
+export interface FounderVerificationHubEvidence {
+  readOnly: true;
+  overallCoveragePercent: number;
+  verificationConfidenceScore: number;
+  gapSummary: readonly string[];
+  missingVerificationAreas: readonly string[];
+  incompleteVerification: boolean;
+  verificationSufficientForLaunch: boolean;
+  verificationConfidencePenalty: number;
+}
+
+export interface FounderProductArchitectureEvidence {
+  readOnly: true;
+  productReadinessScore: number;
+  architectureScore: number;
+  workflowCompletenessScore: number;
+  userJourneyScore: number;
+  screenCoverageScore: number;
+  readinessLabel: string;
+  criticalProductGapCount: number;
+  gapSummary: readonly string[];
+  missingScreens: readonly string[];
+  missingWorkflows: readonly string[];
+  architecturallyIncomplete: boolean;
+  productArchitecturePenalty: number;
+  cqiRootCause: string | null;
 }
 
 export interface FounderReviewerAssessment {
@@ -103,6 +133,14 @@ export interface FounderRemediationPlan {
   retryAttempt: number;
 }
 
+export interface LaunchDecisionExplainability {
+  readOnly: true;
+  decisionSummary: string;
+  topPositiveSignals: readonly string[];
+  topRisks: readonly string[];
+  reasonForVerdict: string;
+}
+
 export interface AutonomousFounderLaunchAssessment {
   readOnly: true;
   advisoryOnly: true;
@@ -121,6 +159,7 @@ export interface AutonomousFounderLaunchAssessment {
   productName: string | null;
   generatedAt: string;
   reportMarkdown: string;
+  launchDecisionExplainability: LaunchDecisionExplainability;
 }
 
 export interface RunAutonomousFounderLaunchAuthorityInput {

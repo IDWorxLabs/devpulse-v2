@@ -51,8 +51,9 @@ export function materializeGeneratedApplication(
     };
   }
 
-  if (!detectTaskTrackerIdea(input.rawPrompt)) {
-    const universalProfile = detectUniversalAppProfile(input.rawPrompt);
+  if (!detectTaskTrackerIdea(input.rawPrompt) || input.profileOverride) {
+    const universalProfile =
+      input.profileOverride ?? detectUniversalAppProfile(input.rawPrompt);
     if (!universalProfile) {
       return {
         readOnly: true,
@@ -70,6 +71,7 @@ export function materializeGeneratedApplication(
         ideaId: input.contract.ideaId,
         buildUnits: input.contract.buildUnits.map((unit) => unit.unitId),
         rawPrompt: input.rawPrompt,
+        profile: universalProfile as GeneratedAppProfile,
       });
 
       const generatedFiles: string[] = [];
@@ -94,7 +96,7 @@ export function materializeGeneratedApplication(
     }
   }
 
-  if (!detectTaskTrackerIdea(input.rawPrompt)) {
+  if (!detectTaskTrackerIdea(input.rawPrompt) && input.profileOverride !== 'TASK_TRACKER_WEB_V1') {
     return {
       readOnly: true,
       generated: false,

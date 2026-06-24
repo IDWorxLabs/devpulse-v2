@@ -399,10 +399,12 @@ export function buildUniversalCrudWorkspaceFiles(input: {
   ideaId: string;
   buildUnits: string[];
   rawPrompt: string;
+  profile?: GeneratedAppProfile;
 }): GeneratedWorkspaceFile[] {
   const contract = buildUniversalFeatureContract({
     contractId: input.contractId,
     rawPrompt: input.rawPrompt,
+    profile: input.profile,
   });
   const primary = getPrimaryEntity(contract);
 
@@ -436,6 +438,7 @@ export function buildUniversalCrudWorkspaceFiles(input: {
       content: buildUniversalFeatureContractJson({
         contractId: input.contractId,
         rawPrompt: input.rawPrompt,
+        profile: input.profile,
       }),
     },
     {
@@ -443,6 +446,7 @@ export function buildUniversalCrudWorkspaceFiles(input: {
       content: buildUniversalFeatureContractJson({
         contractId: input.contractId,
         rawPrompt: input.rawPrompt,
+        profile: input.profile,
       }),
     },
   ];

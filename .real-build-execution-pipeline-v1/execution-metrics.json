@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-06-24T11:22:04.118Z",
+  "metrics": {
+    "readOnly": true,
+    "generationSuccessRate": 100,
+    "materializationSuccessRate": 100,
+    "buildSuccessRate": 100,
+    "previewSuccessRate": 100,
+    "verificationSuccessRate": 0,
+    "launchSuccessRate": 20,
+    "executionProofCompleteRate": 20
+  }
+}

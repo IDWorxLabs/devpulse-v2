@@ -1,0 +1,463 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "Autonomous Founder Launch Authority",
+  "profile": "CRM_WEB_V1",
+  "productName": "CRM",
+  "productPrompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+  "aflaTrustScore": 80,
+  "falsePositiveCount": 0,
+  "falseNegativeCount": 0,
+  "falsePositives": [],
+  "falseNegatives": [],
+  "verdictStability": {
+    "readOnly": true,
+    "runCount": 3,
+    "verdicts": [
+      "NOT_LAUNCH_READY",
+      "NOT_LAUNCH_READY",
+      "NOT_LAUNCH_READY"
+    ],
+    "scores": [
+      0,
+      0,
+      0
+    ],
+    "founderConfidences": [
+      0,
+      0,
+      0
+    ],
+    "verdictStable": true,
+    "scoreVariance": 0,
+    "confidenceVariance": 0,
+    "scoreStable": true,
+    "confidenceStable": true,
+    "stabilityFlags": []
+  },
+  "confidenceCalibration": {
+    "readOnly": true,
+    "founderConfidence": 0,
+    "evidenceQualityScore": 10,
+    "verificationConfidence": 26,
+    "confidenceGap": -10,
+    "inflated": false,
+    "tooConservative": false,
+    "aligned": true
+  },
+  "reviewerAlignment": {
+    "readOnly": true,
+    "scores": {
+      "Engineering Review": 0,
+      "QA Review": 0,
+      "UX Review": 0,
+      "Product Review": 0,
+      "Launch Review": 0,
+      "Founder Review": 0
+    },
+    "minScore": 0,
+    "maxScore": 0,
+    "divergence": 0,
+    "extremeDisagreement": false,
+    "divergenceExplanation": null
+  },
+  "launchDecisionExplainability": {
+    "readOnly": true,
+    "decisionSummary": "Launch not approved (NOT LAUNCH READY) — 25 risk signal(s) outweigh launch readiness.",
+    "topPositiveSignals": [],
+    "topRisks": [
+      "Build Reality: Build Reality evidence not available",
+      "Build Reality evidence not available",
+      "Blueprint Structure: Blueprint Structure evidence not available",
+      "Blueprint Structure evidence not available",
+      "Blueprint Visual: Blueprint Visual evidence not available",
+      "Blueprint Visual evidence not available"
+    ],
+    "reasonForVerdict": "Requirement Discovery incomplete"
+  },
+  "assessment": {
+    "readOnly": true,
+    "advisoryOnly": true,
+    "passed": false,
+    "verdict": "NOT_LAUNCH_READY",
+    "passToken": "AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY_V1_FAIL",
+    "scores": {
+      "seniorEngineeringScore": 0,
+      "qaScore": 0,
+      "uxScore": 0,
+      "productScore": 0,
+      "launchScore": 0,
+      "founderScore": 0,
+      "overallFounderScore": 0
+    },
+    "reviewers": [
+      {
+        "readOnly": true,
+        "role": "senior-engineer",
+        "reviewerName": "Senior Engineer",
+        "score": 0,
+        "findings": [
+          "Engineering reality evidence reports unresolved engineering concerns."
+        ],
+        "risks": [
+          "Engineering Reality evidence not available",
+          "Build Reality evidence not available",
+          "Blueprint Structure evidence not available",
+          "Senior engineer would hesitate to approve this codebase for launch."
+        ]
+      },
+      {
+        "readOnly": true,
+        "role": "qa",
+        "reviewerName": "QA Lead",
+        "score": 0,
+        "findings": [
+          "Feature Reality reports unresolved workflow failures.",
+          "Universal Feature Contract reports contract gaps."
+        ],
+        "risks": [
+          "Feature Reality evidence not available",
+          "Universal Feature Contract evidence not available",
+          "UVL reports incomplete verification (6% coverage)."
+        ]
+      },
+      {
+        "readOnly": true,
+        "role": "ux",
+        "reviewerName": "UX Reviewer",
+        "score": 0,
+        "findings": [
+          "Blueprint visual evidence reports UX structure concerns.",
+          "Important blueprint screens or markers are missing."
+        ],
+        "risks": [
+          "Blueprint Visual evidence not available",
+          "Blueprint Structure evidence not available",
+          "A first-time user may struggle to succeed without guidance."
+        ]
+      },
+      {
+        "readOnly": true,
+        "role": "product",
+        "reviewerName": "Product Reviewer",
+        "score": 0,
+        "findings": [
+          "Universal Feature Contract evidence reports missing business functionality.",
+          "Product architecture readiness 0/100 (Architecturally Incomplete)."
+        ],
+        "risks": [
+          "Universal Feature Contract evidence not available",
+          "Feature Reality evidence not available",
+          "Missing screen: Dashboard",
+          "Missing screen: Leads",
+          "Important product workflows may be incomplete for real users."
+        ]
+      },
+      {
+        "readOnly": true,
+        "role": "launch",
+        "reviewerName": "Launch Reviewer",
+        "score": 0,
+        "findings": [
+          "Launch readiness evidence recommends caution or delay.",
+          "Synthesized launch confidence from pipeline evidence: 0/100",
+          "6 launch blocker(s) detected in evidence."
+        ],
+        "risks": [
+          "Build Reality evidence not available",
+          "Blueprint Structure evidence not available",
+          "Blueprint Visual evidence not available",
+          "Feature Reality evidence not available",
+          "Support risk is elevated for a public launch."
+        ]
+      },
+      {
+        "readOnly": true,
+        "role": "founder",
+        "reviewerName": "Founder",
+        "score": 0,
+        "findings": [
+          "Would not launch yet — obvious weaknesses remain.",
+          "Engineering reality evidence reports unresolved engineering concerns.",
+          "Feature Reality reports unresolved workflow failures.",
+          "Blueprint visual evidence reports UX structure concerns.",
+          "Universal Feature Contract evidence reports missing business functionality.",
+          "Launch readiness evidence recommends caution or delay."
+        ],
+        "risks": [
+          "Engineering Reality evidence not available",
+          "Build Reality evidence not available",
+          "Feature Reality evidence not available",
+          "Universal Feature Contract evidence not available",
+          "Blueprint Visual evidence not available"
+        ],
+        "founderConfidence": 0
+      }
+    ],
+    "evidence": {
+      "readOnly": true,
+      "buildReality": {
+        "readOnly": true,
+        "sourceId": "build-reality",
+        "sourceName": "Build Reality",
+        "available": false,
+        "passed": false,
+        "score": 0,
+        "blockers": [
+          "Build Reality evidence not available"
+        ],
+        "warnings": [],
+        "findings": []
+      },
+      "blueprintStructure": {
+        "readOnly": true,
+        "sourceId": "blueprint-structure",
+        "sourceName": "Blueprint Structure",
+        "available": false,
+        "passed": false,
+        "score": 0,
+        "blockers": [
+          "Blueprint Structure evidence not available"
+        ],
+        "warnings": [],
+        "findings": []
+      },
+      "blueprintVisual": {
+        "readOnly": true,
+        "sourceId": "blueprint-visual",
+        "sourceName": "Blueprint Visual",
+        "available": false,
+        "passed": false,
+        "score": 0,
+        "blockers": [
+          "Blueprint Visual evidence not available"
+        ],
+        "warnings": [],
+        "findings": []
+      },
+      "featureReality": {
+        "readOnly": true,
+        "sourceId": "feature-reality",
+        "sourceName": "Feature Reality",
+        "available": false,
+        "passed": false,
+        "score": 0,
+        "blockers": [
+          "Feature Reality evidence not available"
+        ],
+        "warnings": [],
+        "findings": []
+      },
+      "universalFeatureContract": {
+        "readOnly": true,
+        "sourceId": "universal-feature-contract",
+        "sourceName": "Universal Feature Contract",
+        "available": false,
+        "passed": false,
+        "score": 0,
+        "blockers": [
+          "Universal Feature Contract evidence not available"
+        ],
+        "warnings": [],
+        "findings": []
+      },
+      "engineeringReality": {
+        "readOnly": true,
+        "sourceId": "engineering-reality",
+        "sourceName": "Engineering Reality",
+        "available": false,
+        "passed": false,
+        "score": 0,
+        "blockers": [
+          "Engineering Reality evidence not available"
+        ],
+        "warnings": [],
+        "findings": []
+      },
+      "requirementDiscovery": {
+        "readOnly": true,
+        "requirementConfidenceScore": 36,
+        "coverageMatrix": [
+          {
+            "category": "Business",
+            "status": "Partial"
+          },
+          {
+            "category": "Users",
+            "status": "Complete"
+          },
+          {
+            "category": "Roles",
+            "status": "Missing"
+          },
+          {
+            "category": "Permissions",
+            "status": "Missing"
+          },
+          {
+            "category": "Workflows",
+            "status": "Partial"
+          },
+          {
+            "category": "Data",
+            "status": "Complete"
+          },
+          {
+            "category": "Files",
+            "status": "Missing"
+          },
+          {
+            "category": "Notifications",
+            "status": "Missing"
+          },
+          {
+            "category": "Integrations",
+            "status": "Missing"
+          },
+          {
+            "category": "AI",
+            "status": "Missing"
+          },
+          {
+            "category": "Monetization",
+            "status": "Missing"
+          },
+          {
+            "category": "Deployment",
+            "status": "Missing"
+          }
+        ],
+        "gapSummary": [
+          "Business: Business purpose and target outcome are underspecified",
+          "Roles: User roles and role count are unclear",
+          "Permissions: Permission boundaries are not defined",
+          "Workflows: Core workflows are underspecified",
+          "Files: File handling requirements are missing",
+          "Notifications: Notification expectations are unspecified",
+          "Integrations: External integrations are not defined",
+          "AI: AI capabilities are not specified"
+        ],
+        "poorlyUnderstood": true,
+        "canProceedToPlanning": false
+      },
+      "verificationHub": {
+        "readOnly": true,
+        "overallCoveragePercent": 6,
+        "verificationConfidenceScore": 26,
+        "gapSummary": [
+          "Structure: Blueprint structure verification incomplete",
+          "Structure: Blueprint structure not evaluated",
+          "Visual: Missing visual proof",
+          "Visual: Visual verification not run",
+          "Feature: Feature not validated",
+          "Feature: Feature reality not evaluated",
+          "Engineering: Missing engineering assessment",
+          "Engineering: Engineering reality not evaluated",
+          "Requirement: Insufficient requirement discovery",
+          "Requirement: Requirement discovery insufficient"
+        ],
+        "missingVerificationAreas": [
+          "Structure",
+          "Visual",
+          "Feature",
+          "Engineering",
+          "Requirement",
+          "Launch"
+        ],
+        "incompleteVerification": true,
+        "verificationSufficientForLaunch": false,
+        "verificationConfidencePenalty": 29
+      },
+      "productArchitecture": {
+        "readOnly": true,
+        "productReadinessScore": 0,
+        "architectureScore": 12,
+        "workflowCompletenessScore": 0,
+        "userJourneyScore": 25,
+        "screenCoverageScore": 14,
+        "readinessLabel": "Architecturally Incomplete",
+        "criticalProductGapCount": 6,
+        "gapSummary": [
+          "Missing screen: Dashboard",
+          "Missing screen: Leads",
+          "Missing screen: Pipeline",
+          "Missing screen: Activities",
+          "Missing screen: Reports",
+          "Missing screen: Settings",
+          "Workflow incomplete: Lead to Customer",
+          "Broken journey: First-Time User Journey"
+        ],
+        "missingScreens": [
+          "Dashboard",
+          "Leads",
+          "Pipeline",
+          "Activities",
+          "Reports",
+          "Settings"
+        ],
+        "missingWorkflows": [
+          "Lead to Customer"
+        ],
+        "architecturallyIncomplete": true,
+        "productArchitecturePenalty": 20,
+        "cqiRootCause": "Poor Requirements"
+      },
+      "launchReadiness": {
+        "readOnly": true,
+        "sourceId": "launch-readiness",
+        "sourceName": "Launch Readiness",
+        "available": true,
+        "passed": false,
+        "score": 0,
+        "blockers": [
+          "Build Reality evidence not available",
+          "Blueprint Structure evidence not available",
+          "Blueprint Visual evidence not available",
+          "Feature Reality evidence not available",
+          "Universal Feature Contract evidence not available",
+          "Engineering Reality evidence not available"
+        ],
+        "warnings": [],
+        "findings": [
+          "Synthesized launch confidence from pipeline evidence: 0/100"
+        ]
+      },
+      "allPrerequisitesPassed": false,
+      "missingPrerequisites": [
+        "Requirement Discovery incomplete",
+        "Verification Hub incomplete",
+        "Product Architecture incomplete",
+        "Build Reality",
+        "Blueprint Structure",
+        "Blueprint Visual",
+        "Feature Reality",
+        "Universal Feature Contract",
+        "Engineering Reality"
+      ]
+    },
+    "remediationPlan": null,
+    "blocksLaunch": true,
+    "blocksLaunchReason": "Requirement Discovery incomplete",
+    "userPhase": "LAUNCH_NOT_READY",
+    "userLabel": "✗ Launch Not Ready",
+    "contractId": null,
+    "productName": "CRM",
+    "generatedAt": "2026-06-24T11:27:17.798Z",
+    "reportMarkdown": "",
+    "launchDecisionExplainability": {
+      "readOnly": true,
+      "decisionSummary": "Launch not approved (NOT LAUNCH READY) — 25 risk signal(s) outweigh launch readiness.",
+      "topPositiveSignals": [],
+      "topRisks": [
+        "Build Reality: Build Reality evidence not available",
+        "Build Reality evidence not available",
+        "Blueprint Structure: Blueprint Structure evidence not available",
+        "Blueprint Structure evidence not available",
+        "Blueprint Visual: Blueprint Visual evidence not available",
+        "Blueprint Visual evidence not available"
+      ],
+      "reasonForVerdict": "Requirement Discovery incomplete"
+    }
+  },
+  "generatedAt": "2026-06-24T11:27:17.798Z"
+}

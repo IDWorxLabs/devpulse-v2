@@ -20,6 +20,19 @@
   var founderReviewProfile = 'TASK_TRACKER_WEB_V1';
   var requirementDiscoveryData = null;
   var requirementDiscoveryLoadPromise = null;
+  var verificationHubData = null;
+  var verificationHubLoadPromise = null;
+  var verificationHubProfile = 'CRM_WEB_V1';
+  var trustCalibrationData = null;
+  var trustCalibrationLoadPromise = null;
+  var trustCalibrationProfile = 'CRM_WEB_V1';
+  var productArchitectData = null;
+  var productArchitectLoadPromise = null;
+  var productArchitectProfile = 'CRM_WEB_V1';
+  var largeScaleValidationData = null;
+  var executionPipelineData = null;
+  var executionPipelineLoadPromise = null;
+  var largeScaleValidationLoadPromise = null;
   var insightsSelectedProjectId = null;
 
   /** Client-side demo fallback — used only when workspace API is unavailable. */
@@ -105,7 +118,7 @@
     ],
   };
   var conversationStarted = false;
-  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Founder Review', 'Requirement Discovery', 'Approvals', 'Learning'];
+  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
   var feedSectionIdleCopy = {
     Planning: {
       action: 'Ready to classify your next request',
@@ -119,9 +132,29 @@
       action: 'Ready to evaluate product readiness',
       detail: 'Verification checks product alignment, quality signals, and launch confidence when requested.',
     },
+    'Verification Hub': {
+      action: 'Verification hub ready',
+      detail: 'UVL coordinates verification coverage, confidence, timeline, gaps, and history across applications.',
+    },
     'Founder Review': {
       action: 'Launch review pipeline idle',
       detail: 'Open Founder Review to see evidence chain, reviewer panel, verdict, and AutoFix status.',
+    },
+    'Product Architect Review': {
+      action: 'Product architecture review ready',
+      detail: 'Evaluate product completeness, workflows, journeys, and critical product gaps before launch.',
+    },
+    'Founder Trust Calibration': {
+      action: 'Trust calibration ready',
+      detail: 'Measure AFLA verdict stability, false positives, confidence accuracy, and reviewer alignment.',
+    },
+    'Large-Scale Validation': {
+      action: 'Large-scale validation ready',
+      detail: 'Stress-test build, verify, review, and launch across 50+ application categories.',
+    },
+    'Execution Pipeline': {
+      action: 'Real build execution ready',
+      detail: 'End-to-end execution proof — prompt through CQI, planning, codegen, build, preview, UVL, Product Architect, and AFLA.',
     },
     'Requirement Discovery': {
       action: 'Requirement discovery ready',
@@ -4439,6 +4472,559 @@
     return requirementDiscoveryLoadPromise;
   }
 
+  var VERIFICATION_HUB_SUITE_PROFILES = [
+    { profile: 'CRM_WEB_V1', label: 'CRM' },
+    { profile: 'MARKETPLACE_WEB_V1', label: 'Marketplace' },
+    { profile: 'INVENTORY_WEB_V1', label: 'Inventory' },
+    { profile: 'SCHOOL_MANAGEMENT_WEB_V1', label: 'School Management' },
+    { profile: 'PROJECT_MANAGEMENT_WEB_V1', label: 'Project Management' },
+    { profile: 'BOOKING_PLATFORM_WEB_V1', label: 'Booking Platform' },
+    { profile: 'RESTAURANT_POS_WEB_V1', label: 'Restaurant POS' },
+    { profile: 'LEARNING_PLATFORM_WEB_V1', label: 'Learning Platform' },
+    { profile: 'INSURANCE_CRM_WEB_V1', label: 'Insurance CRM' },
+    { profile: 'FLEET_MANAGEMENT_WEB_V1', label: 'Fleet Management' },
+    { profile: 'HR_PLATFORM_WEB_V1', label: 'HR Platform' },
+    { profile: 'CUSTOMER_SUPPORT_WEB_V1', label: 'Customer Support Platform' },
+  ];
+
+  function verificationHubTimelineClass(status) {
+    if (status === 'PASSED') return 'verification-hub-passed';
+    if (status === 'FAILED') return 'verification-hub-failed';
+    if (status === 'PENDING') return 'verification-hub-pending';
+    return 'verification-hub-not-run';
+  }
+
+  function renderVerificationHubPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Verification Hub',
+        '<p class="product-lead">Loading Unified Verification Lab maturity visibility…</p>',
+      );
+    }
+
+    var profileOptions = VERIFICATION_HUB_SUITE_PROFILES.map(function (app) {
+      var selected = data.profile === app.profile ? ' selected' : '';
+      return '<option value="' + escapeHtml(app.profile) + '"' + selected + '>' + escapeHtml(app.label) + '</option>';
+    }).join('');
+
+    var coverageRows = (data.categoryCoverage || [])
+      .map(function (row) {
+        return (
+          '<div class="verification-hub-row">' +
+          '<span>' + escapeHtml(row.category) + '</span>' +
+          '<span>' + String(row.coveragePercent) + '% coverage</span>' +
+          '<span>' + String(row.confidencePercent) + '% confidence</span>' +
+          '<span class="status-pill verification-hub-' + String(row.status).toLowerCase() + '">' +
+          escapeHtml(row.status) +
+          '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    var timelineRows = (data.timeline || [])
+      .map(function (step) {
+        return (
+          '<div class="verification-hub-timeline-row">' +
+          '<span class="status-pill ' + verificationHubTimelineClass(step.status) + '">' +
+          (step.status === 'PASSED' ? '✓' : step.status === 'FAILED' ? '✗' : '…') +
+          '</span>' +
+          '<span>' + escapeHtml(step.label) + '</span>' +
+          '<span class="hint">' + escapeHtml(step.detail) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    var historyRows = (data.history || [])
+      .slice(0, 8)
+      .map(function (entry) {
+        return (
+          '<div class="verification-hub-history-row">' +
+          '<span>' + escapeHtml(entry.productName) + '</span>' +
+          '<span>' + String(entry.overallCoveragePercent) + '%</span>' +
+          '<span>' + String(entry.verificationConfidenceScore) + '/100</span>' +
+          '<span>' + escapeHtml(entry.result) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'Verification Hub',
+      '<p class="product-lead">Unified Verification Lab — coordinates and proves verification for any generated application. Informational only.</p>' +
+        '<div class="verification-hub-profile-bar">' +
+        '<label for="verification-hub-profile-select"><strong>Application:</strong></label> ' +
+        '<select id="verification-hub-profile-select" class="verification-hub-profile-select">' + profileOptions + '</select>' +
+        '</div>' +
+        '<p><strong>Coverage %:</strong> ' + String(data.overallCoveragePercent) + '%</p>' +
+        '<p><strong>Confidence %:</strong> ' + String(data.verificationConfidenceScore) + '/100</p>' +
+        '<p><strong>Sufficient for Launch:</strong> ' + (data.verificationSufficientForLaunch ? 'Yes' : 'No') + '</p>' +
+        '<p><strong>Verification Coverage</strong></p>' +
+        '<div class="verification-hub-grid">' + coverageRows + '</div>' +
+        '<p><strong>Verification Timeline</strong></p>' +
+        '<div class="verification-hub-timeline">' + timelineRows + '</div>' +
+        '<p><strong>Verification Gaps</strong></p>' +
+        renderFounderReviewList(data.verificationGaps, 'No verification gaps detected.') +
+        '<p><strong>Critical Gaps</strong></p>' +
+        renderFounderReviewList(data.criticalGaps, 'No critical verification gaps.') +
+        '<p><strong>Verification History</strong></p>' +
+        '<div class="verification-hub-history">' + (historyRows || '<p class="hint">No prior verification runs recorded yet.</p>') + '</div>',
+    );
+  }
+
+  function loadVerificationHub(force, profile) {
+    if (!force && verificationHubData && !profile) {
+      return Promise.resolve(verificationHubData);
+    }
+    if (verificationHubLoadPromise) {
+      return verificationHubLoadPromise;
+    }
+    var url = '/api/founder/verification-hub';
+    var queryProfile = profile || verificationHubProfile;
+    if (queryProfile) {
+      url += '?profile=' + encodeURIComponent(queryProfile);
+    }
+    verificationHubLoadPromise = fetch(url, { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('verification-hub HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        verificationHubData = data;
+        verificationHubProfile = data.profile || queryProfile;
+        return data;
+      })
+      .finally(function () {
+        verificationHubLoadPromise = null;
+      });
+    return verificationHubLoadPromise;
+  }
+
+  function bindVerificationHubActions() {
+    var profileSelect = el('verification-hub-profile-select');
+    if (!profileSelect) return;
+    profileSelect.addEventListener('change', function () {
+      verificationHubProfile = profileSelect.value;
+      loadVerificationHub(true, verificationHubProfile)
+        .then(function () {
+          if (currentViewId === 'verification') {
+            renderVerificationSurface(workspaceData, manifestData);
+          }
+        })
+        .catch(function () {
+          /* panel falls back to loading state */
+        });
+    });
+  }
+
+  function refreshVerificationHubPanel() {
+    if (currentViewId === 'verification') {
+      renderVerificationSurface(workspaceData, manifestData);
+    }
+  }
+
+  var TRUST_CALIBRATION_SUITE_PROFILES = [
+    { profile: 'CRM_WEB_V1', label: 'CRM' },
+    { profile: 'MARKETPLACE_WEB_V1', label: 'Marketplace' },
+    { profile: 'INVENTORY_WEB_V1', label: 'Inventory' },
+    { profile: 'SCHOOL_MANAGEMENT_WEB_V1', label: 'School Management' },
+    { profile: 'PROJECT_MANAGEMENT_WEB_V1', label: 'Project Management' },
+    { profile: 'BOOKING_PLATFORM_WEB_V1', label: 'Booking Platform' },
+    { profile: 'RESTAURANT_POS_WEB_V1', label: 'Restaurant POS' },
+    { profile: 'LEARNING_PLATFORM_WEB_V1', label: 'Learning Platform' },
+    { profile: 'INSURANCE_CRM_WEB_V1', label: 'Insurance CRM' },
+    { profile: 'FLEET_MANAGEMENT_WEB_V1', label: 'Fleet Management' },
+    { profile: 'HR_PLATFORM_WEB_V1', label: 'HR Platform' },
+    { profile: 'CUSTOMER_SUPPORT_WEB_V1', label: 'Customer Support Platform' },
+    { profile: 'SOCIAL_PLATFORM_WEB_V1', label: 'Social Platform' },
+    { profile: 'FITNESS_APP_WEB_V1', label: 'Fitness App' },
+    { profile: 'HEALTHCARE_PORTAL_WEB_V1', label: 'Healthcare Portal' },
+    { profile: 'PROPERTY_MANAGEMENT_WEB_V1', label: 'Property Management' },
+    { profile: 'E_COMMERCE_PLATFORM_WEB_V1', label: 'E-Commerce Platform' },
+    { profile: 'JOB_BOARD_WEB_V1', label: 'Job Board' },
+    { profile: 'EVENT_PLATFORM_WEB_V1', label: 'Event Platform' },
+    { profile: 'FINANCE_TRACKER_WEB_V1', label: 'Finance Tracker' },
+  ];
+
+  function renderTrustCalibrationPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Founder Trust Calibration',
+        '<p class="product-lead">Loading AFLA trust calibration visibility…</p>',
+      );
+    }
+
+    var profileOptions = TRUST_CALIBRATION_SUITE_PROFILES.map(function (app) {
+      var selected = data.profile === app.profile ? ' selected' : '';
+      return '<option value="' + escapeHtml(app.profile) + '"' + selected + '>' + escapeHtml(app.label) + '</option>';
+    }).join('');
+
+    var reviewerRows = Object.keys(data.reviewerAlignment.scores || {}).map(function (label) {
+      return (
+        '<div class="trust-calibration-row">' +
+        '<span>' + escapeHtml(label) + '</span>' +
+        '<span>' + String(data.reviewerAlignment.scores[label]) + '/100</span>' +
+        '</div>'
+      );
+    }).join('');
+
+    var historyRows = (data.history || [])
+      .slice(0, 8)
+      .map(function (entry) {
+        return (
+          '<div class="trust-calibration-history-row">' +
+          '<span>' + escapeHtml(entry.productName) + '</span>' +
+          '<span>' + String(entry.aflaTrustScore) + '/100</span>' +
+          '<span>' + escapeHtml(entry.verdictQuality) + '</span>' +
+          '<span>FP:' + String(entry.falsePositiveCount) + ' FN:' + String(entry.falseNegativeCount) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    var explain = data.launchDecisionExplainability || {};
+
+    return renderProductCard(
+      'Founder Trust Calibration',
+      '<p class="product-lead">Autonomous Founder Launch Authority — calibrate launch decisions against evidence. Informational only.</p>' +
+        '<div class="trust-calibration-profile-bar">' +
+        '<label for="trust-calibration-profile-select"><strong>Application:</strong></label> ' +
+        '<select id="trust-calibration-profile-select" class="trust-calibration-profile-select">' + profileOptions + '</select>' +
+        '</div>' +
+        '<p><strong>Trust Score:</strong> ' + String(data.aflaTrustScore) + '/100</p>' +
+        '<p><strong>False Positives:</strong> ' + String(data.falsePositiveCount) + '</p>' +
+        '<p><strong>False Negatives:</strong> ' + String(data.falseNegativeCount) + '</p>' +
+        '<p><strong>Confidence Accuracy:</strong> ' +
+        (data.confidenceAccuracy.aligned ? 'Aligned' : data.confidenceAccuracy.inflated ? 'Inflated' : data.confidenceAccuracy.tooConservative ? 'Too conservative' : 'Review') +
+        ' (gap ' + String(data.confidenceAccuracy.confidenceGap) + ')</p>' +
+        '<p><strong>Reviewer Alignment:</strong> divergence ' + String(data.reviewerAlignment.divergence) +
+        (data.reviewerAlignment.extremeDisagreement ? ' — extreme disagreement' : '') + '</p>' +
+        '<div class="trust-calibration-grid">' + reviewerRows + '</div>' +
+        '<p><strong>Verdict Stability:</strong> ' +
+        (data.verdictStability.verdictStable ? 'Stable' : 'Unstable') +
+        ' · score variance ' + String(data.verdictStability.scoreVariance) +
+        ' · confidence variance ' + String(data.verdictStability.confidenceVariance) + '</p>' +
+        '<p><strong>Decision Summary:</strong> ' + escapeHtml(explain.decisionSummary || '') + '</p>' +
+        '<p><strong>Reason For Verdict:</strong> ' + escapeHtml(explain.reasonForVerdict || '') + '</p>' +
+        '<p><strong>Top Positive Signals</strong></p>' +
+        renderFounderReviewList(explain.topPositiveSignals, 'No positive signals recorded.') +
+        '<p><strong>Top Risks</strong></p>' +
+        renderFounderReviewList(explain.topRisks, 'No risks recorded.') +
+        '<p><strong>Verification Gaps</strong></p>' +
+        renderFounderReviewList(data.falsePositives, 'No false positives detected.') +
+        '<p><strong>Calibration History</strong></p>' +
+        '<div class="trust-calibration-history">' + (historyRows || '<p class="hint">No prior calibration runs recorded yet.</p>') + '</div>',
+    );
+  }
+
+  function loadTrustCalibration(force, profile) {
+    if (!force && trustCalibrationData && !profile) {
+      return Promise.resolve(trustCalibrationData);
+    }
+    if (trustCalibrationLoadPromise) {
+      return trustCalibrationLoadPromise;
+    }
+    var url = '/api/founder/trust-calibration';
+    var queryProfile = profile || trustCalibrationProfile;
+    if (queryProfile) {
+      url += '?profile=' + encodeURIComponent(queryProfile);
+    }
+    trustCalibrationLoadPromise = fetch(url, { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('trust-calibration HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        trustCalibrationData = data;
+        trustCalibrationProfile = data.profile || queryProfile;
+        return data;
+      })
+      .finally(function () {
+        trustCalibrationLoadPromise = null;
+      });
+    return trustCalibrationLoadPromise;
+  }
+
+  function bindTrustCalibrationActions() {
+    var profileSelect = el('trust-calibration-profile-select');
+    if (!profileSelect) return;
+    profileSelect.addEventListener('change', function () {
+      trustCalibrationProfile = profileSelect.value;
+      loadTrustCalibration(true, trustCalibrationProfile)
+        .then(function () {
+          if (currentViewId === 'founder-review') {
+            renderFounderReviewSurface(workspaceData);
+          }
+        })
+        .catch(function () {
+          /* panel falls back to loading state */
+        });
+    });
+  }
+
+  var PRODUCT_ARCHITECT_SUITE_PROFILES = [
+    { profile: 'CRM_WEB_V1', label: 'CRM' },
+    { profile: 'MARKETPLACE_WEB_V1', label: 'Marketplace' },
+    { profile: 'INVENTORY_WEB_V1', label: 'Inventory' },
+    { profile: 'SCHOOL_MANAGEMENT_WEB_V1', label: 'School Management' },
+    { profile: 'HEALTHCARE_PORTAL_WEB_V1', label: 'Healthcare Portal' },
+    { profile: 'FINANCE_TRACKER_WEB_V1', label: 'Finance Tracker' },
+    { profile: 'BOOKING_PLATFORM_WEB_V1', label: 'Booking Platform' },
+    { profile: 'RESTAURANT_POS_WEB_V1', label: 'Restaurant POS' },
+    { profile: 'PROJECT_MANAGEMENT_WEB_V1', label: 'Project Management' },
+    { profile: 'HR_PLATFORM_WEB_V1', label: 'HR Platform' },
+    { profile: 'SOCIAL_PLATFORM_WEB_V1', label: 'Social Platform' },
+    { profile: 'LEARNING_PLATFORM_WEB_V1', label: 'Learning Platform' },
+  ];
+
+  function renderProductArchitectPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Product Architect Review',
+        '<p class="product-lead">Loading product architecture intelligence…</p>',
+      );
+    }
+
+    var profileOptions = PRODUCT_ARCHITECT_SUITE_PROFILES.map(function (app) {
+      var selected = data.profile === app.profile ? ' selected' : '';
+      return '<option value="' + escapeHtml(app.profile) + '"' + selected + '>' + escapeHtml(app.label) + '</option>';
+    }).join('');
+
+    var historyRows = (data.history || [])
+      .slice(0, 8)
+      .map(function (entry) {
+        return (
+          '<div class="product-architect-history-row">' +
+          '<span>' + escapeHtml(entry.productName) + '</span>' +
+          '<span>' + String(entry.productReadinessScore) + '/100</span>' +
+          '<span>' + escapeHtml(entry.readinessLabel) + '</span>' +
+          '<span>Critical:' + String(entry.criticalGapCount) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'Product Architect Review',
+      '<p class="product-lead">Product Architect Intelligence — evaluate whether the product itself is complete before verification and launch review. Informational only.</p>' +
+        '<div class="product-architect-profile-bar">' +
+        '<label for="product-architect-profile-select"><strong>Application:</strong></label> ' +
+        '<select id="product-architect-profile-select" class="product-architect-profile-select">' + profileOptions + '</select>' +
+        '</div>' +
+        '<p><strong>Product Readiness Score:</strong> ' + String(data.productReadinessScore) + '/100 (' + escapeHtml(data.readinessLabel) + ')</p>' +
+        '<p><strong>Architecture Score:</strong> ' + String(data.architectureScore) + '/100</p>' +
+        '<p><strong>Workflow Score:</strong> ' + String(data.workflowScore) + '/100</p>' +
+        '<p><strong>User Journey Score:</strong> ' + String(data.userJourneyScore) + '/100</p>' +
+        '<p><strong>Screen Coverage Score:</strong> ' + String(data.screenCoverageScore) + '/100</p>' +
+        '<p><strong>CQI Root Cause:</strong> ' + escapeHtml(data.cqiRootCause || 'Unknown') + '</p>' +
+        '<p><strong>Critical Product Gaps</strong></p>' +
+        renderFounderReviewList(data.criticalProductGaps, 'No critical product gaps detected.') +
+        '<p><strong>Missing Screens</strong></p>' +
+        renderFounderReviewList(data.missingScreens, 'No missing screens detected.') +
+        '<p><strong>Missing Workflows</strong></p>' +
+        renderFounderReviewList(data.missingWorkflows, 'No missing workflows detected.') +
+        '<p><strong>Recommendations</strong></p>' +
+        renderFounderReviewList(data.recommendations, 'No recommendations yet.') +
+        '<p><strong>Assessment History</strong></p>' +
+        '<div class="product-architect-history">' + (historyRows || '<p class="hint">No prior product architecture runs recorded yet.</p>') + '</div>',
+    );
+  }
+
+  function loadProductArchitect(force, profile) {
+    if (!force && productArchitectData && !profile) {
+      return Promise.resolve(productArchitectData);
+    }
+    if (productArchitectLoadPromise) {
+      return productArchitectLoadPromise;
+    }
+    var url = '/api/founder/product-architect-intelligence';
+    var queryProfile = profile || productArchitectProfile;
+    if (queryProfile) {
+      url += '?profile=' + encodeURIComponent(queryProfile);
+    }
+    productArchitectLoadPromise = fetch(url, { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('product-architect-intelligence HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        productArchitectData = data;
+        productArchitectProfile = data.profile || queryProfile;
+        return data;
+      })
+      .finally(function () {
+        productArchitectLoadPromise = null;
+      });
+    return productArchitectLoadPromise;
+  }
+
+  function bindProductArchitectActions() {
+    var profileSelect = el('product-architect-profile-select');
+    if (!profileSelect || profileSelect.getAttribute('data-bound') === 'true') return;
+    profileSelect.setAttribute('data-bound', 'true');
+    profileSelect.addEventListener('change', function () {
+      productArchitectProfile = profileSelect.value;
+      loadProductArchitect(true, productArchitectProfile)
+        .then(function () {
+          if (currentViewId === 'founder-review') {
+            renderFounderReviewSurface(workspaceData);
+          }
+        })
+        .catch(function () {
+          if (currentViewId === 'founder-review') {
+            renderFounderReviewSurface(workspaceData);
+          }
+        });
+    });
+  }
+
+  function renderLargeScaleValidationPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Large-Scale Validation',
+        '<p class="product-lead">Loading large-scale multi-app validation…</p>',
+      );
+    }
+
+    var failureRows = (data.failureDistribution || [])
+      .map(function (row) {
+        return (
+          '<div class="large-scale-row">' +
+          '<span>' + escapeHtml(row.failureClass) + '</span>' +
+          '<span>' + String(row.count) + ' (' + String(row.percentage) + '%)</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    var leaderboardRows = (data.categoryLeaderboard || [])
+      .slice(0, 10)
+      .map(function (row) {
+        return (
+          '<div class="large-scale-leaderboard-row">' +
+          '<span>' + escapeHtml(row.productName) + '</span>' +
+          '<span>' + String(row.score) + '/100</span>' +
+          '<span>' + (row.passed ? 'PASS' : 'FAIL') + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'Large-Scale Validation',
+      '<p class="product-lead">AiDevEngine generalization proof — one prompt per category across 50+ industries. Informational only.</p>' +
+        '<p><strong>Categories Tested:</strong> ' + String(data.categoriesTested) + '</p>' +
+        '<p><strong>Pass Rate:</strong> ' + String(data.passRates.overallPassRate) + '%</p>' +
+        '<p><strong>Generalization Score:</strong> ' + String(data.generalizationScore) + '/100</p>' +
+        '<p><strong>Generation Success:</strong> ' + String(data.passRates.generationSuccessRate) + '% · ' +
+        '<strong>Blueprint:</strong> ' + String(data.passRates.blueprintSuccessRate) + '% · ' +
+        '<strong>AFLA:</strong> ' + String(data.passRates.aflaSuccessRate) + '%</p>' +
+        '<p><strong>Failure Distribution</strong></p>' +
+        '<div class="large-scale-grid">' + failureRows + '</div>' +
+        '<p><strong>Category Leaderboard</strong></p>' +
+        '<div class="large-scale-leaderboard">' + leaderboardRows + '</div>' +
+        '<p><strong>Weakest Categories</strong></p>' +
+        renderFounderReviewList(data.weakestCategories, 'No weak categories flagged.') +
+        '<p><strong>Cross-App Consistency:</strong> ' + String(data.crossAppConsistency.overallConsistency) + '%</p>',
+    );
+  }
+
+  function loadLargeScaleValidation(force) {
+    if (!force && largeScaleValidationData) {
+      return Promise.resolve(largeScaleValidationData);
+    }
+    if (largeScaleValidationLoadPromise) {
+      return largeScaleValidationLoadPromise;
+    }
+    var url = '/api/founder/large-scale-validation?refresh=true';
+    largeScaleValidationLoadPromise = fetch(url, { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('large-scale-validation HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        largeScaleValidationData = data;
+        return data;
+      })
+      .finally(function () {
+        largeScaleValidationLoadPromise = null;
+      });
+    return largeScaleValidationLoadPromise;
+  }
+
+  function renderExecutionPipelinePanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Execution Pipeline',
+        '<p class="product-lead">Loading real build execution pipeline…</p>',
+      );
+    }
+
+    var failureRows = (data.failureDistribution || [])
+      .map(function (row) {
+        return (
+          '<div class="large-scale-row">' +
+          '<span>' + escapeHtml(row.failureClass) + '</span>' +
+          '<span>' + String(row.count) + ' (' + String(row.percentage) + '%)</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    var recentRows = (data.recentBuilds || [])
+      .map(function (row) {
+        return (
+          '<div class="large-scale-leaderboard-row">' +
+          '<span>' + escapeHtml(row.productName) + '</span>' +
+          '<span>' + (row.buildSuccess ? 'BUILD ✓' : 'BUILD ✗') + '</span>' +
+          '<span>' + (row.previewSuccess ? 'PREVIEW ✓' : 'PREVIEW ✗') + '</span>' +
+          '<span>' + escapeHtml(row.aflaVerdict || '—') + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'Execution Pipeline',
+      '<p class="product-lead">Real build execution proof — actual generated applications, not plans or mock execution.</p>' +
+        '<p><strong>Build Success Rate:</strong> ' + String(data.buildSuccessRate) + '% · ' +
+        '<strong>Preview Success Rate:</strong> ' + String(data.previewSuccessRate) + '% · ' +
+        '<strong>Verification Success Rate:</strong> ' + String(data.verificationSuccessRate) + '%</p>' +
+        '<p><strong>Execution Proof Status:</strong> ' + escapeHtml(data.executionProofStatus || 'UNKNOWN') + ' · ' +
+        '<strong>Execution Generalization Score:</strong> ' + String(data.executionGeneralizationScore) + '/100</p>' +
+        '<p><strong>Failure Distribution</strong></p>' +
+        '<div class="large-scale-grid">' + failureRows + '</div>' +
+        '<p><strong>Recent Builds</strong></p>' +
+        '<div class="large-scale-leaderboard">' + recentRows + '</div>',
+    );
+  }
+
+  function loadExecutionPipeline(force) {
+    if (!force && executionPipelineData) {
+      return Promise.resolve(executionPipelineData);
+    }
+    if (executionPipelineLoadPromise) {
+      return executionPipelineLoadPromise;
+    }
+    executionPipelineLoadPromise = fetch('/api/founder/real-build-execution-pipeline?refresh=true', {
+      method: 'GET',
+      cache: 'no-store',
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('real-build-execution-pipeline HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        executionPipelineData = data;
+        return data;
+      })
+      .finally(function () {
+        executionPipelineLoadPromise = null;
+      });
+    return executionPipelineLoadPromise;
+  }
+
   function renderFounderReviewDashboard(data) {
     if (!data) {
       return (
@@ -4508,6 +5094,8 @@
         '<p class="hint">' + escapeHtml(data.launchReadiness.userLabel || '') + '</p>',
       ) +
       renderRequirementDiscoveryPanel(requirementDiscoveryData) +
+      renderProductArchitectPanel(productArchitectData) +
+      renderTrustCalibrationPanel(trustCalibrationData) +
       renderProductCard(
         'Evidence Chain',
         '<div class="founder-review-evidence-grid">' + evidenceRows + '</div>',
@@ -4638,6 +5226,8 @@
     if (!container) return;
     container.innerHTML = renderFounderReviewDashboard(founderReviewData);
     bindFounderReviewDashboardActions();
+    bindProductArchitectActions();
+    bindTrustCalibrationActions();
   }
 
   function renderVerificationSurface(ws, manifest) {
@@ -4655,6 +5245,9 @@
     };
 
     var html = renderExecutionProofDashboard(executionProofData);
+    html += renderVerificationHubPanel(verificationHubData);
+    html += renderLargeScaleValidationPanel(largeScaleValidationData);
+    html += renderExecutionPipelinePanel(executionPipelineData);
     html +=
       renderProductCard(
         'Verification Readiness',
@@ -4761,6 +5354,7 @@
 
     container.innerHTML = html;
     bindExecutionProofActions();
+    bindVerificationHubActions();
     var inlineBtn = el('run-founder-test-verification');
     if (inlineBtn) {
       inlineBtn.addEventListener('click', function () {
@@ -5510,7 +6104,12 @@
     Planning: '<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h14"/></svg>',
     Execution: '<svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-14h-7l0-6z"/></svg>',
     Verification: '<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg>',
+    'Verification Hub': '<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="3"/></svg>',
     'Founder Review': '<svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>',
+    'Founder Trust Calibration': '<svg viewBox="0 0 24 24"><path d="M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7l7-4z"/><path d="M9 12l2 2 4-4"/></svg>',
+    'Product Architect Review': '<svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M7 7V5h10v2"/><path d="M8 11h8M8 15h5"/></svg>',
+    'Large-Scale Validation': '<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>',
+    'Execution Pipeline': '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
     'Requirement Discovery': '<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M12 4h9"/><path d="M4 9h16"/><path d="M4 15h16"/><path d="M4 4v16"/></svg>',
     Approvals: '<svg viewBox="0 0 24 24"><path d="M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7l7-4z"/></svg>',
     Learning: '<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
@@ -9879,6 +10478,56 @@
     })
     .catch(function () {
       /* Execution Proof falls back to loading state in Verification view */
+    });
+
+  loadVerificationHub(false)
+    .then(function () {
+      if (currentViewId === 'verification') {
+        refreshVerificationHubPanel();
+      }
+    })
+    .catch(function () {
+      /* Verification Hub falls back to loading state in Verification view */
+    });
+
+  loadProductArchitect(false)
+    .then(function () {
+      if (currentViewId === 'founder-review') {
+        renderFounderReviewSurface(workspaceData);
+      }
+    })
+    .catch(function () {
+      /* Product Architect Review falls back to loading state in Founder Review view */
+    });
+
+  loadTrustCalibration(false)
+    .then(function () {
+      if (currentViewId === 'founder-review') {
+        renderFounderReviewSurface(workspaceData);
+      }
+    })
+    .catch(function () {
+      /* Trust Calibration falls back to loading state in Founder Review view */
+    });
+
+  loadLargeScaleValidation(false)
+    .then(function () {
+      if (currentViewId === 'verification') {
+        renderVerificationSurface(workspaceData, manifestData);
+      }
+    })
+    .catch(function () {
+      /* Large-Scale Validation falls back to loading state */
+    });
+
+  loadExecutionPipeline(false)
+    .then(function () {
+      if (currentViewId === 'verification') {
+        renderVerificationSurface(workspaceData, manifestData);
+      }
+    })
+    .catch(function () {
+      /* Execution Pipeline falls back to loading state */
     });
 
   fetch(buildFounderTestApiUrl('/api/founder-reality.json', null))

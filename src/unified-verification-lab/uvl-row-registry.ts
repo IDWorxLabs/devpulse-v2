@@ -249,6 +249,19 @@ export const UNIFIED_VERIFICATION_LAB_RUNTIME_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'UNIFIED_VERIFICATION_LAB_RUNTIME_OPERATOR_FEED', module: 'unified_verification_lab_runtime', phase: 16.7, description: 'Operator feed stages for UVL runtime', extensionOnly: true },
 ] as const;
 
+export const UVL_MATURITY_VERIFICATION_HUB_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'UVL_MATURITY_TYPES', module: 'unified_verification_lab_maturity', phase: 16.7, description: 'UVL maturity and verification hub types', extensionOnly: true },
+  { rowId: 'UVL_VERIFICATION_COVERAGE_ASSESSOR', module: 'unified_verification_lab_maturity', phase: 16.7, description: 'Verification coverage assessment per application', extensionOnly: true },
+  { rowId: 'UVL_VERIFICATION_GAP_DETECTOR', module: 'unified_verification_lab_maturity', phase: 16.7, description: 'Verification gap detection and gap reports', extensionOnly: true },
+  { rowId: 'UVL_VERIFICATION_CONFIDENCE', module: 'unified_verification_lab_maturity', phase: 16.7, description: 'Verification confidence score from evidence sources', extensionOnly: true },
+  { rowId: 'UVL_MATURITY_HISTORY', module: 'unified_verification_lab_maturity', phase: 16.7, description: 'Bounded verification history store', extensionOnly: true },
+  { rowId: 'UVL_MATURITY_ASSESSOR', module: 'unified_verification_lab_maturity', phase: 16.7, description: 'UVL maturity assessment orchestrator', extensionOnly: true },
+  { rowId: 'UVL_VERIFICATION_HUB_OPERATOR_API', module: 'unified_verification_lab_maturity', phase: 16.7, description: 'Verification Hub operator API surface', extensionOnly: true },
+  { rowId: 'UVL_VERIFICATION_SUITE_REGISTRY', module: 'unified_verification_lab_maturity', phase: 16.7, description: 'Multi-app verification proof registry', extensionOnly: true },
+  { rowId: 'UVL_MATURITY_AFLA_INTEGRATION', module: 'unified_verification_lab_maturity', phase: 16.7, description: 'AFLA consumes UVL coverage confidence and gaps', extensionOnly: true },
+  { rowId: 'UVL_MATURITY_OPERATOR_FEED', module: 'unified_verification_lab_maturity', phase: 16.7, description: 'Operator feed stages for Verification Hub', extensionOnly: true },
+] as const;
+
 export const VERIFICATION_REGISTRY_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'VERIFICATION_REGISTRY_TYPES', module: 'verification_registry', phase: 16.8, description: 'Verification registry types and models', extensionOnly: true },
   { rowId: 'VERIFICATION_TARGET_REGISTRY', module: 'verification_registry', phase: 16.8, description: 'Verification target registry without execution', extensionOnly: true },
@@ -1878,6 +1891,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...ENGINEERING_REALITY_AUTHORITY_UVL_ROWS,
   ...AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY_UVL_ROWS,
   ...UNIFIED_VERIFICATION_LAB_RUNTIME_UVL_ROWS,
+  ...UVL_MATURITY_VERIFICATION_HUB_UVL_ROWS,
   ...VERIFICATION_REGISTRY_UVL_ROWS,
   ...VERIFICATION_ORCHESTRATOR_UVL_ROWS,
   ...VERIFICATION_EVIDENCE_ENGINE_UVL_ROWS,
@@ -2001,6 +2015,10 @@ export function listVisualVerificationEngineUvlRows(): UvlRow[] {
 
 export function listUnifiedVerificationLabRuntimeUvlRows(): UvlRow[] {
   return [...UNIFIED_VERIFICATION_LAB_RUNTIME_UVL_ROWS];
+}
+
+export function listUvlMaturityVerificationHubUvlRows(): UvlRow[] {
+  return [...UVL_MATURITY_VERIFICATION_HUB_UVL_ROWS];
 }
 
 export function listVerificationRegistryUvlRows(): UvlRow[] {

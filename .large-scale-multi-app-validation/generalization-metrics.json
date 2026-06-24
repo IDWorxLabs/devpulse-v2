@@ -1,0 +1,21 @@
+{
+  "generalizationScore": 83,
+  "passRates": {
+    "readOnly": true,
+    "generationSuccessRate": 100,
+    "buildSuccessRate": 0,
+    "blueprintSuccessRate": 0,
+    "featureRealitySuccessRate": 0,
+    "engineeringSuccessRate": 0,
+    "aflaSuccessRate": 0,
+    "overallPassRate": 100
+  },
+  "crossAppConsistency": {
+    "readOnly": true,
+    "navigationConsistency": 89,
+    "blueprintConsistency": 98,
+    "verificationConsistency": 92,
+    "launchDecisionConsistency": 100,
+    "overallConsistency": 100
+  }
+}

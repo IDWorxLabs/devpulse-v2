@@ -68,12 +68,38 @@ function reviewSeniorEngineer(evidence: FounderEvidenceSnapshot): FounderReviewe
   };
 }
 
+function applyVerificationHubPenalty(
+  score: number,
+  evidence: FounderEvidenceSnapshot,
+): number {
+  const hub = evidence.verificationHub;
+  if (!hub || !hub.incompleteVerification) return score;
+  return clamp(score - hub.verificationConfidencePenalty);
+}
+
+function applyProductArchitecturePenalty(
+  score: number,
+  evidence: FounderEvidenceSnapshot,
+): number {
+  const productArchitecture = evidence.productArchitecture;
+  if (!productArchitecture || !productArchitecture.architecturallyIncomplete) return score;
+  return clamp(score - productArchitecture.productArchitecturePenalty);
+}
+
+function applyLaunchReviewPenalties(
+  score: number,
+  evidence: FounderEvidenceSnapshot,
+): number {
+  return applyProductArchitecturePenalty(applyVerificationHubPenalty(score, evidence), evidence);
+}
+
 function reviewQa(evidence: FounderEvidenceSnapshot): FounderReviewerAssessment {
-  const score = weightedAverage([
+  const rawScore = weightedAverage([
     { score: evidence.featureReality.score, weight: 0.35 },
     { score: evidence.universalFeatureContract.score, weight: 0.35 },
     { score: evidence.engineeringReality.score, weight: 0.3 },
   ]);
+  const score = applyLaunchReviewPenalties(rawScore, evidence);
 
   const failedChecks = dedupe([
     ...evidence.featureReality.findings.filter((item) => /fail|missing|not/i.test(item)),
@@ -95,6 +121,9 @@ function reviewQa(evidence: FounderEvidenceSnapshot): FounderReviewerAssessment 
     ...evidence.universalFeatureContract.blockers,
     ...evidence.engineeringReality.warnings,
     failedChecks.length > 0 ? 'Unexplained test gaps remain in rendered runtime evidence.' : '',
+    evidence.verificationHub?.incompleteVerification
+      ? `UVL reports incomplete verification (${evidence.verificationHub.overallCoveragePercent}% coverage).`
+      : '',
   ]).slice(0, 5);
 
   return {
@@ -141,16 +170,21 @@ function reviewUx(evidence: FounderEvidenceSnapshot): FounderReviewerAssessment 
 }
 
 function reviewProduct(evidence: FounderEvidenceSnapshot): FounderReviewerAssessment {
-  const score = weightedAverage([
-    { score: evidence.featureReality.score, weight: 0.4 },
-    { score: evidence.universalFeatureContract.score, weight: 0.4 },
-    { score: evidence.launchReadiness.score, weight: 0.2 },
+  const rawScore = weightedAverage([
+    { score: evidence.featureReality.score, weight: 0.35 },
+    { score: evidence.universalFeatureContract.score, weight: 0.35 },
+    { score: evidence.launchReadiness.score, weight: 0.15 },
+    { score: evidence.productArchitecture?.productReadinessScore ?? 0, weight: 0.15 },
   ]);
+  const score = applyProductArchitecturePenalty(rawScore, evidence);
 
   const findings = dedupe([
     evidence.universalFeatureContract.passed
       ? 'Entities, actions, and workflows appear complete in contract evidence.'
       : 'Universal Feature Contract evidence reports missing business functionality.',
+    evidence.productArchitecture
+      ? `Product architecture readiness ${evidence.productArchitecture.productReadinessScore}/100 (${evidence.productArchitecture.readinessLabel}).`
+      : 'Product architecture evidence not available.',
     ...evidence.universalFeatureContract.findings.slice(0, 3),
     ...evidence.featureReality.findings.slice(0, 2),
   ]).slice(0, 6);
@@ -158,6 +192,9 @@ function reviewProduct(evidence: FounderEvidenceSnapshot): FounderReviewerAssess
   const risks = dedupe([
     ...evidence.universalFeatureContract.blockers,
     ...evidence.featureReality.blockers,
+    ...(evidence.productArchitecture?.architecturallyIncomplete
+      ? evidence.productArchitecture.gapSummary.slice(0, 2)
+      : []),
     score < 75 ? 'Important product workflows may be incomplete for real users.' : '',
   ]).slice(0, 5);
 
@@ -172,12 +209,13 @@ function reviewProduct(evidence: FounderEvidenceSnapshot): FounderReviewerAssess
 }
 
 function reviewLaunch(evidence: FounderEvidenceSnapshot): FounderReviewerAssessment {
-  const score = weightedAverage([
+  const rawScore = weightedAverage([
     { score: evidence.launchReadiness.score, weight: 0.4 },
     { score: evidence.featureReality.score, weight: 0.2 },
     { score: evidence.engineeringReality.score, weight: 0.2 },
     { score: evidence.blueprintVisual.score, weight: 0.2 },
   ]);
+  const score = applyLaunchReviewPenalties(rawScore, evidence);
 
   const allBlockers = dedupe([
     ...evidence.buildReality.blockers,
@@ -203,6 +241,9 @@ function reviewLaunch(evidence: FounderEvidenceSnapshot): FounderReviewerAssessm
     ...allBlockers.slice(0, 4),
     ...evidence.launchReadiness.warnings.slice(0, 2),
     score < 70 ? 'Support risk is elevated for a public launch.' : '',
+    evidence.verificationHub?.incompleteVerification
+      ? `Verification confidence ${evidence.verificationHub.verificationConfidenceScore}/100 — launch proof incomplete.`
+      : '',
   ]).slice(0, 5);
 
   return {
@@ -215,12 +256,16 @@ function reviewLaunch(evidence: FounderEvidenceSnapshot): FounderReviewerAssessm
   };
 }
 
-function reviewFounder(reviewers: FounderReviewerAssessment[]): FounderReviewerAssessment {
+function reviewFounder(
+  reviewers: FounderReviewerAssessment[],
+  evidence: FounderEvidenceSnapshot,
+): FounderReviewerAssessment {
   const panelScores = reviewers.map((reviewer) => reviewer.score);
-  const score =
+  const rawScore =
     panelScores.length === 0
       ? 0
       : clamp(panelScores.reduce((sum, value) => sum + value, 0) / panelScores.length);
+  const score = applyLaunchReviewPenalties(rawScore, evidence);
 
   const criticalRiskCount = reviewers.reduce(
     (count, reviewer) =>
@@ -242,6 +287,9 @@ function reviewFounder(reviewers: FounderReviewerAssessment[]): FounderReviewerA
   const risks = dedupe([
     ...reviewers.flatMap((reviewer) => reviewer.risks.slice(0, 2)),
     founderConfidence < 70 ? 'Founder confidence is below professional launch threshold.' : '',
+    evidence.verificationHub?.incompleteVerification
+      ? 'UVL verification hub reports gaps that reduce launch confidence.'
+      : '',
   ]).slice(0, 5);
 
   return {
@@ -263,7 +311,7 @@ export function runFounderReviewerPanel(evidence: FounderEvidenceSnapshot): Foun
     reviewProduct(evidence),
     reviewLaunch(evidence),
   ];
-  return [...panel, reviewFounder(panel)];
+  return [...panel, reviewFounder(panel, evidence)];
 }
 
 export function getReviewerByRole(

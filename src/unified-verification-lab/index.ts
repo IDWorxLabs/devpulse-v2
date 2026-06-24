@@ -318,3 +318,56 @@ export {
   clearUvlLookupCache,
   MAX_UVL_CACHE_SIZE,
 } from './uvl-lookup-cache.js';
+
+export {
+  UVL_MATURITY_VERIFICATION_HUB_V1_PASS_TOKEN,
+  UVL_MATURITY_OWNER_MODULE,
+  UVL_MATURITY_PHASE,
+  MAX_UVL_MATURITY_HISTORY,
+  VERIFICATION_CONFIDENCE_THRESHOLD,
+  VERIFICATION_COVERAGE_THRESHOLD,
+} from './uvl-maturity-bounds.js';
+
+export type {
+  VerificationCoverageCategory,
+  VerificationTimelineStatus,
+  VerificationGapSeverity,
+  VerificationCoverageRow,
+  VerificationTimelineEntry,
+  VerificationGap,
+  VerificationGapReport,
+  UvlMaturityHistoryEntry,
+  UvlMaturityAssessment,
+  AssessUvlMaturityInput,
+} from './uvl-maturity-types.js';
+
+export {
+  UVL_VERIFICATION_SUITE_APPS,
+  resolveUvlSuiteApp,
+  type UvlVerificationSuiteProfile,
+} from './uvl-maturity-suite-registry.js';
+
+export {
+  buildVerificationCoverageAssessment,
+  computeOverallCoveragePercent,
+} from './uvl-verification-coverage-assessor.js';
+
+export { detectVerificationGaps } from './uvl-verification-gap-detector.js';
+
+export {
+  computeVerificationConfidenceScore,
+  computeVerificationConfidencePenalty,
+} from './uvl-verification-confidence.js';
+
+export {
+  resetUvlMaturityHistoryForTests,
+  recordUvlMaturityAssessment,
+  getLastUvlMaturityAssessment,
+  listUvlMaturityHistory,
+  getUvlMaturityHistorySize,
+} from './uvl-maturity-history.js';
+
+export {
+  assessUvlMaturity,
+  isVerificationSufficientForLaunch,
+} from './uvl-maturity-assessor.js';

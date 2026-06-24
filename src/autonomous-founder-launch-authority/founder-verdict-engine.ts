@@ -16,9 +16,20 @@ import type {
   FounderReviewerAssessment,
 } from './autonomous-founder-launch-authority-types.js';
 import { resolveFounderLaunchUserLabel } from './founder-launch-user-surface.js';
+import { buildLaunchDecisionExplainability } from './founder-launch-decision-explainability.js';
 
 function clamp(n: number): number {
   return Math.max(0, Math.min(100, Math.round(n)));
+}
+
+function hasCriticalLaunchBlockers(evidence: FounderEvidenceSnapshot): boolean {
+  if (evidence.featureReality.available && !evidence.featureReality.passed) return true;
+  if (evidence.engineeringReality.available && !evidence.engineeringReality.passed) return true;
+  if (evidence.verificationHub?.incompleteVerification) return true;
+  if (evidence.productArchitecture?.architecturallyIncomplete) return true;
+  if (evidence.requirementDiscovery?.poorlyUnderstood) return true;
+  if (evidence.missingPrerequisites.length > 0) return true;
+  return false;
 }
 
 export function buildFounderLaunchScores(reviewers: FounderReviewerAssessment[]): FounderLaunchScores {
@@ -75,6 +86,13 @@ export function deriveFounderLaunchVerdict(input: {
 }): FounderLaunchVerdict {
   const { evidence, scores, reviewers, remediationPlan } = input;
 
+  if (hasCriticalLaunchBlockers(evidence)) {
+    if (hasAutofixEligibleIssues(remediationPlan)) {
+      return 'NEEDS_AUTOFIX';
+    }
+    return 'NOT_LAUNCH_READY';
+  }
+
   if (!evidence.allPrerequisitesPassed) {
     if (hasAutofixEligibleIssues(remediationPlan)) {
       return 'NEEDS_AUTOFIX';
@@ -108,6 +126,9 @@ export function deriveFounderLaunchVerdict(input: {
   }
 
   if (scores.overallFounderScore >= 85 && founderConfidence >= 80 && lowestReviewerScore >= 70) {
+    if (evidence.productArchitecture?.architecturallyIncomplete) {
+      return 'LAUNCH_READY_WITH_WARNINGS';
+    }
     return 'LAUNCH_READY';
   }
 
@@ -161,6 +182,20 @@ export function buildAutonomousFounderLaunchAssessment(input: {
   const passed = verdict === 'LAUNCH_READY' || verdict === 'LAUNCH_READY_WITH_WARNINGS';
   const blocksLaunch = !passed;
 
+  const launchDecisionExplainability = buildLaunchDecisionExplainability({
+    verdict,
+    evidence: input.evidence,
+    assessment: {
+      scores,
+      reviewers: input.reviewers,
+      blocksLaunchReason: blocksLaunch
+        ? (input.evidence.missingPrerequisites[0] ??
+          input.reviewers.flatMap((reviewer) => reviewer.risks)[0] ??
+          `Verdict: ${verdict}`)
+        : null,
+    },
+  });
+
   return {
     readOnly: true,
     advisoryOnly: true,
@@ -185,5 +220,6 @@ export function buildAutonomousFounderLaunchAssessment(input: {
     productName: input.productName ?? null,
     generatedAt: new Date().toISOString(),
     reportMarkdown: input.reportMarkdown,
+    launchDecisionExplainability,
   };
 }

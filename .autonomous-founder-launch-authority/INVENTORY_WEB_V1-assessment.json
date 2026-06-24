@@ -8,10 +8,10 @@
     "seniorEngineeringScore": 100,
     "qaScore": 99,
     "uxScore": 100,
-    "productScore": 98,
+    "productScore": 83,
     "launchScore": 99,
-    "founderScore": 99,
-    "overallFounderScore": 99
+    "founderScore": 96,
+    "overallFounderScore": 96
   },
   "reviewers": [
     {
@@ -53,9 +53,10 @@
       "readOnly": true,
       "role": "product",
       "reviewerName": "Product Reviewer",
-      "score": 98,
+      "score": 83,
       "findings": [
         "Entities, actions, and workflows appear complete in contract evidence.",
+        "Product architecture evidence not available.",
         "Feature reality satisfied via Universal Feature Contract (FEATURE_REALITY_EXCELLENT)"
       ],
       "risks": []
@@ -76,7 +77,7 @@
       "readOnly": true,
       "role": "founder",
       "reviewerName": "Founder",
-      "score": 99,
+      "score": 96,
       "findings": [
         "Would personally launch this product with confidence.",
         "Workspace present: yes",
@@ -86,7 +87,7 @@
         "Launch readiness evidence supports customer use."
       ],
       "risks": [],
-      "founderConfidence": 99
+      "founderConfidence": 96
     }
   ],
   "evidence": {
@@ -167,6 +168,8 @@
       "findings": []
     },
     "requirementDiscovery": null,
+    "verificationHub": null,
+    "productArchitecture": null,
     "launchReadiness": {
       "readOnly": true,
       "sourceId": "launch-readiness",
@@ -190,6 +193,20 @@
   "userLabel": "✓ Launch Ready",
   "contractId": "build-ready-idea-1",
   "productName": "Inventory System",
-  "generatedAt": "2026-06-24T07:47:44.863Z",
-  "reportMarkdown": "# Autonomous Founder Launch Authority V1\n\nGenerated: 2026-06-24T07:47:44.863Z\nProduct: Inventory System\nContract: build-ready-idea-1\nVerdict: **LAUNCH_READY**\nPass token: `AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY_V1_PASS`\n\n## Scores\n\n- Senior Engineering Score: 100/100\n- QA Score: 99/100\n- UX Score: 100/100\n- Product Score: 98/100\n- Launch Score: 99/100\n- Founder Score: 99/100\n- Overall Founder Score: 99/100\n\n## Evidence Inputs\n\n- **Build Reality**: PASS — 100/100\n- **Blueprint Structure**: PASS — 100/100\n- **Blueprint Visual**: PASS — 100/100\n- **Feature Reality**: PASS — 98/100\n- **Universal Feature Contract**: PASS — 98/100\n- **Engineering Reality**: PASS — 100/100\n- **Launch Readiness**: PASS — 99/100\n\n## Reviewer Panel\n\n### Senior Engineer — 100/100\n\nFindings:\n- Workspace present: yes\n- npm install: pass\n- Checked artifacts: 25\n- Engineering reality evidence supports maintainable architecture.\n\n### QA Lead — 99/100\n\nFindings:\n- Core workflows validated by Feature Reality evidence.\n- Universal Feature Contract checks passed.\n\n### UX Reviewer — 100/100\n\nFindings:\n- Blueprint visual evidence supports understandable onboarding and navigation.\n- Required blueprint screens are structurally present.\n\n### Product Reviewer — 98/100\n\nFindings:\n- Entities, actions, and workflows appear complete in contract evidence.\n- Feature reality satisfied via Universal Feature Contract (FEATURE_REALITY_EXCELLENT)\n\n### Launch Reviewer — 99/100\n\nFindings:\n- Launch readiness evidence supports customer use.\n- Synthesized launch confidence from pipeline evidence: 99/100\n- No launch blockers detected across consumed evidence.\n\n### Founder — 99/100\nFounder Confidence: 99/100\n\nFindings:\n- Would personally launch this product with confidence.\n- Workspace present: yes\n- Core workflows validated by Feature Reality evidence.\n- Blueprint visual evidence supports understandable onboarding and navigation.\n- Entities, actions, and workflows appear complete in contract evidence.\n- Launch readiness evidence supports customer use.\n\n## User Surface\n\nUser sees: ✓ Launch Ready\n\nExpected pass token when launch-ready: `AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY_V1_PASS`"
+  "generatedAt": "2026-06-24T11:30:43.679Z",
+  "reportMarkdown": "# Autonomous Founder Launch Authority V1\n\nGenerated: 2026-06-24T11:30:43.679Z\nProduct: Inventory System\nContract: build-ready-idea-1\nVerdict: **LAUNCH_READY**\nPass token: `AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY_V1_PASS`\n\n## Scores\n\n- Senior Engineering Score: 100/100\n- QA Score: 99/100\n- UX Score: 100/100\n- Product Score: 83/100\n- Launch Score: 99/100\n- Founder Score: 96/100\n- Overall Founder Score: 96/100\n\n## Evidence Inputs\n\n- **Build Reality**: PASS — 100/100\n- **Blueprint Structure**: PASS — 100/100\n- **Blueprint Visual**: PASS — 100/100\n- **Feature Reality**: PASS — 98/100\n- **Universal Feature Contract**: PASS — 98/100\n- **Engineering Reality**: PASS — 100/100\n- **Launch Readiness**: PASS — 99/100\n\n## Reviewer Panel\n\n### Senior Engineer — 100/100\n\nFindings:\n- Workspace present: yes\n- npm install: pass\n- Checked artifacts: 25\n- Engineering reality evidence supports maintainable architecture.\n\n### QA Lead — 99/100\n\nFindings:\n- Core workflows validated by Feature Reality evidence.\n- Universal Feature Contract checks passed.\n\n### UX Reviewer — 100/100\n\nFindings:\n- Blueprint visual evidence supports understandable onboarding and navigation.\n- Required blueprint screens are structurally present.\n\n### Product Reviewer — 83/100\n\nFindings:\n- Entities, actions, and workflows appear complete in contract evidence.\n- Product architecture evidence not available.\n- Feature reality satisfied via Universal Feature Contract (FEATURE_REALITY_EXCELLENT)\n\n### Launch Reviewer — 99/100\n\nFindings:\n- Launch readiness evidence supports customer use.\n- Synthesized launch confidence from pipeline evidence: 99/100\n- No launch blockers detected across consumed evidence.\n\n### Founder — 96/100\nFounder Confidence: 96/100\n\nFindings:\n- Would personally launch this product with confidence.\n- Workspace present: yes\n- Core workflows validated by Feature Reality evidence.\n- Blueprint visual evidence supports understandable onboarding and navigation.\n- Entities, actions, and workflows appear complete in contract evidence.\n- Launch readiness evidence supports customer use.\n\n## User Surface\n\nUser sees: ✓ Launch Ready\n\nExpected pass token when launch-ready: `AUTONOMOUS_FOUNDER_LAUNCH_AUTHORITY_V1_PASS`",
+  "launchDecisionExplainability": {
+    "readOnly": true,
+    "decisionSummary": "Launch approved (LAUNCH READY) — 13 positive signals, 0 risks noted.",
+    "topPositiveSignals": [
+      "Build Reality passed (100/100)",
+      "Blueprint Structure passed (100/100)",
+      "Blueprint Visual passed (100/100)",
+      "Feature Reality passed (98/100)",
+      "Universal Feature Contract passed (98/100)",
+      "Engineering Reality passed (100/100)"
+    ],
+    "topRisks": [],
+    "reasonForVerdict": "Overall founder score 96/100 with founder confidence 96/100 — evidence supports launch."
+  }
 }

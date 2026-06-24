@@ -1,0 +1,12 @@
+[
+  {
+    "readOnly": true,
+    "workflow": "Enrollment to Class",
+    "complete": false,
+    "missingSteps": [
+      "Assign Class",
+      "Track Attendance"
+    ],
+    "severity": "CRITICAL"
+  }
+]

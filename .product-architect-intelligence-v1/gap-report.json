@@ -1,0 +1,116 @@
+{
+  "readOnly": true,
+  "gaps": [
+    {
+      "readOnly": true,
+      "category": "Missing Screens",
+      "severity": "INFO",
+      "summary": "Missing screen: Dashboard",
+      "detail": "Product Gap — expected Dashboard for SCHOOL_MANAGEMENT products."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Screens",
+      "severity": "CRITICAL",
+      "summary": "Missing screen: Teachers",
+      "detail": "Critical Product Gap — expected Teachers for SCHOOL_MANAGEMENT products."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Screens",
+      "severity": "CRITICAL",
+      "summary": "Missing screen: Attendance",
+      "detail": "Critical Product Gap — expected Attendance for SCHOOL_MANAGEMENT products."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Screens",
+      "severity": "INFO",
+      "summary": "Missing screen: Grades",
+      "detail": "Product Gap — expected Grades for SCHOOL_MANAGEMENT products."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Screens",
+      "severity": "INFO",
+      "summary": "Missing screen: Reports",
+      "detail": "Product Gap — expected Reports for SCHOOL_MANAGEMENT products."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Screens",
+      "severity": "INFO",
+      "summary": "Missing screen: Settings",
+      "detail": "Product Gap — expected Settings for SCHOOL_MANAGEMENT products."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Workflows",
+      "severity": "CRITICAL",
+      "summary": "Workflow incomplete: Enrollment to Class",
+      "detail": "Missing steps: Assign Class, Track Attendance"
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Workflows",
+      "severity": "CRITICAL",
+      "summary": "Broken journey: Returning User Journey",
+      "detail": "Missing action: View Schedule; Returning User Journey has no evidenced entry actions.; Navigation structure not evidenced — journey may be hard to discover."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Workflows",
+      "severity": "CRITICAL",
+      "summary": "Broken journey: Power User Journey",
+      "detail": "Missing action: Grade Management; Power User Journey has no evidenced entry actions.; Navigation structure not evidenced — journey may be hard to discover."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Workflows",
+      "severity": "CRITICAL",
+      "summary": "Broken journey: Admin Journey",
+      "detail": "Missing action: Manage Staff; Admin Journey has no evidenced entry actions.; Navigation structure not evidenced — journey may be hard to discover."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Roles",
+      "severity": "WARNING",
+      "summary": "Missing role: Teacher",
+      "detail": "Expected Teacher role support for School Management."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Roles",
+      "severity": "WARNING",
+      "summary": "Missing role: Admin",
+      "detail": "Expected Admin role support for School Management."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Reporting",
+      "severity": "WARNING",
+      "summary": "Reporting capability not evidenced",
+      "detail": "Operational visibility may be limited without reporting surfaces."
+    },
+    {
+      "readOnly": true,
+      "category": "Missing Administration",
+      "severity": "WARNING",
+      "summary": "Administration capability not evidenced",
+      "detail": "Product operators may lack management controls."
+    }
+  ],
+  "criticalGapCount": 6,
+  "warningGapCount": 4,
+  "infoGapCount": 4,
+  "gapSummary": [
+    "Missing screen: Dashboard",
+    "Missing screen: Teachers",
+    "Missing screen: Attendance",
+    "Missing screen: Grades",
+    "Missing screen: Reports",
+    "Missing screen: Settings",
+    "Workflow incomplete: Enrollment to Class",
+    "Broken journey: Returning User Journey"
+  ]
+}

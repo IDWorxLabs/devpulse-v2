@@ -14,10 +14,21 @@ import {
   assessCqiMaturity,
   getLastCqiMaturityAssessment,
 } from '../clarifying-question-intelligence/index.js';
+import {
+  assessUvlMaturity,
+  getLastUvlMaturityAssessment,
+} from '../unified-verification-lab/index.js';
+import {
+  assessProductArchitecture,
+  computeProductArchitectureAflaPenalty,
+  getLastProductArchitectureAssessment,
+} from '../product-architect-intelligence-v1/index.js';
 import type {
   FounderEvidenceSnapshot,
   FounderEvidenceSource,
+  FounderProductArchitectureEvidence,
   FounderRequirementDiscoveryEvidence,
+  FounderVerificationHubEvidence,
 } from './autonomous-founder-launch-authority-types.js';
 
 function clamp(n: number): number {
@@ -340,6 +351,61 @@ function buildRequirementDiscoveryEvidence(
   };
 }
 
+function buildProductArchitectureEvidence(
+  productPrompt?: string | null,
+  profile?: string | null,
+): FounderProductArchitectureEvidence | null {
+  const assessment = productPrompt || profile
+    ? assessProductArchitecture({
+        productPrompt: productPrompt ?? undefined,
+        profile: profile ?? undefined,
+      })
+    : getLastProductArchitectureAssessment();
+  if (!assessment) return null;
+
+  const penalty = computeProductArchitectureAflaPenalty(assessment);
+
+  return {
+    readOnly: true,
+    productReadinessScore: assessment.scores.productReadinessScore,
+    architectureScore: assessment.scores.architectureScore,
+    workflowCompletenessScore: assessment.scores.workflowCompletenessScore,
+    userJourneyScore: assessment.scores.userJourneyScore,
+    screenCoverageScore: assessment.scores.screenCoverageScore,
+    readinessLabel: assessment.scores.readinessLabel,
+    criticalProductGapCount: assessment.gapReport.criticalGapCount,
+    gapSummary: assessment.gapReport.gapSummary,
+    missingScreens: assessment.missingScreens.map((screen) => screen.screen),
+    missingWorkflows: assessment.workflowAnalysis
+      .filter((workflow) => !workflow.complete)
+      .map((workflow) => workflow.workflow),
+    architecturallyIncomplete: penalty.architecturallyIncomplete,
+    productArchitecturePenalty: penalty.penalty,
+    cqiRootCause: assessment.cqiContext?.rootCause ?? null,
+  };
+}
+
+function buildVerificationHubEvidence(
+  productPrompt?: string | null,
+  profile?: string | null,
+): FounderVerificationHubEvidence | null {
+  const assessment = productPrompt || profile
+    ? assessUvlMaturity({ productPrompt: productPrompt ?? undefined, profile: profile ?? undefined })
+    : getLastUvlMaturityAssessment();
+  if (!assessment) return null;
+
+  return {
+    readOnly: true,
+    overallCoveragePercent: assessment.overallCoveragePercent,
+    verificationConfidenceScore: assessment.verificationConfidenceScore,
+    gapSummary: assessment.verificationGapReport.gapSummary,
+    missingVerificationAreas: assessment.missingVerificationAreas,
+    incompleteVerification: assessment.incompleteVerification,
+    verificationSufficientForLaunch: assessment.verificationSufficientForLaunch,
+    verificationConfidencePenalty: assessment.verificationConfidencePenalty,
+  };
+}
+
 export function collectFounderLaunchEvidence(input: {
   projectRootDir?: string | null;
   workspaceDir?: string | null;
@@ -347,6 +413,7 @@ export function collectFounderLaunchEvidence(input: {
   blueprintStructure?: FounderEvidenceSource | null;
   synthesizeLaunchReadiness?: boolean;
   productPrompt?: string | null;
+  profile?: string | null;
 }): FounderEvidenceSnapshot {
   const buildReality = buildBuildRealityEvidence({
     projectRootDir: input.projectRootDir ?? null,
@@ -373,6 +440,8 @@ export function collectFounderLaunchEvidence(input: {
     universalFeatureContract,
     engineeringReality,
     requirementDiscovery: buildRequirementDiscoveryEvidence(input.productPrompt ?? null),
+    verificationHub: buildVerificationHubEvidence(input.productPrompt ?? null, input.profile ?? null),
+    productArchitecture: buildProductArchitectureEvidence(input.productPrompt ?? null, input.profile ?? null),
   };
 
   const launchReadiness = input.synthesizeLaunchReadiness
@@ -392,9 +461,14 @@ export function collectFounderLaunchEvidence(input: {
     .map((source) => source.sourceName);
 
   const requirementDiscovery = partial.requirementDiscovery;
-  const extendedMissing = requirementDiscovery?.poorlyUnderstood
-    ? [...missingPrerequisites, 'Requirement Discovery incomplete']
-    : missingPrerequisites;
+  const verificationHub = partial.verificationHub;
+  const productArchitecture = partial.productArchitecture;
+  const extendedMissing = [
+    ...(requirementDiscovery?.poorlyUnderstood ? ['Requirement Discovery incomplete'] : []),
+    ...(verificationHub?.incompleteVerification ? ['Verification Hub incomplete'] : []),
+    ...(productArchitecture?.architecturallyIncomplete ? ['Product Architecture incomplete'] : []),
+    ...missingPrerequisites,
+  ];
 
   return {
     ...partial,

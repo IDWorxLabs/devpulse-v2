@@ -1,0 +1,278 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "Product Architect Intelligence",
+  "profile": "LEARNING_PLATFORM_WEB_V1",
+  "productName": "Learning Platform",
+  "productPrompt": "Build a learning platform with courses, lessons, student progress, and assessments.",
+  "productDomain": "SCHOOL_MANAGEMENT",
+  "scores": {
+    "readOnly": true,
+    "productCompletenessScore": 16,
+    "workflowCompletenessScore": 0,
+    "screenCoverageScore": 25,
+    "userJourneyScore": 25,
+    "architectureScore": 16,
+    "overallProductScore": 0,
+    "productReadinessScore": 0,
+    "readinessLabel": "Architecturally Incomplete"
+  },
+  "missingScreens": [
+    {
+      "readOnly": true,
+      "screen": "Dashboard",
+      "severity": "INFO",
+      "flag": "Product Gap",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "screen": "Teachers",
+      "severity": "CRITICAL",
+      "flag": "Critical Product Gap",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "screen": "Attendance",
+      "severity": "CRITICAL",
+      "flag": "Critical Product Gap",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "screen": "Grades",
+      "severity": "INFO",
+      "flag": "Product Gap",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "screen": "Reports",
+      "severity": "INFO",
+      "flag": "Product Gap",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "screen": "Settings",
+      "severity": "INFO",
+      "flag": "Product Gap",
+      "critical": false
+    }
+  ],
+  "workflowAnalysis": [
+    {
+      "readOnly": true,
+      "workflow": "Enrollment to Class",
+      "complete": false,
+      "missingSteps": [
+        "Assign Class",
+        "Track Attendance"
+      ],
+      "severity": "CRITICAL"
+    }
+  ],
+  "journeyAnalysis": [
+    {
+      "readOnly": true,
+      "journeyType": "First-Time User Journey",
+      "complete": true,
+      "deadEnds": [],
+      "missingActions": [],
+      "confusingNavigation": [],
+      "broken": false
+    },
+    {
+      "readOnly": true,
+      "journeyType": "Returning User Journey",
+      "complete": false,
+      "deadEnds": [
+        "Returning User Journey has no evidenced entry actions."
+      ],
+      "missingActions": [
+        "View Schedule"
+      ],
+      "confusingNavigation": [
+        "Navigation structure not evidenced — journey may be hard to discover."
+      ],
+      "broken": true
+    },
+    {
+      "readOnly": true,
+      "journeyType": "Power User Journey",
+      "complete": false,
+      "deadEnds": [
+        "Power User Journey has no evidenced entry actions."
+      ],
+      "missingActions": [
+        "Grade Management"
+      ],
+      "confusingNavigation": [
+        "Navigation structure not evidenced — journey may be hard to discover."
+      ],
+      "broken": true
+    },
+    {
+      "readOnly": true,
+      "journeyType": "Admin Journey",
+      "complete": false,
+      "deadEnds": [
+        "Admin Journey has no evidenced entry actions."
+      ],
+      "missingActions": [
+        "Manage Staff"
+      ],
+      "confusingNavigation": [
+        "Navigation structure not evidenced — journey may be hard to discover."
+      ],
+      "broken": true
+    }
+  ],
+  "gapReport": {
+    "readOnly": true,
+    "gaps": [
+      {
+        "readOnly": true,
+        "category": "Missing Screens",
+        "severity": "INFO",
+        "summary": "Missing screen: Dashboard",
+        "detail": "Product Gap — expected Dashboard for SCHOOL_MANAGEMENT products."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Screens",
+        "severity": "CRITICAL",
+        "summary": "Missing screen: Teachers",
+        "detail": "Critical Product Gap — expected Teachers for SCHOOL_MANAGEMENT products."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Screens",
+        "severity": "CRITICAL",
+        "summary": "Missing screen: Attendance",
+        "detail": "Critical Product Gap — expected Attendance for SCHOOL_MANAGEMENT products."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Screens",
+        "severity": "INFO",
+        "summary": "Missing screen: Grades",
+        "detail": "Product Gap — expected Grades for SCHOOL_MANAGEMENT products."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Screens",
+        "severity": "INFO",
+        "summary": "Missing screen: Reports",
+        "detail": "Product Gap — expected Reports for SCHOOL_MANAGEMENT products."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Screens",
+        "severity": "INFO",
+        "summary": "Missing screen: Settings",
+        "detail": "Product Gap — expected Settings for SCHOOL_MANAGEMENT products."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Workflows",
+        "severity": "CRITICAL",
+        "summary": "Workflow incomplete: Enrollment to Class",
+        "detail": "Missing steps: Assign Class, Track Attendance"
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Workflows",
+        "severity": "CRITICAL",
+        "summary": "Broken journey: Returning User Journey",
+        "detail": "Missing action: View Schedule; Returning User Journey has no evidenced entry actions.; Navigation structure not evidenced — journey may be hard to discover."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Workflows",
+        "severity": "CRITICAL",
+        "summary": "Broken journey: Power User Journey",
+        "detail": "Missing action: Grade Management; Power User Journey has no evidenced entry actions.; Navigation structure not evidenced — journey may be hard to discover."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Workflows",
+        "severity": "CRITICAL",
+        "summary": "Broken journey: Admin Journey",
+        "detail": "Missing action: Manage Staff; Admin Journey has no evidenced entry actions.; Navigation structure not evidenced — journey may be hard to discover."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Roles",
+        "severity": "WARNING",
+        "summary": "Missing role: Teacher",
+        "detail": "Expected Teacher role support for School Management."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Roles",
+        "severity": "WARNING",
+        "summary": "Missing role: Admin",
+        "detail": "Expected Admin role support for School Management."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Reporting",
+        "severity": "WARNING",
+        "summary": "Reporting capability not evidenced",
+        "detail": "Operational visibility may be limited without reporting surfaces."
+      },
+      {
+        "readOnly": true,
+        "category": "Missing Administration",
+        "severity": "WARNING",
+        "summary": "Administration capability not evidenced",
+        "detail": "Product operators may lack management controls."
+      }
+    ],
+    "criticalGapCount": 6,
+    "warningGapCount": 4,
+    "infoGapCount": 4,
+    "gapSummary": [
+      "Missing screen: Dashboard",
+      "Missing screen: Teachers",
+      "Missing screen: Attendance",
+      "Missing screen: Grades",
+      "Missing screen: Reports",
+      "Missing screen: Settings",
+      "Workflow incomplete: Enrollment to Class",
+      "Broken journey: Returning User Journey"
+    ]
+  },
+  "cqiContext": {
+    "readOnly": true,
+    "requirementConfidenceScore": 25,
+    "criticalRequirementGapCount": 4,
+    "coverageMatrixSummary": [
+      "Business: Partial",
+      "Users: Complete",
+      "Roles: Missing",
+      "Permissions: Missing",
+      "Workflows: Missing",
+      "Data: Missing",
+      "Files: Missing",
+      "Notifications: Missing",
+      "Integrations: Missing",
+      "AI: Missing",
+      "Monetization: Missing",
+      "Deployment: Missing"
+    ],
+    "rootCause": "Poor Requirements",
+    "rootCauseDetail": "Missing architecture likely stems from incomplete requirement discovery."
+  },
+  "architecturallyComplete": false,
+  "launchReadyFromProductArchitecture": false,
+  "recommendations": [
+    "Add missing core screens before verification and launch review.",
+    "Complete primary user workflows end-to-end, including confirmation and recovery paths.",
+    "Review first-time, returning, power user, and admin journeys for dead ends.",
+    "Resolve 6 critical product gap(s) flagged in the Product Gap Report."
+  ],
+  "generatedAt": "2026-06-24T11:27:23.804Z"
+}

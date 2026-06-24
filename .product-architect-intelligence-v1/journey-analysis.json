@@ -1,0 +1,56 @@
+[
+  {
+    "readOnly": true,
+    "journeyType": "First-Time User Journey",
+    "complete": true,
+    "deadEnds": [],
+    "missingActions": [],
+    "confusingNavigation": [],
+    "broken": false
+  },
+  {
+    "readOnly": true,
+    "journeyType": "Returning User Journey",
+    "complete": false,
+    "deadEnds": [
+      "Returning User Journey has no evidenced entry actions."
+    ],
+    "missingActions": [
+      "View Schedule"
+    ],
+    "confusingNavigation": [
+      "Navigation structure not evidenced — journey may be hard to discover."
+    ],
+    "broken": true
+  },
+  {
+    "readOnly": true,
+    "journeyType": "Power User Journey",
+    "complete": false,
+    "deadEnds": [
+      "Power User Journey has no evidenced entry actions."
+    ],
+    "missingActions": [
+      "Grade Management"
+    ],
+    "confusingNavigation": [
+      "Navigation structure not evidenced — journey may be hard to discover."
+    ],
+    "broken": true
+  },
+  {
+    "readOnly": true,
+    "journeyType": "Admin Journey",
+    "complete": false,
+    "deadEnds": [
+      "Admin Journey has no evidenced entry actions."
+    ],
+    "missingActions": [
+      "Manage Staff"
+    ],
+    "confusingNavigation": [
+      "Navigation structure not evidenced — journey may be hard to discover."
+    ],
+    "broken": true
+  }
+]

@@ -397,7 +397,7 @@ function buildProfileContract(input: {
 export function buildUniversalFeatureContract(
   input: BuildUniversalFeatureContractInput,
 ): UniversalFeatureContract {
-  const profile = detectUniversalAppProfile(input.rawPrompt);
+  const profile = input.profile ?? detectUniversalAppProfile(input.rawPrompt);
   if (!profile) {
     throw new Error('Unable to infer application profile from user idea');
   }

@@ -1,0 +1,14 @@
+[
+  {
+    "readOnly": true,
+    "failureClass": "Requirement Failure",
+    "count": 58,
+    "percentage": 100
+  },
+  {
+    "readOnly": true,
+    "failureClass": "None",
+    "count": 0,
+    "percentage": 0
+  }
+]

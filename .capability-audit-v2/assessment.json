@@ -1,0 +1,1203 @@
+{
+  "version": "V2",
+  "generatedAt": "2026-06-24T11:23:48.205Z",
+  "passToken": "AIDEVENGINE_CAPABILITY_AUDIT_V2_PASS",
+  "readOnly": true,
+  "priorAuditVersion": "V1",
+  "categoryCount": 15,
+  "capabilityCount": 87,
+  "matureCount": 28,
+  "partialCount": 54,
+  "experimentalCount": 4,
+  "missingCount": 1,
+  "highDuplicateRiskCount": 11,
+  "categories": [
+    "IDEA_INTAKE",
+    "REQUIREMENT_INTELLIGENCE",
+    "PLANNING_INTELLIGENCE",
+    "PRODUCT_ARCHITECT_INTELLIGENCE",
+    "CODE_GENERATION",
+    "BLUEPRINT_SYSTEMS",
+    "FEATURE_VALIDATION",
+    "ENGINEERING_REVIEW",
+    "VERIFICATION_SYSTEMS",
+    "FOUNDER_REVIEW",
+    "LAUNCH_READINESS",
+    "SELF_EVOLUTION",
+    "MULTI_PROJECT_EXECUTION",
+    "WORLD2",
+    "OPERATOR_SYSTEMS"
+  ],
+  "capabilities": [
+    {
+      "name": "Chat Authority",
+      "category": "IDEA_INTAKE",
+      "status": "MATURE",
+      "maturity": 92,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/chat/chat-authority.ts",
+      "validateScript": "validate:chat-authority",
+      "summary": "Sole owner of message intake, answer contract, and chat state."
+    },
+    {
+      "name": "Intent Architecture",
+      "category": "IDEA_INTAKE",
+      "status": "MATURE",
+      "maturity": 88,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/intent-architecture/",
+      "validateScript": "validate:intent-architecture",
+      "summary": "Structured intent classification (BUILD_REQUEST, etc.); classification only, no answers."
+    },
+    {
+      "name": "Unified Intake Intelligence",
+      "category": "IDEA_INTAKE",
+      "status": "PARTIAL",
+      "maturity": 85,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/unified-intake-intelligence/",
+      "validateScript": "validate:unified-intake-intelligence",
+      "summary": "Consolidates typed prompt, vault, uploads, and founder context into unified understanding.",
+      "overlapWith": [
+        "Intake Alignment Engine",
+        "Voice Notes Intelligence",
+        "Visual Reference Intelligence"
+      ]
+    },
+    {
+      "name": "LLM Chat Brain",
+      "category": "IDEA_INTAKE",
+      "status": "MATURE",
+      "maturity": 90,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/llm-chat-brain/",
+      "validateScript": "validate:real-llm-chat-brain",
+      "summary": "Real LLM chat with DevPulse context hydration and capability honesty.",
+      "overlapWith": [
+        "World-Class Chat Brain",
+        "Chat Cognitive Architecture"
+      ]
+    },
+    {
+      "name": "World-Class Chat Brain",
+      "category": "IDEA_INTAKE",
+      "status": "PARTIAL",
+      "maturity": 86,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/world-class-chat-brain/",
+      "validateScript": "validate:world-class-chat-brain",
+      "summary": "Chat orchestration, capability honesty, and answer quality judging.",
+      "overlapWith": [
+        "LLM Chat Brain",
+        "Chat Cognitive Architecture"
+      ]
+    },
+    {
+      "name": "Chat Cognitive Architecture",
+      "category": "IDEA_INTAKE",
+      "status": "PARTIAL",
+      "maturity": 82,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/chat-cognitive-architecture/",
+      "validateScript": "validate:chat-cognitive-architecture",
+      "summary": "Cognitive intent understanding, self-model, and response planning.",
+      "overlapWith": [
+        "Intent Architecture",
+        "World-Class Chat Brain"
+      ]
+    },
+    {
+      "name": "Voice Notes Intelligence",
+      "category": "IDEA_INTAKE",
+      "status": "PARTIAL",
+      "maturity": 80,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/voice-notes-intelligence/",
+      "validateScript": "validate:voice-notes-intelligence",
+      "summary": "Voice transcript → intent, requirements, and clarifying questions."
+    },
+    {
+      "name": "Visual Reference Intelligence",
+      "category": "IDEA_INTAKE",
+      "status": "PARTIAL",
+      "maturity": 78,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/visual-reference-intelligence/",
+      "validateScript": "validate:visual-reference-intelligence",
+      "summary": "Screenshot/mockup → layout, component, and flow inference."
+    },
+    {
+      "name": "AiDev Engine Intake Stage",
+      "category": "IDEA_INTAKE",
+      "status": "PARTIAL",
+      "maturity": 65,
+      "duplicateRisk": "LOW",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/aidev-engine/",
+      "validateScript": "validate:aidev-engine",
+      "summary": "Build request intake: RECEIVED → ANALYZING → READY_FOR_PLANNING; intake-only boundary."
+    },
+    {
+      "name": "Requirement Extractor",
+      "category": "REQUIREMENT_INTELLIGENCE",
+      "status": "MATURE",
+      "maturity": 88,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/requirement-extractor/",
+      "validateScript": "validate:requirement-extractor",
+      "summary": "Structured requirement discovery from build requests; extraction only."
+    },
+    {
+      "name": "Requirement Completeness Intelligence",
+      "category": "REQUIREMENT_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 84,
+      "duplicateRisk": "HIGH",
+      "recommendation": "MERGE",
+      "ownerPath": "src/requirement-completeness-intelligence/",
+      "validateScript": "validate:requirement-completeness-intelligence",
+      "summary": "Domain completeness analysis and clarifying question generation.",
+      "overlapWith": [
+        "Clarifying Question Intelligence"
+      ],
+      "canonicalOwner": "Clarifying Question Intelligence"
+    },
+    {
+      "name": "Clarifying Question Intelligence",
+      "category": "REQUIREMENT_INTELLIGENCE",
+      "status": "MATURE",
+      "maturity": 90,
+      "duplicateRisk": "HIGH",
+      "recommendation": "KEEP",
+      "ownerPath": "src/clarifying-question-intelligence/",
+      "validateScript": "validate:clarifying-question-intelligence",
+      "summary": "Category-based clarifying questions, assumption prevention, readiness states; Launch Council member.",
+      "overlapWith": [
+        "Requirement Completeness Intelligence"
+      ],
+      "canonicalOwner": "Clarifying Question Intelligence"
+    },
+    {
+      "name": "Intake Alignment Engine",
+      "category": "REQUIREMENT_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 80,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/intake-alignment-engine/",
+      "validateScript": "validate:intake-alignment-engine",
+      "summary": "Multi-source intake alignment and conflict repair.",
+      "overlapWith": [
+        "Unified Intake Intelligence"
+      ]
+    },
+    {
+      "name": "Planning Gate Authority",
+      "category": "PLANNING_INTELLIGENCE",
+      "status": "MATURE",
+      "maturity": 90,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/planning-gate-authority/",
+      "validateScript": "validate:planning-gate-authority",
+      "summary": "Evidence sufficiency, risk analysis, gate decisions (allow/block/defer)."
+    },
+    {
+      "name": "Planning Brief Generator",
+      "category": "PLANNING_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 85,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/planning-brief-generator/",
+      "validateScript": "validate:planning-brief-generator",
+      "summary": "Project scope, screens, workflows, and gaps brief."
+    },
+    {
+      "name": "Architecture Brief Generator",
+      "category": "PLANNING_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 85,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/architecture-brief-generator/",
+      "validateScript": "validate:architecture-brief-generator",
+      "summary": "System overview, frontend/backend, data model, and risks."
+    },
+    {
+      "name": "Build Plan Generator",
+      "category": "PLANNING_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 85,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/build-plan-generator/",
+      "validateScript": "validate:build-plan-generator",
+      "summary": "Build phases, milestones, dependencies, and risks."
+    },
+    {
+      "name": "Product Architect",
+      "category": "PLANNING_INTELLIGENCE",
+      "status": "MATURE",
+      "maturity": 88,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/product-architect/",
+      "validateScript": "validate:product-architect",
+      "summary": "Architecture blueprint: modules, screens, flows, permissions; design only.",
+      "overlapWith": [
+        "Universal App Blueprint Planning Rule"
+      ]
+    },
+    {
+      "name": "Code Generation Planner",
+      "category": "PLANNING_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 84,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/code-generation-planner/",
+      "validateScript": "validate:code-generation-planner",
+      "summary": "Code plan: file targets, UI requirements, validation tasks."
+    },
+    {
+      "name": "Requirements-to-Plan Execution Contract",
+      "category": "PLANNING_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 82,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/requirements-to-plan-execution-contract/",
+      "validateScript": "validate:requirements-to-plan-contract",
+      "summary": "Formal contract bridging requirements to plan execution."
+    },
+    {
+      "name": "Execution Readiness Gate",
+      "category": "PLANNING_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 80,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/execution-readiness-gate/",
+      "validateScript": "validate:execution-readiness-gate",
+      "summary": "Execution readiness before build; overlaps planning and execution gates.",
+      "overlapWith": [
+        "Planning Gate Authority",
+        "Execution Authority"
+      ]
+    },
+    {
+      "name": "Code Generation Engine V1",
+      "category": "CODE_GENERATION",
+      "status": "PARTIAL",
+      "maturity": 72,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/code-generation-engine/",
+      "validateScript": "validate:code-generation-engine-v1",
+      "summary": "Materializes generated apps; Task Tracker + 5 CRUD profiles; not general-purpose codegen."
+    },
+    {
+      "name": "Universal CRUD Generator",
+      "category": "CODE_GENERATION",
+      "status": "PARTIAL",
+      "maturity": 85,
+      "duplicateRisk": "LOW",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/code-generation-engine/universal-crud-app-generator.ts",
+      "validateScript": "validate:code-generation-engine-v1",
+      "summary": "Profile-specific CRUD app generation for CRM, Inventory, School, PM, Task Tracker."
+    },
+    {
+      "name": "Code Generation Runtime",
+      "category": "CODE_GENERATION",
+      "status": "PARTIAL",
+      "maturity": 55,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "MERGE",
+      "ownerPath": "src/code-generation-runtime/",
+      "validateScript": "validate:code-generation-runtime-foundation",
+      "summary": "Code artifact proposals and change proposals; no file writes.",
+      "overlapWith": [
+        "Code Generation Engine V1",
+        "Controlled Builder Execution Engine"
+      ]
+    },
+    {
+      "name": "Autonomous Builder",
+      "category": "CODE_GENERATION",
+      "status": "PARTIAL",
+      "maturity": 60,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/autonomous-builder/",
+      "validateScript": "validate:autonomous-builder-foundation",
+      "summary": "Autonomous build session lifecycle foundation.",
+      "overlapWith": [
+        "World2 Autonomous Builder",
+        "Controlled Builder Execution Engine"
+      ]
+    },
+    {
+      "name": "Adaptive AutoFix Intelligence",
+      "category": "CODE_GENERATION",
+      "status": "MATURE",
+      "maturity": 88,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/adaptive-autofix-intelligence/",
+      "validateScript": "validate:adaptive-autofix-intelligence",
+      "summary": "Pattern-based adaptive autofix; Launch Council member."
+    },
+    {
+      "name": "Autonomous Repair Loop",
+      "category": "CODE_GENERATION",
+      "status": "PARTIAL",
+      "maturity": 82,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/autonomous-repair-loop/",
+      "validateScript": "validate:autonomous-repair-loop",
+      "summary": "Orchestrates repair from proof, founder, and acceptance signals.",
+      "overlapWith": [
+        "Recovery Strategy Planner",
+        "Auto-Fix Runtime"
+      ]
+    },
+    {
+      "name": "Universal App Blueprint",
+      "category": "BLUEPRINT_SYSTEMS",
+      "status": "MATURE",
+      "maturity": 92,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/universal-app-blueprint/",
+      "validateScript": "validate:universal-app-blueprint-v1",
+      "summary": "Universal App Blueprint v1 — shell, auth, onboarding, pages, feature mount points."
+    },
+    {
+      "name": "Universal App Blueprint Visual Validation",
+      "category": "BLUEPRINT_SYSTEMS",
+      "status": "MATURE",
+      "maturity": 90,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/universal-app-blueprint-visual/",
+      "validateScript": "validate:universal-app-blueprint-visual-v1",
+      "summary": "Visual validation of blueprint layout, nav, and responsiveness; Launch Council member.",
+      "overlapWith": [
+        "Visual QA Engine",
+        "UI Reviewer Authority"
+      ],
+      "canonicalOwner": "Universal App Blueprint Visual Validation"
+    },
+    {
+      "name": "Blueprint Planning Rule",
+      "category": "BLUEPRINT_SYSTEMS",
+      "status": "PARTIAL",
+      "maturity": 80,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/universal-app-blueprint/universal-app-blueprint-planning-rule.ts",
+      "summary": "Planning questions and defaults for blueprint generation."
+    },
+    {
+      "name": "Unified Verification Lab (UVL)",
+      "category": "VERIFICATION_SYSTEMS",
+      "status": "PARTIAL",
+      "maturity": 68,
+      "duplicateRisk": "HIGH",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/unified-verification-lab/",
+      "validateScript": "validate:unified-verification-lab-runtime",
+      "summary": "UVL runtime — provider registration, verification sessions; session lifecycle without full execution.",
+      "overlapWith": [
+        "Verification Orchestrator",
+        "Verification Registry",
+        "Feature Reality Validation"
+      ],
+      "canonicalOwner": "Unified Verification Lab (UVL)"
+    },
+    {
+      "name": "Feature Reality Validation",
+      "category": "FEATURE_VALIDATION",
+      "status": "MATURE",
+      "maturity": 95,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/feature-reality-validation/",
+      "validateScript": "validate:feature-reality-v1",
+      "summary": "Feature contract checks: discoverability, execution, persistence, recovery, UX; Playwright-backed.",
+      "overlapWith": [
+        "Universal Feature Contract Intelligence"
+      ]
+    },
+    {
+      "name": "Universal Feature Contract Intelligence",
+      "category": "FEATURE_VALIDATION",
+      "status": "MATURE",
+      "maturity": 92,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/universal-feature-contract-intelligence/",
+      "validateScript": "validate:universal-feature-contract-intelligence-v1",
+      "summary": "Universal CRUD feature contracts, validation plan, Playwright runner for 5 profiles.",
+      "overlapWith": [
+        "Feature Reality Validation"
+      ]
+    },
+    {
+      "name": "Verification Orchestrator",
+      "category": "VERIFICATION_SYSTEMS",
+      "status": "PARTIAL",
+      "maturity": 60,
+      "duplicateRisk": "HIGH",
+      "recommendation": "MERGE",
+      "ownerPath": "src/verification-orchestrator/",
+      "validateScript": "validate:verification-orchestrator",
+      "summary": "Verification execution planning and scheduling; planning only.",
+      "overlapWith": [
+        "Unified Verification Lab",
+        "Unified Verification Entry"
+      ],
+      "canonicalOwner": "Unified Verification Lab (UVL)"
+    },
+    {
+      "name": "Browser Verification Harness",
+      "category": "FEATURE_VALIDATION",
+      "status": "MATURE",
+      "maturity": 88,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/browser-verification/",
+      "validateScript": "validate:browser-harness",
+      "summary": "Playwright browser verification harness shared by engineering and feature validation."
+    },
+    {
+      "name": "Engineering Reality Authority",
+      "category": "ENGINEERING_REVIEW",
+      "status": "MATURE",
+      "maturity": 95,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/engineering-reality-authority/",
+      "validateScript": "validate:engineering-reality-v1",
+      "summary": "Build analysis, Playwright runtime checks, security/perf/a11y scoring; 100% pass on 5 profiles."
+    },
+    {
+      "name": "Repository Typecheck Reality",
+      "category": "ENGINEERING_REVIEW",
+      "status": "MATURE",
+      "maturity": 90,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/repository-typecheck-reality/",
+      "validateScript": "validate:repository-typecheck-reality",
+      "summary": "Repository typecheck truth; Launch Council member."
+    },
+    {
+      "name": "Execution Reality Validation",
+      "category": "ENGINEERING_REVIEW",
+      "status": "PARTIAL",
+      "maturity": 82,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/execution-reality-validation/",
+      "validateScript": "validate:execution-reality",
+      "summary": "Execution outcome reality checks.",
+      "overlapWith": [
+        "Connected Build Execution",
+        "Build Materialization Reality"
+      ]
+    },
+    {
+      "name": "Hardening Stack (Phase 23)",
+      "category": "ENGINEERING_REVIEW",
+      "status": "PARTIAL",
+      "maturity": 75,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/reliability-hardening/",
+      "validateScript": "validate:reliability-hardening",
+      "summary": "Reliability, performance, security, privacy, recovery, scale hardening — read-only analysis.",
+      "overlapWith": [
+        "Engineering Reality Authority"
+      ]
+    },
+    {
+      "name": "Connected Execution Proof Chain",
+      "category": "ENGINEERING_REVIEW",
+      "status": "MATURE",
+      "maturity": 88,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/connected-build-execution/",
+      "validateScript": "validate:connected-build-execution",
+      "summary": "Build → runtime → preview → verification → launch readiness proof chain."
+    },
+    {
+      "name": "Autonomous Founder Launch Authority",
+      "category": "LAUNCH_READINESS",
+      "status": "MATURE",
+      "maturity": 95,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/autonomous-founder-launch-authority/",
+      "validateScript": "validate:autonomous-founder-launch-authority-v1",
+      "summary": "Multi-reviewer founder panel, evidence pipeline, remediation, autofix; LAUNCH_READY on 5 profiles.",
+      "overlapWith": [
+        "Founder Launch Decision Authority",
+        "Launch Readiness Authority"
+      ],
+      "canonicalOwner": "Autonomous Founder Launch Authority"
+    },
+    {
+      "name": "Launch Council",
+      "category": "LAUNCH_READINESS",
+      "status": "MATURE",
+      "maturity": 92,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/launch-council/",
+      "validateScript": "validate:launch-council",
+      "summary": "Aggregates 28 registered authority verdicts into readiness state, blockers, confidence."
+    },
+    {
+      "name": "Launch Readiness Authority",
+      "category": "LAUNCH_READINESS",
+      "status": "PARTIAL",
+      "maturity": 85,
+      "duplicateRisk": "HIGH",
+      "recommendation": "MERGE",
+      "ownerPath": "src/launch-readiness-authority/",
+      "validateScript": "validate:launch-readiness-authority",
+      "summary": "Launch readiness scoring and thresholds; Launch Council member.",
+      "overlapWith": [
+        "Autonomous Founder Launch Authority",
+        "Founder Readiness Authority"
+      ],
+      "canonicalOwner": "Autonomous Founder Launch Authority"
+    },
+    {
+      "name": "Founder Launch Decision Authority",
+      "category": "LAUNCH_READINESS",
+      "status": "PARTIAL",
+      "maturity": 86,
+      "duplicateRisk": "HIGH",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/founder-launch-decision-authority/",
+      "validateScript": "validate:founder-launch-decision-authority",
+      "summary": "Final founder launch decision from proof chain and risk signals.",
+      "overlapWith": [
+        "Autonomous Founder Launch Authority",
+        "Launch Verdict Governance"
+      ],
+      "canonicalOwner": "Autonomous Founder Launch Authority"
+    },
+    {
+      "name": "Founder Acceptance Stack (24.8)",
+      "category": "FOUNDER_REVIEW",
+      "status": "MATURE",
+      "maturity": 88,
+      "duplicateRisk": "HIGH",
+      "recommendation": "KEEP",
+      "ownerPath": "src/founder-acceptance-validation/",
+      "validateScript": "validate:founder-acceptance-orchestrator",
+      "summary": "8 sub-modules: workflow, confidence, trust, productivity, friction, readiness orchestrator.",
+      "overlapWith": [
+        "Founder Testing Mode V1–V5",
+        "Founder Test Integration"
+      ],
+      "canonicalOwner": "Founder Acceptance Stack (24.8)"
+    },
+    {
+      "name": "Skeptical Founder Simulator",
+      "category": "FOUNDER_REVIEW",
+      "status": "PARTIAL",
+      "maturity": 82,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/skeptical-founder-simulator/",
+      "validateScript": "validate:skeptical-founder-simulator",
+      "summary": "Skeptical founder scenarios; Launch Council member."
+    },
+    {
+      "name": "Product Reality Orchestrator",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "status": "MATURE",
+      "maturity": 88,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/product-reality-verification/product-reality-orchestrator/",
+      "validateScript": "validate:product-reality-orchestrator",
+      "summary": "Master product reality aggregator across experience verification engines.",
+      "overlapWith": [
+        "Founder Test Integration"
+      ]
+    },
+    {
+      "name": "Product Experience Verification Engine",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 84,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/product-reality-verification/product-experience-verification-engine/",
+      "validateScript": "validate:product-experience-verification-engine",
+      "summary": "Coherence, continuity, and trust across product experience."
+    },
+    {
+      "name": "Command Center Brain",
+      "category": "OPERATOR_SYSTEMS",
+      "status": "MATURE",
+      "maturity": 90,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/command-center-brain/",
+      "validateScript": "validate:command-center-brain",
+      "summary": "Command Center intelligence orchestration; high fan-in hub."
+    },
+    {
+      "name": "Project Understanding Engine",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 82,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/project-understanding-engine/",
+      "validateScript": "validate:project-understanding-engine",
+      "summary": "Project comprehension and knowledge reasoning."
+    },
+    {
+      "name": "Completion Truth Engine",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 80,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/completion-truth-engine/",
+      "validateScript": "validate:completion-truth-engine",
+      "summary": "Genuine vs reported completion truth.",
+      "overlapWith": [
+        "World2 Completion Verifier",
+        "Autonomous Completion Engine"
+      ]
+    },
+    {
+      "name": "Workflow Review",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "status": "EXPERIMENTAL",
+      "maturity": 45,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/product-reality-verification/ux-heuristic-evaluator/",
+      "validateScript": "validate:ux-heuristic-evaluator",
+      "summary": "Workflow review partially covered by UX heuristic evaluator and product experience engine; no dedicated workflow authority.",
+      "overlapWith": [
+        "Product Experience Verification Engine",
+        "UI Reviewer Authority"
+      ]
+    },
+    {
+      "name": "Business Review",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "status": "PARTIAL",
+      "maturity": 50,
+      "duplicateRisk": "LOW",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/product-economics-engine/",
+      "validateScript": "validate:product-economics-engine",
+      "summary": "Business review partially covered by product economics, revenue reality, and competitive reality engines.",
+      "overlapWith": [
+        "Revenue Reality Authority",
+        "Competitive Reality Engine"
+      ]
+    },
+    {
+      "name": "UI Reviewer Authority",
+      "category": "FEATURE_VALIDATION",
+      "status": "MATURE",
+      "maturity": 90,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/ui-reviewer-authority/",
+      "validateScript": "validate:ui-reviewer-authority",
+      "summary": "Navigation, discoverability, hierarchy, workflow UI review; Launch Council member.",
+      "overlapWith": [
+        "Universal App Blueprint Visual",
+        "Visual QA Engine"
+      ],
+      "canonicalOwner": "UI Reviewer Authority"
+    },
+    {
+      "name": "Visual Quality Authority",
+      "category": "FEATURE_VALIDATION",
+      "status": "PARTIAL",
+      "maturity": 85,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/visual-quality-authority/",
+      "validateScript": "validate:visual-quality-authority",
+      "summary": "Visual quality launch assessment.",
+      "overlapWith": [
+        "Visual QA Engine",
+        "Universal App Blueprint Visual"
+      ]
+    },
+    {
+      "name": "Visual QA Engine",
+      "category": "FEATURE_VALIDATION",
+      "status": "PARTIAL",
+      "maturity": 84,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/product-reality-verification/visual-qa-engine/",
+      "validateScript": "validate:visual-qa-engine",
+      "summary": "Hierarchy, layout, spacing, typography, color, mobile/desktop checks.",
+      "overlapWith": [
+        "Universal App Blueprint Visual",
+        "UI Reviewer Authority"
+      ]
+    },
+    {
+      "name": "UX Heuristic Evaluator",
+      "category": "FEATURE_VALIDATION",
+      "status": "PARTIAL",
+      "maturity": 82,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/product-reality-verification/ux-heuristic-evaluator/",
+      "validateScript": "validate:ux-heuristic-evaluator",
+      "summary": "Navigation, discoverability, feedback, trust, intelligence visibility heuristics.",
+      "overlapWith": [
+        "UI Reviewer Authority"
+      ]
+    },
+    {
+      "name": "First Impression Judge",
+      "category": "FEATURE_VALIDATION",
+      "status": "PARTIAL",
+      "maturity": 80,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/product-reality-verification/first-impression-judge/",
+      "validateScript": "validate:first-impression-judge",
+      "summary": "Clarity, premium feel, founder usefulness assessment."
+    },
+    {
+      "name": "Navigation Review (Dedicated)",
+      "category": "FEATURE_VALIDATION",
+      "status": "MISSING",
+      "maturity": 0,
+      "duplicateRisk": "HIGH",
+      "recommendation": "REMOVE",
+      "ownerPath": "—",
+      "summary": "Phantom capability — not present. Do not build; navigation checks stay in UI Reviewer and Blueprint Visual.",
+      "overlapWith": [
+        "UI Reviewer Authority",
+        "Universal App Blueprint Visual",
+        "UX Heuristic Evaluator"
+      ],
+      "canonicalOwner": "Blueprint Visual Validation + Founder UX Review"
+    },
+    {
+      "name": "Self-Evolution Authority",
+      "category": "SELF_EVOLUTION",
+      "status": "PARTIAL",
+      "maturity": 78,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/self-evolution-authority/",
+      "validateScript": "validate:self-evolution-authority",
+      "summary": "Detects repeated failure patterns and evolution recommendations; advisory only; Launch Council member."
+    },
+    {
+      "name": "Gap Detection Authority",
+      "category": "SELF_EVOLUTION",
+      "status": "PARTIAL",
+      "maturity": 82,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/gap-detection-authority/",
+      "validateScript": "validate:gap-detection-authority",
+      "summary": "Capability and governance gap detection; Launch Council member.",
+      "overlapWith": [
+        "Missing Capability Detector"
+      ]
+    },
+    {
+      "name": "Missing Capability Detector",
+      "category": "SELF_EVOLUTION",
+      "status": "PARTIAL",
+      "maturity": 80,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "MERGE",
+      "ownerPath": "src/missing-capability-detector/",
+      "validateScript": "validate:missing-capability-detector",
+      "summary": "Missing capability detection.",
+      "overlapWith": [
+        "Gap Detection Authority"
+      ]
+    },
+    {
+      "name": "Self-Learning Engine",
+      "category": "SELF_EVOLUTION",
+      "status": "PARTIAL",
+      "maturity": 55,
+      "duplicateRisk": "LOW",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/self-learning-engine/",
+      "validateScript": "validate:self-learning-engine",
+      "summary": "Learning event classification and pattern extraction; no model modification."
+    },
+    {
+      "name": "Capability Research Engine",
+      "category": "SELF_EVOLUTION",
+      "status": "PARTIAL",
+      "maturity": 50,
+      "duplicateRisk": "LOW",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/capability-research-engine/",
+      "validateScript": "validate:capability-research-engine",
+      "summary": "Capability research → plan → build → verify chain; planning and artifacts only."
+    },
+    {
+      "name": "Failure Escalation (Automated)",
+      "category": "SELF_EVOLUTION",
+      "status": "PARTIAL",
+      "maturity": 60,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/autonomous-repair-loop/",
+      "validateScript": "validate:autonomous-repair-loop",
+      "summary": "Failure escalation partially via repair loop and self-evolution triggers; no unified escalation authority.",
+      "overlapWith": [
+        "Self-Evolution Authority",
+        "Adaptive AutoFix Intelligence"
+      ]
+    },
+    {
+      "name": "Architecture Drift Detection",
+      "category": "SELF_EVOLUTION",
+      "status": "PARTIAL",
+      "maturity": 78,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/architecture-drift-detection/",
+      "validateScript": "validate:architecture-drift-detection",
+      "summary": "Architecture drift detection and advisory signals."
+    },
+    {
+      "name": "Multi-Project Foundation",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "status": "MATURE",
+      "maturity": 88,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/multi-project-foundation/",
+      "validateScript": "validate:multi-project-foundation",
+      "summary": "Project registry, identity, lifecycle, isolation, coordinator."
+    },
+    {
+      "name": "Workspace Isolation Expansion",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "status": "PARTIAL",
+      "maturity": 82,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/workspace-isolation-expansion/",
+      "validateScript": "validate:workspace-isolation-expansion",
+      "summary": "Workspace isolation expansion across projects.",
+      "overlapWith": [
+        "World2 Workspace Foundation",
+        "World2 Disposable Workspace"
+      ]
+    },
+    {
+      "name": "Parallel Build Orchestration",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "status": "PARTIAL",
+      "maturity": 65,
+      "duplicateRisk": "LOW",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/parallel-build-orchestration/",
+      "validateScript": "validate:parallel-build-orchestration",
+      "summary": "Parallel build groups, dependency chains, capacity; planning only."
+    },
+    {
+      "name": "Multi-Project Workspace Tabs",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "status": "PARTIAL",
+      "maturity": 80,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/one-prompt-live-preview/",
+      "validateScript": "validate:multi-project-workspace-tabs",
+      "summary": "Multi-project workspace tabs in live preview."
+    },
+    {
+      "name": "Live Idea-to-Launch Execution Runner",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "status": "PARTIAL",
+      "maturity": 82,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/live-idea-to-launch-execution-runner/",
+      "validateScript": "validate:live-idea-to-launch-execution-runner",
+      "summary": "End-to-end idea→launch orchestration runner."
+    },
+    {
+      "name": "Product Architect Intelligence V1",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "status": "MATURE",
+      "maturity": 91,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/product-architect-intelligence-v1/",
+      "validateScript": "validate:product-architect-intelligence-v1",
+      "summary": "Product completeness scoring: missing screens, workflow gaps, user journeys, gap reports; integrates CQI/UVL/AFLA/large-scale.",
+      "overlapWith": [
+        "Product Architect",
+        "Workflow Review",
+        "Product Experience Verification Engine"
+      ],
+      "canonicalOwner": "Product Architect Intelligence V1"
+    },
+    {
+      "name": "UVL Verification Hub V1",
+      "category": "VERIFICATION_SYSTEMS",
+      "status": "PARTIAL",
+      "maturity": 72,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/unified-verification-lab/",
+      "validateScript": "validate:uvl-maturity-verification-hub-v1",
+      "summary": "UVL maturity hub: coverage assessment, gap detection, confidence scoring; module mature but operational coverage ~6%.",
+      "overlapWith": [
+        "Unified Verification Lab (UVL)",
+        "Verification Orchestrator"
+      ],
+      "canonicalOwner": "Unified Verification Lab (UVL)"
+    },
+    {
+      "name": "AFLA Trust Calibration V1",
+      "category": "LAUNCH_READINESS",
+      "status": "MATURE",
+      "maturity": 88,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/afla-trust-calibration-v1/",
+      "validateScript": "validate:afla-trust-calibration-v1",
+      "summary": "Trust calibration for AFLA: false positive/negative detection, verdict stability, reviewer alignment, trust score.",
+      "overlapWith": [
+        "Autonomous Founder Launch Authority"
+      ],
+      "canonicalOwner": "Autonomous Founder Launch Authority"
+    },
+    {
+      "name": "Large-Scale Multi-App Validation V1",
+      "category": "VERIFICATION_SYSTEMS",
+      "status": "PARTIAL",
+      "maturity": 70,
+      "duplicateRisk": "LOW",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/large-scale-multi-app-validation-v1/",
+      "validateScript": "validate:large-scale-multi-app-validation-v1",
+      "summary": "58-category multi-app validation harness; generalization score 83 but downstream build/blueprint pipeline 0% success.",
+      "overlapWith": [
+        "Feature Reality Validation",
+        "Engineering Reality Authority"
+      ]
+    },
+    {
+      "name": "Founder Review Operator Dashboard V1",
+      "category": "OPERATOR_SYSTEMS",
+      "status": "MATURE",
+      "maturity": 87,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/founder-review-operator-dashboard/",
+      "validateScript": "validate:founder-review-operator-dashboard-v1",
+      "summary": "Founder Reality operator dashboard: founder review panel, AFLA cache integration, planning/execution/verification views.",
+      "overlapWith": [
+        "Command Center Brain",
+        "Inline Operator Feed"
+      ]
+    },
+    {
+      "name": "Canonical Capability Ownership V1",
+      "category": "SELF_EVOLUTION",
+      "status": "MATURE",
+      "maturity": 90,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/canonical-capability-ownership/",
+      "validateScript": "validate:canonical-capability-ownership-v1",
+      "summary": "One capability = one canonical owner; 5/5 consolidation groups complete; meta-governance for duplicate prevention."
+    },
+    {
+      "name": "Founder Reality Surface",
+      "category": "OPERATOR_SYSTEMS",
+      "status": "MATURE",
+      "maturity": 86,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "public/founder-reality/",
+      "validateScript": "validate:founder-reality-surface",
+      "summary": "Unified operator UI hosting verification hub, product architect, trust calibration, large-scale validation panels.",
+      "overlapWith": [
+        "Founder Review Operator Dashboard V1",
+        "Command Center Brain"
+      ]
+    },
+    {
+      "name": "World2 Disposable Workspace Pipeline (24E–24Y)",
+      "category": "WORLD2",
+      "status": "PARTIAL",
+      "maturity": 68,
+      "duplicateRisk": "HIGH",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/world2-disposable-workspace/",
+      "validateScript": "validate:world2-disposable-workspace",
+      "summary": "Canonical World2 disposable workspace orchestration; registered in ownership registry.",
+      "overlapWith": [
+        "World2 Execution Engine",
+        "World2 Controlled Execution Runtime"
+      ],
+      "canonicalOwner": "World2 Disposable Workspace Pipeline (24E–24Y)"
+    },
+    {
+      "name": "World2 Execution Engine",
+      "category": "WORLD2",
+      "status": "PARTIAL",
+      "maturity": 58,
+      "duplicateRisk": "HIGH",
+      "recommendation": "MERGE",
+      "ownerPath": "src/world2-execution-engine/",
+      "validateScript": "validate:world2-execution-engine",
+      "summary": "Execution modes, queue, scope boundaries; merged into disposable pipeline per ownership registry.",
+      "overlapWith": [
+        "World2 Disposable Workspace Pipeline (24E–24Y)"
+      ],
+      "canonicalOwner": "World2 Disposable Workspace Pipeline (24E–24Y)"
+    },
+    {
+      "name": "World2 Workspace Foundation",
+      "category": "WORLD2",
+      "status": "PARTIAL",
+      "maturity": 72,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "ownerPath": "src/world2-workspace-foundation/",
+      "validateScript": "validate:world2-workspace-foundation",
+      "summary": "Workspace isolation, identity, governance bridge for World2."
+    },
+    {
+      "name": "World2 Execution Planner",
+      "category": "WORLD2",
+      "status": "PARTIAL",
+      "maturity": 70,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/world2-execution-planner/",
+      "validateScript": "validate:world2-execution-planner",
+      "summary": "Execution plan generation from workspace state."
+    },
+    {
+      "name": "World2 Simulation Runtime",
+      "category": "WORLD2",
+      "status": "PARTIAL",
+      "maturity": 68,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/world2-simulation-runtime/",
+      "validateScript": "validate:world2-simulation-runtime",
+      "summary": "Pre-execution stage simulation; simulation-first boundary."
+    },
+    {
+      "name": "World2 Dry Run Execution Composer",
+      "category": "WORLD2",
+      "status": "PARTIAL",
+      "maturity": 66,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/world2-dry-run-execution-composer/",
+      "validateScript": "validate:world2-dry-run-execution-composer",
+      "summary": "Compose dry-run execution packages; bridge to real execution not yet closed.",
+      "overlapWith": [
+        "World2 Dry Run Execution Verifier"
+      ]
+    },
+    {
+      "name": "World2 Controlled Execution Runtime",
+      "category": "WORLD2",
+      "status": "EXPERIMENTAL",
+      "maturity": 52,
+      "duplicateRisk": "HIGH",
+      "recommendation": "MERGE",
+      "ownerPath": "src/world2-controlled-execution-runtime/",
+      "validateScript": "validate:world2-controlled-execution-runtime",
+      "summary": "Phase 24 controlled execution; overlaps Phase 15 chain and disposable pipeline.",
+      "overlapWith": [
+        "World2 Builder Packet Execution",
+        "World2 Controlled Apply Runtime"
+      ],
+      "canonicalOwner": "World2 Disposable Workspace Pipeline (24E–24Y)"
+    },
+    {
+      "name": "World2 Completion Runtime",
+      "category": "WORLD2",
+      "status": "EXPERIMENTAL",
+      "maturity": 55,
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/world2-completion-runtime/",
+      "validateScript": "validate:world2-completion-runtime",
+      "summary": "Phase 15.6 completion criteria; not wired to real build outcomes."
+    },
+    {
+      "name": "World2 Learning Loop",
+      "category": "WORLD2",
+      "status": "EXPERIMENTAL",
+      "maturity": 48,
+      "duplicateRisk": "LOW",
+      "recommendation": "EXTEND",
+      "ownerPath": "src/world2-learning-loop/",
+      "validateScript": "validate:world2-learning-loop",
+      "summary": "Failure/success pattern learning from verification; advisory only."
+    }
+  ],
+  "world2Assessment": {
+    "pipelineName": "World2 Disposable Workspace Pipeline (24E–24Y)",
+    "currentMaturity": 62,
+    "status": "PARTIAL",
+    "moduleCount": 9,
+    "gaps": [
+      "Real filesystem instantiation not closed end-to-end",
+      "Phase 7, Phase 15, and Phase 24E–24Y eras still parallel",
+      "Dry-run composer does not activate real build execution",
+      "Large-scale validation shows 0% downstream build success",
+      "Cloud execution path absent"
+    ],
+    "shouldBeNextPhase": false,
+    "nextPhaseRationale": "Real Build Execution Pipeline must precede World2 Maturity — World2 modules validate in isolation but cannot deliver production builds without connected execution."
+  },
+  "priorPassTokensValidated": [
+    "AIDEVENGINE_CAPABILITY_AUDIT_V1_PASS",
+    "CANONICAL_CAPABILITY_OWNERSHIP_V1_PASS",
+    "CLARIFYING_QUESTION_INTELLIGENCE_MATURITY_V1_PASS",
+    "UVL_MATURITY_VERIFICATION_HUB_V1_PASS",
+    "AFLA_TRUST_CALIBRATION_V1_PASS",
+    "LARGE_SCALE_MULTI_APP_VALIDATION_V1_PASS",
+    "PRODUCT_ARCHITECT_INTELLIGENCE_V1_PASS"
+  ]
+}

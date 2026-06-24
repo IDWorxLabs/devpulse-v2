@@ -38,6 +38,11 @@ import { buildFounderTestPingResponse, FOUNDER_TEST_SERVER_STARTED_AT } from './
 import { sendExecutionProofJson } from './execution-proof-handler.js';
 import { sendFounderReviewJson } from './founder-review-handler.js';
 import { sendRequirementDiscoveryJson } from './requirement-discovery-handler.js';
+import { sendVerificationHubJson } from './verification-hub-handler.js';
+import { sendTrustCalibrationJson } from './afla-trust-calibration-handler.js';
+import { sendProductArchitectIntelligenceJson } from './product-architect-intelligence-handler.js';
+import { sendLargeScaleValidationJson } from './large-scale-validation-handler.js';
+import { sendRealBuildExecutionPipelineJson } from './real-build-execution-pipeline-handler.js';
 import { buildPortfolioInsightsDemo } from './portfolio-demo-data.js';
 import { buildProductWorkspaceSnapshot } from './product-workspace-snapshot.js';
 
@@ -277,9 +282,80 @@ export function createFounderRealityServer() {
       return;
     }
 
+    if (urlPath === '/api/founder/verification-hub' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendVerificationHubJson(
+        res,
+        url.searchParams.get('profile'),
+        url.searchParams.get('prompt'),
+        ROOT_DIR,
+      );
+      return;
+    }
+
+    if (urlPath === '/api/founder/trust-calibration' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendTrustCalibrationJson(
+        res,
+        url.searchParams.get('profile'),
+        url.searchParams.get('prompt'),
+      );
+      return;
+    }
+
+    if (urlPath === '/api/founder/product-architect-intelligence' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendProductArchitectIntelligenceJson(
+        res,
+        url.searchParams.get('profile'),
+        url.searchParams.get('prompt'),
+      );
+      return;
+    }
+
+    if (urlPath === '/api/founder/large-scale-validation' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendLargeScaleValidationJson(
+        res,
+        url.searchParams.get('profile'),
+        url.searchParams.get('refresh') === 'true',
+      );
+      return;
+    }
+
+    if (urlPath === '/api/founder/real-build-execution-pipeline' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendRealBuildExecutionPipelineJson(
+        res,
+        url.searchParams.get('profile'),
+        url.searchParams.get('refresh') === 'true',
+      );
+      return;
+    }
+
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       sendJson(res, 405, JSON.stringify({
-        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/founder/founder-review, GET /api/founder/requirement-discovery, GET /api/brain/*, GET /api/build/live-preview, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
+        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/founder/founder-review, GET /api/founder/requirement-discovery, GET /api/founder/verification-hub, GET /api/founder/trust-calibration, GET /api/founder/product-architect-intelligence, GET /api/founder/large-scale-validation, GET /api/founder/real-build-execution-pipeline, GET /api/brain/*, GET /api/build/live-preview, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
         hint: 'Restart DevPulse with npm run dev if Brain POST returns read-only errors',
       }));
       return;

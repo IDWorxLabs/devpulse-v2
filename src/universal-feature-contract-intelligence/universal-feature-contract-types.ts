@@ -83,6 +83,7 @@ export interface UniversalFeatureContract {
 export interface BuildUniversalFeatureContractInput {
   contractId: string;
   rawPrompt: string;
+  profile?: UniversalAppProfile;
   requirements?: readonly string[];
   clarifyingAnswers?: readonly string[];
 }

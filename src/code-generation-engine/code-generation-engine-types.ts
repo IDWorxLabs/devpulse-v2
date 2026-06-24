@@ -42,4 +42,5 @@ export interface MaterializeGeneratedAppInput {
   workspaceId: string;
   contract: BuildReadyExecutionContract;
   rawPrompt: string;
+  profileOverride?: GeneratedAppProfile | null;
 }

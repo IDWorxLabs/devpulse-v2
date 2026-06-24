@@ -1,0 +1,507 @@
+{
+  "duplicateRiskCount": 45,
+  "highDuplicateRiskCount": 11,
+  "mediumDuplicateRiskCount": 34,
+  "lowDuplicateRiskCount": 42,
+  "oneCapabilityOneOwnerValid": true,
+  "authorityOwnershipChecks": [
+    {
+      "domain": "Requirement discovery",
+      "expectedOwner": "Clarifying Question Intelligence",
+      "valid": true,
+      "detail": "3 capabilities; canonical owner resolved"
+    },
+    {
+      "domain": "Verification",
+      "expectedOwner": "Unified Verification Lab (UVL)",
+      "valid": true,
+      "detail": "7 capabilities; canonical owner resolved"
+    },
+    {
+      "domain": "Launch decisions",
+      "expectedOwner": "Autonomous Founder Launch Authority",
+      "valid": true,
+      "detail": "6 capabilities; canonical owner resolved"
+    },
+    {
+      "domain": "Product completeness",
+      "expectedOwner": "Product Architect Intelligence V1",
+      "valid": true,
+      "detail": "4 capabilities; canonical owner resolved"
+    },
+    {
+      "domain": "Isolated execution",
+      "expectedOwner": "World2 Disposable Workspace Pipeline (24E–24Y)",
+      "valid": true,
+      "detail": "9 capabilities; canonical owner resolved"
+    }
+  ],
+  "entries": [
+    {
+      "capabilityName": "Unified Intake Intelligence",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Intake Alignment Engine",
+        "Voice Notes Intelligence",
+        "Visual Reference Intelligence"
+      ]
+    },
+    {
+      "capabilityName": "LLM Chat Brain",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "World-Class Chat Brain",
+        "Chat Cognitive Architecture"
+      ]
+    },
+    {
+      "capabilityName": "World-Class Chat Brain",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "LLM Chat Brain",
+        "Chat Cognitive Architecture"
+      ]
+    },
+    {
+      "capabilityName": "Chat Cognitive Architecture",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "Intent Architecture",
+        "World-Class Chat Brain"
+      ]
+    },
+    {
+      "capabilityName": "Requirement Completeness Intelligence",
+      "duplicateRisk": "HIGH",
+      "recommendation": "MERGE",
+      "overlapWith": [
+        "Clarifying Question Intelligence"
+      ],
+      "canonicalOwner": "Clarifying Question Intelligence",
+      "remediationDecision": "MERGE",
+      "remediationTarget": "Clarifying Question Intelligence"
+    },
+    {
+      "capabilityName": "Clarifying Question Intelligence",
+      "duplicateRisk": "HIGH",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Requirement Completeness Intelligence"
+      ],
+      "canonicalOwner": "Clarifying Question Intelligence",
+      "remediationDecision": "KEEP",
+      "remediationTarget": "Clarifying Question Intelligence"
+    },
+    {
+      "capabilityName": "Intake Alignment Engine",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Unified Intake Intelligence"
+      ]
+    },
+    {
+      "capabilityName": "Product Architect",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Universal App Blueprint Planning Rule"
+      ]
+    },
+    {
+      "capabilityName": "Execution Readiness Gate",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "Planning Gate Authority",
+        "Execution Authority"
+      ]
+    },
+    {
+      "capabilityName": "Code Generation Engine V1",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": []
+    },
+    {
+      "capabilityName": "Code Generation Runtime",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "MERGE",
+      "overlapWith": [
+        "Code Generation Engine V1",
+        "Controlled Builder Execution Engine"
+      ]
+    },
+    {
+      "capabilityName": "Autonomous Builder",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "World2 Autonomous Builder",
+        "Controlled Builder Execution Engine"
+      ]
+    },
+    {
+      "capabilityName": "Autonomous Repair Loop",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Recovery Strategy Planner",
+        "Auto-Fix Runtime"
+      ]
+    },
+    {
+      "capabilityName": "Universal App Blueprint Visual Validation",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Visual QA Engine",
+        "UI Reviewer Authority"
+      ],
+      "canonicalOwner": "Universal App Blueprint Visual Validation"
+    },
+    {
+      "capabilityName": "Unified Verification Lab (UVL)",
+      "duplicateRisk": "HIGH",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "Verification Orchestrator",
+        "Verification Registry",
+        "Feature Reality Validation"
+      ],
+      "canonicalOwner": "Unified Verification Lab (UVL)",
+      "remediationDecision": "EXTEND",
+      "remediationTarget": "Unified Verification Lab (UVL)"
+    },
+    {
+      "capabilityName": "Feature Reality Validation",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Universal Feature Contract Intelligence"
+      ]
+    },
+    {
+      "capabilityName": "Universal Feature Contract Intelligence",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Feature Reality Validation"
+      ]
+    },
+    {
+      "capabilityName": "Verification Orchestrator",
+      "duplicateRisk": "HIGH",
+      "recommendation": "MERGE",
+      "overlapWith": [
+        "Unified Verification Lab",
+        "Unified Verification Entry"
+      ],
+      "canonicalOwner": "Unified Verification Lab (UVL)",
+      "remediationDecision": "MERGE",
+      "remediationTarget": "Unified Verification Lab (UVL)"
+    },
+    {
+      "capabilityName": "Execution Reality Validation",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Connected Build Execution",
+        "Build Materialization Reality"
+      ]
+    },
+    {
+      "capabilityName": "Hardening Stack (Phase 23)",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "Engineering Reality Authority"
+      ]
+    },
+    {
+      "capabilityName": "Autonomous Founder Launch Authority",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Founder Launch Decision Authority",
+        "Launch Readiness Authority"
+      ],
+      "canonicalOwner": "Autonomous Founder Launch Authority"
+    },
+    {
+      "capabilityName": "Launch Readiness Authority",
+      "duplicateRisk": "HIGH",
+      "recommendation": "MERGE",
+      "overlapWith": [
+        "Autonomous Founder Launch Authority",
+        "Founder Readiness Authority"
+      ],
+      "canonicalOwner": "Autonomous Founder Launch Authority",
+      "remediationDecision": "MERGE",
+      "remediationTarget": "Autonomous Founder Launch Authority"
+    },
+    {
+      "capabilityName": "Founder Launch Decision Authority",
+      "duplicateRisk": "HIGH",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "Autonomous Founder Launch Authority",
+        "Launch Verdict Governance"
+      ],
+      "canonicalOwner": "Autonomous Founder Launch Authority",
+      "remediationDecision": "EXTEND",
+      "remediationTarget": "Autonomous Founder Launch Authority"
+    },
+    {
+      "capabilityName": "Founder Acceptance Stack (24.8)",
+      "duplicateRisk": "HIGH",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Founder Testing Mode V1–V5",
+        "Founder Test Integration"
+      ],
+      "canonicalOwner": "Founder Acceptance Stack (24.8)",
+      "remediationDecision": "KEEP",
+      "remediationTarget": "Founder Acceptance Stack (24.8)"
+    },
+    {
+      "capabilityName": "Product Reality Orchestrator",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Founder Test Integration"
+      ]
+    },
+    {
+      "capabilityName": "Completion Truth Engine",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "World2 Completion Verifier",
+        "Autonomous Completion Engine"
+      ]
+    },
+    {
+      "capabilityName": "Workflow Review",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "Product Experience Verification Engine",
+        "UI Reviewer Authority"
+      ]
+    },
+    {
+      "capabilityName": "Business Review",
+      "duplicateRisk": "LOW",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "Revenue Reality Authority",
+        "Competitive Reality Engine"
+      ]
+    },
+    {
+      "capabilityName": "UI Reviewer Authority",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Universal App Blueprint Visual",
+        "Visual QA Engine"
+      ],
+      "canonicalOwner": "UI Reviewer Authority"
+    },
+    {
+      "capabilityName": "Visual Quality Authority",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "Visual QA Engine",
+        "Universal App Blueprint Visual"
+      ]
+    },
+    {
+      "capabilityName": "Visual QA Engine",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Universal App Blueprint Visual",
+        "UI Reviewer Authority"
+      ]
+    },
+    {
+      "capabilityName": "UX Heuristic Evaluator",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "UI Reviewer Authority"
+      ]
+    },
+    {
+      "capabilityName": "Navigation Review (Dedicated)",
+      "duplicateRisk": "HIGH",
+      "recommendation": "REMOVE",
+      "overlapWith": [
+        "UI Reviewer Authority",
+        "Universal App Blueprint Visual",
+        "UX Heuristic Evaluator"
+      ],
+      "canonicalOwner": "Blueprint Visual Validation + Founder UX Review",
+      "remediationDecision": "REMOVE"
+    },
+    {
+      "capabilityName": "Gap Detection Authority",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Missing Capability Detector"
+      ]
+    },
+    {
+      "capabilityName": "Missing Capability Detector",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "MERGE",
+      "overlapWith": [
+        "Gap Detection Authority"
+      ]
+    },
+    {
+      "capabilityName": "Failure Escalation (Automated)",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "Self-Evolution Authority",
+        "Adaptive AutoFix Intelligence"
+      ]
+    },
+    {
+      "capabilityName": "Workspace Isolation Expansion",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "World2 Workspace Foundation",
+        "World2 Disposable Workspace"
+      ]
+    },
+    {
+      "capabilityName": "Product Architect Intelligence V1",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Product Architect",
+        "Workflow Review",
+        "Product Experience Verification Engine"
+      ],
+      "canonicalOwner": "Product Architect Intelligence V1"
+    },
+    {
+      "capabilityName": "UVL Verification Hub V1",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "Unified Verification Lab (UVL)",
+        "Verification Orchestrator"
+      ],
+      "canonicalOwner": "Unified Verification Lab (UVL)"
+    },
+    {
+      "capabilityName": "AFLA Trust Calibration V1",
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Autonomous Founder Launch Authority"
+      ],
+      "canonicalOwner": "Autonomous Founder Launch Authority"
+    },
+    {
+      "capabilityName": "Large-Scale Multi-App Validation V1",
+      "duplicateRisk": "LOW",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "Feature Reality Validation",
+        "Engineering Reality Authority"
+      ]
+    },
+    {
+      "capabilityName": "Founder Review Operator Dashboard V1",
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Command Center Brain",
+        "Inline Operator Feed"
+      ]
+    },
+    {
+      "capabilityName": "Founder Reality Surface",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": [
+        "Founder Review Operator Dashboard V1",
+        "Command Center Brain"
+      ]
+    },
+    {
+      "capabilityName": "World2 Disposable Workspace Pipeline (24E–24Y)",
+      "duplicateRisk": "HIGH",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "World2 Execution Engine",
+        "World2 Controlled Execution Runtime"
+      ],
+      "canonicalOwner": "World2 Disposable Workspace Pipeline (24E–24Y)",
+      "remediationDecision": "EXTEND",
+      "remediationTarget": "World2 Disposable Workspace Pipeline (24E–24Y)"
+    },
+    {
+      "capabilityName": "World2 Execution Engine",
+      "duplicateRisk": "HIGH",
+      "recommendation": "MERGE",
+      "overlapWith": [
+        "World2 Disposable Workspace Pipeline (24E–24Y)"
+      ],
+      "canonicalOwner": "World2 Disposable Workspace Pipeline (24E–24Y)",
+      "remediationDecision": "MERGE",
+      "remediationTarget": "World2 Disposable Workspace Pipeline (24E–24Y)"
+    },
+    {
+      "capabilityName": "World2 Workspace Foundation",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "KEEP",
+      "overlapWith": []
+    },
+    {
+      "capabilityName": "World2 Dry Run Execution Composer",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": [
+        "World2 Dry Run Execution Verifier"
+      ]
+    },
+    {
+      "capabilityName": "World2 Controlled Execution Runtime",
+      "duplicateRisk": "HIGH",
+      "recommendation": "MERGE",
+      "overlapWith": [
+        "World2 Builder Packet Execution",
+        "World2 Controlled Apply Runtime"
+      ],
+      "canonicalOwner": "World2 Disposable Workspace Pipeline (24E–24Y)"
+    },
+    {
+      "capabilityName": "World2 Completion Runtime",
+      "duplicateRisk": "MEDIUM",
+      "recommendation": "EXTEND",
+      "overlapWith": []
+    }
+  ],
+  "newOverlapsSinceV1": [
+    "Product Architect Intelligence V1 ↔ Product Architect ↔ Workflow Review (~40% overlap)",
+    "UVL Verification Hub V1 ↔ Unified Verification Lab ↔ Verification Orchestrator (~35% overlap)",
+    "AFLA Trust Calibration V1 ↔ Autonomous Founder Launch Authority (~25% overlap)",
+    "Founder Review Operator Dashboard V1 ↔ Command Center Brain ↔ Inline Operator Feed (~30% overlap)",
+    "Large-Scale Multi-App Validation V1 ↔ Feature/Engineering Reality (~20% overlap, complementary)",
+    "Founder Reality Surface ↔ multiple operator panels (~45% UI host overlap, acceptable)"
+  ]
+}

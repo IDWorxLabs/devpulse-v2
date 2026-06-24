@@ -1,0 +1,277 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "Unified Verification Lab",
+  "profile": "CRM_WEB_V1",
+  "productName": "CRM",
+  "productPrompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+  "overallCoveragePercent": 6,
+  "verificationConfidenceScore": 26,
+  "categoryCoverage": [
+    {
+      "readOnly": true,
+      "category": "Structure",
+      "coveragePercent": 0,
+      "confidencePercent": 0,
+      "status": "Missing",
+      "missingAreas": [
+        "Blueprint structure not evaluated"
+      ]
+    },
+    {
+      "readOnly": true,
+      "category": "Visual",
+      "coveragePercent": 0,
+      "confidencePercent": 0,
+      "status": "Missing",
+      "missingAreas": [
+        "Visual verification not run"
+      ]
+    },
+    {
+      "readOnly": true,
+      "category": "Feature",
+      "coveragePercent": 0,
+      "confidencePercent": 0,
+      "status": "Missing",
+      "missingAreas": [
+        "Feature reality not evaluated"
+      ]
+    },
+    {
+      "readOnly": true,
+      "category": "Engineering",
+      "coveragePercent": 0,
+      "confidencePercent": 0,
+      "status": "Missing",
+      "missingAreas": [
+        "Engineering reality not evaluated"
+      ]
+    },
+    {
+      "readOnly": true,
+      "category": "Requirement",
+      "coveragePercent": 36,
+      "confidencePercent": 25,
+      "status": "Missing",
+      "missingAreas": [
+        "Requirement discovery insufficient",
+        "5 critical requirement gaps"
+      ]
+    },
+    {
+      "readOnly": true,
+      "category": "Launch",
+      "coveragePercent": 0,
+      "confidencePercent": 0,
+      "status": "Missing",
+      "missingAreas": [
+        "Founder review not completed"
+      ]
+    }
+  ],
+  "missingVerificationAreas": [
+    "Structure",
+    "Visual",
+    "Feature",
+    "Engineering",
+    "Requirement",
+    "Launch"
+  ],
+  "verificationGapReport": {
+    "readOnly": true,
+    "gaps": [
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-1",
+        "category": "Structure",
+        "summary": "Blueprint structure verification incomplete",
+        "severity": "HIGH",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-2",
+        "category": "Structure",
+        "summary": "Blueprint structure not evaluated",
+        "severity": "MEDIUM",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-3",
+        "category": "Visual",
+        "summary": "Missing visual proof",
+        "severity": "HIGH",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-4",
+        "category": "Visual",
+        "summary": "Visual verification not run",
+        "severity": "MEDIUM",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-5",
+        "category": "Feature",
+        "summary": "Feature not validated",
+        "severity": "CRITICAL",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-6",
+        "category": "Feature",
+        "summary": "Feature reality not evaluated",
+        "severity": "MEDIUM",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-7",
+        "category": "Engineering",
+        "summary": "Missing engineering assessment",
+        "severity": "CRITICAL",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-8",
+        "category": "Engineering",
+        "summary": "Engineering reality not evaluated",
+        "severity": "MEDIUM",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-9",
+        "category": "Requirement",
+        "summary": "Insufficient requirement discovery",
+        "severity": "CRITICAL",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-10",
+        "category": "Requirement",
+        "summary": "Requirement discovery insufficient",
+        "severity": "MEDIUM",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-11",
+        "category": "Requirement",
+        "summary": "5 critical requirement gaps",
+        "severity": "MEDIUM",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-12",
+        "category": "Launch",
+        "summary": "Missing founder review",
+        "severity": "CRITICAL",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "gapId": "uvl-gap-13",
+        "category": "Launch",
+        "summary": "Founder review not completed",
+        "severity": "MEDIUM",
+        "critical": false
+      }
+    ],
+    "gapSummary": [
+      "Structure: Blueprint structure verification incomplete",
+      "Structure: Blueprint structure not evaluated",
+      "Visual: Missing visual proof",
+      "Visual: Visual verification not run",
+      "Feature: Feature not validated",
+      "Feature: Feature reality not evaluated",
+      "Engineering: Missing engineering assessment",
+      "Engineering: Engineering reality not evaluated",
+      "Requirement: Insufficient requirement discovery",
+      "Requirement: Requirement discovery insufficient"
+    ],
+    "criticalGapCount": 4,
+    "missingVerificationAreas": [
+      "Structure",
+      "Visual",
+      "Feature",
+      "Engineering",
+      "Requirement",
+      "Launch"
+    ]
+  },
+  "timeline": [
+    {
+      "readOnly": true,
+      "stepId": "build-reality",
+      "label": "Build Reality",
+      "status": "NOT_RUN",
+      "ran": false,
+      "passed": false,
+      "pending": true,
+      "detail": "Build not evaluated"
+    },
+    {
+      "readOnly": true,
+      "stepId": "blueprint-validation",
+      "label": "Blueprint Validation",
+      "status": "NOT_RUN",
+      "ran": false,
+      "passed": false,
+      "pending": true,
+      "detail": "Blueprint validation pending"
+    },
+    {
+      "readOnly": true,
+      "stepId": "blueprint-visual",
+      "label": "Blueprint Visual",
+      "status": "NOT_RUN",
+      "ran": false,
+      "passed": false,
+      "pending": true,
+      "detail": "Blueprint visual pending"
+    },
+    {
+      "readOnly": true,
+      "stepId": "feature-reality",
+      "label": "Feature Reality",
+      "status": "NOT_RUN",
+      "ran": false,
+      "passed": false,
+      "pending": true,
+      "detail": "Feature reality pending"
+    },
+    {
+      "readOnly": true,
+      "stepId": "engineering-reality",
+      "label": "Engineering Reality",
+      "status": "NOT_RUN",
+      "ran": false,
+      "passed": false,
+      "pending": true,
+      "detail": "Engineering reality pending"
+    },
+    {
+      "readOnly": true,
+      "stepId": "founder-review",
+      "label": "Founder Review",
+      "status": "NOT_RUN",
+      "ran": false,
+      "passed": false,
+      "pending": true,
+      "detail": "Founder review pending"
+    }
+  ],
+  "verificationSufficientForLaunch": false,
+  "incompleteVerification": true,
+  "verificationConfidencePenalty": 29,
+  "generatedAt": "2026-06-24T11:27:15.129Z"
+}

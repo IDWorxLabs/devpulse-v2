@@ -23,6 +23,7 @@ export type {
   FounderRemediationIssue,
   FounderRemediationPlan,
   AutonomousFounderLaunchAssessment,
+  LaunchDecisionExplainability,
   RunAutonomousFounderLaunchAuthorityInput,
   RunAiDevEngineEvidencePipelineInput,
 } from './autonomous-founder-launch-authority-types.js';
@@ -40,6 +41,8 @@ export {
   deriveFounderLaunchVerdict,
   buildAutonomousFounderLaunchAssessment,
 } from './founder-verdict-engine.js';
+
+export { buildLaunchDecisionExplainability } from './founder-launch-decision-explainability.js';
 
 export {
   buildFounderRemediationPlan,
