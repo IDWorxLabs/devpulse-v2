@@ -1,0 +1,36 @@
+{
+  "previewServerReuse": {
+    "enabled": true,
+    "sharedPool": true,
+    "attachToExistingRuntime": true,
+    "newServerRequiresJustification": true,
+    "estimatedSavingsMinutes": 59
+  },
+  "buildOutputCache": {
+    "enabled": true,
+    "cacheKeys": [
+      "dist/",
+      "build hash",
+      "workspace fingerprint"
+    ],
+    "rebuildWhenInputsChanged": true,
+    "estimatedSavingsMinutes": 16
+  },
+  "playwrightSessionReuse": {
+    "enabled": true,
+    "sharedBrowserPool": true,
+    "reuseContextWhereSafe": true,
+    "estimatedSavingsMinutes": 18
+  },
+  "artifactReuse": {
+    "enabled": true,
+    "reusableArtifactTypes": [
+      "EXECUTION_PROOF",
+      "VERIFICATION_PROOF",
+      "BUILD_PROOF",
+      "BLUEPRINT_PROOF",
+      "AFLA_ASSESSMENT"
+    ],
+    "avoidReprovingUnchangedEvidence": true
+  }
+}

@@ -1,0 +1,3149 @@
+{
+  "generatedAt": "2026-06-24T14:19:32.113Z",
+  "nodes": [
+    {
+      "validatorName": "validate:action-visibility-engine",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:adaptive-autofix-intelligence",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:adoption-prediction-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:adoption-prediction-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:adoption-reality-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:afla-trust-calibration-v1",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:validation-runtime-governance-v1"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:aidevengine-identity-correction",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:api-documentation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:architecture-brief-generator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:architecture-documentation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:architecture-drift-detection",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:phase9-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:authority-evidence-source-realignment",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:authority-ownership-and-integration-bridge",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:authority-reality-convergence",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:authority-recursion-guard",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:auto-fix-control",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:governance-stack-checkpoint",
+        "validate:phase6-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:auto-fix-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:auto-polish-loop",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-build-execution-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-builder-execution-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-builder-execution-planner",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-builder-execution-sandbox",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-builder-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-builder-reality",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-completion-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-fixing",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-founder-launch-authority-v1",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:cqi-integration-repair-v1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-repair-loop",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-testing",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:autonomous-verification",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:brain-memory-visibility-stack",
+      "triggers": [
+        "validate:phase11-command-center",
+        "validate:project-vault-intelligence",
+        "validate:dependency-intelligence",
+        "validate:workspace-intelligence",
+        "validate:project-history-intelligence",
+        "validate:project-summarization-engine",
+        "validate:portfolio-intelligence",
+        "validate:operator-feed-foundation",
+        "validate:action-visibility-engine",
+        "validate:reasoning-visibility-engine",
+        "validate:progress-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:learning-visibility-engine"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:brain-routing-performance-hardening",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:brief-stage-transitions",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:build-materialization-reality",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:build-materialization-truth-bridge",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:build-plan-generator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:build-proof-gap-materialization",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:build-strategy-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:build-task-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:canonical-capability-ownership-v1",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:cqi-integration-repair-v1"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:capability-audit-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:capability-audit-v2",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:capability-audit-v3",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:validation-runtime-governance-v1"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:capability-build-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:capability-planning-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:capability-research-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:capability-verification-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:change-intelligence-visibility",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-authority",
+      "triggers": [
+        "validate:shell",
+        "validate:task-governor",
+        "validate:foundation"
+      ],
+      "triggeredBy": [
+        "validate:browser-verification-harness",
+        "validate:inline-operator-feed",
+        "validate:phase-1-stability-soak",
+        "validate:real-browser-runner-attachment"
+      ],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-capability-answer-quality",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-cognitive-architecture",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-intelligence-reality",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:founder-readiness-authority",
+        "validate:founder-testing-chat-readiness"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-intelligence-scenario-consumption",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-operational-self-knowledge",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-operational-truth-source-synchronization",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-routing-consistency",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-stress-completion-barrier",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-stress-completion-propagation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-stress-concurrent-active-worker-tracking",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-stress-deadline-runtime-trace-audit",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-stress-deadline-stall-alignment",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-stress-non-blocking-founder-test",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-stress-scenario-settlement",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-stress-settlement-boundary",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:chat-stress-timeout-run-result-materialization",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:clarifying-question-intelligence",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:cqi-integration-repair-v1"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:clarifying-question-intelligence-maturity-v1",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:cqi-integration-repair-v1"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:clarifying-question-live-gate",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:cloud-monitoring-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:cloud-recovery-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:cloud-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:cloud-verification-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:code-generation-engine-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:code-generation-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:command-center-brain",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:command-center-brain-runtime",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:command-center-identity-realignment",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:command-center-runtime-shell",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:command-center-ui-wiring-founder-report-delivery",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:founder-test-reality-sweep"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:command-center-ux-stabilization",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:competitive-reality-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:competitive-reality-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:complete-report-delivery-event-bridge",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:complete-report-handoff",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:complete-report-preparing-stall",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:completion-truth-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:complexity-score-foundation",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:phase9-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-build-execution",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-build-execution-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-launch-final-blocker",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-launch-readiness-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-live-preview-execution",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-live-preview-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-preview-experience-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-runtime-activation-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-runtime-activation-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-runtime-execution",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-verification-execution",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-verification-execution-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-verification-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:connected-workspace-creation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:consistency-audit-authoritative-evidence-repoint",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:controlled-builder-execution-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:controlled-execution-bridge",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:cqi-integration-repair-v1",
+      "triggers": [
+        "validate:clarifying-question-intelligence",
+        "validate:clarifying-question-intelligence-maturity-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:canonical-capability-ownership-v1",
+        "validate:founder-review-operator-dashboard-v1"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:cross-device-continuity-foundation",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:phase8-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:cross-device-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:cross-system-awareness",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:cross-system-routing"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:cross-system-orchestration-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:cross-system-routing",
+      "triggers": [
+        "validate:cross-system-awareness"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:customer-journey-simulation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:customer-value-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:dependency-intelligence",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:digital-founder-board",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:documentation-verification",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:end-to-end-execution-proof-chain",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:end-to-end-founder-workflow-reality",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:engineering-reality-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:evidence-intelligence",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:evidence-propagation-reconciliation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:execution-proof-contradiction-elimination",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:execution-proof-dashboard",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:execution-proof-evolution",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:execution-proof-final-contradiction-isolation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:execution-proof-source-unification",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:execution-readiness-gate",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:execution-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:experience-layer-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:failure-visibility-engine",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:feature-reality-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:final-founder-report-delivery-trace",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:final-report-access-cache-unification",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:first-impression-judge",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:first-time-user-reality",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:first-time-user-reality-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-acceptance-framework",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-acceptance-gate",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-acceptance-orchestrator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-action-center",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-authority-suite",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-confidence-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-confidence-propagation-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-decision-readiness",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-execution-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-execution-proof-propagation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-flow-runtime-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-friction-detector",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-guides",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-inbox-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-interaction-simulation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-launch-decision-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-notification-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-productivity-validation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-readiness-authority",
+      "triggers": [
+        "validate:chat-intelligence-reality",
+        "validate:founder-testing-chat-readiness",
+        "validate:repository-typecheck-reality"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-reality-surface",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-report-access-operator-feed-state",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-result-store-delivery-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-review-operator-dashboard-v1",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:cqi-integration-repair-v1"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-sensemaking-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-completion-boundary-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-crash-locator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-degradation-root-cause-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-guarded-diagnostic-source-patch",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-payload-guard",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-active-run-result-binding",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-api-base-url-routing",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-automation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-chat-stress-simulation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-complete-handoff-boundary",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-complete-report-delivery-label",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-complete-state-truth-report-fetch-loop",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-consistency-audit",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-execution-chain-integration",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-integration",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-launch-readiness",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-operator-feed-trace",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-reality-sweep",
+      "triggers": [
+        "validate:command-center-ui-wiring-founder-report-delivery"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-result-payload-crash-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-result-route-existence-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-results-modal-copy-path-alignment",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-runtime-monitor",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-test-stage2-stall-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-testing-chat-readiness",
+      "triggers": [
+        "validate:chat-intelligence-reality"
+      ],
+      "triggeredBy": [
+        "validate:founder-readiness-authority"
+      ],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-testing-mode",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-testing-mode-v2",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-testing-mode-v3",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-testing-mode-v4",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-testing-v5",
+      "triggers": [
+        "validate:founder"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-trust-validation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-truth-matrix-integration",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:founder-workflow-validation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:full-product-readiness-simulation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:future-problem-prediction",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:phase9-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:gap-detection-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:general-question-understanding",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:generated-runtime-crash-diagnosis",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:generated-ui-runtime-exposure-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:generated-workspace-dependency-installation-executor",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:generated-workspace-dependency-materialization",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:governance-stack-checkpoint",
+      "triggers": [
+        "validate:execution-authority",
+        "validate:execution-verification",
+        "validate:recovery-execution",
+        "validate:founder-approval",
+        "validate:execution-reality",
+        "validate:execution-evidence",
+        "validate:recovery-chains",
+        "validate:auto-fix-control",
+        "validate:rollback-retry",
+        "validate:verification-gated-apply",
+        "validate:phase6-checkpoint",
+        "validate:world2-workspace-foundation",
+        "validate:world2-execution-planner",
+        "validate:world2-simulation-runtime",
+        "validate:world2-autonomous-builder",
+        "validate:world2-completion-verifier",
+        "validate:world2-learning-loop"
+      ],
+      "triggeredBy": [
+        "validate:phase8-governance-stack-checkpoint",
+        "validate:phase9-governance-stack-checkpoint"
+      ],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:inline-operator-feed",
+      "triggers": [
+        "validate:chat-authority",
+        "validate:shell",
+        "validate:task-governor",
+        "validate:foundation"
+      ],
+      "triggeredBy": [
+        "validate:browser-verification-harness",
+        "validate:phase-1-stability-soak",
+        "validate:real-browser-runner-attachment"
+      ],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:intake-alignment-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:intake-validation-stage-transition-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:interaction-testing-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:interactive-explanations",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:large-scale-multi-app-validation-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:launch-blocker-board",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:launch-council",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:launch-council-finalization",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:launch-day-simulation-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:launch-readiness-artifact-build-trace",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:launch-readiness-artifact-completion-barrier-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:launch-readiness-artifact-completion-boundary-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:launch-readiness-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:launch-verdict-governance",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:launch-verdict-governance-source-normalization",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:learning-visibility-engine",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:live-chat-operational-path",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:live-chat-stress-runner-path-alignment",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:live-execution-proof-generation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:live-idea-to-launch-execution-runner",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:live-preview-gatekeeper",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:live-preview-reality",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:live-preview-runtime",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:live-preview-status-sync",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:llm-context-hydration",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:llm-env-loading",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:market-expansion-reality-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:missing-capability-detector",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:phase9-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:missing-capability-escalation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-approval-flow-foundation",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:phase8-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-approval-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-chat-interface",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:phase8-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-chat-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-command-foundation",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:phase8-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-command-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-live-preview-foundation",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:phase8-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-preview-modes",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-preview-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-push-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-runtime-experience-reality",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:multi-project-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:multi-project-monitoring",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:multi-project-verification",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:multi-project-verification-orchestration",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:multi-project-workspace-tabs",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:notification-delivery-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:one-prompt-chat-build-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:one-prompt-live-preview-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:openai-connectivity-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:operator-feed-detail-upgrade",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:operator-feed-final-report-button-state-sync",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:operator-feed-foundation",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:operator-feed-unified-layout-and-stage2-completion",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:parallel-build-orchestration",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:performance-hardening",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:persistent-build-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:phase11-command-center",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:phase8-governance-stack-checkpoint",
+      "triggers": [
+        "validate:mobile-command-foundation",
+        "validate:mobile-chat-interface",
+        "validate:mobile-live-preview-foundation",
+        "validate:mobile-approval-flow-foundation",
+        "validate:cross-device-continuity-foundation",
+        "validate:governance-stack-checkpoint"
+      ],
+      "triggeredBy": [
+        "validate:phase9-governance-stack-checkpoint"
+      ],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:phase9-governance-stack-checkpoint",
+      "triggers": [
+        "validate:missing-capability-detector",
+        "validate:safe-capability-acquisition",
+        "validate:self-learning-engine",
+        "validate:architecture-drift-detection",
+        "validate:complexity-score-foundation",
+        "validate:future-problem-prediction",
+        "validate:phase8-governance-stack-checkpoint",
+        "validate:governance-stack-checkpoint"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:planning-brief-generator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:planning-gate-alignment-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:planning-gate-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:planning-gate-transition",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:platform-propagation-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:portfolio-intelligence",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:post-launch-reality-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:prediction-trust-layer",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:preview-intelligence",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:privacy-hardening",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-architect-intelligence-v1",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:validation-runtime-governance-v1"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-economics-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-evolution-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-evolution-reality-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-experience-verification-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-hardening-verification",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-lifecycle-reality-orchestrator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-readiness-completion-boundary",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-readiness-completion-boundary-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-readiness-propagation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-readiness-real-founder-path",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-readiness-simulation-stall-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:product-reality-orchestrator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:progress-intelligence",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:project-history-intelligence",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:project-intelligence-clarity",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:project-knowledge-reasoning",
+      "triggers": [
+        "validate:project-understanding-engine"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:project-summarization-engine",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:project-understanding-engine",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:project-knowledge-reasoning"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:project-vault-intelligence",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:promise-fulfillment-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:promise-reality-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:real-build-execution-pipeline-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:real-build-execution-pipeline-v1-1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:real-chat-openai-path-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:real-file-workspace-execution",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:real-user-reality-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:reality-proof-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:reality-verification-expansion",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:reasoning-visibility-engine",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:recovery-chains",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:governance-stack-checkpoint",
+        "validate:phase6-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:recovery-hardening",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:reliability-hardening",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:remove-legacy-failed-to-fetch-copy-fallback",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:report-handoff-runid-propagation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:repository-typecheck-reality",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:founder-readiness-authority"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:requirement-completeness-intelligence",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:resource-allocation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:result-fetch-failure-diagnostic-surface",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:revenue-reality-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:running-application-visibility",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:runtime-founder-execution-proof-hydration",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:runtime-materialization-truth-bridge",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:runtime-route-reachability-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:runtime-startup-probe-false-positive-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:runtime-startup-proof-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:runtime-ui-render-proof",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:runtime-verification-layer",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:safe-capability-acquisition",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:phase9-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:scale-hardening",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:scale-readiness-reality-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:security-hardening",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:self-awareness-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:self-documentation",
+      "triggers": [
+        "validate:missing-a",
+        "validate:missing-b",
+        "validate:missing-c",
+        "validate:gap"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:self-evolution-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:self-evolution-governance",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:self-learning-engine",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:phase9-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:self-model-reality-audit",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:self-model-routing-repair",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:self-vision-runtime",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:shared-memory-layer",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:skeptical-founder-simulator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:stage2-chat-stress-boundary-observability",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:strategic-defensibility-reality-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:task-governor",
+      "triggers": [
+        "validate:foundation"
+      ],
+      "triggeredBy": [
+        "validate:browser-verification-harness",
+        "validate:chat-authority",
+        "validate:inline-operator-feed",
+        "validate:phase-1-stability-soak",
+        "validate:real-browser-runner-attachment",
+        "validate:shell-foundation"
+      ],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:testing-runtime-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:timeline-intelligence",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:trust-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:trust-engine-expansion",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:ui-inspection-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:ui-reviewer-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:unified-decision-layer",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:unified-intake-intelligence",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:unified-trust-runtime",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:unified-trust-score",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:unified-verification-entry",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:unified-verification-lab-runtime",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:universal-app-blueprint-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:universal-app-blueprint-visual-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:universal-feature-contract-intelligence-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:unknown-discovery-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:upload-system",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:user-guides",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:user-success-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:uvl-maturity-verification-hub-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:uvl-verification-execution-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:ux-heuristic-evaluator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:v5-launch-verdict-governance-source-normalization",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:validation-runtime-audit-v1",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:validation-runtime-governance-v1"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:validation-runtime-governance-v1",
+      "triggers": [
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1",
+        "validate:capability-audit-v3",
+        "validate:product-architect-intelligence-v1",
+        "validate:afla-trust-calibration-v1"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:verification-evidence-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:verification-gated-apply",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:governance-stack-checkpoint",
+        "validate:phase6-governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:verification-integration",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:verification-intelligence",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:verification-orchestrator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:verification-reality",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:verification-registry",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:verification-reporting-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:verification-results-visibility",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:verification-strategy-core",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:visual-qa-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:visual-quality-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:visual-reference-intelligence",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:visual-verification-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:voice-notes-intelligence",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:workspace-hosting-foundation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:workspace-intelligence",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:brain-memory-visibility-stack"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:workspace-isolation-expansion",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world-class-chat-brain",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-autonomous-builder",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-builder-packet-execution",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-change-set-authority",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-change-set-materializer",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-completion-runtime",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-completion-verifier",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-controlled-apply-runtime",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-controlled-execution-runtime",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-disposable-workspace",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-disposable-workspace-creator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-disposable-workspace-instantiator",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-dry-run-execution-composer",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-dry-run-execution-verifier",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-execution-activation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-execution-engine",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-execution-planner",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-learning-loop",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-recovery-runtime",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-repository-snapshot",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-repository-snapshot-executor",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-repository-snapshot-materializer",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-rollback-runtime",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-simulation-runtime",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-workspace-foundation",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:governance-stack-checkpoint"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-workspace-instantiation-governance",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-workspace-materialization",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:world2-workspace-population",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    }
+  ],
+  "nestedChains": [
+    {
+      "chain": [
+        "validate:chat-authority",
+        "validate:task-governor",
+        "validate:foundation"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:founder-readiness-authority",
+        "validate:founder-testing-chat-readiness",
+        "validate:chat-intelligence-reality"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:inline-operator-feed",
+        "validate:chat-authority",
+        "validate:task-governor",
+        "validate:foundation"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:inline-operator-feed",
+        "validate:chat-authority",
+        "validate:shell",
+        "validate:task-governor"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:inline-operator-feed",
+        "validate:task-governor",
+        "validate:foundation"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:phase8-governance-stack-checkpoint",
+        "validate:governance-stack-checkpoint",
+        "validate:execution-authority",
+        "validate:execution-verification"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:phase9-governance-stack-checkpoint",
+        "validate:phase8-governance-stack-checkpoint",
+        "validate:governance-stack-checkpoint",
+        "validate:execution-authority",
+        "validate:execution-verification"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:phase9-governance-stack-checkpoint",
+        "validate:phase8-governance-stack-checkpoint",
+        "validate:mobile-command-foundation",
+        "validate:mobile-chat-interface"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:phase9-governance-stack-checkpoint",
+        "validate:governance-stack-checkpoint",
+        "validate:execution-authority",
+        "validate:execution-verification"
+      ],
+      "circular": false
+    }
+  ],
+  "circularValidationPaths": [],
+  "repeatedValidationPaths": []
+}

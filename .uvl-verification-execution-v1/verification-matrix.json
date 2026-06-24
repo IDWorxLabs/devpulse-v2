@@ -1,0 +1,152 @@
+[
+  {
+    "readOnly": true,
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "CRM_WEB_V1",
+    "productName": "CRM",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "INVENTORY_WEB_V1",
+    "productName": "Inventory",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+    "productName": "School Management",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "PROJECT_MANAGEMENT_WEB_V1",
+    "productName": "Project Management",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "productName": "Booking Platform",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "RESTAURANT_POS_WEB_V1",
+    "productName": "Restaurant POS",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "productName": "Learning Platform",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "HR_PLATFORM_WEB_V1",
+    "productName": "HR Platform",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "productName": "Customer Support Platform",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "INSURANCE_CRM_WEB_V1",
+    "productName": "Insurance CRM",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "FLEET_MANAGEMENT_WEB_V1",
+    "productName": "Fleet Management",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "productName": "Finance Tracker",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  },
+  {
+    "readOnly": true,
+    "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+    "productName": "E-Commerce Platform",
+    "built": true,
+    "previewed": true,
+    "verified": true,
+    "verificationConfidence": 100,
+    "failureClass": "None"
+  }
+]

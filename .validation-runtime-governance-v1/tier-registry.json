@@ -1,0 +1,3375 @@
+{
+  "generatedAt": "2026-06-24T14:19:30.939Z",
+  "tiers": [
+    {
+      "tier": "FAST",
+      "targetRuntimeSeconds": 60,
+      "description": "During implementation — targeted validators only",
+      "allowedCategories": [
+        "CQI",
+        "FOUNDATION",
+        "OPERATOR",
+        "OTHER"
+      ],
+      "forbiddenCategories": [
+        "AFLA",
+        "UVL",
+        "CAPABILITY_AUDIT",
+        "REAL_BUILD_EXECUTION",
+        "FEATURE_REALITY",
+        "BLUEPRINT",
+        "LAUNCH"
+      ],
+      "forbiddenValidatorPatterns": [
+        "afla",
+        "autonomous-founder-launch",
+        "uvl-verification-execution",
+        "uvl-maturity",
+        "large-scale-multi-app",
+        "capability-audit",
+        "real-build-execution-pipeline",
+        "feature-reality",
+        "engineering-reality",
+        "universal-app-blueprint-visual",
+        "universal-feature-contract"
+      ],
+      "explicitValidators": []
+    },
+    {
+      "tier": "STANDARD",
+      "targetRuntimeSeconds": 300,
+      "description": "After feature completion — affected capability + integration validators",
+      "allowedCategories": [
+        "CQI",
+        "PAI",
+        "ENGINEERING",
+        "FOUNDATION",
+        "OPERATOR",
+        "CONNECTED_PIPELINE",
+        "WORLD2",
+        "OTHER"
+      ],
+      "forbiddenCategories": [
+        "AFLA",
+        "CAPABILITY_AUDIT",
+        "LAUNCH"
+      ],
+      "forbiddenValidatorPatterns": [
+        "afla",
+        "autonomous-founder-launch",
+        "capability-audit",
+        "large-scale-multi-app"
+      ],
+      "explicitValidators": []
+    },
+    {
+      "tier": "FULL",
+      "targetRuntimeSeconds": 900,
+      "description": "Milestone completion — cross-capability and major integration validation",
+      "allowedCategories": [
+        "CQI",
+        "UVL",
+        "REAL_BUILD_EXECUTION",
+        "FEATURE_REALITY",
+        "BLUEPRINT",
+        "ENGINEERING",
+        "CONNECTED_PIPELINE",
+        "WORLD2",
+        "FOUNDATION",
+        "OPERATOR",
+        "OTHER"
+      ],
+      "forbiddenCategories": [],
+      "forbiddenValidatorPatterns": [],
+      "explicitValidators": [
+        "validate:real-build-execution-pipeline-v1",
+        "validate:real-build-execution-pipeline-v1-1",
+        "validate:uvl-verification-execution-v1",
+        "validate:feature-reality-v1",
+        "validate:engineering-reality-v1"
+      ]
+    },
+    {
+      "tier": "LAUNCH",
+      "targetRuntimeSeconds": 0,
+      "description": "Launch candidate only — maximum confidence, not speed",
+      "allowedCategories": [
+        "UVL",
+        "PAI",
+        "AFLA",
+        "LAUNCH",
+        "CAPABILITY_AUDIT",
+        "REAL_BUILD_EXECUTION"
+      ],
+      "forbiddenCategories": [],
+      "forbiddenValidatorPatterns": [],
+      "explicitValidators": [
+        "validate:uvl-verification-execution-v1",
+        "validate:uvl-maturity-verification-hub-v1",
+        "validate:product-architect-intelligence-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:afla-trust-calibration-v1",
+        "validate:real-build-execution-pipeline-v1-1",
+        "validate:capability-audit-v3"
+      ]
+    }
+  ],
+  "assignments": [
+    {
+      "validatorName": "validate:action-visibility-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:adaptive-autofix-intelligence",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:adoption-prediction-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:adoption-prediction-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:adoption-reality-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:afla-trust-calibration-v1",
+      "tier": "LAUNCH",
+      "category": "AFLA",
+      "runtimeBudgetSeconds": 8,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": true
+    },
+    {
+      "validatorName": "validate:aidevengine-identity-correction",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:api-documentation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:architecture-brief-generator",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:architecture-documentation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:architecture-drift-detection",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:authority-evidence-source-realignment",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:authority-ownership-and-integration-bridge",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:authority-reality-convergence",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:authority-recursion-guard",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:auto-fix-control",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:auto-fix-runtime-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 62,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:auto-polish-loop",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-build-execution-proof",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 73,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-builder-execution-foundation",
+      "tier": "FAST",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-builder-execution-planner",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-builder-execution-sandbox",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-builder-foundation",
+      "tier": "FAST",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-builder-reality",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 68,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-completion-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-fixing",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 108,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-founder-launch-authority-v1",
+      "tier": "LAUNCH",
+      "category": "AFLA",
+      "runtimeBudgetSeconds": 426,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": true
+    },
+    {
+      "validatorName": "validate:autonomous-repair-loop",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-testing",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-verification",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:brain-memory-visibility-stack",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:brain-routing-performance-hardening",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:brief-stage-transitions",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:build-materialization-reality",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:build-materialization-truth-bridge",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:build-plan-generator",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:build-proof-gap-materialization",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 138,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:build-strategy-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:build-task-runtime-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:canonical-capability-ownership-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:capability-audit-v1",
+      "tier": "LAUNCH",
+      "category": "CAPABILITY_AUDIT",
+      "runtimeBudgetSeconds": 5,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:capability-audit-v2",
+      "tier": "LAUNCH",
+      "category": "CAPABILITY_AUDIT",
+      "runtimeBudgetSeconds": 6,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:capability-audit-v3",
+      "tier": "LAUNCH",
+      "category": "CAPABILITY_AUDIT",
+      "runtimeBudgetSeconds": 6,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:capability-build-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:capability-planning-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:capability-research-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:capability-verification-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:change-intelligence-visibility",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-authority",
+      "tier": "FAST",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-capability-answer-quality",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-cognitive-architecture",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-intelligence-reality",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-intelligence-scenario-consumption",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-operational-self-knowledge",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-operational-truth-source-synchronization",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-routing-consistency",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-stress-completion-barrier",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-stress-completion-propagation",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-stress-concurrent-active-worker-tracking",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-stress-deadline-runtime-trace-audit",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-stress-deadline-stall-alignment",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-stress-non-blocking-founder-test",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-stress-scenario-settlement",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-stress-settlement-boundary",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-stress-timeout-run-result-materialization",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:clarifying-question-intelligence",
+      "tier": "STANDARD",
+      "category": "CQI",
+      "runtimeBudgetSeconds": 105,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:clarifying-question-intelligence-maturity-v1",
+      "tier": "FAST",
+      "category": "CQI",
+      "runtimeBudgetSeconds": 0.01,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:clarifying-question-live-gate",
+      "tier": "FAST",
+      "category": "CQI",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:cloud-monitoring-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 73,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:cloud-recovery-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 97,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:cloud-runtime-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:cloud-verification-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 97,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:code-generation-engine-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 288,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:code-generation-runtime-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 62,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:command-center-brain",
+      "tier": "STANDARD",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:command-center-brain-runtime",
+      "tier": "STANDARD",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:command-center-identity-realignment",
+      "tier": "FAST",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:command-center-runtime-shell",
+      "tier": "STANDARD",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:command-center-ui-wiring-founder-report-delivery",
+      "tier": "FAST",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:command-center-ux-stabilization",
+      "tier": "STANDARD",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:competitive-reality-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:competitive-reality-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:complete-report-delivery-event-bridge",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:complete-report-handoff",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:complete-report-preparing-stall",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:completion-truth-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:complexity-score-foundation",
+      "tier": "FAST",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-build-execution",
+      "tier": "STANDARD",
+      "category": "CONNECTED_PIPELINE",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-build-execution-foundation",
+      "tier": "FAST",
+      "category": "CONNECTED_PIPELINE",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-launch-final-blocker",
+      "tier": "FULL",
+      "category": "CONNECTED_PIPELINE",
+      "runtimeBudgetSeconds": 123,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-launch-readiness-proof",
+      "tier": "STANDARD",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 88,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-live-preview-execution",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 63,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-live-preview-foundation",
+      "tier": "FAST",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-preview-experience-proof",
+      "tier": "STANDARD",
+      "category": "CONNECTED_PIPELINE",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-runtime-activation-foundation",
+      "tier": "FAST",
+      "category": "CONNECTED_PIPELINE",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-runtime-activation-proof",
+      "tier": "STANDARD",
+      "category": "CONNECTED_PIPELINE",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-runtime-execution",
+      "tier": "FAST",
+      "category": "CONNECTED_PIPELINE",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-verification-execution",
+      "tier": "FULL",
+      "category": "UVL",
+      "runtimeBudgetSeconds": 43,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-verification-execution-proof",
+      "tier": "FULL",
+      "category": "UVL",
+      "runtimeBudgetSeconds": 88,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-verification-foundation",
+      "tier": "FAST",
+      "category": "CONNECTED_PIPELINE",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:connected-workspace-creation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:consistency-audit-authoritative-evidence-repoint",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 178,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:controlled-builder-execution-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 48,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:controlled-execution-bridge",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:cqi-integration-repair-v1",
+      "tier": "FAST",
+      "category": "CQI",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:cross-device-continuity-foundation",
+      "tier": "FAST",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:cross-device-runtime-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 73,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:cross-system-awareness",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:cross-system-orchestration-proof",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:cross-system-routing",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:customer-journey-simulation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:customer-value-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:dependency-intelligence",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:digital-founder-board",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:documentation-verification",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:end-to-end-execution-proof-chain",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:end-to-end-founder-workflow-reality",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 103,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:engineering-reality-v1",
+      "tier": "FULL",
+      "category": "ENGINEERING",
+      "runtimeBudgetSeconds": 180,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:evidence-intelligence",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:evidence-propagation-reconciliation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:execution-proof-contradiction-elimination",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:execution-proof-dashboard",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:execution-proof-evolution",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 93,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:execution-proof-final-contradiction-isolation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:execution-proof-source-unification",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:execution-readiness-gate",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:execution-runtime-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:experience-layer-foundation",
+      "tier": "FAST",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:failure-visibility-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:feature-reality-v1",
+      "tier": "FULL",
+      "category": "FEATURE_REALITY",
+      "runtimeBudgetSeconds": 180,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:final-founder-report-delivery-trace",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:final-report-access-cache-unification",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:first-impression-judge",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:first-time-user-reality",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:first-time-user-reality-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-acceptance-framework",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-acceptance-gate",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-acceptance-orchestrator",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-action-center",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-authority-suite",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-confidence-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-confidence-propagation-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-decision-readiness",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-execution-proof",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 43,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-execution-proof-propagation",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-flow-runtime-proof",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-friction-detector",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-guides",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-inbox-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-interaction-simulation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-launch-decision-authority",
+      "tier": "LAUNCH",
+      "category": "AFLA",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": true
+    },
+    {
+      "validatorName": "validate:founder-notification-runtime-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-productivity-validation",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 73,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-readiness-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-reality-surface",
+      "tier": "STANDARD",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 87,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-report-access-operator-feed-state",
+      "tier": "STANDARD",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-result-store-delivery-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-review-operator-dashboard-v1",
+      "tier": "FULL",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 123,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-sensemaking-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-completion-boundary-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-crash-locator",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-degradation-root-cause-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-guarded-diagnostic-source-patch",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-simulation-payload-guard",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-active-run-result-binding",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-api-base-url-routing",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-automation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-chat-stress-simulation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-complete-handoff-boundary",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-complete-report-delivery-label",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-complete-state-truth-report-fetch-loop",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-consistency-audit",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 178,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-execution-chain-integration",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-integration",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-launch-readiness",
+      "tier": "FAST",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-operator-feed-trace",
+      "tier": "FAST",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-reality-sweep",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 68,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-result-payload-crash-repair",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-result-route-existence-proof",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-results-modal-copy-path-alignment",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-runtime-monitor",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-test-stage2-stall-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-testing-chat-readiness",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-testing-mode",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-testing-mode-v2",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-testing-mode-v3",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-testing-mode-v4",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-testing-v5",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-trust-validation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-truth-matrix-integration",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:founder-workflow-validation",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:full-product-readiness-simulation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:future-problem-prediction",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:gap-detection-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:general-question-understanding",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:generated-runtime-crash-diagnosis",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:generated-ui-runtime-exposure-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:generated-workspace-dependency-installation-executor",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 138,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:generated-workspace-dependency-materialization",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 48,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:governance-stack-checkpoint",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:inline-operator-feed",
+      "tier": "FAST",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:intake-alignment-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:intake-validation-stage-transition-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:interaction-testing-engine",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 207,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:interactive-explanations",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:large-scale-multi-app-validation-v1",
+      "tier": "LAUNCH",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:launch-blocker-board",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:launch-council",
+      "tier": "FAST",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:launch-council-finalization",
+      "tier": "FAST",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:launch-day-simulation-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:launch-readiness-artifact-build-trace",
+      "tier": "FAST",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:launch-readiness-artifact-completion-barrier-repair",
+      "tier": "FAST",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:launch-readiness-artifact-completion-boundary-repair",
+      "tier": "FAST",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:launch-readiness-authority",
+      "tier": "FAST",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:launch-verdict-governance",
+      "tier": "FAST",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:launch-verdict-governance-source-normalization",
+      "tier": "FAST",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:learning-visibility-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:live-chat-operational-path",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:live-chat-stress-runner-path-alignment",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:live-execution-proof-generation",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:live-idea-to-launch-execution-runner",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:live-preview-gatekeeper",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:live-preview-reality",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 103,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:live-preview-runtime",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 207,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:live-preview-status-sync",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:llm-context-hydration",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:llm-env-loading",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:market-expansion-reality-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:missing-capability-detector",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:missing-capability-escalation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-approval-flow-foundation",
+      "tier": "FAST",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-approval-runtime-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-chat-interface",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-chat-runtime-foundation",
+      "tier": "FULL",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 108,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-command-foundation",
+      "tier": "FAST",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-command-runtime-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 73,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-live-preview-foundation",
+      "tier": "FAST",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-preview-modes",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-preview-runtime-foundation",
+      "tier": "FULL",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 108,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-push-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-runtime-experience-reality",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:multi-project-foundation",
+      "tier": "FAST",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:multi-project-monitoring",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 73,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:multi-project-verification",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:multi-project-verification-orchestration",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:multi-project-workspace-tabs",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:notification-delivery-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:one-prompt-chat-build-proof",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:one-prompt-live-preview-proof",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 62,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:openai-connectivity-proof",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:operator-feed-detail-upgrade",
+      "tier": "FAST",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:operator-feed-final-report-button-state-sync",
+      "tier": "FAST",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:operator-feed-foundation",
+      "tier": "STANDARD",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:operator-feed-unified-layout-and-stage2-completion",
+      "tier": "FAST",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:parallel-build-orchestration",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:performance-hardening",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:persistent-build-runtime-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:phase11-command-center",
+      "tier": "STANDARD",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:phase8-governance-stack-checkpoint",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:phase9-governance-stack-checkpoint",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:planning-brief-generator",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:planning-gate-alignment-repair",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:planning-gate-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:planning-gate-transition",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:platform-propagation-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:portfolio-intelligence",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:post-launch-reality-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prediction-trust-layer",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:preview-intelligence",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 207,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:privacy-hardening",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-architect-intelligence-v1",
+      "tier": "LAUNCH",
+      "category": "PAI",
+      "runtimeBudgetSeconds": 1,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-economics-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-evolution-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-evolution-reality-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-experience-verification-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-hardening-verification",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-lifecycle-reality-orchestrator",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-readiness-completion-boundary",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-readiness-completion-boundary-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-readiness-propagation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-readiness-real-founder-path",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-readiness-simulation-stall-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-reality-orchestrator",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:progress-intelligence",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-history-intelligence",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 62,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-intelligence-clarity",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-knowledge-reasoning",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-summarization-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-understanding-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-vault-intelligence",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:promise-fulfillment-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:promise-reality-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:real-build-execution-pipeline-v1",
+      "tier": "FULL",
+      "category": "REAL_BUILD_EXECUTION",
+      "runtimeBudgetSeconds": 18,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:real-build-execution-pipeline-v1-1",
+      "tier": "LAUNCH",
+      "category": "REAL_BUILD_EXECUTION",
+      "runtimeBudgetSeconds": 65,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:real-chat-openai-path-proof",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:real-file-workspace-execution",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 48,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:real-user-reality-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:reality-proof-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:reality-verification-expansion",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:reasoning-visibility-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:recovery-chains",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:recovery-hardening",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:reliability-hardening",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:remove-legacy-failed-to-fetch-copy-fallback",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:report-handoff-runid-propagation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:repository-typecheck-reality",
+      "tier": "FULL",
+      "category": "ENGINEERING",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:requirement-completeness-intelligence",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:resource-allocation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:result-fetch-failure-diagnostic-surface",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:revenue-reality-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:running-application-visibility",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:runtime-founder-execution-proof-hydration",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 50,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:runtime-materialization-truth-bridge",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:runtime-route-reachability-proof",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:runtime-startup-probe-false-positive-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:runtime-startup-proof-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:runtime-ui-render-proof",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:runtime-verification-layer",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:safe-capability-acquisition",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 48,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:scale-hardening",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:scale-readiness-reality-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:security-hardening",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:self-awareness-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:self-documentation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:self-evolution-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:self-evolution-governance",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:self-learning-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:self-model-reality-audit",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:self-model-routing-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:self-vision-runtime",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 207,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:shared-memory-layer",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:skeptical-founder-simulator",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:stage2-chat-stress-boundary-observability",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:strategic-defensibility-reality-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:task-governor",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 33,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:testing-runtime-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 62,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:timeline-intelligence",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:trust-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:trust-engine-expansion",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:ui-inspection-engine",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 207,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:ui-reviewer-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:unified-decision-layer",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:unified-intake-intelligence",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:unified-trust-runtime",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:unified-trust-score",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:unified-verification-entry",
+      "tier": "FULL",
+      "category": "UVL",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:unified-verification-lab-runtime",
+      "tier": "FULL",
+      "category": "UVL",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:universal-app-blueprint-v1",
+      "tier": "FULL",
+      "category": "BLUEPRINT",
+      "runtimeBudgetSeconds": 263,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:universal-app-blueprint-visual-v1",
+      "tier": "FULL",
+      "category": "BLUEPRINT",
+      "runtimeBudgetSeconds": 900,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:universal-feature-contract-intelligence-v1",
+      "tier": "FULL",
+      "category": "FEATURE_REALITY",
+      "runtimeBudgetSeconds": 900,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:unknown-discovery-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:upload-system",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:user-guides",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:user-success-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:uvl-maturity-verification-hub-v1",
+      "tier": "LAUNCH",
+      "category": "UVL",
+      "runtimeBudgetSeconds": 123,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:uvl-verification-execution-v1",
+      "tier": "LAUNCH",
+      "category": "UVL",
+      "runtimeBudgetSeconds": 6,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:ux-heuristic-evaluator",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:v5-launch-verdict-governance-source-normalization",
+      "tier": "FAST",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:validation-runtime-audit-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:validation-runtime-governance-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 900,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:verification-evidence-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:verification-gated-apply",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:verification-integration",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:verification-intelligence",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:verification-orchestrator",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:verification-reality",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 103,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:verification-registry",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:verification-reporting-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:verification-results-visibility",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:verification-strategy-core",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:visual-qa-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:visual-quality-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:visual-reference-intelligence",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:visual-verification-engine",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 207,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:voice-notes-intelligence",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:workspace-hosting-foundation",
+      "tier": "STANDARD",
+      "category": "FOUNDATION",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:workspace-intelligence",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:workspace-isolation-expansion",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world-class-chat-brain",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-autonomous-builder",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-builder-packet-execution",
+      "tier": "STANDARD",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-change-set-authority",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-change-set-materializer",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-completion-runtime",
+      "tier": "STANDARD",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-completion-verifier",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-controlled-apply-runtime",
+      "tier": "STANDARD",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-controlled-execution-runtime",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-disposable-workspace",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-disposable-workspace-creator",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-disposable-workspace-instantiator",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-dry-run-execution-composer",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-dry-run-execution-verifier",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-execution-activation",
+      "tier": "STANDARD",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-execution-engine",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-execution-planner",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-learning-loop",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-recovery-runtime",
+      "tier": "STANDARD",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-repository-snapshot",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-repository-snapshot-executor",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-repository-snapshot-materializer",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-rollback-runtime",
+      "tier": "STANDARD",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-simulation-runtime",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-workspace-foundation",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-workspace-instantiation-governance",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-workspace-materialization",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-workspace-population",
+      "tier": "FAST",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    }
+  ]
+}

@@ -32,6 +32,8 @@
   var largeScaleValidationData = null;
   var executionPipelineData = null;
   var executionPipelineLoadPromise = null;
+  var uvlVerificationExecutionData = null;
+  var uvlVerificationExecutionLoadPromise = null;
   var largeScaleValidationLoadPromise = null;
   var insightsSelectedProjectId = null;
 
@@ -4569,7 +4571,64 @@
         '<p><strong>Critical Gaps</strong></p>' +
         renderFounderReviewList(data.criticalGaps, 'No critical verification gaps.') +
         '<p><strong>Verification History</strong></p>' +
-        '<div class="verification-hub-history">' + (historyRows || '<p class="hint">No prior verification runs recorded yet.</p>') + '</div>',
+        '<div class="verification-hub-history">' + (historyRows || '<p class="hint">No prior verification runs recorded yet.</p>') + '</div>' +
+        renderUvlVerificationExecutionSection(uvlVerificationExecutionData),
+    );
+  }
+
+  function renderUvlVerificationExecutionSection(data) {
+    if (!data) {
+      return (
+        '<hr class="verification-hub-divider" />' +
+        '<p><strong>UVL Verification Execution</strong></p>' +
+        '<p class="hint">Loading verification execution proof…</p>'
+      );
+    }
+
+    var failureRows = (data.failureDistribution || [])
+      .filter(function (entry) {
+        return entry.count > 0;
+      })
+      .map(function (entry) {
+        return (
+          '<div class="verification-hub-row">' +
+          '<span>' + escapeHtml(entry.failureClass) + '</span>' +
+          '<span>' + String(entry.count) + '</span>' +
+          '<span>' + String(entry.percentage) + '%</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    var recentRows = (data.recentVerificationRuns || [])
+      .slice(0, 8)
+      .map(function (run) {
+        return (
+          '<div class="verification-hub-history-row">' +
+          '<span>' + escapeHtml(run.productName) + '</span>' +
+          '<span>' + (run.verified ? 'VERIFIED' : 'NOT_VERIFIED') + '</span>' +
+          '<span>' + String(run.verificationConfidence) + '/100</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return (
+      '<hr class="verification-hub-divider" />' +
+      '<p><strong>UVL Verification Execution</strong></p>' +
+      '<p class="hint">Execution-based verification proof from live preview runtime evidence.</p>' +
+      '<p><strong>Verification Coverage:</strong> ' + String(data.verificationCoveragePercent) + '%</p>' +
+      '<p><strong>Verified Count:</strong> ' + String(data.verifiedCount) + '/' + String(data.categoriesTested) + '</p>' +
+      '<p><strong>Verification Confidence:</strong> ' + String(data.verificationConfidenceScore) + '/100</p>' +
+      '<p><strong>Proof Status:</strong> ' + escapeHtml(data.verificationProofStatus || 'UNKNOWN') + '</p>' +
+      '<p><strong>Failure Distribution</strong></p>' +
+      '<div class="verification-hub-grid">' +
+      (failureRows || '<p class="hint">No verification failures recorded.</p>') +
+      '</div>' +
+      '<p><strong>Recent Verification Runs</strong></p>' +
+      '<div class="verification-hub-history">' +
+      (recentRows || '<p class="hint">No recent verification runs.</p>') +
+      '</div>'
     );
   }
 
@@ -4599,6 +4658,31 @@
         verificationHubLoadPromise = null;
       });
     return verificationHubLoadPromise;
+  }
+
+  function loadUvlVerificationExecution(force) {
+    if (!force && uvlVerificationExecutionData) {
+      return Promise.resolve(uvlVerificationExecutionData);
+    }
+    if (uvlVerificationExecutionLoadPromise) {
+      return uvlVerificationExecutionLoadPromise;
+    }
+    uvlVerificationExecutionLoadPromise = fetch('/api/founder/uvl-verification-execution-v1?refresh=false', {
+      method: 'GET',
+      cache: 'no-store',
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('uvl-verification-execution HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        uvlVerificationExecutionData = data;
+        return data;
+      })
+      .finally(function () {
+        uvlVerificationExecutionLoadPromise = null;
+      });
+    return uvlVerificationExecutionLoadPromise;
   }
 
   function bindVerificationHubActions() {
@@ -10541,6 +10625,16 @@
     })
     .catch(function () {
       /* Execution Pipeline falls back to loading state */
+    });
+
+  loadUvlVerificationExecution(false)
+    .then(function () {
+      if (currentViewId === 'verification') {
+        renderVerificationSurface(workspaceData, manifestData);
+      }
+    })
+    .catch(function () {
+      /* UVL Verification Execution falls back to loading state */
     });
 
   fetch(buildFounderTestApiUrl('/api/founder-reality.json', null))

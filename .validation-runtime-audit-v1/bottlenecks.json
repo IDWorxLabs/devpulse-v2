@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-06-24T14:19:32.113Z",
+  "bottlenecks": [
+    {
+      "bottleneck": "Repeated Playwright suites",
+      "impactScore": 185,
+      "affectedValidatorCount": 13,
+      "estimatedAggregateMinutes": 159,
+      "rank": 1
+    },
+    {
+      "bottleneck": "Repeated preview server startup",
+      "impactScore": 179,
+      "affectedValidatorCount": 74,
+      "estimatedAggregateMinutes": 31,
+      "rank": 2
+    },
+    {
+      "bottleneck": "Repeated npm builds",
+      "impactScore": 143,
+      "affectedValidatorCount": 49,
+      "estimatedAggregateMinutes": 44.9,
+      "rank": 3
+    },
+    {
+      "bottleneck": "Repeated AFLA execution",
+      "impactScore": 64,
+      "affectedValidatorCount": 4,
+      "estimatedAggregateMinutes": 56,
+      "rank": 4
+    },
+    {
+      "bottleneck": "Repeated workspace materialization",
+      "impactScore": 53,
+      "affectedValidatorCount": 17,
+      "estimatedAggregateMinutes": 18.8,
+      "rank": 5
+    },
+    {
+      "bottleneck": "Nested validator chains",
+      "impactScore": 53,
+      "affectedValidatorCount": 21,
+      "estimatedAggregateMinutes": 10.5,
+      "rank": 6
+    },
+    {
+      "bottleneck": "Repeated npm installs",
+      "impactScore": 44,
+      "affectedValidatorCount": 12,
+      "estimatedAggregateMinutes": 19.5,
+      "rank": 7
+    },
+    {
+      "bottleneck": "Repeated UVL execution",
+      "impactScore": 13,
+      "affectedValidatorCount": 4,
+      "estimatedAggregateMinutes": 4.7,
+      "rank": 8
+    },
+    {
+      "bottleneck": "Repeated real build pipeline execution",
+      "impactScore": 13,
+      "affectedValidatorCount": 3,
+      "estimatedAggregateMinutes": 7,
+      "rank": 9
+    }
+  ]
+}

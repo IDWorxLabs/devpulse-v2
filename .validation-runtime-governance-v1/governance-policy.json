@@ -1,0 +1,214 @@
+{
+  "version": "V1",
+  "generatedAt": "2026-06-24T14:19:30.939Z",
+  "passToken": "VALIDATION_RUNTIME_GOVERNANCE_V1_PASS",
+  "active": true,
+  "tiers": [
+    {
+      "tier": "FAST",
+      "targetRuntimeSeconds": 60,
+      "description": "During implementation — targeted validators only",
+      "allowedCategories": [
+        "CQI",
+        "FOUNDATION",
+        "OPERATOR",
+        "OTHER"
+      ],
+      "forbiddenCategories": [
+        "AFLA",
+        "UVL",
+        "CAPABILITY_AUDIT",
+        "REAL_BUILD_EXECUTION",
+        "FEATURE_REALITY",
+        "BLUEPRINT",
+        "LAUNCH"
+      ],
+      "forbiddenValidatorPatterns": [
+        "afla",
+        "autonomous-founder-launch",
+        "uvl-verification-execution",
+        "uvl-maturity",
+        "large-scale-multi-app",
+        "capability-audit",
+        "real-build-execution-pipeline",
+        "feature-reality",
+        "engineering-reality",
+        "universal-app-blueprint-visual",
+        "universal-feature-contract"
+      ],
+      "explicitValidators": []
+    },
+    {
+      "tier": "STANDARD",
+      "targetRuntimeSeconds": 300,
+      "description": "After feature completion — affected capability + integration validators",
+      "allowedCategories": [
+        "CQI",
+        "PAI",
+        "ENGINEERING",
+        "FOUNDATION",
+        "OPERATOR",
+        "CONNECTED_PIPELINE",
+        "WORLD2",
+        "OTHER"
+      ],
+      "forbiddenCategories": [
+        "AFLA",
+        "CAPABILITY_AUDIT",
+        "LAUNCH"
+      ],
+      "forbiddenValidatorPatterns": [
+        "afla",
+        "autonomous-founder-launch",
+        "capability-audit",
+        "large-scale-multi-app"
+      ],
+      "explicitValidators": []
+    },
+    {
+      "tier": "FULL",
+      "targetRuntimeSeconds": 900,
+      "description": "Milestone completion — cross-capability and major integration validation",
+      "allowedCategories": [
+        "CQI",
+        "UVL",
+        "REAL_BUILD_EXECUTION",
+        "FEATURE_REALITY",
+        "BLUEPRINT",
+        "ENGINEERING",
+        "CONNECTED_PIPELINE",
+        "WORLD2",
+        "FOUNDATION",
+        "OPERATOR",
+        "OTHER"
+      ],
+      "forbiddenCategories": [],
+      "forbiddenValidatorPatterns": [],
+      "explicitValidators": [
+        "validate:real-build-execution-pipeline-v1",
+        "validate:real-build-execution-pipeline-v1-1",
+        "validate:uvl-verification-execution-v1",
+        "validate:feature-reality-v1",
+        "validate:engineering-reality-v1"
+      ]
+    },
+    {
+      "tier": "LAUNCH",
+      "targetRuntimeSeconds": 0,
+      "description": "Launch candidate only — maximum confidence, not speed",
+      "allowedCategories": [
+        "UVL",
+        "PAI",
+        "AFLA",
+        "LAUNCH",
+        "CAPABILITY_AUDIT",
+        "REAL_BUILD_EXECUTION"
+      ],
+      "forbiddenCategories": [],
+      "forbiddenValidatorPatterns": [],
+      "explicitValidators": [
+        "validate:uvl-verification-execution-v1",
+        "validate:uvl-maturity-verification-hub-v1",
+        "validate:product-architect-intelligence-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:afla-trust-calibration-v1",
+        "validate:real-build-execution-pipeline-v1-1",
+        "validate:capability-audit-v3"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "RULE_1",
+      "name": "Validation Tiers",
+      "description": "FAST / STANDARD / FULL / LAUNCH tier enforcement",
+      "enforced": true
+    },
+    {
+      "id": "RULE_2",
+      "name": "Preview Server Reuse",
+      "description": "Single shared preview runtime pool; new server requires justification",
+      "enforced": true
+    },
+    {
+      "id": "RULE_3",
+      "name": "Build Output Cache",
+      "description": "Build once, reuse dist/ via workspace fingerprint",
+      "enforced": true
+    },
+    {
+      "id": "RULE_4",
+      "name": "Playwright Session Reuse",
+      "description": "Shared browser session pool across validators",
+      "enforced": true
+    },
+    {
+      "id": "RULE_5",
+      "name": "AFLA Tiering",
+      "description": "AFLA only in FULL and LAUNCH tiers",
+      "enforced": true
+    },
+    {
+      "id": "RULE_6",
+      "name": "Affected Capability Validation",
+      "description": "Capability impact graph maps changed files to validators",
+      "enforced": true
+    },
+    {
+      "id": "RULE_7",
+      "name": "Validation Artifact Reuse",
+      "description": "Reuse execution/verification/build/blueprint/AFLA proofs when valid",
+      "enforced": true
+    },
+    {
+      "id": "RULE_8",
+      "name": "Regression Budget",
+      "description": "Runtime budget per validator; breaches become audit findings",
+      "enforced": true
+    },
+    {
+      "id": "RULE_9",
+      "name": "Duplicate Validation Prevention",
+      "description": "Block repeated expensive operations when reusable evidence exists",
+      "enforced": true
+    },
+    {
+      "id": "RULE_10",
+      "name": "Governance Metrics",
+      "description": "Track overhead, duplicate work, cache/reuse hit rates",
+      "enforced": true
+    }
+  ],
+  "duplicatePreventionRules": [
+    {
+      "operation": "Repeated npm install",
+      "blockWhenReusableEvidenceExists": true,
+      "affectedValidatorCount": 12
+    },
+    {
+      "operation": "Repeated npm build",
+      "blockWhenReusableEvidenceExists": true,
+      "affectedValidatorCount": 47
+    },
+    {
+      "operation": "Repeated preview startup",
+      "blockWhenReusableEvidenceExists": true,
+      "affectedValidatorCount": 74
+    },
+    {
+      "operation": "Repeated UVL execution",
+      "blockWhenReusableEvidenceExists": true,
+      "affectedValidatorCount": 4
+    },
+    {
+      "operation": "Repeated AFLA execution",
+      "blockWhenReusableEvidenceExists": true,
+      "affectedValidatorCount": 4
+    },
+    {
+      "operation": "Repeated Playwright execution",
+      "blockWhenReusableEvidenceExists": true,
+      "affectedValidatorCount": 13
+    }
+  ]
+}

@@ -1,0 +1,587 @@
+{
+  "generatedAt": "2026-06-24T14:19:32.926Z",
+  "entries": [
+    {
+      "capabilityName": "Chat Authority",
+      "category": "IDEA_INTAKE",
+      "maturityScore": 92,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Intent Architecture",
+      "category": "IDEA_INTAKE",
+      "maturityScore": 88,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Unified Intake Intelligence",
+      "category": "IDEA_INTAKE",
+      "maturityScore": 85,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "LLM Chat Brain",
+      "category": "IDEA_INTAKE",
+      "maturityScore": 90,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "World-Class Chat Brain",
+      "category": "IDEA_INTAKE",
+      "maturityScore": 86,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Chat Cognitive Architecture",
+      "category": "IDEA_INTAKE",
+      "maturityScore": 82,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Voice Notes Intelligence",
+      "category": "IDEA_INTAKE",
+      "maturityScore": 80,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Visual Reference Intelligence",
+      "category": "IDEA_INTAKE",
+      "maturityScore": 78,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "AiDev Engine Intake Stage",
+      "category": "IDEA_INTAKE",
+      "maturityScore": 65,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Requirement Extractor",
+      "category": "REQUIREMENT_INTELLIGENCE",
+      "maturityScore": 88,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Requirement Completeness Intelligence",
+      "category": "REQUIREMENT_INTELLIGENCE",
+      "maturityScore": 84,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Clarifying Question Intelligence",
+      "category": "REQUIREMENT_INTELLIGENCE",
+      "maturityScore": 92,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Intake Alignment Engine",
+      "category": "REQUIREMENT_INTELLIGENCE",
+      "maturityScore": 80,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Planning Gate Authority",
+      "category": "PLANNING_INTELLIGENCE",
+      "maturityScore": 90,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Planning Brief Generator",
+      "category": "PLANNING_INTELLIGENCE",
+      "maturityScore": 85,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Architecture Brief Generator",
+      "category": "PLANNING_INTELLIGENCE",
+      "maturityScore": 85,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Build Plan Generator",
+      "category": "PLANNING_INTELLIGENCE",
+      "maturityScore": 85,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Product Architect",
+      "category": "PLANNING_INTELLIGENCE",
+      "maturityScore": 88,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Code Generation Planner",
+      "category": "PLANNING_INTELLIGENCE",
+      "maturityScore": 84,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Requirements-to-Plan Execution Contract",
+      "category": "PLANNING_INTELLIGENCE",
+      "maturityScore": 82,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Execution Readiness Gate",
+      "category": "PLANNING_INTELLIGENCE",
+      "maturityScore": 80,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Code Generation Engine V1",
+      "category": "CODE_GENERATION",
+      "maturityScore": 78,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Universal CRUD Generator",
+      "category": "CODE_GENERATION",
+      "maturityScore": 85,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Code Generation Runtime",
+      "category": "CODE_GENERATION",
+      "maturityScore": 55,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Autonomous Builder",
+      "category": "CODE_GENERATION",
+      "maturityScore": 60,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Adaptive AutoFix Intelligence",
+      "category": "CODE_GENERATION",
+      "maturityScore": 88,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Autonomous Repair Loop",
+      "category": "CODE_GENERATION",
+      "maturityScore": 82,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Universal App Blueprint",
+      "category": "BLUEPRINT_SYSTEMS",
+      "maturityScore": 92,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Universal App Blueprint Visual Validation",
+      "category": "BLUEPRINT_SYSTEMS",
+      "maturityScore": 90,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Blueprint Planning Rule",
+      "category": "BLUEPRINT_SYSTEMS",
+      "maturityScore": 80,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Unified Verification Lab (UVL)",
+      "category": "VERIFICATION_SYSTEMS",
+      "maturityScore": 72,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Feature Reality Validation",
+      "category": "FEATURE_VALIDATION",
+      "maturityScore": 95,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Universal Feature Contract Intelligence",
+      "category": "FEATURE_VALIDATION",
+      "maturityScore": 92,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Verification Orchestrator",
+      "category": "VERIFICATION_SYSTEMS",
+      "maturityScore": 60,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Browser Verification Harness",
+      "category": "FEATURE_VALIDATION",
+      "maturityScore": 88,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Engineering Reality Authority",
+      "category": "ENGINEERING_REVIEW",
+      "maturityScore": 95,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Repository Typecheck Reality",
+      "category": "ENGINEERING_REVIEW",
+      "maturityScore": 90,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Execution Reality Validation",
+      "category": "ENGINEERING_REVIEW",
+      "maturityScore": 88,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Hardening Stack (Phase 23)",
+      "category": "ENGINEERING_REVIEW",
+      "maturityScore": 75,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Connected Execution Proof Chain",
+      "category": "ENGINEERING_REVIEW",
+      "maturityScore": 94,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Autonomous Founder Launch Authority",
+      "category": "LAUNCH_READINESS",
+      "maturityScore": 95,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Launch Council",
+      "category": "LAUNCH_READINESS",
+      "maturityScore": 92,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Launch Readiness Authority",
+      "category": "LAUNCH_READINESS",
+      "maturityScore": 85,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Founder Launch Decision Authority",
+      "category": "LAUNCH_READINESS",
+      "maturityScore": 86,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Founder Acceptance Stack (24.8)",
+      "category": "FOUNDER_REVIEW",
+      "maturityScore": 88,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Skeptical Founder Simulator",
+      "category": "FOUNDER_REVIEW",
+      "maturityScore": 82,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Product Reality Orchestrator",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "maturityScore": 88,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Product Experience Verification Engine",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "maturityScore": 84,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Command Center Brain",
+      "category": "OPERATOR_SYSTEMS",
+      "maturityScore": 90,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Project Understanding Engine",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "maturityScore": 82,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Completion Truth Engine",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "maturityScore": 80,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Workflow Review",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "maturityScore": 45,
+      "status": "EXPERIMENTAL"
+    },
+    {
+      "capabilityName": "Business Review",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "maturityScore": 50,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "UI Reviewer Authority",
+      "category": "FEATURE_VALIDATION",
+      "maturityScore": 90,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Visual Quality Authority",
+      "category": "FEATURE_VALIDATION",
+      "maturityScore": 85,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Visual QA Engine",
+      "category": "FEATURE_VALIDATION",
+      "maturityScore": 84,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "UX Heuristic Evaluator",
+      "category": "FEATURE_VALIDATION",
+      "maturityScore": 82,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "First Impression Judge",
+      "category": "FEATURE_VALIDATION",
+      "maturityScore": 80,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Navigation Review (Dedicated)",
+      "category": "FEATURE_VALIDATION",
+      "maturityScore": 0,
+      "status": "MISSING"
+    },
+    {
+      "capabilityName": "Self-Evolution Authority",
+      "category": "SELF_EVOLUTION",
+      "maturityScore": 78,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Gap Detection Authority",
+      "category": "SELF_EVOLUTION",
+      "maturityScore": 82,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Missing Capability Detector",
+      "category": "SELF_EVOLUTION",
+      "maturityScore": 80,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Self-Learning Engine",
+      "category": "SELF_EVOLUTION",
+      "maturityScore": 55,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Capability Research Engine",
+      "category": "SELF_EVOLUTION",
+      "maturityScore": 50,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Failure Escalation (Automated)",
+      "category": "SELF_EVOLUTION",
+      "maturityScore": 60,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Architecture Drift Detection",
+      "category": "SELF_EVOLUTION",
+      "maturityScore": 78,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Multi-Project Foundation",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "maturityScore": 88,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Workspace Isolation Expansion",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "maturityScore": 82,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Parallel Build Orchestration",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "maturityScore": 65,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Multi-Project Workspace Tabs",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "maturityScore": 80,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Live Idea-to-Launch Execution Runner",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "maturityScore": 86,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Product Architect Intelligence V1",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "maturityScore": 91,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "UVL Verification Hub V1",
+      "category": "VERIFICATION_SYSTEMS",
+      "maturityScore": 74,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "AFLA Trust Calibration V1",
+      "category": "LAUNCH_READINESS",
+      "maturityScore": 88,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Large-Scale Multi-App Validation V1",
+      "category": "VERIFICATION_SYSTEMS",
+      "maturityScore": 74,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Founder Review Operator Dashboard V1",
+      "category": "OPERATOR_SYSTEMS",
+      "maturityScore": 87,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Canonical Capability Ownership V1",
+      "category": "SELF_EVOLUTION",
+      "maturityScore": 90,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Founder Reality Surface",
+      "category": "OPERATOR_SYSTEMS",
+      "maturityScore": 86,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "World2 Disposable Workspace Pipeline (24E–24Y)",
+      "category": "WORLD2",
+      "maturityScore": 70,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "World2 Execution Engine",
+      "category": "WORLD2",
+      "maturityScore": 58,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "World2 Workspace Foundation",
+      "category": "WORLD2",
+      "maturityScore": 72,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "World2 Execution Planner",
+      "category": "WORLD2",
+      "maturityScore": 70,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "World2 Simulation Runtime",
+      "category": "WORLD2",
+      "maturityScore": 68,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "World2 Dry Run Execution Composer",
+      "category": "WORLD2",
+      "maturityScore": 68,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "World2 Controlled Execution Runtime",
+      "category": "WORLD2",
+      "maturityScore": 52,
+      "status": "EXPERIMENTAL"
+    },
+    {
+      "capabilityName": "World2 Completion Runtime",
+      "category": "WORLD2",
+      "maturityScore": 55,
+      "status": "EXPERIMENTAL"
+    },
+    {
+      "capabilityName": "World2 Learning Loop",
+      "category": "WORLD2",
+      "maturityScore": 48,
+      "status": "EXPERIMENTAL"
+    },
+    {
+      "capabilityName": "CQI Maturity V1",
+      "category": "REQUIREMENT_INTELLIGENCE",
+      "maturityScore": 91,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Real Build Execution Pipeline V1",
+      "category": "ENGINEERING_REVIEW",
+      "maturityScore": 92,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Real Build Execution Pipeline V1.1",
+      "category": "ENGINEERING_REVIEW",
+      "maturityScore": 94,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Capability Audit V2",
+      "category": "SELF_EVOLUTION",
+      "maturityScore": 88,
+      "status": "MATURE"
+    },
+    {
+      "capabilityName": "Production Readiness Gate",
+      "category": "PRODUCTION_READINESS",
+      "maturityScore": 0,
+      "status": "MISSING"
+    },
+    {
+      "capabilityName": "Deployment Readiness",
+      "category": "PRODUCTION_READINESS",
+      "maturityScore": 28,
+      "status": "EXPERIMENTAL"
+    },
+    {
+      "capabilityName": "Monitoring",
+      "category": "PRODUCTION_READINESS",
+      "maturityScore": 5,
+      "status": "MISSING"
+    },
+    {
+      "capabilityName": "Rollback",
+      "category": "PRODUCTION_READINESS",
+      "maturityScore": 35,
+      "status": "EXPERIMENTAL"
+    },
+    {
+      "capabilityName": "Release Approval",
+      "category": "PRODUCTION_READINESS",
+      "maturityScore": 72,
+      "status": "PARTIAL"
+    },
+    {
+      "capabilityName": "Operational Safeguards",
+      "category": "PRODUCTION_READINESS",
+      "maturityScore": 58,
+      "status": "PARTIAL"
+    }
+  ]
+}

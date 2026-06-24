@@ -1,0 +1,242 @@
+# Validation Runtime Audit V1
+
+**Generated:** 2026-06-24T14:19:32.113Z  
+**Mode:** READ ONLY — MEASUREMENT ONLY  
+**Pass Token:** `VALIDATION_RUNTIME_AUDIT_V1_PASS`
+
+---
+
+## Executive Summary
+
+AiDevEngine validation ecosystem runtime audit. This phase measures where time is spent before Validation Runtime Governance V1.
+
+| Metric | Value |
+|--------|-------|
+| Total validators scanned | 453 |
+| Registered in package.json | 407 |
+| Measured baselines used | 12 |
+| Aggregate duplicate work | 95% |
+| Sum of registered validator estimates | 241.6 min (14496s) |
+
+### Typical Phase Overhead
+
+| Phase | Minutes |
+|-------|---------|
+| Implementation (typical) | 5 |
+| Regression validation | 8.8 |
+| **Validation overhead ratio** | **63.8%** |
+
+Phase validators: `validate:capability-audit-v3`, `validate:real-build-execution-pipeline-v1`, `validate:real-build-execution-pipeline-v1-1`, `validate:uvl-verification-execution-v1`, `validate:clarifying-question-intelligence-maturity-v1`, `validate:afla-trust-calibration-v1`, `validate:product-architect-intelligence-v1`, `validate:autonomous-founder-launch-authority-v1`
+
+---
+
+## Category Runtime Breakdown
+
+| Category | Validators | Est. Runtime | Est. Minutes |
+|----------|------------|--------------|--------------|
+| OTHER | 288 | 7329s | 122.2 min |
+| BLUEPRINT | 2 | 1965s | 32.8 min |
+| FEATURE_REALITY | 2 | 1832s | 30.5 min |
+| FOUNDATION | 32 | 1206s | 20.1 min |
+| AFLA | 3 | 437s | 7.3 min |
+| OPERATOR | 16 | 426s | 7.1 min |
+| UVL | 6 | 314s | 5.2 min |
+| CONNECTED_PIPELINE | 8 | 249s | 4.2 min |
+| WORLD2 | 27 | 225s | 3.8 min |
+| ENGINEERING | 2 | 183s | 3.1 min |
+| LAUNCH | 11 | 118s | 2 min |
+| CQI | 4 | 111s | 1.9 min |
+| REAL_BUILD_EXECUTION | 2 | 83s | 1.4 min |
+| CAPABILITY_AUDIT | 3 | 17s | 0.3 min |
+| PAI | 1 | 1s | 0 min |
+
+---
+
+## Top 20 Slowest Validators
+
+### Slowest (by runtime seconds)
+
+| Rank | Validator | Runtime (s) | Runtime (min) | Cost | Dup % | Category |
+|------|-----------|-------------|---------------|------|-------|----------|
+| 1 | `validate:universal-app-blueprint-visual-v1` | 1702s | 28.37 min | CRITICAL | 50% | BLUEPRINT |
+| 2 | `validate:universal-feature-contract-intelligence-v1` | 1652s | 27.53 min | CRITICAL | 98% | FEATURE_REALITY |
+| 3 | `validate:validation-runtime-governance-v1` | 1328s | 22.13 min | CRITICAL | 33% | OTHER |
+| 4 | `validate:autonomous-founder-launch-authority-v1` | 426s | 7.1 min | CRITICAL | 17% | AFLA |
+| 5 | `validate:code-generation-engine-v1` | 288s | 4.8 min | HIGH | 67% | OTHER |
+| 6 | `validate:universal-app-blueprint-v1` | 263s | 4.38 min | HIGH | 67% | BLUEPRINT |
+| 7 | `validate:interaction-testing-engine` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 8 | `validate:live-preview-runtime` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 9 | `validate:preview-intelligence` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 10 | `validate:self-vision-runtime` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 11 | `validate:ui-inspection-engine` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 12 | `validate:visual-verification-engine` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 13 | `validate:engineering-reality-v1` | 180s | 3 min | CRITICAL | 0% | ENGINEERING |
+| 14 | `validate:feature-reality-v1` | 180s | 3 min | CRITICAL | 98% | FEATURE_REALITY |
+| 15 | `validate:consistency-audit-authoritative-evidence-repoint` | 178s | 2.97 min | HIGH | 98% | OTHER |
+| 16 | `validate:founder-test-consistency-audit` | 178s | 2.97 min | HIGH | 98% | OTHER |
+| 17 | `validate:build-proof-gap-materialization` | 138s | 2.3 min | HIGH | 98% | OTHER |
+| 18 | `validate:generated-workspace-dependency-installation-executor` | 138s | 2.3 min | HIGH | 98% | OTHER |
+| 19 | `validate:connected-launch-final-blocker` | 123s | 2.05 min | HIGH | 50% | CONNECTED_PIPELINE |
+| 20 | `validate:founder-review-operator-dashboard-v1` | 123s | 2.05 min | HIGH | 0% | OPERATOR |
+
+
+## Top 20 Most Expensive Validators
+
+### Most expensive (cost tier × runtime)
+
+| Rank | Validator | Runtime (s) | Runtime (min) | Cost | Dup % | Category |
+|------|-----------|-------------|---------------|------|-------|----------|
+| 1 | `validate:universal-app-blueprint-visual-v1` | 1702s | 28.37 min | CRITICAL | 50% | BLUEPRINT |
+| 2 | `validate:universal-feature-contract-intelligence-v1` | 1652s | 27.53 min | CRITICAL | 98% | FEATURE_REALITY |
+| 3 | `validate:validation-runtime-governance-v1` | 1328s | 22.13 min | CRITICAL | 33% | OTHER |
+| 4 | `validate:autonomous-founder-launch-authority-v1` | 426s | 7.1 min | CRITICAL | 17% | AFLA |
+| 5 | `validate:code-generation-engine-v1` | 288s | 4.8 min | HIGH | 67% | OTHER |
+| 6 | `validate:engineering-reality-v1` | 180s | 3 min | CRITICAL | 0% | ENGINEERING |
+| 7 | `validate:feature-reality-v1` | 180s | 3 min | CRITICAL | 98% | FEATURE_REALITY |
+| 8 | `validate:universal-app-blueprint-v1` | 263s | 4.38 min | HIGH | 67% | BLUEPRINT |
+| 9 | `validate:interaction-testing-engine` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 10 | `validate:live-preview-runtime` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 11 | `validate:preview-intelligence` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 12 | `validate:self-vision-runtime` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 13 | `validate:ui-inspection-engine` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 14 | `validate:visual-verification-engine` | 207s | 3.45 min | HIGH | 98% | OTHER |
+| 15 | `validate:consistency-audit-authoritative-evidence-repoint` | 178s | 2.97 min | HIGH | 98% | OTHER |
+| 16 | `validate:founder-test-consistency-audit` | 178s | 2.97 min | HIGH | 98% | OTHER |
+| 17 | `validate:real-build-execution-pipeline-v1-1` | 65s | 1.08 min | CRITICAL | 98% | REAL_BUILD_EXECUTION |
+| 18 | `validate:build-proof-gap-materialization` | 138s | 2.3 min | HIGH | 98% | OTHER |
+| 19 | `validate:generated-workspace-dependency-installation-executor` | 138s | 2.3 min | HIGH | 98% | OTHER |
+| 20 | `validate:connected-launch-final-blocker` | 123s | 2.05 min | HIGH | 50% | CONNECTED_PIPELINE |
+
+
+## Top 20 Highest Duplicate Validators
+
+### Highest duplicate work %
+
+| Rank | Validator | Runtime (s) | Runtime (min) | Cost | Dup % | Category |
+|------|-----------|-------------|---------------|------|-------|----------|
+| 1 | `validate:action-visibility-engine` | 27s | 0.45 min | MEDIUM | 98% | OTHER |
+| 2 | `validate:afla-trust-calibration-v1` | 8s | 0.13 min | CRITICAL | 98% | AFLA |
+| 3 | `validate:auto-fix-runtime-foundation` | 62s | 1.03 min | MEDIUM | 98% | FOUNDATION |
+| 4 | `validate:autonomous-build-execution-proof` | 73s | 1.22 min | MEDIUM | 98% | OTHER |
+| 5 | `validate:autonomous-builder-reality` | 68s | 1.13 min | MEDIUM | 98% | OTHER |
+| 6 | `validate:autonomous-fixing` | 108s | 1.8 min | HIGH | 98% | OTHER |
+| 7 | `validate:brain-memory-visibility-stack` | 27s | 0.45 min | MEDIUM | 98% | OTHER |
+| 8 | `validate:build-materialization-reality` | 53s | 0.88 min | MEDIUM | 98% | OTHER |
+| 9 | `validate:build-materialization-truth-bridge` | 53s | 0.88 min | MEDIUM | 98% | OTHER |
+| 10 | `validate:build-proof-gap-materialization` | 138s | 2.3 min | HIGH | 98% | OTHER |
+| 11 | `validate:build-task-runtime-foundation` | 27s | 0.45 min | MEDIUM | 98% | FOUNDATION |
+| 12 | `validate:capability-research-engine` | 38s | 0.63 min | MEDIUM | 98% | OTHER |
+| 13 | `validate:chat-operational-truth-source-synchronization` | 53s | 0.88 min | MEDIUM | 98% | OTHER |
+| 14 | `validate:chat-routing-consistency` | 53s | 0.88 min | MEDIUM | 98% | OTHER |
+| 15 | `validate:cloud-monitoring-foundation` | 73s | 1.22 min | MEDIUM | 98% | FOUNDATION |
+| 16 | `validate:cloud-recovery-foundation` | 97s | 1.62 min | MEDIUM | 98% | FOUNDATION |
+| 17 | `validate:cloud-runtime-foundation` | 27s | 0.45 min | MEDIUM | 98% | FOUNDATION |
+| 18 | `validate:cloud-verification-foundation` | 97s | 1.62 min | MEDIUM | 98% | FOUNDATION |
+| 19 | `validate:code-generation-runtime-foundation` | 62s | 1.03 min | MEDIUM | 98% | FOUNDATION |
+| 20 | `validate:command-center-brain` | 27s | 0.45 min | MEDIUM | 98% | OPERATOR |
+
+
+---
+
+## Duplicate Work Analysis
+
+| Validator | Dup % | Duplicated Operations | Overlapping Validators |
+|-----------|-------|----------------------|------------------------|
+| `validate:action-visibility-engine` | 98% | preview server startup | validate:brain-memory-visibility-stack, validate:connected-live-preview-execution, validate:cross-system-awareness |
+| `validate:afla-trust-calibration-v1` | 98% | AFLA execution | validate:autonomous-founder-launch-authority-v1 |
+| `validate:auto-fix-runtime-foundation` | 98% | npm build, preview server startup | validate:build-task-runtime-foundation, validate:cloud-monitoring-foundation, validate:cloud-recovery-foundation |
+| `validate:autonomous-build-execution-proof` | 98% | npm build | validate:autonomous-builder-reality, validate:autonomous-fixing, validate:build-proof-gap-materialization |
+| `validate:autonomous-builder-reality` | 98% | npm build | validate:autonomous-build-execution-proof, validate:autonomous-fixing, validate:build-proof-gap-materialization |
+| `validate:autonomous-fixing` | 98% | npm build | validate:autonomous-build-execution-proof, validate:autonomous-builder-reality, validate:build-proof-gap-materialization |
+| `validate:brain-memory-visibility-stack` | 98% | preview server startup | validate:action-visibility-engine, validate:connected-live-preview-execution, validate:cross-system-awareness |
+| `validate:build-materialization-reality` | 98% | workspace materialization | validate:build-materialization-truth-bridge, validate:build-proof-gap-materialization, validate:chat-operational-truth-source-synchronization |
+| `validate:build-materialization-truth-bridge` | 98% | workspace materialization | validate:build-materialization-reality, validate:build-proof-gap-materialization, validate:chat-operational-truth-source-synchronization |
+| `validate:build-proof-gap-materialization` | 98% | npm build, workspace materialization | validate:code-generation-engine-v1, validate:autonomous-build-execution-proof, validate:autonomous-builder-reality |
+| `validate:build-task-runtime-foundation` | 98% | preview server startup | validate:auto-fix-runtime-foundation, validate:cloud-recovery-foundation, validate:cloud-runtime-foundation |
+| `validate:capability-research-engine` | 98% | npm build | validate:autonomous-build-execution-proof, validate:autonomous-builder-reality, validate:autonomous-fixing |
+| `validate:chat-operational-truth-source-synchronization` | 98% | workspace materialization | validate:build-materialization-reality, validate:build-materialization-truth-bridge, validate:build-proof-gap-materialization |
+| `validate:chat-routing-consistency` | 98% | workspace materialization | validate:build-materialization-reality, validate:build-materialization-truth-bridge, validate:build-proof-gap-materialization |
+| `validate:cloud-monitoring-foundation` | 98% | npm build | validate:auto-fix-runtime-foundation, validate:cloud-recovery-foundation, validate:cloud-verification-foundation |
+
+---
+
+## Runtime Bottlenecks
+
+| Rank | Bottleneck | Affected Validators | Est. Aggregate | Impact |
+|------|------------|---------------------|----------------|--------|
+| 1 | Repeated Playwright suites | 13 | 159 min | 185 |
+| 2 | Repeated preview server startup | 74 | 31 min | 179 |
+| 3 | Repeated npm builds | 49 | 44.9 min | 143 |
+| 4 | Repeated AFLA execution | 4 | 56 min | 64 |
+| 5 | Repeated workspace materialization | 17 | 18.8 min | 53 |
+| 6 | Nested validator chains | 21 | 10.5 min | 53 |
+| 7 | Repeated npm installs | 12 | 19.5 min | 44 |
+| 8 | Repeated UVL execution | 4 | 4.7 min | 13 |
+| 9 | Repeated real build pipeline execution | 3 | 7 min | 13 |
+
+---
+
+## Validation Dependency Graph
+
+### Nested Chains
+
+| Type | Chain |
+|------|-------|
+| nested | validate:chat-authority → validate:task-governor → validate:foundation |
+| nested | validate:founder-readiness-authority → validate:founder-testing-chat-readiness → validate:chat-intelligence-reality |
+| nested | validate:inline-operator-feed → validate:chat-authority → validate:task-governor → validate:foundation |
+| nested | validate:inline-operator-feed → validate:chat-authority → validate:shell → validate:task-governor |
+| nested | validate:inline-operator-feed → validate:task-governor → validate:foundation |
+| nested | validate:phase8-governance-stack-checkpoint → validate:governance-stack-checkpoint → validate:execution-authority → validate:execution-verification |
+| nested | validate:phase9-governance-stack-checkpoint → validate:phase8-governance-stack-checkpoint → validate:governance-stack-checkpoint → validate:execution-authority → validate:execution-verification |
+| nested | validate:phase9-governance-stack-checkpoint → validate:phase8-governance-stack-checkpoint → validate:mobile-command-foundation → validate:mobile-chat-interface |
+| nested | validate:phase9-governance-stack-checkpoint → validate:governance-stack-checkpoint → validate:execution-authority → validate:execution-verification |
+
+### Circular Validation Paths
+
+_None detected._
+
+### Repeated Validation Paths
+
+_None detected._
+
+---
+
+## Governance Recommendations (Evidence Only — Not Implemented)
+
+| Action | Target | Est. Savings | Evidence |
+|--------|--------|--------------|----------|
+| CACHE | build outputs across validators | 16 min | validate:autonomous-build-execution-proof, validate:autonomous-fixing, validate:cloud-monitoring-foundation |
+| REUSE | preview servers across validators | 59 min | validate:action-visibility-engine, validate:auto-fix-runtime-foundation, validate:autonomous-founder-launch-authority-v1 |
+| MERGE | UVL verification paths | 1 min | validate:connected-verification-execution, validate:founder-execution-proof, validate:uvl-maturity-verification-hub-v1 |
+| TIER | AFLA validation to launch-only gate | 7.1 min | validate:afla-trust-calibration-v1, validate:autonomous-founder-launch-authority-v1, validate:founder-review-operator-dashboard-v1 |
+| MERGE | high-duplicate regression validators | 1 min | validate:action-visibility-engine, validate:afla-trust-calibration-v1, validate:auto-fix-runtime-foundation |
+| REUSE | nested validator results | 20 min | validate:brain-memory-visibility-stack, validate:chat-authority, validate:cqi-integration-repair-v1 |
+| TIER | launch-only validation | 6 min | validate:afla-trust-calibration-v1, validate:autonomous-founder-launch-authority-v1, validate:connected-launch-readiness-proof |
+| CACHE | Playwright browser sessions | 20 min | validate:autonomous-founder-launch-authority-v1, validate:engineering-reality-v1, validate:execution-proof-evolution |
+| KEEP | fast validators as always-on regression | 0 min | validate:adaptive-autofix-intelligence, validate:adoption-prediction-authority, validate:adoption-prediction-engine |
+
+> **Note:** These are measurement-derived recommendations only. No caching, merging, tiering, or validator changes were applied in this phase.
+
+---
+
+## Artifacts
+
+- `.validation-runtime-audit-v1/runtime-metrics.json`
+- `.validation-runtime-audit-v1/validator-rankings.json`
+- `.validation-runtime-audit-v1/duplicate-work-analysis.json`
+- `.validation-runtime-audit-v1/dependency-graph.json`
+- `.validation-runtime-audit-v1/bottlenecks.json`
+- `.validation-runtime-audit-v1/governance-recommendations.json`
+
+---
+
+## Answers
+
+| Question | Answer |
+|----------|--------|
+| Which validators are slowest? | See Top 20 Slowest — leader: `validate:universal-app-blueprint-visual-v1` (1702s) |
+| Which consume most resources? | See Top 20 Most Expensive — leader: `validate:universal-app-blueprint-visual-v1` (CRITICAL) |
+| Which duplicate work? | See Duplicate Work — leader: `validate:action-visibility-engine` (98%) |
+| Where is runtime lost? | See Bottlenecks — #1: Repeated Playwright suites |
+| What to optimize first? | CACHE: build outputs across validators |

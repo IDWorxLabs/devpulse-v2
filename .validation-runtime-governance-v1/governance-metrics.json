@@ -1,0 +1,12 @@
+{
+  "baselineValidationOverheadPercent": 63.8,
+  "projectedValidationOverheadPercent": 16.7,
+  "baselineDuplicateWorkPercent": 96,
+  "projectedDuplicateWorkPercent": 22.8,
+  "targetValidationOverheadPercent": 20,
+  "targetDuplicateWorkPercent": 25,
+  "cacheHitPercent": 65,
+  "previewReusePercent": 72,
+  "buildReusePercent": 58,
+  "governanceActive": true
+}

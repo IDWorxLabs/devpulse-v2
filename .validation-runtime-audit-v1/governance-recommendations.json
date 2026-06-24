@@ -1,0 +1,138 @@
+{
+  "generatedAt": "2026-06-24T14:19:32.113Z",
+  "readOnly": true,
+  "notImplemented": true,
+  "recommendations": [
+    {
+      "action": "CACHE",
+      "target": "build outputs across validators",
+      "rationale": "22 validators trigger npm build or real-build pipeline work; measured RBEP runs 65s+ per invocation.",
+      "evidenceValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-fixing",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-engine-v1",
+        "validate:connected-launch-final-blocker",
+        "validate:consistency-audit-authoritative-evidence-repoint"
+      ],
+      "estimatedSavingsMinutes": 16
+    },
+    {
+      "action": "REUSE",
+      "target": "preview servers across validators",
+      "rationale": "74 validators start preview servers independently.",
+      "evidenceValidators": [
+        "validate:action-visibility-engine",
+        "validate:auto-fix-runtime-foundation",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:brain-memory-visibility-stack",
+        "validate:build-task-runtime-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-runtime-foundation",
+        "validate:cloud-verification-foundation"
+      ],
+      "estimatedSavingsMinutes": 59
+    },
+    {
+      "action": "MERGE",
+      "target": "UVL verification paths",
+      "rationale": "Multiple validators invoke UVL verification execution with overlapping workspace checks.",
+      "evidenceValidators": [
+        "validate:connected-verification-execution",
+        "validate:founder-execution-proof",
+        "validate:uvl-maturity-verification-hub-v1",
+        "validate:uvl-verification-execution-v1"
+      ],
+      "estimatedSavingsMinutes": 1
+    },
+    {
+      "action": "TIER",
+      "target": "AFLA validation to launch-only gate",
+      "rationale": "AFLA validators measured up to 7.1 min; should not run on every feature phase.",
+      "evidenceValidators": [
+        "validate:afla-trust-calibration-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:founder-review-operator-dashboard-v1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "estimatedSavingsMinutes": 7.1
+    },
+    {
+      "action": "MERGE",
+      "target": "high-duplicate regression validators",
+      "rationale": "126 validators show ≥50% duplicate work overlap within their category.",
+      "evidenceValidators": [
+        "validate:action-visibility-engine",
+        "validate:afla-trust-calibration-v1",
+        "validate:auto-fix-runtime-foundation",
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:brain-memory-visibility-stack",
+        "validate:build-materialization-reality",
+        "validate:build-materialization-truth-bridge",
+        "validate:build-proof-gap-materialization"
+      ],
+      "estimatedSavingsMinutes": 1
+    },
+    {
+      "action": "REUSE",
+      "target": "nested validator results",
+      "rationale": "10 validators trigger multiple child validators; results could be shared.",
+      "evidenceValidators": [
+        "validate:brain-memory-visibility-stack",
+        "validate:chat-authority",
+        "validate:cqi-integration-repair-v1",
+        "validate:founder-readiness-authority",
+        "validate:governance-stack-checkpoint",
+        "validate:inline-operator-feed",
+        "validate:phase8-governance-stack-checkpoint",
+        "validate:phase9-governance-stack-checkpoint"
+      ],
+      "estimatedSavingsMinutes": 20
+    },
+    {
+      "action": "TIER",
+      "target": "launch-only validation",
+      "rationale": "Launch and AFLA validators are expensive and should not block routine feature phases.",
+      "evidenceValidators": [
+        "validate:afla-trust-calibration-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:connected-launch-readiness-proof",
+        "validate:founder-launch-decision-authority",
+        "validate:founder-test-launch-readiness",
+        "validate:launch-council"
+      ],
+      "estimatedSavingsMinutes": 6
+    },
+    {
+      "action": "CACHE",
+      "target": "Playwright browser sessions",
+      "rationale": "13 validators launch Playwright; session reuse would reduce cold-start cost.",
+      "evidenceValidators": [
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:engineering-reality-v1",
+        "validate:execution-proof-evolution",
+        "validate:feature-reality-v1",
+        "validate:interaction-testing-engine",
+        "validate:live-preview-runtime"
+      ],
+      "estimatedSavingsMinutes": 20
+    },
+    {
+      "action": "KEEP",
+      "target": "fast validators as always-on regression",
+      "rationale": "259 registered validators are LOW tier (<30s estimated); safe for continuous regression.",
+      "evidenceValidators": [
+        "validate:adaptive-autofix-intelligence",
+        "validate:adoption-prediction-authority",
+        "validate:adoption-prediction-engine",
+        "validate:adoption-reality-authority",
+        "validate:aidevengine-identity-correction"
+      ],
+      "estimatedSavingsMinutes": 0
+    }
+  ]
+}

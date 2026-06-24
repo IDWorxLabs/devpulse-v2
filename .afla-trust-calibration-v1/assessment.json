@@ -442,7 +442,7 @@
     "userLabel": "✗ Launch Not Ready",
     "contractId": null,
     "productName": "CRM",
-    "generatedAt": "2026-06-24T11:27:17.798Z",
+    "generatedAt": "2026-06-24T14:19:38.013Z",
     "reportMarkdown": "",
     "launchDecisionExplainability": {
       "readOnly": true,
@@ -459,5 +459,5 @@
       "reasonForVerdict": "Requirement Discovery incomplete"
     }
   },
-  "generatedAt": "2026-06-24T11:27:17.798Z"
+  "generatedAt": "2026-06-24T14:19:38.013Z"
 }

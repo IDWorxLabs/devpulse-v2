@@ -1,0 +1,281 @@
+{
+  "generatedAt": "2026-06-24T14:19:30.939Z",
+  "nodes": [
+    {
+      "capabilityCategory": "CQI",
+      "pathPatterns": [
+        "src/clarifying-question",
+        "src/cqi-",
+        "scripts/validate-clarifying",
+        "scripts/validate-cqi"
+      ],
+      "validators": [
+        "validate:clarifying-question-intelligence",
+        "validate:clarifying-question-intelligence-maturity-v1",
+        "validate:clarifying-question-live-gate",
+        "validate:cqi-integration-repair-v1"
+      ]
+    },
+    {
+      "capabilityCategory": "UVL",
+      "pathPatterns": [
+        "src/uvl-",
+        "src/unified-verification",
+        "scripts/validate-uvl",
+        "scripts/validate-unified-verification"
+      ],
+      "validators": [
+        "validate:connected-verification-execution",
+        "validate:connected-verification-execution-proof",
+        "validate:unified-verification-entry",
+        "validate:unified-verification-lab-runtime",
+        "validate:uvl-maturity-verification-hub-v1",
+        "validate:uvl-verification-execution-v1"
+      ]
+    },
+    {
+      "capabilityCategory": "AFLA",
+      "pathPatterns": [
+        "src/afla-",
+        "src/autonomous-founder-launch",
+        "scripts/validate-afla",
+        "scripts/validate-autonomous-founder-launch"
+      ],
+      "validators": [
+        "validate:afla-trust-calibration-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:founder-launch-decision-authority"
+      ]
+    },
+    {
+      "capabilityCategory": "PAI",
+      "pathPatterns": [
+        "src/product-architect-intelligence",
+        "scripts/validate-product-architect-intelligence"
+      ],
+      "validators": [
+        "validate:product-architect-intelligence-v1"
+      ]
+    },
+    {
+      "capabilityCategory": "REAL_BUILD_EXECUTION",
+      "pathPatterns": [
+        "src/real-build-execution",
+        "scripts/validate-real-build-execution"
+      ],
+      "validators": [
+        "validate:real-build-execution-pipeline-v1",
+        "validate:real-build-execution-pipeline-v1-1"
+      ]
+    },
+    {
+      "capabilityCategory": "LAUNCH",
+      "pathPatterns": [
+        "src/launch-council",
+        "src/launch-readiness",
+        "scripts/validate-launch"
+      ],
+      "validators": [
+        "validate:connected-launch-readiness-proof",
+        "validate:founder-test-launch-readiness",
+        "validate:launch-council",
+        "validate:launch-council-finalization",
+        "validate:launch-readiness-artifact-build-trace",
+        "validate:launch-readiness-artifact-completion-barrier-repair",
+        "validate:launch-readiness-artifact-completion-boundary-repair",
+        "validate:launch-readiness-authority",
+        "validate:launch-verdict-governance",
+        "validate:launch-verdict-governance-source-normalization",
+        "validate:v5-launch-verdict-governance-source-normalization"
+      ]
+    },
+    {
+      "capabilityCategory": "ENGINEERING",
+      "pathPatterns": [
+        "src/engineering-reality",
+        "src/repository-typecheck",
+        "scripts/validate-engineering"
+      ],
+      "validators": [
+        "validate:engineering-reality-v1",
+        "validate:repository-typecheck-reality"
+      ]
+    },
+    {
+      "capabilityCategory": "BLUEPRINT",
+      "pathPatterns": [
+        "src/universal-app-blueprint",
+        "scripts/validate-universal-app-blueprint",
+        "scripts/validate-blueprint"
+      ],
+      "validators": [
+        "validate:universal-app-blueprint-v1",
+        "validate:universal-app-blueprint-visual-v1"
+      ]
+    },
+    {
+      "capabilityCategory": "FEATURE_REALITY",
+      "pathPatterns": [
+        "src/feature-reality",
+        "src/universal-feature-contract",
+        "scripts/validate-feature-reality",
+        "scripts/validate-universal-feature"
+      ],
+      "validators": [
+        "validate:feature-reality-v1",
+        "validate:universal-feature-contract-intelligence-v1"
+      ]
+    },
+    {
+      "capabilityCategory": "WORLD2",
+      "pathPatterns": [
+        "src/world2-",
+        "scripts/validate-world2"
+      ],
+      "validators": [
+        "validate:world2-autonomous-builder",
+        "validate:world2-builder-packet-execution",
+        "validate:world2-change-set-authority",
+        "validate:world2-change-set-materializer",
+        "validate:world2-completion-runtime",
+        "validate:world2-completion-verifier",
+        "validate:world2-controlled-apply-runtime",
+        "validate:world2-controlled-execution-runtime",
+        "validate:world2-disposable-workspace",
+        "validate:world2-disposable-workspace-creator",
+        "validate:world2-disposable-workspace-instantiator",
+        "validate:world2-dry-run-execution-composer",
+        "validate:world2-dry-run-execution-verifier",
+        "validate:world2-execution-activation",
+        "validate:world2-execution-engine",
+        "validate:world2-execution-planner",
+        "validate:world2-learning-loop",
+        "validate:world2-recovery-runtime",
+        "validate:world2-repository-snapshot",
+        "validate:world2-repository-snapshot-executor",
+        "validate:world2-repository-snapshot-materializer",
+        "validate:world2-rollback-runtime",
+        "validate:world2-simulation-runtime",
+        "validate:world2-workspace-foundation",
+        "validate:world2-workspace-instantiation-governance",
+        "validate:world2-workspace-materialization",
+        "validate:world2-workspace-population"
+      ]
+    },
+    {
+      "capabilityCategory": "OPERATOR",
+      "pathPatterns": [
+        "src/founder-review-operator",
+        "src/command-center",
+        "public/founder-reality",
+        "scripts/validate-founder-review",
+        "scripts/validate-operator"
+      ],
+      "validators": [
+        "validate:command-center-brain",
+        "validate:command-center-brain-runtime",
+        "validate:command-center-identity-realignment",
+        "validate:command-center-runtime-shell",
+        "validate:command-center-ui-wiring-founder-report-delivery",
+        "validate:command-center-ux-stabilization",
+        "validate:founder-reality-surface",
+        "validate:founder-report-access-operator-feed-state",
+        "validate:founder-review-operator-dashboard-v1",
+        "validate:founder-test-operator-feed-trace",
+        "validate:inline-operator-feed",
+        "validate:operator-feed-detail-upgrade",
+        "validate:operator-feed-final-report-button-state-sync",
+        "validate:operator-feed-foundation",
+        "validate:operator-feed-unified-layout-and-stage2-completion",
+        "validate:phase11-command-center"
+      ]
+    },
+    {
+      "capabilityCategory": "CONNECTED_PIPELINE",
+      "pathPatterns": [
+        "src/connected-build",
+        "src/connected-runtime",
+        "src/connected-preview",
+        "src/connected-verification",
+        "src/connected-launch"
+      ],
+      "validators": [
+        "validate:connected-build-execution",
+        "validate:connected-build-execution-foundation",
+        "validate:connected-launch-final-blocker",
+        "validate:connected-preview-experience-proof",
+        "validate:connected-runtime-activation-foundation",
+        "validate:connected-runtime-activation-proof",
+        "validate:connected-runtime-execution",
+        "validate:connected-verification-foundation"
+      ]
+    },
+    {
+      "capabilityCategory": "FOUNDATION",
+      "pathPatterns": [
+        "src/foundation",
+        "src/shell",
+        "src/task-governor",
+        "src/chat-authority",
+        "scripts/validate-foundation",
+        "scripts/validate-shell",
+        "scripts/validate-task-governor"
+      ],
+      "validators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:autonomous-builder-execution-foundation",
+        "validate:autonomous-builder-foundation",
+        "validate:build-task-runtime-foundation",
+        "validate:chat-authority",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-runtime-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:complexity-score-foundation",
+        "validate:connected-live-preview-foundation",
+        "validate:cross-device-continuity-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:execution-runtime-foundation",
+        "validate:experience-layer-foundation",
+        "validate:founder-inbox-foundation",
+        "validate:founder-notification-runtime-foundation",
+        "validate:mobile-approval-flow-foundation",
+        "validate:mobile-approval-runtime-foundation",
+        "validate:mobile-chat-runtime-foundation",
+        "validate:mobile-command-foundation",
+        "validate:mobile-command-runtime-foundation",
+        "validate:mobile-live-preview-foundation",
+        "validate:mobile-preview-runtime-foundation",
+        "validate:mobile-push-foundation",
+        "validate:multi-project-foundation",
+        "validate:notification-delivery-foundation",
+        "validate:persistent-build-runtime-foundation",
+        "validate:task-governor",
+        "validate:testing-runtime-foundation",
+        "validate:workspace-hosting-foundation"
+      ]
+    },
+    {
+      "capabilityCategory": "CAPABILITY_AUDIT",
+      "pathPatterns": [
+        "src/capability-audit",
+        "scripts/validate-capability-audit"
+      ],
+      "validators": [
+        "validate:capability-audit-v1",
+        "validate:capability-audit-v2",
+        "validate:capability-audit-v3"
+      ]
+    },
+    {
+      "capabilityCategory": "VALIDATION_GOVERNANCE",
+      "pathPatterns": [
+        "src/validation-runtime-governance",
+        "src/validation-runtime-audit",
+        "scripts/validate-validation-runtime"
+      ],
+      "validators": []
+    }
+  ]
+}

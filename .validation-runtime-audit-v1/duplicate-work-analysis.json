@@ -1,0 +1,4006 @@
+{
+  "generatedAt": "2026-06-24T14:19:32.113Z",
+  "aggregateDuplicateWorkPercent": 95,
+  "entries": [
+    {
+      "validatorName": "validate:action-visibility-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair",
+        "validate:founder-test-result-route-existence-proof"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:afla-trust-calibration-v1",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-founder-launch-authority-v1"
+      ],
+      "duplicatedOperations": [
+        "AFLA execution"
+      ]
+    },
+    {
+      "validatorName": "validate:auto-fix-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:build-task-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-runtime-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:execution-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build",
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:autonomous-build-execution-proof",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality",
+        "validate:execution-proof-authority-synchronization"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:autonomous-builder-reality",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality",
+        "validate:execution-proof-authority-synchronization"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:autonomous-fixing",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality",
+        "validate:execution-proof-authority-synchronization"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:brain-memory-visibility-stack",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair",
+        "validate:founder-test-result-route-existence-proof"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:build-materialization-reality",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:build-materialization-truth-bridge",
+        "validate:build-proof-gap-materialization",
+        "validate:chat-operational-truth-source-synchronization",
+        "validate:chat-routing-consistency",
+        "validate:code-generation-engine-v1",
+        "validate:execution-proof-authority-synchronization",
+        "validate:live-chat-operational-path"
+      ],
+      "duplicatedOperations": [
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:build-materialization-truth-bridge",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:build-materialization-reality",
+        "validate:build-proof-gap-materialization",
+        "validate:chat-operational-truth-source-synchronization",
+        "validate:chat-routing-consistency",
+        "validate:code-generation-engine-v1",
+        "validate:execution-proof-authority-synchronization",
+        "validate:live-chat-operational-path"
+      ],
+      "duplicatedOperations": [
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:build-proof-gap-materialization",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:code-generation-engine-v1",
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-materialization-reality",
+        "validate:build-materialization-truth-bridge",
+        "validate:capability-research-engine",
+        "validate:chat-operational-truth-source-synchronization",
+        "validate:chat-routing-consistency"
+      ],
+      "duplicatedOperations": [
+        "npm build",
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:build-task-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-runtime-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:execution-runtime-foundation",
+        "validate:persistent-build-runtime-foundation",
+        "validate:testing-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:capability-research-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality",
+        "validate:execution-proof-authority-synchronization"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:chat-operational-truth-source-synchronization",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:build-materialization-reality",
+        "validate:build-materialization-truth-bridge",
+        "validate:build-proof-gap-materialization",
+        "validate:chat-routing-consistency",
+        "validate:code-generation-engine-v1",
+        "validate:execution-proof-authority-synchronization",
+        "validate:live-chat-operational-path"
+      ],
+      "duplicatedOperations": [
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:chat-routing-consistency",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:build-materialization-reality",
+        "validate:build-materialization-truth-bridge",
+        "validate:build-proof-gap-materialization",
+        "validate:chat-operational-truth-source-synchronization",
+        "validate:code-generation-engine-v1",
+        "validate:execution-proof-authority-synchronization",
+        "validate:live-chat-operational-path"
+      ],
+      "duplicatedOperations": [
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:cloud-monitoring-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:founder-inbox-foundation",
+        "validate:founder-notification-runtime-foundation",
+        "validate:mobile-approval-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:cloud-recovery-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:build-task-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-runtime-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:execution-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build",
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:cloud-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:build-task-runtime-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:execution-runtime-foundation",
+        "validate:persistent-build-runtime-foundation",
+        "validate:testing-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:cloud-verification-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:build-task-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-runtime-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:execution-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build",
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:code-generation-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:build-task-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-runtime-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:execution-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build",
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:command-center-brain",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:command-center-brain-runtime",
+        "validate:command-center-runtime-shell",
+        "validate:command-center-ux-stabilization",
+        "validate:founder-reality-surface",
+        "validate:operator-feed-foundation",
+        "validate:phase11-command-center"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:command-center-brain-runtime",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:command-center-brain",
+        "validate:command-center-runtime-shell",
+        "validate:command-center-ux-stabilization",
+        "validate:founder-reality-surface",
+        "validate:operator-feed-foundation",
+        "validate:phase11-command-center"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:command-center-runtime-shell",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:command-center-brain",
+        "validate:command-center-brain-runtime",
+        "validate:command-center-ux-stabilization",
+        "validate:founder-reality-surface",
+        "validate:operator-feed-foundation",
+        "validate:phase11-command-center"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:command-center-ux-stabilization",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:command-center-brain",
+        "validate:command-center-brain-runtime",
+        "validate:command-center-runtime-shell",
+        "validate:founder-reality-surface",
+        "validate:operator-feed-foundation",
+        "validate:phase11-command-center"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:connected-build-execution",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:connected-launch-final-blocker",
+        "validate:connected-preview-experience-proof",
+        "validate:connected-runtime-activation-proof"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:connected-live-preview-execution",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair",
+        "validate:founder-test-result-route-existence-proof"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:connected-preview-experience-proof",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:connected-build-execution",
+        "validate:connected-launch-final-blocker",
+        "validate:connected-runtime-activation-proof"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:connected-runtime-activation-proof",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:connected-build-execution",
+        "validate:connected-launch-final-blocker",
+        "validate:connected-preview-experience-proof"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:connected-verification-execution",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:uvl-maturity-verification-hub-v1",
+        "validate:uvl-verification-execution-v1"
+      ],
+      "duplicatedOperations": [
+        "UVL execution"
+      ]
+    },
+    {
+      "validatorName": "validate:consistency-audit-authoritative-evidence-repoint",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:end-to-end-founder-workflow-reality",
+        "validate:execution-proof-authority-synchronization"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:controlled-builder-execution-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:code-generation-engine-v1",
+        "validate:generated-workspace-dependency-installation-executor",
+        "validate:generated-workspace-dependency-materialization",
+        "validate:real-file-workspace-execution",
+        "validate:safe-capability-acquisition"
+      ],
+      "duplicatedOperations": [
+        "npm install"
+      ]
+    },
+    {
+      "validatorName": "validate:cross-device-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:founder-inbox-foundation",
+        "validate:founder-notification-runtime-foundation",
+        "validate:mobile-approval-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:cross-system-awareness",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair",
+        "validate:founder-test-result-route-existence-proof"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:cross-system-routing",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair",
+        "validate:founder-test-result-route-existence-proof"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:dependency-intelligence",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair",
+        "validate:founder-test-result-route-existence-proof"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:end-to-end-founder-workflow-reality",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:execution-proof-authority-synchronization"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:execution-proof-authority-synchronization",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-materialization-reality",
+        "validate:build-materialization-truth-bridge",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:chat-operational-truth-source-synchronization"
+      ],
+      "duplicatedOperations": [
+        "npm build",
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:execution-proof-contradiction-elimination",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:execution-proof-dashboard",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:execution-proof-evolution",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:interaction-testing-engine",
+        "validate:live-preview-runtime",
+        "validate:preview-intelligence",
+        "validate:self-vision-runtime",
+        "validate:ui-inspection-engine",
+        "validate:validation-runtime-governance-v1",
+        "validate:visual-verification-engine"
+      ],
+      "duplicatedOperations": [
+        "Playwright execution"
+      ]
+    },
+    {
+      "validatorName": "validate:execution-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:build-task-runtime-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-runtime-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:persistent-build-runtime-foundation",
+        "validate:testing-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:failure-visibility-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:founder-test-result-payload-crash-repair",
+        "validate:founder-test-result-route-existence-proof"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:feature-reality-v1",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:universal-feature-contract-intelligence-v1"
+      ],
+      "duplicatedOperations": [
+        "npm install",
+        "preview server startup",
+        "Playwright execution",
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-execution-proof-propagation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-inbox-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:founder-notification-runtime-foundation",
+        "validate:mobile-approval-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-notification-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:founder-inbox-foundation",
+        "validate:mobile-approval-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-productivity-validation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-reality-surface",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:command-center-brain",
+        "validate:command-center-brain-runtime",
+        "validate:command-center-runtime-shell",
+        "validate:command-center-ux-stabilization",
+        "validate:operator-feed-foundation",
+        "validate:phase11-command-center"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-test-consistency-audit",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-test-reality-sweep",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-test-result-payload-crash-repair",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-route-existence-proof"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-test-result-route-existence-proof",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-testing-mode",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-testing-mode-v2",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-testing-mode-v3",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-testing-mode-v4",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-testing-v5",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:founder-workflow-validation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:general-question-understanding",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:generated-workspace-dependency-installation-executor",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:code-generation-engine-v1",
+        "validate:controlled-builder-execution-engine",
+        "validate:generated-workspace-dependency-materialization",
+        "validate:real-file-workspace-execution",
+        "validate:safe-capability-acquisition"
+      ],
+      "duplicatedOperations": [
+        "npm install"
+      ]
+    },
+    {
+      "validatorName": "validate:generated-workspace-dependency-materialization",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:code-generation-engine-v1",
+        "validate:controlled-builder-execution-engine",
+        "validate:generated-workspace-dependency-installation-executor",
+        "validate:real-file-workspace-execution",
+        "validate:safe-capability-acquisition"
+      ],
+      "duplicatedOperations": [
+        "npm install"
+      ]
+    },
+    {
+      "validatorName": "validate:interaction-testing-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:live-preview-runtime",
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:execution-proof-evolution",
+        "validate:failure-visibility-engine"
+      ],
+      "duplicatedOperations": [
+        "preview server startup",
+        "Playwright execution"
+      ]
+    },
+    {
+      "validatorName": "validate:learning-visibility-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:live-chat-operational-path",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:build-materialization-reality",
+        "validate:build-materialization-truth-bridge",
+        "validate:build-proof-gap-materialization",
+        "validate:chat-operational-truth-source-synchronization",
+        "validate:chat-routing-consistency",
+        "validate:code-generation-engine-v1",
+        "validate:execution-proof-authority-synchronization"
+      ],
+      "duplicatedOperations": [
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:live-execution-proof-generation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:live-preview-reality",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:live-preview-runtime",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:interaction-testing-engine",
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:execution-proof-evolution",
+        "validate:failure-visibility-engine"
+      ],
+      "duplicatedOperations": [
+        "preview server startup",
+        "Playwright execution"
+      ]
+    },
+    {
+      "validatorName": "validate:live-preview-status-sync",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:mobile-approval-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:founder-inbox-foundation",
+        "validate:founder-notification-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:mobile-chat-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:founder-inbox-foundation",
+        "validate:founder-notification-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:mobile-command-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:founder-inbox-foundation",
+        "validate:founder-notification-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:mobile-preview-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:founder-inbox-foundation",
+        "validate:founder-notification-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:mobile-push-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:founder-inbox-foundation",
+        "validate:founder-notification-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:multi-project-monitoring",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:multi-project-workspace-tabs",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:notification-delivery-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation",
+        "validate:founder-inbox-foundation",
+        "validate:founder-notification-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:one-prompt-chat-build-proof",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:one-prompt-live-preview-proof",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:project-history-intelligence",
+        "validate:action-visibility-engine",
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:brain-memory-visibility-stack",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1"
+      ],
+      "duplicatedOperations": [
+        "npm build",
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:operator-feed-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:command-center-brain",
+        "validate:command-center-brain-runtime",
+        "validate:command-center-runtime-shell",
+        "validate:command-center-ux-stabilization",
+        "validate:founder-reality-surface",
+        "validate:phase11-command-center"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:persistent-build-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:build-task-runtime-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-runtime-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:execution-runtime-foundation",
+        "validate:testing-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:phase11-command-center",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:command-center-brain",
+        "validate:command-center-brain-runtime",
+        "validate:command-center-runtime-shell",
+        "validate:command-center-ux-stabilization",
+        "validate:founder-reality-surface",
+        "validate:operator-feed-foundation"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:planning-gate-alignment-repair",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:portfolio-intelligence",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:preview-intelligence",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:interaction-testing-engine",
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:execution-proof-evolution",
+        "validate:failure-visibility-engine"
+      ],
+      "duplicatedOperations": [
+        "preview server startup",
+        "Playwright execution"
+      ]
+    },
+    {
+      "validatorName": "validate:progress-intelligence",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:project-history-intelligence",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:one-prompt-live-preview-proof",
+        "validate:action-visibility-engine",
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:brain-memory-visibility-stack",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1"
+      ],
+      "duplicatedOperations": [
+        "npm build",
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:project-knowledge-reasoning",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:project-summarization-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:project-understanding-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:project-vault-intelligence",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:real-build-execution-pipeline-v1",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:real-build-execution-pipeline-v1-1"
+      ],
+      "duplicatedOperations": [
+        "real build pipeline"
+      ]
+    },
+    {
+      "validatorName": "validate:real-build-execution-pipeline-v1-1",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:real-build-execution-pipeline-v1"
+      ],
+      "duplicatedOperations": [
+        "real build pipeline"
+      ]
+    },
+    {
+      "validatorName": "validate:real-file-workspace-execution",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:code-generation-engine-v1",
+        "validate:controlled-builder-execution-engine",
+        "validate:generated-workspace-dependency-installation-executor",
+        "validate:generated-workspace-dependency-materialization",
+        "validate:safe-capability-acquisition"
+      ],
+      "duplicatedOperations": [
+        "npm install"
+      ]
+    },
+    {
+      "validatorName": "validate:reasoning-visibility-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:requirements-to-plan-execution-contract",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:runtime-founder-execution-proof-hydration",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:one-prompt-live-preview-proof",
+        "validate:action-visibility-engine",
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:brain-memory-visibility-stack",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1"
+      ],
+      "duplicatedOperations": [
+        "npm build",
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:runtime-verification-layer",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:safe-capability-acquisition",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:code-generation-engine-v1",
+        "validate:controlled-builder-execution-engine",
+        "validate:generated-workspace-dependency-installation-executor",
+        "validate:generated-workspace-dependency-materialization",
+        "validate:real-file-workspace-execution"
+      ],
+      "duplicatedOperations": [
+        "npm install"
+      ]
+    },
+    {
+      "validatorName": "validate:self-vision-runtime",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:interaction-testing-engine",
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:execution-proof-evolution",
+        "validate:failure-visibility-engine"
+      ],
+      "duplicatedOperations": [
+        "preview server startup",
+        "Playwright execution"
+      ]
+    },
+    {
+      "validatorName": "validate:shared-memory-layer",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:testing-runtime-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:build-task-runtime-foundation",
+        "validate:cloud-monitoring-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-runtime-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:cross-device-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "npm build",
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:timeline-intelligence",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:ui-inspection-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:interaction-testing-engine",
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:execution-proof-evolution",
+        "validate:failure-visibility-engine"
+      ],
+      "duplicatedOperations": [
+        "preview server startup",
+        "Playwright execution"
+      ]
+    },
+    {
+      "validatorName": "validate:unified-decision-layer",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:unified-verification-entry",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:unified-verification-lab-runtime"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:unified-verification-lab-runtime",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:unified-verification-entry"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:universal-feature-contract-intelligence-v1",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:feature-reality-v1"
+      ],
+      "duplicatedOperations": [
+        "npm install",
+        "preview server startup",
+        "Playwright execution",
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:uvl-maturity-verification-hub-v1",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:connected-verification-execution",
+        "validate:uvl-verification-execution-v1"
+      ],
+      "duplicatedOperations": [
+        "UVL execution"
+      ]
+    },
+    {
+      "validatorName": "validate:verification-evidence-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:verification-orchestrator",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:verification-reality",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:verification-registry",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:verification-reporting-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:visual-verification-engine",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:interaction-testing-engine",
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:execution-proof-evolution",
+        "validate:failure-visibility-engine"
+      ],
+      "duplicatedOperations": [
+        "preview server startup",
+        "Playwright execution"
+      ]
+    },
+    {
+      "validatorName": "validate:workspace-hosting-foundation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:auto-fix-runtime-foundation",
+        "validate:build-task-runtime-foundation",
+        "validate:cloud-recovery-foundation",
+        "validate:cloud-runtime-foundation",
+        "validate:cloud-verification-foundation",
+        "validate:code-generation-runtime-foundation",
+        "validate:execution-runtime-foundation",
+        "validate:persistent-build-runtime-foundation"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:workspace-intelligence",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:world2-builder-packet-execution",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:world2-completion-runtime",
+        "validate:world2-controlled-apply-runtime",
+        "validate:world2-execution-activation",
+        "validate:world2-recovery-runtime",
+        "validate:world2-rollback-runtime"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:world2-completion-runtime",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:world2-builder-packet-execution",
+        "validate:world2-controlled-apply-runtime",
+        "validate:world2-execution-activation",
+        "validate:world2-recovery-runtime",
+        "validate:world2-rollback-runtime"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:world2-controlled-apply-runtime",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:world2-builder-packet-execution",
+        "validate:world2-completion-runtime",
+        "validate:world2-execution-activation",
+        "validate:world2-recovery-runtime",
+        "validate:world2-rollback-runtime"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:world2-execution-activation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:world2-builder-packet-execution",
+        "validate:world2-completion-runtime",
+        "validate:world2-controlled-apply-runtime",
+        "validate:world2-recovery-runtime",
+        "validate:world2-rollback-runtime"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:world2-recovery-runtime",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:world2-builder-packet-execution",
+        "validate:world2-completion-runtime",
+        "validate:world2-controlled-apply-runtime",
+        "validate:world2-execution-activation",
+        "validate:world2-rollback-runtime"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:world2-rollback-runtime",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:world2-builder-packet-execution",
+        "validate:world2-completion-runtime",
+        "validate:world2-controlled-apply-runtime",
+        "validate:world2-execution-activation",
+        "validate:world2-recovery-runtime"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:code-generation-engine-v1",
+      "duplicateWorkPercent": 67,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-materialization-reality",
+        "validate:build-materialization-truth-bridge",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:chat-operational-truth-source-synchronization"
+      ],
+      "duplicatedOperations": [
+        "npm build",
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:universal-app-blueprint-v1",
+      "duplicateWorkPercent": 67,
+      "overlappingValidators": [
+        "validate:universal-app-blueprint-visual-v1"
+      ],
+      "duplicatedOperations": [
+        "npm install",
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:connected-launch-final-blocker",
+      "duplicateWorkPercent": 50,
+      "overlappingValidators": [
+        "validate:connected-build-execution",
+        "validate:connected-preview-experience-proof",
+        "validate:connected-runtime-activation-proof"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:universal-app-blueprint-visual-v1",
+      "duplicateWorkPercent": 50,
+      "overlappingValidators": [
+        "validate:universal-app-blueprint-v1"
+      ],
+      "duplicatedOperations": [
+        "npm install",
+        "workspace materialization"
+      ]
+    },
+    {
+      "validatorName": "validate:uvl-verification-execution-v1",
+      "duplicateWorkPercent": 50,
+      "overlappingValidators": [
+        "validate:connected-verification-execution",
+        "validate:uvl-maturity-verification-hub-v1"
+      ],
+      "duplicatedOperations": [
+        "UVL execution"
+      ]
+    },
+    {
+      "validatorName": "validate:validation-runtime-governance-v1",
+      "duplicateWorkPercent": 33,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:autonomous-founder-launch-authority-v1",
+      "duplicateWorkPercent": 17,
+      "overlappingValidators": [
+        "validate:afla-trust-calibration-v1"
+      ],
+      "duplicatedOperations": [
+        "AFLA execution"
+      ]
+    },
+    {
+      "validatorName": "validate:adaptive-autofix-intelligence",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:adoption-prediction-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:adoption-prediction-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:adoption-reality-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:aidev-engine-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:aidevengine-identity-correction",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:answer-authority-protection-policy",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:answer-quality-judge-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:api-documentation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:architecture-brief-generator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:architecture-documentation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:architecture-drift-detection",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:authority-evidence-source-realignment",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:authority-ownership-and-integration-bridge",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:authority-reality-convergence",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:authority-recursion-guard",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:auto-fix-control",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:auto-polish-loop",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:autonomous-builder-execution-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:autonomous-builder-execution-planner",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:autonomous-builder-execution-sandbox",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:autonomous-builder-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:autonomous-completion-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:autonomous-repair-loop",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:autonomous-testing",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:autonomous-verification",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:brain-routing-performance-hardening",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:brief-stage-transitions",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:browser-verification-harness",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:build-package-generator-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:build-plan-generator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:build-strategy-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:canonical-capability-ownership-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:capability-audit-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:capability-audit-v2",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:capability-audit-v3",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:capability-build-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:capability-planning-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:capability-verification-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:central-brain-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:change-intelligence-visibility",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-capability-answer-quality",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-cognitive-architecture",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-intelligence-reality",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-intelligence-scenario-consumption",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-operational-self-knowledge",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-stress-completion-barrier",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-stress-completion-propagation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-stress-concurrent-active-worker-tracking",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-stress-deadline-runtime-trace-audit",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-stress-deadline-stall-alignment",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-stress-non-blocking-founder-test",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-stress-scenario-settlement",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-stress-settlement-boundary",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:chat-stress-timeout-run-result-materialization",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:clarifying-question-intelligence",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:clarifying-question-intelligence-maturity-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:clarifying-question-live-gate",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:code-generation-planner-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:command-center-identity-realignment",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:command-center-ui-wiring-founder-report-delivery",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:competitive-reality-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:competitive-reality-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:complete-report-delivery-event-bridge",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:complete-report-handoff",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:complete-report-preparing-stall",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:completion-truth-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:complexity-score-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:connected-build-execution-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:connected-launch-readiness-proof",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:connected-live-preview-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:connected-runtime-activation-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:connected-runtime-execution",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:connected-verification-execution-proof",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:connected-verification-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:connected-workspace-creation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:context-arbitration-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:controlled-execution-bridge",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:cqi-integration-repair-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:cross-device-continuity-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:cross-system-orchestration-proof",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:customer-journey-simulation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:customer-value-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:digital-founder-board",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:documentation-verification",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:end-to-end-execution-proof-chain",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:engineering-reality-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:evidence-intelligence",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:evidence-propagation-reconciliation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:evidence-registry-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:execution-authority-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:execution-evidence-ledger",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:execution-package-runtime",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:execution-proof-final-contradiction-isolation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:execution-proof-source-unification",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:execution-readiness-gate",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:execution-reality-validation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:execution-verification-loop",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:experience-layer-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:failure-prediction-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:final-founder-report-delivery-trace",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:final-report-access-cache-unification",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:first-impression-judge",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:first-time-user-reality",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:first-time-user-reality-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:foundation-enforcement",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-acceptance-framework",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-acceptance-gate",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-acceptance-orchestrator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-action-center",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-approval-execution-gate",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-authority-suite",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-confidence-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-confidence-propagation-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-decision-readiness",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-execution-proof",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-flow-runtime-proof",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-friction-detector",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-guides",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-interaction-simulation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-launch-decision-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-readiness-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-report-access-operator-feed-state",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-result-store-delivery-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-review-operator-dashboard-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-sensemaking-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-simulation-completion-boundary-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-simulation-crash-locator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-simulation-degradation-root-cause-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-simulation-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-simulation-guarded-diagnostic-source-patch",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-simulation-payload-guard",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-active-run-result-binding",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-api-base-url-routing",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-automation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-chat-stress-simulation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-complete-handoff-boundary",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-complete-report-delivery-label",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-complete-state-truth-report-fetch-loop",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-execution-chain-integration",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-integration",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-launch-readiness",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-operator-feed-trace",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-results-modal-copy-path-alignment",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-runtime-monitor",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-test-stage2-stall-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-testing-chat-readiness",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-trust-validation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:founder-truth-matrix-integration",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:full-product-readiness-simulation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:future-problem-prediction",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:gap-detection-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:generated-runtime-crash-diagnosis",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:generated-ui-runtime-exposure-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:governance-stack-checkpoint",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:identity-founder-product-history-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:implementation-strategy-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:inline-operator-feed",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:intake-alignment-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:intake-validation-stage-transition-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:intent-architecture-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:interactive-explanations",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:large-scale-multi-app-validation-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:launch-blocker-board",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:launch-council",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:launch-council-finalization",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:launch-day-simulation-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:launch-readiness-artifact-build-trace",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:launch-readiness-artifact-completion-barrier-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:launch-readiness-artifact-completion-boundary-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:launch-readiness-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:launch-verdict-governance",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:launch-verdict-governance-source-normalization",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:live-chat-stress-runner-path-alignment",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:live-idea-to-launch-execution-runner",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:live-preview-gatekeeper",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:llm-context-hydration",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:llm-env-loading",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:market-expansion-reality-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:missing-capability-detector",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:missing-capability-escalation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:mobile-approval-flow-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:mobile-chat-interface",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:mobile-command-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:mobile-live-preview-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:mobile-preview-modes",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:mobile-runtime-experience-reality",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:multi-project-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:multi-project-verification",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:multi-project-verification-orchestration",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:observability-stack-reality",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:omega-prompt-safety-policy",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:openai-connectivity-proof",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:operator-feed-detail-upgrade",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:operator-feed-final-report-button-state-sync",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:operator-feed-unified-layout-and-stage2-completion",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:parallel-build-orchestration",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:performance-hardening",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:phase-1-stability-soak",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:phase6-governance-stack-checkpoint",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:phase8-governance-stack-checkpoint",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:phase9-governance-stack-checkpoint",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:planning-brief-generator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:planning-gate-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:planning-gate-transition",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:planning-stack-reality",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:platform-propagation-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:post-launch-reality-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:prediction-trust-layer",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:privacy-hardening",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-architect-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-architect-intelligence-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-economics-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-evolution-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-evolution-reality-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-experience-verification-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-hardening-verification",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-lifecycle-reality-orchestrator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-readiness-completion-boundary",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-readiness-completion-boundary-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-readiness-propagation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-readiness-real-founder-path",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-readiness-simulation-stall-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:product-reality-orchestrator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:project-intelligence-clarity",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:project-vault-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:promise-fulfillment-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:promise-reality-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:real-browser-runner-attachment",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:real-chat-openai-path-proof",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:real-llm-chat-brain-integration",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:real-user-reality-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:reality-proof-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:reality-replay-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:reality-verification-expansion",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:recovery-chains",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:recovery-execution-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:recovery-hardening",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:recovery-strategy-planner-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:reliability-hardening",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:remove-legacy-failed-to-fetch-copy-fallback",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:report-handoff-runid-propagation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:repository-typecheck-reality",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:requirement-completeness-intelligence",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:requirement-extractor-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:resource-allocation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:result-fetch-failure-diagnostic-surface",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:revenue-reality-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:rollback-retry-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:root-cause-attribution-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:running-application-visibility",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:runtime-materialization-truth-bridge",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:runtime-route-reachability-proof",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:runtime-startup-probe-false-positive-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:runtime-startup-proof-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:runtime-ui-render-proof",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:scale-hardening",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:scale-readiness-reality-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:security-hardening",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:self-awareness-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:self-documentation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:self-evolution-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:self-evolution-governance",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:self-learning-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:self-model-reality-audit",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:self-model-routing-repair",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:self-vision-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:session-replay-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:shell-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:skeptical-founder-simulator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:stage2-chat-stress-boundary-observability",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:strategic-defensibility-reality-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:task-governor",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:timeline-ledger-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:trust-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:trust-engine-expansion",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:trust-engine-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:trust-engine-verification-checkpoint",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:ui-reviewer-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:unified-intake-intelligence",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:unified-trust-runtime",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:unified-trust-score",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:unknown-discovery-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:upload-system",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:user-guides",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:user-success-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:ux-heuristic-evaluator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:v5-launch-verdict-governance-source-normalization",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:validation-budget-policy",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:validation-runtime-audit-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:verification-gated-apply",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:verification-integration",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:verification-intelligence",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:verification-loop-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:verification-results-visibility",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:verification-strategy-core",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:visible-ui-clickability-guard",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:visual-qa-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:visual-quality-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:visual-reference-intelligence",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:voice-notes-intelligence",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:workspace-isolation-expansion",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world-class-chat-brain",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-autonomous-builder",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-change-set-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-change-set-materializer",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-completion-verifier",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-controlled-execution-runtime",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-disposable-workspace",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-disposable-workspace-creator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-disposable-workspace-instantiator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-dry-run-execution-composer",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-dry-run-execution-verifier",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-execution-engine",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-execution-planner",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-learning-loop",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-repository-snapshot",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-repository-snapshot-executor",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-repository-snapshot-materializer",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-simulation-runtime",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-workspace-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-workspace-instantiation-governance",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-workspace-materialization",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-workspace-population",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "readOnly": true,
+  "verificationConfidenceScore": 100,
+  "coverageWeight": 100,
+  "runtimeEvidenceWeight": 100,
+  "failureDistributionPenalty": 0,
+  "consistencyWeight": 100,
+  "verificationProofStatus": "PROVEN"
+}

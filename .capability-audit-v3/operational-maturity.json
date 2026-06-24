@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-06-24T14:19:32.925Z",
+  "operationalMaturityScore": 84,
+  "provenCategoryCount": 15,
+  "supportedCategoryCount": 58,
+  "executionGeneralizationScore": 96,
+  "proofCoveragePercent": 100,
+  "pipelineStages": [
+    {
+      "stage": "One Prompt → Requirements",
+      "provenInSuite": true,
+      "successRatePercent": 85,
+      "status": "PARTIAL",
+      "evidence": "CQI Maturity V1 passes domain prompts; large-scale validation shows low requirement confidence for diverse categories."
+    },
+    {
+      "stage": "Requirements → Planning",
+      "provenInSuite": true,
+      "successRatePercent": 90,
+      "status": "MATURE",
+      "evidence": "Planning Gate Authority and brief generators validated; RBEP suite completes planning phase."
+    },
+    {
+      "stage": "Planning → Generation",
+      "provenInSuite": true,
+      "successRatePercent": 100,
+      "status": "MATURE",
+      "evidence": "Real Build Execution V1.1: generationSuccessRate 100% across 15 categories."
+    },
+    {
+      "stage": "Generation → Build",
+      "provenInSuite": true,
+      "successRatePercent": 100,
+      "status": "MATURE",
+      "evidence": "Real Build Execution V1.1: buildSuccessRate 100%, materializationSuccessRate 100%."
+    },
+    {
+      "stage": "Build → Preview",
+      "provenInSuite": true,
+      "successRatePercent": 100,
+      "status": "MATURE",
+      "evidence": "Real Build Execution V1.1: previewSuccessRate 100%, previewedCount 15/15."
+    },
+    {
+      "stage": "Preview → Verification",
+      "provenInSuite": false,
+      "successRatePercent": 0,
+      "status": "MISSING",
+      "evidence": "Real Build Execution V1.1: verifiedCount 0/15 — UVL verification execution not wired."
+    },
+    {
+      "stage": "Verification → Founder Review",
+      "provenInSuite": true,
+      "successRatePercent": 100,
+      "status": "MATURE",
+      "evidence": "Real Build Execution V1.1: reviewedCount 15/15; founder review panel integrated."
+    },
+    {
+      "stage": "Founder Review → Launch Verdict",
+      "provenInSuite": true,
+      "successRatePercent": 100,
+      "status": "MATURE",
+      "evidence": "Real Build Execution V1.1: aflaVerdictCount 15/15, launchSuccessRate 100%."
+    }
+  ],
+  "fullPipelineProvenAcrossSuite": false,
+  "verificationIsBlockingGap": true
+}
