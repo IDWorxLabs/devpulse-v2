@@ -59,6 +59,7 @@ export function buildCategoryMapping(
   const gpProvenSet = new Set(bundle.gpcgAssessment.domainProfiles);
   const cloudProvenSet = new Set(bundle.cloudAssessment.profiles);
   const mobileProvenSet = new Set(bundle.mobileAssessment.provenProfiles);
+  const concurrentProvenSet = new Set(bundle.concurrentAssessment.provenProfiles);
 
   const allProfiles = new Set<string>([
     ...broadProfiles,
@@ -97,6 +98,12 @@ export function buildCategoryMapping(
     }
     if (mobileProvenSet.has(profile) && bundle.mobileAssessment.mobileProofStatus === 'PROVEN') {
       flags.push('MOBILE_PROVEN');
+    }
+    if (
+      concurrentProvenSet.has(profile) &&
+      bundle.concurrentAssessment.concurrentProofStatus === 'PROVEN'
+    ) {
+      flags.push('CONCURRENT_PROVEN');
     }
     if (productionReadySet.has(profile)) flags.push('PRODUCTION_PROVEN');
 

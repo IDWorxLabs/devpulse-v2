@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T16:00:18.953Z",
+  "generatedAt": "2026-06-24T21:30:07.094Z",
   "nodes": [
     {
       "capabilityCategory": "CQI",
@@ -149,6 +149,7 @@
         "validate:world2-execution-engine",
         "validate:world2-execution-planner",
         "validate:world2-learning-loop",
+        "validate:world2-real-instantiation-v1",
         "validate:world2-recovery-runtime",
         "validate:world2-repository-snapshot",
         "validate:world2-repository-snapshot-executor",

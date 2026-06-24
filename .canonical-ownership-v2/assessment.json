@@ -1,0 +1,1081 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "Canonical Ownership V2 Registration",
+  "passToken": "CANONICAL_OWNERSHIP_V2_PASS",
+  "version": "V2",
+  "generatedAt": "2026-06-24T23:04:40.438Z",
+  "registeredCapabilities": 27,
+  "registrationScopeComplete": true,
+  "orphanCriticalCount": 0,
+  "collisionCount": 0,
+  "duplicateRisksResolved": 6,
+  "ownershipProofStatus": "PROVEN",
+  "entries": [
+    {
+      "readOnly": true,
+      "capabilityId": "CAPABILITY_AUDIT_V2",
+      "capabilityName": "Capability Audit V2",
+      "canonicalOwner": "Capability Audit",
+      "category": "SELF_EVOLUTION",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/capability-audit-v2/",
+      "validationCommand": "validate:capability-audit-v2",
+      "passToken": "AIDEVENGINE_CAPABILITY_AUDIT_V2_PASS",
+      "artifactPath": ".capability-audit-v2/assessment.json",
+      "consumes": [],
+      "provides": [
+        "capability inventory",
+        "duplicate risk baseline",
+        "roadmap V2"
+      ],
+      "duplicatesResolved": [],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "CAPABILITY_AUDIT_V3",
+      "capabilityName": "Capability Audit V3",
+      "canonicalOwner": "Capability Audit",
+      "category": "SELF_EVOLUTION",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/capability-audit-v3/",
+      "validationCommand": "validate:capability-audit-v3",
+      "passToken": "AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS",
+      "artifactPath": ".capability-audit-v3/assessment.json",
+      "consumes": [
+        "Capability Audit V2"
+      ],
+      "provides": [
+        "operational maturity",
+        "UVL evidence refresh",
+        "roadmap V3"
+      ],
+      "duplicatesResolved": [],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "CAPABILITY_AUDIT_V3_1",
+      "capabilityName": "Capability Audit V3.1",
+      "canonicalOwner": "Capability Audit",
+      "category": "SELF_EVOLUTION",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/capability-audit-v3/",
+      "validationCommand": "validate:capability-audit-v3-1",
+      "passToken": "AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS",
+      "artifactPath": ".capability-audit-v3-1/assessment.json",
+      "consumes": [
+        "Capability Audit V3",
+        "UVL Verification Execution V1"
+      ],
+      "provides": [
+        "UVL evidence refresh",
+        "coverage breakdown",
+        "roadmap recalculation"
+      ],
+      "duplicatesResolved": [],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "CQI_MATURITY_V1",
+      "capabilityName": "CQI Maturity V1",
+      "canonicalOwner": "CQI",
+      "category": "REQUIREMENT_INTELLIGENCE",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/clarifying-question-intelligence/",
+      "validationCommand": "validate:clarifying-question-intelligence-maturity-v1",
+      "passToken": "CLARIFYING_QUESTION_INTELLIGENCE_MATURITY_V1_PASS",
+      "artifactPath": ".clarifying-question-intelligence-maturity-v1/assessment.json",
+      "consumes": [
+        "Clarifying Question Intelligence"
+      ],
+      "provides": [
+        "requirement completeness",
+        "gap detection",
+        "adaptive questions"
+      ],
+      "duplicatesResolved": [
+        "CQI Maturity V1 ↔ Requirement Completeness Intelligence"
+      ],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "REAL_BUILD_EXECUTION_PIPELINE_V1",
+      "capabilityName": "Real Build Execution Pipeline V1",
+      "canonicalOwner": "Real Build Execution Pipeline",
+      "category": "ENGINEERING_REVIEW",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/real-build-execution-pipeline-v1/",
+      "validationCommand": "validate:real-build-execution-pipeline-v1",
+      "passToken": "REAL_BUILD_EXECUTION_PIPELINE_V1_PASS",
+      "artifactPath": ".real-build-execution-pipeline-v1/build-proof.json",
+      "consumes": [
+        "Code Generation Engine V1"
+      ],
+      "provides": [
+        "build proof",
+        "preview proof",
+        "execution proof"
+      ],
+      "duplicatesResolved": [
+        "Real Build Execution Pipeline ↔ UVL Verification Execution — build vs verification layer"
+      ],
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "REAL_BUILD_EXECUTION_PIPELINE_V1_1",
+      "capabilityName": "Real Build Execution Pipeline V1.1",
+      "canonicalOwner": "Real Build Execution Pipeline",
+      "category": "ENGINEERING_REVIEW",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/real-build-execution-pipeline-v1-1/",
+      "validationCommand": "validate:real-build-execution-pipeline-v1-1",
+      "passToken": "REAL_BUILD_EXECUTION_PIPELINE_V1_1_PASS",
+      "artifactPath": ".real-build-execution-pipeline-v1-1/build-proof.json",
+      "consumes": [
+        "Real Build Execution Pipeline V1"
+      ],
+      "provides": [
+        "15/15 build proof",
+        "generalization score",
+        "AFLA integration"
+      ],
+      "duplicatesResolved": [
+        "Real Build Execution Pipeline V1.1 ↔ UVL Verification Execution V1 — evidence split by layer"
+      ],
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "UVL_VERIFICATION_EXECUTION_V1",
+      "capabilityName": "UVL Verification Execution V1",
+      "canonicalOwner": "UVL",
+      "category": "VERIFICATION_SYSTEMS",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/uvl-verification-execution-v1/",
+      "validationCommand": "validate:uvl-verification-execution-v1",
+      "passToken": "UVL_VERIFICATION_EXECUTION_V1_PASS",
+      "artifactPath": ".uvl-verification-execution-v1/verification-proof.json",
+      "consumes": [
+        "Real Build Execution Pipeline V1.1",
+        "Unified Verification Lab (UVL)"
+      ],
+      "provides": [
+        "verification proof",
+        "verification coverage",
+        "verification confidence"
+      ],
+      "duplicatesResolved": [
+        "Real Build Execution Pipeline ↔ UVL — RBEP build/preview vs UVL verification"
+      ],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "UVL_VERIFICATION_HUB_V1",
+      "capabilityName": "UVL Verification Hub V1",
+      "canonicalOwner": "UVL",
+      "category": "VERIFICATION_SYSTEMS",
+      "status": "REGISTERED",
+      "maturity": "PARTIAL",
+      "modulePath": "src/unified-verification-lab/",
+      "validationCommand": "validate:uvl-maturity-verification-hub-v1",
+      "passToken": "UVL_MATURITY_VERIFICATION_HUB_V1_PASS",
+      "artifactPath": ".unified-verification-lab-v1/assessment.json",
+      "consumes": [
+        "Unified Verification Lab (UVL)"
+      ],
+      "provides": [
+        "verification hub maturity",
+        "coverage assessment"
+      ],
+      "duplicatesResolved": [
+        "UVL Verification Hub ↔ Verification Orchestrator"
+      ],
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "AFLA_TRUST_CALIBRATION_V1",
+      "capabilityName": "AFLA Trust Calibration V1",
+      "canonicalOwner": "AFLA",
+      "category": "LAUNCH_READINESS",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/afla-trust-calibration-v1/",
+      "validationCommand": "validate:afla-trust-calibration-v1",
+      "passToken": "AFLA_TRUST_CALIBRATION_V1_PASS",
+      "artifactPath": ".afla-trust-calibration-v1/assessment.json",
+      "consumes": [
+        "Autonomous Founder Launch Authority"
+      ],
+      "provides": [
+        "trust calibration",
+        "verdict stability",
+        "founder alignment"
+      ],
+      "duplicatesResolved": [],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "FOUNDER_REVIEW_OPERATOR_DASHBOARD_V1",
+      "capabilityName": "Founder Review Operator Dashboard V1",
+      "canonicalOwner": "AFLA",
+      "category": "OPERATOR_SYSTEMS",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/founder-review-operator-dashboard/",
+      "validationCommand": "validate:founder-review-operator-dashboard-v1",
+      "passToken": "FOUNDER_REVIEW_OPERATOR_DASHBOARD_V1_PASS",
+      "artifactPath": ".autonomous-founder-launch-authority/",
+      "consumes": [
+        "Command Center Brain",
+        "Autonomous Founder Launch Authority"
+      ],
+      "provides": [
+        "founder review panel",
+        "operator visibility",
+        "AFLA cache integration"
+      ],
+      "duplicatesResolved": [],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "PRODUCT_ARCHITECT_INTELLIGENCE_V1",
+      "capabilityName": "Product Architect Intelligence V1",
+      "canonicalOwner": "Product Architect Intelligence",
+      "category": "PRODUCT_ARCHITECT_INTELLIGENCE",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/product-architect-intelligence-v1/",
+      "validationCommand": "validate:product-architect-intelligence-v1",
+      "passToken": "PRODUCT_ARCHITECT_INTELLIGENCE_V1_PASS",
+      "artifactPath": ".product-architect-intelligence-v1/assessment.json",
+      "consumes": [
+        "CQI Maturity V1",
+        "UVL Verification Execution V1"
+      ],
+      "provides": [
+        "product completeness",
+        "architecture review",
+        "gap reports"
+      ],
+      "duplicatesResolved": [],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "PRODUCTION_READINESS_GATE_V1",
+      "capabilityName": "Production Readiness Gate V1",
+      "canonicalOwner": "Production Readiness Gate",
+      "category": "PRODUCTION_READINESS",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/production-readiness-gate-v1/",
+      "validationCommand": "validate:production-readiness-gate-v1",
+      "passToken": "PRODUCTION_READINESS_GATE_V1_PASS",
+      "artifactPath": ".production-readiness-gate-v1/assessment.json",
+      "consumes": [
+        "Real Build Execution Pipeline V1.1"
+      ],
+      "provides": [
+        "production readiness score",
+        "production decision",
+        "deployment readiness"
+      ],
+      "duplicatesResolved": [
+        "Production Readiness Gate ↔ AFLA — production vs launch boundary"
+      ],
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "CLOUD_EXECUTION_PATH_V1",
+      "capabilityName": "Cloud Execution Path V1",
+      "canonicalOwner": "Cloud Execution Path",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/cloud-execution-path-v1/",
+      "validationCommand": "validate:cloud-execution-path-v1",
+      "passToken": "CLOUD_EXECUTION_PATH_V1_PASS",
+      "artifactPath": ".cloud-execution-path-v1/assessment.json",
+      "consumes": [
+        "Real Build Execution Pipeline V1.1"
+      ],
+      "provides": [
+        "cloud job contract",
+        "queue",
+        "workers",
+        "cloud-ready packages"
+      ],
+      "duplicatesResolved": [
+        "Cloud Execution Path ↔ World2 — job contract vs isolated environment"
+      ],
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "GENERAL_PURPOSE_CODE_GENERATION_V1",
+      "capabilityName": "General-Purpose Code Generation V1",
+      "canonicalOwner": "General-Purpose Code Generation",
+      "category": "CODE_GENERATION",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/general-purpose-code-generation-v1/",
+      "validationCommand": "validate:general-purpose-code-generation-v1",
+      "passToken": "GENERAL_PURPOSE_CODE_GENERATION_V1_PASS",
+      "artifactPath": ".general-purpose-code-generation-v1/assessment.json",
+      "consumes": [
+        "Code Generation Engine V1"
+      ],
+      "provides": [
+        "domain diversity",
+        "general-purpose codegen proof"
+      ],
+      "duplicatesResolved": [],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "LARGE_SCALE_PIPELINE_INTEGRATION_V1",
+      "capabilityName": "Large-Scale Pipeline Integration V1",
+      "canonicalOwner": "Large-Scale Pipeline Integration",
+      "category": "VERIFICATION_SYSTEMS",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/large-scale-pipeline-integration-v1/",
+      "validationCommand": "validate:large-scale-pipeline-integration-v1",
+      "passToken": "LARGE_SCALE_PIPELINE_INTEGRATION_V1_PASS",
+      "artifactPath": ".large-scale-pipeline-integration-v1/assessment.json",
+      "consumes": [
+        "Real Build Execution Pipeline V1.1",
+        "UVL Verification Execution V1",
+        "Production Readiness Gate V1",
+        "Mobile Runtime Validation at Scale V1"
+      ],
+      "provides": [
+        "pipeline score",
+        "category mapping",
+        "gap classification",
+        "audit impact"
+      ],
+      "duplicatesResolved": [],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "LARGE_SCALE_MULTI_APP_VALIDATION_V1",
+      "capabilityName": "Large-Scale Multi-App Validation V1",
+      "canonicalOwner": "Large-Scale Pipeline Integration",
+      "category": "VERIFICATION_SYSTEMS",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/large-scale-multi-app-validation-v1/",
+      "validationCommand": "validate:large-scale-multi-app-validation-v1",
+      "passToken": "LARGE_SCALE_MULTI_APP_VALIDATION_V1_PASS",
+      "artifactPath": ".large-scale-multi-app-validation/assessment.json",
+      "consumes": [
+        "Feature Reality Validation"
+      ],
+      "provides": [
+        "58-category breadth validation",
+        "generalization score"
+      ],
+      "duplicatesResolved": "MEDIUM",
+      "riskLevel": "PARTIAL"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "WORLD2_REAL_INSTANTIATION_V1",
+      "capabilityName": "World2 Real Instantiation V1",
+      "canonicalOwner": "World2",
+      "category": "WORLD2",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/world2-real-instantiation-v1/",
+      "validationCommand": "validate:world2-real-instantiation-v1",
+      "passToken": "WORLD2_REAL_INSTANTIATION_V1_PASS",
+      "artifactPath": ".world2-real-instantiation-v1/assessment.json",
+      "consumes": [
+        "Cloud Execution Path V1",
+        "Real Build Execution Pipeline V1.1"
+      ],
+      "provides": [
+        "isolated worlds",
+        "promotion",
+        "destruction proof",
+        "World1 protection"
+      ],
+      "duplicatesResolved": [
+        "Cloud Execution Path ↔ World2 — execution contract vs disposable environment"
+      ],
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1",
+      "capabilityName": "Mobile Runtime Validation at Scale V1",
+      "canonicalOwner": "Mobile Runtime Validation",
+      "category": "VERIFICATION_SYSTEMS",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/mobile-runtime-validation-at-scale-v1/",
+      "validationCommand": "validate:mobile-runtime-validation-at-scale-v1",
+      "passToken": "MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_PASS",
+      "artifactPath": ".mobile-runtime-validation-at-scale-v1/assessment.json",
+      "consumes": [
+        "Real Build Execution Pipeline V1.1",
+        "World2 Real Instantiation V1"
+      ],
+      "provides": [
+        "mobile runtime proof",
+        "touch interaction",
+        "mobile profile coverage"
+      ],
+      "duplicatesResolved": [],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "VALIDATION_RUNTIME_AUDIT_V1",
+      "capabilityName": "Validation Runtime Audit V1",
+      "canonicalOwner": "Validation Runtime Governance",
+      "category": "SELF_EVOLUTION",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/validation-runtime-audit-v1/",
+      "validationCommand": "validate:validation-runtime-audit-v1",
+      "passToken": "VALIDATION_RUNTIME_AUDIT_V1_PASS",
+      "artifactPath": ".validation-runtime-audit-v1/runtime-metrics.json",
+      "consumes": [
+        "Validation Runtime Governance V1"
+      ],
+      "provides": [
+        "duplicate work analysis",
+        "runtime metrics",
+        "dependency graph"
+      ],
+      "duplicatesResolved": [],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "VALIDATION_RUNTIME_GOVERNANCE_V1",
+      "capabilityName": "Validation Runtime Governance V1",
+      "canonicalOwner": "Validation Runtime Governance",
+      "category": "SELF_EVOLUTION",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/validation-runtime-governance-v1/",
+      "validationCommand": "validate:validation-runtime-governance-v1",
+      "passToken": "VALIDATION_RUNTIME_GOVERNANCE_V1_PASS",
+      "artifactPath": ".validation-runtime-governance-v1/assessment.json",
+      "consumes": [],
+      "provides": [
+        "validation tiering",
+        "caching",
+        "reuse policy",
+        "runtime budgets"
+      ],
+      "duplicatesResolved": [
+        "Validation Runtime Governance ↔ UVL — governance policy vs verification execution"
+      ],
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "SELF_EVOLUTION_EXECUTION_V1",
+      "capabilityName": "Self-Evolution Execution V1",
+      "canonicalOwner": "Self-Evolution Execution",
+      "category": "SELF_EVOLUTION",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/self-evolution-execution-v1/",
+      "validationCommand": "validate:self-evolution-execution-v1",
+      "passToken": "SELF_EVOLUTION_EXECUTION_V1_PASS",
+      "artifactPath": ".self-evolution-execution-v1/assessment.json",
+      "consumes": [
+        "Capability Audit V3.1",
+        "World2 Real Instantiation V1"
+      ],
+      "provides": [
+        "gap detection",
+        "evolution proposals",
+        "World2 experiments",
+        "promotion path"
+      ],
+      "duplicatesResolved": [],
+      "riskLevel": "LOW"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "MULTI_PROJECT_CONCURRENT_EXECUTION_V1",
+      "capabilityName": "Multi-Project Concurrent Execution V1",
+      "canonicalOwner": "Large-Scale Pipeline Integration",
+      "category": "MULTI_PROJECT_EXECUTION",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/multi-project-concurrent-execution-v1/",
+      "validationCommand": "validate:multi-project-concurrent-execution-v1",
+      "passToken": "MULTI_PROJECT_CONCURRENT_EXECUTION_V1_PASS",
+      "artifactPath": ".multi-project-concurrent-execution-v1/assessment.json",
+      "consumes": [
+        "World2 Real Instantiation V1",
+        "Cloud Execution Path V1",
+        "Real Build Execution Pipeline V1.1"
+      ],
+      "provides": [
+        "concurrent execution proof",
+        "multi-project isolation",
+        "parallel build proof"
+      ],
+      "duplicatesResolved": [
+        "Multi-Project Concurrent Execution ↔ Parallel Build Orchestration — planning vs execution"
+      ],
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "UNIFIED_FAILURE_ESCALATION_AUTHORITY_V1",
+      "capabilityName": "Unified Failure Escalation Authority V1",
+      "canonicalOwner": "Validation Runtime Governance",
+      "category": "SELF_EVOLUTION",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/unified-failure-escalation-authority-v1/",
+      "validationCommand": "validate:unified-failure-escalation-authority-v1",
+      "passToken": "UNIFIED_FAILURE_ESCALATION_AUTHORITY_V1_PASS",
+      "artifactPath": ".unified-failure-escalation-authority-v1/assessment.json",
+      "consumes": [
+        "Self-Evolution Execution V1",
+        "World2 Real Instantiation V1",
+        "Canonical Ownership V2 Registration",
+        "Multi-Project Concurrent Execution V1"
+      ],
+      "provides": [
+        "failure escalation",
+        "three-failure rule",
+        "escalation effectiveness"
+      ],
+      "duplicatesResolved": [
+        "Unified Failure Escalation ↔ Self-Evolution — authority decides, Self-Evolution executes"
+      ],
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "OPERATIONAL_EVIDENCE_FRESHNESS_AUTHORITY_V1",
+      "capabilityName": "Operational Evidence Freshness Authority V1",
+      "canonicalOwner": "Validation Runtime Governance",
+      "category": "VALIDATION_GOVERNANCE",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/operational-evidence-freshness-authority-v1/",
+      "validationCommand": "validate:operational-evidence-freshness-authority-v1",
+      "passToken": "OPERATIONAL_EVIDENCE_FRESHNESS_AUTHORITY_V1_PASS",
+      "artifactPath": ".operational-evidence-freshness-authority-v1/assessment.json",
+      "consumes": [
+        "Validation Runtime Governance V1",
+        "Unified Failure Escalation Authority V1",
+        "Capability Audit V3.1",
+        "Canonical Ownership V2 Registration"
+      ],
+      "provides": [
+        "evidence freshness scoring",
+        "confidence decay",
+        "revalidation recommendations"
+      ],
+      "duplicatesResolved": [
+        "Operational Evidence Freshness ↔ Self-Evolution — Self-Evolution proposes cadence; authority governs"
+      ],
+      "riskLevel": "MEDIUM"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "CUSTOMER_OPERATIONS_PLATFORM_V1",
+      "capabilityName": "Customer Operations Platform V1",
+      "canonicalOwner": "Production Readiness Gate",
+      "category": "OPERATOR",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/customer-operations-platform-v1/",
+      "validationCommand": "validate:customer-operations-platform-v1",
+      "passToken": "CUSTOMER_OPERATIONS_PLATFORM_V1_PASS",
+      "artifactPath": ".customer-operations-platform-v1/assessment.json",
+      "consumes": [
+        "Production Readiness Gate V1",
+        "Cloud Execution Path V1",
+        "Multi-Project Concurrent Execution V1",
+        "World2 Real Instantiation V1",
+        "Strategic Capability Audit V4"
+      ],
+      "provides": [
+        "customer onboarding",
+        "tenant isolation",
+        "project ownership",
+        "usage tracking"
+      ],
+      "duplicatesResolved": [
+        "Customer Operations ↔ Multi-Project — per-tenant concurrent execution"
+      ],
+      "riskLevel": "HIGH"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "PRODUCTION_OBSERVABILITY_PLATFORM_V1",
+      "capabilityName": "Production Observability Platform V1",
+      "canonicalOwner": "Customer Operations Platform",
+      "category": "OPERATOR",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/production-observability-platform-v1/",
+      "validationCommand": "validate:production-observability-platform-v1",
+      "passToken": "PRODUCTION_OBSERVABILITY_PLATFORM_V1_PASS",
+      "artifactPath": ".production-observability-platform-v1/assessment.json",
+      "consumes": [
+        "Customer Operations Platform V1",
+        "Cloud Execution Path V1",
+        "Unified Failure Escalation Authority V1",
+        "Production Readiness Gate V1",
+        "Strategic Capability Audit V4"
+      ],
+      "provides": [
+        "application health",
+        "deployment tracking",
+        "availability monitoring",
+        "incident detection"
+      ],
+      "duplicatesResolved": [
+        "Production Observability ↔ UFEA — incidents feed escalation authority; observability reports only"
+      ],
+      "riskLevel": "HIGH"
+    },
+    {
+      "readOnly": true,
+      "capabilityId": "CONTINUOUS_DEPLOYMENT_PIPELINE_V1",
+      "capabilityName": "Continuous Deployment Pipeline V1",
+      "canonicalOwner": "Production Observability Platform",
+      "category": "OPERATOR",
+      "status": "REGISTERED",
+      "maturity": "MATURE",
+      "modulePath": "src/continuous-deployment-pipeline-v1/",
+      "validationCommand": "validate:continuous-deployment-pipeline-v1",
+      "passToken": "CONTINUOUS_DEPLOYMENT_PIPELINE_V1_PASS",
+      "artifactPath": ".continuous-deployment-pipeline-v1/assessment.json",
+      "consumes": [
+        "Production Observability Platform V1",
+        "Cloud Execution Path V1",
+        "Production Readiness Gate V1",
+        "Unified Failure Escalation Authority V1",
+        "Strategic Capability Audit V4"
+      ],
+      "provides": [
+        "deployment candidates",
+        "promotion governance",
+        "deployment history",
+        "rollback recommendations"
+      ],
+      "duplicatesResolved": [
+        "Continuous Deployment ↔ Cloud Execution — candidates originate from cloud-ready artifacts"
+      ],
+      "riskLevel": "HIGH"
+    }
+  ],
+  "graph": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T23:04:40.438Z",
+    "nodes": [
+      {
+        "readOnly": true,
+        "owner": "Capability Audit",
+        "capabilities": [
+          "Capability Audit V2",
+          "Capability Audit V3",
+          "Capability Audit V3.1"
+        ],
+        "consumers": [
+          "Capability Audit V2",
+          "Capability Audit V3",
+          "UVL Verification Execution V1"
+        ],
+        "providers": [
+          "capability inventory",
+          "duplicate risk baseline",
+          "roadmap V2",
+          "operational maturity",
+          "UVL evidence refresh",
+          "roadmap V3",
+          "coverage breakdown",
+          "roadmap recalculation"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "CQI",
+        "capabilities": [
+          "CQI Maturity V1"
+        ],
+        "consumers": [
+          "Clarifying Question Intelligence"
+        ],
+        "providers": [
+          "requirement completeness",
+          "gap detection",
+          "adaptive questions"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "Real Build Execution Pipeline",
+        "capabilities": [
+          "Real Build Execution Pipeline V1",
+          "Real Build Execution Pipeline V1.1"
+        ],
+        "consumers": [
+          "Code Generation Engine V1",
+          "Real Build Execution Pipeline V1"
+        ],
+        "providers": [
+          "build proof",
+          "preview proof",
+          "execution proof",
+          "15/15 build proof",
+          "generalization score",
+          "AFLA integration"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "UVL",
+        "capabilities": [
+          "UVL Verification Execution V1",
+          "UVL Verification Hub V1"
+        ],
+        "consumers": [
+          "Real Build Execution Pipeline V1.1",
+          "Unified Verification Lab (UVL)"
+        ],
+        "providers": [
+          "verification proof",
+          "verification coverage",
+          "verification confidence",
+          "verification hub maturity",
+          "coverage assessment"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "AFLA",
+        "capabilities": [
+          "AFLA Trust Calibration V1",
+          "Founder Review Operator Dashboard V1"
+        ],
+        "consumers": [
+          "Autonomous Founder Launch Authority",
+          "Command Center Brain"
+        ],
+        "providers": [
+          "trust calibration",
+          "verdict stability",
+          "founder alignment",
+          "founder review panel",
+          "operator visibility",
+          "AFLA cache integration"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "Product Architect Intelligence",
+        "capabilities": [
+          "Product Architect Intelligence V1"
+        ],
+        "consumers": [
+          "CQI Maturity V1",
+          "UVL Verification Execution V1"
+        ],
+        "providers": [
+          "product completeness",
+          "architecture review",
+          "gap reports"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "Production Readiness Gate",
+        "capabilities": [
+          "Production Readiness Gate V1",
+          "Customer Operations Platform V1"
+        ],
+        "consumers": [
+          "Real Build Execution Pipeline V1.1",
+          "Production Readiness Gate V1",
+          "Cloud Execution Path V1",
+          "Multi-Project Concurrent Execution V1",
+          "World2 Real Instantiation V1",
+          "Strategic Capability Audit V4"
+        ],
+        "providers": [
+          "production readiness score",
+          "production decision",
+          "deployment readiness",
+          "customer onboarding",
+          "tenant isolation",
+          "project ownership",
+          "usage tracking"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "Cloud Execution Path",
+        "capabilities": [
+          "Cloud Execution Path V1"
+        ],
+        "consumers": [
+          "Real Build Execution Pipeline V1.1"
+        ],
+        "providers": [
+          "cloud job contract",
+          "queue",
+          "workers",
+          "cloud-ready packages"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "General-Purpose Code Generation",
+        "capabilities": [
+          "General-Purpose Code Generation V1"
+        ],
+        "consumers": [
+          "Code Generation Engine V1"
+        ],
+        "providers": [
+          "domain diversity",
+          "general-purpose codegen proof"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "Large-Scale Pipeline Integration",
+        "capabilities": [
+          "Large-Scale Pipeline Integration V1",
+          "Large-Scale Multi-App Validation V1",
+          "Multi-Project Concurrent Execution V1"
+        ],
+        "consumers": [
+          "Real Build Execution Pipeline V1.1",
+          "UVL Verification Execution V1",
+          "Production Readiness Gate V1",
+          "Mobile Runtime Validation at Scale V1",
+          "Feature Reality Validation",
+          "World2 Real Instantiation V1",
+          "Cloud Execution Path V1"
+        ],
+        "providers": [
+          "pipeline score",
+          "category mapping",
+          "gap classification",
+          "audit impact",
+          "58-category breadth validation",
+          "generalization score",
+          "concurrent execution proof",
+          "multi-project isolation",
+          "parallel build proof"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "World2",
+        "capabilities": [
+          "World2 Real Instantiation V1"
+        ],
+        "consumers": [
+          "Cloud Execution Path V1",
+          "Real Build Execution Pipeline V1.1"
+        ],
+        "providers": [
+          "isolated worlds",
+          "promotion",
+          "destruction proof",
+          "World1 protection"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "Mobile Runtime Validation",
+        "capabilities": [
+          "Mobile Runtime Validation at Scale V1"
+        ],
+        "consumers": [
+          "Real Build Execution Pipeline V1.1",
+          "World2 Real Instantiation V1"
+        ],
+        "providers": [
+          "mobile runtime proof",
+          "touch interaction",
+          "mobile profile coverage"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "Validation Runtime Governance",
+        "capabilities": [
+          "Validation Runtime Audit V1",
+          "Validation Runtime Governance V1",
+          "Unified Failure Escalation Authority V1",
+          "Operational Evidence Freshness Authority V1"
+        ],
+        "consumers": [
+          "Validation Runtime Governance V1",
+          "Self-Evolution Execution V1",
+          "World2 Real Instantiation V1",
+          "Canonical Ownership V2 Registration",
+          "Multi-Project Concurrent Execution V1",
+          "Unified Failure Escalation Authority V1",
+          "Capability Audit V3.1"
+        ],
+        "providers": [
+          "duplicate work analysis",
+          "runtime metrics",
+          "dependency graph",
+          "validation tiering",
+          "caching",
+          "reuse policy",
+          "runtime budgets",
+          "failure escalation",
+          "three-failure rule",
+          "escalation effectiveness",
+          "evidence freshness scoring",
+          "confidence decay",
+          "revalidation recommendations"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "Self-Evolution Execution",
+        "capabilities": [
+          "Self-Evolution Execution V1"
+        ],
+        "consumers": [
+          "Capability Audit V3.1",
+          "World2 Real Instantiation V1"
+        ],
+        "providers": [
+          "gap detection",
+          "evolution proposals",
+          "World2 experiments",
+          "promotion path"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "Customer Operations Platform",
+        "capabilities": [
+          "Production Observability Platform V1"
+        ],
+        "consumers": [
+          "Customer Operations Platform V1",
+          "Cloud Execution Path V1",
+          "Unified Failure Escalation Authority V1",
+          "Production Readiness Gate V1",
+          "Strategic Capability Audit V4"
+        ],
+        "providers": [
+          "application health",
+          "deployment tracking",
+          "availability monitoring",
+          "incident detection"
+        ]
+      },
+      {
+        "readOnly": true,
+        "owner": "Production Observability Platform",
+        "capabilities": [
+          "Continuous Deployment Pipeline V1"
+        ],
+        "consumers": [
+          "Production Observability Platform V1",
+          "Cloud Execution Path V1",
+          "Production Readiness Gate V1",
+          "Unified Failure Escalation Authority V1",
+          "Strategic Capability Audit V4"
+        ],
+        "providers": [
+          "deployment candidates",
+          "promotion governance",
+          "deployment history",
+          "rollback recommendations"
+        ]
+      }
+    ]
+  },
+  "orphanCapabilities": [],
+  "ownershipCollisions": [],
+  "duplicateRiskResolutions": [
+    {
+      "readOnly": true,
+      "pair": "Real Build Execution Pipeline ↔ UVL Verification Execution",
+      "resolution": "RBEP owns build/preview/execution proof; UVL owns verification proof",
+      "resolved": true,
+      "boundary": "Build layer vs verification layer — evidence split in pipeline integration"
+    },
+    {
+      "readOnly": true,
+      "pair": "Production Readiness Gate ↔ AFLA",
+      "resolution": "AFLA owns launch decision; Production Readiness Gate owns production decision",
+      "resolved": true,
+      "boundary": "Launch readiness vs production deployment readiness"
+    },
+    {
+      "readOnly": true,
+      "pair": "Cloud Execution Path ↔ World2",
+      "resolution": "Cloud Execution owns job contract; World2 owns isolated disposable environment",
+      "resolved": true,
+      "boundary": "Cloud job execution vs World2 filesystem isolation"
+    },
+    {
+      "readOnly": true,
+      "pair": "Validation Runtime Governance ↔ UVL",
+      "resolution": "Governance owns validation runtime policy; UVL owns verification execution",
+      "resolved": true,
+      "boundary": "Tiering/caching/reuse vs verification proof generation"
+    },
+    {
+      "readOnly": true,
+      "pair": "CQI Maturity V1 ↔ Requirement Completeness Intelligence",
+      "resolution": "CQI is canonical owner for requirement completeness domain",
+      "resolved": true,
+      "boundary": "Clarifying Question Intelligence delegates completeness intelligence"
+    },
+    {
+      "readOnly": true,
+      "pair": "Capability Audit V2 ↔ Capability Audit V3",
+      "resolution": "V3 supersedes V2 roadmap; lineage preserved in audit artifacts",
+      "resolved": true,
+      "boundary": "Meta audit versioning — V3.1 extends V3 with UVL refresh"
+    }
+  ],
+  "auditImpact": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T23:04:40.438Z",
+    "canonicalOwnershipGapClosed": true,
+    "duplicateRiskFalsePositivesReduced": 6,
+    "orphanCriticalCapabilities": 0,
+    "ownershipCollisions": 0,
+    "auditShouldReport": "Canonical Ownership V2 Registration — COMPLETE"
+  }
+}

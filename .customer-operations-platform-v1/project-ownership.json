@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-06-24T23:04:23.026Z",
+  "projects": [
+    {
+      "readOnly": true,
+      "projectId": "proj-acme-task-tracker",
+      "customerId": "cust-acme-corp",
+      "tenantId": "tenant-acme-corp",
+      "projectName": "Task Tracker",
+      "profile": "TASK_TRACKER_WEB_V1",
+      "buildHistoryCount": 3,
+      "launchHistoryCount": 2,
+      "productionHistoryCount": 1,
+      "world2HistoryCount": 2,
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "projectId": "proj-acme-crm",
+      "customerId": "cust-acme-corp",
+      "tenantId": "tenant-acme-corp",
+      "projectName": "CRM Suite",
+      "profile": "CRM_WEB_V1",
+      "buildHistoryCount": 3,
+      "launchHistoryCount": 2,
+      "productionHistoryCount": 1,
+      "world2HistoryCount": 2,
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "projectId": "proj-nova-marketplace",
+      "customerId": "cust-nova-labs",
+      "tenantId": "tenant-nova-labs",
+      "projectName": "Marketplace",
+      "profile": "MARKETPLACE_WEB_V1",
+      "buildHistoryCount": 3,
+      "launchHistoryCount": 2,
+      "productionHistoryCount": 1,
+      "world2HistoryCount": 2,
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "projectId": "proj-nova-pm",
+      "customerId": "cust-nova-labs",
+      "tenantId": "tenant-nova-labs",
+      "projectName": "Project Management",
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "buildHistoryCount": 3,
+      "launchHistoryCount": 2,
+      "productionHistoryCount": 1,
+      "world2HistoryCount": 2,
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "projectId": "proj-starter-booking",
+      "customerId": "cust-starter-studio",
+      "tenantId": "tenant-starter-studio",
+      "projectName": "Booking Platform",
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "buildHistoryCount": 3,
+      "launchHistoryCount": 2,
+      "productionHistoryCount": 1,
+      "world2HistoryCount": 2,
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    }
+  ]
+}

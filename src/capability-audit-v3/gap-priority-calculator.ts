@@ -7,6 +7,10 @@ import type { UvlEvidenceSnapshot } from './uvl-evidence-loader.js';
 import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeline-integration-v1/index.js';
 import { isWorld2RealInstantiationProven } from '../world2-real-instantiation-v1/index.js';
 import { isMobileRuntimeValidationProven } from '../mobile-runtime-validation-at-scale-v1/index.js';
+import { isCanonicalOwnershipV2Proven } from '../canonical-ownership-v2/index.js';
+import { isMultiProjectConcurrentExecutionProven } from '../multi-project-concurrent-execution-v1/index.js';
+import { isUnifiedFailureEscalationProven } from '../unified-failure-escalation-authority-v1/index.js';
+import { isOperationalEvidenceFreshnessProven } from '../operational-evidence-freshness-authority-v1/index.js';
 
 const PHASE_BY_CAPABILITY: Readonly<Record<string, string>> = {
   'Production readiness gate': 'Production Readiness Gate',
@@ -19,7 +23,8 @@ const PHASE_BY_CAPABILITY: Readonly<Record<string, string>> = {
   'Self-modification execution': 'Self-Evolution Execution',
   'Parallel build execution': 'Multi-Project Concurrent Execution',
   'Operational monitoring for deployed apps': 'Production Readiness Gate',
-  'Unified failure escalation authority': 'Self-Evolution Execution',
+  'Unified failure escalation authority': 'Unified Failure Escalation Authority',
+  'Operational evidence freshness governance': 'Operational Evidence Freshness Authority',
 };
 
 const ROADMAP_TEMPLATES: Readonly<
@@ -106,6 +111,32 @@ const ROADMAP_TEMPLATES: Readonly<
     dependencies: ['Production Readiness Gate', 'UVL Verification Execution'],
     gapCapability: 'Cloud runtime production deployment',
   },
+  'Unified Failure Escalation Authority': {
+    phase: 'Unified Failure Escalation Authority',
+    action: 'BUILD',
+    rationale:
+      'Failures are detected and classified but no canonical authority decides what happens next. Consolidate repair, research, World2, and evolution escalation.',
+    impact: 'MEDIUM',
+    dependencies: [
+      'Self-Evolution Execution V1',
+      'World2 Real Instantiation V1',
+      'Canonical Ownership V2 Registration',
+    ],
+    gapCapability: 'Unified failure escalation authority',
+  },
+  'Operational Evidence Freshness Authority': {
+    phase: 'Operational Evidence Freshness Authority',
+    action: 'BUILD',
+    rationale:
+      'Capabilities are proven but evidence freshness is not governed. Track proof age, confidence decay, and revalidation recommendations before confidence degrades.',
+    impact: 'MEDIUM',
+    dependencies: [
+      'Validation Runtime Governance V1',
+      'Unified Failure Escalation Authority V1',
+      'Capability Audit V3.1',
+    ],
+    gapCapability: 'Operational evidence freshness governance',
+  },
 };
 
 const SEVERITY_WEIGHT: Record<MissingCapabilityEntry['severity'], number> = {
@@ -142,6 +173,12 @@ export function scoreGapPriority(
   if (entry.capability.includes('Cloud runtime')) {
     score += 40;
   }
+  if (entry.capability.includes('Unified failure escalation')) {
+    score += 45;
+  }
+  if (entry.capability.includes('Operational evidence freshness')) {
+    score += 50;
+  }
 
   return score;
 }
@@ -154,7 +191,7 @@ export function computeHighestPriorityGap(
   },
 ): string {
   if (entries.length === 0) {
-    return 'No remaining blocking gaps — maintain operational evidence freshness';
+    return 'No remaining blocking gaps — continue operational monitoring';
   }
 
   const ranked = [...entries].sort(
@@ -250,6 +287,66 @@ export function buildRoadmapFromEvidence(input: {
     });
   }
 
+  if (input.projectRootDir && isCanonicalOwnershipV2Proven(input.projectRootDir)) {
+    completePhases.push({
+      rank: 0,
+      phase: 'Canonical Ownership V2 Registration',
+      action: 'COMPLETE',
+      rationale:
+        'Canonical Ownership V2 PASS: all post-V1 capabilities registered under canonical owners; 0 orphan critical capabilities; 0 ownership collisions; duplicate-risk false positives resolved.',
+      impact: 'HIGH',
+      dependencies: ['Canonical Capability Ownership V1'],
+    });
+  }
+
+  if (input.projectRootDir && isMultiProjectConcurrentExecutionProven(input.projectRootDir)) {
+    completePhases.push({
+      rank: 0,
+      phase: 'Multi-Project Concurrent Execution',
+      action: 'COMPLETE',
+      rationale:
+        'Multi-Project Concurrent Execution V1 PASS: 5/5 concurrent projects proven in World2 with 0 contamination incidents and independent proof chains.',
+      impact: 'MEDIUM',
+      dependencies: [
+        'World2 Real Instantiation V1',
+        'Real Build Execution Pipeline V1.1',
+        'Cloud Execution Path V1',
+      ],
+    });
+  }
+
+  if (input.projectRootDir && isUnifiedFailureEscalationProven(input.projectRootDir)) {
+    completePhases.push({
+      rank: 0,
+      phase: 'Unified Failure Escalation Authority',
+      action: 'COMPLETE',
+      rationale:
+        'Unified Failure Escalation Authority V1 PASS: single escalation authority proven; 3-failure rule enforced; ownership-linked failures; World2 and capability evolution paths proven.',
+      impact: 'MEDIUM',
+      dependencies: [
+        'Self-Evolution Execution V1',
+        'World2 Real Instantiation V1',
+        'Canonical Ownership V2 Registration',
+      ],
+    });
+  }
+
+  if (input.projectRootDir && isOperationalEvidenceFreshnessProven(input.projectRootDir)) {
+    completePhases.push({
+      rank: 0,
+      phase: 'Operational Evidence Freshness Authority',
+      action: 'COMPLETE',
+      rationale:
+        'Operational Evidence Freshness Authority V1 PASS: freshness scoring proven; confidence decay proven; revalidation recommendations via Validation Runtime Governance; evidence drift detection proven.',
+      impact: 'MEDIUM',
+      dependencies: [
+        'Validation Runtime Governance V1',
+        'Unified Failure Escalation Authority V1',
+        'Capability Audit V3.1',
+      ],
+    });
+  }
+
   const context = {
     productionReadinessScore: input.productionReadinessScore,
     codeGenerationMaturityScore: input.codeGenerationMaturityScore,
@@ -289,7 +386,7 @@ export function buildRoadmapFromEvidence(input: {
     ...completePhases.map((p, index) => ({ ...p, rank: activePriorities.length + index + 1 })),
   ];
 
-  const nextPriority = activePriorities[0]?.phase ?? 'Maintain operational evidence freshness';
+  const nextPriority = activePriorities[0]?.phase ?? 'Continue operational monitoring';
   const world2IsNextPhase = nextPriority === 'World2 Real Instantiation';
 
   return { priorities, world2IsNextPhase, nextPriority };

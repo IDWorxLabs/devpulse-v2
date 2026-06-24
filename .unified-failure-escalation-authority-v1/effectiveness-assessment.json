@@ -1,0 +1,12 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T23:04:37.044Z",
+  "resolvedRate": 0,
+  "repeatRate": 28,
+  "researchSuccessRate": 100,
+  "repairSuccessRate": 100,
+  "evolutionSuccessRate": 100,
+  "totalIncidents": 18,
+  "escalatedIncidents": 5,
+  "blockedIncidents": 1
+}

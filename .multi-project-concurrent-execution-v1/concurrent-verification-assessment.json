@@ -1,0 +1,10 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T21:51:59.403Z",
+  "projectsTotal": 5,
+  "buildSuccessRate": 100,
+  "previewSuccessRate": 100,
+  "verificationSuccessRate": 100,
+  "productionReadinessRate": 100,
+  "concurrentPassRate": 100
+}

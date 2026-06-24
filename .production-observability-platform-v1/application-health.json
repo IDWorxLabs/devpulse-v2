@@ -1,0 +1,80 @@
+{
+  "generatedAt": "2026-06-24T23:04:19.867Z",
+  "applications": [
+    {
+      "readOnly": true,
+      "applicationId": "app-proj-acme-task-tracker",
+      "tenantId": "tenant-acme-corp",
+      "customerId": "cust-acme-corp",
+      "projectId": "proj-acme-task-tracker",
+      "applicationName": "Task Tracker",
+      "status": "HEALTHY",
+      "uptimePercent": 99.95,
+      "availabilityScore": 100,
+      "errorRate": 0.02,
+      "latencyScore": 92,
+      "deploymentStatus": "DEPLOYED",
+      "lastObservedAt": "2026-06-24T23:04:19.867Z"
+    },
+    {
+      "readOnly": true,
+      "applicationId": "app-proj-acme-crm",
+      "tenantId": "tenant-acme-corp",
+      "customerId": "cust-acme-corp",
+      "projectId": "proj-acme-crm",
+      "applicationName": "CRM Suite",
+      "status": "HEALTHY",
+      "uptimePercent": 99.91,
+      "availabilityScore": 100,
+      "errorRate": 0.05,
+      "latencyScore": 88,
+      "deploymentStatus": "DEPLOYED",
+      "lastObservedAt": "2026-06-24T23:04:19.867Z"
+    },
+    {
+      "readOnly": true,
+      "applicationId": "app-proj-nova-marketplace",
+      "tenantId": "tenant-nova-labs",
+      "customerId": "cust-nova-labs",
+      "projectId": "proj-nova-marketplace",
+      "applicationName": "Marketplace",
+      "status": "DEGRADED",
+      "uptimePercent": 98.2,
+      "availabilityScore": 75,
+      "errorRate": 1.2,
+      "latencyScore": 72,
+      "deploymentStatus": "DEPLOYED",
+      "lastObservedAt": "2026-06-24T23:04:19.867Z"
+    },
+    {
+      "readOnly": true,
+      "applicationId": "app-proj-nova-pm",
+      "tenantId": "tenant-nova-labs",
+      "customerId": "cust-nova-labs",
+      "projectId": "proj-nova-pm",
+      "applicationName": "Project Management",
+      "status": "HEALTHY",
+      "uptimePercent": 99.88,
+      "availabilityScore": 90,
+      "errorRate": 0.08,
+      "latencyScore": 85,
+      "deploymentStatus": "DEPLOYED",
+      "lastObservedAt": "2026-06-24T23:04:19.867Z"
+    },
+    {
+      "readOnly": true,
+      "applicationId": "app-proj-starter-booking",
+      "tenantId": "tenant-starter-studio",
+      "customerId": "cust-starter-studio",
+      "projectId": "proj-starter-booking",
+      "applicationName": "Booking Platform",
+      "status": "WARNING",
+      "uptimePercent": 96.5,
+      "availabilityScore": 75,
+      "errorRate": 0.9,
+      "latencyScore": 78,
+      "deploymentStatus": "DEPLOYED",
+      "lastObservedAt": "2026-06-24T23:04:19.867Z"
+    }
+  ]
+}

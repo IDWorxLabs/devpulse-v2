@@ -1,0 +1,648 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "Unified Failure Escalation Authority V1",
+  "passToken": "UNIFIED_FAILURE_ESCALATION_AUTHORITY_V1_PASS",
+  "version": "V1",
+  "generatedAt": "2026-06-24T23:04:37.044Z",
+  "sourceSystemsConsumed": 15,
+  "incidentsProcessed": 18,
+  "threeFailureRuleProven": true,
+  "world2EscalationProven": true,
+  "evolutionEscalationProven": true,
+  "singleAuthorityProven": true,
+  "escalationProofStatus": "PROVEN",
+  "registry": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T23:04:37.043Z",
+    "openIncidents": 12,
+    "resolvedIncidents": 0,
+    "escalatedIncidents": 5,
+    "repeatedIncidents": 5,
+    "blockedIncidents": 1,
+    "totalIncidents": 18,
+    "boundedAt": 1000,
+    "incidents": [
+      {
+        "readOnly": true,
+        "incidentId": "e942e5cd-d8fb-453a-b6f5-bea70c67b2f3",
+        "sourceSystem": "Self-Evolution",
+        "timestamp": "2026-06-24T23:04:37.038Z",
+        "severity": "MEDIUM",
+        "classification": "Requirement Failure",
+        "rootCause": "Missing ownership",
+        "affectedCapabilities": [
+          "Canonical ownership registration for V2/V3 modules"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "Self-Evolution Execution",
+        "status": "OPEN",
+        "systemWideImpact": true,
+        "repeatCount": 1,
+        "detail": "Real Build Execution Pipeline V1/V1.1, UVL Verification Execution V1, CQI Maturity V1, Capability Audit V2 not in ownership registry."
+      },
+      {
+        "readOnly": true,
+        "incidentId": "8bb9838f-875d-4dde-a68d-cef8ce8f958e",
+        "sourceSystem": "Self-Evolution",
+        "timestamp": "2026-06-24T23:04:37.039Z",
+        "severity": "MEDIUM",
+        "classification": "Evolution Failure",
+        "rootCause": "Capability gap",
+        "affectedCapabilities": [
+          "Self-modification execution"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "REPAIR",
+        "canonicalOwner": "Self-Evolution Execution",
+        "status": "ESCALATED",
+        "systemWideImpact": true,
+        "repeatCount": 2,
+        "detail": "Self-evolution and gap detection are advisory; no automated capability modification."
+      },
+      {
+        "readOnly": true,
+        "incidentId": "17ca1247-7a8a-45e3-a231-104d67c233e8",
+        "sourceSystem": "Self-Evolution",
+        "timestamp": "2026-06-24T23:04:37.039Z",
+        "severity": "MEDIUM",
+        "classification": "Planning Failure",
+        "rootCause": "Capability gap",
+        "affectedCapabilities": [
+          "Parallel build execution"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "RESEARCH",
+        "canonicalOwner": "Self-Evolution Execution",
+        "status": "ESCALATED",
+        "systemWideImpact": true,
+        "repeatCount": 3,
+        "detail": "Parallel Build Orchestration is planning-only; no concurrent build execution."
+      },
+      {
+        "readOnly": true,
+        "incidentId": "25d032a5-13c3-440d-85d8-92d5d5064baa",
+        "sourceSystem": "Capability Audit",
+        "timestamp": "2026-06-24T23:04:37.039Z",
+        "severity": "MEDIUM",
+        "classification": "Requirement Failure",
+        "rootCause": "Evidence defect",
+        "affectedCapabilities": [
+          "CQI Maturity V1"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "Capability Audit",
+        "status": "OPEN",
+        "systemWideImpact": true,
+        "repeatCount": 1,
+        "detail": "CQI Maturity V1 evidence is EXPIRED (91 days, score 69) — Unified Failure Escalation decides escalation path"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "2e5b38a0-d96e-43fa-bf6a-1aca3e91780d",
+        "sourceSystem": "Capability Audit",
+        "timestamp": "2026-06-24T23:04:37.039Z",
+        "severity": "MEDIUM",
+        "classification": "Verification Failure",
+        "rootCause": "Evidence defect",
+        "affectedCapabilities": [
+          "UVL Verification Execution V1"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "REPAIR",
+        "canonicalOwner": "Capability Audit",
+        "status": "ESCALATED",
+        "systemWideImpact": true,
+        "repeatCount": 2,
+        "detail": "UVL Verification Execution V1 evidence is EXPIRED (91 days, score 81) — Unified Failure Escalation decides escalation path"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "18f4128c-373c-4bed-9a8b-1ed76002533e",
+        "sourceSystem": "Capability Audit",
+        "timestamp": "2026-06-24T23:04:37.039Z",
+        "severity": "MEDIUM",
+        "classification": "Build Failure",
+        "rootCause": "Evidence defect",
+        "affectedCapabilities": [
+          "Real Build Execution Pipeline V1.1"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "WORLD2_EXPERIMENT",
+        "canonicalOwner": "Capability Audit",
+        "status": "ESCALATED",
+        "systemWideImpact": true,
+        "repeatCount": 3,
+        "detail": "Real Build Execution Pipeline V1.1 evidence is EXPIRED (91 days, score 81) — Unified Failure Escalation decides escalation path"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "c6869b55-8de6-4033-8536-20009940fb8c",
+        "sourceSystem": "Production Observability Platform",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "HIGH",
+        "classification": "Production Failure",
+        "rootCause": "Implementation defect",
+        "affectedCapabilities": [
+          "Production Observability Platform V1"
+        ],
+        "affectedProjects": [
+          "proj-nova-marketplace"
+        ],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "Customer Operations Platform",
+        "status": "OPEN",
+        "systemWideImpact": false,
+        "repeatCount": 1,
+        "detail": "Marketplace DEGRADED: error rate 1.2%, uptime 98.2%"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "f284aa9a-1045-48dc-9c44-b3136e325dc2",
+        "sourceSystem": "Production Observability Platform",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "MEDIUM",
+        "classification": "Production Failure",
+        "rootCause": "Implementation defect",
+        "affectedCapabilities": [
+          "Production Observability Platform V1"
+        ],
+        "affectedProjects": [
+          "proj-starter-booking"
+        ],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "Customer Operations Platform",
+        "status": "OPEN",
+        "systemWideImpact": false,
+        "repeatCount": 1,
+        "detail": "Booking Platform WARNING: error rate 0.9%, uptime 96.5%"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "2225993e-8373-482d-9dd4-887c6808eefa",
+        "sourceSystem": "Continuous Deployment Pipeline",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "HIGH",
+        "classification": "Production Failure",
+        "rootCause": "Missing validation",
+        "affectedCapabilities": [
+          "Continuous Deployment Pipeline V1"
+        ],
+        "affectedProjects": [
+          "proj-nova-marketplace"
+        ],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "Production Observability Platform",
+        "status": "OPEN",
+        "systemWideImpact": false,
+        "repeatCount": 1,
+        "detail": "Production deployment live but observability validation flagged degraded health."
+      },
+      {
+        "readOnly": true,
+        "incidentId": "1e5035ca-9146-4acc-8d8c-6cda0eaf87a1",
+        "sourceSystem": "Continuous Deployment Pipeline",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "MEDIUM",
+        "classification": "Architecture Failure",
+        "rootCause": "Regression",
+        "affectedCapabilities": [
+          "Continuous Deployment Pipeline V1"
+        ],
+        "affectedProjects": [
+          "proj-starter-booking"
+        ],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "Production Observability Platform",
+        "status": "OPEN",
+        "systemWideImpact": false,
+        "repeatCount": 1,
+        "detail": "Post-deployment observability detected regression; rollback recommended."
+      },
+      {
+        "readOnly": true,
+        "incidentId": "8740c609-3db7-47e2-8a52-565db107c34e",
+        "sourceSystem": "CQI",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "MEDIUM",
+        "classification": "Requirement Failure",
+        "rootCause": "Missing validation",
+        "affectedCapabilities": [
+          "CQI Maturity V1"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "CQI",
+        "status": "OPEN",
+        "systemWideImpact": true,
+        "repeatCount": 1,
+        "detail": "Proof harness: requirement completeness advisory signal"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "ca85eecb-e593-4104-b8af-30a417c44706",
+        "sourceSystem": "AFLA",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "CRITICAL",
+        "classification": "Launch Failure",
+        "rootCause": "Missing validation",
+        "affectedCapabilities": [
+          "Launch Failure"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "AFLA",
+        "status": "OPEN",
+        "systemWideImpact": true,
+        "repeatCount": 1,
+        "detail": "Proof harness: launch verdict requires operator review on critical failure"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "baed6d58-4a35-431b-b9cf-08fd301892a4",
+        "sourceSystem": "Product Architect",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "MEDIUM",
+        "classification": "Product Failure",
+        "rootCause": "Missing validation",
+        "affectedCapabilities": [
+          "Product Failure"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "Product Architect Intelligence",
+        "status": "OPEN",
+        "systemWideImpact": true,
+        "repeatCount": 1,
+        "detail": "Proof harness: product architecture gap signal"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "71f8a523-7dac-46fc-9f66-fb7c073913da",
+        "sourceSystem": "Concurrent Execution",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "MEDIUM",
+        "classification": "Build Failure",
+        "rootCause": "Missing validation",
+        "affectedCapabilities": [
+          "Build Failure"
+        ],
+        "affectedProjects": [
+          "demo-project-a"
+        ],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "Large-Scale Pipeline Integration",
+        "status": "OPEN",
+        "systemWideImpact": false,
+        "repeatCount": 1,
+        "detail": "Proof harness: repeated build failure fingerprint demo-build-fp-1"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "07cbcfeb-9e70-4126-8b69-a216f03575bd",
+        "sourceSystem": "UVL",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "MEDIUM",
+        "classification": "Verification Failure",
+        "rootCause": "Missing validation",
+        "affectedCapabilities": [
+          "Verification Failure"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "UVL",
+        "status": "OPEN",
+        "systemWideImpact": true,
+        "repeatCount": 1,
+        "detail": "Proof harness: repeated verification failure fingerprint demo-verify-fp-1"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "41dd17ed-aaf2-4767-8c12-cad0e82c56bf",
+        "sourceSystem": "Production Readiness",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "BLOCKING",
+        "classification": "Production Failure",
+        "rootCause": "Missing validation",
+        "affectedCapabilities": [
+          "Production Failure"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "BLOCK_RELEASE",
+        "canonicalOwner": "Production Readiness Gate",
+        "status": "BLOCKED",
+        "systemWideImpact": true,
+        "repeatCount": 1,
+        "detail": "Proof harness: production deployment blocked pending readiness"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "fcd35335-4e47-4b93-9a5a-fe141cc95dba",
+        "sourceSystem": "World2",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "MEDIUM",
+        "classification": "Build Failure",
+        "rootCause": "Missing validation",
+        "affectedCapabilities": [
+          "Build Failure"
+        ],
+        "affectedProjects": [
+          "world2-failure-exp"
+        ],
+        "recommendedAction": "RETRY",
+        "canonicalOwner": "World2",
+        "status": "OPEN",
+        "systemWideImpact": false,
+        "repeatCount": 1,
+        "detail": "Proof harness: World2 escalation candidate for build failure experiment"
+      },
+      {
+        "readOnly": true,
+        "incidentId": "b038f4e3-51c1-4f16-a78c-45119360ce4c",
+        "sourceSystem": "Self-Evolution",
+        "timestamp": "2026-06-24T23:04:37.043Z",
+        "severity": "HIGH",
+        "classification": "Verification Failure",
+        "rootCause": "Capability gap",
+        "affectedCapabilities": [
+          "UVL Verification Execution V1"
+        ],
+        "affectedProjects": [],
+        "recommendedAction": "CAPABILITY_EVOLUTION",
+        "canonicalOwner": "Self-Evolution Execution",
+        "status": "ESCALATED",
+        "systemWideImpact": true,
+        "repeatCount": 3,
+        "detail": "Repeated verification failure — authority triggers capability evolution (Self-Evolution executes)"
+      }
+    ]
+  },
+  "severityDistribution": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T23:04:37.044Z",
+    "LOW": 0,
+    "MEDIUM": 13,
+    "HIGH": 3,
+    "CRITICAL": 1,
+    "BLOCKING": 1
+  },
+  "rootCauseAnalysis": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T23:04:37.044Z",
+    "byRootCause": {
+      "Missing ownership": 1,
+      "Capability gap": 3,
+      "Evidence defect": 3,
+      "Implementation defect": 2,
+      "Missing validation": 8,
+      "Regression": 1
+    },
+    "byClassification": {
+      "Requirement Failure": 3,
+      "Evolution Failure": 1,
+      "Planning Failure": 1,
+      "Verification Failure": 3,
+      "Build Failure": 3,
+      "Production Failure": 4,
+      "Architecture Failure": 1,
+      "Launch Failure": 1,
+      "Product Failure": 1
+    }
+  },
+  "escalationDecisions": [
+    {
+      "readOnly": true,
+      "incidentId": "e942e5cd-d8fb-453a-b6f5-bea70c67b2f3",
+      "strategy": "RETRY",
+      "canonicalOwner": "Self-Evolution Execution",
+      "rationale": "Requirement Failure from Self-Evolution — repeat #1 — Missing ownership",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.038Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "8bb9838f-875d-4dde-a68d-cef8ce8f958e",
+      "strategy": "REPAIR",
+      "canonicalOwner": "Self-Evolution Execution",
+      "rationale": "Evolution Failure from Self-Evolution — repeat #2 — Capability gap",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.039Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "17ca1247-7a8a-45e3-a231-104d67c233e8",
+      "strategy": "RESEARCH",
+      "canonicalOwner": "Self-Evolution Execution",
+      "rationale": "Planning Failure from Self-Evolution — repeat #3 — Capability gap",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.039Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "25d032a5-13c3-440d-85d8-92d5d5064baa",
+      "strategy": "RETRY",
+      "canonicalOwner": "Capability Audit",
+      "rationale": "Requirement Failure from Capability Audit — repeat #1 — Evidence defect",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.039Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "2e5b38a0-d96e-43fa-bf6a-1aca3e91780d",
+      "strategy": "REPAIR",
+      "canonicalOwner": "Capability Audit",
+      "rationale": "Verification Failure from Capability Audit — repeat #2 — Evidence defect",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.039Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "18f4128c-373c-4bed-9a8b-1ed76002533e",
+      "strategy": "WORLD2_EXPERIMENT",
+      "canonicalOwner": "Capability Audit",
+      "rationale": "Build Failure from Capability Audit — repeat #3 — Evidence defect",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": "ca86dccf-6c70-465a-8467-f088bdb3dddd",
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "c6869b55-8de6-4033-8536-20009940fb8c",
+      "strategy": "RETRY",
+      "canonicalOwner": "Customer Operations Platform",
+      "rationale": "Production Failure from Production Observability Platform — repeat #1 — Implementation defect",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "f284aa9a-1045-48dc-9c44-b3136e325dc2",
+      "strategy": "RETRY",
+      "canonicalOwner": "Customer Operations Platform",
+      "rationale": "Production Failure from Production Observability Platform — repeat #1 — Implementation defect",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "2225993e-8373-482d-9dd4-887c6808eefa",
+      "strategy": "RETRY",
+      "canonicalOwner": "Production Observability Platform",
+      "rationale": "Production Failure from Continuous Deployment Pipeline — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "1e5035ca-9146-4acc-8d8c-6cda0eaf87a1",
+      "strategy": "RETRY",
+      "canonicalOwner": "Production Observability Platform",
+      "rationale": "Architecture Failure from Continuous Deployment Pipeline — repeat #1 — Regression",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "8740c609-3db7-47e2-8a52-565db107c34e",
+      "strategy": "RETRY",
+      "canonicalOwner": "CQI",
+      "rationale": "Requirement Failure from CQI — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "ca85eecb-e593-4104-b8af-30a417c44706",
+      "strategy": "RETRY",
+      "canonicalOwner": "AFLA",
+      "rationale": "Launch Failure from AFLA — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "baed6d58-4a35-431b-b9cf-08fd301892a4",
+      "strategy": "RETRY",
+      "canonicalOwner": "Product Architect Intelligence",
+      "rationale": "Product Failure from Product Architect — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "71f8a523-7dac-46fc-9f66-fb7c073913da",
+      "strategy": "RETRY",
+      "canonicalOwner": "Large-Scale Pipeline Integration",
+      "rationale": "Build Failure from Concurrent Execution — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "07cbcfeb-9e70-4126-8b69-a216f03575bd",
+      "strategy": "RETRY",
+      "canonicalOwner": "UVL",
+      "rationale": "Verification Failure from UVL — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "41dd17ed-aaf2-4767-8c12-cad0e82c56bf",
+      "strategy": "BLOCK_RELEASE",
+      "canonicalOwner": "Production Readiness Gate",
+      "rationale": "Production Failure from Production Readiness — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "fcd35335-4e47-4b93-9a5a-fe141cc95dba",
+      "strategy": "RETRY",
+      "canonicalOwner": "World2",
+      "rationale": "Build Failure from World2 — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "b038f4e3-51c1-4f16-a78c-45119360ce4c",
+      "strategy": "CAPABILITY_EVOLUTION",
+      "canonicalOwner": "Self-Evolution Execution",
+      "rationale": "Verification failure #3 — capability evolution (Self-Evolution is executor only)",
+      "selfEvolutionExecutorOnly": true,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    }
+  ],
+  "repeatedFailureAnalysis": [
+    {
+      "readOnly": true,
+      "generatedAt": "2026-06-24T23:04:37.038Z",
+      "fingerprint": "demo-build-fp-1",
+      "failureCount": 3,
+      "firstStrategy": "RETRY",
+      "secondStrategy": "REPAIR",
+      "thirdStrategy": "WORLD2_EXPERIMENT",
+      "threeFailureRuleEnforced": true
+    },
+    {
+      "readOnly": true,
+      "generatedAt": "2026-06-24T23:04:37.038Z",
+      "fingerprint": "demo-verify-fp-1",
+      "failureCount": 3,
+      "firstStrategy": "RETRY",
+      "secondStrategy": "REPAIR",
+      "thirdStrategy": "CAPABILITY_EVOLUTION",
+      "threeFailureRuleEnforced": true
+    }
+  ],
+  "effectivenessAssessment": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T23:04:37.044Z",
+    "resolvedRate": 0,
+    "repeatRate": 28,
+    "researchSuccessRate": 100,
+    "repairSuccessRate": 100,
+    "evolutionSuccessRate": 100,
+    "totalIncidents": 18,
+    "escalatedIncidents": 5,
+    "blockedIncidents": 1
+  },
+  "world2FailureExperiments": [
+    {
+      "readOnly": true,
+      "experimentId": "ca86dccf-6c70-465a-8467-f088bdb3dddd",
+      "worldId": "c96fefcd-9fec-4217-b57f-29473d79bca8",
+      "incidentId": "18f4128c-373c-4bed-9a8b-1ed76002533e",
+      "profile": "TASK_TRACKER_WEB_V1",
+      "createdAt": "2026-06-24T23:04:37.043Z",
+      "status": "CREATED"
+    }
+  ],
+  "auditImpact": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T23:04:37.044Z",
+    "unifiedFailureEscalationGapClosed": true,
+    "singleAuthorityProven": true,
+    "auditShouldReport": "Unified Failure Escalation Authority — COMPLETE"
+  }
+}

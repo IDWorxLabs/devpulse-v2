@@ -3,6 +3,7 @@
  */
 
 import { HIGH_DUPLICATE_RISK_REMEDIATIONS } from '../capability-audit-v1/index.js';
+import { buildDuplicateRiskResolutions } from '../canonical-ownership-v2/index.js';
 import type { DuplicateRiskAnalysis, DuplicateRiskEntry } from './capability-audit-types.js';
 import { CAPABILITY_INVENTORY_V3 } from './capability-inventory.js';
 
@@ -116,6 +117,10 @@ export function buildDuplicateRiskAnalysis(): DuplicateRiskAnalysis {
     (e) => e.duplicateRisk === 'LOW',
   ).length;
   const authorityOwnershipChecks = validateAuthorityOwnership();
+  const v2Resolutions = buildDuplicateRiskResolutions();
+  const resolvedOverlapNotes = v2Resolutions
+    .filter((r) => r.resolved)
+    .map((r) => `${r.pair} — ${r.resolution}`);
 
   return {
     duplicateRiskCount: highDuplicateRiskCount + mediumDuplicateRiskCount,
@@ -125,6 +130,6 @@ export function buildDuplicateRiskAnalysis(): DuplicateRiskAnalysis {
     oneCapabilityOneOwnerValid: authorityOwnershipChecks.every((c) => c.valid),
     authorityOwnershipChecks,
     entries,
-    newOverlapsSinceV2: NEW_OVERLAPS_SINCE_V2,
+    newOverlapsSinceV2: [...NEW_OVERLAPS_SINCE_V2, ...resolvedOverlapNotes],
   };
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T16:00:21.684Z",
+  "generatedAt": "2026-06-24T21:30:09.530Z",
   "aggregateDuplicateWorkPercent": 95,
   "entries": [
     {
@@ -2278,6 +2278,12 @@
       "duplicatedOperations": []
     },
     {
+      "validatorName": "validate:canonical-ownership-v2",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
       "validatorName": "validate:capability-audit-v1",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
@@ -3076,6 +3082,12 @@
       "duplicatedOperations": []
     },
     {
+      "validatorName": "validate:large-scale-pipeline-integration-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
       "validatorName": "validate:launch-blocker-board",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
@@ -3215,6 +3227,12 @@
     },
     {
       "validatorName": "validate:mobile-runtime-experience-reality",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:mobile-runtime-validation-at-scale-v1",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
       "duplicatedOperations": []
@@ -3670,6 +3688,12 @@
       "duplicatedOperations": []
     },
     {
+      "validatorName": "validate:self-evolution-execution-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
       "validatorName": "validate:self-evolution-governance",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
@@ -3989,6 +4013,12 @@
     },
     {
       "validatorName": "validate:world2-learning-loop",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:world2-real-instantiation-v1",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
       "duplicatedOperations": []

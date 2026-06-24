@@ -1,0 +1,45 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T23:04:47.028Z",
+  "overallScore": 83,
+  "continuousOperationReady": true,
+  "canEvolveAutonomously": true,
+  "dimensions": [
+    {
+      "dimension": "Self-Modification Execution",
+      "score": 85,
+      "status": "PARTIAL",
+      "evidence": "Self-Evolution Execution V1 PASS"
+    },
+    {
+      "dimension": "Failure Escalation Authority",
+      "score": 90,
+      "status": "PROVEN",
+      "evidence": "UFEA V1 PASS — single escalation owner"
+    },
+    {
+      "dimension": "Evidence Freshness Loop",
+      "score": 88,
+      "status": "PARTIAL",
+      "evidence": "OEFA V1 PASS — proof lifespan governed"
+    },
+    {
+      "dimension": "Canonical Ownership",
+      "score": 95,
+      "status": "PROVEN",
+      "evidence": "27 capabilities registered, 0 critical orphans"
+    },
+    {
+      "dimension": "Validation Runtime Governance",
+      "score": 85,
+      "status": "PARTIAL",
+      "evidence": "Validation Runtime Governance V1 — tiered validation and reuse."
+    },
+    {
+      "dimension": "Continuous Revalidation",
+      "score": 55,
+      "status": "MISSING",
+      "evidence": "4 expired evidence records."
+    }
+  ]
+}

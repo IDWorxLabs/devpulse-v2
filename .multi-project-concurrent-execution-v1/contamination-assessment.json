@@ -1,0 +1,13 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T21:51:59.402Z",
+  "workspaceOverlap": false,
+  "artifactOverwrite": false,
+  "sharedBuildOutput": false,
+  "crossProjectProofLeakage": false,
+  "queueCorruption": false,
+  "authorityContamination": false,
+  "contaminationIncidents": 0,
+  "violations": [],
+  "passed": true
+}

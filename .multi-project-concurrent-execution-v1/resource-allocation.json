@@ -1,0 +1,60 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T21:51:59.399Z",
+  "totalWorkers": 5,
+  "allocations": [
+    {
+      "readOnly": true,
+      "workerId": "mpce-worker-1",
+      "projectId": "mpce-task_tracker_web_v1",
+      "cpuBudgetPercent": 20,
+      "memoryBudgetMb": 512,
+      "previewSlot": true,
+      "worldSlot": true,
+      "allocatedAt": "2026-06-24T21:51:08.278Z"
+    },
+    {
+      "readOnly": true,
+      "workerId": "mpce-worker-2",
+      "projectId": "mpce-crm_web_v1",
+      "cpuBudgetPercent": 20,
+      "memoryBudgetMb": 512,
+      "previewSlot": true,
+      "worldSlot": true,
+      "allocatedAt": "2026-06-24T21:51:08.280Z"
+    },
+    {
+      "readOnly": true,
+      "workerId": "mpce-worker-3",
+      "projectId": "mpce-marketplace_web_v1",
+      "cpuBudgetPercent": 20,
+      "memoryBudgetMb": 512,
+      "previewSlot": true,
+      "worldSlot": true,
+      "allocatedAt": "2026-06-24T21:51:08.281Z"
+    },
+    {
+      "readOnly": true,
+      "workerId": "mpce-worker-4",
+      "projectId": "mpce-project_management_web_v1",
+      "cpuBudgetPercent": 20,
+      "memoryBudgetMb": 512,
+      "previewSlot": true,
+      "worldSlot": true,
+      "allocatedAt": "2026-06-24T21:51:08.282Z"
+    },
+    {
+      "readOnly": true,
+      "workerId": "mpce-worker-5",
+      "projectId": "mpce-appointment_booking_web_v1",
+      "cpuBudgetPercent": 20,
+      "memoryBudgetMb": 512,
+      "previewSlot": true,
+      "worldSlot": true,
+      "allocatedAt": "2026-06-24T21:51:08.284Z"
+    }
+  ],
+  "noStarvation": true,
+  "noDeadlocks": true,
+  "noOrphanJobs": true
+}

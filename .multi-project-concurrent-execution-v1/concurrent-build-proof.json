@@ -1,0 +1,77 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T21:51:59.403Z",
+  "entries": [
+    {
+      "readOnly": true,
+      "projectId": "mpce-task_tracker_web_v1",
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "buildStartedAt": "2026-06-24T21:51:08.291Z",
+      "buildCompletedAt": "2026-06-24T21:51:20.508Z",
+      "previewStartedAt": "2026-06-24T21:51:08.291Z",
+      "previewCompletedAt": "2026-06-24T21:51:20.508Z",
+      "verificationCompletedAt": "2026-06-24T21:51:20.508Z",
+      "buildProof": true,
+      "previewProof": true,
+      "verificationProof": true
+    },
+    {
+      "readOnly": true,
+      "projectId": "mpce-crm_web_v1",
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "buildStartedAt": "2026-06-24T21:51:20.513Z",
+      "buildCompletedAt": "2026-06-24T21:51:30.307Z",
+      "previewStartedAt": "2026-06-24T21:51:20.513Z",
+      "previewCompletedAt": "2026-06-24T21:51:30.307Z",
+      "verificationCompletedAt": "2026-06-24T21:51:30.307Z",
+      "buildProof": true,
+      "previewProof": true,
+      "verificationProof": true
+    },
+    {
+      "readOnly": true,
+      "projectId": "mpce-marketplace_web_v1",
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "buildStartedAt": "2026-06-24T21:51:30.310Z",
+      "buildCompletedAt": "2026-06-24T21:51:40.033Z",
+      "previewStartedAt": "2026-06-24T21:51:30.310Z",
+      "previewCompletedAt": "2026-06-24T21:51:40.033Z",
+      "verificationCompletedAt": "2026-06-24T21:51:40.033Z",
+      "buildProof": true,
+      "previewProof": true,
+      "verificationProof": true
+    },
+    {
+      "readOnly": true,
+      "projectId": "mpce-project_management_web_v1",
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "buildStartedAt": "2026-06-24T21:51:40.037Z",
+      "buildCompletedAt": "2026-06-24T21:51:49.752Z",
+      "previewStartedAt": "2026-06-24T21:51:40.037Z",
+      "previewCompletedAt": "2026-06-24T21:51:49.752Z",
+      "verificationCompletedAt": "2026-06-24T21:51:49.752Z",
+      "buildProof": true,
+      "previewProof": true,
+      "verificationProof": true
+    },
+    {
+      "readOnly": true,
+      "projectId": "mpce-appointment_booking_web_v1",
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "buildStartedAt": "2026-06-24T21:51:49.756Z",
+      "buildCompletedAt": "2026-06-24T21:51:59.373Z",
+      "previewStartedAt": "2026-06-24T21:51:49.756Z",
+      "previewCompletedAt": "2026-06-24T21:51:59.373Z",
+      "verificationCompletedAt": "2026-06-24T21:51:59.373Z",
+      "buildProof": true,
+      "previewProof": true,
+      "verificationProof": true
+    }
+  ],
+  "allBuildProofComplete": true
+}

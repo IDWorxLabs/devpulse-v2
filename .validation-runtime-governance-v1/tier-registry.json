@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T16:00:18.953Z",
+  "generatedAt": "2026-06-24T21:30:07.094Z",
   "tiers": [
     {
       "tier": "FAST",
@@ -426,6 +426,14 @@
       "category": "FOUNDATION",
       "runtimeBudgetSeconds": 27,
       "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:canonical-ownership-v2",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -1781,6 +1789,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:large-scale-pipeline-integration-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:launch-blocker-board",
       "tier": "FAST",
       "category": "OTHER",
@@ -2058,6 +2074,14 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
       "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-runtime-validation-at-scale-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 630,
+      "budgetCategory": "CRITICAL",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -2741,6 +2765,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:self-evolution-execution-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 630,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:self-evolution-governance",
       "tier": "FAST",
       "category": "OTHER",
@@ -3298,6 +3330,14 @@
       "category": "WORLD2",
       "runtimeBudgetSeconds": 3,
       "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:world2-real-instantiation-v1",
+      "tier": "FULL",
+      "category": "WORLD2",
+      "runtimeBudgetSeconds": 630,
+      "budgetCategory": "CRITICAL",
       "aflaBlockedInFastStandard": false
     },
     {

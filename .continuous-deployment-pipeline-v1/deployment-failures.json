@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-06-24T23:04:16.551Z",
+  "failures": [
+    {
+      "readOnly": true,
+      "incidentId": "dfail-obs-cand-proj-nova-marketplace",
+      "candidateId": "cand-proj-nova-marketplace",
+      "projectId": "proj-nova-marketplace",
+      "tenantId": "tenant-nova-labs",
+      "customerId": "cust-nova-labs",
+      "failureType": "observability_failure",
+      "detail": "Production deployment live but observability validation flagged degraded health.",
+      "unifiedFailureEscalationEligible": true,
+      "detectedAt": "2026-06-24T23:04:16.551Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "dfail-cand-proj-starter-booking",
+      "candidateId": "cand-proj-starter-booking",
+      "projectId": "proj-starter-booking",
+      "tenantId": "tenant-starter-studio",
+      "customerId": "cust-starter-studio",
+      "failureType": "production_regression",
+      "detail": "Post-deployment observability detected regression; rollback recommended.",
+      "unifiedFailureEscalationEligible": true,
+      "detectedAt": "2026-06-24T23:04:16.551Z"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-06-24T21:51:59.403Z",
+  "results": [
+    {
+      "readOnly": true,
+      "worldId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "passed": true,
+      "isolationPassed": true
+    },
+    {
+      "readOnly": true,
+      "worldId": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "passed": true,
+      "isolationPassed": true
+    },
+    {
+      "readOnly": true,
+      "worldId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "passed": true,
+      "isolationPassed": true
+    },
+    {
+      "readOnly": true,
+      "worldId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "passed": true,
+      "isolationPassed": true
+    },
+    {
+      "readOnly": true,
+      "worldId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "passed": true,
+      "isolationPassed": true
+    }
+  ]
+}

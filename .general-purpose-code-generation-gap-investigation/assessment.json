@@ -1,0 +1,110 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "General-Purpose Code Generation Gap Investigation",
+  "passToken": "GENERAL_PURPOSE_CODE_GENERATION_GAP_INVESTIGATION_PASS",
+  "version": "V1",
+  "generatedAt": "2026-06-24T22:49:02.394Z",
+  "investigationProofStatus": "PROVEN",
+  "verdict": "ROADMAP_INCONSISTENCY",
+  "verdictSummary": "Original inconsistency identified and resolved by Strategic Audit Roadmap Consistency Repair V1 — audits now agree; GP V1 marked COMPLETE.",
+  "generalPurposeV1Proven": true,
+  "realCapabilityGapExists": false,
+  "staleEvidenceDetected": false,
+  "auditDisagreementDetected": false,
+  "v1CoverageInsufficient": false,
+  "roadmapInconsistencyDetected": false,
+  "gapProducingAuditSource": "None — resolved",
+  "capabilityAuditAgreesWithV1Pass": true,
+  "strategicAuditAgreesWithV1Pass": true,
+  "shouldV1RemainComplete": true,
+  "shouldV2RoadmapItemExist": true,
+  "roadmapActionRecommendation": "MARK_V1_COMPLETE",
+  "unsupportedCategoryCount": 43,
+  "aspirationalCategoryGapCount": 43,
+  "evidenceAnalysis": [
+    {
+      "readOnly": true,
+      "source": "General-Purpose Code Generation V1",
+      "generalPurposeV1Proven": true,
+      "reportsGap": false,
+      "highestPriority": "N/A — V1 PASS",
+      "codeGenerationScore": 100,
+      "detail": "10/10 GP proof domains passed; workflows, roles, domain logic, and production readiness proven."
+    },
+    {
+      "readOnly": true,
+      "source": "Capability Audit V3.1",
+      "generalPurposeV1Proven": true,
+      "reportsGap": false,
+      "highestPriority": "No remaining blocking gaps — continue operational monitoring",
+      "codeGenerationScore": 100,
+      "detail": "Missing-capabilities filter removes GP gap when assessment.json exists; code generation status MATURE."
+    },
+    {
+      "readOnly": true,
+      "source": "Strategic Capability Audit V4",
+      "generalPurposeV1Proven": true,
+      "reportsGap": false,
+      "highestPriority": "Expired operational evidence — 4 capability evidence record(s) expired — revalidation required before high-confidence operation.",
+      "codeGenerationScore": 92,
+      "detail": "Roadmap rank 1: Evidence Revalidation Cycle (MAINTAIN). Code Generation Diversity dimension 92/100 despite V1 PASS."
+    }
+  ],
+  "roadmapConsistency": [
+    {
+      "readOnly": true,
+      "auditSource": "Strategic Capability Audit V4",
+      "phase": "General-Purpose Code Generation",
+      "action": "COMPLETE",
+      "consistentWithV1Pass": true,
+      "issue": null
+    },
+    {
+      "readOnly": true,
+      "auditSource": "Capability Audit V3.1",
+      "phase": "General-Purpose Code Generation",
+      "action": "GAP_CLOSED",
+      "consistentWithV1Pass": true,
+      "issue": null
+    }
+  ],
+  "remainingCodegenGaps": [
+    {
+      "readOnly": true,
+      "gapId": "gp-v1-proven",
+      "category": "RESOLVED",
+      "capability": "General-Purpose Code Generation V1",
+      "severity": "LOW",
+      "detail": "V1 PASS — 10/10 non-trivial domains with workflow, role, and domain logic validation.",
+      "unsupportedApplicationClasses": []
+    },
+    {
+      "readOnly": true,
+      "gapId": "58-category-vision",
+      "category": "ASPIRATIONAL",
+      "capability": "Full 58-category autonomous generation",
+      "severity": "MEDIUM",
+      "detail": "15 RBEP categories + 10 GP V1 domains proven; 43 categories remain outside full-pipeline proof scope.",
+      "unsupportedApplicationClasses": [
+        "CATEGORY_01_WEB_V1",
+        "CATEGORY_02_WEB_V1",
+        "CATEGORY_03_WEB_V1",
+        "CATEGORY_04_WEB_V1",
+        "CATEGORY_05_WEB_V1",
+        "CATEGORY_06_WEB_V1",
+        "CATEGORY_07_WEB_V1",
+        "CATEGORY_08_WEB_V1"
+      ]
+    },
+    {
+      "readOnly": true,
+      "gapId": "strategic-dimension-cap",
+      "category": "ASPIRATIONAL",
+      "capability": "Code Generation Diversity commercialization dimension",
+      "severity": "LOW",
+      "detail": "Strategic audit caps Code Generation Diversity at 75/100 when V1 PASS — reflects 58-category vision headroom, not V1 failure.",
+      "unsupportedApplicationClasses": []
+    }
+  ]
+}

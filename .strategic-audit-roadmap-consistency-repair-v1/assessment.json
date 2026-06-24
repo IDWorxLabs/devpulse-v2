@@ -1,0 +1,105 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "Strategic Audit Roadmap Consistency Repair V1",
+  "passToken": "STRATEGIC_AUDIT_ROADMAP_CONSISTENCY_REPAIR_V1_PASS",
+  "version": "V1",
+  "generatedAt": "2026-06-24T23:04:08.843Z",
+  "consistencyProofStatus": "PROVEN",
+  "auditsAgree": true,
+  "completedCapabilitiesCannotReappear": true,
+  "evidenceDrivenRoadmapProven": true,
+  "conflictingItems": 0,
+  "staleItems": 0,
+  "duplicateItems": 0,
+  "consistentItems": 4,
+  "generalPurposeV1CompleteInRoadmap": true,
+  "generalPurposeV1NotTopGap": true,
+  "consistencyAnalysis": [
+    {
+      "readOnly": true,
+      "capability": "General-Purpose Code Generation V1",
+      "evidenceSource": "General-Purpose Code Generation V1",
+      "passToken": "GENERAL_PURPOSE_CODE_GENERATION_V1_PASS",
+      "roadmapAction": "COMPLETE",
+      "capabilityAuditAction": "COMPLETE",
+      "consistencyStatus": "CONSISTENT",
+      "detail": "Proven capability marked COMPLETE in both audits."
+    },
+    {
+      "readOnly": true,
+      "capability": "Continuous Deployment Pipeline V1",
+      "evidenceSource": "Continuous Deployment Pipeline V1",
+      "passToken": "CONTINUOUS_DEPLOYMENT_PIPELINE_V1_PASS",
+      "roadmapAction": "COMPLETE",
+      "capabilityAuditAction": "COMPLETE",
+      "consistencyStatus": "CONSISTENT",
+      "detail": "Proven capability marked COMPLETE in both audits."
+    },
+    {
+      "readOnly": true,
+      "capability": "Production Observability Platform V1",
+      "evidenceSource": "Production Observability Platform V1",
+      "passToken": "PRODUCTION_OBSERVABILITY_PLATFORM_V1_PASS",
+      "roadmapAction": "COMPLETE",
+      "capabilityAuditAction": "COMPLETE",
+      "consistencyStatus": "CONSISTENT",
+      "detail": "Proven capability marked COMPLETE in both audits."
+    },
+    {
+      "readOnly": true,
+      "capability": "Customer Operations Platform V1",
+      "evidenceSource": "Customer Operations Platform V1",
+      "passToken": "CUSTOMER_OPERATIONS_PLATFORM_V1_PASS",
+      "roadmapAction": "COMPLETE",
+      "capabilityAuditAction": "COMPLETE",
+      "consistencyStatus": "CONSISTENT",
+      "detail": "Proven capability marked COMPLETE in both audits."
+    }
+  ],
+  "roadmapConflicts": [],
+  "resolvedPriorities": [
+    {
+      "readOnly": true,
+      "rank": 1,
+      "phase": "Operational Excellence Maintenance",
+      "action": "MAINTAIN",
+      "evidenceBasis": "Operational Excellence Maintenance — all registered capabilities proven; maintain evidence freshness and deployment health"
+    },
+    {
+      "readOnly": true,
+      "rank": 2,
+      "phase": "General-Purpose Code Generation",
+      "action": "COMPLETE",
+      "evidenceBasis": "GENERAL_PURPOSE_CODE_GENERATION_V1_PASS"
+    },
+    {
+      "readOnly": true,
+      "rank": 3,
+      "phase": "Continuous Deployment Pipeline",
+      "action": "COMPLETE",
+      "evidenceBasis": "CONTINUOUS_DEPLOYMENT_PIPELINE_V1_PASS"
+    },
+    {
+      "readOnly": true,
+      "rank": 4,
+      "phase": "Production Observability Platform",
+      "action": "COMPLETE",
+      "evidenceBasis": "PRODUCTION_OBSERVABILITY_PLATFORM_V1_PASS"
+    },
+    {
+      "readOnly": true,
+      "rank": 5,
+      "phase": "Customer Operations Platform",
+      "action": "COMPLETE",
+      "evidenceBasis": "CUSTOMER_OPERATIONS_PLATFORM_V1_PASS"
+    },
+    {
+      "readOnly": true,
+      "rank": 6,
+      "phase": "Evidence Revalidation Cycle",
+      "action": "COMPLETE",
+      "evidenceBasis": "EVIDENCE_REVALIDATION_CYCLE_V1_PASS"
+    }
+  ]
+}

@@ -36,6 +36,12 @@
   var world2InstantiationLoadPromise = null;
   var mobileRuntimeValidationLoadPromise = null;
   var selfEvolutionExecutionData = null;
+  var canonicalOwnershipV2Data = null;
+  var multiProjectConcurrentExecutionData = null;
+  var unifiedFailureEscalationData = null;
+  var operationalEvidenceFreshnessData = null;
+  var evidenceRevalidationData = null;
+  var customerOperationsData = null;
   var selfEvolutionExecutionLoadPromise = null;
   var productArchitectData = null;
   var productArchitectLoadPromise = null;
@@ -131,7 +137,7 @@
     ],
   };
   var conversationStarted = false;
-  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Production Readiness', 'Cloud Execution', 'World2', 'Mobile Runtime Validation', 'Self-Evolution', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
+  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Production Readiness', 'Cloud Execution', 'World2', 'Mobile Runtime Validation', 'Self-Evolution', 'Capability Ownership', 'Multi-Project Execution', 'Failure Escalation', 'Evidence Freshness', 'Evidence Revalidation', 'Customer Operations', 'Production Observability', 'Continuous Deployment', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
   var feedSectionIdleCopy = {
     Planning: {
       action: 'Ready to classify your next request',
@@ -180,6 +186,38 @@
     'Self-Evolution': {
       action: 'Self-evolution execution ready',
       detail: 'Observe gaps, propose improvements, experiment in World2, measure impact, and promote with operator approval.',
+    },
+    'Capability Ownership': {
+      action: 'Canonical ownership registered',
+      detail: 'One capability, one canonical owner — registered capabilities, orphan detection, duplicate-risk resolution, and collision checks.',
+    },
+    'Multi-Project Execution': {
+      action: 'Concurrent execution ready',
+      detail: 'Multiple independent projects execute simultaneously in World2 with isolated workspaces, queue tracking, and zero contamination.',
+    },
+    'Failure Escalation': {
+      action: 'Unified escalation authority active',
+      detail: 'Single authority classifies failures, resolves canonical owners, and selects escalation — retry, repair, research, World2, or capability evolution.',
+    },
+    'Evidence Freshness': {
+      action: 'Evidence freshness governed',
+      detail: 'Proof lifespan tracked across capabilities — freshness scoring, confidence decay, and revalidation recommendations before trust degrades.',
+    },
+    'Evidence Revalidation': {
+      action: 'Evidence revalidation cycle active',
+      detail: 'Expired and aging proof continuously identified, prioritized, and refreshed — confidence recovered without capability modification.',
+    },
+    'Customer Operations': {
+      action: 'Customer platform active',
+      detail: 'Customers, tenants, and project ownership — onboarding, usage tracking, plan quotas, and tenant isolation for commercial operations.',
+    },
+    'Production Observability': {
+      action: 'Production observability active',
+      detail: 'Application health, availability, incidents, and recovery recommendations for deployed customer applications — observability reports; UFEA decides.',
+    },
+    'Continuous Deployment': {
+      action: 'Continuous deployment pipeline active',
+      detail: 'Governed change-to-production lifecycle — candidates, staging promotion, production deployment, observability validation, and rollback recommendations.',
     },
     'Large-Scale Validation': {
       action: 'Large-scale validation ready',
@@ -5263,6 +5301,469 @@
     return selfEvolutionExecutionLoadPromise;
   }
 
+  function renderCanonicalOwnershipPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Capability Ownership',
+        '<p class="product-lead">Loading canonical ownership registration…</p>',
+      );
+    }
+
+    var ownerRows = (data.canonicalOwners || [])
+      .slice(0, 12)
+      .map(function (owner) {
+        return (
+          '<div class="cloud-execution-row">' +
+          '<span>' + escapeHtml(owner) + '</span>' +
+          '<span>CANONICAL</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    var capabilityRows = ((data.assessment && data.assessment.entries) || [])
+      .slice(0, 10)
+      .map(function (entry) {
+        return (
+          '<div class="cloud-execution-row">' +
+          '<span>' + escapeHtml(entry.capabilityName) + '</span>' +
+          '<span>' + escapeHtml(entry.canonicalOwner) + '</span>' +
+          '<span>' + escapeHtml(entry.status) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'Capability Ownership',
+      '<p class="product-lead">Canonical Ownership V2 — one capability, one canonical owner. All post-V1 proof modules registered, classified, and auditable.</p>' +
+        '<p><strong>Registered Capabilities:</strong> ' + String(data.registeredCapabilities || 0) + ' · ' +
+        '<strong>Ownership Proof:</strong> ' + escapeHtml(data.ownershipProofStatus || 'NOT_PROVEN') + '</p>' +
+        '<p><strong>Orphan Capabilities:</strong> ' + String(data.orphanCapabilities || 0) + ' · ' +
+        '<strong>Duplicate Risks:</strong> ' + String(data.duplicateRisks || 0) + ' · ' +
+        '<strong>Resolved Overlaps:</strong> ' + String(data.resolvedOverlaps || 0) + '</p>' +
+        '<p><strong>Ownership Collisions:</strong> ' + String(data.collisionCount || 0) + ' · ' +
+        '<strong>Scope Complete:</strong> ' + (data.registrationScopeComplete ? 'Yes' : 'No') + '</p>' +
+        '<p><strong>Canonical owners</strong></p>' +
+        '<div class="cloud-execution-grid">' + (ownerRows || '<p class="hint">No owners registered.</p>') + '</div>' +
+        '<p><strong>Registered capabilities</strong></p>' +
+        '<div class="cloud-execution-grid">' + (capabilityRows || '<p class="hint">No capabilities registered.</p>') + '</div>',
+    );
+  }
+
+  var canonicalOwnershipV2LoadPromise = null;
+
+  function loadCanonicalOwnershipV2(force) {
+    if (!force && canonicalOwnershipV2Data) {
+      return Promise.resolve(canonicalOwnershipV2Data);
+    }
+    if (canonicalOwnershipV2LoadPromise) {
+      return canonicalOwnershipV2LoadPromise;
+    }
+    canonicalOwnershipV2LoadPromise = fetch('/api/founder/canonical-ownership-v2?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('canonical-ownership-v2 HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        canonicalOwnershipV2Data = data;
+        return data;
+      })
+      .finally(function () {
+        canonicalOwnershipV2LoadPromise = null;
+      });
+    return canonicalOwnershipV2LoadPromise;
+  }
+
+  function renderMultiProjectExecutionPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Multi-Project Execution',
+        '<p class="product-lead">Loading multi-project concurrent execution…</p>',
+      );
+    }
+
+    var projectRows = ((data.assessment && data.assessment.projectResults) || [])
+      .slice(0, 8)
+      .map(function (result) {
+        return (
+          '<div class="cloud-execution-row">' +
+          '<span>' + escapeHtml(result.productName) + '</span>' +
+          '<span>' + (result.passed ? 'COMPLETED' : 'FAILED') + '</span>' +
+          '<span>world ' + escapeHtml(result.worldId.slice(0, 8)) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'Multi-Project Execution',
+      '<p class="product-lead">Multi-Project Concurrent Execution V1 — five independent projects build, preview, verify, and review simultaneously inside World2 without contamination.</p>' +
+        '<p><strong>Active projects:</strong> ' + String(data.activeProjects || 0) + ' · ' +
+        '<strong>Queued projects:</strong> ' + String(data.queuedProjects || 0) + ' · ' +
+        '<strong>Completed projects:</strong> ' + String(data.completedProjects || 0) + '</p>' +
+        '<p><strong>Concurrent pass rate:</strong> ' + String(data.concurrentPassRate || 0) + '% · ' +
+        '<strong>Concurrent proof:</strong> ' + escapeHtml(data.concurrentProofStatus || 'NOT_PROVEN') + '</p>' +
+        '<p><strong>Contamination incidents:</strong> ' + String(data.contaminationIncidents || 0) + ' · ' +
+        '<strong>Worker allocation:</strong> ' + String(data.workerAllocation || 0) + ' · ' +
+        '<strong>Resource usage:</strong> ' + String(data.resourceUsagePercent || 0) + '%</p>' +
+        '<p><strong>Concurrent project results</strong></p>' +
+        '<div class="cloud-execution-grid">' + (projectRows || '<p class="hint">No concurrent results yet.</p>') + '</div>',
+    );
+  }
+
+  var multiProjectConcurrentExecutionLoadPromise = null;
+
+  function loadMultiProjectConcurrentExecution(force) {
+    if (!force && multiProjectConcurrentExecutionData) {
+      return Promise.resolve(multiProjectConcurrentExecutionData);
+    }
+    if (multiProjectConcurrentExecutionLoadPromise) {
+      return multiProjectConcurrentExecutionLoadPromise;
+    }
+    multiProjectConcurrentExecutionLoadPromise = fetch('/api/founder/multi-project-concurrent-execution-v1?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('multi-project-concurrent-execution HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        multiProjectConcurrentExecutionData = data;
+        return data;
+      })
+      .finally(function () {
+        multiProjectConcurrentExecutionLoadPromise = null;
+      });
+    return multiProjectConcurrentExecutionLoadPromise;
+  }
+
+  function renderFailureEscalationPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Failure Escalation',
+        '<p class="product-lead">Loading unified failure escalation authority…</p>',
+      );
+    }
+
+    var incidentRows = ((data.assessment && data.assessment.registry && data.assessment.registry.incidents) || [])
+      .slice(0, 8)
+      .map(function (incident) {
+        return (
+          '<div class="cloud-execution-row">' +
+          '<span>' + escapeHtml(incident.sourceSystem) + '</span>' +
+          '<span>' + escapeHtml(incident.severity) + '</span>' +
+          '<span>' + escapeHtml(incident.recommendedAction) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    var severity = (data.assessment && data.assessment.severityDistribution) || {};
+    var rootCause = (data.assessment && data.assessment.rootCauseAnalysis && data.assessment.rootCauseAnalysis.byRootCause) || {};
+
+    return renderProductCard(
+      'Failure Escalation',
+      '<p class="product-lead">Unified Failure Escalation Authority V1 — one classification, one owner, one decision. Self-Evolution executes; authority decides.</p>' +
+        '<p><strong>Open incidents:</strong> ' + String(data.openIncidents || 0) + ' · ' +
+        '<strong>Escalated:</strong> ' + String(data.escalatedIncidents || 0) + ' · ' +
+        '<strong>Blocked releases:</strong> ' + String(data.blockedIncidents || 0) + '</p>' +
+        '<p><strong>Repeated failures:</strong> ' + String(data.repeatedFailures || 0) + ' · ' +
+        '<strong>3-failure rule:</strong> ' + (data.threeFailureRuleProven ? 'Enforced' : 'Open') + ' · ' +
+        '<strong>Proof:</strong> ' + escapeHtml(data.escalationProofStatus || 'NOT_PROVEN') + '</p>' +
+        '<p><strong>Severity distribution</strong></p>' +
+        '<p class="hint">LOW ' + String(severity.LOW || 0) + ' · MEDIUM ' + String(severity.MEDIUM || 0) + ' · HIGH ' + String(severity.HIGH || 0) + ' · CRITICAL ' + String(severity.CRITICAL || 0) + ' · BLOCKING ' + String(severity.BLOCKING || 0) + '</p>' +
+        '<p><strong>Root causes</strong></p>' +
+        '<p class="hint">' + escapeHtml(Object.keys(rootCause).slice(0, 5).join(', ') || 'None') + '</p>' +
+        '<p><strong>Escalation paths</strong></p>' +
+        '<div class="cloud-execution-grid">' + (incidentRows || '<p class="hint">No incidents registered.</p>') + '</div>' +
+        '<p><strong>Effectiveness metrics</strong></p>' +
+        '<p class="hint">Resolved ' + String(data.resolvedRate || 0) + '% · Repeat ' + String(data.repeatRate || 0) + '% · Sources ' + String(data.sourceSystemsConsumed || 0) + '</p>',
+    );
+  }
+
+  var unifiedFailureEscalationLoadPromise = null;
+
+  function loadUnifiedFailureEscalation(force) {
+    if (!force && unifiedFailureEscalationData) {
+      return Promise.resolve(unifiedFailureEscalationData);
+    }
+    if (unifiedFailureEscalationLoadPromise) {
+      return unifiedFailureEscalationLoadPromise;
+    }
+    unifiedFailureEscalationLoadPromise = fetch('/api/founder/unified-failure-escalation-authority-v1?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('unified-failure-escalation HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        unifiedFailureEscalationData = data;
+        return data;
+      })
+      .finally(function () {
+        unifiedFailureEscalationLoadPromise = null;
+      });
+    return unifiedFailureEscalationLoadPromise;
+  }
+
+  function renderEvidenceFreshnessPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Evidence Freshness',
+        '<p class="product-lead">Loading operational evidence freshness authority…</p>',
+      );
+    }
+
+    var recRows = ((data.assessment && data.assessment.revalidationRecommendations) || [])
+      .slice(0, 6)
+      .map(function (rec) {
+        return (
+          '<div class="cloud-execution-row">' +
+          '<span>' + escapeHtml(rec.capability) + '</span>' +
+          '<span>' + escapeHtml(rec.action) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'Evidence Freshness',
+      '<p class="product-lead">Operational Evidence Freshness Authority V1 — proof has a lifespan. Self-Evolution proposes cadence; authority governs trust.</p>' +
+        '<p><strong>Overall freshness score:</strong> ' + String(data.overallFreshnessScore || 0) + '/100 · ' +
+        '<strong>Proof:</strong> ' + escapeHtml(data.freshnessProofStatus || 'NOT_PROVEN') + '</p>' +
+        '<p><strong>Fresh capabilities:</strong> ' + String(data.freshCapabilities || 0) + ' · ' +
+        '<strong>Aging capabilities:</strong> ' + String(data.agingCapabilities || 0) + ' · ' +
+        '<strong>Stale capabilities:</strong> ' + String(data.staleCapabilities || 0) + ' · ' +
+        '<strong>Expired capabilities:</strong> ' + String(data.expiredCapabilities || 0) + '</p>' +
+        '<p><strong>Recommended validations</strong></p>' +
+        '<div class="cloud-execution-grid">' + (recRows || '<p class="hint">No revalidation recommendations.</p>') + '</div>' +
+        '<p><strong>Confidence decay summary</strong></p>' +
+        '<p class="hint">' + escapeHtml(data.confidenceDecaySummary || 'FRESH 100% · AGING 90% · STALE 75% · EXPIRED 50%') + '</p>',
+    );
+  }
+
+  var operationalEvidenceFreshnessLoadPromise = null;
+
+  function loadOperationalEvidenceFreshness(force) {
+    if (!force && operationalEvidenceFreshnessData) {
+      return Promise.resolve(operationalEvidenceFreshnessData);
+    }
+    if (operationalEvidenceFreshnessLoadPromise) {
+      return operationalEvidenceFreshnessLoadPromise;
+    }
+    operationalEvidenceFreshnessLoadPromise = fetch('/api/founder/operational-evidence-freshness-authority-v1?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('operational-evidence-freshness HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        operationalEvidenceFreshnessData = data;
+        return data;
+      })
+      .finally(function () {
+        operationalEvidenceFreshnessLoadPromise = null;
+      });
+    return operationalEvidenceFreshnessLoadPromise;
+  }
+
+  function renderEvidenceRevalidationPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Evidence Revalidation',
+        '<p class="product-lead">Loading evidence revalidation cycle…</p>',
+      );
+    }
+
+    return renderProductCard(
+      'Evidence Revalidation',
+      '<p class="product-lead">Evidence Revalidation Cycle V1 — maintain trust in proven capabilities. Is the proof still trustworthy?</p>' +
+        '<p><strong>Proof:</strong> ' + escapeHtml(data.revalidationProofStatus || 'NOT_PROVEN') + ' · ' +
+        '<strong>Confidence recovered:</strong> ' + String(data.confidenceRecovered || 0) + ' points</p>' +
+        '<p><strong>Fresh:</strong> ' + String(data.freshCount || 0) + ' · ' +
+        '<strong>Aging:</strong> ' + String(data.agingCount || 0) + ' · ' +
+        '<strong>Stale:</strong> ' + String(data.staleCount || 0) + ' · ' +
+        '<strong>Expired:</strong> ' + String(data.expiredCount || 0) + '</p>' +
+        '<p><strong>Revalidating:</strong> ' + String(data.revalidatingCount || 0) + ' · ' +
+        '<strong>Recently Refreshed:</strong> ' + String(data.recentlyRefreshedCount || 0) + '</p>' +
+        '<p><strong>Expired discovered → refreshed:</strong> ' + String(data.expiredDiscovered || 0) + ' → ' + String(data.expiredRefreshed || 0) + '</p>' +
+        '<p class="hint">Freshness before refresh: ' + String(data.overallFreshnessBefore || 0) + '/100 · after: ' + String(data.overallFreshnessAfter || 0) + '/100</p>',
+    );
+  }
+
+  var evidenceRevalidationLoadPromise = null;
+
+  function loadEvidenceRevalidation(force) {
+    if (!force && evidenceRevalidationData) {
+      return Promise.resolve(evidenceRevalidationData);
+    }
+    if (evidenceRevalidationLoadPromise) {
+      return evidenceRevalidationLoadPromise;
+    }
+    evidenceRevalidationLoadPromise = fetch('/api/founder/evidence-revalidation-cycle-v1?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('evidence-revalidation HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        evidenceRevalidationData = data;
+        return data;
+      })
+      .finally(function () {
+        evidenceRevalidationLoadPromise = null;
+      });
+    return evidenceRevalidationLoadPromise;
+  }
+
+  function renderCustomerOperationsPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Customer Operations',
+        '<p class="product-lead">Loading customer operations platform…</p>',
+      );
+    }
+
+    return renderProductCard(
+      'Customer Operations',
+      '<p class="product-lead">Customer Operations Platform V1 — from proven software factory to commercial platform. Every customer has identity, workspace, projects, and usage visibility.</p>' +
+        '<p><strong>Customers:</strong> ' + String(data.customers || 0) + ' · ' +
+        '<strong>Tenants:</strong> ' + String(data.tenants || 0) + ' · ' +
+        '<strong>Projects:</strong> ' + String(data.projects || 0) + ' · ' +
+        '<strong>Proof:</strong> ' + escapeHtml(data.platformProofStatus || 'NOT_PROVEN') + '</p>' +
+        '<p><strong>Usage</strong></p>' +
+        '<p class="hint">Commercialization score ' + String(data.commercializationScore || 0) + '/100 · Activation ' + String(data.activationRate || 0) + '%</p>' +
+        '<p><strong>Plan distribution</strong></p>' +
+        '<p class="hint">' + escapeHtml(data.planDistribution || 'None') + '</p>' +
+        '<p><strong>Activation metrics</strong></p>' +
+        '<p class="hint">Activation rate ' + String(data.activationRate || 0) + '% · Isolation ' + escapeHtml(data.isolationStatus || 'Unknown') + '</p>' +
+        '<p><strong>Isolation status</strong></p>' +
+        '<p class="hint">' + escapeHtml(data.isolationStatus || 'Unknown') + '</p>',
+    );
+  }
+
+  var customerOperationsLoadPromise = null;
+
+  function loadCustomerOperations(force) {
+    if (!force && customerOperationsData) {
+      return Promise.resolve(customerOperationsData);
+    }
+    if (customerOperationsLoadPromise) {
+      return customerOperationsLoadPromise;
+    }
+    customerOperationsLoadPromise = fetch('/api/founder/customer-operations-platform-v1?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('customer-operations HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        customerOperationsData = data;
+        return data;
+      })
+      .finally(function () {
+        customerOperationsLoadPromise = null;
+      });
+    return customerOperationsLoadPromise;
+  }
+
+  function renderProductionObservabilityPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Production Observability',
+        '<p class="product-lead">Loading production observability platform…</p>',
+      );
+    }
+
+    return renderProductCard(
+      'Production Observability',
+      '<p class="product-lead">Production Observability Platform V1 — continuous operational awareness after deployment. Observability reports; Unified Failure Escalation Authority decides.</p>' +
+        '<p><strong>Healthy apps:</strong> ' + String(data.healthyApps || 0) + ' · ' +
+        '<strong>Warning apps:</strong> ' + String(data.warningApps || 0) + ' · ' +
+        '<strong>Critical apps:</strong> ' + String(data.criticalApps || 0) + ' · ' +
+        '<strong>Proof:</strong> ' + escapeHtml(data.observabilityProofStatus || 'NOT_PROVEN') + '</p>' +
+        '<p><strong>Availability score</strong></p>' +
+        '<p class="hint">' + String(data.availabilityScore || 0) + '/100 overall availability across observed applications</p>' +
+        '<p><strong>Open incidents</strong></p>' +
+        '<p class="hint">' + String(data.openIncidents || 0) + ' open · ' + escapeHtml(data.incidentSeveritySummary || 'None') + '</p>' +
+        '<p><strong>Incident severity</strong></p>' +
+        '<p class="hint">' + escapeHtml(data.incidentSeveritySummary || 'None') + '</p>' +
+        '<p><strong>Recovery recommendations</strong></p>' +
+        '<p class="hint">Advisory only — rollback, rebuild, validation increase, World2 investigation, or operator escalation when incidents are active.</p>',
+    );
+  }
+
+  var productionObservabilityData = null;
+  var productionObservabilityLoadPromise = null;
+
+  function loadProductionObservability(force) {
+    if (!force && productionObservabilityData) {
+      return Promise.resolve(productionObservabilityData);
+    }
+    if (productionObservabilityLoadPromise) {
+      return productionObservabilityLoadPromise;
+    }
+    productionObservabilityLoadPromise = fetch('/api/founder/production-observability-platform-v1?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('production-observability HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        productionObservabilityData = data;
+        return data;
+      })
+      .finally(function () {
+        productionObservabilityLoadPromise = null;
+      });
+    return productionObservabilityLoadPromise;
+  }
+
+  function renderContinuousDeploymentPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Continuous Deployment',
+        '<p class="product-lead">Loading continuous deployment pipeline…</p>',
+      );
+    }
+
+    return renderProductCard(
+      'Continuous Deployment',
+      '<p class="product-lead">Continuous Deployment Pipeline V1 — governed change-to-production lifecycle. Promotion requires build, UVL, Product Architect, AFLA, Production Readiness, and ownership proof.</p>' +
+        '<p><strong>Deployment candidates:</strong> ' + String(data.deploymentCandidates || 0) + ' · ' +
+        '<strong>Staging deployments:</strong> ' + String(data.stagingDeployments || 0) + ' · ' +
+        '<strong>Production deployments:</strong> ' + String(data.productionDeployments || 0) + ' · ' +
+        '<strong>Proof:</strong> ' + escapeHtml(data.deploymentProofStatus || 'NOT_PROVEN') + '</p>' +
+        '<p><strong>Promotion decisions</strong></p>' +
+        '<p class="hint">' + String(data.promotionDecisions || 0) + ' governed promotion decisions recorded</p>' +
+        '<p><strong>Rollback recommendations</strong></p>' +
+        '<p class="hint">' + String(data.rollbackRecommendations || 0) + ' advisory rollback paths — no autonomous production modification</p>' +
+        '<p><strong>Deployment health</strong></p>' +
+        '<p class="hint">Post-deployment health score ' + String(data.deploymentHealthScore || 0) + '/100</p>' +
+        '<p><strong>Deployment history</strong></p>' +
+        '<p class="hint">Customer-linked staging and production promotion history tracked per tenant and project.</p>',
+    );
+  }
+
+  var continuousDeploymentData = null;
+  var continuousDeploymentLoadPromise = null;
+
+  function loadContinuousDeployment(force) {
+    if (!force && continuousDeploymentData) {
+      return Promise.resolve(continuousDeploymentData);
+    }
+    if (continuousDeploymentLoadPromise) {
+      return continuousDeploymentLoadPromise;
+    }
+    continuousDeploymentLoadPromise = fetch('/api/founder/continuous-deployment-pipeline-v1?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('continuous-deployment HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        continuousDeploymentData = data;
+        return data;
+      })
+      .finally(function () {
+        continuousDeploymentLoadPromise = null;
+      });
+    return continuousDeploymentLoadPromise;
+  }
+
   var PRODUCT_ARCHITECT_SUITE_PROFILES = [
     { profile: 'CRM_WEB_V1', label: 'CRM' },
     { profile: 'MARKETPLACE_WEB_V1', label: 'Marketplace' },
@@ -5776,6 +6277,14 @@
     html += renderWorld2Panel(world2InstantiationData);
     html += renderMobileRuntimeValidationPanel(mobileRuntimeValidationData);
     html += renderSelfEvolutionPanel(selfEvolutionExecutionData);
+    html += renderCanonicalOwnershipPanel(canonicalOwnershipV2Data);
+    html += renderMultiProjectExecutionPanel(multiProjectConcurrentExecutionData);
+    html += renderFailureEscalationPanel(unifiedFailureEscalationData);
+    html += renderEvidenceFreshnessPanel(operationalEvidenceFreshnessData);
+    html += renderEvidenceRevalidationPanel(evidenceRevalidationData);
+    html += renderCustomerOperationsPanel(customerOperationsData);
+    html += renderProductionObservabilityPanel(productionObservabilityData);
+    html += renderContinuousDeploymentPanel(continuousDeploymentData);
     html +=
       renderProductCard(
         'Verification Readiness',
@@ -6641,6 +7150,14 @@
     'Mobile Runtime Validation': '<svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>',
     'Mobile Runtime Validation': '<svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 18h4"/></svg>',
     'Self-Evolution': '<svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.3 4.7-3.3 6L12 22l-3.7-7A7 7 0 0 1 12 2z"/><path d="M12 8v4l2 2"/></svg>',
+    'Capability Ownership': '<svg viewBox="0 0 24 24"><path d="M12 3l8 4v6c0 4.2-3.4 7.6-8 8-4.6-.4-8-3.8-8-8V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg>',
+    'Multi-Project Execution': '<svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>',
+    'Failure Escalation': '<svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.3 3.6L1.8 18a2 2 0 0 0 1.7 3h16a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0z"/></svg>',
+    'Evidence Freshness': '<svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg>',
+    'Evidence Revalidation': '<svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>',
+    'Customer Operations': '<svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    'Production Observability': '<svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+    'Continuous Deployment': '<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="4"/></svg>',
     'Product Architect Review': '<svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M7 7V5h10v2"/><path d="M8 11h8M8 15h5"/></svg>',
     'Large-Scale Validation': '<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>',
     'Execution Pipeline': '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
@@ -11142,6 +11659,126 @@
     })
     .catch(function () {
       /* Self-Evolution falls back to loading state */
+    });
+
+  loadCanonicalOwnershipV2(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* Capability Ownership falls back to loading state */
+    });
+
+  loadMultiProjectConcurrentExecution(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* Multi-Project Execution falls back to loading state */
+    });
+
+  loadUnifiedFailureEscalation(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* Failure Escalation falls back to loading state */
+    });
+
+  loadOperationalEvidenceFreshness(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* Evidence Freshness falls back to loading state */
+    });
+
+  loadEvidenceRevalidation(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* Evidence Revalidation falls back to loading state */
+    });
+
+  loadCustomerOperations(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* Customer Operations falls back to loading state */
+    });
+
+  loadProductionObservability(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* Production Observability falls back to loading state */
+    });
+
+  loadContinuousDeployment(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* Continuous Deployment falls back to loading state */
     });
 
   fetch(buildFounderTestApiUrl('/api/founder-reality.json', null))

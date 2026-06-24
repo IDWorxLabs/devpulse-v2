@@ -1,0 +1,65 @@
+{
+  "generatedAt": "2026-06-24T23:04:19.867Z",
+  "deployments": [
+    {
+      "readOnly": true,
+      "deploymentId": "deploy-proj-acme-task-tracker-prod",
+      "projectId": "proj-acme-task-tracker",
+      "tenantId": "tenant-acme-corp",
+      "customerId": "cust-acme-corp",
+      "environment": "PRODUCTION",
+      "version": "1.0.0",
+      "deployedAt": "2026-06-24T23:04:19.867Z",
+      "deploymentHealth": "HEALTHY",
+      "rollbackAvailable": true
+    },
+    {
+      "readOnly": true,
+      "deploymentId": "deploy-proj-acme-crm-prod",
+      "projectId": "proj-acme-crm",
+      "tenantId": "tenant-acme-corp",
+      "customerId": "cust-acme-corp",
+      "environment": "PRODUCTION",
+      "version": "1.0.0",
+      "deployedAt": "2026-06-24T23:04:19.867Z",
+      "deploymentHealth": "HEALTHY",
+      "rollbackAvailable": true
+    },
+    {
+      "readOnly": true,
+      "deploymentId": "deploy-proj-nova-marketplace-prod",
+      "projectId": "proj-nova-marketplace",
+      "tenantId": "tenant-nova-labs",
+      "customerId": "cust-nova-labs",
+      "environment": "PRODUCTION",
+      "version": "1.0.0",
+      "deployedAt": "2026-06-24T23:04:19.867Z",
+      "deploymentHealth": "DEGRADED",
+      "rollbackAvailable": true
+    },
+    {
+      "readOnly": true,
+      "deploymentId": "deploy-proj-nova-pm-prod",
+      "projectId": "proj-nova-pm",
+      "tenantId": "tenant-nova-labs",
+      "customerId": "cust-nova-labs",
+      "environment": "STAGING",
+      "version": "1.0.0",
+      "deployedAt": "2026-06-24T23:04:19.867Z",
+      "deploymentHealth": "HEALTHY",
+      "rollbackAvailable": true
+    },
+    {
+      "readOnly": true,
+      "deploymentId": "deploy-proj-starter-booking-prod",
+      "projectId": "proj-starter-booking",
+      "tenantId": "tenant-starter-studio",
+      "customerId": "cust-starter-studio",
+      "environment": "PRODUCTION",
+      "version": "1.0.0",
+      "deployedAt": "2026-06-24T23:04:19.867Z",
+      "deploymentHealth": "WARNING",
+      "rollbackAvailable": true
+    }
+  ]
+}

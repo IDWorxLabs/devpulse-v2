@@ -4,10 +4,10 @@
   "canonicalOwner": "Large-Scale Pipeline Integration V1",
   "passToken": "LARGE_SCALE_PIPELINE_INTEGRATION_V1_PASS",
   "version": "V1",
-  "generatedAt": "2026-06-24T20:51:00.692Z",
+  "generatedAt": "2026-06-24T21:29:04.885Z",
   "metrics": {
     "readOnly": true,
-    "generatedAt": "2026-06-24T20:51:00.692Z",
+    "generatedAt": "2026-06-24T21:29:04.885Z",
     "broadCategoriesTested": 58,
     "buildProvenCategories": 15,
     "verificationProvenCategories": 15,
@@ -1693,7 +1693,7 @@
   ],
   "auditImpact": {
     "readOnly": true,
-    "generatedAt": "2026-06-24T20:51:00.692Z",
+    "generatedAt": "2026-06-24T21:29:04.885Z",
     "largeScaleBuildSuccessRateCorrected": true,
     "legacyBuildSuccessRate": 0,
     "authoritativeBuildSuccessRate": 100,

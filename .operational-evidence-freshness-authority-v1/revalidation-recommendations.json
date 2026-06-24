@@ -1,0 +1,213 @@
+{
+  "generatedAt": "2026-06-24T23:04:13.412Z",
+  "recommendations": [
+    {
+      "readOnly": true,
+      "capability": "Capability Audit V3.1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "CQI Maturity V1",
+      "action": "FULL Validation",
+      "tier": "FULL",
+      "rationale": "EXPIRED evidence — Validation Runtime Governance recommends FULL tier (Affected capability validation for 1 changed file(s) at tier FULL).",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "UVL Verification Execution V1",
+      "action": "FULL Validation",
+      "tier": "FULL",
+      "rationale": "EXPIRED evidence — Validation Runtime Governance recommends FULL tier (Affected capability validation for 1 changed file(s) at tier FULL).",
+      "validatorsToRun": [
+        "validate:uvl-verification-execution-v1"
+      ],
+      "estimatedRuntimeSeconds": 6,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Real Build Execution Pipeline V1.1",
+      "action": "FULL Validation",
+      "tier": "FULL",
+      "rationale": "EXPIRED evidence — Validation Runtime Governance recommends FULL tier (Affected capability validation for 1 changed file(s) at tier FULL).",
+      "validatorsToRun": [
+        "validate:real-build-execution-pipeline-v1-1"
+      ],
+      "estimatedRuntimeSeconds": 65,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "AFLA Trust Calibration V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Product Architect Intelligence V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Production Readiness Gate V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Cloud Execution Path V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "World2 Real Instantiation V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Mobile Runtime Validation at Scale V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Large-Scale Pipeline Integration V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Multi-Project Concurrent Execution V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Self-Evolution Execution V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Unified Failure Escalation Authority V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Canonical Ownership V2 Registration",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Validation Runtime Governance V1",
+      "action": "FULL Validation",
+      "tier": "FULL",
+      "rationale": "EXPIRED evidence — Validation Runtime Governance recommends FULL tier (Affected capability validation for 1 changed file(s) at tier FULL).",
+      "validatorsToRun": [
+        "validate:validation-runtime-governance-v1"
+      ],
+      "estimatedRuntimeSeconds": 1328,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Launch Candidate Suite",
+      "action": "LAUNCH Validation",
+      "tier": "LAUNCH",
+      "rationale": "Governance planner — launch tier available for maximum confidence revalidation.",
+      "validatorsToRun": [
+        "validate:afla-trust-calibration-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:capability-audit-v1",
+        "validate:capability-audit-v2",
+        "validate:capability-audit-v3"
+      ],
+      "estimatedRuntimeSeconds": 1010,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Proof Harness — Aging Evidence",
+      "action": "FAST Validation",
+      "tier": "FAST",
+      "rationale": "Proof harness — AGING evidence revalidation via Validation Runtime Governance.",
+      "validatorsToRun": [
+        "validate:launch-readiness-artifact-completion-boundary-repair"
+      ],
+      "estimatedRuntimeSeconds": 3,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Proof Harness — Stale Evidence",
+      "action": "STANDARD Validation",
+      "tier": "STANDARD",
+      "rationale": "Proof harness — STALE evidence revalidation via Validation Runtime Governance.",
+      "validatorsToRun": [
+        "validate:action-visibility-engine",
+        "validate:auto-fix-runtime-foundation",
+        "validate:autonomous-build-execution-proof"
+      ],
+      "estimatedRuntimeSeconds": 4755,
+      "governancePlannerUsed": true
+    }
+  ]
+}

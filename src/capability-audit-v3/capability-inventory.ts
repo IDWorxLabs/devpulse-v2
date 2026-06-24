@@ -23,6 +23,10 @@ import { V2_INVENTORY_UPGRADES } from './v2-inventory-upgrades.js';
 import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeline-integration-v1/index.js';
 import { isWorld2RealInstantiationProven } from '../world2-real-instantiation-v1/index.js';
 import { isMobileRuntimeValidationProven } from '../mobile-runtime-validation-at-scale-v1/index.js';
+import { isCanonicalOwnershipV2Proven } from '../canonical-ownership-v2/index.js';
+import { isMultiProjectConcurrentExecutionProven } from '../multi-project-concurrent-execution-v1/index.js';
+import { isUnifiedFailureEscalationProven } from '../unified-failure-escalation-authority-v1/index.js';
+import { isOperationalEvidenceFreshnessProven } from '../operational-evidence-freshness-authority-v1/index.js';
 
 export const AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN =
   'AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS';
@@ -332,6 +336,26 @@ export function buildCapabilityAuditV3Assessment(projectRootDir?: string): Capab
   if (projectRootDir && isMobileRuntimeValidationProven(projectRootDir)) {
     closedGapsSinceV2.push(
       'Mobile runtime validation at scale (Mobile Runtime Validation at Scale V1 PASS)',
+    );
+  }
+  if (projectRootDir && isCanonicalOwnershipV2Proven(projectRootDir)) {
+    closedGapsSinceV2.push(
+      'Canonical ownership registration for V2/V3 modules (Canonical Ownership V2 PASS)',
+    );
+  }
+  if (projectRootDir && isMultiProjectConcurrentExecutionProven(projectRootDir)) {
+    closedGapsSinceV2.push(
+      'Parallel build execution (Multi-Project Concurrent Execution V1 PASS)',
+    );
+  }
+  if (projectRootDir && isUnifiedFailureEscalationProven(projectRootDir)) {
+    closedGapsSinceV2.push(
+      'Unified failure escalation authority (Unified Failure Escalation Authority V1 PASS)',
+    );
+  }
+  if (projectRootDir && isOperationalEvidenceFreshnessProven(projectRootDir)) {
+    closedGapsSinceV2.push(
+      'Operational evidence freshness governance (Operational Evidence Freshness Authority V1 PASS)',
     );
   }
 

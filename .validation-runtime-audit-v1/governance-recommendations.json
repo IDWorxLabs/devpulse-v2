@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T16:00:21.684Z",
+  "generatedAt": "2026-06-24T21:30:09.530Z",
   "readOnly": true,
   "notImplemented": true,
   "recommendations": [
@@ -81,18 +81,18 @@
     {
       "action": "REUSE",
       "target": "nested validator results",
-      "rationale": "13 validators trigger multiple child validators; results could be shared.",
+      "rationale": "18 validators trigger multiple child validators; results could be shared.",
       "evidenceValidators": [
         "validate:brain-memory-visibility-stack",
+        "validate:canonical-ownership-v2",
         "validate:chat-authority",
         "validate:cloud-execution-path-v1",
         "validate:cqi-integration-repair-v1",
         "validate:founder-readiness-authority",
         "validate:general-purpose-code-generation-v1",
-        "validate:governance-stack-checkpoint",
-        "validate:inline-operator-feed"
+        "validate:governance-stack-checkpoint"
       ],
-      "estimatedSavingsMinutes": 26
+      "estimatedSavingsMinutes": 36
     },
     {
       "action": "TIER",
@@ -125,7 +125,7 @@
     {
       "action": "KEEP",
       "target": "fast validators as always-on regression",
-      "rationale": "259 registered validators are LOW tier (<30s estimated); safe for continuous regression.",
+      "rationale": "261 registered validators are LOW tier (<30s estimated); safe for continuous regression.",
       "evidenceValidators": [
         "validate:adaptive-autofix-intelligence",
         "validate:adoption-prediction-authority",

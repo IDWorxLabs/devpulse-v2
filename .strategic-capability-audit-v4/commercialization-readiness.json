@@ -1,0 +1,57 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T23:04:47.028Z",
+  "overallScore": 90,
+  "deploymentReady": true,
+  "commercializationReady": true,
+  "dimensions": [
+    {
+      "dimension": "Production Readiness Gate",
+      "score": 90,
+      "status": "PROVEN",
+      "evidence": "Production Readiness Gate V1 PASS"
+    },
+    {
+      "dimension": "Cloud Execution Path",
+      "score": 85,
+      "status": "PARTIAL",
+      "evidence": "Cloud Execution Path V1 PASS"
+    },
+    {
+      "dimension": "Mobile Product Surface",
+      "score": 88,
+      "status": "PARTIAL",
+      "evidence": "Mobile Runtime Validation at Scale V1 PASS"
+    },
+    {
+      "dimension": "Operational Monitoring",
+      "score": 92,
+      "status": "PROVEN",
+      "evidence": "Production Observability Platform V1 PASS — application health, availability, incidents, and recovery recommendations for deployed customer applications."
+    },
+    {
+      "dimension": "Customer Onboarding & Billing",
+      "score": 88,
+      "status": "PARTIAL",
+      "evidence": "Customer Operations Platform V1 PASS — onboarding, tenant isolation, project ownership, usage tracking, and plan quotas proven."
+    },
+    {
+      "dimension": "Continuous Deployment Pipeline",
+      "score": 92,
+      "status": "PROVEN",
+      "evidence": "Continuous Deployment Pipeline V1 PASS — governed promotion from candidate through staging to production with observability validation and rollback recommendations."
+    },
+    {
+      "dimension": "Code Generation Diversity",
+      "score": 92,
+      "status": "PROVEN",
+      "evidence": "General-Purpose Code Generation V1 PASS — 10/10 non-trivial domains proven; aligned with Capability Audit V3.1 MATURE status."
+    },
+    {
+      "dimension": "Large-Scale Pipeline Integration",
+      "score": 92,
+      "status": "PROVEN",
+      "evidence": "Large-Scale Pipeline Integration V1 PASS"
+    }
+  ]
+}

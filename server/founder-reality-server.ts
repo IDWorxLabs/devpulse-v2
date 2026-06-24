@@ -50,6 +50,14 @@ import { sendLargeScaleValidationJson } from './large-scale-validation-handler.j
 import { sendWorld2RealInstantiationJson } from './world2-real-instantiation-handler.js';
 import { sendMobileRuntimeValidationJson } from './mobile-runtime-validation-handler.js';
 import { sendSelfEvolutionExecutionJson } from './self-evolution-execution-v1-handler.js';
+import { sendCanonicalOwnershipV2Json } from './canonical-ownership-v2-handler.js';
+import { sendMultiProjectConcurrentExecutionJson } from './multi-project-concurrent-execution-handler.js';
+import { sendUnifiedFailureEscalationJson } from './unified-failure-escalation-handler.js';
+import { sendOperationalEvidenceFreshnessJson } from './operational-evidence-freshness-handler.js';
+import { sendCustomerOperationsJson } from './customer-operations-handler.js';
+import { sendProductionObservabilityJson } from './production-observability-handler.js';
+import { sendContinuousDeploymentJson } from './continuous-deployment-handler.js';
+import { sendEvidenceRevalidationJson } from './evidence-revalidation-handler.js';
 import { sendRealBuildExecutionPipelineJson } from './real-build-execution-pipeline-handler.js';
 import { sendRealBuildExecutionPipelineV11Json } from './real-build-execution-pipeline-v11-handler.js';
 import { sendUvlVerificationExecutionV1Json } from './uvl-verification-execution-v1-handler.js';
@@ -390,6 +398,107 @@ export function createFounderRealityServer() {
         return;
       }
       sendSelfEvolutionExecutionJson(res, url.searchParams.get('refresh') === 'true');
+      return;
+    }
+
+    if (urlPath === '/api/founder/canonical-ownership-v2' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendCanonicalOwnershipV2Json(res, url.searchParams.get('refresh') === 'true');
+      return;
+    }
+
+    if (
+      urlPath === '/api/founder/multi-project-concurrent-execution-v1' &&
+      (req.method === 'GET' || req.method === 'HEAD')
+    ) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendMultiProjectConcurrentExecutionJson(res, url.searchParams.get('refresh') === 'true');
+      return;
+    }
+
+    if (
+      urlPath === '/api/founder/unified-failure-escalation-authority-v1' &&
+      (req.method === 'GET' || req.method === 'HEAD')
+    ) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendUnifiedFailureEscalationJson(res, url.searchParams.get('refresh') === 'true');
+      return;
+    }
+
+    if (
+      urlPath === '/api/founder/operational-evidence-freshness-authority-v1' &&
+      (req.method === 'GET' || req.method === 'HEAD')
+    ) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendOperationalEvidenceFreshnessJson(res, url.searchParams.get('refresh') === 'true');
+      return;
+    }
+
+    if (
+      urlPath === '/api/founder/customer-operations-platform-v1' &&
+      (req.method === 'GET' || req.method === 'HEAD')
+    ) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendCustomerOperationsJson(res, url.searchParams.get('refresh') === 'true');
+      return;
+    }
+
+    if (
+      urlPath === '/api/founder/production-observability-platform-v1' &&
+      (req.method === 'GET' || req.method === 'HEAD')
+    ) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendProductionObservabilityJson(res, url.searchParams.get('refresh') === 'true');
+      return;
+    }
+
+    if (
+      urlPath === '/api/founder/continuous-deployment-pipeline-v1' &&
+      (req.method === 'GET' || req.method === 'HEAD')
+    ) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendContinuousDeploymentJson(res, url.searchParams.get('refresh') === 'true');
+      return;
+    }
+
+    if (
+      urlPath === '/api/founder/evidence-revalidation-cycle-v1' &&
+      (req.method === 'GET' || req.method === 'HEAD')
+    ) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendEvidenceRevalidationJson(res, url.searchParams.get('refresh') === 'true');
       return;
     }
 

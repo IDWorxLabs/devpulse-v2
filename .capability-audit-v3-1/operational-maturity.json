@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-24T20:54:56.400Z",
-  "operationalMaturityScore": 97,
+  "generatedAt": "2026-06-24T23:04:43.798Z",
+  "operationalMaturityScore": 100,
   "provenCategoryCount": 15,
   "supportedCategoryCount": 58,
   "executionGeneralizationScore": 96,
@@ -107,5 +107,36 @@
     "verificationProofStatus": "PROVEN",
     "uvlVerificationExecutionComplete": true,
     "passToken": "UVL_VERIFICATION_EXECUTION_V1_PASS"
+  },
+  "evidenceFreshness": {
+    "freshCount": 12,
+    "agingCount": 0,
+    "staleCount": 0,
+    "expiredCount": 4,
+    "overallFreshnessScore": 94,
+    "proven": true
+  },
+  "evidenceRevalidation": {
+    "freshEvidenceCount": 16,
+    "expiredEvidenceCount": 0,
+    "revalidatedEvidenceCount": 4,
+    "confidenceRecovered": 244,
+    "recentlyRefreshedCount": 4,
+    "proven": true
+  },
+  "productionObservability": {
+    "observedApplications": 5,
+    "observedDeployments": 5,
+    "openIncidents": 1,
+    "overallAvailabilityScore": 88,
+    "proven": true
+  },
+  "continuousDeployment": {
+    "deploymentCandidates": 5,
+    "promotionDecisions": 9,
+    "deploymentHistoryEntries": 9,
+    "deploymentSuccessRate": 60,
+    "rollbackRecommendations": 2,
+    "proven": true
   }
 }

@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-06-24T22:49:02.394Z",
+  "gaps": [
+    {
+      "readOnly": true,
+      "gapId": "gp-v1-proven",
+      "category": "RESOLVED",
+      "capability": "General-Purpose Code Generation V1",
+      "severity": "LOW",
+      "detail": "V1 PASS — 10/10 non-trivial domains with workflow, role, and domain logic validation.",
+      "unsupportedApplicationClasses": []
+    },
+    {
+      "readOnly": true,
+      "gapId": "58-category-vision",
+      "category": "ASPIRATIONAL",
+      "capability": "Full 58-category autonomous generation",
+      "severity": "MEDIUM",
+      "detail": "15 RBEP categories + 10 GP V1 domains proven; 43 categories remain outside full-pipeline proof scope.",
+      "unsupportedApplicationClasses": [
+        "CATEGORY_01_WEB_V1",
+        "CATEGORY_02_WEB_V1",
+        "CATEGORY_03_WEB_V1",
+        "CATEGORY_04_WEB_V1",
+        "CATEGORY_05_WEB_V1",
+        "CATEGORY_06_WEB_V1",
+        "CATEGORY_07_WEB_V1",
+        "CATEGORY_08_WEB_V1"
+      ]
+    },
+    {
+      "readOnly": true,
+      "gapId": "strategic-dimension-cap",
+      "category": "ASPIRATIONAL",
+      "capability": "Code Generation Diversity commercialization dimension",
+      "severity": "LOW",
+      "detail": "Strategic audit caps Code Generation Diversity at 75/100 when V1 PASS — reflects 58-category vision headroom, not V1 failure.",
+      "unsupportedApplicationClasses": []
+    }
+  ]
+}

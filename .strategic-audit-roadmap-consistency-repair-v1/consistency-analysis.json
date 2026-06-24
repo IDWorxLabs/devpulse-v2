@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-06-24T23:04:08.843Z",
+  "items": [
+    {
+      "readOnly": true,
+      "capability": "General-Purpose Code Generation V1",
+      "evidenceSource": "General-Purpose Code Generation V1",
+      "passToken": "GENERAL_PURPOSE_CODE_GENERATION_V1_PASS",
+      "roadmapAction": "COMPLETE",
+      "capabilityAuditAction": "COMPLETE",
+      "consistencyStatus": "CONSISTENT",
+      "detail": "Proven capability marked COMPLETE in both audits."
+    },
+    {
+      "readOnly": true,
+      "capability": "Continuous Deployment Pipeline V1",
+      "evidenceSource": "Continuous Deployment Pipeline V1",
+      "passToken": "CONTINUOUS_DEPLOYMENT_PIPELINE_V1_PASS",
+      "roadmapAction": "COMPLETE",
+      "capabilityAuditAction": "COMPLETE",
+      "consistencyStatus": "CONSISTENT",
+      "detail": "Proven capability marked COMPLETE in both audits."
+    },
+    {
+      "readOnly": true,
+      "capability": "Production Observability Platform V1",
+      "evidenceSource": "Production Observability Platform V1",
+      "passToken": "PRODUCTION_OBSERVABILITY_PLATFORM_V1_PASS",
+      "roadmapAction": "COMPLETE",
+      "capabilityAuditAction": "COMPLETE",
+      "consistencyStatus": "CONSISTENT",
+      "detail": "Proven capability marked COMPLETE in both audits."
+    },
+    {
+      "readOnly": true,
+      "capability": "Customer Operations Platform V1",
+      "evidenceSource": "Customer Operations Platform V1",
+      "passToken": "CUSTOMER_OPERATIONS_PLATFORM_V1_PASS",
+      "roadmapAction": "COMPLETE",
+      "capabilityAuditAction": "COMPLETE",
+      "consistencyStatus": "CONSISTENT",
+      "detail": "Proven capability marked COMPLETE in both audits."
+    }
+  ]
+}

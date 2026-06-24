@@ -571,6 +571,12 @@
     "Real Build Execution Pipeline V1.1 ↔ UVL Verification Execution V1 — build/preview proof vs verification proof; ownership boundary clear, evidence split by layer",
     "CQI Maturity V1 ↔ Clarifying Question Intelligence ↔ Requirement Completeness Intelligence (~25% overlap, CQI is canonical)",
     "Production Readiness Gate ↔ Launch Readiness Authority ↔ AFLA (~40% overlap, launch vs production boundary)",
-    "Capability Audit V2 ↔ Capability Audit V3 — meta audit lineage; V3 supersedes V2 roadmap"
+    "Capability Audit V2 ↔ Capability Audit V3 — meta audit lineage; V3 supersedes V2 roadmap",
+    "Real Build Execution Pipeline ↔ UVL Verification Execution — RBEP owns build/preview/execution proof; UVL owns verification proof",
+    "Production Readiness Gate ↔ AFLA — AFLA owns launch decision; Production Readiness Gate owns production decision",
+    "Cloud Execution Path ↔ World2 — Cloud Execution owns job contract; World2 owns isolated disposable environment",
+    "Validation Runtime Governance ↔ UVL — Governance owns validation runtime policy; UVL owns verification execution",
+    "CQI Maturity V1 ↔ Requirement Completeness Intelligence — CQI is canonical owner for requirement completeness domain",
+    "Capability Audit V2 ↔ Capability Audit V3 — V3 supersedes V2 roadmap; lineage preserved in audit artifacts"
   ]
 }

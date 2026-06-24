@@ -1,0 +1,36 @@
+{
+  "readOnly": true,
+  "jobId": "c258424b-2168-49c4-ba58-9728c6819f2e",
+  "projectId": "world2-project_management_web_v1",
+  "prompt": "Build a project management system to create projects, edit them, delete them, search projects, and assign team members.",
+  "requirementsSnapshot": {
+    "readOnly": true,
+    "profile": "PROJECT_MANAGEMENT_WEB_V1",
+    "productName": "Project Management",
+    "prompt": "Build a project management system to create projects, edit them, delete them, search projects, and assign team members.",
+    "requirementConfidence": 25
+  },
+  "buildPlan": {
+    "readOnly": true,
+    "contractId": "build-ready-idea-10",
+    "planningSummary": "Contract build-ready-idea-10",
+    "codegenProfile": "PROJECT_MANAGEMENT_WEB_V1"
+  },
+  "workspaceSpec": {
+    "readOnly": true,
+    "workspaceId": "w2-c258424b-2168-49c4-ba58-9728c6819f2e",
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-c258424b-2168-49c4-ba58-9728c6819f2e",
+    "isolationToken": "c258424b-2168-49c4-ba58-9728c6819f2e",
+    "boundedLogsMaxLines": 500,
+    "boundedArtifactsMaxBytes": 5000000,
+    "runtimeTimeoutMs": 300000
+  },
+  "executionMode": "CLOUD_SIMULATED",
+  "requestedAt": "2026-06-24T21:41:31.656Z",
+  "status": "COMPLETED",
+  "claimedAt": null,
+  "completedAt": "2026-06-24T21:41:41.199Z",
+  "workerId": "w2-worker-c258424b",
+  "currentStage": "COMPLETED",
+  "runtimeDurationMs": 9543
+}

@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-06-24T23:04:23.026Z",
+  "customers": [
+    {
+      "readOnly": true,
+      "customerId": "cust-acme-corp",
+      "organizationName": "Acme Corp",
+      "ownerUserId": "user-acme-owner",
+      "email": "ops@acme-corp.example",
+      "status": "ACTIVE",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "lastActiveAt": "2026-06-24T23:04:23.026Z",
+      "planType": "PRO",
+      "tenantId": "tenant-acme-corp"
+    },
+    {
+      "readOnly": true,
+      "customerId": "cust-nova-labs",
+      "organizationName": "Nova Labs",
+      "ownerUserId": "user-nova-owner",
+      "email": "platform@nova-labs.example",
+      "status": "ACTIVE",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "lastActiveAt": "2026-06-24T23:04:23.026Z",
+      "planType": "BUSINESS",
+      "tenantId": "tenant-nova-labs"
+    },
+    {
+      "readOnly": true,
+      "customerId": "cust-starter-studio",
+      "organizationName": "Starter Studio",
+      "ownerUserId": "user-starter-owner",
+      "email": "hello@starter-studio.example",
+      "status": "TRIAL",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "lastActiveAt": "2026-06-24T23:04:23.026Z",
+      "planType": "FREE",
+      "tenantId": "tenant-starter-studio"
+    }
+  ]
+}

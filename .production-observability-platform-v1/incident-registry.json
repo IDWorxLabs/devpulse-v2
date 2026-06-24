@@ -1,0 +1,64 @@
+{
+  "readOnly": true,
+  "totalIncidents": 3,
+  "openIncidents": 1,
+  "resolvedIncidents": 1,
+  "escalatedIncidents": 1,
+  "customerImpactCount": 2,
+  "incidents": [
+    {
+      "readOnly": true,
+      "incidentId": "inc-app-proj-nova-marketplace-degraded",
+      "applicationId": "app-proj-nova-marketplace",
+      "tenantId": "tenant-nova-labs",
+      "customerId": "cust-nova-labs",
+      "projectId": "proj-nova-marketplace",
+      "environment": "PRODUCTION",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "incidentType": "error_spike",
+      "detail": "Marketplace DEGRADED: error rate 1.2%, uptime 98.2%",
+      "affectedCustomers": [
+        "cust-nova-labs"
+      ],
+      "unifiedFailureEscalationEligible": true,
+      "detectedAt": "2026-06-24T23:04:19.867Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "inc-app-proj-starter-booking-warning",
+      "applicationId": "app-proj-starter-booking",
+      "tenantId": "tenant-starter-studio",
+      "customerId": "cust-starter-studio",
+      "projectId": "proj-starter-booking",
+      "environment": "PRODUCTION",
+      "severity": "MEDIUM",
+      "status": "ESCALATED",
+      "incidentType": "availability_degradation",
+      "detail": "Booking Platform WARNING: error rate 0.9%, uptime 96.5%",
+      "affectedCustomers": [
+        "cust-starter-studio"
+      ],
+      "unifiedFailureEscalationEligible": true,
+      "detectedAt": "2026-06-24T23:04:19.867Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "inc-resolved-acme-crm",
+      "applicationId": "app-proj-acme-crm",
+      "tenantId": "tenant-acme-corp",
+      "customerId": "cust-acme-corp",
+      "projectId": "proj-acme-crm",
+      "environment": "PRODUCTION",
+      "severity": "LOW",
+      "status": "RESOLVED",
+      "incidentType": "deployment_regression",
+      "detail": "CRM Suite deployment regression resolved via rollback — UFEA notified",
+      "affectedCustomers": [
+        "cust-acme-corp"
+      ],
+      "unifiedFailureEscalationEligible": true,
+      "detectedAt": "2026-06-23T23:04:19.867Z"
+    }
+  ]
+}

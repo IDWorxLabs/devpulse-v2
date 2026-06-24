@@ -1,0 +1,15 @@
+{
+  "readOnly": true,
+  "configurable": true,
+  "thresholds": {
+    "agingDays": 14,
+    "staleDays": 45,
+    "expiredDays": 90
+  },
+  "decayByStatus": {
+    "FRESH": 100,
+    "AGING": 90,
+    "STALE": 75,
+    "EXPIRED": 50
+  }
+}

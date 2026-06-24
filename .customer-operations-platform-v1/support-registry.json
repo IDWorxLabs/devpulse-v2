@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-06-24T23:04:23.026Z",
+  "incidents": [
+    {
+      "readOnly": true,
+      "incidentId": "support-acme-onboarding",
+      "customerId": "cust-acme-corp",
+      "tenantId": "tenant-acme-corp",
+      "category": "support_request",
+      "status": "RESOLVED",
+      "detail": "Acme Corp onboarding assistance — workspace provisioning verified",
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "support-nova-quota",
+      "customerId": "cust-nova-labs",
+      "tenantId": "tenant-nova-labs",
+      "category": "customer_incident",
+      "status": "IN_PROGRESS",
+      "detail": "Nova Labs quota review — BUSINESS plan concurrent execution limit advisory",
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "support-platform-health",
+      "customerId": "cust-starter-studio",
+      "tenantId": "tenant-starter-studio",
+      "category": "platform_issue",
+      "status": "OPEN",
+      "detail": "Starter Studio trial activation — first project guidance",
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    }
+  ]
+}

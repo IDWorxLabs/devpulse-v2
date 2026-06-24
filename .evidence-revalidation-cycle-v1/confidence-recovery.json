@@ -1,0 +1,64 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T23:03:54.094Z",
+  "expiredToRefreshed": 4,
+  "staleToFresh": 4,
+  "confidenceRecovered": 244,
+  "overallFreshnessBefore": 94,
+  "overallFreshnessAfter": 100,
+  "freshnessDelta": 6,
+  "entries": [
+    {
+      "readOnly": true,
+      "evidenceId": "cqi-maturity-v1",
+      "capabilityId": "CQI Maturity V1",
+      "freshnessBefore": 69,
+      "freshnessAfter": 100,
+      "freshnessDelta": 31,
+      "confidenceBefore": 35,
+      "confidenceAfter": 100,
+      "confidenceDelta": 65,
+      "priorStatus": "EXPIRED",
+      "resultStatus": "REFRESHED"
+    },
+    {
+      "readOnly": true,
+      "evidenceId": "uvl-verification-execution-v1",
+      "capabilityId": "UVL Verification Execution V1",
+      "freshnessBefore": 81,
+      "freshnessAfter": 100,
+      "freshnessDelta": 19,
+      "confidenceBefore": 41,
+      "confidenceAfter": 100,
+      "confidenceDelta": 59,
+      "priorStatus": "EXPIRED",
+      "resultStatus": "REFRESHED"
+    },
+    {
+      "readOnly": true,
+      "evidenceId": "real-build-execution-v1-1",
+      "capabilityId": "Real Build Execution Pipeline V1.1",
+      "freshnessBefore": 81,
+      "freshnessAfter": 100,
+      "freshnessDelta": 19,
+      "confidenceBefore": 41,
+      "confidenceAfter": 100,
+      "confidenceDelta": 59,
+      "priorStatus": "EXPIRED",
+      "resultStatus": "REFRESHED"
+    },
+    {
+      "readOnly": true,
+      "evidenceId": "validation-runtime-governance-v1",
+      "capabilityId": "Validation Runtime Governance V1",
+      "freshnessBefore": 78,
+      "freshnessAfter": 100,
+      "freshnessDelta": 22,
+      "confidenceBefore": 39,
+      "confidenceAfter": 100,
+      "confidenceDelta": 61,
+      "priorStatus": "EXPIRED",
+      "resultStatus": "REFRESHED"
+    }
+  ]
+}

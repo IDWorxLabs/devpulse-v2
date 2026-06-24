@@ -1,0 +1,178 @@
+[
+  {
+    "readOnly": true,
+    "capabilityId": "Capability Audit V3.1",
+    "evidenceId": "capability-audit-v3-1",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T22:26:16.548Z",
+    "expiresAt": "2026-09-22T22:26:16.548Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "CQI Maturity V1",
+    "evidenceId": "cqi-maturity-v1",
+    "currentStatus": "REFRESHED",
+    "lastValidatedAt": "2026-06-24T23:03:55.307Z",
+    "expiresAt": "2026-09-22T23:03:55.307Z",
+    "priority": "HIGH",
+    "recommendedAction": "TARGETED Validation",
+    "revalidationResult": "SUCCESS"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "UVL Verification Execution V1",
+    "evidenceId": "uvl-verification-execution-v1",
+    "currentStatus": "REFRESHED",
+    "lastValidatedAt": "2026-06-24T23:03:55.307Z",
+    "expiresAt": "2026-09-22T23:03:55.307Z",
+    "priority": "HIGH",
+    "recommendedAction": "TARGETED Validation",
+    "revalidationResult": "SUCCESS"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "Real Build Execution Pipeline V1.1",
+    "evidenceId": "real-build-execution-v1-1",
+    "currentStatus": "REFRESHED",
+    "lastValidatedAt": "2026-06-24T23:03:55.307Z",
+    "expiresAt": "2026-09-22T23:03:55.307Z",
+    "priority": "HIGH",
+    "recommendedAction": "TARGETED Validation",
+    "revalidationResult": "SUCCESS"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "AFLA Trust Calibration V1",
+    "evidenceId": "afla-trust-calibration-v1",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T21:30:26.165Z",
+    "expiresAt": "2026-09-22T21:30:26.165Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "Product Architect Intelligence V1",
+    "evidenceId": "product-architect-intelligence-v1",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T21:30:20.908Z",
+    "expiresAt": "2026-09-22T21:30:20.908Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "Production Readiness Gate V1",
+    "evidenceId": "production-readiness-gate-v1",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T15:13:07.329Z",
+    "expiresAt": "2026-09-22T15:13:07.329Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "Cloud Execution Path V1",
+    "evidenceId": "cloud-execution-path-v1",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T15:51:39.490Z",
+    "expiresAt": "2026-09-22T15:51:39.490Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "World2 Real Instantiation V1",
+    "evidenceId": "world2-real-instantiation-v1",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T20:37:43.408Z",
+    "expiresAt": "2026-09-22T20:37:43.408Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "Mobile Runtime Validation at Scale V1",
+    "evidenceId": "mobile-runtime-validation-at-scale-v1",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T20:51:26.557Z",
+    "expiresAt": "2026-09-22T20:51:26.557Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "Large-Scale Pipeline Integration V1",
+    "evidenceId": "large-scale-pipeline-integration-v1",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T21:29:04.885Z",
+    "expiresAt": "2026-09-22T21:29:04.885Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "Multi-Project Concurrent Execution V1",
+    "evidenceId": "multi-project-concurrent-execution-v1",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T21:51:59.403Z",
+    "expiresAt": "2026-09-22T21:51:59.403Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "Self-Evolution Execution V1",
+    "evidenceId": "self-evolution-execution-v1",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T21:06:13.977Z",
+    "expiresAt": "2026-09-22T21:06:13.977Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "Unified Failure Escalation Authority V1",
+    "evidenceId": "unified-failure-escalation-authority-v1",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T22:26:13.168Z",
+    "expiresAt": "2026-09-22T22:26:13.168Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "Canonical Ownership V2 Registration",
+    "evidenceId": "canonical-ownership-v2",
+    "currentStatus": "FRESH",
+    "lastValidatedAt": "2026-06-24T22:25:44.016Z",
+    "expiresAt": "2026-09-22T22:25:44.016Z",
+    "priority": "LOW",
+    "recommendedAction": "No Action",
+    "revalidationResult": "SKIPPED"
+  },
+  {
+    "readOnly": true,
+    "capabilityId": "Validation Runtime Governance V1",
+    "evidenceId": "validation-runtime-governance-v1",
+    "currentStatus": "REFRESHED",
+    "lastValidatedAt": "2026-06-24T23:03:55.307Z",
+    "expiresAt": "2026-09-22T23:03:55.307Z",
+    "priority": "HIGH",
+    "recommendedAction": "TARGETED Validation",
+    "revalidationResult": "SUCCESS"
+  }
+]

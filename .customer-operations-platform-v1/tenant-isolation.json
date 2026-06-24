@@ -1,0 +1,13 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T23:04:23.027Z",
+  "isolationViolations": 0,
+  "isolationProven": true,
+  "violations": [],
+  "checksPerformed": [
+    "cross_tenant_project_access",
+    "cross_tenant_artifact_access",
+    "cross_tenant_execution_access",
+    "cross_tenant_proof_access"
+  ]
+}

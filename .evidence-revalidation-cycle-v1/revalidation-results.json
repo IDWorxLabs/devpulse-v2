@@ -1,0 +1,48 @@
+[
+  {
+    "readOnly": true,
+    "evidenceId": "cqi-maturity-v1",
+    "capabilityId": "CQI Maturity V1",
+    "priorStatus": "EXPIRED",
+    "resultStatus": "REFRESHED",
+    "validatorsRun": [],
+    "refreshedAt": "2026-06-24T23:03:55.307Z",
+    "proofRefreshed": true,
+    "fullRerunAvoided": true
+  },
+  {
+    "readOnly": true,
+    "evidenceId": "uvl-verification-execution-v1",
+    "capabilityId": "UVL Verification Execution V1",
+    "priorStatus": "EXPIRED",
+    "resultStatus": "REFRESHED",
+    "validatorsRun": [],
+    "refreshedAt": "2026-06-24T23:03:55.307Z",
+    "proofRefreshed": true,
+    "fullRerunAvoided": true
+  },
+  {
+    "readOnly": true,
+    "evidenceId": "real-build-execution-v1-1",
+    "capabilityId": "Real Build Execution Pipeline V1.1",
+    "priorStatus": "EXPIRED",
+    "resultStatus": "REFRESHED",
+    "validatorsRun": [],
+    "refreshedAt": "2026-06-24T23:03:55.307Z",
+    "proofRefreshed": true,
+    "fullRerunAvoided": true
+  },
+  {
+    "readOnly": true,
+    "evidenceId": "validation-runtime-governance-v1",
+    "capabilityId": "Validation Runtime Governance V1",
+    "priorStatus": "EXPIRED",
+    "resultStatus": "REFRESHED",
+    "validatorsRun": [
+      "validate:validation-runtime-governance-v1"
+    ],
+    "refreshedAt": "2026-06-24T23:03:55.307Z",
+    "proofRefreshed": true,
+    "fullRerunAvoided": true
+  }
+]

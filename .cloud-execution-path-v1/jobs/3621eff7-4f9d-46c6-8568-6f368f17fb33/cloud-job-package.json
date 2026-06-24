@@ -1,0 +1,56 @@
+{
+  "readOnly": true,
+  "contractVersion": "V1",
+  "jobId": "3621eff7-4f9d-46c6-8568-6f368f17fb33",
+  "projectId": "world2-appointment_booking_web_v1",
+  "executionMode": "CLOUD_SIMULATED",
+  "jobMetadata": {
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "productName": "Booking Platform",
+    "requestedAt": "2026-06-24T21:41:41.202Z",
+    "workerId": null
+  },
+  "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+  "requirementsSnapshot": {
+    "readOnly": true,
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "productName": "Booking Platform",
+    "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+    "requirementConfidence": 36
+  },
+  "buildPlan": {
+    "readOnly": true,
+    "contractId": "build-ready-idea-13",
+    "planningSummary": "Contract build-ready-idea-13",
+    "codegenProfile": "CRM_WEB_V1"
+  },
+  "workspaceSpec": {
+    "readOnly": true,
+    "workspaceId": "w2-3621eff7-4f9d-46c6-8568-6f368f17fb33",
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-3621eff7-4f9d-46c6-8568-6f368f17fb33",
+    "isolationToken": "3621eff7-4f9d-46c6-8568-6f368f17fb33",
+    "boundedLogsMaxLines": 500,
+    "boundedArtifactsMaxBytes": 5000000,
+    "runtimeTimeoutMs": 300000
+  },
+  "expectedArtifactOutputs": [
+    "generated-source-manifest.json",
+    "build-logs.txt",
+    "preview-proof.json",
+    "uvl-verification-proof.json",
+    "product-architect-proof.json",
+    "afla-verdict.json",
+    "production-readiness-result.json",
+    "execution-summary.json",
+    "cloud-job-package.json"
+  ],
+  "validationRequirements": [
+    "Build proof required",
+    "Preview proof required",
+    "UVL verification proof required",
+    "AFLA verdict required",
+    "Production readiness gate required",
+    "Unique isolated workspace required"
+  ],
+  "generatedAt": "2026-06-24T21:41:50.904Z"
+}

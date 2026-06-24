@@ -1,0 +1,289 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "Customer Operations Platform V1",
+  "passToken": "CUSTOMER_OPERATIONS_PLATFORM_V1_PASS",
+  "version": "V1",
+  "generatedAt": "2026-06-24T23:04:23.026Z",
+  "customersRegistered": 3,
+  "tenantsActive": 3,
+  "projectsRegistered": 5,
+  "onboardingProven": true,
+  "tenantIsolationProven": true,
+  "projectOwnershipProven": true,
+  "usageTrackingProven": true,
+  "subscriptionReadinessProven": true,
+  "executionTaggingProven": true,
+  "platformProofStatus": "PROVEN",
+  "customerRegistry": [
+    {
+      "readOnly": true,
+      "customerId": "cust-acme-corp",
+      "organizationName": "Acme Corp",
+      "ownerUserId": "user-acme-owner",
+      "email": "ops@acme-corp.example",
+      "status": "ACTIVE",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "lastActiveAt": "2026-06-24T23:04:23.026Z",
+      "planType": "PRO",
+      "tenantId": "tenant-acme-corp"
+    },
+    {
+      "readOnly": true,
+      "customerId": "cust-nova-labs",
+      "organizationName": "Nova Labs",
+      "ownerUserId": "user-nova-owner",
+      "email": "platform@nova-labs.example",
+      "status": "ACTIVE",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "lastActiveAt": "2026-06-24T23:04:23.026Z",
+      "planType": "BUSINESS",
+      "tenantId": "tenant-nova-labs"
+    },
+    {
+      "readOnly": true,
+      "customerId": "cust-starter-studio",
+      "organizationName": "Starter Studio",
+      "ownerUserId": "user-starter-owner",
+      "email": "hello@starter-studio.example",
+      "status": "TRIAL",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "lastActiveAt": "2026-06-24T23:04:23.026Z",
+      "planType": "FREE",
+      "tenantId": "tenant-starter-studio"
+    }
+  ],
+  "tenantRegistry": [
+    {
+      "readOnly": true,
+      "tenantId": "tenant-acme-corp",
+      "customerId": "cust-acme-corp",
+      "organizationName": "Acme Corp",
+      "status": "ACTIVE",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "isolationBoundary": "isolated-workspace://tenant-acme-corp"
+    },
+    {
+      "readOnly": true,
+      "tenantId": "tenant-nova-labs",
+      "customerId": "cust-nova-labs",
+      "organizationName": "Nova Labs",
+      "status": "ACTIVE",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "isolationBoundary": "isolated-workspace://tenant-nova-labs"
+    },
+    {
+      "readOnly": true,
+      "tenantId": "tenant-starter-studio",
+      "customerId": "cust-starter-studio",
+      "organizationName": "Starter Studio",
+      "status": "ACTIVE",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "isolationBoundary": "isolated-workspace://tenant-starter-studio"
+    }
+  ],
+  "projectOwnership": [
+    {
+      "readOnly": true,
+      "projectId": "proj-acme-task-tracker",
+      "customerId": "cust-acme-corp",
+      "tenantId": "tenant-acme-corp",
+      "projectName": "Task Tracker",
+      "profile": "TASK_TRACKER_WEB_V1",
+      "buildHistoryCount": 3,
+      "launchHistoryCount": 2,
+      "productionHistoryCount": 1,
+      "world2HistoryCount": 2,
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "projectId": "proj-acme-crm",
+      "customerId": "cust-acme-corp",
+      "tenantId": "tenant-acme-corp",
+      "projectName": "CRM Suite",
+      "profile": "CRM_WEB_V1",
+      "buildHistoryCount": 3,
+      "launchHistoryCount": 2,
+      "productionHistoryCount": 1,
+      "world2HistoryCount": 2,
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "projectId": "proj-nova-marketplace",
+      "customerId": "cust-nova-labs",
+      "tenantId": "tenant-nova-labs",
+      "projectName": "Marketplace",
+      "profile": "MARKETPLACE_WEB_V1",
+      "buildHistoryCount": 3,
+      "launchHistoryCount": 2,
+      "productionHistoryCount": 1,
+      "world2HistoryCount": 2,
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "projectId": "proj-nova-pm",
+      "customerId": "cust-nova-labs",
+      "tenantId": "tenant-nova-labs",
+      "projectName": "Project Management",
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "buildHistoryCount": 3,
+      "launchHistoryCount": 2,
+      "productionHistoryCount": 1,
+      "world2HistoryCount": 2,
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "projectId": "proj-starter-booking",
+      "customerId": "cust-starter-studio",
+      "tenantId": "tenant-starter-studio",
+      "projectName": "Booking Platform",
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "buildHistoryCount": 3,
+      "launchHistoryCount": 2,
+      "productionHistoryCount": 1,
+      "world2HistoryCount": 2,
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    }
+  ],
+  "usageTracking": [
+    {
+      "readOnly": true,
+      "customerId": "cust-acme-corp",
+      "tenantId": "tenant-acme-corp",
+      "projectsCreated": 2,
+      "buildsExecuted": 24,
+      "verificationsExecuted": 20,
+      "world2Executions": 8,
+      "concurrentExecutions": 2,
+      "productionDeployments": 2
+    },
+    {
+      "readOnly": true,
+      "customerId": "cust-nova-labs",
+      "tenantId": "tenant-nova-labs",
+      "projectsCreated": 2,
+      "buildsExecuted": 40,
+      "verificationsExecuted": 36,
+      "world2Executions": 12,
+      "concurrentExecutions": 4,
+      "productionDeployments": 4
+    },
+    {
+      "readOnly": true,
+      "customerId": "cust-starter-studio",
+      "tenantId": "tenant-starter-studio",
+      "projectsCreated": 1,
+      "buildsExecuted": 8,
+      "verificationsExecuted": 6,
+      "world2Executions": 2,
+      "concurrentExecutions": 1,
+      "productionDeployments": 0
+    }
+  ],
+  "onboardingMetrics": {
+    "readOnly": true,
+    "signupCount": 3,
+    "verificationComplete": 3,
+    "tenantCreated": 3,
+    "workspaceProvisioned": 3,
+    "firstProjectCreated": 3,
+    "activated": 3,
+    "completionPercent": 100,
+    "activationRate": 100,
+    "averageTimeToFirstProjectHours": 6
+  },
+  "subscriptionPlans": [
+    {
+      "readOnly": true,
+      "planType": "FREE",
+      "monthlyProjectLimit": 2,
+      "monthlyBuildLimit": 20,
+      "concurrentExecutionLimit": 1,
+      "world2ExecutionLimit": 2,
+      "upgradePath": "PRO"
+    },
+    {
+      "readOnly": true,
+      "planType": "PRO",
+      "monthlyProjectLimit": 10,
+      "monthlyBuildLimit": 200,
+      "concurrentExecutionLimit": 3,
+      "world2ExecutionLimit": 10,
+      "upgradePath": "BUSINESS"
+    },
+    {
+      "readOnly": true,
+      "planType": "BUSINESS",
+      "monthlyProjectLimit": 50,
+      "monthlyBuildLimit": 1000,
+      "concurrentExecutionLimit": 10,
+      "world2ExecutionLimit": 50,
+      "upgradePath": "ENTERPRISE"
+    },
+    {
+      "readOnly": true,
+      "planType": "ENTERPRISE",
+      "monthlyProjectLimit": 999,
+      "monthlyBuildLimit": 9999,
+      "concurrentExecutionLimit": 50,
+      "world2ExecutionLimit": 999,
+      "upgradePath": null
+    }
+  ],
+  "tenantIsolation": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T23:04:23.027Z",
+    "isolationViolations": 0,
+    "isolationProven": true,
+    "violations": [],
+    "checksPerformed": [
+      "cross_tenant_project_access",
+      "cross_tenant_artifact_access",
+      "cross_tenant_execution_access",
+      "cross_tenant_proof_access"
+    ]
+  },
+  "supportRegistry": [
+    {
+      "readOnly": true,
+      "incidentId": "support-acme-onboarding",
+      "customerId": "cust-acme-corp",
+      "tenantId": "tenant-acme-corp",
+      "category": "support_request",
+      "status": "RESOLVED",
+      "detail": "Acme Corp onboarding assistance — workspace provisioning verified",
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "support-nova-quota",
+      "customerId": "cust-nova-labs",
+      "tenantId": "tenant-nova-labs",
+      "category": "customer_incident",
+      "status": "IN_PROGRESS",
+      "detail": "Nova Labs quota review — BUSINESS plan concurrent execution limit advisory",
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "support-platform-health",
+      "customerId": "cust-starter-studio",
+      "tenantId": "tenant-starter-studio",
+      "category": "platform_issue",
+      "status": "OPEN",
+      "detail": "Starter Studio trial activation — first project guidance",
+      "createdAt": "2026-06-24T23:04:23.026Z"
+    }
+  ],
+  "commercializationImpact": {
+    "readOnly": true,
+    "priorCommercializationScore": 68,
+    "projectedCommercializationScore": 100,
+    "customerOnboardingDimensionScore": 88,
+    "customerOperationsGapClosed": true
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T23:04:37.044Z",
+  "byRootCause": {
+    "Missing ownership": 1,
+    "Capability gap": 3,
+    "Evidence defect": 3,
+    "Implementation defect": 2,
+    "Missing validation": 8,
+    "Regression": 1
+  },
+  "byClassification": {
+    "Requirement Failure": 3,
+    "Evolution Failure": 1,
+    "Planning Failure": 1,
+    "Verification Failure": 3,
+    "Build Failure": 3,
+    "Production Failure": 4,
+    "Architecture Failure": 1,
+    "Launch Failure": 1,
+    "Product Failure": 1
+  }
+}

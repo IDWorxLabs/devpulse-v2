@@ -1,0 +1,794 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "Operational Evidence Freshness Authority V1",
+  "passToken": "OPERATIONAL_EVIDENCE_FRESHNESS_AUTHORITY_V1_PASS",
+  "version": "V1",
+  "generatedAt": "2026-06-24T23:04:13.412Z",
+  "evidenceSourcesConsumed": 16,
+  "capabilitiesAssessed": 16,
+  "overallFreshnessScore": 94,
+  "freshnessScoringProven": true,
+  "confidenceDecayProven": true,
+  "revalidationRecommendationsProven": true,
+  "evidenceDriftProven": true,
+  "staleEscalationProven": true,
+  "freshnessProofStatus": "PROVEN",
+  "registry": {
+    "readOnly": true,
+    "totalRecords": 16,
+    "freshCount": 12,
+    "agingCount": 0,
+    "staleCount": 0,
+    "expiredCount": 4,
+    "overallFreshnessScore": 94,
+    "records": [
+      {
+        "readOnly": true,
+        "evidenceId": "capability-audit-v3-1",
+        "sourceCapability": "Capability Audit V3.1",
+        "sourceSystem": "Capability Audit V3.1",
+        "createdAt": "2026-06-24T22:36:21.509Z",
+        "lastValidatedAt": "2026-06-24T22:36:21.509Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "passToken": "AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.capability-audit-v3-1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "cqi-maturity-v1",
+        "sourceCapability": "CQI Maturity V1",
+        "sourceSystem": "CQI Maturity",
+        "createdAt": "1970-01-01T00:00:00.000Z",
+        "lastValidatedAt": "1970-01-01T00:00:00.000Z",
+        "ageDays": 91,
+        "freshnessScore": 69,
+        "confidenceDecay": 50,
+        "status": "EXPIRED",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.cqi-maturity-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "uvl-verification-execution-v1",
+        "sourceCapability": "UVL Verification Execution V1",
+        "sourceSystem": "UVL Verification Execution",
+        "createdAt": "1970-01-01T00:00:00.000Z",
+        "lastValidatedAt": "1970-01-01T00:00:00.000Z",
+        "ageDays": 91,
+        "freshnessScore": 81,
+        "confidenceDecay": 50,
+        "status": "EXPIRED",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.uvl-verification-execution-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "real-build-execution-v1-1",
+        "sourceCapability": "Real Build Execution Pipeline V1.1",
+        "sourceSystem": "Real Build Execution",
+        "createdAt": "1970-01-01T00:00:00.000Z",
+        "lastValidatedAt": "1970-01-01T00:00:00.000Z",
+        "ageDays": 91,
+        "freshnessScore": 81,
+        "confidenceDecay": 50,
+        "status": "EXPIRED",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.real-build-execution-pipeline-v1-1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "afla-trust-calibration-v1",
+        "sourceCapability": "AFLA Trust Calibration V1",
+        "sourceSystem": "AFLA Trust Calibration",
+        "createdAt": "2026-06-24T21:30:26.165Z",
+        "lastValidatedAt": "2026-06-24T21:30:26.165Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.afla-trust-calibration-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "product-architect-intelligence-v1",
+        "sourceCapability": "Product Architect Intelligence V1",
+        "sourceSystem": "Product Architect Intelligence",
+        "createdAt": "2026-06-24T21:30:20.908Z",
+        "lastValidatedAt": "2026-06-24T21:30:20.908Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.product-architect-intelligence-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "production-readiness-gate-v1",
+        "sourceCapability": "Production Readiness Gate V1",
+        "sourceSystem": "Production Readiness",
+        "createdAt": "2026-06-24T15:13:07.329Z",
+        "lastValidatedAt": "2026-06-24T15:13:07.329Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "passToken": "PRODUCTION_READINESS_GATE_V1_PASS",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.production-readiness-gate-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "cloud-execution-path-v1",
+        "sourceCapability": "Cloud Execution Path V1",
+        "sourceSystem": "Cloud Execution",
+        "createdAt": "2026-06-24T15:51:39.490Z",
+        "lastValidatedAt": "2026-06-24T15:51:39.490Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "passToken": "CLOUD_EXECUTION_PATH_V1_PASS",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.cloud-execution-path-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "world2-real-instantiation-v1",
+        "sourceCapability": "World2 Real Instantiation V1",
+        "sourceSystem": "World2",
+        "createdAt": "2026-06-24T20:37:43.408Z",
+        "lastValidatedAt": "2026-06-24T20:37:43.408Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "passToken": "WORLD2_REAL_INSTANTIATION_V1_PASS",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.world2-real-instantiation-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "mobile-runtime-validation-at-scale-v1",
+        "sourceCapability": "Mobile Runtime Validation at Scale V1",
+        "sourceSystem": "Mobile Runtime Validation",
+        "createdAt": "2026-06-24T20:51:26.557Z",
+        "lastValidatedAt": "2026-06-24T20:51:26.557Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "passToken": "MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_PASS",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.mobile-runtime-validation-at-scale-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "large-scale-pipeline-integration-v1",
+        "sourceCapability": "Large-Scale Pipeline Integration V1",
+        "sourceSystem": "Large-Scale Validation",
+        "createdAt": "2026-06-24T21:29:04.885Z",
+        "lastValidatedAt": "2026-06-24T21:29:04.885Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "passToken": "LARGE_SCALE_PIPELINE_INTEGRATION_V1_PASS",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.large-scale-pipeline-integration-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "multi-project-concurrent-execution-v1",
+        "sourceCapability": "Multi-Project Concurrent Execution V1",
+        "sourceSystem": "Concurrent Execution",
+        "createdAt": "2026-06-24T21:51:59.403Z",
+        "lastValidatedAt": "2026-06-24T21:51:59.403Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "passToken": "MULTI_PROJECT_CONCURRENT_EXECUTION_V1_PASS",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.multi-project-concurrent-execution-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "self-evolution-execution-v1",
+        "sourceCapability": "Self-Evolution Execution V1",
+        "sourceSystem": "Self-Evolution",
+        "createdAt": "2026-06-24T21:06:13.977Z",
+        "lastValidatedAt": "2026-06-24T21:06:13.977Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "passToken": "SELF_EVOLUTION_EXECUTION_V1_PASS",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.self-evolution-execution-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "unified-failure-escalation-authority-v1",
+        "sourceCapability": "Unified Failure Escalation Authority V1",
+        "sourceSystem": "Unified Failure Escalation",
+        "createdAt": "2026-06-24T22:36:15.128Z",
+        "lastValidatedAt": "2026-06-24T22:36:15.128Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "passToken": "UNIFIED_FAILURE_ESCALATION_AUTHORITY_V1_PASS",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.unified-failure-escalation-authority-v1\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "canonical-ownership-v2",
+        "sourceCapability": "Canonical Ownership V2 Registration",
+        "sourceSystem": "Canonical Ownership V2",
+        "createdAt": "2026-06-24T22:36:18.213Z",
+        "lastValidatedAt": "2026-06-24T22:36:18.213Z",
+        "ageDays": 0,
+        "freshnessScore": 100,
+        "confidenceDecay": 100,
+        "status": "FRESH",
+        "passToken": "CANONICAL_OWNERSHIP_V2_PASS",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.canonical-ownership-v2\\assessment.json"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "validation-runtime-governance-v1",
+        "sourceCapability": "Validation Runtime Governance V1",
+        "sourceSystem": "Validation Runtime Governance",
+        "createdAt": "1970-01-01T00:00:00.000Z",
+        "lastValidatedAt": "1970-01-01T00:00:00.000Z",
+        "ageDays": 91,
+        "freshnessScore": 78,
+        "confidenceDecay": 50,
+        "status": "EXPIRED",
+        "artifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.validation-runtime-governance-v1\\assessment.json"
+      }
+    ]
+  },
+  "capabilityFreshness": [
+    {
+      "readOnly": true,
+      "capability": "Capability Audit V3.1",
+      "sourceSystem": "Capability Audit V3.1",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T22:36:21.509Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "CQI Maturity V1",
+      "sourceSystem": "CQI Maturity",
+      "proofAgeDays": 91,
+      "lastValidation": "1970-01-01T00:00:00.000Z",
+      "freshnessScore": 69,
+      "confidenceAdjustment": 50,
+      "status": "EXPIRED",
+      "recommendedAction": "FULL Validation"
+    },
+    {
+      "readOnly": true,
+      "capability": "UVL Verification Execution V1",
+      "sourceSystem": "UVL Verification Execution",
+      "proofAgeDays": 91,
+      "lastValidation": "1970-01-01T00:00:00.000Z",
+      "freshnessScore": 81,
+      "confidenceAdjustment": 50,
+      "status": "EXPIRED",
+      "recommendedAction": "FULL Validation"
+    },
+    {
+      "readOnly": true,
+      "capability": "Real Build Execution Pipeline V1.1",
+      "sourceSystem": "Real Build Execution",
+      "proofAgeDays": 91,
+      "lastValidation": "1970-01-01T00:00:00.000Z",
+      "freshnessScore": 81,
+      "confidenceAdjustment": 50,
+      "status": "EXPIRED",
+      "recommendedAction": "FULL Validation"
+    },
+    {
+      "readOnly": true,
+      "capability": "AFLA Trust Calibration V1",
+      "sourceSystem": "AFLA Trust Calibration",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T21:30:26.165Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Product Architect Intelligence V1",
+      "sourceSystem": "Product Architect Intelligence",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T21:30:20.908Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Production Readiness Gate V1",
+      "sourceSystem": "Production Readiness",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T15:13:07.329Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Cloud Execution Path V1",
+      "sourceSystem": "Cloud Execution",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T15:51:39.490Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "World2 Real Instantiation V1",
+      "sourceSystem": "World2",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T20:37:43.408Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Mobile Runtime Validation at Scale V1",
+      "sourceSystem": "Mobile Runtime Validation",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T20:51:26.557Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Large-Scale Pipeline Integration V1",
+      "sourceSystem": "Large-Scale Validation",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T21:29:04.885Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Multi-Project Concurrent Execution V1",
+      "sourceSystem": "Concurrent Execution",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T21:51:59.403Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Self-Evolution Execution V1",
+      "sourceSystem": "Self-Evolution",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T21:06:13.977Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Unified Failure Escalation Authority V1",
+      "sourceSystem": "Unified Failure Escalation",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T22:36:15.128Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Canonical Ownership V2 Registration",
+      "sourceSystem": "Canonical Ownership V2",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T22:36:18.213Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Validation Runtime Governance V1",
+      "sourceSystem": "Validation Runtime Governance",
+      "proofAgeDays": 91,
+      "lastValidation": "1970-01-01T00:00:00.000Z",
+      "freshnessScore": 78,
+      "confidenceAdjustment": 50,
+      "status": "EXPIRED",
+      "recommendedAction": "FULL Validation"
+    }
+  ],
+  "confidenceDecay": {
+    "readOnly": true,
+    "configurable": true,
+    "thresholds": {
+      "agingDays": 14,
+      "staleDays": 45,
+      "expiredDays": 90
+    },
+    "decayByStatus": {
+      "FRESH": 100,
+      "AGING": 90,
+      "STALE": 75,
+      "EXPIRED": 50
+    }
+  },
+  "revalidationRecommendations": [
+    {
+      "readOnly": true,
+      "capability": "Capability Audit V3.1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "CQI Maturity V1",
+      "action": "FULL Validation",
+      "tier": "FULL",
+      "rationale": "EXPIRED evidence — Validation Runtime Governance recommends FULL tier (Affected capability validation for 1 changed file(s) at tier FULL).",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "UVL Verification Execution V1",
+      "action": "FULL Validation",
+      "tier": "FULL",
+      "rationale": "EXPIRED evidence — Validation Runtime Governance recommends FULL tier (Affected capability validation for 1 changed file(s) at tier FULL).",
+      "validatorsToRun": [
+        "validate:uvl-verification-execution-v1"
+      ],
+      "estimatedRuntimeSeconds": 6,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Real Build Execution Pipeline V1.1",
+      "action": "FULL Validation",
+      "tier": "FULL",
+      "rationale": "EXPIRED evidence — Validation Runtime Governance recommends FULL tier (Affected capability validation for 1 changed file(s) at tier FULL).",
+      "validatorsToRun": [
+        "validate:real-build-execution-pipeline-v1-1"
+      ],
+      "estimatedRuntimeSeconds": 65,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "AFLA Trust Calibration V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Product Architect Intelligence V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Production Readiness Gate V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Cloud Execution Path V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "World2 Real Instantiation V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Mobile Runtime Validation at Scale V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Large-Scale Pipeline Integration V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Multi-Project Concurrent Execution V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Self-Evolution Execution V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Unified Failure Escalation Authority V1",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Canonical Ownership V2 Registration",
+      "action": "No Action",
+      "tier": "NONE",
+      "rationale": "Evidence is FRESH — no revalidation required.",
+      "validatorsToRun": [],
+      "estimatedRuntimeSeconds": 0,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Validation Runtime Governance V1",
+      "action": "FULL Validation",
+      "tier": "FULL",
+      "rationale": "EXPIRED evidence — Validation Runtime Governance recommends FULL tier (Affected capability validation for 1 changed file(s) at tier FULL).",
+      "validatorsToRun": [
+        "validate:validation-runtime-governance-v1"
+      ],
+      "estimatedRuntimeSeconds": 1328,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Launch Candidate Suite",
+      "action": "LAUNCH Validation",
+      "tier": "LAUNCH",
+      "rationale": "Governance planner — launch tier available for maximum confidence revalidation.",
+      "validatorsToRun": [
+        "validate:afla-trust-calibration-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:capability-audit-v1",
+        "validate:capability-audit-v2",
+        "validate:capability-audit-v3"
+      ],
+      "estimatedRuntimeSeconds": 1010,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Proof Harness — Aging Evidence",
+      "action": "FAST Validation",
+      "tier": "FAST",
+      "rationale": "Proof harness — AGING evidence revalidation via Validation Runtime Governance.",
+      "validatorsToRun": [
+        "validate:launch-readiness-artifact-completion-boundary-repair"
+      ],
+      "estimatedRuntimeSeconds": 3,
+      "governancePlannerUsed": true
+    },
+    {
+      "readOnly": true,
+      "capability": "Proof Harness — Stale Evidence",
+      "action": "STANDARD Validation",
+      "tier": "STANDARD",
+      "rationale": "Proof harness — STALE evidence revalidation via Validation Runtime Governance.",
+      "validatorsToRun": [
+        "validate:action-visibility-engine",
+        "validate:auto-fix-runtime-foundation",
+        "validate:autonomous-build-execution-proof"
+      ],
+      "estimatedRuntimeSeconds": 4755,
+      "governancePlannerUsed": true
+    }
+  ],
+  "evidenceDrift": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T23:04:12.181Z",
+    "driftDetected": true,
+    "entries": [
+      {
+        "readOnly": true,
+        "evidenceId": "cqi-maturity-v1",
+        "sourceCapability": "CQI Maturity V1",
+        "driftType": "missing_revalidation",
+        "detail": "No assessment artifact at C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.cqi-maturity-v1\\assessment.json — proof requires revalidation",
+        "severity": "HIGH"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "uvl-verification-execution-v1",
+        "sourceCapability": "UVL Verification Execution V1",
+        "driftType": "missing_revalidation",
+        "detail": "No assessment artifact at C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.uvl-verification-execution-v1\\assessment.json — proof requires revalidation",
+        "severity": "HIGH"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "real-build-execution-v1-1",
+        "sourceCapability": "Real Build Execution Pipeline V1.1",
+        "driftType": "missing_revalidation",
+        "detail": "No assessment artifact at C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.real-build-execution-pipeline-v1-1\\assessment.json — proof requires revalidation",
+        "severity": "HIGH"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "validation-runtime-governance-v1",
+        "sourceCapability": "Validation Runtime Governance V1",
+        "driftType": "missing_revalidation",
+        "detail": "No assessment artifact at C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.validation-runtime-governance-v1\\assessment.json — proof requires revalidation",
+        "severity": "HIGH"
+      },
+      {
+        "readOnly": true,
+        "evidenceId": "capability-audit-v3-1",
+        "sourceCapability": "Capability Audit V3.1",
+        "driftType": "outdated_artifact_reference",
+        "detail": "Audit references 4 capability artifact(s) missing or outdated on disk",
+        "severity": "LOW"
+      }
+    ]
+  },
+  "freshnessIncidents": [
+    {
+      "readOnly": true,
+      "incidentId": "freshness-cqi-maturity-v1",
+      "evidenceId": "cqi-maturity-v1",
+      "sourceCapability": "CQI Maturity V1",
+      "severity": "HIGH",
+      "status": "EXPIRED",
+      "detail": "CQI Maturity V1 evidence is EXPIRED (91 days, score 69) — Unified Failure Escalation decides escalation path",
+      "unifiedFailureEscalationEligible": true
+    },
+    {
+      "readOnly": true,
+      "incidentId": "freshness-uvl-verification-execution-v1",
+      "evidenceId": "uvl-verification-execution-v1",
+      "sourceCapability": "UVL Verification Execution V1",
+      "severity": "HIGH",
+      "status": "EXPIRED",
+      "detail": "UVL Verification Execution V1 evidence is EXPIRED (91 days, score 81) — Unified Failure Escalation decides escalation path",
+      "unifiedFailureEscalationEligible": true
+    },
+    {
+      "readOnly": true,
+      "incidentId": "freshness-real-build-execution-v1-1",
+      "evidenceId": "real-build-execution-v1-1",
+      "sourceCapability": "Real Build Execution Pipeline V1.1",
+      "severity": "HIGH",
+      "status": "EXPIRED",
+      "detail": "Real Build Execution Pipeline V1.1 evidence is EXPIRED (91 days, score 81) — Unified Failure Escalation decides escalation path",
+      "unifiedFailureEscalationEligible": true
+    },
+    {
+      "readOnly": true,
+      "incidentId": "freshness-validation-runtime-governance-v1",
+      "evidenceId": "validation-runtime-governance-v1",
+      "sourceCapability": "Validation Runtime Governance V1",
+      "severity": "HIGH",
+      "status": "EXPIRED",
+      "detail": "Validation Runtime Governance V1 evidence is EXPIRED (91 days, score 78) — Unified Failure Escalation decides escalation path",
+      "unifiedFailureEscalationEligible": true
+    }
+  ],
+  "criticalProofMonitoring": [
+    {
+      "monitor": "Build Proof",
+      "status": "EXPIRED",
+      "freshnessScore": 81,
+      "lastValidatedAt": "1970-01-01T00:00:00.000Z"
+    },
+    {
+      "monitor": "Verification Proof",
+      "status": "EXPIRED",
+      "freshnessScore": 81,
+      "lastValidatedAt": "1970-01-01T00:00:00.000Z"
+    },
+    {
+      "monitor": "Production Proof",
+      "status": "FRESH",
+      "freshnessScore": 100,
+      "lastValidatedAt": "2026-06-24T15:13:07.329Z"
+    },
+    {
+      "monitor": "Mobile Proof",
+      "status": "FRESH",
+      "freshnessScore": 100,
+      "lastValidatedAt": "2026-06-24T20:51:26.557Z"
+    },
+    {
+      "monitor": "Cloud Proof",
+      "status": "FRESH",
+      "freshnessScore": 100,
+      "lastValidatedAt": "2026-06-24T15:51:39.490Z"
+    },
+    {
+      "monitor": "World2 Proof",
+      "status": "FRESH",
+      "freshnessScore": 100,
+      "lastValidatedAt": "2026-06-24T20:37:43.408Z"
+    },
+    {
+      "monitor": "Concurrent Proof",
+      "status": "FRESH",
+      "freshnessScore": 100,
+      "lastValidatedAt": "2026-06-24T21:51:59.403Z"
+    },
+    {
+      "monitor": "Self-Evolution Proof",
+      "status": "FRESH",
+      "freshnessScore": 100,
+      "lastValidatedAt": "2026-06-24T21:06:13.977Z"
+    }
+  ],
+  "auditImpact": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T23:04:13.412Z",
+    "operationalEvidenceFreshnessGapClosed": true,
+    "auditShouldReport": "Operational Evidence Freshness Authority — COMPLETE"
+  }
+}

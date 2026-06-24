@@ -1,0 +1,181 @@
+{
+  "generatedAt": "2026-06-24T23:04:13.412Z",
+  "capabilities": [
+    {
+      "readOnly": true,
+      "capability": "Capability Audit V3.1",
+      "sourceSystem": "Capability Audit V3.1",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T22:36:21.509Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "CQI Maturity V1",
+      "sourceSystem": "CQI Maturity",
+      "proofAgeDays": 91,
+      "lastValidation": "1970-01-01T00:00:00.000Z",
+      "freshnessScore": 69,
+      "confidenceAdjustment": 50,
+      "status": "EXPIRED",
+      "recommendedAction": "FULL Validation"
+    },
+    {
+      "readOnly": true,
+      "capability": "UVL Verification Execution V1",
+      "sourceSystem": "UVL Verification Execution",
+      "proofAgeDays": 91,
+      "lastValidation": "1970-01-01T00:00:00.000Z",
+      "freshnessScore": 81,
+      "confidenceAdjustment": 50,
+      "status": "EXPIRED",
+      "recommendedAction": "FULL Validation"
+    },
+    {
+      "readOnly": true,
+      "capability": "Real Build Execution Pipeline V1.1",
+      "sourceSystem": "Real Build Execution",
+      "proofAgeDays": 91,
+      "lastValidation": "1970-01-01T00:00:00.000Z",
+      "freshnessScore": 81,
+      "confidenceAdjustment": 50,
+      "status": "EXPIRED",
+      "recommendedAction": "FULL Validation"
+    },
+    {
+      "readOnly": true,
+      "capability": "AFLA Trust Calibration V1",
+      "sourceSystem": "AFLA Trust Calibration",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T21:30:26.165Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Product Architect Intelligence V1",
+      "sourceSystem": "Product Architect Intelligence",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T21:30:20.908Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Production Readiness Gate V1",
+      "sourceSystem": "Production Readiness",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T15:13:07.329Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Cloud Execution Path V1",
+      "sourceSystem": "Cloud Execution",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T15:51:39.490Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "World2 Real Instantiation V1",
+      "sourceSystem": "World2",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T20:37:43.408Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Mobile Runtime Validation at Scale V1",
+      "sourceSystem": "Mobile Runtime Validation",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T20:51:26.557Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Large-Scale Pipeline Integration V1",
+      "sourceSystem": "Large-Scale Validation",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T21:29:04.885Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Multi-Project Concurrent Execution V1",
+      "sourceSystem": "Concurrent Execution",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T21:51:59.403Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Self-Evolution Execution V1",
+      "sourceSystem": "Self-Evolution",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T21:06:13.977Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Unified Failure Escalation Authority V1",
+      "sourceSystem": "Unified Failure Escalation",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T22:36:15.128Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Canonical Ownership V2 Registration",
+      "sourceSystem": "Canonical Ownership V2",
+      "proofAgeDays": 0,
+      "lastValidation": "2026-06-24T22:36:18.213Z",
+      "freshnessScore": 100,
+      "confidenceAdjustment": 100,
+      "status": "FRESH",
+      "recommendedAction": "No Action"
+    },
+    {
+      "readOnly": true,
+      "capability": "Validation Runtime Governance V1",
+      "sourceSystem": "Validation Runtime Governance",
+      "proofAgeDays": 91,
+      "lastValidation": "1970-01-01T00:00:00.000Z",
+      "freshnessScore": 78,
+      "confidenceAdjustment": 50,
+      "status": "EXPIRED",
+      "recommendedAction": "FULL Validation"
+    }
+  ]
+}

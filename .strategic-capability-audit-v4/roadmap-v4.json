@@ -1,0 +1,85 @@
+{
+  "generatedAt": "2026-06-24T23:04:47.029Z",
+  "priorities": [
+    {
+      "readOnly": true,
+      "rank": 1,
+      "phase": "Operational Excellence Maintenance",
+      "action": "MAINTAIN",
+      "rationale": "All registered strategic capabilities proven — maintain evidence freshness, escalation effectiveness, tenant isolation, and deployment health.",
+      "impact": "MEDIUM",
+      "dependencies": [
+        "Operational Evidence Freshness Authority V1",
+        "Unified Failure Escalation Authority V1",
+        "Continuous Deployment Pipeline V1"
+      ],
+      "evidenceBasis": "Operational Excellence Maintenance — all registered capabilities proven; maintain evidence freshness and deployment health"
+    },
+    {
+      "readOnly": true,
+      "rank": 2,
+      "phase": "General-Purpose Code Generation",
+      "action": "COMPLETE",
+      "rationale": "General-Purpose Code Generation V1 PASS: 10/10 non-trivial domains with workflow, role, domain logic, and production readiness proven.",
+      "impact": "HIGH",
+      "dependencies": [
+        "Real Build Execution Pipeline V1.1",
+        "UVL Verification Execution V1"
+      ],
+      "evidenceBasis": "GENERAL_PURPOSE_CODE_GENERATION_V1_PASS"
+    },
+    {
+      "readOnly": true,
+      "rank": 3,
+      "phase": "Continuous Deployment Pipeline",
+      "action": "COMPLETE",
+      "rationale": "Continuous Deployment Pipeline V1 PASS: deployment candidates, promotion governance, staging-before-production, deployment history, and rollback recommendations proven.",
+      "impact": "HIGH",
+      "dependencies": [
+        "Production Observability Platform V1",
+        "Cloud Execution Path V1"
+      ],
+      "evidenceBasis": "CONTINUOUS_DEPLOYMENT_PIPELINE_V1_PASS"
+    },
+    {
+      "readOnly": true,
+      "rank": 4,
+      "phase": "Production Observability Platform",
+      "action": "COMPLETE",
+      "rationale": "Production Observability Platform V1 PASS: application health, deployment tracking, availability monitoring, incident detection, and recovery recommendations proven.",
+      "impact": "HIGH",
+      "dependencies": [
+        "Customer Operations Platform V1",
+        "Unified Failure Escalation Authority V1"
+      ],
+      "evidenceBasis": "PRODUCTION_OBSERVABILITY_PLATFORM_V1_PASS"
+    },
+    {
+      "readOnly": true,
+      "rank": 5,
+      "phase": "Customer Operations Platform",
+      "action": "COMPLETE",
+      "rationale": "Customer Operations Platform V1 PASS: 3 customers, tenant isolation 0 violations, project ownership, usage tracking, subscription readiness.",
+      "impact": "HIGH",
+      "dependencies": [
+        "Production Readiness Gate V1",
+        "Multi-Project Concurrent Execution V1"
+      ],
+      "evidenceBasis": "CUSTOMER_OPERATIONS_PLATFORM_V1_PASS"
+    },
+    {
+      "readOnly": true,
+      "rank": 6,
+      "phase": "Evidence Revalidation Cycle",
+      "action": "COMPLETE",
+      "rationale": "Evidence Revalidation Cycle V1 PASS: expired evidence discovered, prioritized, and refreshed — confidence recovered without capability modification.",
+      "impact": "HIGH",
+      "dependencies": [
+        "Operational Evidence Freshness Authority V1",
+        "Validation Runtime Governance V1"
+      ],
+      "evidenceBasis": "EVIDENCE_REVALIDATION_CYCLE_V1_PASS"
+    }
+  ],
+  "highestValueNextCapability": "Operational Excellence Maintenance — all registered capabilities proven; maintain evidence freshness and deployment health"
+}

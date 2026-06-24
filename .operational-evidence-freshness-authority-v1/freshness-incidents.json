@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-06-24T23:04:13.412Z",
+  "incidents": [
+    {
+      "readOnly": true,
+      "incidentId": "freshness-cqi-maturity-v1",
+      "evidenceId": "cqi-maturity-v1",
+      "sourceCapability": "CQI Maturity V1",
+      "severity": "HIGH",
+      "status": "EXPIRED",
+      "detail": "CQI Maturity V1 evidence is EXPIRED (91 days, score 69) — Unified Failure Escalation decides escalation path",
+      "unifiedFailureEscalationEligible": true
+    },
+    {
+      "readOnly": true,
+      "incidentId": "freshness-uvl-verification-execution-v1",
+      "evidenceId": "uvl-verification-execution-v1",
+      "sourceCapability": "UVL Verification Execution V1",
+      "severity": "HIGH",
+      "status": "EXPIRED",
+      "detail": "UVL Verification Execution V1 evidence is EXPIRED (91 days, score 81) — Unified Failure Escalation decides escalation path",
+      "unifiedFailureEscalationEligible": true
+    },
+    {
+      "readOnly": true,
+      "incidentId": "freshness-real-build-execution-v1-1",
+      "evidenceId": "real-build-execution-v1-1",
+      "sourceCapability": "Real Build Execution Pipeline V1.1",
+      "severity": "HIGH",
+      "status": "EXPIRED",
+      "detail": "Real Build Execution Pipeline V1.1 evidence is EXPIRED (91 days, score 81) — Unified Failure Escalation decides escalation path",
+      "unifiedFailureEscalationEligible": true
+    },
+    {
+      "readOnly": true,
+      "incidentId": "freshness-validation-runtime-governance-v1",
+      "evidenceId": "validation-runtime-governance-v1",
+      "sourceCapability": "Validation Runtime Governance V1",
+      "severity": "HIGH",
+      "status": "EXPIRED",
+      "detail": "Validation Runtime Governance V1 evidence is EXPIRED (91 days, score 78) — Unified Failure Escalation decides escalation path",
+      "unifiedFailureEscalationEligible": true
+    }
+  ]
+}

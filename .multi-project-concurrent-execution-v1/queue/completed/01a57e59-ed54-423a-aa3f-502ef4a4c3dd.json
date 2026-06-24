@@ -1,0 +1,13 @@
+{
+  "readOnly": true,
+  "jobId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+  "projectId": "mpce-project_management_web_v1",
+  "profile": "PROJECT_MANAGEMENT_WEB_V1",
+  "productName": "Project Management",
+  "worldId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+  "status": "COMPLETED",
+  "queuedAt": "2026-06-24T21:51:08.274Z",
+  "startedAt": "2026-06-24T21:51:08.282Z",
+  "completedAt": "2026-06-24T21:51:59.382Z",
+  "workerId": "mpce-worker-4"
+}

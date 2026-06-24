@@ -1,0 +1,9 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T23:04:16.551Z",
+  "deploymentSuccessRate": 60,
+  "deploymentFailureRate": 40,
+  "rollbackRate": 20,
+  "postDeploymentHealthScore": 70,
+  "observabilityValidationPassRate": 60
+}

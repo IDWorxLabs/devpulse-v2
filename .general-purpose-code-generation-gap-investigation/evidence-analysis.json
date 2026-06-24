@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-06-24T22:49:02.394Z",
+  "entries": [
+    {
+      "readOnly": true,
+      "source": "General-Purpose Code Generation V1",
+      "generalPurposeV1Proven": true,
+      "reportsGap": false,
+      "highestPriority": "N/A — V1 PASS",
+      "codeGenerationScore": 100,
+      "detail": "10/10 GP proof domains passed; workflows, roles, domain logic, and production readiness proven."
+    },
+    {
+      "readOnly": true,
+      "source": "Capability Audit V3.1",
+      "generalPurposeV1Proven": true,
+      "reportsGap": false,
+      "highestPriority": "No remaining blocking gaps — continue operational monitoring",
+      "codeGenerationScore": 100,
+      "detail": "Missing-capabilities filter removes GP gap when assessment.json exists; code generation status MATURE."
+    },
+    {
+      "readOnly": true,
+      "source": "Strategic Capability Audit V4",
+      "generalPurposeV1Proven": true,
+      "reportsGap": false,
+      "highestPriority": "Expired operational evidence — 4 capability evidence record(s) expired — revalidation required before high-confidence operation.",
+      "codeGenerationScore": 92,
+      "detail": "Roadmap rank 1: Evidence Revalidation Cycle (MAINTAIN). Code Generation Diversity dimension 92/100 despite V1 PASS."
+    }
+  ]
+}

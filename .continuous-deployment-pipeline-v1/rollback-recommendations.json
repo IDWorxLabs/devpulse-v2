@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-06-24T23:04:16.551Z",
+  "recommendations": [
+    {
+      "readOnly": true,
+      "recommendationId": "escalate-dfail-obs-cand-proj-nova-marketplace",
+      "candidateId": "cand-proj-nova-marketplace",
+      "deploymentId": "deploy-prod-proj-nova-marketplace",
+      "projectId": "proj-nova-marketplace",
+      "action": "Escalate to operator",
+      "rationale": "Deployment reached production but observability health is degraded. Operator review recommended before further promotion.",
+      "autonomousModificationAllowed": false
+    },
+    {
+      "readOnly": true,
+      "recommendationId": "rollback-dfail-cand-proj-starter-booking",
+      "candidateId": "cand-proj-starter-booking",
+      "deploymentId": "deploy-prod-proj-starter-booking",
+      "projectId": "proj-starter-booking",
+      "action": "Rollback deployment",
+      "rationale": "Observability validation detected deployment regression after production promotion. Rollback to prior stable version recommended.",
+      "autonomousModificationAllowed": false
+    }
+  ]
+}

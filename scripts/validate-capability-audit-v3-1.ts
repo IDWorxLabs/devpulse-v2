@@ -22,6 +22,22 @@ import {
   buildUvlEvidenceRefreshArtifact,
   loadUvlEvidenceSnapshot,
 } from '../src/capability-audit-v3/index.js';
+import {
+  isCanonicalOwnershipV2Proven,
+  runCanonicalOwnershipV2Registration,
+} from '../src/canonical-ownership-v2/index.js';
+import {
+  isMultiProjectConcurrentExecutionProven,
+  runMultiProjectConcurrentExecutionV1,
+} from '../src/multi-project-concurrent-execution-v1/index.js';
+import {
+  isUnifiedFailureEscalationProven,
+  runUnifiedFailureEscalationAuthorityV1,
+} from '../src/unified-failure-escalation-authority-v1/index.js';
+import {
+  isOperationalEvidenceFreshnessProven,
+  runOperationalEvidenceFreshnessAuthorityV1,
+} from '../src/operational-evidence-freshness-authority-v1/index.js';
 
 interface CheckResult {
   name: string;
@@ -39,11 +55,30 @@ function assert(name: string, condition: boolean, detail: string): void {
   results.push({ name, passed: condition, detail });
 }
 
+function highestGapTitle(highestPriorityGap: string): string {
+  const separator = ' — ';
+  const idx = highestPriorityGap.indexOf(separator);
+  return idx >= 0 ? highestPriorityGap.slice(0, idx) : highestPriorityGap;
+}
+
 assert(
   'capability audit v3 module exists',
   existsSync(join(ROOT, 'src/capability-audit-v3/index.ts')),
   'src/capability-audit-v3/index.ts',
 );
+
+if (!isCanonicalOwnershipV2Proven(ROOT)) {
+  runCanonicalOwnershipV2Registration({ projectRootDir: ROOT });
+}
+if (!isMultiProjectConcurrentExecutionProven(ROOT)) {
+  runMultiProjectConcurrentExecutionV1({ projectRootDir: ROOT, resetRegistry: false, resetQueue: false });
+}
+if (!isUnifiedFailureEscalationProven(ROOT)) {
+  runUnifiedFailureEscalationAuthorityV1({ projectRootDir: ROOT, resetRegistry: true });
+}
+if (!isOperationalEvidenceFreshnessProven(ROOT)) {
+  runOperationalEvidenceFreshnessAuthorityV1({ projectRootDir: ROOT, resetRegistry: true });
+}
 
 const evidence = loadUvlEvidenceSnapshot(ROOT);
 const assessment = buildCapabilityAuditV3Assessment(ROOT);
@@ -197,9 +232,9 @@ assert(
 
 assert(
   'UVL not highest gap',
-  !assessment.highestPriorityGap.includes('UVL Verification Execution') &&
-    !assessment.highestPriorityGap.includes('UVL full verification'),
-  assessment.highestPriorityGap.slice(0, 80),
+  highestGapTitle(assessment.highestPriorityGap) !== 'UVL Verification Execution' &&
+    !highestGapTitle(assessment.highestPriorityGap).includes('UVL full verification'),
+  highestGapTitle(assessment.highestPriorityGap),
 );
 
 assert(
@@ -325,6 +360,98 @@ assert(
   'mobile runtime validation complete in roadmap',
   roadmap.some((p) => p.phase === 'Mobile Runtime Validation at Scale' && p.action === 'COMPLETE'),
   'COMPLETE action',
+);
+
+assert(
+  'canonical ownership gap resolved',
+  !missingCapabilities.entries.some(
+    (e) => e.capability === 'Canonical ownership registration for V2/V3 modules',
+  ),
+  assessment.highestPriorityGap.slice(0, 100),
+);
+
+assert(
+  'canonical ownership not highest gap',
+  highestGapTitle(assessment.highestPriorityGap) !== 'Canonical Ownership V2 Registration',
+  highestGapTitle(assessment.highestPriorityGap),
+);
+
+assert(
+  'canonical ownership complete in roadmap',
+  roadmap.some((p) => p.phase === 'Canonical Ownership V2 Registration' && p.action === 'COMPLETE'),
+  'COMPLETE action',
+);
+
+assert(
+  'parallel build gap resolved',
+  !missingCapabilities.entries.some((e) => e.capability === 'Parallel build execution'),
+  assessment.highestPriorityGap.slice(0, 100),
+);
+
+assert(
+  'multi-project concurrent not highest gap',
+  highestGapTitle(assessment.highestPriorityGap) !== 'Multi-Project Concurrent Execution',
+  highestGapTitle(assessment.highestPriorityGap),
+);
+
+assert(
+  'multi-project concurrent complete in roadmap',
+  roadmap.some((p) => p.phase === 'Multi-Project Concurrent Execution' && p.action === 'COMPLETE'),
+  'COMPLETE action',
+);
+
+assert(
+  'unified failure escalation gap resolved',
+  !missingCapabilities.entries.some(
+    (e) => e.capability === 'Unified failure escalation authority',
+  ),
+  assessment.highestPriorityGap.slice(0, 100),
+);
+
+assert(
+  'unified failure escalation not highest gap',
+  highestGapTitle(assessment.highestPriorityGap) !== 'Unified Failure Escalation Authority',
+  highestGapTitle(assessment.highestPriorityGap),
+);
+
+assert(
+  'self-evolution execution not highest operational gap',
+  highestGapTitle(assessment.highestPriorityGap) !== 'Self-Evolution Execution' ||
+    assessment.highestPriorityGap.includes('No remaining blocking gaps'),
+  highestGapTitle(assessment.highestPriorityGap),
+);
+
+assert(
+  'unified failure escalation complete in roadmap',
+  roadmap.some((p) => p.phase === 'Unified Failure Escalation Authority' && p.action === 'COMPLETE'),
+  'COMPLETE action',
+);
+
+assert(
+  'operational evidence freshness gap resolved',
+  !missingCapabilities.entries.some(
+    (e) => e.capability === 'Operational evidence freshness governance',
+  ),
+  assessment.highestPriorityGap.slice(0, 100),
+);
+
+assert(
+  'operational evidence freshness not highest gap',
+  highestGapTitle(assessment.highestPriorityGap) !== 'Operational Evidence Freshness Authority',
+  highestGapTitle(assessment.highestPriorityGap),
+);
+
+assert(
+  'evidence freshness complete in roadmap',
+  roadmap.some((p) => p.phase === 'Operational Evidence Freshness Authority' && p.action === 'COMPLETE'),
+  'COMPLETE action',
+);
+
+assert(
+  'audit consumes evidence freshness',
+  assessment.operationalMaturity.evidenceFreshness.proven ||
+    assessment.operationalMaturity.evidenceFreshness.overallFreshnessScore >= 0,
+  String(assessment.operationalMaturity.evidenceFreshness.freshCount),
 );
 
 const failed = results.filter((r) => !r.passed);

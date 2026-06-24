@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-06-24T23:04:23.026Z",
+  "plans": [
+    {
+      "readOnly": true,
+      "planType": "FREE",
+      "monthlyProjectLimit": 2,
+      "monthlyBuildLimit": 20,
+      "concurrentExecutionLimit": 1,
+      "world2ExecutionLimit": 2,
+      "upgradePath": "PRO"
+    },
+    {
+      "readOnly": true,
+      "planType": "PRO",
+      "monthlyProjectLimit": 10,
+      "monthlyBuildLimit": 200,
+      "concurrentExecutionLimit": 3,
+      "world2ExecutionLimit": 10,
+      "upgradePath": "BUSINESS"
+    },
+    {
+      "readOnly": true,
+      "planType": "BUSINESS",
+      "monthlyProjectLimit": 50,
+      "monthlyBuildLimit": 1000,
+      "concurrentExecutionLimit": 10,
+      "world2ExecutionLimit": 50,
+      "upgradePath": "ENTERPRISE"
+    },
+    {
+      "readOnly": true,
+      "planType": "ENTERPRISE",
+      "monthlyProjectLimit": 999,
+      "monthlyBuildLimit": 9999,
+      "concurrentExecutionLimit": 50,
+      "world2ExecutionLimit": 999,
+      "upgradePath": null
+    }
+  ]
+}

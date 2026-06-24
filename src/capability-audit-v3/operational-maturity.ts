@@ -8,6 +8,10 @@ import {
   buildUvlEvidenceRefreshFromSnapshot,
   loadUvlEvidenceSnapshot,
 } from './uvl-evidence-loader.js';
+import { loadFreshnessSummaryForAudit } from '../operational-evidence-freshness-authority-v1/operational-evidence-freshness-evidence-loader.js';
+import { loadRevalidationSummaryForAudit } from '../evidence-revalidation-cycle-v1/index.js';
+import { loadProductionObservabilitySummaryForAudit } from '../production-observability-platform-v1/index.js';
+import { loadContinuousDeploymentSummaryForAudit } from '../continuous-deployment-pipeline-v1/index.js';
 
 export function buildOperationalMaturityReport(projectRootDir?: string): OperationalMaturityReport {
   const uvlEvidence = loadUvlEvidenceSnapshot(projectRootDir);
@@ -15,6 +19,14 @@ export function buildOperationalMaturityReport(projectRootDir?: string): Operati
   const categoriesRequired = suite.categoriesRequired;
   const coverageEvidence = buildCoverageEvidenceFromSnapshot(uvlEvidence);
   const uvlEvidenceRefresh = buildUvlEvidenceRefreshFromSnapshot(uvlEvidence);
+  const evidenceFreshness = loadFreshnessSummaryForAudit(projectRootDir ?? process.cwd());
+  const evidenceRevalidation = loadRevalidationSummaryForAudit(projectRootDir ?? process.cwd());
+  const productionObservability = loadProductionObservabilitySummaryForAudit(
+    projectRootDir ?? process.cwd(),
+  );
+  const continuousDeployment = loadContinuousDeploymentSummaryForAudit(
+    projectRootDir ?? process.cwd(),
+  );
 
   const verificationSuccessRate = coverageEvidence.verificationCoverage.percent;
 
@@ -81,8 +93,15 @@ export function buildOperationalMaturityReport(projectRootDir?: string): Operati
   ];
 
   const stageScores = stages.map((s) => s.successRatePercent);
-  const operationalMaturityScore = Math.round(
-    stageScores.reduce((sum, score) => sum + score, 0) / stageScores.length,
+  const observabilityBoost = productionObservability.proven ? 4 : 0;
+  const deploymentBoost = continuousDeployment.proven ? 3 : 0;
+  const operationalMaturityScore = Math.min(
+    100,
+    Math.round(
+      stageScores.reduce((sum, score) => sum + score, 0) / stageScores.length +
+        observabilityBoost +
+        deploymentBoost,
+    ),
   );
 
   return {
@@ -97,5 +116,20 @@ export function buildOperationalMaturityReport(projectRootDir?: string): Operati
     fullPipelineProvenAcrossSuite: uvlEvidence.uvlVerificationExecutionComplete,
     verificationIsBlockingGap: !uvlEvidence.uvlVerificationExecutionComplete,
     uvlEvidenceRefresh,
+    evidenceFreshness,
+    evidenceRevalidation: {
+      freshEvidenceCount: evidenceRevalidation.proven
+        ? evidenceRevalidation.freshCount + evidenceRevalidation.refreshedCount
+        : evidenceFreshness.freshCount,
+      expiredEvidenceCount: evidenceRevalidation.proven
+        ? evidenceRevalidation.expiredCount
+        : evidenceFreshness.expiredCount,
+      revalidatedEvidenceCount: evidenceRevalidation.revalidatedEvidenceCount,
+      confidenceRecovered: evidenceRevalidation.confidenceRecovered,
+      recentlyRefreshedCount: evidenceRevalidation.refreshedCount,
+      proven: evidenceRevalidation.proven,
+    },
+    productionObservability,
+    continuousDeployment,
   };
 }

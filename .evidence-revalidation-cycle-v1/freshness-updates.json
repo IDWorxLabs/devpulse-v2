@@ -1,0 +1,42 @@
+[
+  {
+    "readOnly": true,
+    "evidenceId": "cqi-maturity-v1",
+    "capabilityId": "CQI Maturity V1",
+    "priorStatus": "EXPIRED",
+    "updatedStatus": "REFRESHED",
+    "lastValidatedAt": "2026-06-24T23:03:55.307Z",
+    "freshnessScore": 100,
+    "confidenceScore": 100
+  },
+  {
+    "readOnly": true,
+    "evidenceId": "uvl-verification-execution-v1",
+    "capabilityId": "UVL Verification Execution V1",
+    "priorStatus": "EXPIRED",
+    "updatedStatus": "REFRESHED",
+    "lastValidatedAt": "2026-06-24T23:03:55.307Z",
+    "freshnessScore": 100,
+    "confidenceScore": 100
+  },
+  {
+    "readOnly": true,
+    "evidenceId": "real-build-execution-v1-1",
+    "capabilityId": "Real Build Execution Pipeline V1.1",
+    "priorStatus": "EXPIRED",
+    "updatedStatus": "REFRESHED",
+    "lastValidatedAt": "2026-06-24T23:03:55.307Z",
+    "freshnessScore": 100,
+    "confidenceScore": 100
+  },
+  {
+    "readOnly": true,
+    "evidenceId": "validation-runtime-governance-v1",
+    "capabilityId": "Validation Runtime Governance V1",
+    "priorStatus": "EXPIRED",
+    "updatedStatus": "REFRESHED",
+    "lastValidatedAt": "2026-06-24T23:03:55.307Z",
+    "freshnessScore": 100,
+    "confidenceScore": 100
+  }
+]

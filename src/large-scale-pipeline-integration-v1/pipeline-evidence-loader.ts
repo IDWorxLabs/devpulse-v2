@@ -8,6 +8,7 @@ import { PRODUCTION_READINESS_GATE_V1_ARTIFACT_DIR } from '../production-readine
 import { CLOUD_EXECUTION_PATH_V1_ARTIFACT_DIR } from '../cloud-execution-path-v1/cloud-execution-path-v1-bounds.js';
 import { GENERAL_PURPOSE_CODE_GENERATION_V1_ARTIFACT_DIR } from '../general-purpose-code-generation-v1/general-purpose-code-generation-v1-bounds.js';
 import { MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_ARTIFACT_DIR } from '../mobile-runtime-validation-at-scale-v1/mobile-runtime-validation-v1-bounds.js';
+import { MULTI_PROJECT_CONCURRENT_EXECUTION_V1_ARTIFACT_DIR } from '../multi-project-concurrent-execution-v1/multi-project-concurrent-execution-v1-bounds.js';
 import type { EvidenceSourceRecord } from './large-scale-pipeline-integration-v1-types.js';
 
 export const RBEP_ARTIFACT_DIR = '.real-build-execution-pipeline-v1-1';
@@ -26,6 +27,7 @@ const EVIDENCE_DIRS = {
   pai: PAI_ARTIFACT_DIR,
   largeScale: LARGE_SCALE_ARTIFACT_DIR,
   mobile: MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_ARTIFACT_DIR,
+  concurrent: MULTI_PROJECT_CONCURRENT_EXECUTION_V1_ARTIFACT_DIR,
 } as const;
 
 function resolveRoot(projectRootDir?: string): string {
@@ -162,6 +164,13 @@ export interface PipelineEvidenceBundle {
     passToken: string | null;
     provenProfiles: readonly string[];
   };
+  concurrentAssessment: {
+    concurrentProjectsProven: number;
+    concurrentPassRate: number;
+    concurrentProofStatus: string;
+    passToken: string | null;
+    provenProfiles: readonly string[];
+  };
 }
 
 export function loadPipelineEvidenceBundle(projectRootDir?: string): PipelineEvidenceBundle {
@@ -245,6 +254,12 @@ export function loadPipelineEvidenceBundle(projectRootDir?: string): PipelineEvi
     'mobile',
     ['assessment.json'],
     'MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_REPORT.md',
+  );
+  const concurrent = loadSystem(
+    'Multi-Project Concurrent Execution V1',
+    'concurrent',
+    ['assessment.json'],
+    'MULTI_PROJECT_CONCURRENT_EXECUTION_V1_REPORT.md',
   );
 
   const rbepBuildProof = readJson<RbepBuildProofEntry[]>(
@@ -340,6 +355,21 @@ export function loadPipelineEvidenceBundle(projectRootDir?: string): PipelineEvi
     .map((c) => c.profile)
     .filter(Boolean) as string[];
 
+  const concurrentRaw = readJson(
+    concurrent.paths[0] ?? null,
+    {},
+  ) as {
+    concurrentProjectsProven?: number;
+    concurrentPassRate?: number;
+    concurrentProofStatus?: string;
+    passToken?: string;
+    projectResults?: Array<{ profile?: string; passed?: boolean }>;
+  };
+  const concurrentProvenProfiles = (concurrentRaw.projectResults ?? [])
+    .filter((p) => p.passed)
+    .map((p) => p.profile)
+    .filter(Boolean) as string[];
+
   return {
     readOnly: true,
     generatedAt: new Date().toISOString(),
@@ -412,6 +442,14 @@ export function loadPipelineEvidenceBundle(projectRootDir?: string): PipelineEvi
       mobileProofStatus: mobileRaw.mobileProofStatus ?? 'NOT_PROVEN',
       passToken: mobile.passToken ?? mobileRaw.passToken ?? null,
       provenProfiles: mobileProvenProfiles,
+    },
+    concurrentAssessment: {
+      concurrentProjectsProven:
+        concurrentRaw.concurrentProjectsProven ?? concurrentProvenProfiles.length,
+      concurrentPassRate: concurrentRaw.concurrentPassRate ?? 0,
+      concurrentProofStatus: concurrentRaw.concurrentProofStatus ?? 'NOT_PROVEN',
+      passToken: concurrent.passToken ?? concurrentRaw.passToken ?? null,
+      provenProfiles: concurrentProvenProfiles,
     },
   };
 }

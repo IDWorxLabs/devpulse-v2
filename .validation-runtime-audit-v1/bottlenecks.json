@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T16:00:21.684Z",
+  "generatedAt": "2026-06-24T21:30:09.530Z",
   "bottlenecks": [
     {
       "bottleneck": "Repeated Playwright suites",

@@ -56,6 +56,9 @@ export function computePipelineMetrics(
   const mobileProven =
     bundle.mobileAssessment.categoriesMobileProven ||
     countFlaggedCategories(mapping, 'MOBILE_PROVEN');
+  const concurrentProven =
+    bundle.concurrentAssessment.concurrentProjectsProven ||
+    countFlaggedCategories(mapping, 'CONCURRENT_PROVEN');
 
   const productReadinessCount = rbepPassCount(bundle, 'paiResult');
   const launchReadinessCount = bundle.rbepBuildProof.filter(
@@ -89,6 +92,7 @@ export function computePipelineMetrics(
     cloudProvenCategories: cloudProven,
     gpProvenCategories: gpProven,
     mobileProvenCategories: mobileProven,
+    concurrentProvenCategories: concurrentProven,
     buildSuccessRate: authoritativeBuildRate,
     previewSuccessRate: authoritativePreviewRate,
     verificationSuccessRate: authoritativeVerificationRate,
@@ -113,6 +117,10 @@ export function computePipelineMetrics(
       bundle.mobileAssessment.mobilePassRate > 0
         ? bundle.mobileAssessment.mobilePassRate
         : rate(mobileProven, bundle.mobileAssessment.categoriesValidated || 10),
+    concurrentExecutionSuccessRate:
+      bundle.concurrentAssessment.concurrentPassRate > 0
+        ? bundle.concurrentAssessment.concurrentPassRate
+        : rate(concurrentProven, bundle.concurrentAssessment.concurrentProjectsProven || 5),
     legacyLargeScaleBuildSuccessRate: bundle.largeScaleAssessment.buildSuccessRate,
   };
 }

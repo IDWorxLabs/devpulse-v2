@@ -1,0 +1,55 @@
+{
+  "generatedAt": "2026-06-24T23:04:19.867Z",
+  "metrics": [
+    {
+      "readOnly": true,
+      "applicationId": "app-proj-acme-task-tracker",
+      "responseTimeMs": 136,
+      "errorRate": 0.02,
+      "availabilityPercent": 99.95,
+      "deploymentSuccess": true,
+      "crashCount": 0,
+      "recoveryCount": 2
+    },
+    {
+      "readOnly": true,
+      "applicationId": "app-proj-acme-crm",
+      "responseTimeMs": 144,
+      "errorRate": 0.05,
+      "availabilityPercent": 99.91,
+      "deploymentSuccess": true,
+      "crashCount": 0,
+      "recoveryCount": 2
+    },
+    {
+      "readOnly": true,
+      "applicationId": "app-proj-nova-marketplace",
+      "responseTimeMs": 176,
+      "errorRate": 1.2,
+      "availabilityPercent": 98.2,
+      "deploymentSuccess": true,
+      "crashCount": 0,
+      "recoveryCount": 1
+    },
+    {
+      "readOnly": true,
+      "applicationId": "app-proj-nova-pm",
+      "responseTimeMs": 150,
+      "errorRate": 0.08,
+      "availabilityPercent": 99.88,
+      "deploymentSuccess": true,
+      "crashCount": 0,
+      "recoveryCount": 2
+    },
+    {
+      "readOnly": true,
+      "applicationId": "app-proj-starter-booking",
+      "responseTimeMs": 164,
+      "errorRate": 0.9,
+      "availabilityPercent": 96.5,
+      "deploymentSuccess": true,
+      "crashCount": 1,
+      "recoveryCount": 1
+    }
+  ]
+}

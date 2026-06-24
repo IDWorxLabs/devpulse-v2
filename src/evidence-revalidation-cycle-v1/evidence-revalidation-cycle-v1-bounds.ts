@@ -1,0 +1,27 @@
+/**
+ * Evidence Revalidation Cycle V1 — bounds and pass tokens.
+ */
+
+export const EVIDENCE_REVALIDATION_CYCLE_V1_PASS_TOKEN =
+  'EVIDENCE_REVALIDATION_CYCLE_V1_PASS' as const;
+
+export const EVIDENCE_REVALIDATION_CYCLE_V1_FAIL_TOKEN =
+  'EVIDENCE_REVALIDATION_CYCLE_V1_FAIL' as const;
+
+export const EVIDENCE_REVALIDATION_CYCLE_V1_ARTIFACT_DIR =
+  '.evidence-revalidation-cycle-v1' as const;
+
+export const EVIDENCE_REVALIDATION_CYCLE_V1_REPORT_TITLE =
+  'EVIDENCE_REVALIDATION_CYCLE_V1_REPORT.md' as const;
+
+export const MIN_REVALIDATION_RECORDS = 1 as const;
+
+export const MIN_EXPIRED_REFRESHED = 1 as const;
+
+export const MIN_CONFIDENCE_RECOVERY_POINTS = 1 as const;
+
+export const PRIOR_PASS_TOKENS = [
+  'OPERATIONAL_EVIDENCE_FRESHNESS_AUTHORITY_V1_PASS',
+  'VALIDATION_RUNTIME_GOVERNANCE_V1_PASS',
+  'AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS',
+] as const;

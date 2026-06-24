@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T16:00:21.684Z",
+  "generatedAt": "2026-06-24T21:30:09.530Z",
   "nodes": [
     {
       "validatorName": "validate:action-visibility-engine",
@@ -303,6 +303,20 @@
       "circularRisk": false
     },
     {
+      "validatorName": "validate:canonical-ownership-v2",
+      "triggers": [
+        "validate:capability-audit-v3-1",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
       "validatorName": "validate:capability-audit-v1",
       "triggers": [],
       "triggeredBy": [],
@@ -329,9 +343,14 @@
       "validatorName": "validate:capability-audit-v3-1",
       "triggers": [],
       "triggeredBy": [
+        "validate:canonical-ownership-v2",
         "validate:cloud-execution-path-v1",
         "validate:general-purpose-code-generation-v1",
-        "validate:production-readiness-gate-v1"
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1"
       ],
       "nestedValidation": false,
       "circularRisk": false
@@ -537,7 +556,10 @@
         "validate:capability-audit-v3-1"
       ],
       "triggeredBy": [
-        "validate:general-purpose-code-generation-v1"
+        "validate:general-purpose-code-generation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1"
       ],
       "nestedValidation": true,
       "circularRisk": false
@@ -1468,7 +1490,12 @@
         "validate:validation-runtime-governance-v1",
         "validate:capability-audit-v3-1"
       ],
-      "triggeredBy": [],
+      "triggeredBy": [
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1"
+      ],
       "nestedValidation": true,
       "circularRisk": false
     },
@@ -1582,8 +1609,31 @@
     {
       "validatorName": "validate:large-scale-multi-app-validation-v1",
       "triggers": [],
-      "triggeredBy": [],
+      "triggeredBy": [
+        "validate:large-scale-pipeline-integration-v1"
+      ],
       "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:large-scale-pipeline-integration-v1",
+      "triggers": [
+        "validate:large-scale-multi-app-validation-v1",
+        "validate:capability-audit-v3-1",
+        "validate:real-build-execution-pipeline-v1-1",
+        "validate:uvl-verification-execution-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "triggeredBy": [
+        "validate:canonical-ownership-v2",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1"
+      ],
+      "nestedValidation": true,
       "circularRisk": false
     },
     {
@@ -1841,6 +1891,25 @@
       "triggers": [],
       "triggeredBy": [],
       "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:mobile-runtime-validation-at-scale-v1",
+      "triggers": [
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:uvl-verification-execution-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "triggeredBy": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1"
+      ],
+      "nestedValidation": true,
       "circularRisk": false
     },
     {
@@ -2177,7 +2246,11 @@
       ],
       "triggeredBy": [
         "validate:cloud-execution-path-v1",
-        "validate:general-purpose-code-generation-v1"
+        "validate:general-purpose-code-generation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1"
       ],
       "nestedValidation": true,
       "circularRisk": false
@@ -2270,7 +2343,9 @@
       "triggeredBy": [
         "validate:cloud-execution-path-v1",
         "validate:general-purpose-code-generation-v1",
-        "validate:production-readiness-gate-v1"
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:world2-real-instantiation-v1"
       ],
       "nestedValidation": false,
       "circularRisk": false
@@ -2507,6 +2582,24 @@
       "circularRisk": false
     },
     {
+      "validatorName": "validate:self-evolution-execution-v1",
+      "triggers": [
+        "validate:world2-real-instantiation-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:uvl-verification-execution-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "triggeredBy": [
+        "validate:canonical-ownership-v2"
+      ],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
       "validatorName": "validate:self-evolution-governance",
       "triggers": [],
       "triggeredBy": [],
@@ -2726,7 +2819,11 @@
       "triggeredBy": [
         "validate:cloud-execution-path-v1",
         "validate:general-purpose-code-generation-v1",
-        "validate:production-readiness-gate-v1"
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1"
       ],
       "nestedValidation": false,
       "circularRisk": false
@@ -2764,9 +2861,14 @@
         "validate:afla-trust-calibration-v1"
       ],
       "triggeredBy": [
+        "validate:canonical-ownership-v2",
         "validate:cloud-execution-path-v1",
         "validate:general-purpose-code-generation-v1",
-        "validate:production-readiness-gate-v1"
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1"
       ],
       "nestedValidation": true,
       "circularRisk": false
@@ -3037,6 +3139,26 @@
       "circularRisk": false
     },
     {
+      "validatorName": "validate:world2-real-instantiation-v1",
+      "triggers": [
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:uvl-verification-execution-v1",
+        "validate:real-build-execution-pipeline-v1-1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "triggeredBy": [
+        "validate:canonical-ownership-v2",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:self-evolution-execution-v1"
+      ],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
       "validatorName": "validate:world2-recovery-runtime",
       "triggers": [],
       "triggeredBy": [],
@@ -3114,15 +3236,10 @@
   "nestedChains": [
     {
       "chain": [
-        "validate:chat-authority",
-        "validate:task-governor",
-        "validate:foundation"
-      ],
-      "circular": false
-    },
-    {
-      "chain": [
-        "validate:cloud-execution-path-v1",
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
         "validate:production-readiness-gate-v1",
         "validate:validation-runtime-governance-v1",
         "validate:autonomous-founder-launch-authority-v1",
@@ -3132,7 +3249,10 @@
     },
     {
       "chain": [
-        "validate:cloud-execution-path-v1",
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
         "validate:production-readiness-gate-v1",
         "validate:capability-audit-v3-1",
         "validate:validation-runtime-governance-v1"
@@ -3141,23 +3261,10 @@
     },
     {
       "chain": [
-        "validate:cloud-execution-path-v1",
-        "validate:validation-runtime-governance-v1",
-        "validate:autonomous-founder-launch-authority-v1",
-        "validate:validation-runtime-audit-v1"
-      ],
-      "circular": false
-    },
-    {
-      "chain": [
-        "validate:founder-readiness-authority",
-        "validate:founder-testing-chat-readiness",
-        "validate:chat-intelligence-reality"
-      ],
-      "circular": false
-    },
-    {
-      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
         "validate:general-purpose-code-generation-v1",
         "validate:cloud-execution-path-v1",
         "validate:production-readiness-gate-v1",
@@ -3169,6 +3276,10 @@
     },
     {
       "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
         "validate:general-purpose-code-generation-v1",
         "validate:cloud-execution-path-v1",
         "validate:production-readiness-gate-v1",
@@ -3179,6 +3290,10 @@
     },
     {
       "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
         "validate:general-purpose-code-generation-v1",
         "validate:cloud-execution-path-v1",
         "validate:validation-runtime-governance-v1",
@@ -3189,6 +3304,10 @@
     },
     {
       "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
         "validate:general-purpose-code-generation-v1",
         "validate:cloud-execution-path-v1",
         "validate:production-readiness-gate-v1",
@@ -3198,6 +3317,10 @@
     },
     {
       "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
         "validate:general-purpose-code-generation-v1",
         "validate:production-readiness-gate-v1",
         "validate:validation-runtime-governance-v1",
@@ -3208,6 +3331,10 @@
     },
     {
       "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
         "validate:general-purpose-code-generation-v1",
         "validate:production-readiness-gate-v1",
         "validate:capability-audit-v3-1",
@@ -3217,6 +3344,10 @@
     },
     {
       "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
         "validate:general-purpose-code-generation-v1",
         "validate:validation-runtime-governance-v1",
         "validate:autonomous-founder-launch-authority-v1",
@@ -3226,73 +3357,531 @@
     },
     {
       "chain": [
-        "validate:inline-operator-feed",
-        "validate:chat-authority",
-        "validate:task-governor",
-        "validate:foundation"
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1"
       ],
       "circular": false
     },
     {
       "chain": [
-        "validate:inline-operator-feed",
-        "validate:chat-authority",
-        "validate:shell",
-        "validate:task-governor"
-      ],
-      "circular": false
-    },
-    {
-      "chain": [
-        "validate:inline-operator-feed",
-        "validate:task-governor",
-        "validate:foundation"
-      ],
-      "circular": false
-    },
-    {
-      "chain": [
-        "validate:phase8-governance-stack-checkpoint",
-        "validate:governance-stack-checkpoint",
-        "validate:execution-authority",
-        "validate:execution-verification"
-      ],
-      "circular": false
-    },
-    {
-      "chain": [
-        "validate:phase9-governance-stack-checkpoint",
-        "validate:phase8-governance-stack-checkpoint",
-        "validate:governance-stack-checkpoint",
-        "validate:execution-authority",
-        "validate:execution-verification"
-      ],
-      "circular": false
-    },
-    {
-      "chain": [
-        "validate:phase9-governance-stack-checkpoint",
-        "validate:phase8-governance-stack-checkpoint",
-        "validate:mobile-command-foundation",
-        "validate:mobile-chat-interface"
-      ],
-      "circular": false
-    },
-    {
-      "chain": [
-        "validate:phase9-governance-stack-checkpoint",
-        "validate:governance-stack-checkpoint",
-        "validate:execution-authority",
-        "validate:execution-verification"
-      ],
-      "circular": false
-    },
-    {
-      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:cloud-execution-path-v1",
         "validate:production-readiness-gate-v1",
         "validate:validation-runtime-governance-v1",
         "validate:autonomous-founder-launch-authority-v1",
         "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:uvl-verification-execution-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:large-scale-multi-app-validation-v1",
+        "validate:capability-audit-v3-1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:uvl-verification-execution-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:uvl-verification-execution-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:cloud-execution-path-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:uvl-verification-execution-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:uvl-verification-execution-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:large-scale-multi-app-validation-v1",
+        "validate:capability-audit-v3-1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
       ],
       "circular": false
     }

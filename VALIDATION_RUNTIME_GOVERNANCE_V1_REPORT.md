@@ -1,6 +1,6 @@
 # Validation Runtime Governance V1
 
-**Generated:** 2026-06-24T16:00:18.953Z  
+**Generated:** 2026-06-24T21:30:07.094Z  
 **Governance Active:** YES  
 **Audit Baseline:** `VALIDATION_RUNTIME_AUDIT_V1_PASS`  
 **Pass Token:** `VALIDATION_RUNTIME_GOVERNANCE_V1_PASS`
@@ -33,9 +33,9 @@ Validation Runtime Governance V1 transforms validation from **Run Everything** t
 
 | Tier | Validators Assigned |
 |------|---------------------|
-| FAST | 251 |
+| FAST | 253 |
 | STANDARD | 115 |
-| FULL | 30 |
+| FULL | 33 |
 | LAUNCH | 12 |
 
 ### Tier Targets

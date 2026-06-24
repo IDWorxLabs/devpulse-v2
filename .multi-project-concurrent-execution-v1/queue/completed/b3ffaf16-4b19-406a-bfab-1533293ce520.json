@@ -1,0 +1,13 @@
+{
+  "readOnly": true,
+  "jobId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+  "projectId": "mpce-task_tracker_web_v1",
+  "profile": "TASK_TRACKER_WEB_V1",
+  "productName": "Task Tracker",
+  "worldId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+  "status": "COMPLETED",
+  "queuedAt": "2026-06-24T21:51:08.271Z",
+  "startedAt": "2026-06-24T21:51:08.278Z",
+  "completedAt": "2026-06-24T21:51:59.377Z",
+  "workerId": "mpce-worker-1"
+}

@@ -1,0 +1,47 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T23:04:12.181Z",
+  "driftDetected": true,
+  "entries": [
+    {
+      "readOnly": true,
+      "evidenceId": "cqi-maturity-v1",
+      "sourceCapability": "CQI Maturity V1",
+      "driftType": "missing_revalidation",
+      "detail": "No assessment artifact at C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.cqi-maturity-v1\\assessment.json — proof requires revalidation",
+      "severity": "HIGH"
+    },
+    {
+      "readOnly": true,
+      "evidenceId": "uvl-verification-execution-v1",
+      "sourceCapability": "UVL Verification Execution V1",
+      "driftType": "missing_revalidation",
+      "detail": "No assessment artifact at C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.uvl-verification-execution-v1\\assessment.json — proof requires revalidation",
+      "severity": "HIGH"
+    },
+    {
+      "readOnly": true,
+      "evidenceId": "real-build-execution-v1-1",
+      "sourceCapability": "Real Build Execution Pipeline V1.1",
+      "driftType": "missing_revalidation",
+      "detail": "No assessment artifact at C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.real-build-execution-pipeline-v1-1\\assessment.json — proof requires revalidation",
+      "severity": "HIGH"
+    },
+    {
+      "readOnly": true,
+      "evidenceId": "validation-runtime-governance-v1",
+      "sourceCapability": "Validation Runtime Governance V1",
+      "driftType": "missing_revalidation",
+      "detail": "No assessment artifact at C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.validation-runtime-governance-v1\\assessment.json — proof requires revalidation",
+      "severity": "HIGH"
+    },
+    {
+      "readOnly": true,
+      "evidenceId": "capability-audit-v3-1",
+      "sourceCapability": "Capability Audit V3.1",
+      "driftType": "outdated_artifact_reference",
+      "detail": "Audit references 4 capability artifact(s) missing or outdated on disk",
+      "severity": "LOW"
+    }
+  ]
+}

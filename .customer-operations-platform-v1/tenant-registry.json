@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-06-24T23:04:23.026Z",
+  "tenants": [
+    {
+      "readOnly": true,
+      "tenantId": "tenant-acme-corp",
+      "customerId": "cust-acme-corp",
+      "organizationName": "Acme Corp",
+      "status": "ACTIVE",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "isolationBoundary": "isolated-workspace://tenant-acme-corp"
+    },
+    {
+      "readOnly": true,
+      "tenantId": "tenant-nova-labs",
+      "customerId": "cust-nova-labs",
+      "organizationName": "Nova Labs",
+      "status": "ACTIVE",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "isolationBoundary": "isolated-workspace://tenant-nova-labs"
+    },
+    {
+      "readOnly": true,
+      "tenantId": "tenant-starter-studio",
+      "customerId": "cust-starter-studio",
+      "organizationName": "Starter Studio",
+      "status": "ACTIVE",
+      "createdAt": "2026-06-24T23:04:23.026Z",
+      "isolationBoundary": "isolated-workspace://tenant-starter-studio"
+    }
+  ]
+}

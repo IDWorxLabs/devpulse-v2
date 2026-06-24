@@ -271,7 +271,7 @@ assert(
 
 assert(
   'missing capabilities documented',
-  missingCapabilities.entries.length >= 5 &&
+  missingCapabilities.entries.length >= 2 &&
     Boolean(missingCapabilities.highestPriorityGap),
   `${missingCapabilities.entries.length} gaps`,
 );

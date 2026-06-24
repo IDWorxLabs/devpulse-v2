@@ -1,0 +1,45 @@
+/**
+ * Strategic Capability Audit V4 — bounds and pass token.
+ */
+
+export const STRATEGIC_CAPABILITY_AUDIT_V4_PASS_TOKEN = 'STRATEGIC_CAPABILITY_AUDIT_V4_PASS';
+
+export const STRATEGIC_CAPABILITY_AUDIT_V4_FAIL_TOKEN = 'STRATEGIC_CAPABILITY_AUDIT_V4_FAIL';
+
+export const STRATEGIC_CAPABILITY_AUDIT_V4_REPORT_TITLE =
+  'STRATEGIC_CAPABILITY_AUDIT_V4_REPORT.md';
+
+export const STRATEGIC_CAPABILITY_AUDIT_V4_ARTIFACT_DIR = '.strategic-capability-audit-v4';
+
+export const MIN_EVIDENCE_SOURCES_CONSUMED = 12;
+
+export const MIN_STRATEGIC_DIMENSIONS_ASSESSED = 8;
+
+export const STRATEGIC_GAP_CATEGORIES = [
+  'Capability Gaps',
+  'Architectural Weaknesses',
+  'Autonomous Software Factory',
+  'Cloud-Scale Capabilities',
+  'Commercialization & Deployment',
+  'Customer-Facing Capabilities',
+  'Intelligence Capabilities',
+  'Operational Capabilities',
+] as const;
+
+export const PRIOR_PASS_TOKENS = [
+  'OPERATIONAL_EVIDENCE_FRESHNESS_AUTHORITY_V1_PASS',
+  'UNIFIED_FAILURE_ESCALATION_AUTHORITY_V1_PASS',
+  'MULTI_PROJECT_CONCURRENT_EXECUTION_V1_PASS',
+  'CANONICAL_OWNERSHIP_V2_PASS',
+  'SELF_EVOLUTION_EXECUTION_V1_PASS',
+  'WORLD2_REAL_INSTANTIATION_V1_PASS',
+  'MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_PASS',
+  'AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS',
+  'VALIDATION_RUNTIME_GOVERNANCE_V1_PASS',
+] as const;
+
+export const FACTORY_READINESS_THRESHOLD = 75;
+
+export const AUTONOMY_READINESS_THRESHOLD = 70;
+
+export const COMMERCIALIZATION_READINESS_THRESHOLD = 50;

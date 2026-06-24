@@ -1,0 +1,13 @@
+{
+  "readOnly": true,
+  "jobId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+  "projectId": "mpce-appointment_booking_web_v1",
+  "profile": "APPOINTMENT_BOOKING_WEB_V1",
+  "productName": "Booking Platform",
+  "worldId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+  "status": "COMPLETED",
+  "queuedAt": "2026-06-24T21:51:08.276Z",
+  "startedAt": "2026-06-24T21:51:08.284Z",
+  "completedAt": "2026-06-24T21:51:59.384Z",
+  "workerId": "mpce-worker-5"
+}

@@ -1,0 +1,328 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T23:04:40.438Z",
+  "nodes": [
+    {
+      "readOnly": true,
+      "owner": "Capability Audit",
+      "capabilities": [
+        "Capability Audit V2",
+        "Capability Audit V3",
+        "Capability Audit V3.1"
+      ],
+      "consumers": [
+        "Capability Audit V2",
+        "Capability Audit V3",
+        "UVL Verification Execution V1"
+      ],
+      "providers": [
+        "capability inventory",
+        "duplicate risk baseline",
+        "roadmap V2",
+        "operational maturity",
+        "UVL evidence refresh",
+        "roadmap V3",
+        "coverage breakdown",
+        "roadmap recalculation"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "CQI",
+      "capabilities": [
+        "CQI Maturity V1"
+      ],
+      "consumers": [
+        "Clarifying Question Intelligence"
+      ],
+      "providers": [
+        "requirement completeness",
+        "gap detection",
+        "adaptive questions"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "Real Build Execution Pipeline",
+      "capabilities": [
+        "Real Build Execution Pipeline V1",
+        "Real Build Execution Pipeline V1.1"
+      ],
+      "consumers": [
+        "Code Generation Engine V1",
+        "Real Build Execution Pipeline V1"
+      ],
+      "providers": [
+        "build proof",
+        "preview proof",
+        "execution proof",
+        "15/15 build proof",
+        "generalization score",
+        "AFLA integration"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "UVL",
+      "capabilities": [
+        "UVL Verification Execution V1",
+        "UVL Verification Hub V1"
+      ],
+      "consumers": [
+        "Real Build Execution Pipeline V1.1",
+        "Unified Verification Lab (UVL)"
+      ],
+      "providers": [
+        "verification proof",
+        "verification coverage",
+        "verification confidence",
+        "verification hub maturity",
+        "coverage assessment"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "AFLA",
+      "capabilities": [
+        "AFLA Trust Calibration V1",
+        "Founder Review Operator Dashboard V1"
+      ],
+      "consumers": [
+        "Autonomous Founder Launch Authority",
+        "Command Center Brain"
+      ],
+      "providers": [
+        "trust calibration",
+        "verdict stability",
+        "founder alignment",
+        "founder review panel",
+        "operator visibility",
+        "AFLA cache integration"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "Product Architect Intelligence",
+      "capabilities": [
+        "Product Architect Intelligence V1"
+      ],
+      "consumers": [
+        "CQI Maturity V1",
+        "UVL Verification Execution V1"
+      ],
+      "providers": [
+        "product completeness",
+        "architecture review",
+        "gap reports"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "Production Readiness Gate",
+      "capabilities": [
+        "Production Readiness Gate V1",
+        "Customer Operations Platform V1"
+      ],
+      "consumers": [
+        "Real Build Execution Pipeline V1.1",
+        "Production Readiness Gate V1",
+        "Cloud Execution Path V1",
+        "Multi-Project Concurrent Execution V1",
+        "World2 Real Instantiation V1",
+        "Strategic Capability Audit V4"
+      ],
+      "providers": [
+        "production readiness score",
+        "production decision",
+        "deployment readiness",
+        "customer onboarding",
+        "tenant isolation",
+        "project ownership",
+        "usage tracking"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "Cloud Execution Path",
+      "capabilities": [
+        "Cloud Execution Path V1"
+      ],
+      "consumers": [
+        "Real Build Execution Pipeline V1.1"
+      ],
+      "providers": [
+        "cloud job contract",
+        "queue",
+        "workers",
+        "cloud-ready packages"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "General-Purpose Code Generation",
+      "capabilities": [
+        "General-Purpose Code Generation V1"
+      ],
+      "consumers": [
+        "Code Generation Engine V1"
+      ],
+      "providers": [
+        "domain diversity",
+        "general-purpose codegen proof"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "Large-Scale Pipeline Integration",
+      "capabilities": [
+        "Large-Scale Pipeline Integration V1",
+        "Large-Scale Multi-App Validation V1",
+        "Multi-Project Concurrent Execution V1"
+      ],
+      "consumers": [
+        "Real Build Execution Pipeline V1.1",
+        "UVL Verification Execution V1",
+        "Production Readiness Gate V1",
+        "Mobile Runtime Validation at Scale V1",
+        "Feature Reality Validation",
+        "World2 Real Instantiation V1",
+        "Cloud Execution Path V1"
+      ],
+      "providers": [
+        "pipeline score",
+        "category mapping",
+        "gap classification",
+        "audit impact",
+        "58-category breadth validation",
+        "generalization score",
+        "concurrent execution proof",
+        "multi-project isolation",
+        "parallel build proof"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "World2",
+      "capabilities": [
+        "World2 Real Instantiation V1"
+      ],
+      "consumers": [
+        "Cloud Execution Path V1",
+        "Real Build Execution Pipeline V1.1"
+      ],
+      "providers": [
+        "isolated worlds",
+        "promotion",
+        "destruction proof",
+        "World1 protection"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "Mobile Runtime Validation",
+      "capabilities": [
+        "Mobile Runtime Validation at Scale V1"
+      ],
+      "consumers": [
+        "Real Build Execution Pipeline V1.1",
+        "World2 Real Instantiation V1"
+      ],
+      "providers": [
+        "mobile runtime proof",
+        "touch interaction",
+        "mobile profile coverage"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "Validation Runtime Governance",
+      "capabilities": [
+        "Validation Runtime Audit V1",
+        "Validation Runtime Governance V1",
+        "Unified Failure Escalation Authority V1",
+        "Operational Evidence Freshness Authority V1"
+      ],
+      "consumers": [
+        "Validation Runtime Governance V1",
+        "Self-Evolution Execution V1",
+        "World2 Real Instantiation V1",
+        "Canonical Ownership V2 Registration",
+        "Multi-Project Concurrent Execution V1",
+        "Unified Failure Escalation Authority V1",
+        "Capability Audit V3.1"
+      ],
+      "providers": [
+        "duplicate work analysis",
+        "runtime metrics",
+        "dependency graph",
+        "validation tiering",
+        "caching",
+        "reuse policy",
+        "runtime budgets",
+        "failure escalation",
+        "three-failure rule",
+        "escalation effectiveness",
+        "evidence freshness scoring",
+        "confidence decay",
+        "revalidation recommendations"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "Self-Evolution Execution",
+      "capabilities": [
+        "Self-Evolution Execution V1"
+      ],
+      "consumers": [
+        "Capability Audit V3.1",
+        "World2 Real Instantiation V1"
+      ],
+      "providers": [
+        "gap detection",
+        "evolution proposals",
+        "World2 experiments",
+        "promotion path"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "Customer Operations Platform",
+      "capabilities": [
+        "Production Observability Platform V1"
+      ],
+      "consumers": [
+        "Customer Operations Platform V1",
+        "Cloud Execution Path V1",
+        "Unified Failure Escalation Authority V1",
+        "Production Readiness Gate V1",
+        "Strategic Capability Audit V4"
+      ],
+      "providers": [
+        "application health",
+        "deployment tracking",
+        "availability monitoring",
+        "incident detection"
+      ]
+    },
+    {
+      "readOnly": true,
+      "owner": "Production Observability Platform",
+      "capabilities": [
+        "Continuous Deployment Pipeline V1"
+      ],
+      "consumers": [
+        "Production Observability Platform V1",
+        "Cloud Execution Path V1",
+        "Production Readiness Gate V1",
+        "Unified Failure Escalation Authority V1",
+        "Strategic Capability Audit V4"
+      ],
+      "providers": [
+        "deployment candidates",
+        "promotion governance",
+        "deployment history",
+        "rollback recommendations"
+      ]
+    }
+  ]
+}

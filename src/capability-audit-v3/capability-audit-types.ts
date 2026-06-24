@@ -154,6 +154,36 @@ export interface OperationalMaturityReport {
   fullPipelineProvenAcrossSuite: boolean;
   verificationIsBlockingGap: boolean;
   uvlEvidenceRefresh: UvlEvidenceRefresh;
+  evidenceFreshness: {
+    freshCount: number;
+    agingCount: number;
+    staleCount: number;
+    expiredCount: number;
+    overallFreshnessScore: number;
+    proven: boolean;
+  };
+  evidenceRevalidation: {
+    freshEvidenceCount: number;
+    expiredEvidenceCount: number;
+    revalidatedEvidenceCount: number;
+    confidenceRecovered: number;
+    recentlyRefreshedCount: number;
+    proven: boolean;
+  };
+  productionObservability: {
+    observedApplications: number;
+    observedDeployments: number;
+    openIncidents: number;
+    overallAvailabilityScore: number;
+    proven: boolean;
+  };
+  continuousDeployment: {
+    deploymentCandidates: number;
+    promotionDecisions: number;
+    deploymentHistoryEntries: number;
+    deploymentSuccessRate: number;
+    proven: boolean;
+  };
 }
 
 export interface ProductionReadinessDimension {

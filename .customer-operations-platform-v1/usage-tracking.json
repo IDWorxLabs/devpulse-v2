@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-06-24T23:04:23.026Z",
+  "usage": [
+    {
+      "readOnly": true,
+      "customerId": "cust-acme-corp",
+      "tenantId": "tenant-acme-corp",
+      "projectsCreated": 2,
+      "buildsExecuted": 24,
+      "verificationsExecuted": 20,
+      "world2Executions": 8,
+      "concurrentExecutions": 2,
+      "productionDeployments": 2
+    },
+    {
+      "readOnly": true,
+      "customerId": "cust-nova-labs",
+      "tenantId": "tenant-nova-labs",
+      "projectsCreated": 2,
+      "buildsExecuted": 40,
+      "verificationsExecuted": 36,
+      "world2Executions": 12,
+      "concurrentExecutions": 4,
+      "productionDeployments": 4
+    },
+    {
+      "readOnly": true,
+      "customerId": "cust-starter-studio",
+      "tenantId": "tenant-starter-studio",
+      "projectsCreated": 1,
+      "buildsExecuted": 8,
+      "verificationsExecuted": 6,
+      "world2Executions": 2,
+      "concurrentExecutions": 1,
+      "productionDeployments": 0
+    }
+  ]
+}

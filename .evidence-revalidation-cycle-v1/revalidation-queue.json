@@ -1,0 +1,48 @@
+[
+  {
+    "readOnly": true,
+    "evidenceId": "cqi-maturity-v1",
+    "capabilityId": "CQI Maturity V1",
+    "priority": "HIGH",
+    "currentStatus": "EXPIRED",
+    "recommendedAction": "TARGETED Validation",
+    "validatorsToRun": [],
+    "estimatedRuntimeSeconds": 0,
+    "governancePlannerUsed": true
+  },
+  {
+    "readOnly": true,
+    "evidenceId": "real-build-execution-v1-1",
+    "capabilityId": "Real Build Execution Pipeline V1.1",
+    "priority": "HIGH",
+    "currentStatus": "EXPIRED",
+    "recommendedAction": "TARGETED Validation",
+    "validatorsToRun": [],
+    "estimatedRuntimeSeconds": 0,
+    "governancePlannerUsed": true
+  },
+  {
+    "readOnly": true,
+    "evidenceId": "uvl-verification-execution-v1",
+    "capabilityId": "UVL Verification Execution V1",
+    "priority": "HIGH",
+    "currentStatus": "EXPIRED",
+    "recommendedAction": "TARGETED Validation",
+    "validatorsToRun": [],
+    "estimatedRuntimeSeconds": 0,
+    "governancePlannerUsed": true
+  },
+  {
+    "readOnly": true,
+    "evidenceId": "validation-runtime-governance-v1",
+    "capabilityId": "Validation Runtime Governance V1",
+    "priority": "HIGH",
+    "currentStatus": "EXPIRED",
+    "recommendedAction": "TARGETED Validation",
+    "validatorsToRun": [
+      "validate:validation-runtime-governance-v1"
+    ],
+    "estimatedRuntimeSeconds": 1328,
+    "governancePlannerUsed": true
+  }
+]

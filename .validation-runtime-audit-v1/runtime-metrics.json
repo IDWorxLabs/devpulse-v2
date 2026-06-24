@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-06-24T16:00:21.684Z",
-  "validatorCount": 457,
-  "registeredValidatorCount": 408,
-  "totalEstimatedRuntimeSeconds": 16160,
-  "totalEstimatedRuntimeMinutes": 269.3,
+  "generatedAt": "2026-06-24T21:30:09.530Z",
+  "validatorCount": 462,
+  "registeredValidatorCount": 413,
+  "totalEstimatedRuntimeSeconds": 18056,
+  "totalEstimatedRuntimeMinutes": 300.9,
   "aggregateDuplicateWorkPercent": 95,
   "regressionChain": {
     "typicalImplementationMinutes": 5,
@@ -1146,6 +1146,31 @@
       "maxRuntimeBoundMs": null,
       "validationMode": "UNMARKED",
       "registeredInPackageJson": false
+    },
+    {
+      "validatorName": "validate:canonical-ownership-v2",
+      "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-canonical-ownership-v2.ts",
+      "category": "OTHER",
+      "runtimeSeconds": 3,
+      "runtimeMinutes": 0.05,
+      "measurementSource": "STATIC_ESTIMATE",
+      "costTier": "LOW",
+      "duplicateWorkPercent": 0,
+      "workPatterns": {
+        "npmInstallCount": 0,
+        "npmBuildCount": 0,
+        "previewServerCount": 0,
+        "playwrightExecutionCount": 0,
+        "workspaceMaterializationCount": 0,
+        "uvlExecutionCount": 0,
+        "aflaExecutionCount": 0,
+        "auditExecutionCount": 0,
+        "realBuildPipelineCount": 0,
+        "nestedValidatorCount": 0
+      },
+      "maxRuntimeBoundMs": 120000,
+      "validationMode": "UNMARKED",
+      "registeredInPackageJson": true
     },
     {
       "validatorName": "validate:capability-audit-v1",
@@ -5798,6 +5823,31 @@
       "registeredInPackageJson": true
     },
     {
+      "validatorName": "validate:large-scale-pipeline-integration-v1",
+      "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-large-scale-pipeline-integration-v1.ts",
+      "category": "OTHER",
+      "runtimeSeconds": 3,
+      "runtimeMinutes": 0.05,
+      "measurementSource": "STATIC_ESTIMATE",
+      "costTier": "LOW",
+      "duplicateWorkPercent": 0,
+      "workPatterns": {
+        "npmInstallCount": 0,
+        "npmBuildCount": 0,
+        "previewServerCount": 0,
+        "playwrightExecutionCount": 0,
+        "workspaceMaterializationCount": 0,
+        "uvlExecutionCount": 0,
+        "aflaExecutionCount": 0,
+        "auditExecutionCount": 0,
+        "realBuildPipelineCount": 0,
+        "nestedValidatorCount": 0
+      },
+      "maxRuntimeBoundMs": 120000,
+      "validationMode": "UNMARKED",
+      "registeredInPackageJson": true
+    },
+    {
       "validatorName": "validate:launch-blocker-board",
       "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-launch-blocker-board.ts",
       "category": "OTHER",
@@ -6669,6 +6719,31 @@
         "nestedValidatorCount": 0
       },
       "maxRuntimeBoundMs": 2000,
+      "validationMode": "UNMARKED",
+      "registeredInPackageJson": true
+    },
+    {
+      "validatorName": "validate:mobile-runtime-validation-at-scale-v1",
+      "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-mobile-runtime-validation-at-scale-v1.ts",
+      "category": "OTHER",
+      "runtimeSeconds": 630,
+      "runtimeMinutes": 10.5,
+      "measurementSource": "MAX_RUNTIME_BOUND",
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 0,
+      "workPatterns": {
+        "npmInstallCount": 0,
+        "npmBuildCount": 0,
+        "previewServerCount": 0,
+        "playwrightExecutionCount": 0,
+        "workspaceMaterializationCount": 0,
+        "uvlExecutionCount": 0,
+        "aflaExecutionCount": 0,
+        "auditExecutionCount": 0,
+        "realBuildPipelineCount": 0,
+        "nestedValidatorCount": 0
+      },
+      "maxRuntimeBoundMs": 1800000,
       "validationMode": "UNMARKED",
       "registeredInPackageJson": true
     },
@@ -9198,6 +9273,31 @@
       "registeredInPackageJson": true
     },
     {
+      "validatorName": "validate:self-evolution-execution-v1",
+      "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-self-evolution-execution-v1.ts",
+      "category": "OTHER",
+      "runtimeSeconds": 630,
+      "runtimeMinutes": 10.5,
+      "measurementSource": "MAX_RUNTIME_BOUND",
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 0,
+      "workPatterns": {
+        "npmInstallCount": 0,
+        "npmBuildCount": 0,
+        "previewServerCount": 0,
+        "playwrightExecutionCount": 0,
+        "workspaceMaterializationCount": 0,
+        "uvlExecutionCount": 0,
+        "aflaExecutionCount": 0,
+        "auditExecutionCount": 0,
+        "realBuildPipelineCount": 0,
+        "nestedValidatorCount": 0
+      },
+      "maxRuntimeBoundMs": 1800000,
+      "validationMode": "UNMARKED",
+      "registeredInPackageJson": true
+    },
+    {
       "validatorName": "validate:self-evolution-governance",
       "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-self-evolution-governance.ts",
       "category": "OTHER",
@@ -11195,6 +11295,31 @@
       },
       "maxRuntimeBoundMs": null,
       "validationMode": "FAST_FEATURE_CHECK",
+      "registeredInPackageJson": true
+    },
+    {
+      "validatorName": "validate:world2-real-instantiation-v1",
+      "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-world2-real-instantiation-v1.ts",
+      "category": "WORLD2",
+      "runtimeSeconds": 630,
+      "runtimeMinutes": 10.5,
+      "measurementSource": "MAX_RUNTIME_BOUND",
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 0,
+      "workPatterns": {
+        "npmInstallCount": 0,
+        "npmBuildCount": 0,
+        "previewServerCount": 0,
+        "playwrightExecutionCount": 0,
+        "workspaceMaterializationCount": 0,
+        "uvlExecutionCount": 0,
+        "aflaExecutionCount": 0,
+        "auditExecutionCount": 0,
+        "realBuildPipelineCount": 0,
+        "nestedValidatorCount": 0
+      },
+      "maxRuntimeBoundMs": 1800000,
+      "validationMode": "UNMARKED",
       "registeredInPackageJson": true
     },
     {

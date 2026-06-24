@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-06-24T23:04:19.867Z",
+  "recommendations": [
+    {
+      "readOnly": true,
+      "recommendationId": "rec-inc-app-proj-nova-marketplace-degraded",
+      "incidentId": "inc-app-proj-nova-marketplace-degraded",
+      "action": "Rebuild deployment",
+      "rationale": "Error spike exceeds threshold — rebuild with increased validation.",
+      "autonomousModificationAllowed": false
+    },
+    {
+      "readOnly": true,
+      "recommendationId": "rec-inc-app-proj-starter-booking-warning",
+      "incidentId": "inc-app-proj-starter-booking-warning",
+      "action": "Increase validation frequency",
+      "rationale": "Availability below healthy threshold — increase validation cadence via OEFA.",
+      "autonomousModificationAllowed": false
+    },
+    {
+      "readOnly": true,
+      "recommendationId": "rec-operator-standby",
+      "incidentId": "inc-app-proj-nova-marketplace-degraded",
+      "action": "Escalate to operator",
+      "rationale": "Production observability standby — UFEA decides escalation path for all incidents.",
+      "autonomousModificationAllowed": false
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-06-24T23:04:47.029Z",
+  "gaps": [
+    {
+      "readOnly": true,
+      "gapId": "continuous-deployment-pipeline",
+      "category": "Operational Capabilities",
+      "capability": "Continuous deployment pipeline for customer apps",
+      "severity": "LOW",
+      "detail": "Continuous Deployment Pipeline V1 PASS — governed promotion from candidate through staging to production with observability validation.",
+      "evidenceBasis": "Commercialization readiness — Continuous Deployment dimension 92/100 after CD V1",
+      "strategicValueScore": 45
+    },
+    {
+      "readOnly": true,
+      "gapId": "operational-monitoring",
+      "category": "Operational Capabilities",
+      "capability": "Production observability for deployed apps",
+      "severity": "LOW",
+      "detail": "Production Observability Platform V1 PASS — runtime health, alerting, and incident visibility proven for customer-deployed applications.",
+      "evidenceBasis": "Commercialization readiness — Operational Monitoring dimension 92/100 after POP V1",
+      "strategicValueScore": 40
+    }
+  ],
+  "noMajorGapsConclusion": true
+}

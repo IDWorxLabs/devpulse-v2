@@ -1,0 +1,56 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T23:04:47.028Z",
+  "overallScore": 95,
+  "softwareFactoryReady": true,
+  "dimensions": [
+    {
+      "dimension": "Requirements → Planning",
+      "score": 85,
+      "status": "PARTIAL",
+      "evidence": "CQI Maturity V1 and planning gate authority validated."
+    },
+    {
+      "dimension": "Planning → Generation → Build",
+      "score": 100,
+      "status": "PROVEN",
+      "evidence": "Build coverage 15/15."
+    },
+    {
+      "dimension": "Build → Preview → Verification",
+      "score": 100,
+      "status": "PROVEN",
+      "evidence": "Verification 15/15."
+    },
+    {
+      "dimension": "Verification → Launch",
+      "score": 95,
+      "status": "PROVEN",
+      "evidence": "AFLA 15/15."
+    },
+    {
+      "dimension": "Multi-Project Orchestration",
+      "score": 100,
+      "status": "PROVEN",
+      "evidence": "MPCE V1 PASS"
+    },
+    {
+      "dimension": "Isolated Execution (World2)",
+      "score": 95,
+      "status": "PROVEN",
+      "evidence": "World2 Real Instantiation V1 PASS"
+    },
+    {
+      "dimension": "Failure Recovery",
+      "score": 90,
+      "status": "PROVEN",
+      "evidence": "UFEA V1 PASS"
+    },
+    {
+      "dimension": "Evidence Governance",
+      "score": 92,
+      "status": "PROVEN",
+      "evidence": "OEFA V1 PASS"
+    }
+  ]
+}

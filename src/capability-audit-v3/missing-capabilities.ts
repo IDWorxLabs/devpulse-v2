@@ -14,6 +14,10 @@ import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeli
 import { isWorld2RealInstantiationProven } from '../world2-real-instantiation-v1/index.js';
 import { isMobileRuntimeValidationProven } from '../mobile-runtime-validation-at-scale-v1/index.js';
 import { isSelfEvolutionExecutionProven } from '../self-evolution-execution-v1/index.js';
+import { isCanonicalOwnershipV2Proven } from '../canonical-ownership-v2/index.js';
+import { isMultiProjectConcurrentExecutionProven } from '../multi-project-concurrent-execution-v1/index.js';
+import { isUnifiedFailureEscalationProven } from '../unified-failure-escalation-authority-v1/index.js';
+import { isOperationalEvidenceFreshnessProven } from '../operational-evidence-freshness-authority-v1/index.js';
 
 const BASE_MISSING_CAPABILITIES: readonly MissingCapabilitiesReport['entries'][number][] = [
   {
@@ -85,6 +89,13 @@ const BASE_MISSING_CAPABILITIES: readonly MissingCapabilitiesReport['entries'][n
     focusArea: 'Self-Evolution',
     detail: 'Partial coverage via repair loop and self-evolution triggers; no single escalation owner.',
   },
+  {
+    capability: 'Operational evidence freshness governance',
+    severity: 'MEDIUM',
+    focusArea: 'Validation Runtime Governance',
+    detail:
+      'Capabilities are proven but evidence freshness is not governed. Proof lifespan and revalidation cadence unvalidated.',
+  },
 ];
 
 export function buildMissingCapabilitiesReport(input?: {
@@ -152,6 +163,30 @@ export function buildMissingCapabilitiesReport(input?: {
     if (
       isSelfEvolutionExecutionProven(root) &&
       entry.capability === 'Self-modification execution'
+    ) {
+      return false;
+    }
+    if (
+      isCanonicalOwnershipV2Proven(root) &&
+      entry.capability === 'Canonical ownership registration for V2/V3 modules'
+    ) {
+      return false;
+    }
+    if (
+      isMultiProjectConcurrentExecutionProven(root) &&
+      entry.capability === 'Parallel build execution'
+    ) {
+      return false;
+    }
+    if (
+      isUnifiedFailureEscalationProven(root) &&
+      entry.capability === 'Unified failure escalation authority'
+    ) {
+      return false;
+    }
+    if (
+      isOperationalEvidenceFreshnessProven(root) &&
+      entry.capability === 'Operational evidence freshness governance'
     ) {
       return false;
     }

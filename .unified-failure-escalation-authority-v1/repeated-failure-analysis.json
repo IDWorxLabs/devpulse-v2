@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-06-24T23:04:37.044Z",
+  "analyses": [
+    {
+      "readOnly": true,
+      "generatedAt": "2026-06-24T23:04:37.038Z",
+      "fingerprint": "demo-build-fp-1",
+      "failureCount": 3,
+      "firstStrategy": "RETRY",
+      "secondStrategy": "REPAIR",
+      "thirdStrategy": "WORLD2_EXPERIMENT",
+      "threeFailureRuleEnforced": true
+    },
+    {
+      "readOnly": true,
+      "generatedAt": "2026-06-24T23:04:37.038Z",
+      "fingerprint": "demo-verify-fp-1",
+      "failureCount": 3,
+      "firstStrategy": "RETRY",
+      "secondStrategy": "REPAIR",
+      "thirdStrategy": "CAPABILITY_EVOLUTION",
+      "threeFailureRuleEnforced": true
+    }
+  ]
+}

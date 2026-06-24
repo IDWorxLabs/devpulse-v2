@@ -1,0 +1,185 @@
+{
+  "generatedAt": "2026-06-24T23:04:37.044Z",
+  "decisions": [
+    {
+      "readOnly": true,
+      "incidentId": "e942e5cd-d8fb-453a-b6f5-bea70c67b2f3",
+      "strategy": "RETRY",
+      "canonicalOwner": "Self-Evolution Execution",
+      "rationale": "Requirement Failure from Self-Evolution — repeat #1 — Missing ownership",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.038Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "8bb9838f-875d-4dde-a68d-cef8ce8f958e",
+      "strategy": "REPAIR",
+      "canonicalOwner": "Self-Evolution Execution",
+      "rationale": "Evolution Failure from Self-Evolution — repeat #2 — Capability gap",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.039Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "17ca1247-7a8a-45e3-a231-104d67c233e8",
+      "strategy": "RESEARCH",
+      "canonicalOwner": "Self-Evolution Execution",
+      "rationale": "Planning Failure from Self-Evolution — repeat #3 — Capability gap",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.039Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "25d032a5-13c3-440d-85d8-92d5d5064baa",
+      "strategy": "RETRY",
+      "canonicalOwner": "Capability Audit",
+      "rationale": "Requirement Failure from Capability Audit — repeat #1 — Evidence defect",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.039Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "2e5b38a0-d96e-43fa-bf6a-1aca3e91780d",
+      "strategy": "REPAIR",
+      "canonicalOwner": "Capability Audit",
+      "rationale": "Verification Failure from Capability Audit — repeat #2 — Evidence defect",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.039Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "18f4128c-373c-4bed-9a8b-1ed76002533e",
+      "strategy": "WORLD2_EXPERIMENT",
+      "canonicalOwner": "Capability Audit",
+      "rationale": "Build Failure from Capability Audit — repeat #3 — Evidence defect",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": "ca86dccf-6c70-465a-8467-f088bdb3dddd",
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "c6869b55-8de6-4033-8536-20009940fb8c",
+      "strategy": "RETRY",
+      "canonicalOwner": "Customer Operations Platform",
+      "rationale": "Production Failure from Production Observability Platform — repeat #1 — Implementation defect",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "f284aa9a-1045-48dc-9c44-b3136e325dc2",
+      "strategy": "RETRY",
+      "canonicalOwner": "Customer Operations Platform",
+      "rationale": "Production Failure from Production Observability Platform — repeat #1 — Implementation defect",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "2225993e-8373-482d-9dd4-887c6808eefa",
+      "strategy": "RETRY",
+      "canonicalOwner": "Production Observability Platform",
+      "rationale": "Production Failure from Continuous Deployment Pipeline — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "1e5035ca-9146-4acc-8d8c-6cda0eaf87a1",
+      "strategy": "RETRY",
+      "canonicalOwner": "Production Observability Platform",
+      "rationale": "Architecture Failure from Continuous Deployment Pipeline — repeat #1 — Regression",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "8740c609-3db7-47e2-8a52-565db107c34e",
+      "strategy": "RETRY",
+      "canonicalOwner": "CQI",
+      "rationale": "Requirement Failure from CQI — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "ca85eecb-e593-4104-b8af-30a417c44706",
+      "strategy": "RETRY",
+      "canonicalOwner": "AFLA",
+      "rationale": "Launch Failure from AFLA — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "baed6d58-4a35-431b-b9cf-08fd301892a4",
+      "strategy": "RETRY",
+      "canonicalOwner": "Product Architect Intelligence",
+      "rationale": "Product Failure from Product Architect — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "71f8a523-7dac-46fc-9f66-fb7c073913da",
+      "strategy": "RETRY",
+      "canonicalOwner": "Large-Scale Pipeline Integration",
+      "rationale": "Build Failure from Concurrent Execution — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "07cbcfeb-9e70-4126-8b69-a216f03575bd",
+      "strategy": "RETRY",
+      "canonicalOwner": "UVL",
+      "rationale": "Verification Failure from UVL — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "41dd17ed-aaf2-4767-8c12-cad0e82c56bf",
+      "strategy": "BLOCK_RELEASE",
+      "canonicalOwner": "Production Readiness Gate",
+      "rationale": "Production Failure from Production Readiness — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "fcd35335-4e47-4b93-9a5a-fe141cc95dba",
+      "strategy": "RETRY",
+      "canonicalOwner": "World2",
+      "rationale": "Build Failure from World2 — repeat #1 — Missing validation",
+      "selfEvolutionExecutorOnly": false,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    },
+    {
+      "readOnly": true,
+      "incidentId": "b038f4e3-51c1-4f16-a78c-45119360ce4c",
+      "strategy": "CAPABILITY_EVOLUTION",
+      "canonicalOwner": "Self-Evolution Execution",
+      "rationale": "Verification failure #3 — capability evolution (Self-Evolution is executor only)",
+      "selfEvolutionExecutorOnly": true,
+      "world2ExperimentId": null,
+      "decidedAt": "2026-06-24T23:04:37.043Z"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "readOnly": true,
+  "jobId": "3621eff7-4f9d-46c6-8568-6f368f17fb33",
+  "profile": "APPOINTMENT_BOOKING_WEB_V1",
+  "executionMode": "CLOUD_SIMULATED",
+  "buildProof": true,
+  "previewProof": true,
+  "verificationProof": false,
+  "aflaVerdict": "NOT_LAUNCH_READY",
+  "productionReadinessScore": 81,
+  "runtimeDurationMs": 9702
+}

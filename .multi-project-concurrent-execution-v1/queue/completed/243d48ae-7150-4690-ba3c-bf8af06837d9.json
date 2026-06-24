@@ -1,0 +1,13 @@
+{
+  "readOnly": true,
+  "jobId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+  "projectId": "mpce-marketplace_web_v1",
+  "profile": "MARKETPLACE_WEB_V1",
+  "productName": "Marketplace",
+  "worldId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+  "status": "COMPLETED",
+  "queuedAt": "2026-06-24T21:51:08.273Z",
+  "startedAt": "2026-06-24T21:51:08.281Z",
+  "completedAt": "2026-06-24T21:51:59.380Z",
+  "workerId": "mpce-worker-3"
+}

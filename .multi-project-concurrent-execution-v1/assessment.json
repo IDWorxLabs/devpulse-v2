@@ -1,0 +1,1715 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "Multi-Project Concurrent Execution V1",
+  "passToken": "MULTI_PROJECT_CONCURRENT_EXECUTION_V1_PASS",
+  "version": "V1",
+  "generatedAt": "2026-06-24T21:51:59.403Z",
+  "concurrentProjectsProven": 5,
+  "concurrentPassRate": 100,
+  "contaminationIncidents": 0,
+  "concurrentWorld2Executions": 5,
+  "concurrentProofStatus": "PROVEN",
+  "queueSnapshot": {
+    "readOnly": true,
+    "queued": 0,
+    "active": 0,
+    "completed": 5,
+    "failed": 0,
+    "cancelled": 0,
+    "jobs": [
+      {
+        "readOnly": true,
+        "jobId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+        "projectId": "mpce-task_tracker_web_v1",
+        "profile": "TASK_TRACKER_WEB_V1",
+        "productName": "Task Tracker",
+        "worldId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+        "status": "COMPLETED",
+        "queuedAt": "2026-06-24T21:51:08.271Z",
+        "startedAt": "2026-06-24T21:51:08.278Z",
+        "completedAt": "2026-06-24T21:51:59.377Z",
+        "workerId": "mpce-worker-1"
+      },
+      {
+        "readOnly": true,
+        "jobId": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+        "projectId": "mpce-crm_web_v1",
+        "profile": "CRM_WEB_V1",
+        "productName": "CRM",
+        "worldId": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+        "status": "COMPLETED",
+        "queuedAt": "2026-06-24T21:51:08.272Z",
+        "startedAt": "2026-06-24T21:51:08.280Z",
+        "completedAt": "2026-06-24T21:51:59.379Z",
+        "workerId": "mpce-worker-2"
+      },
+      {
+        "readOnly": true,
+        "jobId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+        "projectId": "mpce-marketplace_web_v1",
+        "profile": "MARKETPLACE_WEB_V1",
+        "productName": "Marketplace",
+        "worldId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+        "status": "COMPLETED",
+        "queuedAt": "2026-06-24T21:51:08.273Z",
+        "startedAt": "2026-06-24T21:51:08.281Z",
+        "completedAt": "2026-06-24T21:51:59.380Z",
+        "workerId": "mpce-worker-3"
+      },
+      {
+        "readOnly": true,
+        "jobId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+        "projectId": "mpce-project_management_web_v1",
+        "profile": "PROJECT_MANAGEMENT_WEB_V1",
+        "productName": "Project Management",
+        "worldId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+        "status": "COMPLETED",
+        "queuedAt": "2026-06-24T21:51:08.274Z",
+        "startedAt": "2026-06-24T21:51:08.282Z",
+        "completedAt": "2026-06-24T21:51:59.382Z",
+        "workerId": "mpce-worker-4"
+      },
+      {
+        "readOnly": true,
+        "jobId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+        "projectId": "mpce-appointment_booking_web_v1",
+        "profile": "APPOINTMENT_BOOKING_WEB_V1",
+        "productName": "Booking Platform",
+        "worldId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+        "status": "COMPLETED",
+        "queuedAt": "2026-06-24T21:51:08.276Z",
+        "startedAt": "2026-06-24T21:51:08.284Z",
+        "completedAt": "2026-06-24T21:51:59.384Z",
+        "workerId": "mpce-worker-5"
+      }
+    ]
+  },
+  "resourceAllocation": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T21:51:59.399Z",
+    "totalWorkers": 5,
+    "allocations": [
+      {
+        "readOnly": true,
+        "workerId": "mpce-worker-1",
+        "projectId": "mpce-task_tracker_web_v1",
+        "cpuBudgetPercent": 20,
+        "memoryBudgetMb": 512,
+        "previewSlot": true,
+        "worldSlot": true,
+        "allocatedAt": "2026-06-24T21:51:08.278Z"
+      },
+      {
+        "readOnly": true,
+        "workerId": "mpce-worker-2",
+        "projectId": "mpce-crm_web_v1",
+        "cpuBudgetPercent": 20,
+        "memoryBudgetMb": 512,
+        "previewSlot": true,
+        "worldSlot": true,
+        "allocatedAt": "2026-06-24T21:51:08.280Z"
+      },
+      {
+        "readOnly": true,
+        "workerId": "mpce-worker-3",
+        "projectId": "mpce-marketplace_web_v1",
+        "cpuBudgetPercent": 20,
+        "memoryBudgetMb": 512,
+        "previewSlot": true,
+        "worldSlot": true,
+        "allocatedAt": "2026-06-24T21:51:08.281Z"
+      },
+      {
+        "readOnly": true,
+        "workerId": "mpce-worker-4",
+        "projectId": "mpce-project_management_web_v1",
+        "cpuBudgetPercent": 20,
+        "memoryBudgetMb": 512,
+        "previewSlot": true,
+        "worldSlot": true,
+        "allocatedAt": "2026-06-24T21:51:08.282Z"
+      },
+      {
+        "readOnly": true,
+        "workerId": "mpce-worker-5",
+        "projectId": "mpce-appointment_booking_web_v1",
+        "cpuBudgetPercent": 20,
+        "memoryBudgetMb": 512,
+        "previewSlot": true,
+        "worldSlot": true,
+        "allocatedAt": "2026-06-24T21:51:08.284Z"
+      }
+    ],
+    "noStarvation": true,
+    "noDeadlocks": true,
+    "noOrphanJobs": true
+  },
+  "contaminationAssessment": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T21:51:59.402Z",
+    "workspaceOverlap": false,
+    "artifactOverwrite": false,
+    "sharedBuildOutput": false,
+    "crossProjectProofLeakage": false,
+    "queueCorruption": false,
+    "authorityContamination": false,
+    "contaminationIncidents": 0,
+    "violations": [],
+    "passed": true
+  },
+  "buildProof": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T21:51:59.403Z",
+    "entries": [
+      {
+        "readOnly": true,
+        "projectId": "mpce-task_tracker_web_v1",
+        "profile": "TASK_TRACKER_WEB_V1",
+        "productName": "Task Tracker",
+        "buildStartedAt": "2026-06-24T21:51:08.291Z",
+        "buildCompletedAt": "2026-06-24T21:51:20.508Z",
+        "previewStartedAt": "2026-06-24T21:51:08.291Z",
+        "previewCompletedAt": "2026-06-24T21:51:20.508Z",
+        "verificationCompletedAt": "2026-06-24T21:51:20.508Z",
+        "buildProof": true,
+        "previewProof": true,
+        "verificationProof": true
+      },
+      {
+        "readOnly": true,
+        "projectId": "mpce-crm_web_v1",
+        "profile": "CRM_WEB_V1",
+        "productName": "CRM",
+        "buildStartedAt": "2026-06-24T21:51:20.513Z",
+        "buildCompletedAt": "2026-06-24T21:51:30.307Z",
+        "previewStartedAt": "2026-06-24T21:51:20.513Z",
+        "previewCompletedAt": "2026-06-24T21:51:30.307Z",
+        "verificationCompletedAt": "2026-06-24T21:51:30.307Z",
+        "buildProof": true,
+        "previewProof": true,
+        "verificationProof": true
+      },
+      {
+        "readOnly": true,
+        "projectId": "mpce-marketplace_web_v1",
+        "profile": "MARKETPLACE_WEB_V1",
+        "productName": "Marketplace",
+        "buildStartedAt": "2026-06-24T21:51:30.310Z",
+        "buildCompletedAt": "2026-06-24T21:51:40.033Z",
+        "previewStartedAt": "2026-06-24T21:51:30.310Z",
+        "previewCompletedAt": "2026-06-24T21:51:40.033Z",
+        "verificationCompletedAt": "2026-06-24T21:51:40.033Z",
+        "buildProof": true,
+        "previewProof": true,
+        "verificationProof": true
+      },
+      {
+        "readOnly": true,
+        "projectId": "mpce-project_management_web_v1",
+        "profile": "PROJECT_MANAGEMENT_WEB_V1",
+        "productName": "Project Management",
+        "buildStartedAt": "2026-06-24T21:51:40.037Z",
+        "buildCompletedAt": "2026-06-24T21:51:49.752Z",
+        "previewStartedAt": "2026-06-24T21:51:40.037Z",
+        "previewCompletedAt": "2026-06-24T21:51:49.752Z",
+        "verificationCompletedAt": "2026-06-24T21:51:49.752Z",
+        "buildProof": true,
+        "previewProof": true,
+        "verificationProof": true
+      },
+      {
+        "readOnly": true,
+        "projectId": "mpce-appointment_booking_web_v1",
+        "profile": "APPOINTMENT_BOOKING_WEB_V1",
+        "productName": "Booking Platform",
+        "buildStartedAt": "2026-06-24T21:51:49.756Z",
+        "buildCompletedAt": "2026-06-24T21:51:59.373Z",
+        "previewStartedAt": "2026-06-24T21:51:49.756Z",
+        "previewCompletedAt": "2026-06-24T21:51:59.373Z",
+        "verificationCompletedAt": "2026-06-24T21:51:59.373Z",
+        "buildProof": true,
+        "previewProof": true,
+        "verificationProof": true
+      }
+    ],
+    "allBuildProofComplete": true
+  },
+  "verificationAssessment": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T21:51:59.403Z",
+    "projectsTotal": 5,
+    "buildSuccessRate": 100,
+    "previewSuccessRate": 100,
+    "verificationSuccessRate": 100,
+    "productionReadinessRate": 100,
+    "concurrentPassRate": 100
+  },
+  "failureClassification": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T21:51:59.403Z",
+    "failures": [],
+    "totalFailures": 0
+  },
+  "world2ConcurrentResults": [
+    {
+      "readOnly": true,
+      "worldId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "passed": true,
+      "isolationPassed": true
+    },
+    {
+      "readOnly": true,
+      "worldId": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "passed": true,
+      "isolationPassed": true
+    },
+    {
+      "readOnly": true,
+      "worldId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "passed": true,
+      "isolationPassed": true
+    },
+    {
+      "readOnly": true,
+      "worldId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "passed": true,
+      "isolationPassed": true
+    },
+    {
+      "readOnly": true,
+      "worldId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "passed": true,
+      "isolationPassed": true
+    }
+  ],
+  "projectResults": [
+    {
+      "readOnly": true,
+      "projectId": "mpce-task_tracker_web_v1",
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "worldId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+      "passed": true,
+      "buildProof": true,
+      "previewProof": true,
+      "verificationProof": true,
+      "productionReadinessScore": 89,
+      "contaminationCheckPassed": true,
+      "executionResult": {
+        "readOnly": true,
+        "job": {
+          "readOnly": true,
+          "jobId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+          "projectId": "world2-task_tracker_web_v1",
+          "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+          "requirementsSnapshot": {
+            "readOnly": true,
+            "profile": "TASK_TRACKER_WEB_V1",
+            "productName": "Task Tracker",
+            "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+            "requirementConfidence": 25
+          },
+          "buildPlan": {
+            "readOnly": true,
+            "contractId": "build-ready-idea-1",
+            "planningSummary": "Contract build-ready-idea-1",
+            "codegenProfile": "TASK_TRACKER_WEB_V1"
+          },
+          "workspaceSpec": {
+            "readOnly": true,
+            "workspaceId": "w2-b3ffaf16-4b19-406a-bfab-1533293ce520",
+            "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-b3ffaf16-4b19-406a-bfab-1533293ce520",
+            "isolationToken": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+            "boundedLogsMaxLines": 500,
+            "boundedArtifactsMaxBytes": 5000000,
+            "runtimeTimeoutMs": 300000
+          },
+          "executionMode": "CLOUD_SIMULATED",
+          "requestedAt": "2026-06-24T21:51:08.291Z",
+          "status": "COMPLETED",
+          "claimedAt": null,
+          "completedAt": "2026-06-24T21:51:20.508Z",
+          "workerId": "w2-worker-b3ffaf16",
+          "currentStage": "COMPLETED",
+          "runtimeDurationMs": 12216
+        },
+        "passed": true,
+        "failureReport": null,
+        "artifactStatus": {
+          "readOnly": true,
+          "sourceManifest": true,
+          "buildLogs": true,
+          "previewProof": true,
+          "uvlVerificationProof": true,
+          "productArchitectProof": true,
+          "aflaVerdict": true,
+          "productionReadinessResult": true,
+          "executionSummary": true,
+          "cloudJobPackage": true
+        },
+        "cloudJobPackage": {
+          "readOnly": true,
+          "contractVersion": "V1",
+          "jobId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+          "projectId": "world2-task_tracker_web_v1",
+          "executionMode": "CLOUD_SIMULATED",
+          "jobMetadata": {
+            "profile": "TASK_TRACKER_WEB_V1",
+            "productName": "Task Tracker",
+            "requestedAt": "2026-06-24T21:51:08.291Z",
+            "workerId": null
+          },
+          "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+          "requirementsSnapshot": {
+            "readOnly": true,
+            "profile": "TASK_TRACKER_WEB_V1",
+            "productName": "Task Tracker",
+            "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+            "requirementConfidence": 25
+          },
+          "buildPlan": {
+            "readOnly": true,
+            "contractId": "build-ready-idea-1",
+            "planningSummary": "Contract build-ready-idea-1",
+            "codegenProfile": "TASK_TRACKER_WEB_V1"
+          },
+          "workspaceSpec": {
+            "readOnly": true,
+            "workspaceId": "w2-b3ffaf16-4b19-406a-bfab-1533293ce520",
+            "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-b3ffaf16-4b19-406a-bfab-1533293ce520",
+            "isolationToken": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+            "boundedLogsMaxLines": 500,
+            "boundedArtifactsMaxBytes": 5000000,
+            "runtimeTimeoutMs": 300000
+          },
+          "expectedArtifactOutputs": [
+            "generated-source-manifest.json",
+            "build-logs.txt",
+            "preview-proof.json",
+            "uvl-verification-proof.json",
+            "product-architect-proof.json",
+            "afla-verdict.json",
+            "production-readiness-result.json",
+            "execution-summary.json",
+            "cloud-job-package.json"
+          ],
+          "validationRequirements": [
+            "Build proof required",
+            "Preview proof required",
+            "UVL verification proof required",
+            "AFLA verdict required",
+            "Production readiness gate required",
+            "Unique isolated workspace required"
+          ],
+          "generatedAt": "2026-06-24T21:51:20.506Z"
+        },
+        "buildProof": true,
+        "previewProof": true,
+        "verificationProof": false,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "productionReadinessScore": 89,
+        "productionReadinessVerdict": "PRODUCTION_READY",
+        "executionSummary": "Cloud execution completed for Task Tracker in 12218ms",
+        "contaminationCheckPassed": true
+      },
+      "world": {
+        "readOnly": true,
+        "worldId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+        "createdAt": "2026-06-24T21:51:08.257Z",
+        "status": "COMPLETED",
+        "executionMode": "CLOUD_SIMULATED",
+        "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-b3ffaf16-4b19-406a-bfab-1533293ce520",
+        "sourceProject": "C:\\Users\\Richa\\Desktop\\DevPulse-V2",
+        "instantiatedBy": "multi-project-concurrent-execution-v1",
+        "artifactDirectory": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.world2-real-instantiation-v1\\worlds\\b3ffaf16-4b19-406a-bfab-1533293ce520",
+        "runtimeState": "ARCHIVED",
+        "promotionState": "NOT_ELIGIBLE",
+        "profile": "TASK_TRACKER_WEB_V1",
+        "productName": "Task Tracker",
+        "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+        "jobId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+        "completedAt": "2026-06-24T21:51:20.510Z",
+        "destroyedAt": null,
+        "promotedAt": null,
+        "executionResult": {
+          "readOnly": true,
+          "job": {
+            "readOnly": true,
+            "jobId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+            "projectId": "world2-task_tracker_web_v1",
+            "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+            "requirementsSnapshot": {
+              "readOnly": true,
+              "profile": "TASK_TRACKER_WEB_V1",
+              "productName": "Task Tracker",
+              "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+              "requirementConfidence": 25
+            },
+            "buildPlan": {
+              "readOnly": true,
+              "contractId": "build-ready-idea-1",
+              "planningSummary": "Contract build-ready-idea-1",
+              "codegenProfile": "TASK_TRACKER_WEB_V1"
+            },
+            "workspaceSpec": {
+              "readOnly": true,
+              "workspaceId": "w2-b3ffaf16-4b19-406a-bfab-1533293ce520",
+              "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-b3ffaf16-4b19-406a-bfab-1533293ce520",
+              "isolationToken": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+              "boundedLogsMaxLines": 500,
+              "boundedArtifactsMaxBytes": 5000000,
+              "runtimeTimeoutMs": 300000
+            },
+            "executionMode": "CLOUD_SIMULATED",
+            "requestedAt": "2026-06-24T21:51:08.291Z",
+            "status": "COMPLETED",
+            "claimedAt": null,
+            "completedAt": "2026-06-24T21:51:20.508Z",
+            "workerId": "w2-worker-b3ffaf16",
+            "currentStage": "COMPLETED",
+            "runtimeDurationMs": 12216
+          },
+          "passed": true,
+          "failureReport": null,
+          "artifactStatus": {
+            "readOnly": true,
+            "sourceManifest": true,
+            "buildLogs": true,
+            "previewProof": true,
+            "uvlVerificationProof": true,
+            "productArchitectProof": true,
+            "aflaVerdict": true,
+            "productionReadinessResult": true,
+            "executionSummary": true,
+            "cloudJobPackage": true
+          },
+          "cloudJobPackage": {
+            "readOnly": true,
+            "contractVersion": "V1",
+            "jobId": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+            "projectId": "world2-task_tracker_web_v1",
+            "executionMode": "CLOUD_SIMULATED",
+            "jobMetadata": {
+              "profile": "TASK_TRACKER_WEB_V1",
+              "productName": "Task Tracker",
+              "requestedAt": "2026-06-24T21:51:08.291Z",
+              "workerId": null
+            },
+            "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+            "requirementsSnapshot": {
+              "readOnly": true,
+              "profile": "TASK_TRACKER_WEB_V1",
+              "productName": "Task Tracker",
+              "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+              "requirementConfidence": 25
+            },
+            "buildPlan": {
+              "readOnly": true,
+              "contractId": "build-ready-idea-1",
+              "planningSummary": "Contract build-ready-idea-1",
+              "codegenProfile": "TASK_TRACKER_WEB_V1"
+            },
+            "workspaceSpec": {
+              "readOnly": true,
+              "workspaceId": "w2-b3ffaf16-4b19-406a-bfab-1533293ce520",
+              "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-b3ffaf16-4b19-406a-bfab-1533293ce520",
+              "isolationToken": "b3ffaf16-4b19-406a-bfab-1533293ce520",
+              "boundedLogsMaxLines": 500,
+              "boundedArtifactsMaxBytes": 5000000,
+              "runtimeTimeoutMs": 300000
+            },
+            "expectedArtifactOutputs": [
+              "generated-source-manifest.json",
+              "build-logs.txt",
+              "preview-proof.json",
+              "uvl-verification-proof.json",
+              "product-architect-proof.json",
+              "afla-verdict.json",
+              "production-readiness-result.json",
+              "execution-summary.json",
+              "cloud-job-package.json"
+            ],
+            "validationRequirements": [
+              "Build proof required",
+              "Preview proof required",
+              "UVL verification proof required",
+              "AFLA verdict required",
+              "Production readiness gate required",
+              "Unique isolated workspace required"
+            ],
+            "generatedAt": "2026-06-24T21:51:20.506Z"
+          },
+          "buildProof": true,
+          "previewProof": true,
+          "verificationProof": false,
+          "aflaVerdict": "NOT_LAUNCH_READY",
+          "productionReadinessScore": 89,
+          "productionReadinessVerdict": "PRODUCTION_READY",
+          "executionSummary": "Cloud execution completed for Task Tracker in 12218ms",
+          "contaminationCheckPassed": true
+        },
+        "world2VerificationProof": {
+          "readOnly": true,
+          "profile": "TASK_TRACKER_WEB_V1",
+          "verificationCoveragePercent": 85,
+          "verificationConfidenceScore": 85,
+          "verified": true,
+          "source": "UVL Verification Execution V1"
+        },
+        "world2ProductAssessment": {
+          "readOnly": true,
+          "profile": "TASK_TRACKER_WEB_V1",
+          "productReadinessScore": 89,
+          "reviewed": true,
+          "source": "Product Architect Intelligence V1"
+        }
+      }
+    },
+    {
+      "readOnly": true,
+      "projectId": "mpce-crm_web_v1",
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "worldId": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+      "passed": true,
+      "buildProof": true,
+      "previewProof": true,
+      "verificationProof": true,
+      "productionReadinessScore": 89,
+      "contaminationCheckPassed": true,
+      "executionResult": {
+        "readOnly": true,
+        "job": {
+          "readOnly": true,
+          "jobId": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+          "projectId": "world2-crm_web_v1",
+          "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+          "requirementsSnapshot": {
+            "readOnly": true,
+            "profile": "CRM_WEB_V1",
+            "productName": "CRM",
+            "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+            "requirementConfidence": 36
+          },
+          "buildPlan": {
+            "readOnly": true,
+            "contractId": "build-ready-idea-4",
+            "planningSummary": "Contract build-ready-idea-4",
+            "codegenProfile": "CRM_WEB_V1"
+          },
+          "workspaceSpec": {
+            "readOnly": true,
+            "workspaceId": "w2-4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+            "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+            "isolationToken": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+            "boundedLogsMaxLines": 500,
+            "boundedArtifactsMaxBytes": 5000000,
+            "runtimeTimeoutMs": 300000
+          },
+          "executionMode": "CLOUD_SIMULATED",
+          "requestedAt": "2026-06-24T21:51:20.513Z",
+          "status": "COMPLETED",
+          "claimedAt": null,
+          "completedAt": "2026-06-24T21:51:30.307Z",
+          "workerId": "w2-worker-4ff5be88",
+          "currentStage": "COMPLETED",
+          "runtimeDurationMs": 9794
+        },
+        "passed": true,
+        "failureReport": null,
+        "artifactStatus": {
+          "readOnly": true,
+          "sourceManifest": true,
+          "buildLogs": true,
+          "previewProof": true,
+          "uvlVerificationProof": true,
+          "productArchitectProof": true,
+          "aflaVerdict": true,
+          "productionReadinessResult": true,
+          "executionSummary": true,
+          "cloudJobPackage": true
+        },
+        "cloudJobPackage": {
+          "readOnly": true,
+          "contractVersion": "V1",
+          "jobId": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+          "projectId": "world2-crm_web_v1",
+          "executionMode": "CLOUD_SIMULATED",
+          "jobMetadata": {
+            "profile": "CRM_WEB_V1",
+            "productName": "CRM",
+            "requestedAt": "2026-06-24T21:51:20.513Z",
+            "workerId": null
+          },
+          "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+          "requirementsSnapshot": {
+            "readOnly": true,
+            "profile": "CRM_WEB_V1",
+            "productName": "CRM",
+            "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+            "requirementConfidence": 36
+          },
+          "buildPlan": {
+            "readOnly": true,
+            "contractId": "build-ready-idea-4",
+            "planningSummary": "Contract build-ready-idea-4",
+            "codegenProfile": "CRM_WEB_V1"
+          },
+          "workspaceSpec": {
+            "readOnly": true,
+            "workspaceId": "w2-4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+            "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+            "isolationToken": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+            "boundedLogsMaxLines": 500,
+            "boundedArtifactsMaxBytes": 5000000,
+            "runtimeTimeoutMs": 300000
+          },
+          "expectedArtifactOutputs": [
+            "generated-source-manifest.json",
+            "build-logs.txt",
+            "preview-proof.json",
+            "uvl-verification-proof.json",
+            "product-architect-proof.json",
+            "afla-verdict.json",
+            "production-readiness-result.json",
+            "execution-summary.json",
+            "cloud-job-package.json"
+          ],
+          "validationRequirements": [
+            "Build proof required",
+            "Preview proof required",
+            "UVL verification proof required",
+            "AFLA verdict required",
+            "Production readiness gate required",
+            "Unique isolated workspace required"
+          ],
+          "generatedAt": "2026-06-24T21:51:30.305Z"
+        },
+        "buildProof": true,
+        "previewProof": true,
+        "verificationProof": false,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "productionReadinessScore": 89,
+        "productionReadinessVerdict": "PRODUCTION_READY",
+        "executionSummary": "Cloud execution completed for CRM in 9795ms",
+        "contaminationCheckPassed": true
+      },
+      "world": {
+        "readOnly": true,
+        "worldId": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+        "createdAt": "2026-06-24T21:51:08.259Z",
+        "status": "COMPLETED",
+        "executionMode": "CLOUD_SIMULATED",
+        "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+        "sourceProject": "C:\\Users\\Richa\\Desktop\\DevPulse-V2",
+        "instantiatedBy": "multi-project-concurrent-execution-v1",
+        "artifactDirectory": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.world2-real-instantiation-v1\\worlds\\4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+        "runtimeState": "ARCHIVED",
+        "promotionState": "NOT_ELIGIBLE",
+        "profile": "CRM_WEB_V1",
+        "productName": "CRM",
+        "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+        "jobId": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+        "completedAt": "2026-06-24T21:51:30.308Z",
+        "destroyedAt": null,
+        "promotedAt": null,
+        "executionResult": {
+          "readOnly": true,
+          "job": {
+            "readOnly": true,
+            "jobId": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+            "projectId": "world2-crm_web_v1",
+            "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+            "requirementsSnapshot": {
+              "readOnly": true,
+              "profile": "CRM_WEB_V1",
+              "productName": "CRM",
+              "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+              "requirementConfidence": 36
+            },
+            "buildPlan": {
+              "readOnly": true,
+              "contractId": "build-ready-idea-4",
+              "planningSummary": "Contract build-ready-idea-4",
+              "codegenProfile": "CRM_WEB_V1"
+            },
+            "workspaceSpec": {
+              "readOnly": true,
+              "workspaceId": "w2-4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+              "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+              "isolationToken": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+              "boundedLogsMaxLines": 500,
+              "boundedArtifactsMaxBytes": 5000000,
+              "runtimeTimeoutMs": 300000
+            },
+            "executionMode": "CLOUD_SIMULATED",
+            "requestedAt": "2026-06-24T21:51:20.513Z",
+            "status": "COMPLETED",
+            "claimedAt": null,
+            "completedAt": "2026-06-24T21:51:30.307Z",
+            "workerId": "w2-worker-4ff5be88",
+            "currentStage": "COMPLETED",
+            "runtimeDurationMs": 9794
+          },
+          "passed": true,
+          "failureReport": null,
+          "artifactStatus": {
+            "readOnly": true,
+            "sourceManifest": true,
+            "buildLogs": true,
+            "previewProof": true,
+            "uvlVerificationProof": true,
+            "productArchitectProof": true,
+            "aflaVerdict": true,
+            "productionReadinessResult": true,
+            "executionSummary": true,
+            "cloudJobPackage": true
+          },
+          "cloudJobPackage": {
+            "readOnly": true,
+            "contractVersion": "V1",
+            "jobId": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+            "projectId": "world2-crm_web_v1",
+            "executionMode": "CLOUD_SIMULATED",
+            "jobMetadata": {
+              "profile": "CRM_WEB_V1",
+              "productName": "CRM",
+              "requestedAt": "2026-06-24T21:51:20.513Z",
+              "workerId": null
+            },
+            "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+            "requirementsSnapshot": {
+              "readOnly": true,
+              "profile": "CRM_WEB_V1",
+              "productName": "CRM",
+              "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+              "requirementConfidence": 36
+            },
+            "buildPlan": {
+              "readOnly": true,
+              "contractId": "build-ready-idea-4",
+              "planningSummary": "Contract build-ready-idea-4",
+              "codegenProfile": "CRM_WEB_V1"
+            },
+            "workspaceSpec": {
+              "readOnly": true,
+              "workspaceId": "w2-4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+              "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+              "isolationToken": "4ff5be88-f551-41e6-9aa6-07fa835ccaf4",
+              "boundedLogsMaxLines": 500,
+              "boundedArtifactsMaxBytes": 5000000,
+              "runtimeTimeoutMs": 300000
+            },
+            "expectedArtifactOutputs": [
+              "generated-source-manifest.json",
+              "build-logs.txt",
+              "preview-proof.json",
+              "uvl-verification-proof.json",
+              "product-architect-proof.json",
+              "afla-verdict.json",
+              "production-readiness-result.json",
+              "execution-summary.json",
+              "cloud-job-package.json"
+            ],
+            "validationRequirements": [
+              "Build proof required",
+              "Preview proof required",
+              "UVL verification proof required",
+              "AFLA verdict required",
+              "Production readiness gate required",
+              "Unique isolated workspace required"
+            ],
+            "generatedAt": "2026-06-24T21:51:30.305Z"
+          },
+          "buildProof": true,
+          "previewProof": true,
+          "verificationProof": false,
+          "aflaVerdict": "NOT_LAUNCH_READY",
+          "productionReadinessScore": 89,
+          "productionReadinessVerdict": "PRODUCTION_READY",
+          "executionSummary": "Cloud execution completed for CRM in 9795ms",
+          "contaminationCheckPassed": true
+        },
+        "world2VerificationProof": {
+          "readOnly": true,
+          "profile": "CRM_WEB_V1",
+          "verificationCoveragePercent": 85,
+          "verificationConfidenceScore": 85,
+          "verified": true,
+          "source": "UVL Verification Execution V1"
+        },
+        "world2ProductAssessment": {
+          "readOnly": true,
+          "profile": "CRM_WEB_V1",
+          "productReadinessScore": 89,
+          "reviewed": true,
+          "source": "Product Architect Intelligence V1"
+        }
+      }
+    },
+    {
+      "readOnly": true,
+      "projectId": "mpce-marketplace_web_v1",
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "worldId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+      "passed": true,
+      "buildProof": true,
+      "previewProof": true,
+      "verificationProof": true,
+      "productionReadinessScore": 81,
+      "contaminationCheckPassed": true,
+      "executionResult": {
+        "readOnly": true,
+        "job": {
+          "readOnly": true,
+          "jobId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+          "projectId": "world2-marketplace_web_v1",
+          "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+          "requirementsSnapshot": {
+            "readOnly": true,
+            "profile": "MARKETPLACE_WEB_V1",
+            "productName": "Marketplace",
+            "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+            "requirementConfidence": 22
+          },
+          "buildPlan": {
+            "readOnly": true,
+            "contractId": "build-ready-idea-7",
+            "planningSummary": "Contract build-ready-idea-7",
+            "codegenProfile": "CRM_WEB_V1"
+          },
+          "workspaceSpec": {
+            "readOnly": true,
+            "workspaceId": "w2-243d48ae-7150-4690-ba3c-bf8af06837d9",
+            "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-243d48ae-7150-4690-ba3c-bf8af06837d9",
+            "isolationToken": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+            "boundedLogsMaxLines": 500,
+            "boundedArtifactsMaxBytes": 5000000,
+            "runtimeTimeoutMs": 300000
+          },
+          "executionMode": "CLOUD_SIMULATED",
+          "requestedAt": "2026-06-24T21:51:30.310Z",
+          "status": "COMPLETED",
+          "claimedAt": null,
+          "completedAt": "2026-06-24T21:51:40.033Z",
+          "workerId": "w2-worker-243d48ae",
+          "currentStage": "COMPLETED",
+          "runtimeDurationMs": 9723
+        },
+        "passed": true,
+        "failureReport": null,
+        "artifactStatus": {
+          "readOnly": true,
+          "sourceManifest": true,
+          "buildLogs": true,
+          "previewProof": true,
+          "uvlVerificationProof": true,
+          "productArchitectProof": true,
+          "aflaVerdict": true,
+          "productionReadinessResult": true,
+          "executionSummary": true,
+          "cloudJobPackage": true
+        },
+        "cloudJobPackage": {
+          "readOnly": true,
+          "contractVersion": "V1",
+          "jobId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+          "projectId": "world2-marketplace_web_v1",
+          "executionMode": "CLOUD_SIMULATED",
+          "jobMetadata": {
+            "profile": "MARKETPLACE_WEB_V1",
+            "productName": "Marketplace",
+            "requestedAt": "2026-06-24T21:51:30.310Z",
+            "workerId": null
+          },
+          "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+          "requirementsSnapshot": {
+            "readOnly": true,
+            "profile": "MARKETPLACE_WEB_V1",
+            "productName": "Marketplace",
+            "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+            "requirementConfidence": 22
+          },
+          "buildPlan": {
+            "readOnly": true,
+            "contractId": "build-ready-idea-7",
+            "planningSummary": "Contract build-ready-idea-7",
+            "codegenProfile": "CRM_WEB_V1"
+          },
+          "workspaceSpec": {
+            "readOnly": true,
+            "workspaceId": "w2-243d48ae-7150-4690-ba3c-bf8af06837d9",
+            "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-243d48ae-7150-4690-ba3c-bf8af06837d9",
+            "isolationToken": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+            "boundedLogsMaxLines": 500,
+            "boundedArtifactsMaxBytes": 5000000,
+            "runtimeTimeoutMs": 300000
+          },
+          "expectedArtifactOutputs": [
+            "generated-source-manifest.json",
+            "build-logs.txt",
+            "preview-proof.json",
+            "uvl-verification-proof.json",
+            "product-architect-proof.json",
+            "afla-verdict.json",
+            "production-readiness-result.json",
+            "execution-summary.json",
+            "cloud-job-package.json"
+          ],
+          "validationRequirements": [
+            "Build proof required",
+            "Preview proof required",
+            "UVL verification proof required",
+            "AFLA verdict required",
+            "Production readiness gate required",
+            "Unique isolated workspace required"
+          ],
+          "generatedAt": "2026-06-24T21:51:40.031Z"
+        },
+        "buildProof": true,
+        "previewProof": true,
+        "verificationProof": false,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "productionReadinessScore": 81,
+        "productionReadinessVerdict": "PRODUCTION_READY",
+        "executionSummary": "Cloud execution completed for Marketplace in 9725ms",
+        "contaminationCheckPassed": true
+      },
+      "world": {
+        "readOnly": true,
+        "worldId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+        "createdAt": "2026-06-24T21:51:08.266Z",
+        "status": "COMPLETED",
+        "executionMode": "CLOUD_SIMULATED",
+        "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-243d48ae-7150-4690-ba3c-bf8af06837d9",
+        "sourceProject": "C:\\Users\\Richa\\Desktop\\DevPulse-V2",
+        "instantiatedBy": "multi-project-concurrent-execution-v1",
+        "artifactDirectory": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.world2-real-instantiation-v1\\worlds\\243d48ae-7150-4690-ba3c-bf8af06837d9",
+        "runtimeState": "ARCHIVED",
+        "promotionState": "NOT_ELIGIBLE",
+        "profile": "MARKETPLACE_WEB_V1",
+        "productName": "Marketplace",
+        "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+        "jobId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+        "completedAt": "2026-06-24T21:51:40.035Z",
+        "destroyedAt": null,
+        "promotedAt": null,
+        "executionResult": {
+          "readOnly": true,
+          "job": {
+            "readOnly": true,
+            "jobId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+            "projectId": "world2-marketplace_web_v1",
+            "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+            "requirementsSnapshot": {
+              "readOnly": true,
+              "profile": "MARKETPLACE_WEB_V1",
+              "productName": "Marketplace",
+              "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+              "requirementConfidence": 22
+            },
+            "buildPlan": {
+              "readOnly": true,
+              "contractId": "build-ready-idea-7",
+              "planningSummary": "Contract build-ready-idea-7",
+              "codegenProfile": "CRM_WEB_V1"
+            },
+            "workspaceSpec": {
+              "readOnly": true,
+              "workspaceId": "w2-243d48ae-7150-4690-ba3c-bf8af06837d9",
+              "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-243d48ae-7150-4690-ba3c-bf8af06837d9",
+              "isolationToken": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+              "boundedLogsMaxLines": 500,
+              "boundedArtifactsMaxBytes": 5000000,
+              "runtimeTimeoutMs": 300000
+            },
+            "executionMode": "CLOUD_SIMULATED",
+            "requestedAt": "2026-06-24T21:51:30.310Z",
+            "status": "COMPLETED",
+            "claimedAt": null,
+            "completedAt": "2026-06-24T21:51:40.033Z",
+            "workerId": "w2-worker-243d48ae",
+            "currentStage": "COMPLETED",
+            "runtimeDurationMs": 9723
+          },
+          "passed": true,
+          "failureReport": null,
+          "artifactStatus": {
+            "readOnly": true,
+            "sourceManifest": true,
+            "buildLogs": true,
+            "previewProof": true,
+            "uvlVerificationProof": true,
+            "productArchitectProof": true,
+            "aflaVerdict": true,
+            "productionReadinessResult": true,
+            "executionSummary": true,
+            "cloudJobPackage": true
+          },
+          "cloudJobPackage": {
+            "readOnly": true,
+            "contractVersion": "V1",
+            "jobId": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+            "projectId": "world2-marketplace_web_v1",
+            "executionMode": "CLOUD_SIMULATED",
+            "jobMetadata": {
+              "profile": "MARKETPLACE_WEB_V1",
+              "productName": "Marketplace",
+              "requestedAt": "2026-06-24T21:51:30.310Z",
+              "workerId": null
+            },
+            "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+            "requirementsSnapshot": {
+              "readOnly": true,
+              "profile": "MARKETPLACE_WEB_V1",
+              "productName": "Marketplace",
+              "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+              "requirementConfidence": 22
+            },
+            "buildPlan": {
+              "readOnly": true,
+              "contractId": "build-ready-idea-7",
+              "planningSummary": "Contract build-ready-idea-7",
+              "codegenProfile": "CRM_WEB_V1"
+            },
+            "workspaceSpec": {
+              "readOnly": true,
+              "workspaceId": "w2-243d48ae-7150-4690-ba3c-bf8af06837d9",
+              "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-243d48ae-7150-4690-ba3c-bf8af06837d9",
+              "isolationToken": "243d48ae-7150-4690-ba3c-bf8af06837d9",
+              "boundedLogsMaxLines": 500,
+              "boundedArtifactsMaxBytes": 5000000,
+              "runtimeTimeoutMs": 300000
+            },
+            "expectedArtifactOutputs": [
+              "generated-source-manifest.json",
+              "build-logs.txt",
+              "preview-proof.json",
+              "uvl-verification-proof.json",
+              "product-architect-proof.json",
+              "afla-verdict.json",
+              "production-readiness-result.json",
+              "execution-summary.json",
+              "cloud-job-package.json"
+            ],
+            "validationRequirements": [
+              "Build proof required",
+              "Preview proof required",
+              "UVL verification proof required",
+              "AFLA verdict required",
+              "Production readiness gate required",
+              "Unique isolated workspace required"
+            ],
+            "generatedAt": "2026-06-24T21:51:40.031Z"
+          },
+          "buildProof": true,
+          "previewProof": true,
+          "verificationProof": false,
+          "aflaVerdict": "NOT_LAUNCH_READY",
+          "productionReadinessScore": 81,
+          "productionReadinessVerdict": "PRODUCTION_READY",
+          "executionSummary": "Cloud execution completed for Marketplace in 9725ms",
+          "contaminationCheckPassed": true
+        },
+        "world2VerificationProof": {
+          "readOnly": true,
+          "profile": "MARKETPLACE_WEB_V1",
+          "verificationCoveragePercent": 85,
+          "verificationConfidenceScore": 85,
+          "verified": true,
+          "source": "UVL Verification Execution V1"
+        },
+        "world2ProductAssessment": {
+          "readOnly": true,
+          "profile": "MARKETPLACE_WEB_V1",
+          "productReadinessScore": 81,
+          "reviewed": true,
+          "source": "Product Architect Intelligence V1"
+        }
+      }
+    },
+    {
+      "readOnly": true,
+      "projectId": "mpce-project_management_web_v1",
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "worldId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+      "passed": true,
+      "buildProof": true,
+      "previewProof": true,
+      "verificationProof": true,
+      "productionReadinessScore": 89,
+      "contaminationCheckPassed": true,
+      "executionResult": {
+        "readOnly": true,
+        "job": {
+          "readOnly": true,
+          "jobId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+          "projectId": "world2-project_management_web_v1",
+          "prompt": "Build a project management system to create projects, edit them, delete them, search projects, and assign team members.",
+          "requirementsSnapshot": {
+            "readOnly": true,
+            "profile": "PROJECT_MANAGEMENT_WEB_V1",
+            "productName": "Project Management",
+            "prompt": "Build a project management system to create projects, edit them, delete them, search projects, and assign team members.",
+            "requirementConfidence": 25
+          },
+          "buildPlan": {
+            "readOnly": true,
+            "contractId": "build-ready-idea-10",
+            "planningSummary": "Contract build-ready-idea-10",
+            "codegenProfile": "PROJECT_MANAGEMENT_WEB_V1"
+          },
+          "workspaceSpec": {
+            "readOnly": true,
+            "workspaceId": "w2-01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+            "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+            "isolationToken": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+            "boundedLogsMaxLines": 500,
+            "boundedArtifactsMaxBytes": 5000000,
+            "runtimeTimeoutMs": 300000
+          },
+          "executionMode": "CLOUD_SIMULATED",
+          "requestedAt": "2026-06-24T21:51:40.037Z",
+          "status": "COMPLETED",
+          "claimedAt": null,
+          "completedAt": "2026-06-24T21:51:49.752Z",
+          "workerId": "w2-worker-01a57e59",
+          "currentStage": "COMPLETED",
+          "runtimeDurationMs": 9715
+        },
+        "passed": true,
+        "failureReport": null,
+        "artifactStatus": {
+          "readOnly": true,
+          "sourceManifest": true,
+          "buildLogs": true,
+          "previewProof": true,
+          "uvlVerificationProof": true,
+          "productArchitectProof": true,
+          "aflaVerdict": true,
+          "productionReadinessResult": true,
+          "executionSummary": true,
+          "cloudJobPackage": true
+        },
+        "cloudJobPackage": {
+          "readOnly": true,
+          "contractVersion": "V1",
+          "jobId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+          "projectId": "world2-project_management_web_v1",
+          "executionMode": "CLOUD_SIMULATED",
+          "jobMetadata": {
+            "profile": "PROJECT_MANAGEMENT_WEB_V1",
+            "productName": "Project Management",
+            "requestedAt": "2026-06-24T21:51:40.037Z",
+            "workerId": null
+          },
+          "prompt": "Build a project management system to create projects, edit them, delete them, search projects, and assign team members.",
+          "requirementsSnapshot": {
+            "readOnly": true,
+            "profile": "PROJECT_MANAGEMENT_WEB_V1",
+            "productName": "Project Management",
+            "prompt": "Build a project management system to create projects, edit them, delete them, search projects, and assign team members.",
+            "requirementConfidence": 25
+          },
+          "buildPlan": {
+            "readOnly": true,
+            "contractId": "build-ready-idea-10",
+            "planningSummary": "Contract build-ready-idea-10",
+            "codegenProfile": "PROJECT_MANAGEMENT_WEB_V1"
+          },
+          "workspaceSpec": {
+            "readOnly": true,
+            "workspaceId": "w2-01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+            "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+            "isolationToken": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+            "boundedLogsMaxLines": 500,
+            "boundedArtifactsMaxBytes": 5000000,
+            "runtimeTimeoutMs": 300000
+          },
+          "expectedArtifactOutputs": [
+            "generated-source-manifest.json",
+            "build-logs.txt",
+            "preview-proof.json",
+            "uvl-verification-proof.json",
+            "product-architect-proof.json",
+            "afla-verdict.json",
+            "production-readiness-result.json",
+            "execution-summary.json",
+            "cloud-job-package.json"
+          ],
+          "validationRequirements": [
+            "Build proof required",
+            "Preview proof required",
+            "UVL verification proof required",
+            "AFLA verdict required",
+            "Production readiness gate required",
+            "Unique isolated workspace required"
+          ],
+          "generatedAt": "2026-06-24T21:51:49.750Z"
+        },
+        "buildProof": true,
+        "previewProof": true,
+        "verificationProof": false,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "productionReadinessScore": 89,
+        "productionReadinessVerdict": "PRODUCTION_READY",
+        "executionSummary": "Cloud execution completed for Project Management in 9716ms",
+        "contaminationCheckPassed": true
+      },
+      "world": {
+        "readOnly": true,
+        "worldId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+        "createdAt": "2026-06-24T21:51:08.268Z",
+        "status": "COMPLETED",
+        "executionMode": "CLOUD_SIMULATED",
+        "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+        "sourceProject": "C:\\Users\\Richa\\Desktop\\DevPulse-V2",
+        "instantiatedBy": "multi-project-concurrent-execution-v1",
+        "artifactDirectory": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.world2-real-instantiation-v1\\worlds\\01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+        "runtimeState": "ARCHIVED",
+        "promotionState": "NOT_ELIGIBLE",
+        "profile": "PROJECT_MANAGEMENT_WEB_V1",
+        "productName": "Project Management",
+        "prompt": "Build a project management system to create projects, edit them, delete them, search projects, and assign team members.",
+        "jobId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+        "completedAt": "2026-06-24T21:51:49.753Z",
+        "destroyedAt": null,
+        "promotedAt": null,
+        "executionResult": {
+          "readOnly": true,
+          "job": {
+            "readOnly": true,
+            "jobId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+            "projectId": "world2-project_management_web_v1",
+            "prompt": "Build a project management system to create projects, edit them, delete them, search projects, and assign team members.",
+            "requirementsSnapshot": {
+              "readOnly": true,
+              "profile": "PROJECT_MANAGEMENT_WEB_V1",
+              "productName": "Project Management",
+              "prompt": "Build a project management system to create projects, edit them, delete them, search projects, and assign team members.",
+              "requirementConfidence": 25
+            },
+            "buildPlan": {
+              "readOnly": true,
+              "contractId": "build-ready-idea-10",
+              "planningSummary": "Contract build-ready-idea-10",
+              "codegenProfile": "PROJECT_MANAGEMENT_WEB_V1"
+            },
+            "workspaceSpec": {
+              "readOnly": true,
+              "workspaceId": "w2-01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+              "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+              "isolationToken": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+              "boundedLogsMaxLines": 500,
+              "boundedArtifactsMaxBytes": 5000000,
+              "runtimeTimeoutMs": 300000
+            },
+            "executionMode": "CLOUD_SIMULATED",
+            "requestedAt": "2026-06-24T21:51:40.037Z",
+            "status": "COMPLETED",
+            "claimedAt": null,
+            "completedAt": "2026-06-24T21:51:49.752Z",
+            "workerId": "w2-worker-01a57e59",
+            "currentStage": "COMPLETED",
+            "runtimeDurationMs": 9715
+          },
+          "passed": true,
+          "failureReport": null,
+          "artifactStatus": {
+            "readOnly": true,
+            "sourceManifest": true,
+            "buildLogs": true,
+            "previewProof": true,
+            "uvlVerificationProof": true,
+            "productArchitectProof": true,
+            "aflaVerdict": true,
+            "productionReadinessResult": true,
+            "executionSummary": true,
+            "cloudJobPackage": true
+          },
+          "cloudJobPackage": {
+            "readOnly": true,
+            "contractVersion": "V1",
+            "jobId": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+            "projectId": "world2-project_management_web_v1",
+            "executionMode": "CLOUD_SIMULATED",
+            "jobMetadata": {
+              "profile": "PROJECT_MANAGEMENT_WEB_V1",
+              "productName": "Project Management",
+              "requestedAt": "2026-06-24T21:51:40.037Z",
+              "workerId": null
+            },
+            "prompt": "Build a project management system to create projects, edit them, delete them, search projects, and assign team members.",
+            "requirementsSnapshot": {
+              "readOnly": true,
+              "profile": "PROJECT_MANAGEMENT_WEB_V1",
+              "productName": "Project Management",
+              "prompt": "Build a project management system to create projects, edit them, delete them, search projects, and assign team members.",
+              "requirementConfidence": 25
+            },
+            "buildPlan": {
+              "readOnly": true,
+              "contractId": "build-ready-idea-10",
+              "planningSummary": "Contract build-ready-idea-10",
+              "codegenProfile": "PROJECT_MANAGEMENT_WEB_V1"
+            },
+            "workspaceSpec": {
+              "readOnly": true,
+              "workspaceId": "w2-01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+              "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+              "isolationToken": "01a57e59-ed54-423a-aa3f-502ef4a4c3dd",
+              "boundedLogsMaxLines": 500,
+              "boundedArtifactsMaxBytes": 5000000,
+              "runtimeTimeoutMs": 300000
+            },
+            "expectedArtifactOutputs": [
+              "generated-source-manifest.json",
+              "build-logs.txt",
+              "preview-proof.json",
+              "uvl-verification-proof.json",
+              "product-architect-proof.json",
+              "afla-verdict.json",
+              "production-readiness-result.json",
+              "execution-summary.json",
+              "cloud-job-package.json"
+            ],
+            "validationRequirements": [
+              "Build proof required",
+              "Preview proof required",
+              "UVL verification proof required",
+              "AFLA verdict required",
+              "Production readiness gate required",
+              "Unique isolated workspace required"
+            ],
+            "generatedAt": "2026-06-24T21:51:49.750Z"
+          },
+          "buildProof": true,
+          "previewProof": true,
+          "verificationProof": false,
+          "aflaVerdict": "NOT_LAUNCH_READY",
+          "productionReadinessScore": 89,
+          "productionReadinessVerdict": "PRODUCTION_READY",
+          "executionSummary": "Cloud execution completed for Project Management in 9716ms",
+          "contaminationCheckPassed": true
+        },
+        "world2VerificationProof": {
+          "readOnly": true,
+          "profile": "PROJECT_MANAGEMENT_WEB_V1",
+          "verificationCoveragePercent": 85,
+          "verificationConfidenceScore": 85,
+          "verified": true,
+          "source": "UVL Verification Execution V1"
+        },
+        "world2ProductAssessment": {
+          "readOnly": true,
+          "profile": "PROJECT_MANAGEMENT_WEB_V1",
+          "productReadinessScore": 89,
+          "reviewed": true,
+          "source": "Product Architect Intelligence V1"
+        }
+      }
+    },
+    {
+      "readOnly": true,
+      "projectId": "mpce-appointment_booking_web_v1",
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "worldId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+      "passed": true,
+      "buildProof": true,
+      "previewProof": true,
+      "verificationProof": true,
+      "productionReadinessScore": 81,
+      "contaminationCheckPassed": true,
+      "executionResult": {
+        "readOnly": true,
+        "job": {
+          "readOnly": true,
+          "jobId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+          "projectId": "world2-appointment_booking_web_v1",
+          "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+          "requirementsSnapshot": {
+            "readOnly": true,
+            "profile": "APPOINTMENT_BOOKING_WEB_V1",
+            "productName": "Booking Platform",
+            "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+            "requirementConfidence": 36
+          },
+          "buildPlan": {
+            "readOnly": true,
+            "contractId": "build-ready-idea-13",
+            "planningSummary": "Contract build-ready-idea-13",
+            "codegenProfile": "CRM_WEB_V1"
+          },
+          "workspaceSpec": {
+            "readOnly": true,
+            "workspaceId": "w2-614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+            "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+            "isolationToken": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+            "boundedLogsMaxLines": 500,
+            "boundedArtifactsMaxBytes": 5000000,
+            "runtimeTimeoutMs": 300000
+          },
+          "executionMode": "CLOUD_SIMULATED",
+          "requestedAt": "2026-06-24T21:51:49.756Z",
+          "status": "COMPLETED",
+          "claimedAt": null,
+          "completedAt": "2026-06-24T21:51:59.373Z",
+          "workerId": "w2-worker-614b6a2c",
+          "currentStage": "COMPLETED",
+          "runtimeDurationMs": 9617
+        },
+        "passed": true,
+        "failureReport": null,
+        "artifactStatus": {
+          "readOnly": true,
+          "sourceManifest": true,
+          "buildLogs": true,
+          "previewProof": true,
+          "uvlVerificationProof": true,
+          "productArchitectProof": true,
+          "aflaVerdict": true,
+          "productionReadinessResult": true,
+          "executionSummary": true,
+          "cloudJobPackage": true
+        },
+        "cloudJobPackage": {
+          "readOnly": true,
+          "contractVersion": "V1",
+          "jobId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+          "projectId": "world2-appointment_booking_web_v1",
+          "executionMode": "CLOUD_SIMULATED",
+          "jobMetadata": {
+            "profile": "APPOINTMENT_BOOKING_WEB_V1",
+            "productName": "Booking Platform",
+            "requestedAt": "2026-06-24T21:51:49.756Z",
+            "workerId": null
+          },
+          "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+          "requirementsSnapshot": {
+            "readOnly": true,
+            "profile": "APPOINTMENT_BOOKING_WEB_V1",
+            "productName": "Booking Platform",
+            "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+            "requirementConfidence": 36
+          },
+          "buildPlan": {
+            "readOnly": true,
+            "contractId": "build-ready-idea-13",
+            "planningSummary": "Contract build-ready-idea-13",
+            "codegenProfile": "CRM_WEB_V1"
+          },
+          "workspaceSpec": {
+            "readOnly": true,
+            "workspaceId": "w2-614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+            "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+            "isolationToken": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+            "boundedLogsMaxLines": 500,
+            "boundedArtifactsMaxBytes": 5000000,
+            "runtimeTimeoutMs": 300000
+          },
+          "expectedArtifactOutputs": [
+            "generated-source-manifest.json",
+            "build-logs.txt",
+            "preview-proof.json",
+            "uvl-verification-proof.json",
+            "product-architect-proof.json",
+            "afla-verdict.json",
+            "production-readiness-result.json",
+            "execution-summary.json",
+            "cloud-job-package.json"
+          ],
+          "validationRequirements": [
+            "Build proof required",
+            "Preview proof required",
+            "UVL verification proof required",
+            "AFLA verdict required",
+            "Production readiness gate required",
+            "Unique isolated workspace required"
+          ],
+          "generatedAt": "2026-06-24T21:51:59.371Z"
+        },
+        "buildProof": true,
+        "previewProof": true,
+        "verificationProof": false,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "productionReadinessScore": 81,
+        "productionReadinessVerdict": "PRODUCTION_READY",
+        "executionSummary": "Cloud execution completed for Booking Platform in 9619ms",
+        "contaminationCheckPassed": true
+      },
+      "world": {
+        "readOnly": true,
+        "worldId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+        "createdAt": "2026-06-24T21:51:08.270Z",
+        "status": "COMPLETED",
+        "executionMode": "CLOUD_SIMULATED",
+        "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+        "sourceProject": "C:\\Users\\Richa\\Desktop\\DevPulse-V2",
+        "instantiatedBy": "multi-project-concurrent-execution-v1",
+        "artifactDirectory": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.world2-real-instantiation-v1\\worlds\\614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+        "runtimeState": "ARCHIVED",
+        "promotionState": "NOT_ELIGIBLE",
+        "profile": "APPOINTMENT_BOOKING_WEB_V1",
+        "productName": "Booking Platform",
+        "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+        "jobId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+        "completedAt": "2026-06-24T21:51:59.375Z",
+        "destroyedAt": null,
+        "promotedAt": null,
+        "executionResult": {
+          "readOnly": true,
+          "job": {
+            "readOnly": true,
+            "jobId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+            "projectId": "world2-appointment_booking_web_v1",
+            "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+            "requirementsSnapshot": {
+              "readOnly": true,
+              "profile": "APPOINTMENT_BOOKING_WEB_V1",
+              "productName": "Booking Platform",
+              "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+              "requirementConfidence": 36
+            },
+            "buildPlan": {
+              "readOnly": true,
+              "contractId": "build-ready-idea-13",
+              "planningSummary": "Contract build-ready-idea-13",
+              "codegenProfile": "CRM_WEB_V1"
+            },
+            "workspaceSpec": {
+              "readOnly": true,
+              "workspaceId": "w2-614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+              "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+              "isolationToken": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+              "boundedLogsMaxLines": 500,
+              "boundedArtifactsMaxBytes": 5000000,
+              "runtimeTimeoutMs": 300000
+            },
+            "executionMode": "CLOUD_SIMULATED",
+            "requestedAt": "2026-06-24T21:51:49.756Z",
+            "status": "COMPLETED",
+            "claimedAt": null,
+            "completedAt": "2026-06-24T21:51:59.373Z",
+            "workerId": "w2-worker-614b6a2c",
+            "currentStage": "COMPLETED",
+            "runtimeDurationMs": 9617
+          },
+          "passed": true,
+          "failureReport": null,
+          "artifactStatus": {
+            "readOnly": true,
+            "sourceManifest": true,
+            "buildLogs": true,
+            "previewProof": true,
+            "uvlVerificationProof": true,
+            "productArchitectProof": true,
+            "aflaVerdict": true,
+            "productionReadinessResult": true,
+            "executionSummary": true,
+            "cloudJobPackage": true
+          },
+          "cloudJobPackage": {
+            "readOnly": true,
+            "contractVersion": "V1",
+            "jobId": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+            "projectId": "world2-appointment_booking_web_v1",
+            "executionMode": "CLOUD_SIMULATED",
+            "jobMetadata": {
+              "profile": "APPOINTMENT_BOOKING_WEB_V1",
+              "productName": "Booking Platform",
+              "requestedAt": "2026-06-24T21:51:49.756Z",
+              "workerId": null
+            },
+            "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+            "requirementsSnapshot": {
+              "readOnly": true,
+              "profile": "APPOINTMENT_BOOKING_WEB_V1",
+              "productName": "Booking Platform",
+              "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+              "requirementConfidence": 36
+            },
+            "buildPlan": {
+              "readOnly": true,
+              "contractId": "build-ready-idea-13",
+              "planningSummary": "Contract build-ready-idea-13",
+              "codegenProfile": "CRM_WEB_V1"
+            },
+            "workspaceSpec": {
+              "readOnly": true,
+              "workspaceId": "w2-614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+              "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+              "isolationToken": "614b6a2c-52e0-4888-aecb-5e5e93fda9bd",
+              "boundedLogsMaxLines": 500,
+              "boundedArtifactsMaxBytes": 5000000,
+              "runtimeTimeoutMs": 300000
+            },
+            "expectedArtifactOutputs": [
+              "generated-source-manifest.json",
+              "build-logs.txt",
+              "preview-proof.json",
+              "uvl-verification-proof.json",
+              "product-architect-proof.json",
+              "afla-verdict.json",
+              "production-readiness-result.json",
+              "execution-summary.json",
+              "cloud-job-package.json"
+            ],
+            "validationRequirements": [
+              "Build proof required",
+              "Preview proof required",
+              "UVL verification proof required",
+              "AFLA verdict required",
+              "Production readiness gate required",
+              "Unique isolated workspace required"
+            ],
+            "generatedAt": "2026-06-24T21:51:59.371Z"
+          },
+          "buildProof": true,
+          "previewProof": true,
+          "verificationProof": false,
+          "aflaVerdict": "NOT_LAUNCH_READY",
+          "productionReadinessScore": 81,
+          "productionReadinessVerdict": "PRODUCTION_READY",
+          "executionSummary": "Cloud execution completed for Booking Platform in 9619ms",
+          "contaminationCheckPassed": true
+        },
+        "world2VerificationProof": {
+          "readOnly": true,
+          "profile": "APPOINTMENT_BOOKING_WEB_V1",
+          "verificationCoveragePercent": 85,
+          "verificationConfidenceScore": 85,
+          "verified": true,
+          "source": "UVL Verification Execution V1"
+        },
+        "world2ProductAssessment": {
+          "readOnly": true,
+          "profile": "APPOINTMENT_BOOKING_WEB_V1",
+          "productReadinessScore": 81,
+          "reviewed": true,
+          "source": "Product Architect Intelligence V1"
+        }
+      }
+    }
+  ],
+  "evolutionBoundary": {
+    "readOnly": true,
+    "selfEvolutionObservedOnly": true,
+    "runningProjectsModified": false,
+    "boundaryEnforced": true,
+    "detail": "Self-Evolution Execution V1 may observe concurrent results; running concurrent projects are not modified during execution."
+  }
+}
