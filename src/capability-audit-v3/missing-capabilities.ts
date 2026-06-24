@@ -1,22 +1,18 @@
 /**
- * AiDevEngine Capability Audit V3 — missing capabilities report.
+ * AiDevEngine Capability Audit V3 — missing capabilities report (evidence-driven).
  */
 
 import type { MissingCapabilitiesReport } from './capability-audit-types.js';
+import { computeHighestPriorityGap } from './gap-priority-calculator.js';
+import { loadUvlEvidenceSnapshot } from './uvl-evidence-loader.js';
 
-export const MISSING_CAPABILITIES_V3: readonly MissingCapabilitiesReport['entries'][number][] = [
-  {
-    capability: 'UVL full verification execution',
-    severity: 'BLOCKING',
-    focusArea: 'Verification Systems',
-    detail:
-      'Real Build Execution V1.1: verifiedCount 0/15 despite 100% build/preview/launch proof. UVL Hub operational coverage ~6%.',
-  },
+const BASE_MISSING_CAPABILITIES: readonly MissingCapabilitiesReport['entries'][number][] = [
   {
     capability: 'Production readiness gate',
     severity: 'BLOCKING',
     focusArea: 'Production Readiness',
-    detail: 'Launch readiness validates blueprint suites; production deployment readiness unvalidated.',
+    detail:
+      'Launch readiness validates blueprint suites; production deployment readiness unvalidated.',
   },
   {
     capability: 'Cloud runtime production deployment',
@@ -48,7 +44,7 @@ export const MISSING_CAPABILITIES_V3: readonly MissingCapabilitiesReport['entrie
     severity: 'MEDIUM',
     focusArea: 'Self-Evolution',
     detail:
-      'Real Build Execution Pipeline V1/V1.1, CQI Maturity V1, Capability Audit V2 not in ownership registry.',
+      'Real Build Execution Pipeline V1/V1.1, UVL Verification Execution V1, CQI Maturity V1, Capability Audit V2 not in ownership registry.',
   },
   {
     capability: 'Mobile runtime validation at scale',
@@ -82,16 +78,37 @@ export const MISSING_CAPABILITIES_V3: readonly MissingCapabilitiesReport['entrie
   },
 ];
 
-export function buildMissingCapabilitiesReport(): MissingCapabilitiesReport {
+export function buildMissingCapabilitiesReport(input?: {
+  projectRootDir?: string;
+  productionReadinessScore?: number;
+  codeGenerationMaturityScore?: number;
+}): MissingCapabilitiesReport {
+  const uvlEvidence = loadUvlEvidenceSnapshot(input?.projectRootDir);
+  const entries = BASE_MISSING_CAPABILITIES.filter((entry) => {
+    if (
+      uvlEvidence.uvlVerificationExecutionComplete &&
+      (entry.capability === 'UVL full verification execution' ||
+        entry.capability.toLowerCase().includes('uvl'))
+    ) {
+      return false;
+    }
+    return true;
+  });
+
+  const context = {
+    productionReadinessScore: input?.productionReadinessScore ?? 33,
+    codeGenerationMaturityScore: input?.codeGenerationMaturityScore ?? 58,
+  };
+
   return {
     generatedAt: new Date().toISOString(),
-    blockingVision: MISSING_CAPABILITIES_V3.filter((e) => e.severity === 'BLOCKING').map(
-      (e) => e.capability,
-    ),
-    stillWeak: MISSING_CAPABILITIES_V3.filter(
-      (e) => e.severity === 'HIGH' || e.severity === 'MEDIUM',
-    ).map((e) => e.capability),
-    entries: MISSING_CAPABILITIES_V3,
-    highestPriorityGap: 'UVL full verification execution',
+    blockingVision: entries.filter((e) => e.severity === 'BLOCKING').map((e) => e.capability),
+    stillWeak: entries
+      .filter((e) => e.severity === 'HIGH' || e.severity === 'MEDIUM')
+      .map((e) => e.capability),
+    entries,
+    highestPriorityGap: computeHighestPriorityGap(entries, context),
   };
 }
+
+export const MISSING_CAPABILITIES_V3 = BASE_MISSING_CAPABILITIES;

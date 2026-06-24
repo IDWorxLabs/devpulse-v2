@@ -6,6 +6,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS_TOKEN,
   AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN,
   AUDIT_CATEGORIES_V3,
   CAPABILITY_AUDIT_V3_REPORT_TITLE,
@@ -19,6 +20,10 @@ import {
   buildMissingCapabilitiesReport,
   buildRecommendedRoadmap,
 } from '../src/capability-audit-v3/index.js';
+import {
+  buildUvlEvidenceRefreshArtifact,
+  loadUvlEvidenceSnapshot,
+} from '../src/capability-audit-v3/uvl-evidence-loader.js';
 
 interface CheckResult {
   name: string;
@@ -30,6 +35,7 @@ const results: CheckResult[] = [];
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 const REPORT_PATH = join(ROOT, CAPABILITY_AUDIT_V3_REPORT_TITLE);
 const ASSESSMENT_DIR = join(ROOT, '.capability-audit-v3');
+const ASSESSMENT_DIR_V31 = join(ROOT, '.capability-audit-v3-1');
 
 function assert(name: string, condition: boolean, detail: string): void {
   results.push({ name, passed: condition, detail });
@@ -41,11 +47,21 @@ assert(
   'src/capability-audit-v3/index.ts',
 );
 
-const assessment = buildCapabilityAuditV3Assessment();
+const assessment = buildCapabilityAuditV3Assessment(ROOT);
 const duplicateRisk = buildDuplicateRiskAnalysis();
-const missingCapabilities = buildMissingCapabilitiesReport();
-const { priorities: roadmap, world2IsNextPhase, nextPriority } = buildRecommendedRoadmap();
+const missingCapabilities = buildMissingCapabilitiesReport({
+  projectRootDir: ROOT,
+  productionReadinessScore: assessment.productionReadiness.productionReadinessScore,
+  codeGenerationMaturityScore: assessment.codeGeneration.codeGenerationMaturityScore,
+});
+const { priorities: roadmap, world2IsNextPhase, nextPriority } = buildRecommendedRoadmap({
+  projectRootDir: ROOT,
+  productionReadinessScore: assessment.productionReadiness.productionReadinessScore,
+  codeGenerationMaturityScore: assessment.codeGeneration.codeGenerationMaturityScore,
+});
 const maturityMatrix = buildMaturityMatrix(assessment);
+const uvlSnapshot = loadUvlEvidenceSnapshot(ROOT);
+const uvlEvidenceRefresh = buildUvlEvidenceRefreshArtifact(uvlSnapshot);
 
 const reportMarkdown = buildCapabilityAuditV3ReportMarkdown({
   assessment,
@@ -55,6 +71,8 @@ const reportMarkdown = buildCapabilityAuditV3ReportMarkdown({
 });
 
 mkdirSync(ASSESSMENT_DIR, { recursive: true });
+mkdirSync(ASSESSMENT_DIR_V31, { recursive: true });
+
 writeFileSync(
   join(ASSESSMENT_DIR, 'assessment.json'),
   `${JSON.stringify(assessment, null, 2)}\n`,
@@ -97,6 +115,38 @@ writeFileSync(
 );
 writeFileSync(REPORT_PATH, reportMarkdown, 'utf8');
 
+writeFileSync(join(ASSESSMENT_DIR_V31, 'assessment.json'), `${JSON.stringify(assessment, null, 2)}\n`, 'utf8');
+writeFileSync(
+  join(ASSESSMENT_DIR_V31, 'operational-maturity.json'),
+  `${JSON.stringify(assessment.operationalMaturity, null, 2)}\n`,
+  'utf8',
+);
+writeFileSync(
+  join(ASSESSMENT_DIR_V31, 'recommended-roadmap.json'),
+  `${JSON.stringify(
+    {
+      generatedAt: assessment.generatedAt,
+      world2IsNextPhase,
+      nextPriority,
+      highestPriorityGap: assessment.highestPriorityGap,
+      priorities: roadmap,
+    },
+    null,
+    2,
+  )}\n`,
+  'utf8',
+);
+writeFileSync(
+  join(ASSESSMENT_DIR_V31, 'missing-capabilities.json'),
+  `${JSON.stringify(missingCapabilities, null, 2)}\n`,
+  'utf8',
+);
+writeFileSync(
+  join(ASSESSMENT_DIR_V31, 'uvl-evidence-refresh.json'),
+  `${JSON.stringify(uvlEvidenceRefresh, null, 2)}\n`,
+  'utf8',
+);
+
 assert('report written', existsSync(REPORT_PATH), CAPABILITY_AUDIT_V3_REPORT_TITLE);
 assert(
   'assessment artifacts written',
@@ -110,12 +160,23 @@ assert(
   ].every((file) => existsSync(join(ASSESSMENT_DIR, file))),
   '.capability-audit-v3/',
 );
+assert(
+  'v3.1 artifacts written',
+  [
+    'assessment.json',
+    'operational-maturity.json',
+    'recommended-roadmap.json',
+    'missing-capabilities.json',
+    'uvl-evidence-refresh.json',
+  ].every((file) => existsSync(join(ASSESSMENT_DIR_V31, file))),
+  '.capability-audit-v3-1/',
+);
 
 const reportBody = readFileSync(REPORT_PATH, 'utf8');
 assert(
   'report contains pass token',
-  reportBody.includes(AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN),
-  AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN,
+  reportBody.includes(assessment.passToken),
+  assessment.passToken,
 );
 
 const requiredSections = [
@@ -176,7 +237,8 @@ for (const name of REQUIRED_INVENTORY_V3) {
 
 assert(
   'assessment JSON valid',
-  assessment.passToken === AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN,
+  assessment.passToken === AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS_TOKEN ||
+    assessment.passToken === AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN,
   assessment.passToken,
 );
 
@@ -226,8 +288,40 @@ assert(
 );
 
 assert(
-  'UVL verification execution is rank 1',
-  nextPriority === 'UVL Verification Execution',
+  'UVL verification execution not highest gap',
+  !assessment.highestPriorityGap.includes('UVL Verification Execution') &&
+    !assessment.highestPriorityGap.includes('UVL full verification'),
+  assessment.highestPriorityGap,
+);
+
+assert(
+  'UVL verification execution complete',
+  assessment.uvlEvidenceRefresh.uvlVerificationExecutionComplete === true,
+  `${assessment.uvlEvidenceRefresh.verifiedCount}/${assessment.uvlEvidenceRefresh.categoriesRequired}`,
+);
+
+assert(
+  'UVL verified count 15/15',
+  assessment.uvlEvidenceRefresh.verifiedCount === 15 &&
+    assessment.uvlEvidenceRefresh.categoriesRequired === 15,
+  `${assessment.uvlEvidenceRefresh.verifiedCount}/${assessment.uvlEvidenceRefresh.categoriesRequired}`,
+);
+
+assert(
+  'UVL verification coverage 100%',
+  assessment.uvlEvidenceRefresh.verificationCoveragePercent === 100,
+  String(assessment.uvlEvidenceRefresh.verificationCoveragePercent),
+);
+
+assert(
+  'UVL verification confidence 100',
+  assessment.uvlEvidenceRefresh.verificationConfidenceScore === 100,
+  String(assessment.uvlEvidenceRefresh.verificationConfidenceScore),
+);
+
+assert(
+  'next priority recalculated',
+  nextPriority !== 'UVL Verification Execution',
   nextPriority,
 );
 
@@ -238,23 +332,36 @@ assert(
 );
 
 assert(
+  'UVL verification execution marked complete',
+  roadmap.some((p) => p.phase === 'UVL Verification Execution' && p.action === 'COMPLETE'),
+  'COMPLETE action',
+);
+
+assert(
   'operational maturity score valid',
   assessment.operationalMaturity.operationalMaturityScore >= 70 &&
-    assessment.operationalMaturity.operationalMaturityScore <= 95,
+    assessment.operationalMaturity.operationalMaturityScore <= 100,
   String(assessment.operationalMaturity.operationalMaturityScore),
 );
 
 assert(
-  'verification is blocking gap',
-  assessment.operationalMaturity.verificationIsBlockingGap === true,
-  'verifiedCount 0/15',
+  'verification is not blocking gap',
+  assessment.operationalMaturity.verificationIsBlockingGap === false,
+  'verification complete',
 );
 
 assert(
-  'prior pass tokens include RBEP',
+  'suite coverage 15/15 verification',
+  assessment.operationalMaturity.coverageEvidence.verificationCoverage.count === 15,
+  `${assessment.operationalMaturity.coverageEvidence.verificationCoverage.count}/15`,
+);
+
+assert(
+  'prior pass tokens include RBEP and UVL',
   PRIOR_PASS_TOKENS.includes('REAL_BUILD_EXECUTION_PIPELINE_V1_PASS') &&
-    PRIOR_PASS_TOKENS.includes('REAL_BUILD_EXECUTION_PIPELINE_V1_1_PASS'),
-  'RBEP tokens',
+    PRIOR_PASS_TOKENS.includes('REAL_BUILD_EXECUTION_PIPELINE_V1_1_PASS') &&
+    PRIOR_PASS_TOKENS.includes('UVL_VERIFICATION_EXECUTION_V1_PASS'),
+  'RBEP + UVL tokens',
 );
 
 const rbepArtifact = join(ROOT, '.real-build-execution-pipeline-v1-1/proof-coverage.json');
@@ -267,6 +374,19 @@ if (existsSync(rbepArtifact)) {
     'RBEP V1.1 proof evidence',
     (proof.proofCoveragePercent ?? 0) >= 100 && (proof.categoriesWithFullProof ?? 0) >= 15,
     `${proof.categoriesWithFullProof}/15 @ ${proof.proofCoveragePercent}%`,
+  );
+}
+
+const uvlCoverageArtifact = join(ROOT, '.uvl-verification-execution-v1/verification-coverage.json');
+if (existsSync(uvlCoverageArtifact)) {
+  const coverage = JSON.parse(readFileSync(uvlCoverageArtifact, 'utf8')) as {
+    verifiedCount?: number;
+    verificationCoveragePercent?: number;
+  };
+  assert(
+    'UVL verification coverage artifact',
+    (coverage.verifiedCount ?? 0) === 15 && (coverage.verificationCoveragePercent ?? 0) === 100,
+    `${coverage.verifiedCount}/15 @ ${coverage.verificationCoveragePercent}%`,
   );
 }
 
@@ -289,11 +409,17 @@ console.log(`Code generation maturity: ${assessment.codeGeneration.codeGeneratio
 console.log(`World2 next phase: ${assessment.world2Assessment.shouldBeNextPhase ? 'YES' : 'NO'}`);
 console.log(`Next priority: ${nextPriority}`);
 console.log(`Highest gap: ${assessment.highestPriorityGap}`);
+console.log(
+  `UVL verified: ${assessment.uvlEvidenceRefresh.verifiedCount}/${assessment.uvlEvidenceRefresh.categoriesRequired} @ ${assessment.uvlEvidenceRefresh.verificationCoveragePercent}%`,
+);
 console.log(`Report: ${CAPABILITY_AUDIT_V3_REPORT_TITLE}`);
-console.log(`Artifacts: .capability-audit-v3/`);
+console.log(`Artifacts: .capability-audit-v3/ and .capability-audit-v3-1/`);
 
 if (failed.length === 0) {
-  console.log(`\n${AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN}`);
+  console.log(`\n${assessment.passToken}`);
+  if (assessment.passToken === AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS_TOKEN) {
+    console.log(AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS_TOKEN);
+  }
   process.exit(0);
 }
 

@@ -1,0 +1,30 @@
+{
+  "version": "V3.1",
+  "generatedAt": "2026-06-24T14:39:31.446Z",
+  "auditRefresh": "UVL Evidence Refresh",
+  "passToken": "UVL_VERIFICATION_EXECUTION_V1_PASS",
+  "sourceFiles": [
+    "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.uvl-verification-execution-v1\\verification-coverage.json",
+    "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.uvl-verification-execution-v1\\verification-confidence.json",
+    "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.uvl-verification-execution-v1\\verification-proof.json",
+    "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.uvl-verification-execution-v1\\verification-matrix.json",
+    "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.real-build-execution-pipeline-v1-1\\proof-coverage.json",
+    "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.real-build-execution-pipeline-v1-1\\generalization-score.json",
+    "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\UVL_VERIFICATION_EXECUTION_V1_REPORT.md"
+  ],
+  "isUvlVerificationExecutionMissing": false,
+  "verifiedCount": "15/15",
+  "verificationCoveragePercent": 100,
+  "verificationConfidenceScore": 100,
+  "verificationProofStatus": "PROVEN",
+  "suiteCoverage": {
+    "buildCoverage": "15/15",
+    "previewCoverage": "15/15",
+    "verificationCoverage": "15/15",
+    "aflaReviewCoverage": "15/15"
+  },
+  "rbepVerifiedCountNote": "RBEP proof-coverage verifiedCount tracks build-chain stage; UVL verification-coverage is authoritative for verification proof.",
+  "rbepVerifiedCount": 0,
+  "uvlVerifiedCount": 15,
+  "uvlVerificationExecutionComplete": true
+}

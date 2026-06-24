@@ -126,6 +126,7 @@
     "validate:real-build-execution-pipeline-v1": "tsx scripts/validate-real-build-execution-pipeline-v1.ts",
     "validate:capability-audit-v2": "tsx scripts/validate-capability-audit-v2.ts",
     "validate:capability-audit-v3": "tsx scripts/validate-capability-audit-v3.ts",
+    "validate:capability-audit-v3-1": "tsx scripts/validate-capability-audit-v3-1.ts",
     "validate:uvl-verification-execution-v1": "tsx scripts/validate-uvl-verification-execution-v1.ts",
     "validate:validation-runtime-audit-v1": "tsx scripts/validate-validation-runtime-audit-v1.ts",
     "validate:validation-runtime-governance-v1": "tsx scripts/validate-validation-runtime-governance-v1.ts",

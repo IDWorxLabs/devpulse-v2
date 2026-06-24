@@ -17,10 +17,15 @@ import type {
 import { buildCodeGenerationAssessment } from './code-generation-assessment.js';
 import { buildOperationalMaturityReport } from './operational-maturity.js';
 import { buildProductionReadinessAssessment } from './production-readiness-assessment.js';
+import { buildRecommendedRoadmap } from './recommended-roadmap.js';
+import { buildMissingCapabilitiesReport } from './missing-capabilities.js';
 import { V2_INVENTORY_UPGRADES } from './v2-inventory-upgrades.js';
 
 export const AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN =
   'AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS';
+
+export const AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS_TOKEN =
+  'AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS';
 
 export const CAPABILITY_AUDIT_V3_REPORT_TITLE = 'AIDEVENGINE_CAPABILITY_AUDIT_V3_REPORT.md';
 
@@ -48,6 +53,7 @@ export const PRIOR_PASS_TOKENS: readonly string[] = [
   'AIDEVENGINE_CAPABILITY_AUDIT_V2_PASS',
   'REAL_BUILD_EXECUTION_PIPELINE_V1_PASS',
   'REAL_BUILD_EXECUTION_PIPELINE_V1_1_PASS',
+  'UVL_VERIFICATION_EXECUTION_V1_PASS',
 ] as const;
 
 export const REQUIRED_INVENTORY_V3: readonly string[] = [
@@ -59,6 +65,7 @@ export const REQUIRED_INVENTORY_V3: readonly string[] = [
   'Product Architect Intelligence V1',
   'Real Build Execution Pipeline V1',
   'Real Build Execution Pipeline V1.1',
+  'UVL Verification Execution V1',
   'Canonical Capability Ownership V1',
   'Capability Audit V2',
 ] as const;
@@ -122,9 +129,23 @@ export const NEW_V3_CAPABILITIES: readonly CapabilityEntryV3[] = [
     ownerPath: 'src/real-build-execution-pipeline-v1-1/',
     validateScript: 'validate:real-build-execution-pipeline-v1-1',
     summary:
-      'Full 15/15 proof coverage: Generated, Built, Previewed, Reviewed, Launch Evaluated; execution generalization 96/100; verification stage 0%.',
+      'Full 15/15 build/preview/AFLA proof coverage; execution generalization 96/100; UVL Verification Execution V1 provides separate verification proof.',
     overlapWith: ['Real Build Execution Pipeline V1', 'Connected Execution Proof Chain'],
     canonicalOwner: 'Real Build Execution Pipeline V1.1',
+  },
+  {
+    name: 'UVL Verification Execution V1',
+    category: 'VERIFICATION_SYSTEMS',
+    status: 'MATURE',
+    maturity: 93,
+    duplicateRisk: 'LOW',
+    recommendation: 'KEEP',
+    ownerPath: 'src/uvl-verification-execution-v1/',
+    validateScript: 'validate:uvl-verification-execution-v1',
+    summary:
+      '15/15 category verification against live preview runtime; 100% verification coverage and 100/100 confidence; closes Capability Audit V3 verification gap.',
+    overlapWith: ['UVL Verification Hub V1', 'Unified Verification Lab (UVL)'],
+    canonicalOwner: 'Unified Verification Lab (UVL)',
   },
   {
     name: 'Capability Audit V2',
@@ -260,7 +281,7 @@ export function buildCategoryAssessments(
   });
 }
 
-export function buildCapabilityAuditV3Assessment(): CapabilityAuditV3Assessment {
+export function buildCapabilityAuditV3Assessment(projectRootDir?: string): CapabilityAuditV3Assessment {
   const capabilities = CAPABILITY_INVENTORY_V3;
   const matureCount = capabilities.filter((c) => c.status === 'MATURE').length;
   const partialCount = capabilities.filter((c) => c.status === 'PARTIAL').length;
@@ -268,14 +289,42 @@ export function buildCapabilityAuditV3Assessment(): CapabilityAuditV3Assessment 
   const missingCount = capabilities.filter((c) => c.status === 'MISSING').length;
   const highDuplicateRiskCount = capabilities.filter((c) => c.duplicateRisk === 'HIGH').length;
   const categoryAssessments = buildCategoryAssessments(capabilities);
-  const operationalMaturity = buildOperationalMaturityReport();
+  const operationalMaturity = buildOperationalMaturityReport(projectRootDir);
   const productionReadiness = buildProductionReadinessAssessment();
   const codeGeneration = buildCodeGenerationAssessment();
+  const missingCapabilities = buildMissingCapabilitiesReport({
+    projectRootDir,
+    productionReadinessScore: productionReadiness.productionReadinessScore,
+    codeGenerationMaturityScore: codeGeneration.codeGenerationMaturityScore,
+  });
+  const { nextPriority } = buildRecommendedRoadmap({
+    projectRootDir,
+    productionReadinessScore: productionReadiness.productionReadinessScore,
+    codeGenerationMaturityScore: codeGeneration.codeGenerationMaturityScore,
+  });
+  const uvlComplete = operationalMaturity.uvlEvidenceRefresh.uvlVerificationExecutionComplete;
+
+  const closedGapsSinceV2 = [
+    'Real build execution beyond simulation (Real Build Execution Pipeline V1/V1.1 PASS)',
+    '15/15 category proof chain: Generated → Built → Previewed → Reviewed → Launch Evaluated',
+    'Execution generalization score 96/100 (threshold 85)',
+  ];
+  if (uvlComplete) {
+    closedGapsSinceV2.push(
+      'UVL verification execution (UVL Verification Execution V1 PASS: 15/15 verified, 100% coverage, 100/100 confidence)',
+    );
+  }
+
+  const world2Rationale = uvlComplete
+    ? `${nextPriority} is the highest-priority gap after UVL Verification Execution V1 closed verification at 15/15. World2 should follow production readiness and canonical ownership registration.`
+    : 'UVL Verification Execution is the highest-priority gap — Real Build Execution V1.1 proves build/preview/launch at 100% but UVL verification evidence is incomplete. World2 should follow verification wiring and canonical ownership registration.';
 
   return {
-    version: 'V3',
+    version: uvlComplete ? 'V3.1' : 'V3',
     generatedAt: new Date().toISOString(),
-    passToken: AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN,
+    passToken: uvlComplete
+      ? AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS_TOKEN
+      : AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN,
     readOnly: true,
     priorAuditVersion: 'V2',
     categoryCount: AUDIT_CATEGORIES_V3.length,
@@ -301,20 +350,16 @@ export function buildCapabilityAuditV3Assessment(): CapabilityAuditV3Assessment 
         'Cloud execution path absent',
       ],
       shouldBeNextPhase: false,
-      nextPhaseRationale:
-        'UVL Verification Execution is the highest-priority gap — Real Build Execution V1.1 proves build/preview/launch at 100% but verifiedCount is 0/15. World2 should follow verification wiring and canonical ownership registration.',
+      nextPhaseRationale: world2Rationale,
       operationalReadiness: 'PARTIAL',
     },
     productionReadiness,
     codeGeneration,
     operationalMaturity,
     priorPassTokensValidated: PRIOR_PASS_TOKENS,
-    closedGapsSinceV2: [
-      'Real build execution beyond simulation (Real Build Execution Pipeline V1/V1.1 PASS)',
-      '15/15 category proof chain: Generated → Built → Previewed → Reviewed → Launch Evaluated',
-      'Execution generalization score 96/100 (threshold 85)',
-    ],
-    highestPriorityGap: 'UVL Verification Execution — verifiedCount 0/15 in Real Build Execution V1.1 proof coverage',
+    closedGapsSinceV2,
+    highestPriorityGap: missingCapabilities.highestPriorityGap,
+    uvlEvidenceRefresh: operationalMaturity.uvlEvidenceRefresh,
   };
 }
 

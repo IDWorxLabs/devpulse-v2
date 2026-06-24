@@ -116,6 +116,32 @@ export interface PipelineStageAssessment {
   evidence: string;
 }
 
+export interface CoverageMetric {
+  count: number;
+  required: number;
+  percent: number;
+  source: string;
+}
+
+export interface CoverageEvidence {
+  buildCoverage: CoverageMetric;
+  previewCoverage: CoverageMetric;
+  verificationCoverage: CoverageMetric;
+  aflaReviewCoverage: CoverageMetric;
+}
+
+export interface UvlEvidenceRefresh {
+  artifactDir: string;
+  consumedArtifacts: readonly string[];
+  verifiedCount: number;
+  categoriesRequired: number;
+  verificationCoveragePercent: number;
+  verificationConfidenceScore: number;
+  verificationProofStatus: string;
+  uvlVerificationExecutionComplete: boolean;
+  passToken: string;
+}
+
 export interface OperationalMaturityReport {
   generatedAt: string;
   operationalMaturityScore: number;
@@ -123,9 +149,11 @@ export interface OperationalMaturityReport {
   supportedCategoryCount: number;
   executionGeneralizationScore: number;
   proofCoveragePercent: number;
+  coverageEvidence: CoverageEvidence;
   pipelineStages: readonly PipelineStageAssessment[];
   fullPipelineProvenAcrossSuite: boolean;
   verificationIsBlockingGap: boolean;
+  uvlEvidenceRefresh: UvlEvidenceRefresh;
 }
 
 export interface ProductionReadinessDimension {
@@ -164,7 +192,7 @@ export interface World2Assessment {
 }
 
 export interface CapabilityAuditV3Assessment {
-  version: 'V3';
+  version: 'V3' | 'V3.1';
   generatedAt: string;
   passToken: string;
   readOnly: true;
@@ -186,4 +214,5 @@ export interface CapabilityAuditV3Assessment {
   priorPassTokensValidated: readonly string[];
   closedGapsSinceV2: readonly string[];
   highestPriorityGap: string;
+  uvlEvidenceRefresh: UvlEvidenceRefresh;
 }

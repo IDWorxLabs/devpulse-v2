@@ -50,7 +50,7 @@ const AUTHORITY_OWNERSHIP_CHECKS = [
 
 export const NEW_OVERLAPS_SINCE_V2: readonly string[] = [
   'Real Build Execution Pipeline V1/V1.1 ↔ Connected Build Execution ↔ Execution Reality Validation (~30% overlap, complementary proof layers)',
-  'Real Build Execution Pipeline V1.1 ↔ UVL Verification Hub V1 — verification stage not wired; ownership boundary clear but integration gap',
+  'Real Build Execution Pipeline V1.1 ↔ UVL Verification Execution V1 — build/preview proof vs verification proof; ownership boundary clear, evidence split by layer',
   'CQI Maturity V1 ↔ Clarifying Question Intelligence ↔ Requirement Completeness Intelligence (~25% overlap, CQI is canonical)',
   'Production Readiness Gate ↔ Launch Readiness Authority ↔ AFLA (~40% overlap, launch vs production boundary)',
   'Capability Audit V2 ↔ Capability Audit V3 — meta audit lineage; V3 supersedes V2 roadmap',

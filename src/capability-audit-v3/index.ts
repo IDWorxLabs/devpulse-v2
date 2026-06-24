@@ -4,6 +4,7 @@
 
 export {
   AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN,
+  AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS_TOKEN,
   CAPABILITY_AUDIT_V3_REPORT_TITLE,
   AUDIT_CATEGORIES_V3,
   CAPABILITY_INVENTORY_V3,
@@ -32,6 +33,14 @@ export { buildMaturityMatrix, buildMaturitySummary } from './maturity-matrix-bui
 
 export { buildOperationalMaturityReport } from './operational-maturity.js';
 
+export {
+  loadUvlEvidenceSnapshot,
+  loadAuditEvidenceSnapshot,
+  buildUvlEvidenceRefreshArtifact,
+  buildUvlEvidenceRefreshFromSnapshot,
+  buildCoverageEvidenceFromSnapshot,
+} from './uvl-evidence-loader.js';
+
 export { buildProductionReadinessAssessment } from './production-readiness-assessment.js';
 
 export { buildCodeGenerationAssessment } from './code-generation-assessment.js';
@@ -51,6 +60,9 @@ export type {
   MissingCapabilityEntry,
   MissingCapabilitiesReport,
   RoadmapPriority,
+  CoverageMetric,
+  CoverageEvidence,
+  UvlEvidenceRefresh,
   PipelineStageAssessment,
   OperationalMaturityReport,
   ProductionReadinessDimension,

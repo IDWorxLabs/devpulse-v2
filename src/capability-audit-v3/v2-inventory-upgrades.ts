@@ -47,17 +47,18 @@ export const V2_INVENTORY_UPGRADES: readonly InventoryUpgrade[] = [
   {
     name: 'UVL Verification Hub V1',
     patch: {
-      maturity: 74,
+      maturity: 82,
       summary:
-        'UVL maturity hub: coverage assessment, gap detection, confidence scoring; module mature but operational verification execution 0% in RBEP V1.1 suite.',
+        'UVL maturity hub: coverage assessment, gap detection, confidence scoring; UVL Verification Execution V1 proves 15/15 operational verification.',
     },
   },
   {
     name: 'Unified Verification Lab (UVL)',
     patch: {
-      maturity: 72,
+      maturity: 88,
+      status: 'MATURE',
       summary:
-        'UVL runtime — provider registration, verification sessions; Real Build Execution V1.1 shows verifiedCount 0/15 — execution wiring is the blocking gap.',
+        'UVL runtime — provider registration, verification sessions; UVL Verification Execution V1 proves 15/15 verified at 100% coverage and 100/100 confidence.',
     },
   },
   {

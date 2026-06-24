@@ -10,7 +10,6 @@ import type {
   MissingCapabilitiesReport,
   RoadmapPriority,
 } from './capability-audit-types.js';
-import { AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN } from './capability-inventory.js';
 import { buildMaturitySummary } from './maturity-matrix-builder.js';
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -79,22 +78,31 @@ export function buildCapabilityAuditV3ReportMarkdown(input: {
   const prod = assessment.productionReadiness;
   const codegen = assessment.codeGeneration;
   const activeRoadmap = roadmap.filter((p) => p.action !== 'COMPLETE');
+  const uvlComplete = ops.uvlEvidenceRefresh.uvlVerificationExecutionComplete;
+  const coverage = ops.coverageEvidence;
+  const uvlRefresh = ops.uvlEvidenceRefresh;
 
   const lines: string[] = [
     '# AiDevEngine Capability Audit Report V3',
     '',
-    '**Phase Next — Capability Audit Refresh V3**',
+    uvlComplete
+      ? '**Phase Next — Capability Audit Refresh V3.1 (UVL Evidence Refresh)**'
+      : '**Phase Next — Capability Audit Refresh V3**',
     `**Generated:** ${assessment.generatedAt.slice(0, 10)}`,
-    '**Scope:** Full re-assessment after Real Build Execution Pipeline V1 and V1.1',
-    '**Method:** V2 inventory refresh, RBEP V1.1 artifact analysis, operational maturity scoring, fresh roadmap recalculation',
+    uvlComplete
+      ? '**Scope:** Re-assessment after UVL Verification Execution V1 PASS — consumes `.uvl-verification-execution-v1/` evidence'
+      : '**Scope:** Full re-assessment after Real Build Execution Pipeline V1 and V1.1',
+    '**Method:** V2 inventory refresh, RBEP V1.1 build/preview proof, UVL Verification Execution V1 verification proof, operational maturity scoring, fresh roadmap recalculation',
     '',
-    `**Pass token:** \`${AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN}\``,
+    `**Pass token:** \`${assessment.passToken}\``,
     '',
     '---',
     '',
     '## Executive Summary',
     '',
-    'Since Capability Audit V2, AiDevEngine closed its **largest operational gap**: Real Build Execution Pipeline V1 and V1.1 now prove **15/15 categories** through Generated → Built → Previewed → Reviewed → Launch Evaluated with **100% proof coverage** and **96/100 execution generalization**.',
+    uvlComplete
+      ? 'Since Capability Audit V3, AiDevEngine closed the **verification gap**: UVL Verification Execution V1 now proves **15/15 categories verified** with **100% verification coverage** and **100/100 verification confidence** against live preview runtime evidence. Real Build Execution Pipeline V1.1 continues to prove **15/15 build/preview/AFLA** coverage.'
+      : 'Since Capability Audit V2, AiDevEngine closed its **largest operational gap**: Real Build Execution Pipeline V1 and V1.1 now prove **15/15 categories** through Generated → Built → Previewed → Reviewed → Launch Evaluated with **100% proof coverage** and **96/100 execution generalization**.',
     '',
     `The refreshed audit catalogues **${assessment.capabilityCount} capabilities** across **${assessment.categoryCount} categories** with an overall average maturity of **${maturitySummary.overallAvgMaturity}**.`,
     '',
@@ -109,6 +117,15 @@ export function buildCapabilityAuditV3ReportMarkdown(input: {
     '| Production Readiness Score | — | ' + prod.productionReadinessScore + ' |',
     '| Code Generation Maturity | — | ' + codegen.codeGenerationMaturityScore + ' |',
     '',
+    '### Coverage Breakdown (Evidence-Driven)',
+    '',
+    `| Layer | Coverage | Source |`,
+    `|-------|----------|--------|`,
+    `| Build | ${coverage.buildCoverage.count}/${coverage.buildCoverage.required} (${coverage.buildCoverage.percent}%) | ${coverage.buildCoverage.source} |`,
+    `| Preview | ${coverage.previewCoverage.count}/${coverage.previewCoverage.required} (${coverage.previewCoverage.percent}%) | ${coverage.previewCoverage.source} |`,
+    `| Verification | ${coverage.verificationCoverage.count}/${coverage.verificationCoverage.required} (${coverage.verificationCoverage.percent}%) | ${coverage.verificationCoverage.source} |`,
+    `| AFLA Review | ${coverage.aflaReviewCoverage.count}/${coverage.aflaReviewCoverage.required} (${coverage.aflaReviewCoverage.percent}%) | ${coverage.aflaReviewCoverage.source} |`,
+    '',
     '### Prior Phase Pass Tokens (Validated Baseline)',
     '',
     ...assessment.priorPassTokensValidated.map((token) => `- \`${token}\``),
@@ -120,8 +137,12 @@ export function buildCapabilityAuditV3ReportMarkdown(input: {
     '### Key Findings',
     '',
     '1. **Real Build Execution is proven** — V1/V1.1 PASS closes the V2 rank-1 gap; build/preview/launch at 100% for 15 categories.',
-    '2. **Verification is the new blocking gap** — verifiedCount 0/15 in RBEP V1.1; UVL operational coverage ~6%.',
-    '3. **World2 should NOT be the next phase** — UVL Verification Execution must wire verification before World2 real instantiation.',
+    uvlComplete
+      ? '2. **UVL Verification Execution is proven** — UVL Verification Execution V1 PASS: verifiedCount 15/15, verification coverage 100%, confidence 100/100.'
+      : '2. **Verification remains the blocking gap** — UVL Verification Execution V1 evidence incomplete; RBEP build/preview proof does not substitute for UVL verification proof.',
+    uvlComplete
+      ? `3. **${activeRoadmap[0]?.phase ?? 'Production Readiness Gate'} is the new highest-priority gap** — recalculated from current maturity and gap evidence after UVL verification closed.`
+      : '3. **World2 should NOT be the next phase** — UVL Verification Execution must complete before World2 real instantiation.',
     '4. **Production Readiness is largely absent** — score 33/100; no production gate, monitoring, or deployment path.',
     '5. **Code generation remains CRUD-limited** — 5 profiles proven; complex workflows and domain-specific apps not yet supported.',
     '6. **One Capability = One Canonical Owner** holds for CQI, UVL, AFLA, PAI, and World2 domains.',
@@ -133,7 +154,8 @@ export function buildCapabilityAuditV3ReportMarkdown(input: {
     '| Capability | Category | Status | Maturity | Validate Script |',
     '|------------|----------|--------|----------|-----------------|',
     '| CQI Maturity V1 | Requirement Intelligence | MATURE | 91 | validate:clarifying-question-intelligence-maturity-v1 |',
-    '| UVL Verification Hub V1 | Verification Systems | PARTIAL | 74 | validate:uvl-maturity-verification-hub-v1 |',
+    '| UVL Verification Hub V1 | Verification Systems | PARTIAL | 82 | validate:uvl-maturity-verification-hub-v1 |',
+    '| UVL Verification Execution V1 | Verification Systems | MATURE | 93 | validate:uvl-verification-execution-v1 |',
     '| AFLA Trust Calibration V1 | Launch Readiness | MATURE | 88 | validate:afla-trust-calibration-v1 |',
     '| Large-Scale Multi-App Validation V1 | Verification Systems | PARTIAL | 74 | validate:large-scale-multi-app-validation-v1 |',
     '| Founder Review Operator Dashboard V1 | Operator Systems | MATURE | 87 | validate:founder-review-operator-dashboard-v1 |',
@@ -179,7 +201,10 @@ export function buildCapabilityAuditV3ReportMarkdown(input: {
     '',
     `**Proven categories:** ${ops.provenCategoryCount}/${ops.supportedCategoryCount} supported`,
     `**Execution generalization:** ${ops.executionGeneralizationScore}/100`,
-    `**Proof coverage:** ${ops.proofCoveragePercent}%`,
+    `**Build coverage:** ${coverage.buildCoverage.count}/${coverage.buildCoverage.required} (${coverage.buildCoverage.percent}%)`,
+    `**Preview coverage:** ${coverage.previewCoverage.count}/${coverage.previewCoverage.required} (${coverage.previewCoverage.percent}%)`,
+    `**Verification coverage:** ${coverage.verificationCoverage.count}/${coverage.verificationCoverage.required} (${coverage.verificationCoverage.percent}%) — source: ${coverage.verificationCoverage.source}`,
+    `**AFLA review coverage:** ${coverage.aflaReviewCoverage.count}/${coverage.aflaReviewCoverage.required} (${coverage.aflaReviewCoverage.percent}%)`,
     '',
     '| Pipeline Stage | Proven | Success Rate | Status | Evidence |',
     '|----------------|--------|--------------|--------|----------|',
@@ -193,7 +218,7 @@ export function buildCapabilityAuditV3ReportMarkdown(input: {
 
   lines.push(
     '',
-    `**Full pipeline proven across suite:** ${ops.fullPipelineProvenAcrossSuite ? 'YES' : 'NO'} (verification blocks completion)`,
+    `**Full pipeline proven across suite:** ${ops.fullPipelineProvenAcrossSuite ? 'YES' : 'NO'}${uvlComplete ? '' : ' (verification blocks completion)'}`,
     '',
     '---',
     '',
@@ -306,7 +331,9 @@ export function buildCapabilityAuditV3ReportMarkdown(input: {
     '',
     '## Recommended Roadmap V3',
     '',
-    '*Fresh roadmap from V3 evidence — Real Build Execution is COMPLETE; UVL Verification Execution is rank 1.*',
+    uvlComplete
+      ? '*Fresh roadmap from V3.1 evidence — Real Build Execution and UVL Verification Execution are COMPLETE; priorities recalculated.*'
+      : '*Fresh roadmap from V3 evidence — Real Build Execution is COMPLETE; UVL Verification Execution is rank 1.*',
     '',
     '| Rank | Phase | Action | Impact | Rationale |',
     '|------|-------|--------|--------|-----------|',
@@ -327,10 +354,12 @@ export function buildCapabilityAuditV3ReportMarkdown(input: {
     '',
     '| System | Artifact | Status |',
     '|--------|----------|--------|',
-    '| Real Build Execution V1.1 | `.real-build-execution-pipeline-v1-1/proof-coverage.json` | 15/15 proof, verified 0/15 |',
+    '| Real Build Execution V1.1 | `.real-build-execution-pipeline-v1-1/proof-coverage.json` | 15/15 build/preview/AFLA proof |',
     '| Real Build Execution V1.1 | `.real-build-execution-pipeline-v1-1/generalization-score.json` | 96/100 generalization |',
+    `| UVL Verification Execution V1 | \`.uvl-verification-execution-v1/verification-coverage.json\` | ${uvlRefresh.verifiedCount}/${uvlRefresh.categoriesRequired} verified, ${uvlRefresh.verificationCoveragePercent}% coverage |`,
+    `| UVL Verification Execution V1 | \`.uvl-verification-execution-v1/verification-confidence.json\` | ${uvlRefresh.verificationConfidenceScore}/100 confidence, ${uvlRefresh.verificationProofStatus} |`,
     '| Autonomous Founder Launch Authority | `.autonomous-founder-launch-authority/suite-summary.json` | LAUNCH_READY (5/5) |',
-    '| UVL Verification Hub V1 | `.unified-verification-lab-v1/assessment.json` | ~6% coverage |',
+    '| UVL Verification Hub V1 | `.unified-verification-lab-v1/assessment.json` | maturity hub (operational proof from UVL Execution V1) |',
     '| Large-Scale Multi-App Validation | `.large-scale-multi-app-validation/assessment.json` | Gen 100%, build 0% in harness |',
     '| Capability Audit V2 | `.capability-audit-v2/assessment.json` | Prior baseline |',
     '',
@@ -340,16 +369,20 @@ export function buildCapabilityAuditV3ReportMarkdown(input: {
     '',
     '| Question | Answer |',
     '|----------|--------|',
+    '| Is UVL Verification Execution still missing? | ' + (uvlComplete ? 'No' : 'Yes') + ' |',
+    '| Verified Count | ' + `${uvlRefresh.verifiedCount}/${uvlRefresh.categoriesRequired}` + ' |',
+    '| Verification Coverage | ' + `${uvlRefresh.verificationCoveragePercent}%` + ' |',
+    '| Verification Confidence | ' + `${uvlRefresh.verificationConfidenceScore}/100` + ' |',
     `| What capabilities exist? | ${assessment.capabilityCount} across ${assessment.categoryCount} categories |`,
     `| What capabilities are mature? | ${assessment.matureCount} MATURE |`,
     `| What capabilities are incomplete? | ${assessment.partialCount} PARTIAL, ${assessment.experimentalCount} EXPERIMENTAL, ${assessment.missingCount} MISSING |`,
     `| What capabilities overlap? | ${duplicateRisk.duplicateRiskCount} with duplicate risk; ${duplicateRisk.newOverlapsSinceV2.length} new since V2 |`,
     `| Highest-priority remaining gap? | ${assessment.highestPriorityGap} |`,
-    `| What should AiDevEngine build next? | ${activeRoadmap[0]?.phase ?? 'UVL Verification Execution'} |`,
+    `| What should AiDevEngine build next? | ${activeRoadmap[0]?.phase ?? 'Production Readiness Gate'} |`,
     '',
     '---',
     '',
-    `**Pass token:** \`${AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN}\``,
+    `**Pass token:** \`${assessment.passToken}\``,
     '',
   );
 
