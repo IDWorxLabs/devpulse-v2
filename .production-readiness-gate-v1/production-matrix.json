@@ -1,0 +1,167 @@
+[
+  {
+    "readOnly": true,
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": true,
+    "productionReadinessScore": 89,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "CRM_WEB_V1",
+    "productName": "CRM",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": true,
+    "productionReadinessScore": 89,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "INVENTORY_WEB_V1",
+    "productName": "Inventory",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": true,
+    "productionReadinessScore": 89,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+    "productName": "School Management",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": true,
+    "productionReadinessScore": 89,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "PROJECT_MANAGEMENT_WEB_V1",
+    "productName": "Project Management",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": true,
+    "productionReadinessScore": 89,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": false,
+    "productionReadinessScore": 81,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "productName": "Booking Platform",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": false,
+    "productionReadinessScore": 81,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "RESTAURANT_POS_WEB_V1",
+    "productName": "Restaurant POS",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": false,
+    "productionReadinessScore": 81,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "productName": "Learning Platform",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": false,
+    "productionReadinessScore": 81,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "HR_PLATFORM_WEB_V1",
+    "productName": "HR Platform",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": false,
+    "productionReadinessScore": 81,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "productName": "Customer Support Platform",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": false,
+    "productionReadinessScore": 81,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "INSURANCE_CRM_WEB_V1",
+    "productName": "Insurance CRM",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": false,
+    "productionReadinessScore": 81,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "FLEET_MANAGEMENT_WEB_V1",
+    "productName": "Fleet Management",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": false,
+    "productionReadinessScore": 81,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "productName": "Finance Tracker",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": false,
+    "productionReadinessScore": 81,
+    "verdict": "PRODUCTION_READY"
+  },
+  {
+    "readOnly": true,
+    "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+    "productName": "E-Commerce Platform",
+    "buildProven": true,
+    "previewProven": true,
+    "verificationProven": true,
+    "launchReady": false,
+    "productionReadinessScore": 81,
+    "verdict": "PRODUCTION_READY"
+  }
+]

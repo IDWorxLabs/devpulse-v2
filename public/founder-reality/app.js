@@ -26,6 +26,9 @@
   var trustCalibrationData = null;
   var trustCalibrationLoadPromise = null;
   var trustCalibrationProfile = 'CRM_WEB_V1';
+  var productionReadinessData = null;
+  var productionReadinessLoadPromise = null;
+  var productionReadinessProfile = 'CRM_WEB_V1';
   var productArchitectData = null;
   var productArchitectLoadPromise = null;
   var productArchitectProfile = 'CRM_WEB_V1';
@@ -120,7 +123,7 @@
     ],
   };
   var conversationStarted = false;
-  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
+  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Production Readiness', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
   var feedSectionIdleCopy = {
     Planning: {
       action: 'Ready to classify your next request',
@@ -149,6 +152,10 @@
     'Founder Trust Calibration': {
       action: 'Trust calibration ready',
       detail: 'Measure AFLA verdict stability, false positives, confidence accuracy, and reviewer alignment.',
+    },
+    'Production Readiness': {
+      action: 'Production readiness gate ready',
+      detail: 'Evaluate whether generated applications can safely deploy to production beyond launch simulation.',
     },
     'Large-Scale Validation': {
       action: 'Large-scale validation ready',
@@ -4847,6 +4854,130 @@
     });
   }
 
+  function renderProductionReadinessPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Production Readiness',
+        '<p class="product-lead">Loading production readiness gate visibility…</p>',
+      );
+    }
+
+    var profileOptions = FOUNDER_REVIEW_SUITE_PROFILES.map(function (app) {
+      var selected = data.profile === app.profile ? ' selected' : '';
+      return '<option value="' + escapeHtml(app.profile) + '"' + selected + '>' + escapeHtml(app.label) + '</option>';
+    }).join('');
+
+    var domainRows = (data.domainScores || []).map(function (row) {
+      return (
+        '<div class="production-readiness-row">' +
+        '<span>' + escapeHtml(row.label) + '</span>' +
+        '<span>' + String(row.score) + '/100</span>' +
+        '<span class="status-pill">' + escapeHtml(row.status) + '</span>' +
+        '</div>'
+      );
+    }).join('');
+
+    var riskRows = (data.productionRisks || [])
+      .slice(0, 8)
+      .map(function (risk) {
+        return (
+          '<div class="production-readiness-risk-row">' +
+          '<span class="status-pill">' + escapeHtml(risk.level) + '</span>' +
+          '<span>' + escapeHtml(risk.summary) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    var matrixRows = (data.productionMatrix.entries || [])
+      .slice(0, 8)
+      .map(function (entry) {
+        return (
+          '<div class="production-readiness-matrix-row">' +
+          '<span>' + escapeHtml(entry.productName) + '</span>' +
+          '<span>' + String(entry.overallScore) + '/100</span>' +
+          '<span>' + escapeHtml(String(entry.verdict).replaceAll('_', ' ')) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'Production Readiness',
+      '<p class="product-lead">Production Readiness Gate — evaluate whether generated applications can safely operate in production. Informational only.</p>' +
+        '<div class="production-readiness-profile-bar">' +
+        '<label for="production-readiness-profile-select"><strong>Application:</strong></label> ' +
+        '<select id="production-readiness-profile-select" class="production-readiness-profile-select">' + profileOptions + '</select>' +
+        '</div>' +
+        '<p><strong>Overall Score:</strong> ' + String(data.overallScore) + '/100</p>' +
+        '<p><strong>Readiness Verdict:</strong> <span class="status-pill">' + escapeHtml(String(data.verdict).replaceAll('_', ' ')) + '</span></p>' +
+        '<p><strong>Launch Chain Complete:</strong> ' + (data.launchChainComplete ? 'Yes' : 'No') + '</p>' +
+        '<p><strong>Suite Average:</strong> ' + String(data.productionMatrix.averageScore) + '/100 (' +
+        String(data.productionMatrix.productionReadyCount) + ' ready, ' +
+        String(data.productionMatrix.withWarningsCount) + ' with warnings)</p>' +
+        '<p><strong>Domain Scores</strong></p>' +
+        '<div class="production-readiness-grid">' + (domainRows || '<p class="hint">Waiting for domain scores.</p>') + '</div>' +
+        '<p><strong>Production Risks</strong></p>' +
+        '<div class="production-readiness-risks">' + (riskRows || '<p class="hint">No production risks classified.</p>') + '</div>' +
+        '<p><strong>Missing Requirements</strong></p>' +
+        renderFounderReviewList(data.missingRequirements, 'No missing requirements.') +
+        '<p><strong>Hardening Recommendations</strong></p>' +
+        renderFounderReviewList(
+          (data.hardeningRecommendations || []).map(function (rec) {
+            return '[' + rec.priority + '] ' + rec.title + ' — ' + rec.action;
+          }),
+          'No hardening recommendations yet.',
+        ) +
+        '<p><strong>Production Readiness Matrix</strong></p>' +
+        '<div class="production-readiness-matrix">' + (matrixRows || '<p class="hint">Matrix not available.</p>') + '</div>',
+    );
+  }
+
+  function loadProductionReadiness(force, profile) {
+    if (!force && productionReadinessData && !profile) {
+      return Promise.resolve(productionReadinessData);
+    }
+    if (productionReadinessLoadPromise) {
+      return productionReadinessLoadPromise;
+    }
+    var url = '/api/founder/production-readiness-gate-v1?refresh=false';
+    var queryProfile = profile || productionReadinessProfile;
+    if (queryProfile) {
+      url += '&profile=' + encodeURIComponent(queryProfile);
+    }
+    productionReadinessLoadPromise = fetch(url, { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('production-readiness-gate HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        productionReadinessData = data;
+        productionReadinessProfile = data.profile || profile || productionReadinessProfile;
+        return data;
+      })
+      .finally(function () {
+        productionReadinessLoadPromise = null;
+      });
+    return productionReadinessLoadPromise;
+  }
+
+  function bindProductionReadinessActions() {
+    var profileSelect = el('production-readiness-profile-select');
+    if (!profileSelect) return;
+    profileSelect.addEventListener('change', function () {
+      productionReadinessProfile = profileSelect.value;
+      loadProductionReadiness(true, productionReadinessProfile)
+        .then(function () {
+          if (currentViewId === 'founder-review') {
+            renderFounderReviewSurface(workspaceData);
+          }
+        })
+        .catch(function () {
+          /* panel falls back to loading state */
+        });
+    });
+  }
+
   var PRODUCT_ARCHITECT_SUITE_PROFILES = [
     { profile: 'CRM_WEB_V1', label: 'CRM' },
     { profile: 'MARKETPLACE_WEB_V1', label: 'Marketplace' },
@@ -5193,6 +5324,7 @@
       renderRequirementDiscoveryPanel(requirementDiscoveryData) +
       renderProductArchitectPanel(productArchitectData) +
       renderTrustCalibrationPanel(trustCalibrationData) +
+      renderProductionReadinessPanel(productionReadinessData) +
       renderProductCard(
         'Evidence Chain',
         '<div class="founder-review-evidence-grid">' + evidenceRows + '</div>',
@@ -5325,6 +5457,7 @@
     bindFounderReviewDashboardActions();
     bindProductArchitectActions();
     bindTrustCalibrationActions();
+    bindProductionReadinessActions();
   }
 
   function renderVerificationSurface(ws, manifest) {
@@ -5345,6 +5478,7 @@
     html += renderVerificationHubPanel(verificationHubData);
     html += renderLargeScaleValidationPanel(largeScaleValidationData);
     html += renderExecutionPipelinePanel(executionPipelineData);
+    html += renderProductionReadinessPanel(productionReadinessData);
     html +=
       renderProductCard(
         'Verification Readiness',
@@ -6204,6 +6338,7 @@
     'Verification Hub': '<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="3"/></svg>',
     'Founder Review': '<svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>',
     'Founder Trust Calibration': '<svg viewBox="0 0 24 24"><path d="M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7l7-4z"/><path d="M9 12l2 2 4-4"/></svg>',
+    'Production Readiness': '<svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>',
     'Product Architect Review': '<svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M7 7V5h10v2"/><path d="M8 11h8M8 15h5"/></svg>',
     'Large-Scale Validation': '<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>',
     'Execution Pipeline': '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
@@ -10635,6 +10770,16 @@
     })
     .catch(function () {
       /* UVL Verification Execution falls back to loading state */
+    });
+
+  loadProductionReadiness(false)
+    .then(function () {
+      if (currentViewId === 'verification') {
+        renderVerificationSurface(workspaceData, manifestData);
+      }
+    })
+    .catch(function () {
+      /* Production Readiness falls back to loading state */
     });
 
   fetch(buildFounderTestApiUrl('/api/founder-reality.json', null))

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T14:39:31.458Z",
+  "generatedAt": "2026-06-24T14:55:48.744Z",
   "entries": [
     {
       "capabilityName": "Chat Authority",
@@ -556,26 +556,26 @@
     {
       "capabilityName": "Production Readiness Gate",
       "category": "PRODUCTION_READINESS",
-      "maturityScore": 0,
-      "status": "MISSING"
+      "maturityScore": 88,
+      "status": "MATURE"
     },
     {
       "capabilityName": "Deployment Readiness",
       "category": "PRODUCTION_READINESS",
-      "maturityScore": 28,
-      "status": "EXPERIMENTAL"
+      "maturityScore": 82,
+      "status": "PARTIAL"
     },
     {
       "capabilityName": "Monitoring",
       "category": "PRODUCTION_READINESS",
-      "maturityScore": 5,
-      "status": "MISSING"
+      "maturityScore": 72,
+      "status": "PARTIAL"
     },
     {
       "capabilityName": "Rollback",
       "category": "PRODUCTION_READINESS",
-      "maturityScore": 35,
-      "status": "EXPERIMENTAL"
+      "maturityScore": 76,
+      "status": "PARTIAL"
     },
     {
       "capabilityName": "Release Approval",

@@ -1,0 +1,113 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T14:55:39.815Z",
+  "overallScore": 84,
+  "domains": [
+    {
+      "readOnly": true,
+      "domain": "SECURITY",
+      "label": "Security",
+      "score": 88,
+      "status": "MATURE",
+      "findings": [
+        "No hardcoded secrets detected",
+        "Authentication patterns present"
+      ]
+    },
+    {
+      "readOnly": true,
+      "domain": "RELIABILITY",
+      "label": "Reliability",
+      "score": 95,
+      "status": "MATURE",
+      "findings": [
+        "Build proven with reproducible artifacts",
+        "Preview runtime proven stable",
+        "No explicit error boundaries — add for production resilience",
+        "Build script defined in package.json"
+      ]
+    },
+    {
+      "readOnly": true,
+      "domain": "OBSERVABILITY",
+      "label": "Observability",
+      "score": 70,
+      "status": "PARTIAL",
+      "findings": [
+        "Minimal logging — add structured logging for production",
+        "Health/status indicators detected"
+      ]
+    },
+    {
+      "readOnly": true,
+      "domain": "CONFIGURATION",
+      "label": "Configuration",
+      "score": 58,
+      "status": "PARTIAL",
+      "findings": [
+        "Missing .env.example — document environment variables"
+      ]
+    },
+    {
+      "readOnly": true,
+      "domain": "DEPLOYMENT",
+      "label": "Deployment",
+      "score": 100,
+      "status": "MATURE",
+      "findings": [
+        "Production build artifacts present in dist/",
+        "Build pipeline script available",
+        "Production startup script available",
+        "Preview deployment path validated"
+      ]
+    },
+    {
+      "readOnly": true,
+      "domain": "RECOVERY",
+      "label": "Recovery",
+      "score": 80,
+      "status": "MATURE",
+      "findings": [
+        "No recovery/runbook documentation",
+        "Client-side persistence detected — document backup assumptions",
+        "Restart resilience inferred from static SPA build output"
+      ]
+    },
+    {
+      "readOnly": true,
+      "domain": "SCALABILITY",
+      "label": "Scalability",
+      "score": 96,
+      "status": "MATURE",
+      "findings": [
+        "Modular component structure supports scaling",
+        "Multi-file architecture detected",
+        "Static SPA deployment model — horizontal scale via CDN"
+      ]
+    },
+    {
+      "readOnly": true,
+      "domain": "DATA_PROTECTION",
+      "label": "Data Protection",
+      "score": 85,
+      "status": "MATURE",
+      "findings": [
+        "Local storage used — document retention and PII handling",
+        "No sensitive data hardcoded in source"
+      ]
+    },
+    {
+      "readOnly": true,
+      "domain": "OPERATIONAL_RISK",
+      "label": "Operational Risk",
+      "score": 71,
+      "status": "PARTIAL",
+      "findings": [
+        "Launch readiness proven via AFLA",
+        "Verification proven via UVL",
+        "Low-scoring domains: Configuration",
+        "Launch readiness not proven — operational risk elevated"
+      ]
+    }
+  ]
+}

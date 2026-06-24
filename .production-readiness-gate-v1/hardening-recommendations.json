@@ -1,0 +1,7 @@
+[
+  "Add .env.example and document required production variables",
+  "Add README with deployment, backup, and recovery steps",
+  "Observability: Minimal logging — add structured logging for production",
+  "Configuration: Missing .env.example — document environment variables",
+  "Resolve launch readiness blockers before production gate"
+]

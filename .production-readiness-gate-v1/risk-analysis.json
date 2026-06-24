@@ -1,0 +1,362 @@
+[
+  {
+    "readOnly": true,
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "CRM_WEB_V1",
+    "productName": "CRM",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "CRM_WEB_V1",
+    "productName": "CRM",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "INVENTORY_WEB_V1",
+    "productName": "Inventory",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "INVENTORY_WEB_V1",
+    "productName": "Inventory",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+    "productName": "School Management",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+    "productName": "School Management",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "PROJECT_MANAGEMENT_WEB_V1",
+    "productName": "Project Management",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "PROJECT_MANAGEMENT_WEB_V1",
+    "productName": "Project Management",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "riskLevel": "HIGH",
+    "category": "Launch Readiness",
+    "detail": "AFLA launch verdict not LAUNCH_READY",
+    "recommendation": "Resolve launch readiness blockers before production gate"
+  },
+  {
+    "readOnly": true,
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "productName": "Booking Platform",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "productName": "Booking Platform",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "productName": "Booking Platform",
+    "riskLevel": "HIGH",
+    "category": "Launch Readiness",
+    "detail": "AFLA launch verdict not LAUNCH_READY",
+    "recommendation": "Resolve launch readiness blockers before production gate"
+  },
+  {
+    "readOnly": true,
+    "profile": "RESTAURANT_POS_WEB_V1",
+    "productName": "Restaurant POS",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "RESTAURANT_POS_WEB_V1",
+    "productName": "Restaurant POS",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "RESTAURANT_POS_WEB_V1",
+    "productName": "Restaurant POS",
+    "riskLevel": "HIGH",
+    "category": "Launch Readiness",
+    "detail": "AFLA launch verdict not LAUNCH_READY",
+    "recommendation": "Resolve launch readiness blockers before production gate"
+  },
+  {
+    "readOnly": true,
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "productName": "Learning Platform",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "productName": "Learning Platform",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "productName": "Learning Platform",
+    "riskLevel": "HIGH",
+    "category": "Launch Readiness",
+    "detail": "AFLA launch verdict not LAUNCH_READY",
+    "recommendation": "Resolve launch readiness blockers before production gate"
+  },
+  {
+    "readOnly": true,
+    "profile": "HR_PLATFORM_WEB_V1",
+    "productName": "HR Platform",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "HR_PLATFORM_WEB_V1",
+    "productName": "HR Platform",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "HR_PLATFORM_WEB_V1",
+    "productName": "HR Platform",
+    "riskLevel": "HIGH",
+    "category": "Launch Readiness",
+    "detail": "AFLA launch verdict not LAUNCH_READY",
+    "recommendation": "Resolve launch readiness blockers before production gate"
+  },
+  {
+    "readOnly": true,
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "productName": "Customer Support Platform",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "productName": "Customer Support Platform",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "productName": "Customer Support Platform",
+    "riskLevel": "HIGH",
+    "category": "Launch Readiness",
+    "detail": "AFLA launch verdict not LAUNCH_READY",
+    "recommendation": "Resolve launch readiness blockers before production gate"
+  },
+  {
+    "readOnly": true,
+    "profile": "INSURANCE_CRM_WEB_V1",
+    "productName": "Insurance CRM",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "INSURANCE_CRM_WEB_V1",
+    "productName": "Insurance CRM",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "INSURANCE_CRM_WEB_V1",
+    "productName": "Insurance CRM",
+    "riskLevel": "HIGH",
+    "category": "Launch Readiness",
+    "detail": "AFLA launch verdict not LAUNCH_READY",
+    "recommendation": "Resolve launch readiness blockers before production gate"
+  },
+  {
+    "readOnly": true,
+    "profile": "FLEET_MANAGEMENT_WEB_V1",
+    "productName": "Fleet Management",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "FLEET_MANAGEMENT_WEB_V1",
+    "productName": "Fleet Management",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "FLEET_MANAGEMENT_WEB_V1",
+    "productName": "Fleet Management",
+    "riskLevel": "HIGH",
+    "category": "Launch Readiness",
+    "detail": "AFLA launch verdict not LAUNCH_READY",
+    "recommendation": "Resolve launch readiness blockers before production gate"
+  },
+  {
+    "readOnly": true,
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "productName": "Finance Tracker",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "productName": "Finance Tracker",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "productName": "Finance Tracker",
+    "riskLevel": "HIGH",
+    "category": "Launch Readiness",
+    "detail": "AFLA launch verdict not LAUNCH_READY",
+    "recommendation": "Resolve launch readiness blockers before production gate"
+  },
+  {
+    "readOnly": true,
+    "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+    "productName": "E-Commerce Platform",
+    "riskLevel": "HIGH",
+    "category": "Configuration",
+    "detail": "Missing environment configuration documentation",
+    "recommendation": "Add .env.example and document required production variables"
+  },
+  {
+    "readOnly": true,
+    "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+    "productName": "E-Commerce Platform",
+    "riskLevel": "HIGH",
+    "category": "Recovery",
+    "detail": "No recovery or operational runbook documentation",
+    "recommendation": "Add README with deployment, backup, and recovery steps"
+  },
+  {
+    "readOnly": true,
+    "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+    "productName": "E-Commerce Platform",
+    "riskLevel": "HIGH",
+    "category": "Launch Readiness",
+    "detail": "AFLA launch verdict not LAUNCH_READY",
+    "recommendation": "Resolve launch readiness blockers before production gate"
+  }
+]

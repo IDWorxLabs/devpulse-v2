@@ -13,17 +13,17 @@
 
 Since Capability Audit V3, AiDevEngine closed the **verification gap**: UVL Verification Execution V1 now proves **15/15 categories verified** with **100% verification coverage** and **100/100 verification confidence** against live preview runtime evidence. Real Build Execution Pipeline V1.1 continues to prove **15/15 build/preview/AFLA** coverage.
 
-The refreshed audit catalogues **98 capabilities** across **16 categories** with an overall average maturity of **77**.
+The refreshed audit catalogues **98 capabilities** across **16 categories** with an overall average maturity of **79**.
 
 | Metric | V2 Baseline | V3 Current |
 |--------|-------------|------------|
 | Categories | 15 | 16 |
 | Capabilities | 87 | 98 |
-| Mature | 28 | 36 |
-| Partial | 54 | 53 |
-| High duplicate risk | 11 | 12 |
+| Mature | 28 | 37 |
+| Partial | 54 | 56 |
+| High duplicate risk | 11 | 11 |
 | Operational Maturity Score | — | 97 |
-| Production Readiness Score | — | 33 |
+| Production Readiness Score | — | 75 |
 | Code Generation Maturity | — | 58 |
 
 ### Coverage Breakdown (Evidence-Driven)
@@ -60,7 +60,7 @@ The refreshed audit catalogues **98 capabilities** across **16 categories** with
 
 1. **Real Build Execution is proven** — V1/V1.1 PASS closes the V2 rank-1 gap; build/preview/launch at 100% for 15 categories.
 2. **UVL Verification Execution is proven** — UVL Verification Execution V1 PASS: verifiedCount 15/15, verification coverage 100%, confidence 100/100.
-3. **Production Readiness Gate is the new highest-priority gap** — recalculated from current maturity and gap evidence after UVL verification closed.
+3. **Cloud Execution Path is the new highest-priority gap** — recalculated from current maturity and gap evidence after UVL verification closed.
 4. **Production Readiness is largely absent** — score 33/100; no production gate, monitoring, or deployment path.
 5. **Code generation remains CRUD-limited** — 5 profiles proven; complex workflows and domain-specific apps not yet supported.
 6. **One Capability = One Canonical Owner** holds for CQI, UVL, AFLA, PAI, and World2 domains.
@@ -286,14 +286,14 @@ The refreshed audit catalogues **98 capabilities** across **16 categories** with
 
 ## Production Readiness
 
-**Capabilities:** 6 · **Mature:** 0 · **Partial:** 2 · **Experimental:** 2
+**Capabilities:** 6 · **Mature:** 1 · **Partial:** 5 · **Experimental:** 0
 
 | Capability | Status | Maturity | Duplicate Risk | Recommendation | Owner Path | Canonical Owner | Overlap With |
 |------------|--------|----------|----------------|----------------|------------|-----------------|--------------|
-| Production Readiness Gate | MISSING | 0 | HIGH | BUILD | `—` | Production Readiness Gate | Launch Readiness Authority, Autonomous Founder Launch Authority |
-| Deployment Readiness | EXPERIMENTAL | 28 | MEDIUM | BUILD | `src/scale-readiness-reality-authority/` | — | Production Readiness Gate |
-| Monitoring | MISSING | 5 | LOW | BUILD | `—` | — | — |
-| Rollback | EXPERIMENTAL | 35 | LOW | EXTEND | `src/reliability-hardening/` | — | — |
+| Production Readiness Gate | MATURE | 88 | LOW | EXTEND | `src/production-readiness-gate-v1/` | Production Readiness Gate V1 | Launch Readiness Authority, Autonomous Founder Launch Authority |
+| Deployment Readiness | PARTIAL | 82 | MEDIUM | EXTEND | `src/production-readiness-gate-v1/` | Production Readiness Gate V1 | Production Readiness Gate |
+| Monitoring | PARTIAL | 72 | LOW | EXTEND | `src/production-readiness-gate-v1/` | — | — |
+| Rollback | PARTIAL | 76 | LOW | EXTEND | `src/production-readiness-gate-v1/` | — | — |
 | Release Approval | PARTIAL | 72 | MEDIUM | EXTEND | `src/autonomous-founder-launch-authority/` | Autonomous Founder Launch Authority | Autonomous Founder Launch Authority, Launch Council |
 | Operational Safeguards | PARTIAL | 58 | LOW | EXTEND | `src/execution-readiness-gate/` | — | — |
 
@@ -318,7 +318,7 @@ The refreshed audit catalogues **98 capabilities** across **16 categories** with
 | Multi-Project Execution | 5 | 80 | PARTIAL |
 | World2 | 9 | 62 | PARTIAL |
 | Operator Systems | 3 | 88 | MATURE |
-| Production Readiness | 6 | 33 | EXPERIMENTAL |
+| Production Readiness | 6 | 75 | PARTIAL |
 
 ---
 
@@ -350,7 +350,7 @@ The refreshed audit catalogues **98 capabilities** across **16 categories** with
 
 ## Duplicate Risk Analysis V3
 
-**Duplicate Risk Count:** 50 (HIGH: 12, MEDIUM: 38)
+**Duplicate Risk Count:** 49 (HIGH: 11, MEDIUM: 38)
 
 **One Capability = One Canonical Owner:** VALID
 
@@ -393,16 +393,16 @@ The refreshed audit catalogues **98 capabilities** across **16 categories** with
 
 ## Production Readiness Assessment
 
-**Production Readiness Score:** 33/100 (EXPERIMENTAL)
+**Production Readiness Score:** 75/100 (PARTIAL)
 
 | Dimension | Maturity | Status | Detail |
 |-----------|----------|--------|--------|
-| Production Readiness Gate | 0 | MISSING | No production readiness gate module; launch readiness covers blueprint suites only. |
-| Deployment Readiness | 28 | EXPERIMENTAL | Scale readiness authority is advisory; no validated deployment pipeline. |
-| Monitoring | 5 | MISSING | No observability or health monitoring for deployed generated apps. |
-| Rollback | 35 | EXPERIMENTAL | Reliability hardening analyzes recovery; automated rollback not implemented. |
-| Release Approval | 72 | PARTIAL | AFLA launch approval proven for 15-suite; production release approval path absent. |
-| Operational Safeguards | 58 | PARTIAL | Pre-build execution and planning gates exist; production operational safeguards missing. |
+| Production Readiness Gate | 84 | MATURE | Production Readiness Gate V1 PASS: 84/100 from .production-readiness-gate-v1/assessment.json |
+| Deployment Readiness | 89 | PARTIAL | Production Readiness Gate evaluates build artifacts and deployment startup path from generated workspaces. |
+| Monitoring | 69 | PARTIAL | Observability domain scored via logging, health indicators, and error reporting patterns. |
+| Rollback | 64 | EXPERIMENTAL | Recovery readiness domain covers backup assumptions and restart resilience guidance. |
+| Release Approval | 72 | PARTIAL | AFLA launch approval proven for 15-suite; Production Readiness Gate adds production deployment boundary. |
+| Operational Safeguards | 74 | MATURE | Security, configuration, and operational risk domains scored per category. |
 
 ---
 
@@ -428,7 +428,7 @@ Code Generation Engine V1 materializes 5 CRUD profiles with 100% success in Real
 **Operational Readiness:** PARTIAL
 **Should World2 be next phase?** NO
 
-**Rationale:** Production Readiness Gate is the highest-priority gap after UVL Verification Execution V1 closed verification at 15/15. World2 should follow production readiness and canonical ownership registration.
+**Rationale:** Cloud Execution Path is the highest-priority gap after UVL Verification Execution V1 closed verification at 15/15. World2 should follow production readiness and canonical ownership registration.
 
 ### Remaining Gaps
 
@@ -444,11 +444,10 @@ Code Generation Engine V1 materializes 5 CRUD profiles with 100% success in Real
 
 ### Highest-Priority Gap
 
-**Production Readiness Gate — Launch readiness validates blueprint suites; production deployment readiness unvalidated.**
+**Cloud Execution Path — No validated cloud execution or production deployment path.**
 
 ### What is still missing (BLOCKING)?
 
-- **BLOCKING:** Production readiness gate
 - **BLOCKING:** Cloud runtime production deployment
 
 ### What remains weak?
@@ -460,7 +459,6 @@ Code Generation Engine V1 materializes 5 CRUD profiles with 100% success in Real
 - Mobile runtime validation at scale
 - Self-modification execution
 - Parallel build execution
-- Operational monitoring for deployed apps
 - Unified failure escalation authority
 
 ---
@@ -471,15 +469,14 @@ Code Generation Engine V1 materializes 5 CRUD profiles with 100% success in Real
 
 | Rank | Phase | Action | Impact | Rationale |
 |------|-------|--------|--------|-----------|
-| 1 | Production Readiness Gate | BUILD | CRITICAL | Launch readiness validates blueprint suites; production deployment, monitoring, and rollback remain unvalidated. Current… |
-| 2 | Cloud Execution Path | BUILD | HIGH | No validated cloud runtime or production deployment. Defer until production readiness gate is proven locally. Current ga… |
-| 3 | General-Purpose Code Generation | EXTEND | HIGH | Real Build Execution and UVL verification prove 15 CRUD-adjacent categories at 100%; Code Generation Engine still limite… |
-| 4 | Large-Scale Pipeline Integration | EXTEND | HIGH | Large-scale validation harness shows 0% buildSuccessRate despite Real Build Execution proving 100%. Wire harness to RBEP… |
-| 5 | World2 Real Instantiation | EXTEND | HIGH | World2 modules validate in isolation; dry-run bridge does not activate real execution. Connect to Real Build Execution a… |
-| 6 | Mobile Runtime Validation at Scale | BUILD | HIGH | Mobile preview modes exist; large-scale mobile runtime validation harness needed for cross-platform vision. Current gap:… |
-| 7 | Self-Evolution Execution | EXTEND | MEDIUM | Self-evolution is advisory only. Wire gap detection → capability research → build → verify loop with human approval gate… |
-| 8 | Canonical Ownership V2 Registration | REGISTER | HIGH | Real Build Execution V1/V1.1, CQI Maturity V1, UVL Verification Execution V1, Capability Audit V2/V3, and Production Rea… |
-| 9 | Multi-Project Concurrent Execution | EXTEND | MEDIUM | Multi-project foundation and tabs are mature; parallel build orchestration must move from planning to execution. Current… |
+| 1 | Cloud Execution Path | BUILD | HIGH | No validated cloud runtime or production deployment. Defer until production readiness gate is proven locally. Current ga… |
+| 2 | General-Purpose Code Generation | EXTEND | HIGH | Real Build Execution and UVL verification prove 15 CRUD-adjacent categories at 100%; Code Generation Engine still limite… |
+| 3 | Large-Scale Pipeline Integration | EXTEND | HIGH | Large-scale validation harness shows 0% buildSuccessRate despite Real Build Execution proving 100%. Wire harness to RBEP… |
+| 4 | World2 Real Instantiation | EXTEND | HIGH | World2 modules validate in isolation; dry-run bridge does not activate real execution. Connect to Real Build Execution a… |
+| 5 | Mobile Runtime Validation at Scale | BUILD | HIGH | Mobile preview modes exist; large-scale mobile runtime validation harness needed for cross-platform vision. Current gap:… |
+| 6 | Self-Evolution Execution | EXTEND | MEDIUM | Self-evolution is advisory only. Wire gap detection → capability research → build → verify loop with human approval gate… |
+| 7 | Canonical Ownership V2 Registration | REGISTER | HIGH | Real Build Execution V1/V1.1, CQI Maturity V1, UVL Verification Execution V1, Capability Audit V2/V3, and Production Rea… |
+| 8 | Multi-Project Concurrent Execution | EXTEND | MEDIUM | Multi-project foundation and tabs are mature; parallel build orchestration must move from planning to execution. Current… |
 
 ---
 
@@ -507,11 +504,11 @@ Code Generation Engine V1 materializes 5 CRUD profiles with 100% success in Real
 | Verification Coverage | 100% |
 | Verification Confidence | 100/100 |
 | What capabilities exist? | 98 across 16 categories |
-| What capabilities are mature? | 36 MATURE |
-| What capabilities are incomplete? | 53 PARTIAL, 6 EXPERIMENTAL, 3 MISSING |
-| What capabilities overlap? | 50 with duplicate risk; 5 new since V2 |
-| Highest-priority remaining gap? | Production Readiness Gate — Launch readiness validates blueprint suites; production deployment readiness unvalidated. |
-| What should AiDevEngine build next? | Production Readiness Gate |
+| What capabilities are mature? | 37 MATURE |
+| What capabilities are incomplete? | 56 PARTIAL, 4 EXPERIMENTAL, 1 MISSING |
+| What capabilities overlap? | 49 with duplicate risk; 5 new since V2 |
+| Highest-priority remaining gap? | Cloud Execution Path — No validated cloud execution or production deployment path. |
+| What should AiDevEngine build next? | Cloud Execution Path |
 
 ---
 

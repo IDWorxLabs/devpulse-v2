@@ -1,0 +1,3224 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "Production Readiness Gate V1",
+  "passToken": "PRODUCTION_READINESS_GATE_V1_PASS",
+  "version": "V1",
+  "generatedAt": "2026-06-24T14:55:39.815Z",
+  "categoriesEvaluated": 15,
+  "categoriesProductionReady": 15,
+  "productionReadinessScore": 84,
+  "productionReadinessVerdict": "PRODUCTION_READY",
+  "productionProofStatus": "PROVEN",
+  "domainScores": {
+    "readOnly": true,
+    "generatedAt": "2026-06-24T14:55:39.815Z",
+    "overallScore": 84,
+    "domains": [
+      {
+        "readOnly": true,
+        "domain": "SECURITY",
+        "label": "Security",
+        "score": 88,
+        "status": "MATURE",
+        "findings": [
+          "No hardcoded secrets detected",
+          "Authentication patterns present"
+        ]
+      },
+      {
+        "readOnly": true,
+        "domain": "RELIABILITY",
+        "label": "Reliability",
+        "score": 95,
+        "status": "MATURE",
+        "findings": [
+          "Build proven with reproducible artifacts",
+          "Preview runtime proven stable",
+          "No explicit error boundaries — add for production resilience",
+          "Build script defined in package.json"
+        ]
+      },
+      {
+        "readOnly": true,
+        "domain": "OBSERVABILITY",
+        "label": "Observability",
+        "score": 70,
+        "status": "PARTIAL",
+        "findings": [
+          "Minimal logging — add structured logging for production",
+          "Health/status indicators detected"
+        ]
+      },
+      {
+        "readOnly": true,
+        "domain": "CONFIGURATION",
+        "label": "Configuration",
+        "score": 58,
+        "status": "PARTIAL",
+        "findings": [
+          "Missing .env.example — document environment variables"
+        ]
+      },
+      {
+        "readOnly": true,
+        "domain": "DEPLOYMENT",
+        "label": "Deployment",
+        "score": 100,
+        "status": "MATURE",
+        "findings": [
+          "Production build artifacts present in dist/",
+          "Build pipeline script available",
+          "Production startup script available",
+          "Preview deployment path validated"
+        ]
+      },
+      {
+        "readOnly": true,
+        "domain": "RECOVERY",
+        "label": "Recovery",
+        "score": 80,
+        "status": "MATURE",
+        "findings": [
+          "No recovery/runbook documentation",
+          "Client-side persistence detected — document backup assumptions",
+          "Restart resilience inferred from static SPA build output"
+        ]
+      },
+      {
+        "readOnly": true,
+        "domain": "SCALABILITY",
+        "label": "Scalability",
+        "score": 96,
+        "status": "MATURE",
+        "findings": [
+          "Modular component structure supports scaling",
+          "Multi-file architecture detected",
+          "Static SPA deployment model — horizontal scale via CDN"
+        ]
+      },
+      {
+        "readOnly": true,
+        "domain": "DATA_PROTECTION",
+        "label": "Data Protection",
+        "score": 85,
+        "status": "MATURE",
+        "findings": [
+          "Local storage used — document retention and PII handling",
+          "No sensitive data hardcoded in source"
+        ]
+      },
+      {
+        "readOnly": true,
+        "domain": "OPERATIONAL_RISK",
+        "label": "Operational Risk",
+        "score": 71,
+        "status": "PARTIAL",
+        "findings": [
+          "Launch readiness proven via AFLA",
+          "Verification proven via UVL",
+          "Low-scoring domains: Configuration",
+          "Launch readiness not proven — operational risk elevated"
+        ]
+      }
+    ]
+  },
+  "productionMatrix": [
+    {
+      "readOnly": true,
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": true,
+      "productionReadinessScore": 89,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": true,
+      "productionReadinessScore": 89,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "INVENTORY_WEB_V1",
+      "productName": "Inventory",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": true,
+      "productionReadinessScore": 89,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+      "productName": "School Management",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": true,
+      "productionReadinessScore": 89,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": true,
+      "productionReadinessScore": 89,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": false,
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": false,
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "RESTAURANT_POS_WEB_V1",
+      "productName": "Restaurant POS",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": false,
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "LEARNING_PLATFORM_WEB_V1",
+      "productName": "Learning Platform",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": false,
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "HR_PLATFORM_WEB_V1",
+      "productName": "HR Platform",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": false,
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "CUSTOMER_SUPPORT_WEB_V1",
+      "productName": "Customer Support Platform",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": false,
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "INSURANCE_CRM_WEB_V1",
+      "productName": "Insurance CRM",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": false,
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "FLEET_MANAGEMENT_WEB_V1",
+      "productName": "Fleet Management",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": false,
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "FINANCE_TRACKER_WEB_V1",
+      "productName": "Finance Tracker",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": false,
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY"
+    },
+    {
+      "readOnly": true,
+      "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+      "productName": "E-Commerce Platform",
+      "buildProven": true,
+      "previewProven": true,
+      "verificationProven": true,
+      "launchReady": false,
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY"
+    }
+  ],
+  "riskAnalysis": [
+    {
+      "readOnly": true,
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "INVENTORY_WEB_V1",
+      "productName": "Inventory",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "INVENTORY_WEB_V1",
+      "productName": "Inventory",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+      "productName": "School Management",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+      "productName": "School Management",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "riskLevel": "HIGH",
+      "category": "Launch Readiness",
+      "detail": "AFLA launch verdict not LAUNCH_READY",
+      "recommendation": "Resolve launch readiness blockers before production gate"
+    },
+    {
+      "readOnly": true,
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "riskLevel": "HIGH",
+      "category": "Launch Readiness",
+      "detail": "AFLA launch verdict not LAUNCH_READY",
+      "recommendation": "Resolve launch readiness blockers before production gate"
+    },
+    {
+      "readOnly": true,
+      "profile": "RESTAURANT_POS_WEB_V1",
+      "productName": "Restaurant POS",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "RESTAURANT_POS_WEB_V1",
+      "productName": "Restaurant POS",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "RESTAURANT_POS_WEB_V1",
+      "productName": "Restaurant POS",
+      "riskLevel": "HIGH",
+      "category": "Launch Readiness",
+      "detail": "AFLA launch verdict not LAUNCH_READY",
+      "recommendation": "Resolve launch readiness blockers before production gate"
+    },
+    {
+      "readOnly": true,
+      "profile": "LEARNING_PLATFORM_WEB_V1",
+      "productName": "Learning Platform",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "LEARNING_PLATFORM_WEB_V1",
+      "productName": "Learning Platform",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "LEARNING_PLATFORM_WEB_V1",
+      "productName": "Learning Platform",
+      "riskLevel": "HIGH",
+      "category": "Launch Readiness",
+      "detail": "AFLA launch verdict not LAUNCH_READY",
+      "recommendation": "Resolve launch readiness blockers before production gate"
+    },
+    {
+      "readOnly": true,
+      "profile": "HR_PLATFORM_WEB_V1",
+      "productName": "HR Platform",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "HR_PLATFORM_WEB_V1",
+      "productName": "HR Platform",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "HR_PLATFORM_WEB_V1",
+      "productName": "HR Platform",
+      "riskLevel": "HIGH",
+      "category": "Launch Readiness",
+      "detail": "AFLA launch verdict not LAUNCH_READY",
+      "recommendation": "Resolve launch readiness blockers before production gate"
+    },
+    {
+      "readOnly": true,
+      "profile": "CUSTOMER_SUPPORT_WEB_V1",
+      "productName": "Customer Support Platform",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "CUSTOMER_SUPPORT_WEB_V1",
+      "productName": "Customer Support Platform",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "CUSTOMER_SUPPORT_WEB_V1",
+      "productName": "Customer Support Platform",
+      "riskLevel": "HIGH",
+      "category": "Launch Readiness",
+      "detail": "AFLA launch verdict not LAUNCH_READY",
+      "recommendation": "Resolve launch readiness blockers before production gate"
+    },
+    {
+      "readOnly": true,
+      "profile": "INSURANCE_CRM_WEB_V1",
+      "productName": "Insurance CRM",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "INSURANCE_CRM_WEB_V1",
+      "productName": "Insurance CRM",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "INSURANCE_CRM_WEB_V1",
+      "productName": "Insurance CRM",
+      "riskLevel": "HIGH",
+      "category": "Launch Readiness",
+      "detail": "AFLA launch verdict not LAUNCH_READY",
+      "recommendation": "Resolve launch readiness blockers before production gate"
+    },
+    {
+      "readOnly": true,
+      "profile": "FLEET_MANAGEMENT_WEB_V1",
+      "productName": "Fleet Management",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "FLEET_MANAGEMENT_WEB_V1",
+      "productName": "Fleet Management",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "FLEET_MANAGEMENT_WEB_V1",
+      "productName": "Fleet Management",
+      "riskLevel": "HIGH",
+      "category": "Launch Readiness",
+      "detail": "AFLA launch verdict not LAUNCH_READY",
+      "recommendation": "Resolve launch readiness blockers before production gate"
+    },
+    {
+      "readOnly": true,
+      "profile": "FINANCE_TRACKER_WEB_V1",
+      "productName": "Finance Tracker",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "FINANCE_TRACKER_WEB_V1",
+      "productName": "Finance Tracker",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "FINANCE_TRACKER_WEB_V1",
+      "productName": "Finance Tracker",
+      "riskLevel": "HIGH",
+      "category": "Launch Readiness",
+      "detail": "AFLA launch verdict not LAUNCH_READY",
+      "recommendation": "Resolve launch readiness blockers before production gate"
+    },
+    {
+      "readOnly": true,
+      "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+      "productName": "E-Commerce Platform",
+      "riskLevel": "HIGH",
+      "category": "Configuration",
+      "detail": "Missing environment configuration documentation",
+      "recommendation": "Add .env.example and document required production variables"
+    },
+    {
+      "readOnly": true,
+      "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+      "productName": "E-Commerce Platform",
+      "riskLevel": "HIGH",
+      "category": "Recovery",
+      "detail": "No recovery or operational runbook documentation",
+      "recommendation": "Add README with deployment, backup, and recovery steps"
+    },
+    {
+      "readOnly": true,
+      "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+      "productName": "E-Commerce Platform",
+      "riskLevel": "HIGH",
+      "category": "Launch Readiness",
+      "detail": "AFLA launch verdict not LAUNCH_READY",
+      "recommendation": "Resolve launch readiness blockers before production gate"
+    }
+  ],
+  "hardeningRecommendations": [
+    "Add .env.example and document required production variables",
+    "Add README with deployment, backup, and recovery steps",
+    "Observability: Minimal logging — add structured logging for production",
+    "Configuration: Missing .env.example — document environment variables",
+    "Resolve launch readiness blockers before production gate"
+  ],
+  "categoryResults": [
+    {
+      "readOnly": true,
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-task-tracker-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": true,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "LAUNCH_READY",
+        "aflaScore": 97,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json",
+          ".autonomous-founder-launch-authority/suite-summary.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 81,
+          "status": "MATURE",
+          "findings": [
+            "Launch readiness proven via AFLA",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 89,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "TASK_TRACKER_WEB_V1",
+          "productName": "Task Tracker",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "TASK_TRACKER_WEB_V1",
+          "productName": "Task Tracker",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        }
+      ],
+      "missingRequirements": [
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": true
+    },
+    {
+      "readOnly": true,
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-crm-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": true,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "LAUNCH_READY",
+        "aflaScore": 97,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json",
+          ".autonomous-founder-launch-authority/suite-summary.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 81,
+          "status": "MATURE",
+          "findings": [
+            "Launch readiness proven via AFLA",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 89,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "CRM_WEB_V1",
+          "productName": "CRM",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "CRM_WEB_V1",
+          "productName": "CRM",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        }
+      ],
+      "missingRequirements": [
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": true
+    },
+    {
+      "readOnly": true,
+      "profile": "INVENTORY_WEB_V1",
+      "productName": "Inventory",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-inventory-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": true,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "LAUNCH_READY",
+        "aflaScore": 96,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json",
+          ".autonomous-founder-launch-authority/suite-summary.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 81,
+          "status": "MATURE",
+          "findings": [
+            "Launch readiness proven via AFLA",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 89,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "INVENTORY_WEB_V1",
+          "productName": "Inventory",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "INVENTORY_WEB_V1",
+          "productName": "Inventory",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        }
+      ],
+      "missingRequirements": [
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": true
+    },
+    {
+      "readOnly": true,
+      "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+      "productName": "School Management",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-school-management-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": true,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "LAUNCH_READY",
+        "aflaScore": 97,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json",
+          ".autonomous-founder-launch-authority/suite-summary.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 81,
+          "status": "MATURE",
+          "findings": [
+            "Launch readiness proven via AFLA",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 89,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+          "productName": "School Management",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+          "productName": "School Management",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        }
+      ],
+      "missingRequirements": [
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": true
+    },
+    {
+      "readOnly": true,
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-project-management-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": true,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "LAUNCH_READY",
+        "aflaScore": 97,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json",
+          ".autonomous-founder-launch-authority/suite-summary.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 81,
+          "status": "MATURE",
+          "findings": [
+            "Launch readiness proven via AFLA",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 89,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "PROJECT_MANAGEMENT_WEB_V1",
+          "productName": "Project Management",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "PROJECT_MANAGEMENT_WEB_V1",
+          "productName": "Project Management",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        }
+      ],
+      "missingRequirements": [
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": true
+    },
+    {
+      "readOnly": true,
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-marketplace-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": false,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "aflaScore": null,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 66,
+          "status": "PARTIAL",
+          "findings": [
+            "Launch readiness not proven — operational risk elevated",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "MARKETPLACE_WEB_V1",
+          "productName": "Marketplace",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "MARKETPLACE_WEB_V1",
+          "productName": "Marketplace",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        },
+        {
+          "readOnly": true,
+          "profile": "MARKETPLACE_WEB_V1",
+          "productName": "Marketplace",
+          "riskLevel": "HIGH",
+          "category": "Launch Readiness",
+          "detail": "AFLA launch verdict not LAUNCH_READY",
+          "recommendation": "Resolve launch readiness blockers before production gate"
+        }
+      ],
+      "missingRequirements": [
+        "AFLA launch readiness",
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Resolve launch readiness blockers before production gate",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": false
+    },
+    {
+      "readOnly": true,
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-appointment-booking-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": false,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "aflaScore": null,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 66,
+          "status": "PARTIAL",
+          "findings": [
+            "Launch readiness not proven — operational risk elevated",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "APPOINTMENT_BOOKING_WEB_V1",
+          "productName": "Booking Platform",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "APPOINTMENT_BOOKING_WEB_V1",
+          "productName": "Booking Platform",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        },
+        {
+          "readOnly": true,
+          "profile": "APPOINTMENT_BOOKING_WEB_V1",
+          "productName": "Booking Platform",
+          "riskLevel": "HIGH",
+          "category": "Launch Readiness",
+          "detail": "AFLA launch verdict not LAUNCH_READY",
+          "recommendation": "Resolve launch readiness blockers before production gate"
+        }
+      ],
+      "missingRequirements": [
+        "AFLA launch readiness",
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Resolve launch readiness blockers before production gate",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": false
+    },
+    {
+      "readOnly": true,
+      "profile": "RESTAURANT_POS_WEB_V1",
+      "productName": "Restaurant POS",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-restaurant-pos-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": false,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "aflaScore": null,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 66,
+          "status": "PARTIAL",
+          "findings": [
+            "Launch readiness not proven — operational risk elevated",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "RESTAURANT_POS_WEB_V1",
+          "productName": "Restaurant POS",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "RESTAURANT_POS_WEB_V1",
+          "productName": "Restaurant POS",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        },
+        {
+          "readOnly": true,
+          "profile": "RESTAURANT_POS_WEB_V1",
+          "productName": "Restaurant POS",
+          "riskLevel": "HIGH",
+          "category": "Launch Readiness",
+          "detail": "AFLA launch verdict not LAUNCH_READY",
+          "recommendation": "Resolve launch readiness blockers before production gate"
+        }
+      ],
+      "missingRequirements": [
+        "AFLA launch readiness",
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Resolve launch readiness blockers before production gate",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": false
+    },
+    {
+      "readOnly": true,
+      "profile": "LEARNING_PLATFORM_WEB_V1",
+      "productName": "Learning Platform",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-learning-platform-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": false,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "aflaScore": null,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 66,
+          "status": "PARTIAL",
+          "findings": [
+            "Launch readiness not proven — operational risk elevated",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "LEARNING_PLATFORM_WEB_V1",
+          "productName": "Learning Platform",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "LEARNING_PLATFORM_WEB_V1",
+          "productName": "Learning Platform",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        },
+        {
+          "readOnly": true,
+          "profile": "LEARNING_PLATFORM_WEB_V1",
+          "productName": "Learning Platform",
+          "riskLevel": "HIGH",
+          "category": "Launch Readiness",
+          "detail": "AFLA launch verdict not LAUNCH_READY",
+          "recommendation": "Resolve launch readiness blockers before production gate"
+        }
+      ],
+      "missingRequirements": [
+        "AFLA launch readiness",
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Resolve launch readiness blockers before production gate",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": false
+    },
+    {
+      "readOnly": true,
+      "profile": "HR_PLATFORM_WEB_V1",
+      "productName": "HR Platform",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-hr-platform-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": false,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "aflaScore": null,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 66,
+          "status": "PARTIAL",
+          "findings": [
+            "Launch readiness not proven — operational risk elevated",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "HR_PLATFORM_WEB_V1",
+          "productName": "HR Platform",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "HR_PLATFORM_WEB_V1",
+          "productName": "HR Platform",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        },
+        {
+          "readOnly": true,
+          "profile": "HR_PLATFORM_WEB_V1",
+          "productName": "HR Platform",
+          "riskLevel": "HIGH",
+          "category": "Launch Readiness",
+          "detail": "AFLA launch verdict not LAUNCH_READY",
+          "recommendation": "Resolve launch readiness blockers before production gate"
+        }
+      ],
+      "missingRequirements": [
+        "AFLA launch readiness",
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Resolve launch readiness blockers before production gate",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": false
+    },
+    {
+      "readOnly": true,
+      "profile": "CUSTOMER_SUPPORT_WEB_V1",
+      "productName": "Customer Support Platform",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-customer-support-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": false,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "aflaScore": null,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 66,
+          "status": "PARTIAL",
+          "findings": [
+            "Launch readiness not proven — operational risk elevated",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "CUSTOMER_SUPPORT_WEB_V1",
+          "productName": "Customer Support Platform",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "CUSTOMER_SUPPORT_WEB_V1",
+          "productName": "Customer Support Platform",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        },
+        {
+          "readOnly": true,
+          "profile": "CUSTOMER_SUPPORT_WEB_V1",
+          "productName": "Customer Support Platform",
+          "riskLevel": "HIGH",
+          "category": "Launch Readiness",
+          "detail": "AFLA launch verdict not LAUNCH_READY",
+          "recommendation": "Resolve launch readiness blockers before production gate"
+        }
+      ],
+      "missingRequirements": [
+        "AFLA launch readiness",
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Resolve launch readiness blockers before production gate",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": false
+    },
+    {
+      "readOnly": true,
+      "profile": "INSURANCE_CRM_WEB_V1",
+      "productName": "Insurance CRM",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-insurance-crm-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": false,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "aflaScore": null,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 66,
+          "status": "PARTIAL",
+          "findings": [
+            "Launch readiness not proven — operational risk elevated",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "INSURANCE_CRM_WEB_V1",
+          "productName": "Insurance CRM",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "INSURANCE_CRM_WEB_V1",
+          "productName": "Insurance CRM",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        },
+        {
+          "readOnly": true,
+          "profile": "INSURANCE_CRM_WEB_V1",
+          "productName": "Insurance CRM",
+          "riskLevel": "HIGH",
+          "category": "Launch Readiness",
+          "detail": "AFLA launch verdict not LAUNCH_READY",
+          "recommendation": "Resolve launch readiness blockers before production gate"
+        }
+      ],
+      "missingRequirements": [
+        "AFLA launch readiness",
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Resolve launch readiness blockers before production gate",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": false
+    },
+    {
+      "readOnly": true,
+      "profile": "FLEET_MANAGEMENT_WEB_V1",
+      "productName": "Fleet Management",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-fleet-management-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": false,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "aflaScore": null,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 66,
+          "status": "PARTIAL",
+          "findings": [
+            "Launch readiness not proven — operational risk elevated",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "FLEET_MANAGEMENT_WEB_V1",
+          "productName": "Fleet Management",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "FLEET_MANAGEMENT_WEB_V1",
+          "productName": "Fleet Management",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        },
+        {
+          "readOnly": true,
+          "profile": "FLEET_MANAGEMENT_WEB_V1",
+          "productName": "Fleet Management",
+          "riskLevel": "HIGH",
+          "category": "Launch Readiness",
+          "detail": "AFLA launch verdict not LAUNCH_READY",
+          "recommendation": "Resolve launch readiness blockers before production gate"
+        }
+      ],
+      "missingRequirements": [
+        "AFLA launch readiness",
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Resolve launch readiness blockers before production gate",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": false
+    },
+    {
+      "readOnly": true,
+      "profile": "FINANCE_TRACKER_WEB_V1",
+      "productName": "Finance Tracker",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-finance-tracker-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": false,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "aflaScore": null,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 66,
+          "status": "PARTIAL",
+          "findings": [
+            "Launch readiness not proven — operational risk elevated",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "FINANCE_TRACKER_WEB_V1",
+          "productName": "Finance Tracker",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "FINANCE_TRACKER_WEB_V1",
+          "productName": "Finance Tracker",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        },
+        {
+          "readOnly": true,
+          "profile": "FINANCE_TRACKER_WEB_V1",
+          "productName": "Finance Tracker",
+          "riskLevel": "HIGH",
+          "category": "Launch Readiness",
+          "detail": "AFLA launch verdict not LAUNCH_READY",
+          "recommendation": "Resolve launch readiness blockers before production gate"
+        }
+      ],
+      "missingRequirements": [
+        "AFLA launch readiness",
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Resolve launch readiness blockers before production gate",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": false
+    },
+    {
+      "readOnly": true,
+      "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+      "productName": "E-Commerce Platform",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-e-commerce-platform-web-v1",
+      "upstreamEvidence": {
+        "readOnly": true,
+        "buildProven": true,
+        "previewProven": true,
+        "verificationProven": true,
+        "launchReady": false,
+        "productArchitectReviewed": true,
+        "cqiRequirementConfidence": null,
+        "aflaVerdict": "NOT_LAUNCH_READY",
+        "aflaScore": null,
+        "uvlVerificationConfidence": 100,
+        "paiProductReadinessScore": 85,
+        "evidenceSources": [
+          ".real-build-execution-pipeline-v1-1/build-proof.json",
+          ".uvl-verification-execution-v1/verification-proof.json"
+        ]
+      },
+      "domainScores": [
+        {
+          "readOnly": true,
+          "domain": "SECURITY",
+          "label": "Security",
+          "score": 88,
+          "status": "MATURE",
+          "findings": [
+            "No hardcoded secrets detected",
+            "Authentication patterns present"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RELIABILITY",
+          "label": "Reliability",
+          "score": 95,
+          "status": "MATURE",
+          "findings": [
+            "Build proven with reproducible artifacts",
+            "Preview runtime proven stable",
+            "No explicit error boundaries — add for production resilience",
+            "Build script defined in package.json"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OBSERVABILITY",
+          "label": "Observability",
+          "score": 70,
+          "status": "PARTIAL",
+          "findings": [
+            "Minimal logging — add structured logging for production",
+            "Health/status indicators detected"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "CONFIGURATION",
+          "label": "Configuration",
+          "score": 58,
+          "status": "PARTIAL",
+          "findings": [
+            "Missing .env.example — document environment variables"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DEPLOYMENT",
+          "label": "Deployment",
+          "score": 100,
+          "status": "MATURE",
+          "findings": [
+            "Production build artifacts present in dist/",
+            "Build pipeline script available",
+            "Production startup script available",
+            "Preview deployment path validated"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "RECOVERY",
+          "label": "Recovery",
+          "score": 80,
+          "status": "MATURE",
+          "findings": [
+            "No recovery/runbook documentation",
+            "Client-side persistence detected — document backup assumptions",
+            "Restart resilience inferred from static SPA build output"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "SCALABILITY",
+          "label": "Scalability",
+          "score": 96,
+          "status": "MATURE",
+          "findings": [
+            "Modular component structure supports scaling",
+            "Multi-file architecture detected",
+            "Static SPA deployment model — horizontal scale via CDN"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "DATA_PROTECTION",
+          "label": "Data Protection",
+          "score": 85,
+          "status": "MATURE",
+          "findings": [
+            "Local storage used — document retention and PII handling",
+            "No sensitive data hardcoded in source"
+          ]
+        },
+        {
+          "readOnly": true,
+          "domain": "OPERATIONAL_RISK",
+          "label": "Operational Risk",
+          "score": 66,
+          "status": "PARTIAL",
+          "findings": [
+            "Launch readiness not proven — operational risk elevated",
+            "Verification proven via UVL",
+            "Low-scoring domains: Configuration"
+          ]
+        }
+      ],
+      "productionReadinessScore": 81,
+      "verdict": "PRODUCTION_READY",
+      "risks": [
+        {
+          "readOnly": true,
+          "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+          "productName": "E-Commerce Platform",
+          "riskLevel": "HIGH",
+          "category": "Configuration",
+          "detail": "Missing environment configuration documentation",
+          "recommendation": "Add .env.example and document required production variables"
+        },
+        {
+          "readOnly": true,
+          "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+          "productName": "E-Commerce Platform",
+          "riskLevel": "HIGH",
+          "category": "Recovery",
+          "detail": "No recovery or operational runbook documentation",
+          "recommendation": "Add README with deployment, backup, and recovery steps"
+        },
+        {
+          "readOnly": true,
+          "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+          "productName": "E-Commerce Platform",
+          "riskLevel": "HIGH",
+          "category": "Launch Readiness",
+          "detail": "AFLA launch verdict not LAUNCH_READY",
+          "recommendation": "Resolve launch readiness blockers before production gate"
+        }
+      ],
+      "missingRequirements": [
+        "AFLA launch readiness",
+        "Environment configuration documentation",
+        "Operational recovery documentation"
+      ],
+      "hardeningRecommendations": [
+        "Add .env.example and document required production variables",
+        "Add README with deployment, backup, and recovery steps",
+        "Resolve launch readiness blockers before production gate",
+        "Observability: Minimal logging — add structured logging for production",
+        "Configuration: Missing .env.example — document environment variables"
+      ],
+      "operationalRequirementsSatisfied": false
+    }
+  ]
+}

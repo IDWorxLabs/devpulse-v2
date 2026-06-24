@@ -5,6 +5,9 @@
 import type { MissingCapabilitiesReport } from './capability-audit-types.js';
 import { computeHighestPriorityGap } from './gap-priority-calculator.js';
 import { loadUvlEvidenceSnapshot } from './uvl-evidence-loader.js';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { PRODUCTION_READINESS_GATE_V1_ARTIFACT_DIR } from '../production-readiness-gate-v1/production-readiness-gate-v1-bounds.js';
 
 const BASE_MISSING_CAPABILITIES: readonly MissingCapabilitiesReport['entries'][number][] = [
   {
@@ -84,11 +87,22 @@ export function buildMissingCapabilitiesReport(input?: {
   codeGenerationMaturityScore?: number;
 }): MissingCapabilitiesReport {
   const uvlEvidence = loadUvlEvidenceSnapshot(input?.projectRootDir);
+  const root = input?.projectRootDir ?? process.cwd();
+  const productionGateProven = existsSync(
+    join(root, PRODUCTION_READINESS_GATE_V1_ARTIFACT_DIR, 'assessment.json'),
+  );
   const entries = BASE_MISSING_CAPABILITIES.filter((entry) => {
     if (
       uvlEvidence.uvlVerificationExecutionComplete &&
       (entry.capability === 'UVL full verification execution' ||
         entry.capability.toLowerCase().includes('uvl'))
+    ) {
+      return false;
+    }
+    if (
+      productionGateProven &&
+      (entry.capability === 'Production readiness gate' ||
+        entry.capability === 'Operational monitoring for deployed apps')
     ) {
       return false;
     }

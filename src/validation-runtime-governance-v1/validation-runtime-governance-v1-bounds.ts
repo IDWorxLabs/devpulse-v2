@@ -28,6 +28,7 @@ export const TIER_TARGET_RUNTIME_SECONDS = {
 
 export const LAUNCH_TIER_VALIDATORS: readonly string[] = [
   'validate:uvl-verification-execution-v1',
+  'validate:production-readiness-gate-v1',
   'validate:uvl-maturity-verification-hub-v1',
   'validate:product-architect-intelligence-v1',
   'validate:autonomous-founder-launch-authority-v1',
@@ -56,6 +57,7 @@ export const REGRESSION_VALIDATORS: readonly string[] = [
   'validate:capability-audit-v3',
   'validate:validation-runtime-audit-v1',
   'validate:uvl-verification-execution-v1',
+  'validate:production-readiness-gate-v1',
   'validate:real-build-execution-pipeline-v1-1',
   'validate:afla-trust-calibration-v1',
   'validate:product-architect-intelligence-v1',
