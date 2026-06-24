@@ -1,0 +1,102 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T20:51:26.557Z",
+  "overallScore": 48,
+  "hiddenNavigationRisk": false,
+  "unreachableScreensRisk": false,
+  "overflowIssues": false,
+  "viewportClippingRisk": false,
+  "brokenLayoutsRisk": true,
+  "categoryScores": [
+    {
+      "profile": "TASK_TRACKER_WEB_V1",
+      "score": 48,
+      "findings": [
+        "SIDE_OR_TOP_NAVIGATION_DETECTED",
+        "TAB_STRUCTURE_LIKELY",
+        "HIGH_MENU_COMPLEXITY"
+      ]
+    },
+    {
+      "profile": "CRM_WEB_V1",
+      "score": 48,
+      "findings": [
+        "SIDE_OR_TOP_NAVIGATION_DETECTED",
+        "TAB_STRUCTURE_LIKELY",
+        "HIGH_MENU_COMPLEXITY"
+      ]
+    },
+    {
+      "profile": "INVENTORY_WEB_V1",
+      "score": 48,
+      "findings": [
+        "SIDE_OR_TOP_NAVIGATION_DETECTED",
+        "TAB_STRUCTURE_LIKELY",
+        "HIGH_MENU_COMPLEXITY"
+      ]
+    },
+    {
+      "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+      "score": 48,
+      "findings": [
+        "SIDE_OR_TOP_NAVIGATION_DETECTED",
+        "TAB_STRUCTURE_LIKELY",
+        "HIGH_MENU_COMPLEXITY"
+      ]
+    },
+    {
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "score": 48,
+      "findings": [
+        "SIDE_OR_TOP_NAVIGATION_DETECTED",
+        "TAB_STRUCTURE_LIKELY",
+        "HIGH_MENU_COMPLEXITY"
+      ]
+    },
+    {
+      "profile": "MARKETPLACE_WEB_V1",
+      "score": 48,
+      "findings": [
+        "SIDE_OR_TOP_NAVIGATION_DETECTED",
+        "TAB_STRUCTURE_LIKELY",
+        "HIGH_MENU_COMPLEXITY"
+      ]
+    },
+    {
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "score": 48,
+      "findings": [
+        "SIDE_OR_TOP_NAVIGATION_DETECTED",
+        "TAB_STRUCTURE_LIKELY",
+        "HIGH_MENU_COMPLEXITY"
+      ]
+    },
+    {
+      "profile": "LEARNING_PLATFORM_WEB_V1",
+      "score": 48,
+      "findings": [
+        "SIDE_OR_TOP_NAVIGATION_DETECTED",
+        "TAB_STRUCTURE_LIKELY",
+        "HIGH_MENU_COMPLEXITY"
+      ]
+    },
+    {
+      "profile": "CUSTOMER_SUPPORT_WEB_V1",
+      "score": 48,
+      "findings": [
+        "SIDE_OR_TOP_NAVIGATION_DETECTED",
+        "TAB_STRUCTURE_LIKELY",
+        "HIGH_MENU_COMPLEXITY"
+      ]
+    },
+    {
+      "profile": "FINANCE_TRACKER_WEB_V1",
+      "score": 48,
+      "findings": [
+        "SIDE_OR_TOP_NAVIGATION_DETECTED",
+        "TAB_STRUCTURE_LIKELY",
+        "HIGH_MENU_COMPLEXITY"
+      ]
+    }
+  ]
+}

@@ -82,5 +82,15 @@
     ],
     "passToken": null,
     "evidenceAvailable": true
+  },
+  {
+    "readOnly": true,
+    "system": "Mobile Runtime Validation at Scale V1",
+    "artifactDir": ".mobile-runtime-validation-at-scale-v1",
+    "artifacts": [
+      ".mobile-runtime-validation-at-scale-v1\\assessment.json"
+    ],
+    "passToken": "MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_PASS",
+    "evidenceAvailable": true
   }
 ]

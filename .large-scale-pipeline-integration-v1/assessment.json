@@ -4,16 +4,17 @@
   "canonicalOwner": "Large-Scale Pipeline Integration V1",
   "passToken": "LARGE_SCALE_PIPELINE_INTEGRATION_V1_PASS",
   "version": "V1",
-  "generatedAt": "2026-06-24T20:37:57.651Z",
+  "generatedAt": "2026-06-24T20:51:00.692Z",
   "metrics": {
     "readOnly": true,
-    "generatedAt": "2026-06-24T20:37:57.651Z",
+    "generatedAt": "2026-06-24T20:51:00.692Z",
     "broadCategoriesTested": 58,
     "buildProvenCategories": 15,
     "verificationProvenCategories": 15,
     "productionProvenCategories": 15,
     "cloudProvenCategories": 3,
     "gpProvenCategories": 10,
+    "mobileProvenCategories": 10,
     "buildSuccessRate": 100,
     "previewSuccessRate": 100,
     "verificationSuccessRate": 100,
@@ -22,6 +23,7 @@
     "productionReadinessRate": 100,
     "cloudSimulatedSuccessRate": 100,
     "generalPurposeGenerationSuccessRate": 100,
+    "mobileRuntimeSuccessRate": 100,
     "legacyLargeScaleBuildSuccessRate": 0
   },
   "pipelineScore": {
@@ -79,6 +81,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "GP_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ],
       "gapClassification": "PRODUCTION_PROVEN",
@@ -233,6 +236,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "CLOUD_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ],
       "gapClassification": "CLOUD_SIMULATED_PROVEN",
@@ -252,6 +256,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "GP_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ],
       "gapClassification": "PRODUCTION_PROVEN",
@@ -350,6 +355,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "GP_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ],
       "gapClassification": "PRODUCTION_PROVEN",
@@ -498,6 +504,7 @@
         "BROAD_VALIDATED",
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ],
       "gapClassification": "PRODUCTION_PROVEN",
@@ -548,6 +555,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "GP_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ],
       "gapClassification": "PRODUCTION_PROVEN",
@@ -628,6 +636,7 @@
         "VERIFICATION_PROVEN",
         "GP_PROVEN",
         "CLOUD_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ],
       "gapClassification": "CLOUD_SIMULATED_PROVEN",
@@ -721,6 +730,7 @@
         "BROAD_VALIDATED",
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ],
       "gapClassification": "PRODUCTION_PROVEN",
@@ -833,6 +843,7 @@
         "BROAD_VALIDATED",
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ],
       "gapClassification": "PRODUCTION_PROVEN",
@@ -882,6 +893,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "CLOUD_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ],
       "gapClassification": "CLOUD_SIMULATED_PROVEN",
@@ -1012,6 +1024,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "GP_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ]
     },
@@ -1106,6 +1119,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "CLOUD_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ]
     },
@@ -1119,6 +1133,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "GP_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ]
     },
@@ -1181,6 +1196,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "GP_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ]
     },
@@ -1275,6 +1291,7 @@
         "BROAD_VALIDATED",
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ]
     },
@@ -1307,6 +1324,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "GP_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ]
     },
@@ -1357,6 +1375,7 @@
         "VERIFICATION_PROVEN",
         "GP_PROVEN",
         "CLOUD_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ]
     },
@@ -1414,6 +1433,7 @@
         "BROAD_VALIDATED",
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ]
     },
@@ -1484,6 +1504,7 @@
         "BROAD_VALIDATED",
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ]
     },
@@ -1515,6 +1536,7 @@
         "BUILD_PROVEN",
         "VERIFICATION_PROVEN",
         "CLOUD_PROVEN",
+        "MOBILE_PROVEN",
         "PRODUCTION_PROVEN"
       ]
     },
@@ -1657,11 +1679,21 @@
       ],
       "passToken": null,
       "evidenceAvailable": true
+    },
+    {
+      "readOnly": true,
+      "system": "Mobile Runtime Validation at Scale V1",
+      "artifactDir": ".mobile-runtime-validation-at-scale-v1",
+      "artifacts": [
+        ".mobile-runtime-validation-at-scale-v1\\assessment.json"
+      ],
+      "passToken": "MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_PASS",
+      "evidenceAvailable": true
     }
   ],
   "auditImpact": {
     "readOnly": true,
-    "generatedAt": "2026-06-24T20:37:57.651Z",
+    "generatedAt": "2026-06-24T20:51:00.692Z",
     "largeScaleBuildSuccessRateCorrected": true,
     "legacyBuildSuccessRate": 0,
     "authoritativeBuildSuccessRate": 100,
@@ -1670,7 +1702,6 @@
     "integrationComplete": true
   },
   "remainingGaps": [
-    "44 categories broadly validated without real build proof (BREADTH_ONLY)",
-    "Mobile runtime validation at scale — no large-scale mobile harness"
+    "44 categories broadly validated without real build proof (BREADTH_ONLY)"
   ]
 }

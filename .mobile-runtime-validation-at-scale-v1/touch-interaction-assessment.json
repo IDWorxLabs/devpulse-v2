@@ -1,0 +1,123 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T20:51:26.557Z",
+  "overallScore": 97,
+  "tapTargetsAccessible": true,
+  "menusUsable": true,
+  "buttonsClickable": true,
+  "navigationDrawerFunctional": true,
+  "scrollingFunctional": true,
+  "formsUsable": true,
+  "categoryScores": [
+    {
+      "profile": "TASK_TRACKER_WEB_V1",
+      "score": 97,
+      "findings": [
+        "TAP_TARGETS_ACCESSIBLE",
+        "MENUS_USABLE",
+        "BUTTONS_CLICKABLE",
+        "LINKS_TAPPABLE",
+        "FORMS_USABLE"
+      ]
+    },
+    {
+      "profile": "CRM_WEB_V1",
+      "score": 97,
+      "findings": [
+        "TAP_TARGETS_ACCESSIBLE",
+        "MENUS_USABLE",
+        "BUTTONS_CLICKABLE",
+        "LINKS_TAPPABLE",
+        "FORMS_USABLE"
+      ]
+    },
+    {
+      "profile": "INVENTORY_WEB_V1",
+      "score": 97,
+      "findings": [
+        "TAP_TARGETS_ACCESSIBLE",
+        "MENUS_USABLE",
+        "BUTTONS_CLICKABLE",
+        "LINKS_TAPPABLE",
+        "FORMS_USABLE"
+      ]
+    },
+    {
+      "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+      "score": 97,
+      "findings": [
+        "TAP_TARGETS_ACCESSIBLE",
+        "MENUS_USABLE",
+        "BUTTONS_CLICKABLE",
+        "LINKS_TAPPABLE",
+        "FORMS_USABLE"
+      ]
+    },
+    {
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "score": 97,
+      "findings": [
+        "TAP_TARGETS_ACCESSIBLE",
+        "MENUS_USABLE",
+        "BUTTONS_CLICKABLE",
+        "LINKS_TAPPABLE",
+        "FORMS_USABLE"
+      ]
+    },
+    {
+      "profile": "MARKETPLACE_WEB_V1",
+      "score": 97,
+      "findings": [
+        "TAP_TARGETS_ACCESSIBLE",
+        "MENUS_USABLE",
+        "BUTTONS_CLICKABLE",
+        "LINKS_TAPPABLE",
+        "FORMS_USABLE"
+      ]
+    },
+    {
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "score": 97,
+      "findings": [
+        "TAP_TARGETS_ACCESSIBLE",
+        "MENUS_USABLE",
+        "BUTTONS_CLICKABLE",
+        "LINKS_TAPPABLE",
+        "FORMS_USABLE"
+      ]
+    },
+    {
+      "profile": "LEARNING_PLATFORM_WEB_V1",
+      "score": 97,
+      "findings": [
+        "TAP_TARGETS_ACCESSIBLE",
+        "MENUS_USABLE",
+        "BUTTONS_CLICKABLE",
+        "LINKS_TAPPABLE",
+        "FORMS_USABLE"
+      ]
+    },
+    {
+      "profile": "CUSTOMER_SUPPORT_WEB_V1",
+      "score": 97,
+      "findings": [
+        "TAP_TARGETS_ACCESSIBLE",
+        "MENUS_USABLE",
+        "BUTTONS_CLICKABLE",
+        "LINKS_TAPPABLE",
+        "FORMS_USABLE"
+      ]
+    },
+    {
+      "profile": "FINANCE_TRACKER_WEB_V1",
+      "score": 97,
+      "findings": [
+        "TAP_TARGETS_ACCESSIBLE",
+        "MENUS_USABLE",
+        "BUTTONS_CLICKABLE",
+        "LINKS_TAPPABLE",
+        "FORMS_USABLE"
+      ]
+    }
+  ]
+}

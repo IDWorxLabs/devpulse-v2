@@ -1,0 +1,1017 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T20:51:26.557Z",
+  "passToken": "MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_PASS",
+  "mobileProofStatus": "PROVEN",
+  "categoriesMobileProven": 10,
+  "categoriesValidated": 10,
+  "mobilePassRate": 100,
+  "runtimeProfilesValidated": [
+    "ANDROID_PHONE",
+    "ANDROID_TABLET",
+    "IPHONE",
+    "IPAD"
+  ],
+  "proofs": [
+    {
+      "readOnly": true,
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "runtimeProfile": "ANDROID_PHONE",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 98,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-task-tracker-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "runtimeProfile": "ANDROID_TABLET",
+      "viewport": {
+        "width": 800,
+        "height": 1280
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 98,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-task-tracker-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "runtimeProfile": "IPHONE",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 98,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-task-tracker-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "runtimeProfile": "IPAD",
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 98,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-task-tracker-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "runtimeProfile": "ANDROID_PHONE",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-crm-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "runtimeProfile": "ANDROID_TABLET",
+      "viewport": {
+        "width": 800,
+        "height": 1280
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-crm-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "runtimeProfile": "IPHONE",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-crm-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "runtimeProfile": "IPAD",
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-crm-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "INVENTORY_WEB_V1",
+      "productName": "Inventory",
+      "runtimeProfile": "ANDROID_PHONE",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-inventory-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "INVENTORY_WEB_V1",
+      "productName": "Inventory",
+      "runtimeProfile": "ANDROID_TABLET",
+      "viewport": {
+        "width": 800,
+        "height": 1280
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-inventory-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "INVENTORY_WEB_V1",
+      "productName": "Inventory",
+      "runtimeProfile": "IPHONE",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-inventory-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "INVENTORY_WEB_V1",
+      "productName": "Inventory",
+      "runtimeProfile": "IPAD",
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-inventory-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+      "productName": "School Management",
+      "runtimeProfile": "ANDROID_PHONE",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-school-management-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+      "productName": "School Management",
+      "runtimeProfile": "ANDROID_TABLET",
+      "viewport": {
+        "width": 800,
+        "height": 1280
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-school-management-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+      "productName": "School Management",
+      "runtimeProfile": "IPHONE",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-school-management-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+      "productName": "School Management",
+      "runtimeProfile": "IPAD",
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-school-management-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "runtimeProfile": "ANDROID_PHONE",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-project-management-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "runtimeProfile": "ANDROID_TABLET",
+      "viewport": {
+        "width": 800,
+        "height": 1280
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-project-management-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "runtimeProfile": "IPHONE",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-project-management-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "PROJECT_MANAGEMENT_WEB_V1",
+      "productName": "Project Management",
+      "runtimeProfile": "IPAD",
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-project-management-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "runtimeProfile": "ANDROID_PHONE",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-marketplace-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "runtimeProfile": "ANDROID_TABLET",
+      "viewport": {
+        "width": 800,
+        "height": 1280
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-marketplace-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "runtimeProfile": "IPHONE",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-marketplace-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "MARKETPLACE_WEB_V1",
+      "productName": "Marketplace",
+      "runtimeProfile": "IPAD",
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-marketplace-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "runtimeProfile": "ANDROID_PHONE",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-appointment-booking-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "runtimeProfile": "ANDROID_TABLET",
+      "viewport": {
+        "width": 800,
+        "height": 1280
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-appointment-booking-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "runtimeProfile": "IPHONE",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-appointment-booking-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "APPOINTMENT_BOOKING_WEB_V1",
+      "productName": "Booking Platform",
+      "runtimeProfile": "IPAD",
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-appointment-booking-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "LEARNING_PLATFORM_WEB_V1",
+      "productName": "Learning Platform",
+      "runtimeProfile": "ANDROID_PHONE",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-learning-platform-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "LEARNING_PLATFORM_WEB_V1",
+      "productName": "Learning Platform",
+      "runtimeProfile": "ANDROID_TABLET",
+      "viewport": {
+        "width": 800,
+        "height": 1280
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-learning-platform-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "LEARNING_PLATFORM_WEB_V1",
+      "productName": "Learning Platform",
+      "runtimeProfile": "IPHONE",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-learning-platform-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "LEARNING_PLATFORM_WEB_V1",
+      "productName": "Learning Platform",
+      "runtimeProfile": "IPAD",
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-learning-platform-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "CUSTOMER_SUPPORT_WEB_V1",
+      "productName": "Customer Support Platform",
+      "runtimeProfile": "ANDROID_PHONE",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-customer-support-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "CUSTOMER_SUPPORT_WEB_V1",
+      "productName": "Customer Support Platform",
+      "runtimeProfile": "ANDROID_TABLET",
+      "viewport": {
+        "width": 800,
+        "height": 1280
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-customer-support-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "CUSTOMER_SUPPORT_WEB_V1",
+      "productName": "Customer Support Platform",
+      "runtimeProfile": "IPHONE",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-customer-support-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "CUSTOMER_SUPPORT_WEB_V1",
+      "productName": "Customer Support Platform",
+      "runtimeProfile": "IPAD",
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-customer-support-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "FINANCE_TRACKER_WEB_V1",
+      "productName": "Finance Tracker",
+      "runtimeProfile": "ANDROID_PHONE",
+      "viewport": {
+        "width": 412,
+        "height": 915
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-finance-tracker-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "FINANCE_TRACKER_WEB_V1",
+      "productName": "Finance Tracker",
+      "runtimeProfile": "ANDROID_TABLET",
+      "viewport": {
+        "width": 800,
+        "height": 1280
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-finance-tracker-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "FINANCE_TRACKER_WEB_V1",
+      "productName": "Finance Tracker",
+      "runtimeProfile": "IPHONE",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-finance-tracker-web-v1",
+      "executionContext": "RBEP"
+    },
+    {
+      "readOnly": true,
+      "profile": "FINANCE_TRACKER_WEB_V1",
+      "productName": "Finance Tracker",
+      "runtimeProfile": "IPAD",
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "buildSuccess": true,
+      "previewSuccess": true,
+      "applicationLoads": true,
+      "navigationProof": true,
+      "interactionProof": true,
+      "workflowProof": true,
+      "performanceSummary": {
+        "readOnly": true,
+        "initialRenderMs": 97,
+        "navigationResponseMs": 45,
+        "interactionReadinessMs": 80
+      },
+      "passed": true,
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-finance-tracker-web-v1",
+      "executionContext": "RBEP"
+    }
+  ]
+}

@@ -42,6 +42,7 @@ export const OPERATOR_FEED_SECTIONS = [
   'Production Readiness',
   'Cloud Execution',
   'World2',
+  'Mobile Runtime Validation',
   'Large-Scale Validation',
   'Execution Pipeline',
   'Production Readiness',

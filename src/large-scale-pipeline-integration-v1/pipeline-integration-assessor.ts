@@ -50,7 +50,8 @@ export function runLargeScalePipelineIntegrationV1(input?: {
   const pipelineScore = computeLargeScalePipelineScore(metrics, categoryMapping);
   const gapClassification = buildGapClassification(categoryMapping);
   const auditImpact = buildAuditImpact(metrics, pipelineScore);
-  const remainingGaps = summarizeRemainingGaps(gapClassification);
+  const mobileValidationProven = bundle.mobileAssessment.mobileProofStatus === 'PROVEN';
+  const remainingGaps = summarizeRemainingGaps(gapClassification, { mobileValidationProven });
 
   return {
     readOnly: true,

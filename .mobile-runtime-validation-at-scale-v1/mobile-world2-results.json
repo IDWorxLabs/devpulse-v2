@@ -1,0 +1,26 @@
+[
+  {
+    "readOnly": true,
+    "worldId": "10718067-9201-4aeb-a889-c16e7b6786f0",
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "mobileRuntimeProven": true,
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-10718067-9201-4aeb-a889-c16e7b6786f0"
+  },
+  {
+    "readOnly": true,
+    "worldId": "4eb1e475-8c5f-400c-ab8a-a9c2a786bfc9",
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "mobileRuntimeProven": true,
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-4eb1e475-8c5f-400c-ab8a-a9c2a786bfc9"
+  },
+  {
+    "readOnly": true,
+    "worldId": "30a3d032-6396-4458-8472-7859a7763187",
+    "profile": "CRM_WEB_V1",
+    "productName": "CRM",
+    "mobileRuntimeProven": true,
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-30a3d032-6396-4458-8472-7859a7763187"
+  }
+]

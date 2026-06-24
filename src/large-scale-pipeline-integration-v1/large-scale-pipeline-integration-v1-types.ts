@@ -8,7 +8,8 @@ export type CategoryProofFlag =
   | 'VERIFICATION_PROVEN'
   | 'GP_PROVEN'
   | 'CLOUD_PROVEN'
-  | 'PRODUCTION_PROVEN';
+  | 'PRODUCTION_PROVEN'
+  | 'MOBILE_PROVEN';
 
 export type GapClassification =
   | 'BREADTH_ONLY'
@@ -40,6 +41,7 @@ export interface PipelineMetrics {
   verificationProvenCategories: number;
   productionProvenCategories: number;
   cloudProvenCategories: number;
+  mobileProvenCategories: number;
   gpProvenCategories: number;
   buildSuccessRate: number;
   previewSuccessRate: number;
@@ -49,6 +51,7 @@ export interface PipelineMetrics {
   productionReadinessRate: number;
   cloudSimulatedSuccessRate: number;
   generalPurposeGenerationSuccessRate: number;
+  mobileRuntimeSuccessRate: number;
   /** Legacy large-scale harness build rate (AFLA dry-run) for audit contrast. */
   legacyLargeScaleBuildSuccessRate: number;
 }

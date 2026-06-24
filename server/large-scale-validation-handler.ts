@@ -37,6 +37,7 @@ export interface LargeScaleValidationPayload {
   verificationProvenCategories: number;
   productionProvenCategories: number;
   cloudProvenCategories: number;
+  mobileProvenCategories: number;
   largeScalePipelineScore: number;
   remainingGaps: readonly string[];
   authoritativePassRates: {
@@ -85,6 +86,7 @@ export function buildLargeScaleValidationPayload(input?: {
     verificationProvenCategories: pipelineIntegration.metrics.verificationProvenCategories,
     productionProvenCategories: pipelineIntegration.metrics.productionProvenCategories,
     cloudProvenCategories: pipelineIntegration.metrics.cloudProvenCategories,
+    mobileProvenCategories: pipelineIntegration.metrics.mobileProvenCategories,
     largeScalePipelineScore: pipelineIntegration.pipelineScore.score,
     remainingGaps: pipelineIntegration.remainingGaps,
     authoritativePassRates: {

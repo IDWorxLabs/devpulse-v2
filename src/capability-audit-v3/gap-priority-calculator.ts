@@ -6,6 +6,7 @@ import type { MissingCapabilityEntry, RoadmapPriority } from './capability-audit
 import type { UvlEvidenceSnapshot } from './uvl-evidence-loader.js';
 import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeline-integration-v1/index.js';
 import { isWorld2RealInstantiationProven } from '../world2-real-instantiation-v1/index.js';
+import { isMobileRuntimeValidationProven } from '../mobile-runtime-validation-at-scale-v1/index.js';
 
 const PHASE_BY_CAPABILITY: Readonly<Record<string, string>> = {
   'Production readiness gate': 'Production Readiness Gate',
@@ -229,6 +230,22 @@ export function buildRoadmapFromEvidence(input: {
         'World2 Disposable Workspace Pipeline (24E–24Y)',
         'Real Build Execution Pipeline V1.1',
         'Cloud Execution Path V1',
+      ],
+    });
+  }
+
+  if (input.projectRootDir && isMobileRuntimeValidationProven(input.projectRootDir)) {
+    completePhases.push({
+      rank: 0,
+      phase: 'Mobile Runtime Validation at Scale',
+      action: 'COMPLETE',
+      rationale:
+        'Mobile Runtime Validation at Scale V1 PASS: 10/10 categories mobile-proven across ANDROID_PHONE, ANDROID_TABLET, IPHONE, and IPAD profiles.',
+      impact: 'HIGH',
+      dependencies: [
+        'Real Build Execution Pipeline V1.1',
+        'World2 Real Instantiation V1',
+        'UVL Verification Execution V1',
       ],
     });
   }

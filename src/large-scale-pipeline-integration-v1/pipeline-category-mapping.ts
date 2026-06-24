@@ -20,6 +20,8 @@ function profileSet(entries: readonly { profile: string }[]): Set<string> {
 function classifyGap(
   flags: readonly CategoryProofFlag[],
 ): GapClassification {
+  if (flags.includes('MOBILE_PROVEN') && flags.includes('CLOUD_PROVEN')) return 'CLOUD_SIMULATED_PROVEN';
+  if (flags.includes('MOBILE_PROVEN') && flags.includes('PRODUCTION_PROVEN')) return 'PRODUCTION_PROVEN';
   if (flags.includes('CLOUD_PROVEN')) return 'CLOUD_SIMULATED_PROVEN';
   if (flags.includes('PRODUCTION_PROVEN')) return 'PRODUCTION_PROVEN';
   if (flags.includes('BUILD_PROVEN') && !flags.includes('VERIFICATION_PROVEN')) return 'BUILD_ONLY';
@@ -56,6 +58,7 @@ export function buildCategoryMapping(
 
   const gpProvenSet = new Set(bundle.gpcgAssessment.domainProfiles);
   const cloudProvenSet = new Set(bundle.cloudAssessment.profiles);
+  const mobileProvenSet = new Set(bundle.mobileAssessment.provenProfiles);
 
   const allProfiles = new Set<string>([
     ...broadProfiles,
@@ -91,6 +94,9 @@ export function buildCategoryMapping(
     }
     if (cloudProvenSet.has(profile) && bundle.cloudAssessment.cloudSimulatedProofStatus === 'PROVEN') {
       flags.push('CLOUD_PROVEN');
+    }
+    if (mobileProvenSet.has(profile) && bundle.mobileAssessment.mobileProofStatus === 'PROVEN') {
+      flags.push('MOBILE_PROVEN');
     }
     if (productionReadySet.has(profile)) flags.push('PRODUCTION_PROVEN');
 

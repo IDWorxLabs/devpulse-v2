@@ -315,6 +315,18 @@ assert(
   'COMPLETE action',
 );
 
+assert(
+  'mobile runtime validation gap resolved',
+  !assessment.highestPriorityGap.includes('Mobile runtime validation at scale'),
+  assessment.highestPriorityGap.slice(0, 100),
+);
+
+assert(
+  'mobile runtime validation complete in roadmap',
+  roadmap.some((p) => p.phase === 'Mobile Runtime Validation at Scale' && p.action === 'COMPLETE'),
+  'COMPLETE action',
+);
+
 const failed = results.filter((r) => !r.passed);
 console.log('\n--- AiDevEngine Capability Audit V3.1 Validation (UVL Evidence Refresh) ---');
 for (const r of results) {

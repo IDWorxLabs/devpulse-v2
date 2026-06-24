@@ -48,6 +48,7 @@ import { sendCloudExecutionPathV1Json } from './cloud-execution-path-handler.js'
 import { sendProductArchitectIntelligenceJson } from './product-architect-intelligence-handler.js';
 import { sendLargeScaleValidationJson } from './large-scale-validation-handler.js';
 import { sendWorld2RealInstantiationJson } from './world2-real-instantiation-handler.js';
+import { sendMobileRuntimeValidationJson } from './mobile-runtime-validation-handler.js';
 import { sendRealBuildExecutionPipelineJson } from './real-build-execution-pipeline-handler.js';
 import { sendRealBuildExecutionPipelineV11Json } from './real-build-execution-pipeline-v11-handler.js';
 import { sendUvlVerificationExecutionV1Json } from './uvl-verification-execution-v1-handler.js';
@@ -368,6 +369,16 @@ export function createFounderRealityServer() {
         return;
       }
       sendWorld2RealInstantiationJson(res, url.searchParams.get('refresh') === 'true');
+      return;
+    }
+
+    if (urlPath === '/api/founder/mobile-runtime-validation-at-scale-v1' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendMobileRuntimeValidationJson(res, url.searchParams.get('refresh') === 'true');
       return;
     }
 

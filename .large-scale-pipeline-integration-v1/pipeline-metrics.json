@@ -1,12 +1,13 @@
 {
   "readOnly": true,
-  "generatedAt": "2026-06-24T20:37:57.651Z",
+  "generatedAt": "2026-06-24T20:51:00.692Z",
   "broadCategoriesTested": 58,
   "buildProvenCategories": 15,
   "verificationProvenCategories": 15,
   "productionProvenCategories": 15,
   "cloudProvenCategories": 3,
   "gpProvenCategories": 10,
+  "mobileProvenCategories": 10,
   "buildSuccessRate": 100,
   "previewSuccessRate": 100,
   "verificationSuccessRate": 100,
@@ -15,5 +16,6 @@
   "productionReadinessRate": 100,
   "cloudSimulatedSuccessRate": 100,
   "generalPurposeGenerationSuccessRate": 100,
+  "mobileRuntimeSuccessRate": 100,
   "legacyLargeScaleBuildSuccessRate": 0
 }

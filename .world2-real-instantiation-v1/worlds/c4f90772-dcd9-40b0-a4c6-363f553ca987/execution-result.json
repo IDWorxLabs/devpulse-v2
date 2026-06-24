@@ -1,0 +1,117 @@
+{
+  "readOnly": true,
+  "job": {
+    "readOnly": true,
+    "jobId": "c4f90772-dcd9-40b0-a4c6-363f553ca987",
+    "projectId": "world2-crm_web_v1",
+    "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+    "requirementsSnapshot": {
+      "readOnly": true,
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+      "requirementConfidence": 36
+    },
+    "buildPlan": {
+      "readOnly": true,
+      "contractId": "build-ready-idea-1",
+      "planningSummary": "Contract build-ready-idea-1",
+      "codegenProfile": "CRM_WEB_V1"
+    },
+    "workspaceSpec": {
+      "readOnly": true,
+      "workspaceId": "w2-c4f90772-dcd9-40b0-a4c6-363f553ca987",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-c4f90772-dcd9-40b0-a4c6-363f553ca987",
+      "isolationToken": "c4f90772-dcd9-40b0-a4c6-363f553ca987",
+      "boundedLogsMaxLines": 500,
+      "boundedArtifactsMaxBytes": 5000000,
+      "runtimeTimeoutMs": 300000
+    },
+    "executionMode": "CLOUD_SIMULATED",
+    "requestedAt": "2026-06-24T20:50:29.666Z",
+    "status": "COMPLETED",
+    "claimedAt": null,
+    "completedAt": "2026-06-24T20:50:43.823Z",
+    "workerId": "w2-worker-c4f90772",
+    "currentStage": "COMPLETED",
+    "runtimeDurationMs": 14156
+  },
+  "passed": true,
+  "failureReport": null,
+  "artifactStatus": {
+    "readOnly": true,
+    "sourceManifest": true,
+    "buildLogs": true,
+    "previewProof": true,
+    "uvlVerificationProof": true,
+    "productArchitectProof": true,
+    "aflaVerdict": true,
+    "productionReadinessResult": true,
+    "executionSummary": true,
+    "cloudJobPackage": true
+  },
+  "cloudJobPackage": {
+    "readOnly": true,
+    "contractVersion": "V1",
+    "jobId": "c4f90772-dcd9-40b0-a4c6-363f553ca987",
+    "projectId": "world2-crm_web_v1",
+    "executionMode": "CLOUD_SIMULATED",
+    "jobMetadata": {
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "requestedAt": "2026-06-24T20:50:29.666Z",
+      "workerId": null
+    },
+    "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+    "requirementsSnapshot": {
+      "readOnly": true,
+      "profile": "CRM_WEB_V1",
+      "productName": "CRM",
+      "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+      "requirementConfidence": 36
+    },
+    "buildPlan": {
+      "readOnly": true,
+      "contractId": "build-ready-idea-1",
+      "planningSummary": "Contract build-ready-idea-1",
+      "codegenProfile": "CRM_WEB_V1"
+    },
+    "workspaceSpec": {
+      "readOnly": true,
+      "workspaceId": "w2-c4f90772-dcd9-40b0-a4c6-363f553ca987",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-c4f90772-dcd9-40b0-a4c6-363f553ca987",
+      "isolationToken": "c4f90772-dcd9-40b0-a4c6-363f553ca987",
+      "boundedLogsMaxLines": 500,
+      "boundedArtifactsMaxBytes": 5000000,
+      "runtimeTimeoutMs": 300000
+    },
+    "expectedArtifactOutputs": [
+      "generated-source-manifest.json",
+      "build-logs.txt",
+      "preview-proof.json",
+      "uvl-verification-proof.json",
+      "product-architect-proof.json",
+      "afla-verdict.json",
+      "production-readiness-result.json",
+      "execution-summary.json",
+      "cloud-job-package.json"
+    ],
+    "validationRequirements": [
+      "Build proof required",
+      "Preview proof required",
+      "UVL verification proof required",
+      "AFLA verdict required",
+      "Production readiness gate required",
+      "Unique isolated workspace required"
+    ],
+    "generatedAt": "2026-06-24T20:50:43.820Z"
+  },
+  "buildProof": true,
+  "previewProof": true,
+  "verificationProof": false,
+  "aflaVerdict": "NOT_LAUNCH_READY",
+  "productionReadinessScore": 89,
+  "productionReadinessVerdict": "PRODUCTION_READY",
+  "executionSummary": "Cloud execution completed for CRM in 14159ms",
+  "contaminationCheckPassed": true
+}

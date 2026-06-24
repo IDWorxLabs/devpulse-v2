@@ -21,6 +21,7 @@ export function buildGapClassification(
 
 export function summarizeRemainingGaps(
   gapClassification: readonly GapClassificationEntry[],
+  options?: { mobileValidationProven?: boolean },
 ): readonly string[] {
   const gaps: string[] = [];
   const breadthOnly = gapClassification.filter((g) => g.classification === 'BREADTH_ONLY');
@@ -41,8 +42,9 @@ export function summarizeRemainingGaps(
     gaps.push(`${unvalidated.length} categories not in any validation suite (UNVALIDATED)`);
   }
 
-  const mobileGap = 'Mobile runtime validation at scale — no large-scale mobile harness';
-  gaps.push(mobileGap);
+  if (!options?.mobileValidationProven) {
+    gaps.push('Mobile runtime validation at scale — no large-scale mobile harness');
+  }
 
   return gaps;
 }

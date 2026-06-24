@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { PRODUCTION_READINESS_GATE_V1_ARTIFACT_DIR } from '../production-readiness-gate-v1/production-readiness-gate-v1-bounds.js';
 import { CLOUD_EXECUTION_PATH_V1_ARTIFACT_DIR } from '../cloud-execution-path-v1/cloud-execution-path-v1-bounds.js';
 import { GENERAL_PURPOSE_CODE_GENERATION_V1_ARTIFACT_DIR } from '../general-purpose-code-generation-v1/general-purpose-code-generation-v1-bounds.js';
+import { MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_ARTIFACT_DIR } from '../mobile-runtime-validation-at-scale-v1/mobile-runtime-validation-v1-bounds.js';
 import type { EvidenceSourceRecord } from './large-scale-pipeline-integration-v1-types.js';
 
 export const RBEP_ARTIFACT_DIR = '.real-build-execution-pipeline-v1-1';
@@ -24,6 +25,7 @@ const EVIDENCE_DIRS = {
   afla: AFLA_ARTIFACT_DIR,
   pai: PAI_ARTIFACT_DIR,
   largeScale: LARGE_SCALE_ARTIFACT_DIR,
+  mobile: MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_ARTIFACT_DIR,
 } as const;
 
 function resolveRoot(projectRootDir?: string): string {
@@ -152,6 +154,14 @@ export interface PipelineEvidenceBundle {
     generationSuccessRate: number;
     profiles: readonly string[];
   };
+  mobileAssessment: {
+    categoriesMobileProven: number;
+    categoriesValidated: number;
+    mobilePassRate: number;
+    mobileProofStatus: string;
+    passToken: string | null;
+    provenProfiles: readonly string[];
+  };
 }
 
 export function loadPipelineEvidenceBundle(projectRootDir?: string): PipelineEvidenceBundle {
@@ -229,6 +239,12 @@ export function loadPipelineEvidenceBundle(projectRootDir?: string): PipelineEvi
     'largeScale',
     ['assessment.json'],
     'LARGE_SCALE_MULTI_APP_VALIDATION_REPORT.md',
+  );
+  const mobile = loadSystem(
+    'Mobile Runtime Validation at Scale V1',
+    'mobile',
+    ['assessment.json'],
+    'MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_REPORT.md',
   );
 
   const rbepBuildProof = readJson<RbepBuildProofEntry[]>(
@@ -308,6 +324,21 @@ export function loadPipelineEvidenceBundle(projectRootDir?: string): PipelineEvi
   const largeScaleProfiles = (largeScaleRaw.categoryResults ?? [])
     .map((c) => c.profile)
     .filter(Boolean) as string[];
+  const mobileRaw = readJson(
+    mobile.paths[0] ?? null,
+    {},
+  ) as {
+    categoriesMobileProven?: number;
+    categoriesValidated?: number;
+    mobilePassRate?: number;
+    mobileProofStatus?: string;
+    passToken?: string;
+    categoryResults?: Array<{ profile?: string; mobileRuntimeProven?: boolean }>;
+  };
+  const mobileProvenProfiles = (mobileRaw.categoryResults ?? [])
+    .filter((c) => c.mobileRuntimeProven)
+    .map((c) => c.profile)
+    .filter(Boolean) as string[];
 
   return {
     readOnly: true,
@@ -373,6 +404,14 @@ export function loadPipelineEvidenceBundle(projectRootDir?: string): PipelineEvi
       buildSuccessRate: largeScaleRaw.passRates?.buildSuccessRate ?? 0,
       generationSuccessRate: largeScaleRaw.passRates?.generationSuccessRate ?? 0,
       profiles: largeScaleProfiles,
+    },
+    mobileAssessment: {
+      categoriesMobileProven: mobileRaw.categoriesMobileProven ?? mobileProvenProfiles.length,
+      categoriesValidated: mobileRaw.categoriesValidated ?? mobileProvenProfiles.length,
+      mobilePassRate: mobileRaw.mobilePassRate ?? 0,
+      mobileProofStatus: mobileRaw.mobileProofStatus ?? 'NOT_PROVEN',
+      passToken: mobile.passToken ?? mobileRaw.passToken ?? null,
+      provenProfiles: mobileProvenProfiles,
     },
   };
 }

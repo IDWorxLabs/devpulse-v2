@@ -32,7 +32,9 @@
   var cloudExecutionData = null;
   var cloudExecutionLoadPromise = null;
   var world2InstantiationData = null;
+  var mobileRuntimeValidationData = null;
   var world2InstantiationLoadPromise = null;
+  var mobileRuntimeValidationLoadPromise = null;
   var productArchitectData = null;
   var productArchitectLoadPromise = null;
   var productArchitectProfile = 'CRM_WEB_V1';
@@ -127,7 +129,7 @@
     ],
   };
   var conversationStarted = false;
-  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Production Readiness', 'Cloud Execution', 'World2', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
+  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Production Readiness', 'Cloud Execution', 'World2', 'Mobile Runtime Validation', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
   var feedSectionIdleCopy = {
     Planning: {
       action: 'Ready to classify your next request',
@@ -168,6 +170,10 @@
     World2: {
       action: 'World2 instantiation ready',
       detail: 'Create disposable isolated execution worlds with real build, verify, review, and promotion paths.',
+    },
+    'Mobile Runtime Validation': {
+      action: 'Mobile runtime validation ready',
+      detail: 'Validate touch interaction, navigation, workflows, and performance across mobile runtime profiles at scale.',
     },
     'Large-Scale Validation': {
       action: 'Large-scale validation ready',
@@ -5120,6 +5126,64 @@
     return world2InstantiationLoadPromise;
   }
 
+  function renderMobileRuntimeValidationPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Mobile Runtime Validation',
+        '<p class="product-lead">Loading mobile runtime validation visibility…</p>',
+      );
+    }
+
+    var categoryRows = ((data.assessment && data.assessment.categoryResults) || [])
+      .map(function (cat) {
+        return (
+          '<div class="cloud-execution-row">' +
+          '<span>' + escapeHtml(cat.productName) + '</span>' +
+          '<span>' + (cat.mobileRuntimeProven ? 'MOBILE_PROVEN' : 'NOT_PROVEN') + '</span>' +
+          '<span>' + escapeHtml((cat.profilesValidated || []).join(', ') || 'none') + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'Mobile Runtime Validation',
+      '<p class="product-lead">Mobile Runtime Validation at Scale V1 — touch, navigation, workflow, and performance proof across emulated mobile profiles. Informational only.</p>' +
+        '<p><strong>Mobile Pass Rate:</strong> ' + String(data.mobilePassRate || 0) + '% · ' +
+        '<strong>Categories Mobile-Proven:</strong> ' + String(data.categoriesMobileProven || 0) + '/' + String(data.categoriesValidated || 0) + '</p>' +
+        '<p><strong>Profile Coverage:</strong> ' + escapeHtml((data.profileCoverage || []).join(', ') || 'none') + '</p>' +
+        '<p><strong>Touch Interaction Score:</strong> ' + String(data.touchInteractionScore || 0) + '/100 · ' +
+        '<strong>Navigation Score:</strong> ' + String(data.navigationScore || 0) + '/100 · ' +
+        '<strong>Performance Score:</strong> ' + String(data.performanceScore || 0) + '/100</p>' +
+        '<p><strong>World2 Mobile Executions:</strong> ' + String(data.world2MobileExecutions || 0) + ' · ' +
+        '<strong>Mobile Proof Status:</strong> ' + escapeHtml(data.mobileProofStatus || 'NOT_PROVEN') + '</p>' +
+        '<p><strong>Category mobile proof</strong></p>' +
+        '<div class="cloud-execution-grid">' + (categoryRows || '<p class="hint">No mobile category results yet.</p>') + '</div>',
+    );
+  }
+
+  function loadMobileRuntimeValidation(force) {
+    if (!force && mobileRuntimeValidationData) {
+      return Promise.resolve(mobileRuntimeValidationData);
+    }
+    if (mobileRuntimeValidationLoadPromise) {
+      return mobileRuntimeValidationLoadPromise;
+    }
+    mobileRuntimeValidationLoadPromise = fetch('/api/founder/mobile-runtime-validation-at-scale-v1?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('mobile-runtime-validation HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        mobileRuntimeValidationData = data;
+        return data;
+      })
+      .finally(function () {
+        mobileRuntimeValidationLoadPromise = null;
+      });
+    return mobileRuntimeValidationLoadPromise;
+  }
+
   var PRODUCT_ARCHITECT_SUITE_PROFILES = [
     { profile: 'CRM_WEB_V1', label: 'CRM' },
     { profile: 'MARKETPLACE_WEB_V1', label: 'Marketplace' },
@@ -5631,6 +5695,7 @@
     html += renderProductionReadinessPanel(productionReadinessData);
     html += renderCloudExecutionPanel(cloudExecutionData);
     html += renderWorld2Panel(world2InstantiationData);
+    html += renderMobileRuntimeValidationPanel(mobileRuntimeValidationData);
     html +=
       renderProductCard(
         'Verification Readiness',
@@ -6493,6 +6558,8 @@
     'Production Readiness': '<svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>',
     'Cloud Execution': '<svg viewBox="0 0 24 24"><path d="M6 16h12l-1-2v-5a7 7 0 0 0-14 0v5l-1 2z"/><path d="M4 10a8 8 0 0 1 16 0"/></svg>',
     World2: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>',
+    'Mobile Runtime Validation': '<svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>',
+    'Mobile Runtime Validation': '<svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 18h4"/></svg>',
     'Product Architect Review': '<svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M7 7V5h10v2"/><path d="M8 11h8M8 15h5"/></svg>',
     'Large-Scale Validation': '<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>',
     'Execution Pipeline': '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
@@ -10964,6 +11031,21 @@
     })
     .catch(function () {
       /* World2 falls back to loading state */
+    });
+
+  loadMobileRuntimeValidation(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* Mobile Runtime Validation falls back to loading state */
     });
 
   fetch(buildFounderTestApiUrl('/api/founder-reality.json', null))

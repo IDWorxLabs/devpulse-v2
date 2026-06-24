@@ -22,6 +22,7 @@ import { buildMissingCapabilitiesReport } from './missing-capabilities.js';
 import { V2_INVENTORY_UPGRADES } from './v2-inventory-upgrades.js';
 import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeline-integration-v1/index.js';
 import { isWorld2RealInstantiationProven } from '../world2-real-instantiation-v1/index.js';
+import { isMobileRuntimeValidationProven } from '../mobile-runtime-validation-at-scale-v1/index.js';
 
 export const AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN =
   'AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS';
@@ -327,6 +328,11 @@ export function buildCapabilityAuditV3Assessment(projectRootDir?: string): Capab
   }
   if (projectRootDir && isWorld2RealInstantiationProven(projectRootDir)) {
     closedGapsSinceV2.push('World2 real filesystem instantiation (World2 Real Instantiation V1 PASS)');
+  }
+  if (projectRootDir && isMobileRuntimeValidationProven(projectRootDir)) {
+    closedGapsSinceV2.push(
+      'Mobile runtime validation at scale (Mobile Runtime Validation at Scale V1 PASS)',
+    );
   }
 
   const world2Gaps = [

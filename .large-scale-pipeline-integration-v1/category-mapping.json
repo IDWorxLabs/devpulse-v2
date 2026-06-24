@@ -38,6 +38,7 @@
       "BUILD_PROVEN",
       "VERIFICATION_PROVEN",
       "GP_PROVEN",
+      "MOBILE_PROVEN",
       "PRODUCTION_PROVEN"
     ],
     "gapClassification": "PRODUCTION_PROVEN",
@@ -192,6 +193,7 @@
       "BUILD_PROVEN",
       "VERIFICATION_PROVEN",
       "CLOUD_PROVEN",
+      "MOBILE_PROVEN",
       "PRODUCTION_PROVEN"
     ],
     "gapClassification": "CLOUD_SIMULATED_PROVEN",
@@ -211,6 +213,7 @@
       "BUILD_PROVEN",
       "VERIFICATION_PROVEN",
       "GP_PROVEN",
+      "MOBILE_PROVEN",
       "PRODUCTION_PROVEN"
     ],
     "gapClassification": "PRODUCTION_PROVEN",
@@ -309,6 +312,7 @@
       "BUILD_PROVEN",
       "VERIFICATION_PROVEN",
       "GP_PROVEN",
+      "MOBILE_PROVEN",
       "PRODUCTION_PROVEN"
     ],
     "gapClassification": "PRODUCTION_PROVEN",
@@ -457,6 +461,7 @@
       "BROAD_VALIDATED",
       "BUILD_PROVEN",
       "VERIFICATION_PROVEN",
+      "MOBILE_PROVEN",
       "PRODUCTION_PROVEN"
     ],
     "gapClassification": "PRODUCTION_PROVEN",
@@ -507,6 +512,7 @@
       "BUILD_PROVEN",
       "VERIFICATION_PROVEN",
       "GP_PROVEN",
+      "MOBILE_PROVEN",
       "PRODUCTION_PROVEN"
     ],
     "gapClassification": "PRODUCTION_PROVEN",
@@ -587,6 +593,7 @@
       "VERIFICATION_PROVEN",
       "GP_PROVEN",
       "CLOUD_PROVEN",
+      "MOBILE_PROVEN",
       "PRODUCTION_PROVEN"
     ],
     "gapClassification": "CLOUD_SIMULATED_PROVEN",
@@ -680,6 +687,7 @@
       "BROAD_VALIDATED",
       "BUILD_PROVEN",
       "VERIFICATION_PROVEN",
+      "MOBILE_PROVEN",
       "PRODUCTION_PROVEN"
     ],
     "gapClassification": "PRODUCTION_PROVEN",
@@ -792,6 +800,7 @@
       "BROAD_VALIDATED",
       "BUILD_PROVEN",
       "VERIFICATION_PROVEN",
+      "MOBILE_PROVEN",
       "PRODUCTION_PROVEN"
     ],
     "gapClassification": "PRODUCTION_PROVEN",
@@ -841,6 +850,7 @@
       "BUILD_PROVEN",
       "VERIFICATION_PROVEN",
       "CLOUD_PROVEN",
+      "MOBILE_PROVEN",
       "PRODUCTION_PROVEN"
     ],
     "gapClassification": "CLOUD_SIMULATED_PROVEN",

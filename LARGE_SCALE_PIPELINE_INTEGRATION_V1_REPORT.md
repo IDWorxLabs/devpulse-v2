@@ -1,6 +1,6 @@
 # LARGE_SCALE_PIPELINE_INTEGRATION_V1_REPORT
 
-Generated: 2026-06-24T20:37:57.651Z
+Generated: 2026-06-24T20:51:00.692Z
 
 ## Executive Summary
 
@@ -19,6 +19,7 @@ Large-scale pipeline integration reflects authoritative evidence: build 100%, ve
 | Launch Readiness Rate | 100% | — |
 | Production Readiness Rate | 100% | 15 production-proven |
 | Cloud Simulated Success Rate | 100% | 3 cloud-proven |
+| Mobile Runtime Success Rate | 100% | 10 mobile-proven |
 | General-Purpose Generation Success Rate | 100% | 10 GP-proven |
 
 **Legacy large-scale harness buildSuccessRate:** 0% (AFLA dry-run — superseded by RBEP evidence)
@@ -30,6 +31,7 @@ Large-scale pipeline integration reflects authoritative evidence: build 100%, ve
 - Verification-proven categories: 15
 - Production-proven categories: 15
 - Cloud-proven categories: 3
+- Mobile-proven categories: 10
 
 ## Pipeline Score Breakdown
 
@@ -44,7 +46,6 @@ Large-scale pipeline integration reflects authoritative evidence: build 100%, ve
 ## Remaining Gaps
 
 - 44 categories broadly validated without real build proof (BREADTH_ONLY)
-- Mobile runtime validation at scale — no large-scale mobile harness
 
 ## Evidence Sources
 
@@ -56,6 +57,7 @@ Large-scale pipeline integration reflects authoritative evidence: build 100%, ve
 - **Autonomous Founder Launch Authority** (.autonomous-founder-launch-authority) — available — pass: none
 - **Product Architect Intelligence V1** (.product-architect-intelligence-v1) — available — pass: none
 - **Large-Scale Multi-App Validation V1** (.large-scale-multi-app-validation) — available — pass: none
+- **Mobile Runtime Validation at Scale V1** (.mobile-runtime-validation-at-scale-v1) — available — pass: MOBILE_RUNTIME_VALIDATION_AT_SCALE_V1_PASS
 
 ## Pass Token
 
