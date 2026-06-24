@@ -2009,6 +2009,146 @@ body {
   margin-top: 0.75rem;
 }
 
+.founder-review-dashboard {
+  display: grid;
+  gap: 1rem;
+}
+
+.founder-review-dashboard > h2 {
+  margin-bottom: 0.25rem;
+}
+
+.founder-review-profile-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.founder-review-profile-select {
+  min-width: 12rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(15, 23, 42, 0.6);
+  color: inherit;
+}
+
+.founder-review-overall-score {
+  font-size: 1.05rem;
+}
+
+.founder-review-evidence-grid,
+.founder-review-score-grid,
+.founder-review-history-grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.founder-review-evidence-row,
+.founder-review-history-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.founder-review-history-row {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.founder-review-reviewer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.founder-review-reviewer-card {
+  padding: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.founder-review-reviewer-card h4 {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+}
+
+.founder-review-list {
+  margin: 0.35rem 0 0.85rem;
+  padding-left: 1.1rem;
+}
+
+.founder-review-pass {
+  background: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+}
+
+.founder-review-fail {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+}
+
+.founder-review-running {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+}
+
+.founder-review-waiting {
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+}
+
+.founder-review-phase {
+  background: rgba(99, 102, 241, 0.15);
+  color: #c7d2fe;
+}
+
+.founder-verdict-ready {
+  background: rgba(34, 197, 94, 0.18);
+  color: #86efac;
+}
+
+.founder-verdict-warnings {
+  background: rgba(234, 179, 8, 0.18);
+  color: #fde047;
+}
+
+.founder-verdict-autofix {
+  background: rgba(249, 115, 22, 0.18);
+  color: #fdba74;
+}
+
+.founder-verdict-human,
+.founder-verdict-blocked {
+  background: rgba(239, 68, 68, 0.18);
+  color: #fca5a5;
+}
+
+.founder-verdict-waiting {
+  background: rgba(148, 163, 184, 0.18);
+  color: #cbd5e1;
+}
+
+.founder-review-actions {
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 900px) {
+  .founder-review-evidence-row,
+  .founder-review-history-row {
+    grid-template-columns: 1fr;
+  }
+
+  .founder-review-reviewer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .verification-category-group {
   margin: 0.75rem 0;
   padding-bottom: 0.5rem;

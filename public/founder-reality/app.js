@@ -15,6 +15,9 @@
   var workspaceLoadPromise = null;
   var executionProofData = null;
   var executionProofLoadPromise = null;
+  var founderReviewData = null;
+  var founderReviewLoadPromise = null;
+  var founderReviewProfile = 'TASK_TRACKER_WEB_V1';
   var insightsSelectedProjectId = null;
 
   /** Client-side demo fallback — used only when workspace API is unavailable. */
@@ -100,7 +103,7 @@
     ],
   };
   var conversationStarted = false;
-  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Approvals', 'Learning'];
+  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Founder Review', 'Approvals', 'Learning'];
   var feedSectionIdleCopy = {
     Planning: {
       action: 'Ready to classify your next request',
@@ -113,6 +116,10 @@
     Verification: {
       action: 'Ready to evaluate product readiness',
       detail: 'Verification checks product alignment, quality signals, and launch confidence when requested.',
+    },
+    'Founder Review': {
+      action: 'Launch review pipeline idle',
+      detail: 'Open Founder Review to see evidence chain, reviewer panel, verdict, and AutoFix status.',
     },
     Approvals: {
       action: 'Waiting for founder decisions when needed',
@@ -2298,6 +2305,7 @@
     'live-preview': 'Live Preview',
     'project-memory': 'Project Memory',
     verification: 'Verification',
+    'founder-review': 'Founder Review',
     notifications: 'Notifications',
     'project-insights': 'Project Insights',
     'system-diagnostics': 'System Diagnostics',
@@ -2312,6 +2320,7 @@
     'live-preview',
     'project-memory',
     'verification',
+    'founder-review',
     'notifications',
     'project-insights',
     'system-diagnostics',
@@ -4321,6 +4330,239 @@
     }
   }
 
+  var FOUNDER_REVIEW_SUITE_PROFILES = [
+    { profile: 'TASK_TRACKER_WEB_V1', label: 'Task Tracker' },
+    { profile: 'CRM_WEB_V1', label: 'CRM' },
+    { profile: 'INVENTORY_WEB_V1', label: 'Inventory System' },
+    { profile: 'SCHOOL_MANAGEMENT_WEB_V1', label: 'School Management System' },
+    { profile: 'PROJECT_MANAGEMENT_WEB_V1', label: 'Project Management System' },
+  ];
+
+  function founderReviewEvidenceClass(status) {
+    if (status === 'PASS') return 'founder-review-pass';
+    if (status === 'FAIL') return 'founder-review-fail';
+    if (status === 'RUNNING') return 'founder-review-running';
+    return 'founder-review-waiting';
+  }
+
+  function founderReviewVerdictClass(verdict) {
+    if (verdict === 'LAUNCH_READY') return 'founder-verdict-ready';
+    if (verdict === 'LAUNCH_READY_WITH_WARNINGS') return 'founder-verdict-warnings';
+    if (verdict === 'NEEDS_AUTOFIX') return 'founder-verdict-autofix';
+    if (verdict === 'NEEDS_HUMAN_REVIEW') return 'founder-verdict-human';
+    if (verdict === 'NOT_LAUNCH_READY') return 'founder-verdict-blocked';
+    return 'founder-verdict-waiting';
+  }
+
+  function renderFounderReviewList(items, emptyText) {
+    if (!items || !items.length) {
+      return '<p class="hint">' + escapeHtml(emptyText) + '</p>';
+    }
+    return '<ul class="founder-review-list">' + items.map(function (item) {
+      return '<li>' + escapeHtml(String(item)) + '</li>';
+    }).join('') + '</ul>';
+  }
+
+  function renderFounderReviewDashboard(data) {
+    if (!data) {
+      return (
+        '<section class="card founder-review-dashboard" id="founder-review-dashboard">' +
+        '<h2>Founder Review</h2>' +
+        '<p class="product-lead">Loading Autonomous Founder Launch Authority review transparency…</p>' +
+        '</section>'
+      );
+    }
+
+    var profileOptions = FOUNDER_REVIEW_SUITE_PROFILES.map(function (app) {
+      var selected = data.profile === app.profile ? ' selected' : '';
+      return '<option value="' + escapeHtml(app.profile) + '"' + selected + '>' + escapeHtml(app.label) + '</option>';
+    }).join('');
+
+    var evidenceRows = (data.evidenceChain || []).map(function (row) {
+      return (
+        '<div class="founder-review-evidence-row">' +
+        '<span class="founder-review-evidence-label">' + escapeHtml(row.label) + '</span>' +
+        '<span class="status-pill ' + founderReviewEvidenceClass(row.status) + '">' + escapeHtml(row.status) + '</span>' +
+        '<span class="founder-review-evidence-score">' + String(row.score) + '/100</span>' +
+        '</div>'
+      );
+    }).join('');
+
+    var reviewerCards = (data.reviewerPanel || []).map(function (reviewer) {
+      var confidence =
+        reviewer.role === 'founder' && reviewer.founderConfidence != null
+          ? '<p><strong>Confidence:</strong> ' + String(reviewer.founderConfidence) + '/100</p>'
+          : '';
+      return (
+        '<article class="founder-review-reviewer-card">' +
+        '<h4>' + escapeHtml(reviewer.title) + '</h4>' +
+        '<p><strong>Score:</strong> ' + String(reviewer.score) + '/100</p>' +
+        confidence +
+        '<p><strong>Findings</strong></p>' +
+        renderFounderReviewList(reviewer.findings, 'No findings recorded.') +
+        '<p><strong>Risks</strong></p>' +
+        renderFounderReviewList(reviewer.risks, 'No risks recorded.') +
+        '</article>'
+      );
+    }).join('');
+
+    var historyRows = (data.history || []).slice(0, 8).map(function (entry) {
+      return (
+        '<div class="founder-review-history-row">' +
+        '<span>' + escapeHtml(entry.generatedAt.slice(0, 10)) + '</span>' +
+        '<span>' + escapeHtml(entry.productName) + '</span>' +
+        '<span>' + String(entry.overallScore) + '/100</span>' +
+        '<span class="status-pill ' + founderReviewVerdictClass(entry.verdict) + '">' + escapeHtml(String(entry.verdict).replaceAll('_', ' ')) + '</span>' +
+        '</div>'
+      );
+    }).join('');
+
+    return (
+      '<section class="card founder-review-dashboard" id="founder-review-dashboard">' +
+      '<h2>Founder Review</h2>' +
+      '<p class="product-lead">AiDevEngine internal launch review transparency — informational only. Autonomous Founder Launch Authority remains the sole launch decision owner.</p>' +
+      '<div class="founder-review-profile-bar">' +
+      '<label for="founder-review-profile-select"><strong>Application:</strong></label> ' +
+      '<select id="founder-review-profile-select" class="founder-review-profile-select">' + profileOptions + '</select>' +
+      '</div>' +
+      renderProductCard(
+        'Launch Readiness',
+        '<p class="founder-review-overall-score"><strong>Overall Score:</strong> ' + String(data.launchReadiness.overallScore) + '/100</p>' +
+        '<p><strong>Current Status:</strong> <span class="status-pill founder-review-phase">' + escapeHtml(data.launchReadiness.currentPhase) + '</span></p>' +
+        '<p class="hint">' + escapeHtml(data.launchReadiness.userLabel || '') + '</p>',
+      ) +
+      renderProductCard(
+        'Evidence Chain',
+        '<div class="founder-review-evidence-grid">' + evidenceRows + '</div>',
+      ) +
+      renderProductCard(
+        'Reviewer Panel',
+        '<p class="hint">Six reviewers: Senior Engineer Review, QA Review, UX Review, Product Review, Launch Review, Founder Review.</p>' +
+        '<div class="founder-review-reviewer-grid">' + (reviewerCards || '<p class="hint">Waiting for reviewer assessments.</p>') + '</div>',
+      ) +
+      renderProductCard(
+        'Launch Readiness Breakdown',
+        '<div class="founder-review-score-grid">' +
+        '<p><strong>Engineering:</strong> ' + String(data.scoreBreakdown.engineering) + '</p>' +
+        '<p><strong>QA:</strong> ' + String(data.scoreBreakdown.qa) + '</p>' +
+        '<p><strong>UX:</strong> ' + String(data.scoreBreakdown.ux) + '</p>' +
+        '<p><strong>Product:</strong> ' + String(data.scoreBreakdown.product) + '</p>' +
+        '<p><strong>Launch:</strong> ' + String(data.scoreBreakdown.launch) + '</p>' +
+        '<p><strong>Founder:</strong> ' + String(data.scoreBreakdown.founder) + '</p>' +
+        '<p class="founder-review-overall-score"><strong>Overall:</strong> ' + String(data.scoreBreakdown.overall) + '</p>' +
+        '</div>',
+      ) +
+      renderProductCard(
+        'Launch Blockers',
+        '<p><strong>Critical Blockers</strong></p>' +
+        renderFounderReviewList(data.blockers.criticalBlockers, 'No critical blockers.') +
+        '<p><strong>Warnings</strong></p>' +
+        renderFounderReviewList(data.blockers.warnings, 'No warnings.') +
+        '<p><strong>Recommendations</strong></p>' +
+        renderFounderReviewList(data.blockers.recommendations, 'No recommendations yet.'),
+      ) +
+      renderProductCard(
+        'AutoFix',
+        '<p><strong>AutoFix Active:</strong> ' + (data.autoFix.autofixActive ? 'Yes' : 'No') + '</p>' +
+        '<p><strong>Retry Count:</strong> ' + String(data.autoFix.retryCount) + ' / ' + String(data.autoFix.maxRetries) + '</p>' +
+        '<p><strong>AutoFix Queue</strong></p>' +
+        renderFounderReviewList(data.autoFix.queue, 'AutoFix queue is empty.') +
+        '<p><strong>Resolved Issues</strong></p>' +
+        renderFounderReviewList(data.autoFix.resolvedIssues, 'No resolved issues yet.') +
+        '<p><strong>Remaining Issues</strong></p>' +
+        renderFounderReviewList(data.autoFix.remainingIssues, 'No remaining issues.') +
+        (data.autoFix.remediationPlanId
+          ? '<p class="hint"><strong>FounderRemediationPlan:</strong> ' + escapeHtml(data.autoFix.remediationPlanId) + '</p>'
+          : ''),
+      ) +
+      renderProductCard(
+        'Founder Verdict',
+        '<p class="status-pill ' + founderReviewVerdictClass(data.founderVerdict.verdict) + '">' +
+        escapeHtml(String(data.founderVerdict.verdict).replaceAll('_', ' ')) +
+        '</p>' +
+        '<p><strong>Founder Confidence:</strong> ' + String(data.founderVerdict.founderConfidence) + '/100</p>' +
+        '<p><strong>Reasoning Summary:</strong> ' + escapeHtml(data.founderVerdict.reasoningSummary) + '</p>' +
+        (data.founderVerdict.blocksLaunchReason
+          ? '<p class="hint"><strong>Blocks Launch:</strong> ' + escapeHtml(data.founderVerdict.blocksLaunchReason) + '</p>'
+          : ''),
+      ) +
+      renderProductCard(
+        'Historical Launch Reviews',
+        '<p><strong>Trend Direction:</strong> ' + escapeHtml(data.trendDirection || 'UNKNOWN') + '</p>' +
+        '<div class="founder-review-history-grid">' + (historyRows || '<p class="hint">No prior reviews recorded yet.</p>') + '</div>' +
+        '<p class="hint">Maximum history: 25 reviews.</p>',
+      ) +
+      '<div class="founder-review-actions">' +
+      '<button type="button" class="btn-secondary" id="copy-founder-review-report">Copy Founder Review Report</button>' +
+      '</div>' +
+      '</section>'
+    );
+  }
+
+  function bindFounderReviewDashboardActions() {
+    var copyBtn = el('copy-founder-review-report');
+    if (copyBtn && copyBtn.getAttribute('data-bound') !== 'true') {
+      copyBtn.setAttribute('data-bound', 'true');
+      copyBtn.addEventListener('click', function () {
+        var text = founderReviewData && founderReviewData.copyReportText;
+        if (!text) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text);
+        }
+      });
+    }
+    var profileSelect = el('founder-review-profile-select');
+    if (profileSelect && profileSelect.getAttribute('data-bound') !== 'true') {
+      profileSelect.setAttribute('data-bound', 'true');
+      profileSelect.addEventListener('change', function () {
+        founderReviewProfile = profileSelect.value || 'TASK_TRACKER_WEB_V1';
+        loadFounderReview(true)
+          .then(function () {
+            refreshFounderReviewPanel();
+          })
+          .catch(function () {
+            refreshFounderReviewPanel();
+          });
+      });
+    }
+  }
+
+  function loadFounderReview(force) {
+    if (!force && founderReviewData && founderReviewData.profile === founderReviewProfile) {
+      return Promise.resolve(founderReviewData);
+    }
+    if (founderReviewLoadPromise) {
+      return founderReviewLoadPromise;
+    }
+    var url = '/api/founder/founder-review?profile=' + encodeURIComponent(founderReviewProfile);
+    founderReviewLoadPromise = fetch(url, { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('founder-review HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        founderReviewData = data;
+        return data;
+      })
+      .finally(function () {
+        founderReviewLoadPromise = null;
+      });
+    return founderReviewLoadPromise;
+  }
+
+  function refreshFounderReviewPanel() {
+    if (currentViewId === 'founder-review') {
+      renderFounderReviewSurface(workspaceData);
+    }
+  }
+
+  function renderFounderReviewSurface(ws) {
+    var container = el('founder-review-surface');
+    if (!container) return;
+    container.innerHTML = renderFounderReviewDashboard(founderReviewData);
+    bindFounderReviewDashboardActions();
+  }
+
   function renderVerificationSurface(ws, manifest) {
     var container = el('verification-surface');
     if (!container) return;
@@ -5011,6 +5253,7 @@
     renderLivePreviewSurface(buildWorkspaceViewForActiveProject(workspaceData));
     renderProjectMemorySurface(workspaceData);
     renderVerificationSurface(workspaceData, manifestData);
+    renderFounderReviewSurface(workspaceData);
     renderNotificationsSurface(workspaceData, runtimeNotifications);
     renderProjectInsightsSurface(workspaceData);
     renderSidebarStatus(workspaceData);
@@ -5049,6 +5292,15 @@
         })
         .catch(function () {
           refreshExecutionProofPanel();
+        });
+    }
+    if (viewId === 'founder-review') {
+      loadFounderReview(false)
+        .then(function () {
+          refreshFounderReviewPanel();
+        })
+        .catch(function () {
+          refreshFounderReviewPanel();
         });
     }
     if (viewId === 'live-preview') {
@@ -5181,6 +5433,7 @@
     Planning: '<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h14"/></svg>',
     Execution: '<svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-14h-7l0-6z"/></svg>',
     Verification: '<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg>',
+    'Founder Review': '<svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>',
     Approvals: '<svg viewBox="0 0 24 24"><path d="M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7l7-4z"/></svg>',
     Learning: '<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
   };

@@ -63,6 +63,11 @@
           <span class="nav-label">Verification</span>
           <span class="nav-help">Pass/fail proof, validation evidence, and launch confidence — not Project Insights summaries.</span>
         </button>
+        <button type="button" class="nav-item" data-view="founder-review" title="See what AiDevEngine reviewed, found, and why launch was approved or blocked.">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg></span>
+          <span class="nav-label">Founder Review</span>
+          <span class="nav-help">Internal launch review transparency — informational only.</span>
+        </button>
         <button type="button" class="nav-item" data-view="notifications" title="Founder alerts, test results, and important product updates.">
           <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 16H6l-1-2v-5a7 7 0 0 1 14 0v5l-1 2z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span>
           <span class="nav-label">Notifications</span>
@@ -258,6 +263,10 @@
 
       <div class="center-view hidden" id="view-verification">
         <div class="product-surface-scroll" id="verification-surface"></div>
+      </div>
+
+      <div class="center-view hidden" id="view-founder-review">
+        <div class="product-surface-scroll" id="founder-review-surface"></div>
       </div>
 
       <div class="center-view hidden" id="view-notifications">

@@ -123,6 +123,7 @@
     "validate:autonomous-founder-launch-authority-v1": "tsx scripts/validate-autonomous-founder-launch-authority-v1.ts",
     "validate:capability-audit-v1": "tsx scripts/validate-capability-audit-v1.ts",
     "validate:canonical-capability-ownership-v1": "tsx scripts/validate-canonical-capability-ownership-v1.ts",
+    "validate:founder-review-operator-dashboard-v1": "tsx scripts/validate-founder-review-operator-dashboard-v1.ts",
     "proof:direct-build-task-tracker": "tsx scripts/direct-build-proof-task-tracker.ts",
     "validate:one-prompt-live-preview-proof": "tsx scripts/validate-one-prompt-live-preview-proof.ts",
     "validate:one-prompt-chat-build-proof": "tsx scripts/validate-one-prompt-chat-build-proof.ts",

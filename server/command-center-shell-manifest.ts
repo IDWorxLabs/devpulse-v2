@@ -25,6 +25,7 @@ export const PRODUCT_NAV_ITEMS = [
   'Live Preview',
   'Project Memory',
   'Verification',
+  'Founder Review',
   'Notifications',
   'Project Insights',
   'System Diagnostics',
@@ -34,6 +35,7 @@ export const OPERATOR_FEED_SECTIONS = [
   'Planning',
   'Execution',
   'Verification',
+  'Founder Review',
   'Approvals',
   'Learning',
 ] as const;
