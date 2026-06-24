@@ -72,3 +72,12 @@ export {
 export type { World2ExecutionModeContext } from './world2-execution-engine-authority.js';
 
 export { buildWorld2ExecutionEngineReportMarkdown } from './world2-execution-engine-report-builder.js';
+
+export {
+  WORLD2_EXECUTION_ENGINE_AUTHORITATIVE_OWNER,
+  WORLD2_EXECUTION_ENGINE_CONSOLIDATION_STATUS,
+  resolveAuthoritativeWorld2Execution,
+  delegateWorld2ExecutionToPipeline,
+  applyPipelineExecutionDelegation,
+} from './world2-execution-engine-consolidation-bridge.js';
+export type { World2ExecutionEngineConsolidationSnapshot } from './world2-execution-engine-consolidation-bridge.js';

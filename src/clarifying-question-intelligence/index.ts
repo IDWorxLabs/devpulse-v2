@@ -258,4 +258,12 @@ export {
 
 export type { World2PlanningGateResult } from './clarifying-question-world2-bridge.js';
 
+export {
+  CQI_CANONICAL_OWNERSHIP_STATUS,
+  CQI_CANONICAL_RESPONSIBILITIES,
+  CQI_CONSOLIDATED_CAPABILITIES,
+  getClarifyingQuestionConsolidationOwnership,
+} from './clarifying-question-consolidation-ownership.js';
+export type { ClarifyingQuestionConsolidationOwnership } from './clarifying-question-consolidation-ownership.js';
+
 

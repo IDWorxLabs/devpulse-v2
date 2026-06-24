@@ -2,6 +2,7 @@
  * Launch Readiness Authority — final synthesis from Launch Council evidence authorities.
  */
 
+import { createHash } from 'node:crypto';
 import { getLastBlueprintVisualAssessment } from '../universal-app-blueprint-visual/index.js';
 import { getLastFeatureRealityAssessment } from '../feature-reality-validation/index.js';
 import { getLastUniversalFeatureContractAssessment } from '../universal-feature-contract-intelligence/index.js';
@@ -32,6 +33,11 @@ import type {
   LaunchReadinessRecommendation,
   LaunchReadinessState,
 } from './launch-readiness-types.js';
+import {
+  applyAflaLaunchDelegation,
+  deriveLaunchDecisionFromAfla,
+  resolveAuthoritativeLaunchReadiness,
+} from './launch-readiness-consolidation-bridge.js';
 
 function clamp(n: number): number {
   return Math.max(0, Math.min(100, Math.round(n)));
@@ -303,22 +309,28 @@ function stableCacheKey(report: FounderTestV4ReportWithAdoptionPrediction, confi
 export function assessLaunchReadinessAuthority(
   report: FounderTestV4ReportWithAdoptionPrediction,
 ): LaunchReadinessAuthorityAssessment {
+  const consolidation = resolveAuthoritativeLaunchReadiness();
   const authorityResults = mapEvidenceAuthoritiesFromFounderTestV4(report);
   const evidenceBreakdown = buildEvidenceBreakdown(authorityResults);
   const baseConfidenceScore = calculateLaunchConfidenceScore(authorityResults);
-  const launchConfidenceScore = adjustLaunchConfidenceForAdoption(
+  let launchConfidenceScore = adjustLaunchConfidenceForAdoption(
     baseConfidenceScore,
     report.adoptionPredictionAuthority,
   );
   const criticalBlockers = detectCriticalBlockers(report);
   const blockingAuthorities = collectBlockingAuthorities(authorityResults, criticalBlockers);
   const supportingAuthorities = collectSupportingAuthorities(authorityResults);
-  const recommendation = deriveRecommendation({
+  let recommendation = deriveRecommendation({
     report,
     authorityResults,
     launchConfidenceScore,
     criticalBlockers,
   });
+  if (consolidation.aflaAssessment) {
+    const aflaDecision = deriveLaunchDecisionFromAfla(consolidation.aflaAssessment);
+    recommendation = applyAflaLaunchDelegation(recommendation, consolidation.aflaAssessment);
+    launchConfidenceScore = aflaDecision.launchConfidenceScore;
+  }
   const readinessState = deriveReadinessState(recommendation);
   const rationale = buildRationale({
     recommendation,

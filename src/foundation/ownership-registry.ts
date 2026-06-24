@@ -822,7 +822,10 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     ownerModule: 'devpulse_v2_verification_orchestrator',
     ownerFunction: 'getDevPulseV2VerificationOrchestrator',
     phase: 16.9,
-    description: 'Phase 16.9 Verification Orchestrator — coordinates verification execution planning, scheduling, and readiness; no verification execution, evidence generation, or auto-fix',
+    description:
+      'Phase 16.9 Verification Orchestrator — MERGED into UVL; scheduling and coordination delegated to unified_verification_lab_runtime',
+    authoritativeOwner: 'unified_verification_lab_runtime',
+    delegatedCapabilities: ['verification_scheduling', 'verification_coordination', 'verification_status'],
   },
   verification_evidence_engine: {
     domain: 'verification_evidence_engine',
@@ -1412,8 +1415,10 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     ownerModule: 'devpulse_world2_execution_engine',
     ownerFunction: 'assessWorld2ExecutionEngine',
     phase: 24.57,
-    description: 'Phase 24L — World 2 Execution Engine — execution mode and scope authority for World 2 pipeline',
-    delegatedCapabilities: ['execution_mode_selection', 'scope_boundary_enforcement'],
+    description:
+      'Phase 24L — World 2 Execution Engine — MERGED into world2_disposable_workspace pipeline; execution lifecycle delegated to 24E–24Y capstone',
+    authoritativeOwner: 'world2_disposable_workspace',
+    delegatedCapabilities: ['execution_mode_selection', 'scope_boundary_enforcement', 'workspace_lifecycle'],
     upstreamDependencies: ['world2_controlled_execution_runtime', 'autonomous_builder_execution_sandbox'],
     downstreamConsumers: ['world2_disposable_workspace'],
   },

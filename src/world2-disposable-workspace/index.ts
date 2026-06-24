@@ -69,3 +69,11 @@ export {
   evaluateDisposableWorkspaceFoundationBoundaries,
 } from './world2-workspace-foundation-bridge.js';
 export type { World2WorkspaceFoundationBridgeResult } from './world2-workspace-foundation-bridge.js';
+
+export {
+  WORLD2_PIPELINE_CANONICAL_OWNERSHIP_STATUS,
+  WORLD2_PIPELINE_CANONICAL_RESPONSIBILITIES,
+  WORLD2_PIPELINE_CONSOLIDATED_CAPABILITIES,
+  getWorld2DisposableWorkspaceConsolidationOwnership,
+} from './world2-disposable-workspace-consolidation-ownership.js';
+export type { World2DisposableWorkspaceConsolidationOwnership } from './world2-disposable-workspace-consolidation-ownership.js';

@@ -1,0 +1,254 @@
+/**
+ * Canonical Capability Ownership V1 — ownership registry.
+ * One Capability = One Canonical Owner.
+ */
+
+import type { CanonicalCapabilityOwnershipEntry } from './canonical-capability-ownership-types.js';
+
+export const CANONICAL_CAPABILITY_OWNERSHIP_V1_PASS_TOKEN =
+  'CANONICAL_CAPABILITY_OWNERSHIP_V1_PASS';
+
+export const CONSOLIDATION_REPORT_TITLE = 'AIDEVENGINE_CONSOLIDATION_REPORT.md';
+
+export const CANONICAL_OWNERSHIP_ENTRIES: readonly CanonicalCapabilityOwnershipEntry[] = [
+  // ── Group 1: Launch Readiness → AFLA ──
+  {
+    capability: 'Autonomous Founder Launch Authority',
+    owner: 'Autonomous Founder Launch Authority',
+    ownerPath: 'src/autonomous-founder-launch-authority/',
+    consumers: ['Launch Council', 'Launch Readiness Authority (delegated)', 'Founder Launch Decision Authority'],
+    status: 'CANONICAL',
+    consolidationGroup: 'LAUNCH_READINESS_AUTHORITY',
+    responsibilities: [
+      'Launch Decision',
+      'Launch Approval',
+      'Launch Blockers',
+      'Launch Verdicts',
+      'Launch Confidence',
+      'Launch Readiness State',
+    ],
+    validateScript: 'validate:autonomous-founder-launch-authority-v1',
+  },
+  {
+    capability: 'Launch Readiness Authority',
+    owner: 'Autonomous Founder Launch Authority',
+    ownerPath: 'src/autonomous-founder-launch-authority/',
+    consumers: ['Launch Council', 'Founder Testing Mode V4'],
+    status: 'MERGED',
+    consolidationGroup: 'LAUNCH_READINESS_AUTHORITY',
+    mergedInto: 'Autonomous Founder Launch Authority',
+    validateScript: 'validate:launch-readiness-authority',
+  },
+  {
+    capability: 'Founder Launch Decision Authority',
+    owner: 'Autonomous Founder Launch Authority',
+    ownerPath: 'src/autonomous-founder-launch-authority/',
+    consumers: ['Launch Council', 'Founder Testing Mode'],
+    status: 'DELEGATED',
+    consolidationGroup: 'LAUNCH_READINESS_AUTHORITY',
+    mergedInto: 'Autonomous Founder Launch Authority',
+    validateScript: 'validate:founder-launch-decision-authority',
+  },
+
+  // ── Group 2: Verification Orchestrator → UVL ──
+  {
+    capability: 'Unified Verification Lab (UVL)',
+    owner: 'Unified Verification Lab (UVL)',
+    ownerPath: 'src/unified-verification-lab/',
+    consumers: [
+      'Verification Orchestrator (delegated)',
+      'Feature Reality Validation',
+      'Engineering Reality Authority',
+      'Verification Registry',
+    ],
+    status: 'CANONICAL',
+    consolidationGroup: 'VERIFICATION_ORCHESTRATOR',
+    responsibilities: [
+      'Verification Execution',
+      'Verification Scheduling',
+      'Verification Coordination',
+      'Verification Status',
+      'Verification Aggregation',
+    ],
+    validateScript: 'validate:unified-verification-lab-runtime',
+  },
+  {
+    capability: 'Verification Orchestrator',
+    owner: 'Unified Verification Lab (UVL)',
+    ownerPath: 'src/unified-verification-lab/',
+    consumers: ['Command Center Brain', 'Operator Feed'],
+    status: 'MERGED',
+    consolidationGroup: 'VERIFICATION_ORCHESTRATOR',
+    mergedInto: 'Unified Verification Lab (UVL)',
+    validateScript: 'validate:verification-orchestrator',
+  },
+
+  // ── Group 3: Requirement Completeness → CQI ──
+  {
+    capability: 'Clarifying Question Intelligence',
+    owner: 'Clarifying Question Intelligence',
+    ownerPath: 'src/clarifying-question-intelligence/',
+    consumers: [
+      'Requirement Completeness Intelligence (delegated)',
+      'Launch Council',
+      'AiDev Engine Intake',
+      'World2 Planning Gate',
+    ],
+    status: 'CANONICAL',
+    consolidationGroup: 'REQUIREMENT_COMPLETENESS_INTELLIGENCE',
+    responsibilities: [
+      'Missing Requirement Detection',
+      'Requirement Completeness',
+      'Requirement Gaps',
+      'Question Generation',
+      'Requirement Confidence',
+    ],
+    validateScript: 'validate:clarifying-question-intelligence',
+  },
+  {
+    capability: 'Requirement Completeness Intelligence',
+    owner: 'Clarifying Question Intelligence',
+    ownerPath: 'src/clarifying-question-intelligence/',
+    consumers: ['Unified Intake Intelligence', 'Planning Gate Authority'],
+    status: 'MERGED',
+    consolidationGroup: 'REQUIREMENT_COMPLETENESS_INTELLIGENCE',
+    mergedInto: 'Clarifying Question Intelligence',
+    validateScript: 'validate:requirement-completeness-intelligence',
+  },
+
+  // ── Group 4: Navigation Review — REMOVED ──
+  {
+    capability: 'Navigation Review (Dedicated)',
+    owner: 'Blueprint Visual Validation + Founder UX Review',
+    ownerPath: 'src/universal-app-blueprint-visual/, src/ui-reviewer-authority/',
+    consumers: ['UI Reviewer Authority (navigation-review scenario)', 'Mobile Preview Modes'],
+    status: 'REMOVED',
+    consolidationGroup: 'NAVIGATION_REVIEW',
+    responsibilities: ['Navigation UX checks (distributed, not standalone authority)'],
+  },
+  {
+    capability: 'Universal App Blueprint Visual Validation',
+    owner: 'Universal App Blueprint Visual Validation',
+    ownerPath: 'src/universal-app-blueprint-visual/',
+    consumers: ['Launch Council', 'Autonomous Founder Launch Authority'],
+    status: 'CANONICAL',
+    consolidationGroup: 'NAVIGATION_REVIEW',
+    responsibilities: ['Blueprint visual structure', 'Navigation layout validation'],
+    validateScript: 'validate:universal-app-blueprint-visual-v1',
+  },
+  {
+    capability: 'UI Reviewer Authority',
+    owner: 'UI Reviewer Authority',
+    ownerPath: 'src/ui-reviewer-authority/',
+    consumers: ['Launch Council', 'Founder UX Review'],
+    status: 'CANONICAL',
+    consolidationGroup: 'NAVIGATION_REVIEW',
+    responsibilities: ['Founder UX review scenarios including navigation-review'],
+    validateScript: 'validate:ui-reviewer-authority',
+  },
+
+  // ── Group 5: World2 Execution Engine → Disposable Pipeline ──
+  {
+    capability: 'World2 Disposable Workspace Pipeline (24E–24Y)',
+    owner: 'World2 Disposable Workspace Pipeline (24E–24Y)',
+    ownerPath: 'src/world2-disposable-workspace/',
+    consumers: [
+      'World2 Execution Engine (delegated)',
+      'World2 Change Set Authority',
+      'World2 Dry Run Execution Composer',
+    ],
+    status: 'CANONICAL',
+    consolidationGroup: 'WORLD2_EXECUTION_ENGINE',
+    responsibilities: [
+      'Workspace Creation',
+      'Workspace Isolation',
+      'Workspace Execution',
+      'Workspace Disposal',
+      'Workspace Lifecycle',
+    ],
+    validateScript: 'validate:world2-disposable-workspace',
+  },
+  {
+    capability: 'World2 Execution Engine',
+    owner: 'World2 Disposable Workspace Pipeline (24E–24Y)',
+    ownerPath: 'src/world2-disposable-workspace/',
+    consumers: ['World2 Controlled Execution Runtime', 'Autonomous Builder Execution Sandbox'],
+    status: 'MERGED',
+    consolidationGroup: 'WORLD2_EXECUTION_ENGINE',
+    mergedInto: 'World2 Disposable Workspace Pipeline (24E–24Y)',
+    validateScript: 'validate:world2-execution-engine',
+  },
+
+  // ── Other high duplicate-risk entries (audit remediations) ──
+  {
+    capability: 'Founder Acceptance Stack (24.8)',
+    owner: 'Founder Acceptance Stack (24.8)',
+    ownerPath: 'src/founder-acceptance-validation/founder-acceptance-orchestrator/',
+    consumers: ['Founder Test Integration', 'Founder Acceptance Gate'],
+    status: 'CANONICAL',
+    validateScript: 'validate:founder-acceptance-orchestrator',
+  },
+] as const;
+
+export const FUTURE_CONSOLIDATION_RECOMMENDATIONS: readonly string[] = [
+  'MERGE Code Generation Runtime into Code Generation Engine V1 (partial overlap ~55%)',
+  'EXTEND Code Generation beyond 5 CRUD profiles before adding new codegen authorities',
+  'Consolidate Phase 7 and Phase 15 World2 eras into 24E–24Y disposable pipeline consumers',
+  'MERGE Verification Registry scheduling views into UVL panel registry',
+  'Align UI Reviewer, Visual QA Engine, and UX Heuristic Evaluator under distributed UX review model',
+  'Register remaining Launch Council authorities in foundation ownership-registry.ts',
+  'Wire capability-audit inventory ownerPath to canonical-capability-ownership registry',
+] as const;
+
+export function listCanonicalOwnershipEntries(): readonly CanonicalCapabilityOwnershipEntry[] {
+  return CANONICAL_OWNERSHIP_ENTRIES;
+}
+
+export function getCanonicalOwnershipEntry(
+  capability: string,
+): CanonicalCapabilityOwnershipEntry | undefined {
+  return CANONICAL_OWNERSHIP_ENTRIES.find((entry) => entry.capability === capability);
+}
+
+export function listEntriesByStatus(
+  status: CanonicalCapabilityOwnershipEntry['status'],
+): readonly CanonicalCapabilityOwnershipEntry[] {
+  return CANONICAL_OWNERSHIP_ENTRIES.filter((entry) => entry.status === status);
+}
+
+export function resolveAuthoritativeOwner(capability: string): string | undefined {
+  const entry = getCanonicalOwnershipEntry(capability);
+  if (!entry) return undefined;
+  if (entry.status === 'CANONICAL') return entry.owner;
+  return entry.mergedInto ?? entry.owner;
+}
+
+export function assertSingleCanonicalOwner(capability: string): {
+  ok: boolean;
+  owner?: string;
+  violation?: string;
+} {
+  const entry = getCanonicalOwnershipEntry(capability);
+  if (!entry) {
+    return { ok: false, violation: `Unknown capability: ${capability}` };
+  }
+
+  if (entry.status === 'CANONICAL') {
+    if (entry.owner !== entry.capability && !entry.capability.includes('+')) {
+      return {
+        ok: false,
+        violation: `CANONICAL entry "${capability}" owner mismatch: ${entry.owner}`,
+      };
+    }
+    return { ok: true, owner: entry.owner };
+  }
+
+  if (entry.status === 'MERGED' || entry.status === 'DELEGATED') {
+    if (!entry.mergedInto) {
+      return { ok: false, violation: `MERGED/DELEGATED entry "${capability}" missing mergedInto` };
+    }
+    return { ok: true, owner: entry.mergedInto };
+  }
+
+  return { ok: true, owner: entry.owner };
+}

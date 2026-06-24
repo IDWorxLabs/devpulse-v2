@@ -78,3 +78,11 @@ export { evaluateInvisibleFounderLaunchTrigger } from './founder-invisible-trigg
 export type { InvisibleFounderLaunchTriggerResult } from './founder-invisible-trigger.js';
 
 export { mapAutonomousFounderLaunchCouncilAuthority } from './autonomous-founder-launch-integration.js';
+
+export {
+  AFLA_CANONICAL_OWNERSHIP_STATUS,
+  AFLA_CANONICAL_RESPONSIBILITIES,
+  AFLA_CONSOLIDATED_CAPABILITIES,
+  getAutonomousFounderLaunchConsolidationOwnership,
+} from './autonomous-founder-launch-consolidation-ownership.js';
+export type { AutonomousFounderLaunchConsolidationOwnership } from './autonomous-founder-launch-consolidation-ownership.js';

@@ -152,6 +152,14 @@ export function getDevPulseV2UnifiedVerificationLabRuntime(): {
 }
 
 export {
+  UVL_CANONICAL_OWNERSHIP_STATUS,
+  UVL_CANONICAL_RESPONSIBILITIES,
+  UVL_CONSOLIDATED_CAPABILITIES,
+  getUnifiedVerificationLabConsolidationOwnership,
+} from './unified-verification-lab-consolidation-ownership.js';
+export type { UnifiedVerificationLabConsolidationOwnership } from './unified-verification-lab-consolidation-ownership.js';
+
+export {
   WORLD2_BUILDER_PACKET_EXECUTION_UVL_ROWS,
   WORLD2_CONTROLLED_APPLY_RUNTIME_UVL_ROWS,
   WORLD2_ROLLBACK_RUNTIME_UVL_ROWS,

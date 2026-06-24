@@ -98,3 +98,11 @@ export function getDevPulseV2VerificationOrchestrator(): {
     extensionOnly: true,
   };
 }
+
+export {
+  VERIFICATION_ORCHESTRATOR_AUTHORITATIVE_OWNER,
+  VERIFICATION_ORCHESTRATOR_CONSOLIDATION_STATUS,
+  resolveAuthoritativeVerificationOrchestration,
+  applyUvlOrchestrationDelegation,
+} from './verification-orchestrator-consolidation-bridge.js';
+export type { VerificationOrchestratorConsolidationSnapshot } from './verification-orchestrator-consolidation-bridge.js';

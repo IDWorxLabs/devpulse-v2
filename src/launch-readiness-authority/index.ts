@@ -51,3 +51,12 @@ export {
   assessLaunchReadinessAuthority,
   buildLaunchReadinessAuthorityArtifacts,
 } from './launch-readiness-authority.js';
+
+export {
+  LAUNCH_READINESS_AUTHORITATIVE_OWNER,
+  LAUNCH_READINESS_CONSOLIDATION_STATUS,
+  resolveAuthoritativeLaunchReadiness,
+  deriveLaunchDecisionFromAfla,
+  applyAflaLaunchDelegation,
+} from './launch-readiness-consolidation-bridge.js';
+export type { LaunchReadinessConsolidationSnapshot } from './launch-readiness-consolidation-bridge.js';
