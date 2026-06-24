@@ -35,6 +35,8 @@
   var mobileRuntimeValidationData = null;
   var world2InstantiationLoadPromise = null;
   var mobileRuntimeValidationLoadPromise = null;
+  var selfEvolutionExecutionData = null;
+  var selfEvolutionExecutionLoadPromise = null;
   var productArchitectData = null;
   var productArchitectLoadPromise = null;
   var productArchitectProfile = 'CRM_WEB_V1';
@@ -129,7 +131,7 @@
     ],
   };
   var conversationStarted = false;
-  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Production Readiness', 'Cloud Execution', 'World2', 'Mobile Runtime Validation', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
+  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Production Readiness', 'Cloud Execution', 'World2', 'Mobile Runtime Validation', 'Self-Evolution', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
   var feedSectionIdleCopy = {
     Planning: {
       action: 'Ready to classify your next request',
@@ -174,6 +176,10 @@
     'Mobile Runtime Validation': {
       action: 'Mobile runtime validation ready',
       detail: 'Validate touch interaction, navigation, workflows, and performance across mobile runtime profiles at scale.',
+    },
+    'Self-Evolution': {
+      action: 'Self-evolution execution ready',
+      detail: 'Observe gaps, propose improvements, experiment in World2, measure impact, and promote with operator approval.',
     },
     'Large-Scale Validation': {
       action: 'Large-scale validation ready',
@@ -5184,6 +5190,79 @@
     return mobileRuntimeValidationLoadPromise;
   }
 
+  function renderSelfEvolutionPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Self-Evolution',
+        '<p class="product-lead">Loading self-evolution execution visibility…</p>',
+      );
+    }
+
+    var gapRows = ((data.assessment && data.assessment.gapAssessment && data.assessment.gapAssessment.gaps) || [])
+      .slice(0, 8)
+      .map(function (gap) {
+        return (
+          '<div class="cloud-execution-row">' +
+          '<span>' + escapeHtml(gap.capability) + '</span>' +
+          '<span>' + escapeHtml(gap.gapClass) + '</span>' +
+          '<span>' + escapeHtml(gap.severity) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    var experimentRows = ((data.assessment && data.assessment.experimentResults) || [])
+      .map(function (exp) {
+        return (
+          '<div class="cloud-execution-row">' +
+          '<span>' + escapeHtml(exp.productName) + '</span>' +
+          '<span>' + (exp.validationPassed ? 'VALIDATED' : 'FAILED') + '</span>' +
+          '<span>world ' + escapeHtml(exp.worldId.slice(0, 8)) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'Self-Evolution',
+      '<p class="product-lead">Self-Evolution Execution V1 — Observe → Propose → Build → Validate → Measure → Promote inside World2. Production engine never modified directly.</p>' +
+        '<p><strong>Detected Gaps:</strong> ' + String(data.gapsDetected || 0) + ' · ' +
+        '<strong>Active Proposals:</strong> ' + String(data.activeProposals || data.proposalsGenerated || 0) + '</p>' +
+        '<p><strong>Experiment Status:</strong> ' + String(data.experimentsCompleted || 0) + ' completed · ' +
+        '<strong>Evolution Proof:</strong> ' + escapeHtml(data.evolutionProofStatus || 'NOT_PROVEN') + '</p>' +
+        '<p><strong>Promotion Candidates:</strong> ' + String(data.promotionCandidates || 0) + ' · ' +
+        '<strong>Approval Queue:</strong> ' + String(data.approvalQueueSize || 0) + ' · ' +
+        '<strong>Promoted:</strong> ' + String(data.promotionsCompleted || 0) + '</p>' +
+        '<p><strong>World1 Protected:</strong> ' + (data.world1Protected ? 'Yes' : 'No') + '</p>' +
+        '<p><strong>Detected gaps</strong></p>' +
+        '<div class="cloud-execution-grid">' + (gapRows || '<p class="hint">No gaps detected.</p>') + '</div>' +
+        '<p><strong>World2 experiments</strong></p>' +
+        '<div class="cloud-execution-grid">' + (experimentRows || '<p class="hint">No experiments yet.</p>') + '</div>',
+    );
+  }
+
+  function loadSelfEvolutionExecution(force) {
+    if (!force && selfEvolutionExecutionData) {
+      return Promise.resolve(selfEvolutionExecutionData);
+    }
+    if (selfEvolutionExecutionLoadPromise) {
+      return selfEvolutionExecutionLoadPromise;
+    }
+    selfEvolutionExecutionLoadPromise = fetch('/api/founder/self-evolution-execution-v1?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('self-evolution-execution HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        selfEvolutionExecutionData = data;
+        return data;
+      })
+      .finally(function () {
+        selfEvolutionExecutionLoadPromise = null;
+      });
+    return selfEvolutionExecutionLoadPromise;
+  }
+
   var PRODUCT_ARCHITECT_SUITE_PROFILES = [
     { profile: 'CRM_WEB_V1', label: 'CRM' },
     { profile: 'MARKETPLACE_WEB_V1', label: 'Marketplace' },
@@ -5696,6 +5775,7 @@
     html += renderCloudExecutionPanel(cloudExecutionData);
     html += renderWorld2Panel(world2InstantiationData);
     html += renderMobileRuntimeValidationPanel(mobileRuntimeValidationData);
+    html += renderSelfEvolutionPanel(selfEvolutionExecutionData);
     html +=
       renderProductCard(
         'Verification Readiness',
@@ -6560,6 +6640,7 @@
     World2: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>',
     'Mobile Runtime Validation': '<svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>',
     'Mobile Runtime Validation': '<svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 18h4"/></svg>',
+    'Self-Evolution': '<svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.3 4.7-3.3 6L12 22l-3.7-7A7 7 0 0 1 12 2z"/><path d="M12 8v4l2 2"/></svg>',
     'Product Architect Review': '<svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M7 7V5h10v2"/><path d="M8 11h8M8 15h5"/></svg>',
     'Large-Scale Validation': '<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>',
     'Execution Pipeline': '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
@@ -11046,6 +11127,21 @@
     })
     .catch(function () {
       /* Mobile Runtime Validation falls back to loading state */
+    });
+
+  loadSelfEvolutionExecution(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* Self-Evolution falls back to loading state */
     });
 
   fetch(buildFounderTestApiUrl('/api/founder-reality.json', null))

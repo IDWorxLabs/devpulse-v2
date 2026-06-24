@@ -13,6 +13,7 @@ import { GENERAL_PURPOSE_CODE_GENERATION_V1_ARTIFACT_DIR } from '../general-purp
 import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeline-integration-v1/index.js';
 import { isWorld2RealInstantiationProven } from '../world2-real-instantiation-v1/index.js';
 import { isMobileRuntimeValidationProven } from '../mobile-runtime-validation-at-scale-v1/index.js';
+import { isSelfEvolutionExecutionProven } from '../self-evolution-execution-v1/index.js';
 
 const BASE_MISSING_CAPABILITIES: readonly MissingCapabilitiesReport['entries'][number][] = [
   {
@@ -145,6 +146,12 @@ export function buildMissingCapabilitiesReport(input?: {
     if (
       isMobileRuntimeValidationProven(root) &&
       entry.capability === 'Mobile runtime validation at scale'
+    ) {
+      return false;
+    }
+    if (
+      isSelfEvolutionExecutionProven(root) &&
+      entry.capability === 'Self-modification execution'
     ) {
       return false;
     }

@@ -1,0 +1,35 @@
+{
+  "readOnly": true,
+  "worldId": "316d73d1-c27b-40c2-8856-9a4b38697c48",
+  "proposalId": "4ce2a198-afba-47b7-a9fc-780c0f0645e9",
+  "gapId": "gap-2-self-evolution",
+  "targetCapability": "Self-modification execution",
+  "changeScope": [
+    "Configuration",
+    "Scoring",
+    "Validation Logic",
+    "Evidence Routing",
+    "Capability Wiring",
+    "Registries"
+  ],
+  "modifications": [
+    {
+      "type": "CONFIGURATION",
+      "target": "validation-scoring-threshold",
+      "action": "TUNE",
+      "bounded": true
+    },
+    {
+      "type": "EVIDENCE_ROUTING",
+      "target": "gap-assessment-sources",
+      "action": "EXTEND",
+      "bounded": true
+    }
+  ],
+  "excludedScopes": [
+    "ARBITRARY_REPOSITORY_REWRITING",
+    "UNBOUNDED_SOURCE_MUTATION",
+    "PRODUCTION_BRANCH_MODIFICATION"
+  ],
+  "appliedAt": "2026-06-24T21:06:13.947Z"
+}

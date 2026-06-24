@@ -1,6 +1,6 @@
 {
   "version": "V3.1",
-  "generatedAt": "2026-06-24T20:51:39.230Z",
+  "generatedAt": "2026-06-24T20:54:56.466Z",
   "passToken": "AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS",
   "readOnly": true,
   "priorAuditVersion": "V2",
@@ -1563,7 +1563,7 @@
     "detail": "Code Generation Engine V1 materializes 5 CRUD profiles with Real Build Execution V1.1 (15 categories). General-Purpose Code Generation V1 adds workflow-driven, role-aware, domain-specific generation with 10/10 non-trivial app types proven."
   },
   "operationalMaturity": {
-    "generatedAt": "2026-06-24T20:51:39.111Z",
+    "generatedAt": "2026-06-24T20:54:56.400Z",
     "operationalMaturityScore": 97,
     "provenCategoryCount": 15,
     "supportedCategoryCount": 58,

@@ -1,0 +1,24 @@
+[
+  {
+    "readOnly": true,
+    "proposalId": "957ffb54-dd4e-473a-b8b8-04bc31d7d630",
+    "experimentId": "830cd944-dd82-4256-8275-b2bd8cd61c83",
+    "improvement": 4,
+    "regressionsDetected": false,
+    "validationPassed": true,
+    "operatorApprovalPresent": true,
+    "decision": "PROMOTABLE",
+    "decidedAt": "2026-06-24T21:06:13.973Z"
+  },
+  {
+    "readOnly": true,
+    "proposalId": "4ce2a198-afba-47b7-a9fc-780c0f0645e9",
+    "experimentId": "464aa88b-46b2-46b2-ba2c-bf44d7abdbd8",
+    "improvement": 4,
+    "regressionsDetected": false,
+    "validationPassed": true,
+    "operatorApprovalPresent": true,
+    "decision": "PROMOTABLE",
+    "decidedAt": "2026-06-24T21:06:13.973Z"
+  }
+]

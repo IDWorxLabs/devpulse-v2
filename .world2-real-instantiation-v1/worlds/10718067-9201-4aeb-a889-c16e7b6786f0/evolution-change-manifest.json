@@ -1,0 +1,35 @@
+{
+  "readOnly": true,
+  "worldId": "10718067-9201-4aeb-a889-c16e7b6786f0",
+  "proposalId": "957ffb54-dd4e-473a-b8b8-04bc31d7d630",
+  "gapId": "gap-1-self-evolution",
+  "targetCapability": "Canonical ownership registration for V2/V3 modules",
+  "changeScope": [
+    "Configuration",
+    "Scoring",
+    "Validation Logic",
+    "Evidence Routing",
+    "Capability Wiring",
+    "Registries"
+  ],
+  "modifications": [
+    {
+      "type": "CONFIGURATION",
+      "target": "validation-scoring-threshold",
+      "action": "TUNE",
+      "bounded": true
+    },
+    {
+      "type": "EVIDENCE_ROUTING",
+      "target": "gap-assessment-sources",
+      "action": "EXTEND",
+      "bounded": true
+    }
+  ],
+  "excludedScopes": [
+    "ARBITRARY_REPOSITORY_REWRITING",
+    "UNBOUNDED_SOURCE_MUTATION",
+    "PRODUCTION_BRANCH_MODIFICATION"
+  ],
+  "appliedAt": "2026-06-24T21:05:56.720Z"
+}

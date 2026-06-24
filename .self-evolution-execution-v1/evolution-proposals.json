@@ -1,0 +1,125 @@
+[
+  {
+    "readOnly": true,
+    "proposalId": "957ffb54-dd4e-473a-b8b8-04bc31d7d630",
+    "gapId": "gap-1-self-evolution",
+    "targetCapability": "Canonical ownership registration for V2/V3 modules",
+    "reason": "Real Build Execution Pipeline V1/V1.1, UVL Verification Execution V1, CQI Maturity V1, Capability Audit V2 not in ownership registry.",
+    "expectedBenefit": "Close architecture gap for Canonical ownership registration for V2/V3 modules via bounded World2 evolution",
+    "riskLevel": "LOW",
+    "validationPlan": [
+      "CREATE_WORLD2_EXPERIMENT",
+      "IMPLEMENT_BOUNDED_CHANGE",
+      "BUILD",
+      "PREVIEW",
+      "UVL_VERIFICATION",
+      "PRODUCT_ARCHITECT_REVIEW",
+      "AFLA_VERDICT",
+      "PRODUCTION_READINESS_GATE",
+      "MEASURE_IMPACT",
+      "OPERATOR_APPROVAL",
+      "PROMOTE_OR_ARCHIVE"
+    ],
+    "changeScope": [
+      "Configuration",
+      "Scoring",
+      "Validation Logic",
+      "Evidence Routing",
+      "Capability Wiring",
+      "Registries"
+    ],
+    "pipelineStage": "GENERATE_PROPOSAL"
+  },
+  {
+    "readOnly": true,
+    "proposalId": "4ce2a198-afba-47b7-a9fc-780c0f0645e9",
+    "gapId": "gap-2-self-evolution",
+    "targetCapability": "Self-modification execution",
+    "reason": "Self-evolution and gap detection are advisory; no automated capability modification.",
+    "expectedBenefit": "Close architecture gap for Self-modification execution via bounded World2 evolution",
+    "riskLevel": "HIGH",
+    "validationPlan": [
+      "CREATE_WORLD2_EXPERIMENT",
+      "IMPLEMENT_BOUNDED_CHANGE",
+      "BUILD",
+      "PREVIEW",
+      "UVL_VERIFICATION",
+      "PRODUCT_ARCHITECT_REVIEW",
+      "AFLA_VERDICT",
+      "PRODUCTION_READINESS_GATE",
+      "MEASURE_IMPACT",
+      "OPERATOR_APPROVAL",
+      "PROMOTE_OR_ARCHIVE"
+    ],
+    "changeScope": [
+      "Configuration",
+      "Scoring",
+      "Validation Logic",
+      "Evidence Routing",
+      "Capability Wiring",
+      "Registries"
+    ],
+    "pipelineStage": "GENERATE_PROPOSAL"
+  },
+  {
+    "readOnly": true,
+    "proposalId": "73ec1c22-03fe-4755-a21f-525a71ba0ae8",
+    "gapId": "gap-3-multi-project-scale",
+    "targetCapability": "Parallel build execution",
+    "reason": "Parallel Build Orchestration is planning-only; no concurrent build execution.",
+    "expectedBenefit": "Close workflow gap for Parallel build execution via bounded World2 evolution",
+    "riskLevel": "LOW",
+    "validationPlan": [
+      "CREATE_WORLD2_EXPERIMENT",
+      "IMPLEMENT_BOUNDED_CHANGE",
+      "BUILD",
+      "PREVIEW",
+      "UVL_VERIFICATION",
+      "PRODUCT_ARCHITECT_REVIEW",
+      "AFLA_VERDICT",
+      "PRODUCTION_READINESS_GATE",
+      "MEASURE_IMPACT",
+      "OPERATOR_APPROVAL",
+      "PROMOTE_OR_ARCHIVE"
+    ],
+    "changeScope": [
+      "Configuration",
+      "Scoring",
+      "Validation Logic",
+      "Evidence Routing",
+      "Rules"
+    ],
+    "pipelineStage": "GENERATE_PROPOSAL"
+  },
+  {
+    "readOnly": true,
+    "proposalId": "843e626d-f13b-45f8-a915-cd1424e66ce1",
+    "gapId": "gap-4-self-evolution",
+    "targetCapability": "Unified failure escalation authority",
+    "reason": "Partial coverage via repair loop and self-evolution triggers; no single escalation owner.",
+    "expectedBenefit": "Close architecture gap for Unified failure escalation authority via bounded World2 evolution",
+    "riskLevel": "LOW",
+    "validationPlan": [
+      "CREATE_WORLD2_EXPERIMENT",
+      "IMPLEMENT_BOUNDED_CHANGE",
+      "BUILD",
+      "PREVIEW",
+      "UVL_VERIFICATION",
+      "PRODUCT_ARCHITECT_REVIEW",
+      "AFLA_VERDICT",
+      "PRODUCTION_READINESS_GATE",
+      "MEASURE_IMPACT",
+      "OPERATOR_APPROVAL",
+      "PROMOTE_OR_ARCHIVE"
+    ],
+    "changeScope": [
+      "Configuration",
+      "Scoring",
+      "Validation Logic",
+      "Evidence Routing",
+      "Capability Wiring",
+      "Registries"
+    ],
+    "pipelineStage": "GENERATE_PROPOSAL"
+  }
+]

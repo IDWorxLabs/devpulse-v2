@@ -1,0 +1,16 @@
+{
+  "readOnly": true,
+  "world1Protected": true,
+  "sentinelHashesBefore": {
+    "package.json": "03473479eca5157e",
+    "src/capability-audit-v3/index.ts": "5fbdfeae6430a68d",
+    "server/founder-reality-server.ts": "e2859c9a14c7b73d"
+  },
+  "sentinelHashesAfter": {
+    "package.json": "03473479eca5157e",
+    "src/capability-audit-v3/index.ts": "5fbdfeae6430a68d",
+    "server/founder-reality-server.ts": "e2859c9a14c7b73d"
+  },
+  "directProductionModification": false,
+  "evolutionConfinedToWorld2": true
+}
