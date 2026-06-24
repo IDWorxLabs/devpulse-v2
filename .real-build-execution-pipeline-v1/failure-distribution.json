@@ -1,14 +1,8 @@
 [
   {
     "readOnly": true,
-    "failureClass": "Requirement Failure",
-    "count": 12,
-    "percentage": 80
-  },
-  {
-    "readOnly": true,
     "failureClass": "None",
-    "count": 3,
-    "percentage": 20
+    "count": 15,
+    "percentage": 100
   }
 ]

@@ -71,6 +71,18 @@ export interface RealBuildCategoryResult {
   failureClass: ExecutionFailureClass;
   failureDetail: string | null;
   executionProof: BuildExecutionProofEvidence;
+  stageResults?: RealBuildStageResults;
+}
+
+export interface RealBuildStageResults {
+  readOnly: true;
+  npmInstallOk: boolean;
+  npmBuildOk: boolean;
+  previewNavigationOk: boolean;
+  uvlPassed: boolean;
+  paiPassed: boolean;
+  paiExecuted: boolean;
+  aflaVerdictIssued: boolean;
 }
 
 export interface RealBuildExecutionMetrics {

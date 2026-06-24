@@ -59,7 +59,7 @@ const REQUIRED_UI_STRINGS = [
   'Verification Success Rate',
   'Execution Proof Status',
   'Failure Distribution',
-  'Recent Builds',
+  'Recent Execution Runs',
   '/api/founder/real-build-execution-pipeline',
 ];
 

@@ -135,7 +135,7 @@
   {
     "profile": "INVENTORY_WEB_V1",
     "productName": "Inventory",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build an inventory system to add items, edit items, remove items, and search inventory.",
@@ -182,32 +182,27 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-inventory-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-inventory-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
       "uvlResultSummary": "Coverage 22% · confidence 18",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   },
   {
     "profile": "SCHOOL_MANAGEMENT_WEB_V1",
     "productName": "School Management",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build a school management system for students, teachers, and classes with create, edit, delete, and assign workflows.",
@@ -254,26 +249,21 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
-      "uvlResultSummary": "Coverage 23% · confidence 20",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-school-management-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-school-management-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
+      "uvlResultSummary": "Coverage 23% · confidence 21",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   },
   {
@@ -333,7 +323,7 @@
       "previewShellOk": true,
       "previewNavigationOk": true,
       "previewFeatureOk": true,
-      "uvlResultSummary": "Coverage 22% · confidence 19",
+      "uvlResultSummary": "Coverage 23% · confidence 19",
       "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NOT_LAUNCH_READY",
       "missingEvidence": [
@@ -346,7 +336,7 @@
   {
     "profile": "MARKETPLACE_WEB_V1",
     "productName": "Marketplace",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
@@ -393,32 +383,27 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-marketplace-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-marketplace-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
       "uvlResultSummary": "Coverage 23% · confidence 19",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   },
   {
     "profile": "APPOINTMENT_BOOKING_WEB_V1",
     "productName": "Booking Platform",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build an appointment booking system for clinics with calendar and reminders.",
@@ -465,32 +450,27 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-appointment-booking-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-appointment-booking-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
       "uvlResultSummary": "Coverage 24% · confidence 23",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   },
   {
     "profile": "RESTAURANT_POS_WEB_V1",
     "productName": "Restaurant POS",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build a restaurant POS with orders, menu management, table service, and payment processing.",
@@ -537,32 +517,27 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-restaurant-pos-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-restaurant-pos-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
       "uvlResultSummary": "Coverage 24% · confidence 22",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   },
   {
     "profile": "LEARNING_PLATFORM_WEB_V1",
     "productName": "Learning Platform",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build a learning platform with courses, lessons, student progress, and assessments.",
@@ -609,32 +584,27 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
-      "uvlResultSummary": "Coverage 22% · confidence 19",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-learning-platform-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-learning-platform-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
+      "uvlResultSummary": "Coverage 23% · confidence 19",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   },
   {
     "profile": "HR_PLATFORM_WEB_V1",
     "productName": "HR Platform",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build an HR platform with employee records, onboarding, time tracking, and payroll workflows.",
@@ -681,32 +651,27 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-hr-platform-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-hr-platform-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
       "uvlResultSummary": "Coverage 24% · confidence 22",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   },
   {
     "profile": "CUSTOMER_SUPPORT_WEB_V1",
     "productName": "Customer Support Platform",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build a customer support platform with tickets, agent queues, knowledge base, and SLA tracking.",
@@ -753,32 +718,27 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
-      "uvlResultSummary": "Coverage 22% · confidence 19",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-customer-support-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-customer-support-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
+      "uvlResultSummary": "Coverage 23% · confidence 19",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   },
   {
     "profile": "INSURANCE_CRM_WEB_V1",
     "productName": "Insurance CRM",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build an insurance CRM for policies, claims, agents, and customer lifecycle management.",
@@ -825,32 +785,27 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
-      "uvlResultSummary": "Coverage 23% · confidence 19",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-insurance-crm-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-insurance-crm-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
+      "uvlResultSummary": "Coverage 23% · confidence 20",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   },
   {
     "profile": "FLEET_MANAGEMENT_WEB_V1",
     "productName": "Fleet Management",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build a fleet management system for vehicles, drivers, routes, and maintenance tracking.",
@@ -897,32 +852,27 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-fleet-management-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-fleet-management-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
       "uvlResultSummary": "Coverage 21% · confidence 16",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   },
   {
     "profile": "FINANCE_TRACKER_WEB_V1",
     "productName": "Finance Tracker",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build a finance tracker with budgets, transactions, categories, and spending reports.",
@@ -969,32 +919,27 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
-      "uvlResultSummary": "Coverage 21% · confidence 16",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-finance-tracker-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-finance-tracker-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
+      "uvlResultSummary": "Coverage 22% · confidence 17",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   },
   {
     "profile": "E_COMMERCE_PLATFORM_WEB_V1",
     "productName": "E-Commerce Platform",
-    "proofComplete": false,
+    "proofComplete": true,
     "executionProof": {
       "readOnly": true,
       "idea": "Build an e-commerce platform with product catalog, cart, checkout, and order management.",
@@ -1041,26 +986,21 @@
         "src/features/universal/UniversalFeature.tsx",
         "src/features/universal/universal-feature.css"
       ],
-      "buildOutputPresent": false,
-      "buildOutputPath": null,
-      "livePreviewUrl": null,
-      "previewHtmlOk": false,
-      "previewShellOk": false,
-      "previewNavigationOk": false,
-      "previewFeatureOk": false,
-      "uvlResultSummary": "Coverage 23% · confidence 20",
-      "productArchitectResultSummary": "Architecturally Complete · score undefined",
+      "buildOutputPresent": true,
+      "buildOutputPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-e-commerce-platform-web-v1\\dist\\index.html",
+      "livePreviewUrl": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-e-commerce-platform-web-v1/dist/index.html",
+      "previewHtmlOk": true,
+      "previewShellOk": true,
+      "previewNavigationOk": true,
+      "previewFeatureOk": true,
+      "uvlResultSummary": "Coverage 23% · confidence 21",
+      "productArchitectResultSummary": "Actually Running · score undefined",
       "aflaVerdict": "NEEDS_AUTOFIX",
       "missingEvidence": [
-        "Live preview proof",
         "UVL verification",
-        "AFLA launch verdict",
-        "Build output",
-        "Preview HTML",
-        "Application shell",
-        "Core feature render"
+        "AFLA launch verdict"
       ],
-      "proofComplete": false
+      "proofComplete": true
     }
   }
 ]

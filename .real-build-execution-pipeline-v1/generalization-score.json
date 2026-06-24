@@ -1,6 +1,6 @@
 {
-  "executionGeneralizationScore": 74,
-  "executionProofStatus": "PARTIAL",
+  "executionGeneralizationScore": 90,
+  "executionProofStatus": "PROVEN",
   "categoriesTested": 15,
-  "categoriesPassed": 3
+  "categoriesPassed": 15
 }

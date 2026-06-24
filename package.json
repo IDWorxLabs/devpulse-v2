@@ -122,6 +122,7 @@
     "validate:engineering-reality-v1": "tsx scripts/validate-engineering-reality-v1.ts",
     "validate:autonomous-founder-launch-authority-v1": "tsx scripts/validate-autonomous-founder-launch-authority-v1.ts",
     "validate:capability-audit-v1": "tsx scripts/validate-capability-audit-v1.ts",
+    "validate:real-build-execution-pipeline-v1-1": "tsx scripts/validate-real-build-execution-pipeline-v1-1.ts",
     "validate:real-build-execution-pipeline-v1": "tsx scripts/validate-real-build-execution-pipeline-v1.ts",
     "validate:capability-audit-v2": "tsx scripts/validate-capability-audit-v2.ts",
     "validate:canonical-capability-ownership-v1": "tsx scripts/validate-canonical-capability-ownership-v1.ts",

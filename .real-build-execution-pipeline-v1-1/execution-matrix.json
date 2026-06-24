@@ -1,0 +1,107 @@
+[
+  {
+    "readOnly": true,
+    "productName": "Task Tracker",
+    "profile": "TASK_TRACKER_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "CRM",
+    "profile": "CRM_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "Inventory",
+    "profile": "INVENTORY_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "School Management",
+    "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "Project Management",
+    "profile": "PROJECT_MANAGEMENT_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "Marketplace",
+    "profile": "MARKETPLACE_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "Booking Platform",
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "Restaurant POS",
+    "profile": "RESTAURANT_POS_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "Learning Platform",
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "HR Platform",
+    "profile": "HR_PLATFORM_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "Customer Support Platform",
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "Insurance CRM",
+    "profile": "INSURANCE_CRM_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "Fleet Management",
+    "profile": "FLEET_MANAGEMENT_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "Finance Tracker",
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  },
+  {
+    "readOnly": true,
+    "productName": "E-Commerce Platform",
+    "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+    "status": "PASS",
+    "proofComplete": true
+  }
+]

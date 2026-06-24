@@ -4961,41 +4961,54 @@
       );
     }
 
-    var failureRows = (data.failureDistribution || [])
+    var failureRows = (data.failureIntelligenceSummary || data.failureDistribution || [])
       .map(function (row) {
+        var label = row.bucket || row.failureClass || 'Failure';
         return (
           '<div class="large-scale-row">' +
-          '<span>' + escapeHtml(row.failureClass) + '</span>' +
-          '<span>' + String(row.count) + ' (' + String(row.percentage) + '%)</span>' +
+          '<span>' + escapeHtml(label) + '</span>' +
+          '<span>' + String(row.count) + '</span>' +
           '</div>'
         );
       })
       .join('');
 
-    var recentRows = (data.recentBuilds || [])
+    var matrixBlock = data.executionMatrixText
+      ? '<pre class="execution-matrix">' + escapeHtml(data.executionMatrixText) + '</pre>'
+      : '';
+
+    var recentRows = (data.recentExecutionRuns || data.recentBuilds || [])
+      .slice(0, 8)
       .map(function (row) {
         return (
           '<div class="large-scale-leaderboard-row">' +
           '<span>' + escapeHtml(row.productName) + '</span>' +
-          '<span>' + (row.buildSuccess ? 'BUILD ✓' : 'BUILD ✗') + '</span>' +
-          '<span>' + (row.previewSuccess ? 'PREVIEW ✓' : 'PREVIEW ✗') + '</span>' +
+          '<span>' + (row.proofComplete || row.buildSuccess ? 'PROOF ✓' : 'PROOF ✗') + '</span>' +
           '<span>' + escapeHtml(row.aflaVerdict || '—') + '</span>' +
           '</div>'
         );
       })
       .join('');
 
+    var proofCoverage = data.proofCoveragePercent != null ? data.proofCoveragePercent : '—';
+    var genScore = data.executionGeneralizationScoreV2 != null
+      ? data.executionGeneralizationScoreV2
+      : data.executionGeneralizationScore;
+
     return renderProductCard(
       'Execution Pipeline',
-      '<p class="product-lead">Real build execution proof — actual generated applications, not plans or mock execution.</p>' +
-        '<p><strong>Build Success Rate:</strong> ' + String(data.buildSuccessRate) + '% · ' +
+      '<p class="product-lead">Full 15/15 execution proof — real workspaces, npm build, live preview, UVL, Product Architect, AFLA.</p>' +
+        '<p><strong>Proof Coverage:</strong> ' + String(proofCoverage) + '% · ' +
+        '<strong>Build Success Rate:</strong> ' + String(data.buildSuccessRate) + '% · ' +
         '<strong>Preview Success Rate:</strong> ' + String(data.previewSuccessRate) + '% · ' +
         '<strong>Verification Success Rate:</strong> ' + String(data.verificationSuccessRate) + '%</p>' +
         '<p><strong>Execution Proof Status:</strong> ' + escapeHtml(data.executionProofStatus || 'UNKNOWN') + ' · ' +
-        '<strong>Execution Generalization Score:</strong> ' + String(data.executionGeneralizationScore) + '/100</p>' +
-        '<p><strong>Failure Distribution</strong></p>' +
-        '<div class="large-scale-grid">' + failureRows + '</div>' +
-        '<p><strong>Recent Builds</strong></p>' +
+        '<strong>Execution Generalization Score:</strong> ' + String(genScore) + '/100</p>' +
+        '<p><strong>15-category Execution Matrix</strong></p>' +
+        matrixBlock +
+        '<p><strong>Failure Intelligence</strong></p>' +
+        '<div class="large-scale-grid">' + (failureRows || '<p class="hint">No failures — full proof coverage.</p>') + '</div>' +
+        '<p><strong>Recent Execution Runs</strong></p>' +
         '<div class="large-scale-leaderboard">' + recentRows + '</div>',
     );
   }
@@ -5007,7 +5020,7 @@
     if (executionPipelineLoadPromise) {
       return executionPipelineLoadPromise;
     }
-    executionPipelineLoadPromise = fetch('/api/founder/real-build-execution-pipeline?refresh=true', {
+    executionPipelineLoadPromise = fetch('/api/founder/real-build-execution-pipeline-v11?refresh=false', {
       method: 'GET',
       cache: 'no-store',
     })

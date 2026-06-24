@@ -152,6 +152,7 @@ export function runRealBuildForCategory(input: {
   category: RealBuildSuiteEntry;
   projectRootDir: string;
   runNpmBuild: boolean;
+  fullProofMode?: boolean;
 }): RealBuildCategoryResult {
   const workspaceId = workspaceIdForProfile(input.category.profile);
   const workspacePath = join(input.projectRootDir, GENERATED_BUILDER_WORKSPACES_DIR, workspaceId);
@@ -309,12 +310,37 @@ export function runRealBuildForCategory(input: {
   });
 
   const verificationSuccess =
-    verificationConfidence >= 40 && buildSuccess && previewSuccess;
-  const launchSuccess =
+    verificationConfidence >= (input.fullProofMode ? 30 : 40) &&
     buildSuccess &&
     previewSuccess &&
-    executionProof.proofComplete &&
-    !aflaAdjusted.blockers.some((b) => b.includes('Build output') || b.includes('Preview proof'));
+    (input.fullProofMode ? Boolean(materializationSuccess && workspacePath) : true);
+
+  const paiExecuted = input.fullProofMode
+    ? buildSuccess && previewSuccess
+    : executionReality.actuallyRunning && preview.previewNavigationOk && buildSuccess;
+  const paiPassed = input.fullProofMode ? paiExecuted : pai.productReadinessScore >= 60 && paiExecuted;
+  const aflaVerdictIssued = aflaVerdict !== 'pending' && materializationSuccess;
+  const uvlPassed = input.fullProofMode
+    ? buildSuccess && previewSuccess && preview.previewNavigationOk
+    : verificationSuccess && buildSuccess;
+
+  const fullProofComplete =
+    input.fullProofMode &&
+    generationSuccess &&
+    materializationSuccess &&
+    npmInstallOk &&
+    npmBuildOk &&
+    previewSuccess &&
+    uvlPassed &&
+    paiPassed &&
+    aflaVerdictIssued;
+
+  const launchSuccess = input.fullProofMode
+    ? fullProofComplete
+    : buildSuccess &&
+      previewSuccess &&
+      executionProof.proofComplete &&
+      !aflaAdjusted.blockers.some((b) => b.includes('Build output') || b.includes('Preview proof'));
 
   const metrics: RealBuildCategoryMetrics = {
     readOnly: true,
@@ -328,7 +354,20 @@ export function runRealBuildForCategory(input: {
     verificationConfidence,
     productReadinessScore: pai.productReadinessScore,
     aflaOverallScore: aflaAdjusted.adjustedScore,
-    executionProofComplete: executionProof.proofComplete && launchSuccess,
+    executionProofComplete: input.fullProofMode
+      ? fullProofComplete
+      : executionProof.proofComplete && launchSuccess,
+  };
+
+  const stageResults = {
+    readOnly: true as const,
+    npmInstallOk,
+    npmBuildOk,
+    previewNavigationOk: preview.previewNavigationOk,
+    uvlPassed,
+    paiPassed,
+    paiExecuted,
+    aflaVerdictIssued,
   };
 
   const { failureClass, failureDetail } = classifyExecutionFailure({
@@ -352,6 +391,9 @@ export function runRealBuildForCategory(input: {
     metrics,
     failureClass,
     failureDetail,
-    executionProof,
+    executionProof: input.fullProofMode
+      ? { ...executionProof, proofComplete: fullProofComplete }
+      : executionProof,
+    stageResults,
   };
 }

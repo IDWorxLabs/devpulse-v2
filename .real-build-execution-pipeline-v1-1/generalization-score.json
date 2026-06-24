@@ -1,5 +1,6 @@
 {
-  "generatedAt": "2026-06-24T12:01:13.656Z",
+  "executionGeneralizationScoreV2": 96,
+  "executionProofStatus": "PROVEN",
   "metrics": {
     "readOnly": true,
     "generationSuccessRate": 100,

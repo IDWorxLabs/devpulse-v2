@@ -1,0 +1,20 @@
+/**
+ * Real Build Execution Pipeline V1.1 — bounds and pass token.
+ */
+
+export const REAL_BUILD_EXECUTION_PIPELINE_V1_1_PASS_TOKEN =
+  'REAL_BUILD_EXECUTION_PIPELINE_V1_1_PASS';
+
+export const REAL_BUILD_EXECUTION_V11_REPORT_TITLE =
+  'REAL_BUILD_EXECUTION_PIPELINE_V1_1_REPORT.md';
+
+export const REAL_BUILD_EXECUTION_V11_ARTIFACT_DIR =
+  '.real-build-execution-pipeline-v1-1';
+
+export const MIN_FULL_PROOF_CATEGORIES = 15;
+
+export const EXECUTION_GENERALIZATION_V2_PASS_THRESHOLD = 85;
+
+export const MIN_PROOF_COVERAGE_PERCENT = 100;
+
+export const MAX_REAL_BUILD_EXECUTION_V11_HISTORY = 20;
