@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T14:19:32.113Z",
+  "generatedAt": "2026-06-24T16:00:21.684Z",
   "aggregateDuplicateWorkPercent": 95,
   "entries": [
     {
@@ -913,6 +913,23 @@
     },
     {
       "validatorName": "validate:founder-workflow-validation",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:autonomous-build-execution-proof",
+        "validate:autonomous-builder-reality",
+        "validate:autonomous-fixing",
+        "validate:build-proof-gap-materialization",
+        "validate:capability-research-engine",
+        "validate:code-generation-engine-v1",
+        "validate:consistency-audit-authoritative-evidence-repoint",
+        "validate:end-to-end-founder-workflow-reality"
+      ],
+      "duplicatedOperations": [
+        "npm build"
+      ]
+    },
+    {
+      "validatorName": "validate:general-purpose-code-generation-v1",
       "duplicateWorkPercent": 98,
       "overlappingValidators": [
         "validate:autonomous-build-execution-proof",
@@ -2004,6 +2021,16 @@
       ]
     },
     {
+      "validatorName": "validate:production-readiness-gate-v1",
+      "duplicateWorkPercent": 50,
+      "overlappingValidators": [
+        "validate:validation-runtime-governance-v1"
+      ],
+      "duplicatedOperations": [
+        "AFLA execution"
+      ]
+    },
+    {
       "validatorName": "validate:universal-app-blueprint-visual-v1",
       "duplicateWorkPercent": 50,
       "overlappingValidators": [
@@ -2269,6 +2296,12 @@
       "duplicatedOperations": []
     },
     {
+      "validatorName": "validate:capability-audit-v3-1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
       "validatorName": "validate:capability-build-engine",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
@@ -2402,6 +2435,12 @@
     },
     {
       "validatorName": "validate:clarifying-question-live-gate",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:cloud-execution-path-v1",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
       "duplicatedOperations": []

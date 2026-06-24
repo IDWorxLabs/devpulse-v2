@@ -44,6 +44,7 @@ import {
   sendProductionReadinessGateV1Json,
   sendProductionReadinessJson,
 } from './production-readiness-gate-handler.js';
+import { sendCloudExecutionPathV1Json } from './cloud-execution-path-handler.js';
 import { sendProductArchitectIntelligenceJson } from './product-architect-intelligence-handler.js';
 import { sendLargeScaleValidationJson } from './large-scale-validation-handler.js';
 import { sendRealBuildExecutionPipelineJson } from './real-build-execution-pipeline-handler.js';
@@ -393,6 +394,16 @@ export function createFounderRealityServer() {
       return;
     }
 
+    if (urlPath === '/api/founder/cloud-execution-path-v1' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendCloudExecutionPathV1Json(res, url.searchParams.get('refresh') === 'true', ROOT_DIR);
+      return;
+    }
+
     if (urlPath === '/api/founder/uvl-verification-execution-v1' && (req.method === 'GET' || req.method === 'HEAD')) {
       if (req.method === 'HEAD') {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -405,7 +416,7 @@ export function createFounderRealityServer() {
 
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       sendJson(res, 405, JSON.stringify({
-        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/founder/founder-review, GET /api/founder/requirement-discovery, GET /api/founder/verification-hub, GET /api/founder/uvl-verification-execution-v1, GET /api/founder/production-readiness-gate-v1, GET /api/founder/trust-calibration, GET /api/founder/production-readiness-gate, GET /api/founder/product-architect-intelligence, GET /api/founder/large-scale-validation, GET /api/founder/real-build-execution-pipeline, GET /api/founder/real-build-execution-pipeline-v11, GET /api/brain/*, GET /api/build/live-preview, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
+        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/founder/founder-review, GET /api/founder/requirement-discovery, GET /api/founder/verification-hub, GET /api/founder/uvl-verification-execution-v1, GET /api/founder/production-readiness-gate-v1, GET /api/founder/cloud-execution-path-v1, GET /api/founder/trust-calibration, GET /api/founder/production-readiness-gate, GET /api/founder/product-architect-intelligence, GET /api/founder/large-scale-validation, GET /api/founder/real-build-execution-pipeline, GET /api/founder/real-build-execution-pipeline-v11, GET /api/brain/*, GET /api/build/live-preview, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
         hint: 'Restart DevPulse with npm run dev if Brain POST returns read-only errors',
       }));
       return;

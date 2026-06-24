@@ -1,33 +1,11 @@
 {
-  "generatedAt": "2026-06-24T14:55:48.744Z",
+  "generatedAt": "2026-06-24T16:02:31.794Z",
   "world2IsNextPhase": false,
-  "nextPriority": "Cloud Execution Path",
-  "highestPriorityGap": "Cloud Execution Path — No validated cloud execution or production deployment path.",
+  "nextPriority": "Large-Scale Pipeline Integration",
+  "highestPriorityGap": "Large-Scale Pipeline Integration — Large-scale validation shows 0% buildSuccessRate in its harness despite Real Build Execution V1.1 proving 100% for 15 categories.",
   "priorities": [
     {
       "rank": 1,
-      "phase": "Cloud Execution Path",
-      "action": "BUILD",
-      "rationale": "No validated cloud runtime or production deployment. Defer until production readiness gate is proven locally. Current gap: No validated cloud execution or production deployment path.",
-      "impact": "HIGH",
-      "dependencies": [
-        "Production Readiness Gate",
-        "UVL Verification Execution"
-      ]
-    },
-    {
-      "rank": 2,
-      "phase": "General-Purpose Code Generation",
-      "action": "EXTEND",
-      "rationale": "Real Build Execution and UVL verification prove 15 CRUD-adjacent categories at 100%; Code Generation Engine still limited to 5 profiles. Current gap: Code Generation Engine V1 limited to 5 web CRUD profiles; blocks 58-category diversity.",
-      "impact": "HIGH",
-      "dependencies": [
-        "Real Build Execution Pipeline V1.1",
-        "UVL Verification Execution"
-      ]
-    },
-    {
-      "rank": 3,
       "phase": "Large-Scale Pipeline Integration",
       "action": "EXTEND",
       "rationale": "Large-scale validation harness shows 0% buildSuccessRate despite Real Build Execution proving 100%. Wire harness to RBEP proof chain. Current gap: Large-scale validation shows 0% buildSuccessRate in its harness despite Real Build Execution V1.1 proving 100% for 15 categories.",
@@ -38,7 +16,7 @@
       ]
     },
     {
-      "rank": 4,
+      "rank": 2,
       "phase": "World2 Real Instantiation",
       "action": "EXTEND",
       "rationale": "World2 modules validate in isolation; dry-run bridge does not activate real execution. Connect to Real Build Execution after verification and ownership registration. Current gap: Dry-run composer bridge sets realExecutionPerformed=false; execution proven outside World2 boundary.",
@@ -49,7 +27,7 @@
       ]
     },
     {
-      "rank": 5,
+      "rank": 3,
       "phase": "Mobile Runtime Validation at Scale",
       "action": "BUILD",
       "rationale": "Mobile preview modes exist; large-scale mobile runtime validation harness needed for cross-platform vision. Current gap: Mobile preview modes exist; no large-scale mobile runtime validation harness.",
@@ -60,7 +38,7 @@
       ]
     },
     {
-      "rank": 6,
+      "rank": 4,
       "phase": "Self-Evolution Execution",
       "action": "EXTEND",
       "rationale": "Self-evolution is advisory only. Wire gap detection → capability research → build → verify loop with human approval gate. Current gap: Self-evolution and gap detection are advisory; no automated capability modification.",
@@ -71,7 +49,7 @@
       ]
     },
     {
-      "rank": 7,
+      "rank": 5,
       "phase": "Canonical Ownership V2 Registration",
       "action": "REGISTER",
       "rationale": "Real Build Execution V1/V1.1, CQI Maturity V1, UVL Verification Execution V1, Capability Audit V2/V3, and Production Readiness Gate need constitutional registration. Current gap: Real Build Execution Pipeline V1/V1.1, UVL Verification Execution V1, CQI Maturity V1, Capability Audit V2 not in ownership registry.",
@@ -81,7 +59,7 @@
       ]
     },
     {
-      "rank": 8,
+      "rank": 6,
       "phase": "Multi-Project Concurrent Execution",
       "action": "EXTEND",
       "rationale": "Multi-project foundation and tabs are mature; parallel build orchestration must move from planning to execution. Current gap: Parallel Build Orchestration is planning-only; no concurrent build execution.",
@@ -92,7 +70,7 @@
       ]
     },
     {
-      "rank": 9,
+      "rank": 7,
       "phase": "Real Build Execution Pipeline",
       "action": "COMPLETE",
       "rationale": "V1 and V1.1 PASS: 15/15 proof coverage, execution generalization 96/100. Closed largest V2 operational gap.",
@@ -100,7 +78,7 @@
       "dependencies": []
     },
     {
-      "rank": 10,
+      "rank": 8,
       "phase": "UVL Verification Execution",
       "action": "COMPLETE",
       "rationale": "UVL Verification Execution V1 PASS: 15/15 verified, 100% coverage, 100/100 confidence.",

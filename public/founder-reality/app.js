@@ -29,6 +29,8 @@
   var productionReadinessData = null;
   var productionReadinessLoadPromise = null;
   var productionReadinessProfile = 'CRM_WEB_V1';
+  var cloudExecutionData = null;
+  var cloudExecutionLoadPromise = null;
   var productArchitectData = null;
   var productArchitectLoadPromise = null;
   var productArchitectProfile = 'CRM_WEB_V1';
@@ -123,7 +125,7 @@
     ],
   };
   var conversationStarted = false;
-  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Production Readiness', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
+  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Production Readiness', 'Cloud Execution', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
   var feedSectionIdleCopy = {
     Planning: {
       action: 'Ready to classify your next request',
@@ -156,6 +158,10 @@
     'Production Readiness': {
       action: 'Production readiness gate ready',
       detail: 'Evaluate whether generated applications can safely deploy to production beyond launch simulation.',
+    },
+    'Cloud Execution': {
+      action: 'Cloud execution path ready',
+      detail: 'Submit, claim, and run build jobs through the cloud execution contract with isolated workspaces.',
     },
     'Large-Scale Validation': {
       action: 'Large-scale validation ready',
@@ -4978,6 +4984,75 @@
     });
   }
 
+  function renderCloudExecutionPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Cloud Execution',
+        '<p class="product-lead">Loading cloud execution path visibility…</p>',
+      );
+    }
+
+    var queuedRows = (data.queuedJobs || [])
+      .map(function (job) {
+        return '<div class="cloud-execution-row"><span>' + escapeHtml(job.productName) + '</span><span>' + escapeHtml(job.status) + '</span></div>';
+      })
+      .join('');
+    var activeRows = (data.activeJobs || [])
+      .map(function (job) {
+        return '<div class="cloud-execution-row"><span>' + escapeHtml(job.productName) + '</span><span>' + escapeHtml(job.currentStage || job.status) + '</span><span>' + escapeHtml(job.executionMode) + '</span></div>';
+      })
+      .join('');
+    var completedRows = (data.completedJobs || [])
+      .map(function (job) {
+        return '<div class="cloud-execution-row"><span>' + escapeHtml(job.productName) + '</span><span>' + String(job.overallScore || '—') + '/100</span><span>' + escapeHtml(String(job.verdict || 'COMPLETED')) + '</span><span>' + String(job.runtimeDurationMs || 0) + 'ms</span></div>';
+      })
+      .join('');
+    var failedRows = (data.failedJobs || [])
+      .map(function (job) {
+        return '<div class="cloud-execution-row"><span>' + escapeHtml(job.productName) + '</span><span>' + escapeHtml(job.failureClass || 'FAILED') + '</span></div>';
+      })
+      .join('');
+
+    return renderProductCard(
+      'Cloud Execution',
+      '<p class="product-lead">Cloud Execution Path V1 — submit and track build jobs through a unified local/cloud contract. Informational only.</p>' +
+        '<p><strong>Cloud Simulated Proof:</strong> ' + escapeHtml(data.cloudSimulatedProofStatus) + '</p>' +
+        '<p><strong>Jobs:</strong> ' + String(data.jobsCompleted) + ' completed · ' + String(data.jobsFailed) + ' failed · ' + String(data.contaminationIncidents) + ' contamination incidents</p>' +
+        '<p><strong>Queued jobs</strong></p>' +
+        '<div class="cloud-execution-grid">' + (queuedRows || '<p class="hint">No queued jobs.</p>') + '</div>' +
+        '<p><strong>Active jobs</strong></p>' +
+        '<div class="cloud-execution-grid">' + (activeRows || '<p class="hint">No active jobs.</p>') + '</div>' +
+        '<p><strong>Completed jobs</strong></p>' +
+        '<div class="cloud-execution-grid">' + (completedRows || '<p class="hint">No completed jobs yet.</p>') + '</div>' +
+        '<p><strong>Failed jobs</strong></p>' +
+        '<div class="cloud-execution-grid">' + (failedRows || '<p class="hint">No failed jobs.</p>') + '</div>' +
+        '<p><strong>Execution mode:</strong> CLOUD_SIMULATED (local contract execution)</p>' +
+        '<p><strong>Artifact status:</strong> build logs, preview proof, UVL, Product Architect, AFLA, production readiness, cloud-job-package</p>',
+    );
+  }
+
+  function loadCloudExecution(force) {
+    if (!force && cloudExecutionData) {
+      return Promise.resolve(cloudExecutionData);
+    }
+    if (cloudExecutionLoadPromise) {
+      return cloudExecutionLoadPromise;
+    }
+    cloudExecutionLoadPromise = fetch('/api/founder/cloud-execution-path-v1?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('cloud-execution-path HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        cloudExecutionData = data;
+        return data;
+      })
+      .finally(function () {
+        cloudExecutionLoadPromise = null;
+      });
+    return cloudExecutionLoadPromise;
+  }
+
   var PRODUCT_ARCHITECT_SUITE_PROFILES = [
     { profile: 'CRM_WEB_V1', label: 'CRM' },
     { profile: 'MARKETPLACE_WEB_V1', label: 'Marketplace' },
@@ -5325,6 +5400,7 @@
       renderProductArchitectPanel(productArchitectData) +
       renderTrustCalibrationPanel(trustCalibrationData) +
       renderProductionReadinessPanel(productionReadinessData) +
+      renderCloudExecutionPanel(cloudExecutionData) +
       renderProductCard(
         'Evidence Chain',
         '<div class="founder-review-evidence-grid">' + evidenceRows + '</div>',
@@ -5479,6 +5555,7 @@
     html += renderLargeScaleValidationPanel(largeScaleValidationData);
     html += renderExecutionPipelinePanel(executionPipelineData);
     html += renderProductionReadinessPanel(productionReadinessData);
+    html += renderCloudExecutionPanel(cloudExecutionData);
     html +=
       renderProductCard(
         'Verification Readiness',
@@ -6339,6 +6416,7 @@
     'Founder Review': '<svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>',
     'Founder Trust Calibration': '<svg viewBox="0 0 24 24"><path d="M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7l7-4z"/><path d="M9 12l2 2 4-4"/></svg>',
     'Production Readiness': '<svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>',
+    'Cloud Execution': '<svg viewBox="0 0 24 24"><path d="M6 16h12l-1-2v-5a7 7 0 0 0-14 0v5l-1 2z"/><path d="M4 10a8 8 0 0 1 16 0"/></svg>',
     'Product Architect Review': '<svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M7 7V5h10v2"/><path d="M8 11h8M8 15h5"/></svg>',
     'Large-Scale Validation': '<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>',
     'Execution Pipeline': '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
@@ -10780,6 +10858,21 @@
     })
     .catch(function () {
       /* Production Readiness falls back to loading state */
+    });
+
+  loadCloudExecution(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* Cloud Execution falls back to loading state */
     });
 
   fetch(buildFounderTestApiUrl('/api/founder-reality.json', null))

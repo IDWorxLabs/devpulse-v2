@@ -1,6 +1,6 @@
 {
   "version": "V1",
-  "generatedAt": "2026-06-24T14:19:30.939Z",
+  "generatedAt": "2026-06-24T16:00:18.953Z",
   "passToken": "VALIDATION_RUNTIME_GOVERNANCE_V1_PASS",
   "active": true,
   "tiers": [
@@ -108,6 +108,7 @@
       "forbiddenValidatorPatterns": [],
       "explicitValidators": [
         "validate:uvl-verification-execution-v1",
+        "validate:production-readiness-gate-v1",
         "validate:uvl-maturity-verification-hub-v1",
         "validate:product-architect-intelligence-v1",
         "validate:autonomous-founder-launch-authority-v1",
@@ -188,7 +189,7 @@
     {
       "operation": "Repeated npm build",
       "blockWhenReusableEvidenceExists": true,
-      "affectedValidatorCount": 47
+      "affectedValidatorCount": 48
     },
     {
       "operation": "Repeated preview startup",
@@ -198,7 +199,7 @@
     {
       "operation": "Repeated UVL execution",
       "blockWhenReusableEvidenceExists": true,
-      "affectedValidatorCount": 4
+      "affectedValidatorCount": 3
     },
     {
       "operation": "Repeated AFLA execution",

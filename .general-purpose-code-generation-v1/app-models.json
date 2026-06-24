@@ -1,0 +1,1457 @@
+[
+  {
+    "readOnly": true,
+    "appType": "Marketplace Application",
+    "domain": "MARKETPLACE",
+    "strategy": "MARKETPLACE_APP",
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+    "entities": [
+      {
+        "readOnly": true,
+        "id": "listing",
+        "label": "Listing",
+        "pluralLabel": "Listings",
+        "primary": true
+      },
+      {
+        "readOnly": true,
+        "id": "order",
+        "label": "Order",
+        "pluralLabel": "Orders",
+        "primary": false
+      },
+      {
+        "readOnly": true,
+        "id": "user",
+        "label": "User",
+        "pluralLabel": "Users",
+        "primary": false
+      }
+    ],
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "buyer",
+        "label": "Buyer",
+        "permissions": [
+          "view_buyer",
+          "manage_buyer"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "seller",
+        "label": "Seller",
+        "permissions": [
+          "view_seller",
+          "manage_seller"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "permissions": [
+      "view_buyer",
+      "manage_buyer",
+      "view_seller",
+      "manage_seller",
+      "view_admin",
+      "manage_admin"
+    ],
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "purchase-flow",
+        "label": "Purchase Flow",
+        "steps": [
+          "Search",
+          "Select",
+          "Checkout",
+          "Order Confirmation"
+        ],
+        "critical": true
+      }
+    ],
+    "screens": [
+      {
+        "readOnly": true,
+        "id": "listings",
+        "label": "Listings",
+        "screenType": "Listings",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "product-detail",
+        "label": "Product Detail",
+        "screenType": "Product Detail",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "search",
+        "label": "Search",
+        "screenType": "Search",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "cart",
+        "label": "Cart",
+        "screenType": "Cart",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "id": "checkout",
+        "label": "Checkout",
+        "screenType": "Checkout",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "orders",
+        "label": "Orders",
+        "screenType": "Orders",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "profile",
+        "label": "Profile",
+        "screenType": "Profile",
+        "critical": false
+      }
+    ],
+    "actions": [
+      "Create Listing",
+      "Browse",
+      "View Detail",
+      "Contact Seller",
+      "Manage Orders"
+    ],
+    "dataModels": [
+      "Listing",
+      "Order",
+      "User"
+    ],
+    "automations": [
+      "Status transition hooks",
+      "Validation on save"
+    ],
+    "integrations": [
+      "Export placeholder",
+      "Notification placeholder"
+    ],
+    "aiFeatures": []
+  },
+  {
+    "readOnly": true,
+    "appType": "Booking Application",
+    "domain": "BOOKING",
+    "strategy": "BOOKING_APP",
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "productName": "Booking Platform",
+    "prompt": "Build an appointment booking system for clinics with calendar and reminders.",
+    "entities": [
+      {
+        "readOnly": true,
+        "id": "slot",
+        "label": "Slot",
+        "pluralLabel": "Slots",
+        "primary": true
+      },
+      {
+        "readOnly": true,
+        "id": "booking",
+        "label": "Booking",
+        "pluralLabel": "Bookings",
+        "primary": false
+      },
+      {
+        "readOnly": true,
+        "id": "customer",
+        "label": "Customer",
+        "pluralLabel": "Customers",
+        "primary": false
+      }
+    ],
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "customer",
+        "label": "Customer",
+        "permissions": [
+          "view_customer",
+          "manage_customer"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "provider",
+        "label": "Provider",
+        "permissions": [
+          "view_provider",
+          "manage_provider"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "permissions": [
+      "view_customer",
+      "manage_customer",
+      "view_provider",
+      "manage_provider",
+      "view_admin",
+      "manage_admin"
+    ],
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "booking-flow",
+        "label": "Booking Flow",
+        "steps": [
+          "Search",
+          "Select",
+          "Book",
+          "Pay",
+          "Confirmation"
+        ],
+        "critical": true
+      }
+    ],
+    "screens": [
+      {
+        "readOnly": true,
+        "id": "search",
+        "label": "Search",
+        "screenType": "Search",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "availability",
+        "label": "Availability",
+        "screenType": "Availability",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "booking-detail",
+        "label": "Booking Detail",
+        "screenType": "Booking Detail",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "id": "checkout",
+        "label": "Checkout",
+        "screenType": "Checkout",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "confirmation",
+        "label": "Confirmation",
+        "screenType": "Confirmation",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "my-bookings",
+        "label": "My Bookings",
+        "screenType": "My Bookings",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "settings",
+        "label": "Settings",
+        "screenType": "Settings",
+        "critical": false
+      }
+    ],
+    "actions": [
+      "Search Availability",
+      "Select Slot",
+      "Enter Details",
+      "Confirm",
+      "Cancel"
+    ],
+    "dataModels": [
+      "Slot",
+      "Booking",
+      "Customer"
+    ],
+    "automations": [
+      "Status transition hooks",
+      "Validation on save"
+    ],
+    "integrations": [
+      "Export placeholder",
+      "Notification placeholder"
+    ],
+    "aiFeatures": []
+  },
+  {
+    "readOnly": true,
+    "appType": "Content Application",
+    "domain": "LEARNING_PLATFORM",
+    "strategy": "CONTENT_APP",
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "productName": "Learning Platform",
+    "prompt": "Build a learning platform with courses, lessons, student progress, and assessments.",
+    "entities": [
+      {
+        "readOnly": true,
+        "id": "course",
+        "label": "Course",
+        "pluralLabel": "Courses",
+        "primary": true
+      },
+      {
+        "readOnly": true,
+        "id": "lesson",
+        "label": "Lesson",
+        "pluralLabel": "Lessons",
+        "primary": false
+      },
+      {
+        "readOnly": true,
+        "id": "progress",
+        "label": "Progress",
+        "pluralLabel": "Progresss",
+        "primary": false
+      }
+    ],
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "learner",
+        "label": "Learner",
+        "permissions": [
+          "view_learner",
+          "manage_learner"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "instructor",
+        "label": "Instructor",
+        "permissions": [
+          "view_instructor",
+          "manage_instructor"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "permissions": [
+      "view_learner",
+      "manage_learner",
+      "view_instructor",
+      "manage_instructor",
+      "view_admin",
+      "manage_admin"
+    ],
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "learn-and-complete",
+        "label": "Learn and Complete",
+        "steps": [
+          "Enroll",
+          "Learn",
+          "Assess",
+          "Complete"
+        ],
+        "critical": true
+      }
+    ],
+    "screens": [
+      {
+        "readOnly": true,
+        "id": "catalog",
+        "label": "Catalog",
+        "screenType": "Catalog",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "course-detail",
+        "label": "Course Detail",
+        "screenType": "Course Detail",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "progress",
+        "label": "Progress",
+        "screenType": "Progress",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "assessments",
+        "label": "Assessments",
+        "screenType": "Assessments",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "certificates",
+        "label": "Certificates",
+        "screenType": "Certificates",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "id": "profile",
+        "label": "Profile",
+        "screenType": "Profile",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "id": "settings",
+        "label": "Settings",
+        "screenType": "Settings",
+        "critical": false
+      }
+    ],
+    "actions": [
+      "Create Course",
+      "Enroll",
+      "Track Lessons",
+      "Mark Progress",
+      "Certificate"
+    ],
+    "dataModels": [
+      "Course",
+      "Lesson",
+      "Progress"
+    ],
+    "automations": [
+      "Status transition hooks",
+      "Validation on save"
+    ],
+    "integrations": [
+      "Export placeholder",
+      "Notification placeholder"
+    ],
+    "aiFeatures": []
+  },
+  {
+    "readOnly": true,
+    "appType": "Workflow Application",
+    "domain": "CUSTOMER_SUPPORT",
+    "strategy": "WORKFLOW_APP",
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "productName": "Customer Support Platform",
+    "prompt": "Build a customer support platform with tickets, agent queues, knowledge base, and SLA tracking.",
+    "entities": [
+      {
+        "readOnly": true,
+        "id": "primary-record",
+        "label": "Primary Record",
+        "pluralLabel": "Primary Records",
+        "primary": true
+      },
+      {
+        "readOnly": true,
+        "id": "status",
+        "label": "Status",
+        "pluralLabel": "Statuss",
+        "primary": false
+      }
+    ],
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "agent",
+        "label": "Agent",
+        "permissions": [
+          "view_agent",
+          "manage_agent"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "manager",
+        "label": "Manager",
+        "permissions": [
+          "view_manager",
+          "manage_manager"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "permissions": [
+      "view_agent",
+      "manage_agent",
+      "view_manager",
+      "manage_manager",
+      "view_admin",
+      "manage_admin"
+    ],
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "primary-workflow",
+        "label": "Primary Workflow",
+        "steps": [
+          "Create",
+          "Assign",
+          "Update Status",
+          "Complete",
+          "History"
+        ],
+        "critical": true
+      }
+    ],
+    "screens": [
+      {
+        "readOnly": true,
+        "id": "dashboard",
+        "label": "Dashboard",
+        "screenType": "Dashboard",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "list",
+        "label": "List",
+        "screenType": "List",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "detail",
+        "label": "Detail",
+        "screenType": "Detail",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "workflow-step",
+        "label": "Workflow Step",
+        "screenType": "Workflow Step",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "activity",
+        "label": "Activity",
+        "screenType": "Activity",
+        "critical": true
+      }
+    ],
+    "actions": [
+      "Create",
+      "Assign",
+      "Update Status",
+      "Complete",
+      "History"
+    ],
+    "dataModels": [
+      "Primary Record",
+      "Status"
+    ],
+    "automations": [
+      "Status transition hooks",
+      "Validation on save"
+    ],
+    "integrations": [
+      "Export placeholder",
+      "Notification placeholder"
+    ],
+    "aiFeatures": []
+  },
+  {
+    "readOnly": true,
+    "appType": "Workflow Application",
+    "domain": "EVENT",
+    "strategy": "WORKFLOW_APP",
+    "profile": "EVENT_PLATFORM_WEB_V1",
+    "productName": "Event Platform",
+    "prompt": "Build an event platform with event listings, registration, ticketing, and attendee management.",
+    "entities": [
+      {
+        "readOnly": true,
+        "id": "primary-record",
+        "label": "Primary Record",
+        "pluralLabel": "Primary Records",
+        "primary": true
+      },
+      {
+        "readOnly": true,
+        "id": "status",
+        "label": "Status",
+        "pluralLabel": "Statuss",
+        "primary": false
+      }
+    ],
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "agent",
+        "label": "Agent",
+        "permissions": [
+          "view_agent",
+          "manage_agent"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "manager",
+        "label": "Manager",
+        "permissions": [
+          "view_manager",
+          "manage_manager"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "permissions": [
+      "view_agent",
+      "manage_agent",
+      "view_manager",
+      "manage_manager",
+      "view_admin",
+      "manage_admin"
+    ],
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "primary-workflow",
+        "label": "Primary Workflow",
+        "steps": [
+          "Create",
+          "Assign",
+          "Update Status",
+          "Complete",
+          "History"
+        ],
+        "critical": true
+      }
+    ],
+    "screens": [
+      {
+        "readOnly": true,
+        "id": "dashboard",
+        "label": "Dashboard",
+        "screenType": "Dashboard",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "list",
+        "label": "List",
+        "screenType": "List",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "detail",
+        "label": "Detail",
+        "screenType": "Detail",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "workflow-step",
+        "label": "Workflow Step",
+        "screenType": "Workflow Step",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "activity",
+        "label": "Activity",
+        "screenType": "Activity",
+        "critical": true
+      }
+    ],
+    "actions": [
+      "Create",
+      "Assign",
+      "Update Status",
+      "Complete",
+      "History"
+    ],
+    "dataModels": [
+      "Primary Record",
+      "Status"
+    ],
+    "automations": [
+      "Status transition hooks",
+      "Validation on save"
+    ],
+    "integrations": [
+      "Export placeholder",
+      "Notification placeholder"
+    ],
+    "aiFeatures": []
+  },
+  {
+    "readOnly": true,
+    "appType": "Portal Application",
+    "domain": "HEALTHCARE",
+    "strategy": "PORTAL_APP",
+    "profile": "HEALTHCARE_PORTAL_WEB_V1",
+    "productName": "Healthcare Portal",
+    "prompt": "Build a healthcare portal for patients, appointments, providers, and medical records.",
+    "entities": [
+      {
+        "readOnly": true,
+        "id": "user",
+        "label": "User",
+        "pluralLabel": "Users",
+        "primary": true
+      },
+      {
+        "readOnly": true,
+        "id": "record",
+        "label": "Record",
+        "pluralLabel": "Records",
+        "primary": false
+      },
+      {
+        "readOnly": true,
+        "id": "appointment",
+        "label": "Appointment",
+        "pluralLabel": "Appointments",
+        "primary": false
+      }
+    ],
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "patient",
+        "label": "Patient",
+        "permissions": [
+          "view_patient",
+          "manage_patient"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "provider",
+        "label": "Provider",
+        "permissions": [
+          "view_provider",
+          "manage_provider"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "permissions": [
+      "view_patient",
+      "manage_patient",
+      "view_provider",
+      "manage_provider",
+      "view_admin",
+      "manage_admin"
+    ],
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "patient-visit",
+        "label": "Patient Visit",
+        "steps": [
+          "Schedule",
+          "Check In",
+          "Document Care"
+        ],
+        "critical": true
+      }
+    ],
+    "screens": [
+      {
+        "readOnly": true,
+        "id": "dashboard",
+        "label": "Dashboard",
+        "screenType": "Dashboard",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "id": "patients",
+        "label": "Patients",
+        "screenType": "Patients",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "appointments",
+        "label": "Appointments",
+        "screenType": "Appointments",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "providers",
+        "label": "Providers",
+        "screenType": "Providers",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "id": "prescriptions",
+        "label": "Prescriptions",
+        "screenType": "Prescriptions",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "id": "billing",
+        "label": "Billing",
+        "screenType": "Billing",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "id": "reports",
+        "label": "Reports",
+        "screenType": "Reports",
+        "critical": false
+      }
+    ],
+    "actions": [
+      "Register",
+      "Book",
+      "View Records",
+      "Manage Profile"
+    ],
+    "dataModels": [
+      "User",
+      "Record",
+      "Appointment"
+    ],
+    "automations": [
+      "Status transition hooks",
+      "Validation on save"
+    ],
+    "integrations": [
+      "Export placeholder",
+      "Notification placeholder"
+    ],
+    "aiFeatures": []
+  },
+  {
+    "readOnly": true,
+    "appType": "Dashboard Application",
+    "domain": "FINANCE",
+    "strategy": "DASHBOARD_APP",
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "productName": "Finance Tracker",
+    "prompt": "Build a finance tracker with budgets, transactions, categories, and spending reports.",
+    "entities": [
+      {
+        "readOnly": true,
+        "id": "metric",
+        "label": "Metric",
+        "pluralLabel": "Metrics",
+        "primary": true
+      },
+      {
+        "readOnly": true,
+        "id": "transaction",
+        "label": "Transaction",
+        "pluralLabel": "Transactions",
+        "primary": false
+      },
+      {
+        "readOnly": true,
+        "id": "category",
+        "label": "Category",
+        "pluralLabel": "Categorys",
+        "primary": false
+      }
+    ],
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "accountant",
+        "label": "Accountant",
+        "permissions": [
+          "view_accountant",
+          "manage_accountant"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "manager",
+        "label": "Manager",
+        "permissions": [
+          "view_manager",
+          "manage_manager"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "permissions": [
+      "view_accountant",
+      "manage_accountant",
+      "view_manager",
+      "manage_manager",
+      "view_admin",
+      "manage_admin"
+    ],
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "record-to-report",
+        "label": "Record to Report",
+        "steps": [
+          "Capture Transaction",
+          "Categorize",
+          "Report"
+        ],
+        "critical": true
+      }
+    ],
+    "screens": [
+      {
+        "readOnly": true,
+        "id": "dashboard",
+        "label": "Dashboard",
+        "screenType": "Dashboard",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "transactions",
+        "label": "Transactions",
+        "screenType": "Transactions",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "accounts",
+        "label": "Accounts",
+        "screenType": "Accounts",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "invoices",
+        "label": "Invoices",
+        "screenType": "Invoices",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "id": "reports",
+        "label": "Reports",
+        "screenType": "Reports",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "settings",
+        "label": "Settings",
+        "screenType": "Settings",
+        "critical": false
+      }
+    ],
+    "actions": [
+      "View Dashboard",
+      "Add Entry",
+      "Categorize",
+      "Report"
+    ],
+    "dataModels": [
+      "Metric",
+      "Transaction",
+      "Category"
+    ],
+    "automations": [
+      "Status transition hooks",
+      "Validation on save"
+    ],
+    "integrations": [
+      "Export placeholder",
+      "Notification placeholder"
+    ],
+    "aiFeatures": []
+  },
+  {
+    "readOnly": true,
+    "appType": "Workflow Application",
+    "domain": "JOB_BOARD",
+    "strategy": "WORKFLOW_APP",
+    "profile": "JOB_BOARD_WEB_V1",
+    "productName": "Job Board",
+    "prompt": "Build a job board where employers post jobs and candidates search, apply, and track applications.",
+    "entities": [
+      {
+        "readOnly": true,
+        "id": "primary-record",
+        "label": "Primary Record",
+        "pluralLabel": "Primary Records",
+        "primary": true
+      },
+      {
+        "readOnly": true,
+        "id": "status",
+        "label": "Status",
+        "pluralLabel": "Statuss",
+        "primary": false
+      }
+    ],
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "agent",
+        "label": "Agent",
+        "permissions": [
+          "view_agent",
+          "manage_agent"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "manager",
+        "label": "Manager",
+        "permissions": [
+          "view_manager",
+          "manage_manager"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "permissions": [
+      "view_agent",
+      "manage_agent",
+      "view_manager",
+      "manage_manager",
+      "view_admin",
+      "manage_admin"
+    ],
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "primary-workflow",
+        "label": "Primary Workflow",
+        "steps": [
+          "Create",
+          "Assign",
+          "Update Status",
+          "Complete",
+          "History"
+        ],
+        "critical": true
+      }
+    ],
+    "screens": [
+      {
+        "readOnly": true,
+        "id": "dashboard",
+        "label": "Dashboard",
+        "screenType": "Dashboard",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "list",
+        "label": "List",
+        "screenType": "List",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "detail",
+        "label": "Detail",
+        "screenType": "Detail",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "workflow-step",
+        "label": "Workflow Step",
+        "screenType": "Workflow Step",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "activity",
+        "label": "Activity",
+        "screenType": "Activity",
+        "critical": true
+      }
+    ],
+    "actions": [
+      "Create",
+      "Assign",
+      "Update Status",
+      "Complete",
+      "History"
+    ],
+    "dataModels": [
+      "Primary Record",
+      "Status"
+    ],
+    "automations": [
+      "Status transition hooks",
+      "Validation on save"
+    ],
+    "integrations": [
+      "Export placeholder",
+      "Notification placeholder"
+    ],
+    "aiFeatures": []
+  },
+  {
+    "readOnly": true,
+    "appType": "Workflow Application",
+    "domain": "PROPERTY",
+    "strategy": "WORKFLOW_APP",
+    "profile": "PROPERTY_MANAGEMENT_WEB_V1",
+    "productName": "Property Management",
+    "prompt": "Build a property management system for listings, tenants, leases, and maintenance requests.",
+    "entities": [
+      {
+        "readOnly": true,
+        "id": "primary-record",
+        "label": "Primary Record",
+        "pluralLabel": "Primary Records",
+        "primary": true
+      },
+      {
+        "readOnly": true,
+        "id": "status",
+        "label": "Status",
+        "pluralLabel": "Statuss",
+        "primary": false
+      }
+    ],
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "agent",
+        "label": "Agent",
+        "permissions": [
+          "view_agent",
+          "manage_agent"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "manager",
+        "label": "Manager",
+        "permissions": [
+          "view_manager",
+          "manage_manager"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "permissions": [
+      "view_agent",
+      "manage_agent",
+      "view_manager",
+      "manage_manager",
+      "view_admin",
+      "manage_admin"
+    ],
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "primary-workflow",
+        "label": "Primary Workflow",
+        "steps": [
+          "Create",
+          "Assign",
+          "Update Status",
+          "Complete",
+          "History"
+        ],
+        "critical": true
+      }
+    ],
+    "screens": [
+      {
+        "readOnly": true,
+        "id": "dashboard",
+        "label": "Dashboard",
+        "screenType": "Dashboard",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "list",
+        "label": "List",
+        "screenType": "List",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "detail",
+        "label": "Detail",
+        "screenType": "Detail",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "workflow-step",
+        "label": "Workflow Step",
+        "screenType": "Workflow Step",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "activity",
+        "label": "Activity",
+        "screenType": "Activity",
+        "critical": true
+      }
+    ],
+    "actions": [
+      "Create",
+      "Assign",
+      "Update Status",
+      "Complete",
+      "History"
+    ],
+    "dataModels": [
+      "Primary Record",
+      "Status"
+    ],
+    "automations": [
+      "Status transition hooks",
+      "Validation on save"
+    ],
+    "integrations": [
+      "Export placeholder",
+      "Notification placeholder"
+    ],
+    "aiFeatures": []
+  },
+  {
+    "readOnly": true,
+    "appType": "Community Application",
+    "domain": "COMMUNITY_PLATFORM",
+    "strategy": "COMMUNITY_APP",
+    "profile": "SOCIAL_PLATFORM_WEB_V1",
+    "productName": "Community Platform",
+    "prompt": "Build a community platform with groups, posts, messaging, and member profiles.",
+    "entities": [
+      {
+        "readOnly": true,
+        "id": "group",
+        "label": "Group",
+        "pluralLabel": "Groups",
+        "primary": true
+      },
+      {
+        "readOnly": true,
+        "id": "post",
+        "label": "Post",
+        "pluralLabel": "Posts",
+        "primary": false
+      },
+      {
+        "readOnly": true,
+        "id": "member",
+        "label": "Member",
+        "pluralLabel": "Members",
+        "primary": false
+      }
+    ],
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "member",
+        "label": "Member",
+        "permissions": [
+          "view_member",
+          "manage_member"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "moderator",
+        "label": "Moderator",
+        "permissions": [
+          "view_moderator",
+          "manage_moderator"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "permissions": [
+      "view_member",
+      "manage_member",
+      "view_moderator",
+      "manage_moderator",
+      "view_admin",
+      "manage_admin"
+    ],
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "join-and-participate",
+        "label": "Join and Participate",
+        "steps": [
+          "Discover",
+          "Join",
+          "Post"
+        ],
+        "critical": true
+      }
+    ],
+    "screens": [
+      {
+        "readOnly": true,
+        "id": "feed",
+        "label": "Feed",
+        "screenType": "Feed",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "groups",
+        "label": "Groups",
+        "screenType": "Groups",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "messages",
+        "label": "Messages",
+        "screenType": "Messages",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "id": "notifications",
+        "label": "Notifications",
+        "screenType": "Notifications",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "profile",
+        "label": "Profile",
+        "screenType": "Profile",
+        "critical": true
+      },
+      {
+        "readOnly": true,
+        "id": "moderation",
+        "label": "Moderation",
+        "screenType": "Moderation",
+        "critical": false
+      },
+      {
+        "readOnly": true,
+        "id": "settings",
+        "label": "Settings",
+        "screenType": "Settings",
+        "critical": false
+      }
+    ],
+    "actions": [
+      "Join Group",
+      "Create Post",
+      "Comment",
+      "Message",
+      "Moderate"
+    ],
+    "dataModels": [
+      "Group",
+      "Post",
+      "Member"
+    ],
+    "automations": [
+      "Status transition hooks",
+      "Validation on save"
+    ],
+    "integrations": [
+      "Export placeholder",
+      "Notification placeholder"
+    ],
+    "aiFeatures": []
+  }
+]

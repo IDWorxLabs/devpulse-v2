@@ -1,6 +1,6 @@
 {
   "version": "V3.1",
-  "generatedAt": "2026-06-24T14:55:48.744Z",
+  "generatedAt": "2026-06-24T16:02:31.794Z",
   "passToken": "AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS",
   "readOnly": true,
   "priorAuditVersion": "V2",
@@ -1508,7 +1508,7 @@
       "Cloud execution path absent"
     ],
     "shouldBeNextPhase": false,
-    "nextPhaseRationale": "Cloud Execution Path is the highest-priority gap after UVL Verification Execution V1 closed verification at 15/15. World2 should follow production readiness and canonical ownership registration.",
+    "nextPhaseRationale": "Large-Scale Pipeline Integration is the highest-priority gap after UVL Verification Execution V1 closed verification at 15/15. World2 should follow production readiness and canonical ownership registration.",
     "operationalReadiness": "PARTIAL"
   },
   "productionReadiness": {
@@ -1554,17 +1554,17 @@
     ]
   },
   "codeGeneration": {
-    "codeGenerationMaturityScore": 58,
-    "status": "PARTIAL",
+    "codeGenerationMaturityScore": 100,
+    "status": "MATURE",
     "crudProfileCount": 5,
-    "supportsComplexWorkflows": false,
-    "supportsMultiRoleSystems": false,
-    "supportsAdvancedBusinessLogic": false,
-    "supportsDomainSpecificApps": false,
-    "detail": "Code Generation Engine V1 materializes 5 CRUD profiles with 100% success in Real Build Execution V1.1 (15 categories). Cannot yet generate complex workflows, multi-role systems, advanced business logic, or arbitrary domain-specific applications beyond CRUD-adjacent patterns."
+    "supportsComplexWorkflows": true,
+    "supportsMultiRoleSystems": true,
+    "supportsAdvancedBusinessLogic": true,
+    "supportsDomainSpecificApps": true,
+    "detail": "Code Generation Engine V1 materializes 5 CRUD profiles with Real Build Execution V1.1 (15 categories). General-Purpose Code Generation V1 adds workflow-driven, role-aware, domain-specific generation with 10/10 non-trivial app types proven."
   },
   "operationalMaturity": {
-    "generatedAt": "2026-06-24T14:55:48.735Z",
+    "generatedAt": "2026-06-24T16:02:31.754Z",
     "operationalMaturityScore": 97,
     "provenCategoryCount": 15,
     "supportedCategoryCount": 58,
@@ -1693,7 +1693,7 @@
     "Execution generalization score 96/100 (threshold 85)",
     "UVL verification execution (UVL Verification Execution V1 PASS: 15/15 verified, 100% coverage, 100/100 confidence)"
   ],
-  "highestPriorityGap": "Cloud Execution Path — No validated cloud execution or production deployment path.",
+  "highestPriorityGap": "Large-Scale Pipeline Integration — Large-scale validation shows 0% buildSuccessRate in its harness despite Real Build Execution V1.1 proving 100% for 15 categories.",
   "uvlEvidenceRefresh": {
     "artifactDir": ".uvl-verification-execution-v1",
     "consumedArtifacts": [

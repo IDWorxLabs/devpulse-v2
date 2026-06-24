@@ -294,7 +294,7 @@ export function buildCapabilityAuditV3Assessment(projectRootDir?: string): Capab
   const categoryAssessments = buildCategoryAssessments(capabilities);
   const operationalMaturity = buildOperationalMaturityReport(projectRootDir);
   const productionReadiness = buildProductionReadinessAssessment(projectRootDir);
-  const codeGeneration = buildCodeGenerationAssessment();
+  const codeGeneration = buildCodeGenerationAssessment({ projectRootDir });
   const missingCapabilities = buildMissingCapabilitiesReport({
     projectRootDir,
     productionReadinessScore: productionReadiness.productionReadinessScore,

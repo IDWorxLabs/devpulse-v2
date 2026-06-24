@@ -1,0 +1,362 @@
+[
+  {
+    "readOnly": true,
+    "profile": "MARKETPLACE_WEB_V1",
+    "domain": "MARKETPLACE",
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "buyer",
+        "label": "Buyer",
+        "permissions": [
+          "view_buyer",
+          "manage_buyer"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "seller",
+        "label": "Seller",
+        "permissions": [
+          "view_seller",
+          "manage_seller"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "roleNavigationPresent": true,
+    "permissionPlaceholdersPresent": true
+  },
+  {
+    "readOnly": true,
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "domain": "BOOKING",
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "customer",
+        "label": "Customer",
+        "permissions": [
+          "view_customer",
+          "manage_customer"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "provider",
+        "label": "Provider",
+        "permissions": [
+          "view_provider",
+          "manage_provider"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "roleNavigationPresent": true,
+    "permissionPlaceholdersPresent": true
+  },
+  {
+    "readOnly": true,
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "domain": "LEARNING_PLATFORM",
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "learner",
+        "label": "Learner",
+        "permissions": [
+          "view_learner",
+          "manage_learner"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "instructor",
+        "label": "Instructor",
+        "permissions": [
+          "view_instructor",
+          "manage_instructor"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "roleNavigationPresent": true,
+    "permissionPlaceholdersPresent": true
+  },
+  {
+    "readOnly": true,
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "domain": "CUSTOMER_SUPPORT",
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "agent",
+        "label": "Agent",
+        "permissions": [
+          "view_agent",
+          "manage_agent"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "manager",
+        "label": "Manager",
+        "permissions": [
+          "view_manager",
+          "manage_manager"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "roleNavigationPresent": true,
+    "permissionPlaceholdersPresent": true
+  },
+  {
+    "readOnly": true,
+    "profile": "EVENT_PLATFORM_WEB_V1",
+    "domain": "EVENT",
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "agent",
+        "label": "Agent",
+        "permissions": [
+          "view_agent",
+          "manage_agent"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "manager",
+        "label": "Manager",
+        "permissions": [
+          "view_manager",
+          "manage_manager"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "roleNavigationPresent": true,
+    "permissionPlaceholdersPresent": true
+  },
+  {
+    "readOnly": true,
+    "profile": "HEALTHCARE_PORTAL_WEB_V1",
+    "domain": "HEALTHCARE",
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "patient",
+        "label": "Patient",
+        "permissions": [
+          "view_patient",
+          "manage_patient"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "provider",
+        "label": "Provider",
+        "permissions": [
+          "view_provider",
+          "manage_provider"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "roleNavigationPresent": true,
+    "permissionPlaceholdersPresent": true
+  },
+  {
+    "readOnly": true,
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "domain": "FINANCE",
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "accountant",
+        "label": "Accountant",
+        "permissions": [
+          "view_accountant",
+          "manage_accountant"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "manager",
+        "label": "Manager",
+        "permissions": [
+          "view_manager",
+          "manage_manager"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "roleNavigationPresent": true,
+    "permissionPlaceholdersPresent": true
+  },
+  {
+    "readOnly": true,
+    "profile": "JOB_BOARD_WEB_V1",
+    "domain": "JOB_BOARD",
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "agent",
+        "label": "Agent",
+        "permissions": [
+          "view_agent",
+          "manage_agent"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "manager",
+        "label": "Manager",
+        "permissions": [
+          "view_manager",
+          "manage_manager"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "roleNavigationPresent": true,
+    "permissionPlaceholdersPresent": true
+  },
+  {
+    "readOnly": true,
+    "profile": "PROPERTY_MANAGEMENT_WEB_V1",
+    "domain": "PROPERTY",
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "agent",
+        "label": "Agent",
+        "permissions": [
+          "view_agent",
+          "manage_agent"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "manager",
+        "label": "Manager",
+        "permissions": [
+          "view_manager",
+          "manage_manager"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "roleNavigationPresent": true,
+    "permissionPlaceholdersPresent": true
+  },
+  {
+    "readOnly": true,
+    "profile": "SOCIAL_PLATFORM_WEB_V1",
+    "domain": "COMMUNITY_PLATFORM",
+    "roles": [
+      {
+        "readOnly": true,
+        "id": "member",
+        "label": "Member",
+        "permissions": [
+          "view_member",
+          "manage_member"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "moderator",
+        "label": "Moderator",
+        "permissions": [
+          "view_moderator",
+          "manage_moderator"
+        ]
+      },
+      {
+        "readOnly": true,
+        "id": "admin",
+        "label": "Admin",
+        "permissions": [
+          "view_admin",
+          "manage_admin"
+        ]
+      }
+    ],
+    "roleNavigationPresent": true,
+    "permissionPlaceholdersPresent": true
+  }
+]

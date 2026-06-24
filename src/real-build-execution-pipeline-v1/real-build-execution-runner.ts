@@ -22,7 +22,6 @@ import { assessUvlMaturity } from '../unified-verification-lab/index.js';
 import { assessProductArchitecture } from '../product-architect-intelligence-v1/index.js';
 import { adjustAflaScoreForExecutionProof } from './real-build-afla-integration.js';
 import { assessProductionReadinessAfterLaunch } from '../production-readiness-gate-v1/production-readiness-launch-integration.js';
-import { assessProductionReadinessAfterLaunch } from '../production-readiness-gate-v1/production-readiness-launch-integration.js';
 import { classifyExecutionFailure } from './real-build-execution-failure-classifier.js';
 import { assessExecutionRealityForProductArchitect } from './real-build-pai-integration.js';
 import { adjustVerificationConfidence } from './real-build-uvl-integration.js';

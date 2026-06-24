@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T14:19:32.113Z",
+  "generatedAt": "2026-06-24T16:00:21.684Z",
   "slowest": [
     {
       "rank": 1,
@@ -30,6 +30,24 @@
     },
     {
       "rank": 4,
+      "validatorName": "validate:general-purpose-code-generation-v1",
+      "runtimeSeconds": 840,
+      "runtimeMinutes": 14,
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 98,
+      "category": "OTHER"
+    },
+    {
+      "rank": 5,
+      "validatorName": "validate:cloud-execution-path-v1",
+      "runtimeSeconds": 630,
+      "runtimeMinutes": 10.5,
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 0,
+      "category": "OTHER"
+    },
+    {
+      "rank": 6,
       "validatorName": "validate:autonomous-founder-launch-authority-v1",
       "runtimeSeconds": 426,
       "runtimeMinutes": 7.1,
@@ -38,7 +56,16 @@
       "category": "AFLA"
     },
     {
-      "rank": 5,
+      "rank": 7,
+      "validatorName": "validate:production-readiness-gate-v1",
+      "runtimeSeconds": 420,
+      "runtimeMinutes": 7,
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 50,
+      "category": "OTHER"
+    },
+    {
+      "rank": 8,
       "validatorName": "validate:code-generation-engine-v1",
       "runtimeSeconds": 288,
       "runtimeMinutes": 4.8,
@@ -47,7 +74,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 6,
+      "rank": 9,
       "validatorName": "validate:universal-app-blueprint-v1",
       "runtimeSeconds": 263,
       "runtimeMinutes": 4.38,
@@ -56,7 +83,7 @@
       "category": "BLUEPRINT"
     },
     {
-      "rank": 7,
+      "rank": 10,
       "validatorName": "validate:interaction-testing-engine",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -65,7 +92,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 8,
+      "rank": 11,
       "validatorName": "validate:live-preview-runtime",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -74,7 +101,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 9,
+      "rank": 12,
       "validatorName": "validate:preview-intelligence",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -83,7 +110,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 10,
+      "rank": 13,
       "validatorName": "validate:self-vision-runtime",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -92,7 +119,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 11,
+      "rank": 14,
       "validatorName": "validate:ui-inspection-engine",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -101,7 +128,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 12,
+      "rank": 15,
       "validatorName": "validate:visual-verification-engine",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -110,7 +137,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 13,
+      "rank": 16,
       "validatorName": "validate:engineering-reality-v1",
       "runtimeSeconds": 180,
       "runtimeMinutes": 3,
@@ -119,7 +146,7 @@
       "category": "ENGINEERING"
     },
     {
-      "rank": 14,
+      "rank": 17,
       "validatorName": "validate:feature-reality-v1",
       "runtimeSeconds": 180,
       "runtimeMinutes": 3,
@@ -128,7 +155,7 @@
       "category": "FEATURE_REALITY"
     },
     {
-      "rank": 15,
+      "rank": 18,
       "validatorName": "validate:consistency-audit-authoritative-evidence-repoint",
       "runtimeSeconds": 178,
       "runtimeMinutes": 2.97,
@@ -137,7 +164,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 16,
+      "rank": 19,
       "validatorName": "validate:founder-test-consistency-audit",
       "runtimeSeconds": 178,
       "runtimeMinutes": 2.97,
@@ -146,40 +173,13 @@
       "category": "OTHER"
     },
     {
-      "rank": 17,
+      "rank": 20,
       "validatorName": "validate:build-proof-gap-materialization",
       "runtimeSeconds": 138,
       "runtimeMinutes": 2.3,
       "costTier": "HIGH",
       "duplicateWorkPercent": 98,
       "category": "OTHER"
-    },
-    {
-      "rank": 18,
-      "validatorName": "validate:generated-workspace-dependency-installation-executor",
-      "runtimeSeconds": 138,
-      "runtimeMinutes": 2.3,
-      "costTier": "HIGH",
-      "duplicateWorkPercent": 98,
-      "category": "OTHER"
-    },
-    {
-      "rank": 19,
-      "validatorName": "validate:connected-launch-final-blocker",
-      "runtimeSeconds": 123,
-      "runtimeMinutes": 2.05,
-      "costTier": "HIGH",
-      "duplicateWorkPercent": 50,
-      "category": "CONNECTED_PIPELINE"
-    },
-    {
-      "rank": 20,
-      "validatorName": "validate:founder-review-operator-dashboard-v1",
-      "runtimeSeconds": 123,
-      "runtimeMinutes": 2.05,
-      "costTier": "HIGH",
-      "duplicateWorkPercent": 0,
-      "category": "OPERATOR"
     }
   ],
   "mostExpensive": [
@@ -212,6 +212,24 @@
     },
     {
       "rank": 4,
+      "validatorName": "validate:general-purpose-code-generation-v1",
+      "runtimeSeconds": 840,
+      "runtimeMinutes": 14,
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 98,
+      "category": "OTHER"
+    },
+    {
+      "rank": 5,
+      "validatorName": "validate:cloud-execution-path-v1",
+      "runtimeSeconds": 630,
+      "runtimeMinutes": 10.5,
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 0,
+      "category": "OTHER"
+    },
+    {
+      "rank": 6,
       "validatorName": "validate:autonomous-founder-launch-authority-v1",
       "runtimeSeconds": 426,
       "runtimeMinutes": 7.1,
@@ -220,7 +238,16 @@
       "category": "AFLA"
     },
     {
-      "rank": 5,
+      "rank": 7,
+      "validatorName": "validate:production-readiness-gate-v1",
+      "runtimeSeconds": 420,
+      "runtimeMinutes": 7,
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 50,
+      "category": "OTHER"
+    },
+    {
+      "rank": 8,
       "validatorName": "validate:code-generation-engine-v1",
       "runtimeSeconds": 288,
       "runtimeMinutes": 4.8,
@@ -229,7 +256,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 6,
+      "rank": 9,
       "validatorName": "validate:engineering-reality-v1",
       "runtimeSeconds": 180,
       "runtimeMinutes": 3,
@@ -238,7 +265,7 @@
       "category": "ENGINEERING"
     },
     {
-      "rank": 7,
+      "rank": 10,
       "validatorName": "validate:feature-reality-v1",
       "runtimeSeconds": 180,
       "runtimeMinutes": 3,
@@ -247,7 +274,7 @@
       "category": "FEATURE_REALITY"
     },
     {
-      "rank": 8,
+      "rank": 11,
       "validatorName": "validate:universal-app-blueprint-v1",
       "runtimeSeconds": 263,
       "runtimeMinutes": 4.38,
@@ -256,7 +283,7 @@
       "category": "BLUEPRINT"
     },
     {
-      "rank": 9,
+      "rank": 12,
       "validatorName": "validate:interaction-testing-engine",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -265,7 +292,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 10,
+      "rank": 13,
       "validatorName": "validate:live-preview-runtime",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -274,7 +301,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 11,
+      "rank": 14,
       "validatorName": "validate:preview-intelligence",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -283,7 +310,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 12,
+      "rank": 15,
       "validatorName": "validate:self-vision-runtime",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -292,7 +319,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 13,
+      "rank": 16,
       "validatorName": "validate:ui-inspection-engine",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -301,7 +328,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 14,
+      "rank": 17,
       "validatorName": "validate:visual-verification-engine",
       "runtimeSeconds": 207,
       "runtimeMinutes": 3.45,
@@ -310,7 +337,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 15,
+      "rank": 18,
       "validatorName": "validate:consistency-audit-authoritative-evidence-repoint",
       "runtimeSeconds": 178,
       "runtimeMinutes": 2.97,
@@ -319,7 +346,7 @@
       "category": "OTHER"
     },
     {
-      "rank": 16,
+      "rank": 19,
       "validatorName": "validate:founder-test-consistency-audit",
       "runtimeSeconds": 178,
       "runtimeMinutes": 2.97,
@@ -328,40 +355,13 @@
       "category": "OTHER"
     },
     {
-      "rank": 17,
+      "rank": 20,
       "validatorName": "validate:real-build-execution-pipeline-v1-1",
       "runtimeSeconds": 65,
       "runtimeMinutes": 1.08,
       "costTier": "CRITICAL",
       "duplicateWorkPercent": 98,
       "category": "REAL_BUILD_EXECUTION"
-    },
-    {
-      "rank": 18,
-      "validatorName": "validate:build-proof-gap-materialization",
-      "runtimeSeconds": 138,
-      "runtimeMinutes": 2.3,
-      "costTier": "HIGH",
-      "duplicateWorkPercent": 98,
-      "category": "OTHER"
-    },
-    {
-      "rank": 19,
-      "validatorName": "validate:generated-workspace-dependency-installation-executor",
-      "runtimeSeconds": 138,
-      "runtimeMinutes": 2.3,
-      "costTier": "HIGH",
-      "duplicateWorkPercent": 98,
-      "category": "OTHER"
-    },
-    {
-      "rank": 20,
-      "validatorName": "validate:connected-launch-final-blocker",
-      "runtimeSeconds": 123,
-      "runtimeMinutes": 2.05,
-      "costTier": "HIGH",
-      "duplicateWorkPercent": 50,
-      "category": "CONNECTED_PIPELINE"
     }
   ],
   "highestDuplicate": [

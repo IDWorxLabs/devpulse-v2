@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T14:19:30.939Z",
+  "generatedAt": "2026-06-24T16:00:18.953Z",
   "tiers": [
     {
       "tier": "FAST",
@@ -105,6 +105,7 @@
       "forbiddenValidatorPatterns": [],
       "explicitValidators": [
         "validate:uvl-verification-execution-v1",
+        "validate:production-readiness-gate-v1",
         "validate:uvl-maturity-verification-hub-v1",
         "validate:product-architect-intelligence-v1",
         "validate:autonomous-founder-launch-authority-v1",
@@ -428,14 +429,6 @@
       "aflaBlockedInFastStandard": false
     },
     {
-      "validatorName": "validate:canonical-capability-ownership-v1",
-      "tier": "FAST",
-      "category": "OTHER",
-      "runtimeBudgetSeconds": 3,
-      "budgetCategory": "LOW",
-      "aflaBlockedInFastStandard": false
-    },
-    {
       "validatorName": "validate:capability-audit-v1",
       "tier": "LAUNCH",
       "category": "CAPABILITY_AUDIT",
@@ -456,6 +449,14 @@
       "tier": "LAUNCH",
       "category": "CAPABILITY_AUDIT",
       "runtimeBudgetSeconds": 6,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:capability-audit-v3-1",
+      "tier": "LAUNCH",
+      "category": "CAPABILITY_AUDIT",
+      "runtimeBudgetSeconds": 23,
       "budgetCategory": "LOW",
       "aflaBlockedInFastStandard": false
     },
@@ -657,6 +658,14 @@
       "category": "CQI",
       "runtimeBudgetSeconds": 3,
       "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:cloud-execution-path-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 630,
+      "budgetCategory": "CRITICAL",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -1372,14 +1381,6 @@
       "aflaBlockedInFastStandard": false
     },
     {
-      "validatorName": "validate:founder-review-operator-dashboard-v1",
-      "tier": "FULL",
-      "category": "OPERATOR",
-      "runtimeBudgetSeconds": 123,
-      "budgetCategory": "HIGH",
-      "aflaBlockedInFastStandard": false
-    },
-    {
       "validatorName": "validate:founder-sensemaking-engine",
       "tier": "FAST",
       "category": "OTHER",
@@ -1673,6 +1674,14 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
       "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:general-purpose-code-generation-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 840,
+      "budgetCategory": "CRITICAL",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -2388,6 +2397,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:production-readiness-gate-v1",
+      "tier": "LAUNCH",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 420,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:progress-intelligence",
       "tier": "STANDARD",
       "category": "OTHER",
@@ -2953,14 +2970,6 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
       "budgetCategory": "LOW",
-      "aflaBlockedInFastStandard": false
-    },
-    {
-      "validatorName": "validate:uvl-maturity-verification-hub-v1",
-      "tier": "LAUNCH",
-      "category": "UVL",
-      "runtimeBudgetSeconds": 123,
-      "budgetCategory": "HIGH",
       "aflaBlockedInFastStandard": false
     },
     {

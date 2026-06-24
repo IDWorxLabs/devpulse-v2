@@ -1,0 +1,56 @@
+{
+  "readOnly": true,
+  "contractVersion": "V1",
+  "jobId": "b5033b86-1a0b-462d-b874-e4759d2ad9e6",
+  "projectId": "proj-task_tracker_web_v1",
+  "executionMode": "CLOUD_SIMULATED",
+  "jobMetadata": {
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "requestedAt": "2026-06-24T15:12:08.561Z",
+    "workerId": "worker-b5033b86"
+  },
+  "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+  "requirementsSnapshot": {
+    "readOnly": true,
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+    "requirementConfidence": 25
+  },
+  "buildPlan": {
+    "readOnly": true,
+    "contractId": "build-ready-idea-1",
+    "planningSummary": "Contract build-ready-idea-1",
+    "codegenProfile": "TASK_TRACKER_WEB_V1"
+  },
+  "workspaceSpec": {
+    "readOnly": true,
+    "workspaceId": "cep-b5033b86-1a0b-462d-b874-e4759d2ad9e6",
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\cep-b5033b86-1a0b-462d-b874-e4759d2ad9e6",
+    "isolationToken": "b5033b86-1a0b-462d-b874-e4759d2ad9e6",
+    "boundedLogsMaxLines": 500,
+    "boundedArtifactsMaxBytes": 5000000,
+    "runtimeTimeoutMs": 300000
+  },
+  "expectedArtifactOutputs": [
+    "generated-source-manifest.json",
+    "build-logs.txt",
+    "preview-proof.json",
+    "uvl-verification-proof.json",
+    "product-architect-proof.json",
+    "afla-verdict.json",
+    "production-readiness-result.json",
+    "execution-summary.json",
+    "cloud-job-package.json"
+  ],
+  "validationRequirements": [
+    "Build proof required",
+    "Preview proof required",
+    "UVL verification proof required",
+    "AFLA verdict required",
+    "Production readiness gate required",
+    "Unique isolated workspace required"
+  ],
+  "generatedAt": "2026-06-24T15:12:25.332Z"
+}

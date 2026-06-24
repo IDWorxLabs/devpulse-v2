@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T14:19:30.939Z",
+  "generatedAt": "2026-06-24T16:00:18.953Z",
   "entries": [
     {
       "validatorName": "validate:universal-app-blueprint-visual-v1",
@@ -26,11 +26,35 @@
       "breachBecomesAuditFinding": true
     },
     {
+      "validatorName": "validate:general-purpose-code-generation-v1",
+      "budgetSeconds": 1680,
+      "budgetCategory": "CRITICAL",
+      "measuredSeconds": null,
+      "estimatedSeconds": 840,
+      "breachBecomesAuditFinding": true
+    },
+    {
+      "validatorName": "validate:cloud-execution-path-v1",
+      "budgetSeconds": 1260,
+      "budgetCategory": "CRITICAL",
+      "measuredSeconds": null,
+      "estimatedSeconds": 630,
+      "breachBecomesAuditFinding": true
+    },
+    {
       "validatorName": "validate:autonomous-founder-launch-authority-v1",
       "budgetSeconds": 852,
       "budgetCategory": "CRITICAL",
       "measuredSeconds": 426,
       "estimatedSeconds": 426,
+      "breachBecomesAuditFinding": true
+    },
+    {
+      "validatorName": "validate:production-readiness-gate-v1",
+      "budgetSeconds": 840,
+      "budgetCategory": "CRITICAL",
+      "measuredSeconds": null,
+      "estimatedSeconds": 420,
       "breachBecomesAuditFinding": true
     },
     {
@@ -147,22 +171,6 @@
     },
     {
       "validatorName": "validate:connected-launch-final-blocker",
-      "budgetSeconds": 184.5,
-      "budgetCategory": "HIGH",
-      "measuredSeconds": null,
-      "estimatedSeconds": 123,
-      "breachBecomesAuditFinding": true
-    },
-    {
-      "validatorName": "validate:founder-review-operator-dashboard-v1",
-      "budgetSeconds": 184.5,
-      "budgetCategory": "HIGH",
-      "measuredSeconds": null,
-      "estimatedSeconds": 123,
-      "breachBecomesAuditFinding": true
-    },
-    {
-      "validatorName": "validate:uvl-maturity-verification-hub-v1",
       "budgetSeconds": 184.5,
       "budgetCategory": "HIGH",
       "measuredSeconds": null,
@@ -1170,6 +1178,14 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:capability-audit-v3-1",
+      "budgetSeconds": 23,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 23,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:afla-trust-calibration-v1",
       "budgetSeconds": 16,
       "budgetCategory": "CRITICAL",
@@ -1419,14 +1435,6 @@
     },
     {
       "validatorName": "validate:build-strategy-engine",
-      "budgetSeconds": 3,
-      "budgetCategory": "LOW",
-      "measuredSeconds": null,
-      "estimatedSeconds": 3,
-      "breachBecomesAuditFinding": false
-    },
-    {
-      "validatorName": "validate:canonical-capability-ownership-v1",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,

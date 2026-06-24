@@ -1,0 +1,256 @@
+[
+  {
+    "readOnly": true,
+    "profile": "MARKETPLACE_WEB_V1",
+    "domain": "MARKETPLACE",
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "purchase-flow",
+        "label": "Purchase Flow",
+        "steps": [
+          "Search",
+          "Select",
+          "Checkout",
+          "Order Confirmation"
+        ],
+        "critical": true
+      }
+    ],
+    "primaryWorkflowComplete": true,
+    "stateTransitions": [
+      "Search → Select",
+      "Select → Checkout",
+      "Checkout → Order Confirmation"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "domain": "BOOKING",
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "booking-flow",
+        "label": "Booking Flow",
+        "steps": [
+          "Search",
+          "Select",
+          "Book",
+          "Pay",
+          "Confirmation"
+        ],
+        "critical": true
+      }
+    ],
+    "primaryWorkflowComplete": true,
+    "stateTransitions": [
+      "Search → Select",
+      "Select → Book",
+      "Book → Pay",
+      "Pay → Confirmation"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "domain": "LEARNING_PLATFORM",
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "learn-and-complete",
+        "label": "Learn and Complete",
+        "steps": [
+          "Enroll",
+          "Learn",
+          "Assess",
+          "Complete"
+        ],
+        "critical": true
+      }
+    ],
+    "primaryWorkflowComplete": true,
+    "stateTransitions": [
+      "Enroll → Learn",
+      "Learn → Assess",
+      "Assess → Complete"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "domain": "CUSTOMER_SUPPORT",
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "primary-workflow",
+        "label": "Primary Workflow",
+        "steps": [
+          "Create",
+          "Assign",
+          "Update Status",
+          "Complete",
+          "History"
+        ],
+        "critical": true
+      }
+    ],
+    "primaryWorkflowComplete": true,
+    "stateTransitions": [
+      "Create → Assign",
+      "Assign → Update Status",
+      "Update Status → Complete",
+      "Complete → History"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "EVENT_PLATFORM_WEB_V1",
+    "domain": "EVENT",
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "primary-workflow",
+        "label": "Primary Workflow",
+        "steps": [
+          "Create",
+          "Assign",
+          "Update Status",
+          "Complete",
+          "History"
+        ],
+        "critical": true
+      }
+    ],
+    "primaryWorkflowComplete": true,
+    "stateTransitions": [
+      "Create → Assign",
+      "Assign → Update Status",
+      "Update Status → Complete",
+      "Complete → History"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "HEALTHCARE_PORTAL_WEB_V1",
+    "domain": "HEALTHCARE",
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "patient-visit",
+        "label": "Patient Visit",
+        "steps": [
+          "Schedule",
+          "Check In",
+          "Document Care"
+        ],
+        "critical": true
+      }
+    ],
+    "primaryWorkflowComplete": true,
+    "stateTransitions": [
+      "Schedule → Check In",
+      "Check In → Document Care"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "domain": "FINANCE",
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "record-to-report",
+        "label": "Record to Report",
+        "steps": [
+          "Capture Transaction",
+          "Categorize",
+          "Report"
+        ],
+        "critical": true
+      }
+    ],
+    "primaryWorkflowComplete": true,
+    "stateTransitions": [
+      "Capture Transaction → Categorize",
+      "Categorize → Report"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "JOB_BOARD_WEB_V1",
+    "domain": "JOB_BOARD",
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "primary-workflow",
+        "label": "Primary Workflow",
+        "steps": [
+          "Create",
+          "Assign",
+          "Update Status",
+          "Complete",
+          "History"
+        ],
+        "critical": true
+      }
+    ],
+    "primaryWorkflowComplete": true,
+    "stateTransitions": [
+      "Create → Assign",
+      "Assign → Update Status",
+      "Update Status → Complete",
+      "Complete → History"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "PROPERTY_MANAGEMENT_WEB_V1",
+    "domain": "PROPERTY",
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "primary-workflow",
+        "label": "Primary Workflow",
+        "steps": [
+          "Create",
+          "Assign",
+          "Update Status",
+          "Complete",
+          "History"
+        ],
+        "critical": true
+      }
+    ],
+    "primaryWorkflowComplete": true,
+    "stateTransitions": [
+      "Create → Assign",
+      "Assign → Update Status",
+      "Update Status → Complete",
+      "Complete → History"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "SOCIAL_PLATFORM_WEB_V1",
+    "domain": "COMMUNITY_PLATFORM",
+    "workflows": [
+      {
+        "readOnly": true,
+        "id": "join-and-participate",
+        "label": "Join and Participate",
+        "steps": [
+          "Discover",
+          "Join",
+          "Post"
+        ],
+        "critical": true
+      }
+    ],
+    "primaryWorkflowComplete": true,
+    "stateTransitions": [
+      "Discover → Join",
+      "Join → Post"
+    ]
+  }
+]

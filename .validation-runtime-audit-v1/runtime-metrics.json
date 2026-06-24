@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-06-24T14:19:32.113Z",
-  "validatorCount": 453,
-  "registeredValidatorCount": 407,
-  "totalEstimatedRuntimeSeconds": 14496,
-  "totalEstimatedRuntimeMinutes": 241.6,
+  "generatedAt": "2026-06-24T16:00:21.684Z",
+  "validatorCount": 457,
+  "registeredValidatorCount": 408,
+  "totalEstimatedRuntimeSeconds": 16160,
+  "totalEstimatedRuntimeMinutes": 269.3,
   "aggregateDuplicateWorkPercent": 95,
   "regressionChain": {
     "typicalImplementationMinutes": 5,
@@ -1145,7 +1145,7 @@
       },
       "maxRuntimeBoundMs": null,
       "validationMode": "UNMARKED",
-      "registeredInPackageJson": true
+      "registeredInPackageJson": false
     },
     {
       "validatorName": "validate:capability-audit-v1",
@@ -1204,6 +1204,31 @@
       "runtimeSeconds": 6,
       "runtimeMinutes": 0.1,
       "measurementSource": "MEASURED",
+      "costTier": "LOW",
+      "duplicateWorkPercent": 0,
+      "workPatterns": {
+        "npmInstallCount": 0,
+        "npmBuildCount": 0,
+        "previewServerCount": 0,
+        "playwrightExecutionCount": 0,
+        "workspaceMaterializationCount": 0,
+        "uvlExecutionCount": 0,
+        "aflaExecutionCount": 0,
+        "auditExecutionCount": 4,
+        "realBuildPipelineCount": 0,
+        "nestedValidatorCount": 0
+      },
+      "maxRuntimeBoundMs": null,
+      "validationMode": "UNMARKED",
+      "registeredInPackageJson": true
+    },
+    {
+      "validatorName": "validate:capability-audit-v3-1",
+      "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-capability-audit-v3-1.ts",
+      "category": "CAPABILITY_AUDIT",
+      "runtimeSeconds": 23,
+      "runtimeMinutes": 0.38,
+      "measurementSource": "STATIC_ESTIMATE",
       "costTier": "LOW",
       "duplicateWorkPercent": 0,
       "workPatterns": {
@@ -1869,6 +1894,31 @@
         "nestedValidatorCount": 0
       },
       "maxRuntimeBoundMs": 60000,
+      "validationMode": "UNMARKED",
+      "registeredInPackageJson": true
+    },
+    {
+      "validatorName": "validate:cloud-execution-path-v1",
+      "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-cloud-execution-path-v1.ts",
+      "category": "OTHER",
+      "runtimeSeconds": 630,
+      "runtimeMinutes": 10.5,
+      "measurementSource": "MAX_RUNTIME_BOUND",
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 0,
+      "workPatterns": {
+        "npmInstallCount": 0,
+        "npmBuildCount": 0,
+        "previewServerCount": 0,
+        "playwrightExecutionCount": 0,
+        "workspaceMaterializationCount": 0,
+        "uvlExecutionCount": 0,
+        "aflaExecutionCount": 0,
+        "auditExecutionCount": 0,
+        "realBuildPipelineCount": 0,
+        "nestedValidatorCount": 0
+      },
+      "maxRuntimeBoundMs": 1800000,
       "validationMode": "UNMARKED",
       "registeredInPackageJson": true
     },
@@ -4420,7 +4470,7 @@
       },
       "maxRuntimeBoundMs": 15000,
       "validationMode": "UNMARKED",
-      "registeredInPackageJson": true
+      "registeredInPackageJson": false
     },
     {
       "validatorName": "validate:founder-sensemaking-engine",
@@ -5344,6 +5394,31 @@
         "nestedValidatorCount": 0
       },
       "maxRuntimeBoundMs": 60000,
+      "validationMode": "UNMARKED",
+      "registeredInPackageJson": true
+    },
+    {
+      "validatorName": "validate:general-purpose-code-generation-v1",
+      "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-general-purpose-code-generation-v1.ts",
+      "category": "OTHER",
+      "runtimeSeconds": 840,
+      "runtimeMinutes": 14,
+      "measurementSource": "MAX_RUNTIME_BOUND",
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 98,
+      "workPatterns": {
+        "npmInstallCount": 0,
+        "npmBuildCount": 1,
+        "previewServerCount": 0,
+        "playwrightExecutionCount": 0,
+        "workspaceMaterializationCount": 0,
+        "uvlExecutionCount": 0,
+        "aflaExecutionCount": 0,
+        "auditExecutionCount": 0,
+        "realBuildPipelineCount": 0,
+        "nestedValidatorCount": 0
+      },
+      "maxRuntimeBoundMs": 2400000,
       "validationMode": "UNMARKED",
       "registeredInPackageJson": true
     },
@@ -7798,6 +7873,31 @@
       "registeredInPackageJson": true
     },
     {
+      "validatorName": "validate:production-readiness-gate-v1",
+      "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-production-readiness-gate-v1.ts",
+      "category": "OTHER",
+      "runtimeSeconds": 420,
+      "runtimeMinutes": 7,
+      "measurementSource": "MAX_RUNTIME_BOUND",
+      "costTier": "CRITICAL",
+      "duplicateWorkPercent": 50,
+      "workPatterns": {
+        "npmInstallCount": 0,
+        "npmBuildCount": 0,
+        "previewServerCount": 0,
+        "playwrightExecutionCount": 0,
+        "workspaceMaterializationCount": 0,
+        "uvlExecutionCount": 0,
+        "aflaExecutionCount": 1,
+        "auditExecutionCount": 2,
+        "realBuildPipelineCount": 2,
+        "nestedValidatorCount": 0
+      },
+      "maxRuntimeBoundMs": 1200000,
+      "validationMode": "UNMARKED",
+      "registeredInPackageJson": true
+    },
+    {
       "validatorName": "validate:progress-intelligence",
       "scriptPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\scripts\\validate-progress-intelligence.ts",
       "category": "OTHER",
@@ -9995,7 +10095,7 @@
       },
       "maxRuntimeBoundMs": 20000,
       "validationMode": "UNMARKED",
-      "registeredInPackageJson": true
+      "registeredInPackageJson": false
     },
     {
       "validatorName": "validate:uvl-verification-execution-v1",

@@ -1,0 +1,404 @@
+[
+  {
+    "profile": "MARKETPLACE_WEB_V1",
+    "domain": "MARKETPLACE",
+    "productName": "Marketplace",
+    "strategy": "MARKETPLACE_APP",
+    "definition": {
+      "readOnly": true,
+      "label": "Marketplace Application",
+      "requiredEntities": [
+        "Listing",
+        "Order",
+        "User"
+      ],
+      "expectedWorkflows": [
+        "Create Listing",
+        "Browse",
+        "View Detail",
+        "Contact Seller",
+        "Manage Orders"
+      ],
+      "userRoles": [
+        "Buyer",
+        "Seller",
+        "Admin"
+      ],
+      "screenExpectations": [
+        "Listings",
+        "Product Detail",
+        "Search",
+        "Orders",
+        "Profile"
+      ],
+      "dataModelComplexity": "HIGH",
+      "validationNeeds": [
+        "Listing lifecycle",
+        "Purchase flow",
+        "Multi-role navigation"
+      ],
+      "strategy": "MARKETPLACE_APP"
+    }
+  },
+  {
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "domain": "BOOKING",
+    "productName": "Booking Platform",
+    "strategy": "BOOKING_APP",
+    "definition": {
+      "readOnly": true,
+      "label": "Booking Application",
+      "requiredEntities": [
+        "Slot",
+        "Booking",
+        "Customer"
+      ],
+      "expectedWorkflows": [
+        "Search Availability",
+        "Select Slot",
+        "Enter Details",
+        "Confirm",
+        "Cancel"
+      ],
+      "userRoles": [
+        "Customer",
+        "Provider",
+        "Admin"
+      ],
+      "screenExpectations": [
+        "Calendar",
+        "Booking Form",
+        "Confirmation",
+        "My Bookings"
+      ],
+      "dataModelComplexity": "MEDIUM",
+      "validationNeeds": [
+        "Booking conflict warning",
+        "Availability",
+        "Confirmation flow"
+      ],
+      "strategy": "BOOKING_APP"
+    }
+  },
+  {
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "domain": "LEARNING_PLATFORM",
+    "productName": "Learning Platform",
+    "strategy": "CONTENT_APP",
+    "definition": {
+      "readOnly": true,
+      "label": "Content Application",
+      "requiredEntities": [
+        "Course",
+        "Lesson",
+        "Progress"
+      ],
+      "expectedWorkflows": [
+        "Create Course",
+        "Enroll",
+        "Track Lessons",
+        "Mark Progress",
+        "Certificate"
+      ],
+      "userRoles": [
+        "Teacher",
+        "Student",
+        "Admin"
+      ],
+      "screenExpectations": [
+        "Catalog",
+        "Course Detail",
+        "Lesson",
+        "Progress",
+        "Admin"
+      ],
+      "dataModelComplexity": "HIGH",
+      "validationNeeds": [
+        "Progress tracker",
+        "Lesson flow",
+        "Enrollment"
+      ],
+      "strategy": "CONTENT_APP"
+    }
+  },
+  {
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "domain": "CUSTOMER_SUPPORT",
+    "productName": "Customer Support Platform",
+    "strategy": "WORKFLOW_APP",
+    "definition": {
+      "readOnly": true,
+      "label": "Workflow Application",
+      "requiredEntities": [
+        "Primary Record",
+        "Status"
+      ],
+      "expectedWorkflows": [
+        "Create",
+        "Assign",
+        "Update Status",
+        "Complete",
+        "History"
+      ],
+      "userRoles": [
+        "Agent",
+        "Manager",
+        "Admin"
+      ],
+      "screenExpectations": [
+        "Dashboard",
+        "List",
+        "Detail",
+        "Workflow Step",
+        "Activity"
+      ],
+      "dataModelComplexity": "MEDIUM",
+      "validationNeeds": [
+        "State transitions",
+        "Role actions",
+        "Workflow completion"
+      ],
+      "strategy": "WORKFLOW_APP"
+    }
+  },
+  {
+    "profile": "EVENT_PLATFORM_WEB_V1",
+    "domain": "EVENT",
+    "productName": "Event Platform",
+    "strategy": "WORKFLOW_APP",
+    "definition": {
+      "readOnly": true,
+      "label": "Workflow Application",
+      "requiredEntities": [
+        "Primary Record",
+        "Status"
+      ],
+      "expectedWorkflows": [
+        "Create",
+        "Assign",
+        "Update Status",
+        "Complete",
+        "History"
+      ],
+      "userRoles": [
+        "Agent",
+        "Manager",
+        "Admin"
+      ],
+      "screenExpectations": [
+        "Dashboard",
+        "List",
+        "Detail",
+        "Workflow Step",
+        "Activity"
+      ],
+      "dataModelComplexity": "MEDIUM",
+      "validationNeeds": [
+        "State transitions",
+        "Role actions",
+        "Workflow completion"
+      ],
+      "strategy": "WORKFLOW_APP"
+    }
+  },
+  {
+    "profile": "HEALTHCARE_PORTAL_WEB_V1",
+    "domain": "HEALTHCARE",
+    "productName": "Healthcare Portal",
+    "strategy": "PORTAL_APP",
+    "definition": {
+      "readOnly": true,
+      "label": "Portal Application",
+      "requiredEntities": [
+        "User",
+        "Record",
+        "Appointment"
+      ],
+      "expectedWorkflows": [
+        "Register",
+        "Book",
+        "View Records",
+        "Manage Profile"
+      ],
+      "userRoles": [
+        "Patient",
+        "Provider",
+        "Admin"
+      ],
+      "screenExpectations": [
+        "Dashboard",
+        "Profile",
+        "Records",
+        "Settings",
+        "Notifications"
+      ],
+      "dataModelComplexity": "HIGH",
+      "validationNeeds": [
+        "Role portals",
+        "Secure views",
+        "Workflow steps"
+      ],
+      "strategy": "PORTAL_APP"
+    }
+  },
+  {
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "domain": "FINANCE",
+    "productName": "Finance Tracker",
+    "strategy": "DASHBOARD_APP",
+    "definition": {
+      "readOnly": true,
+      "label": "Dashboard Application",
+      "requiredEntities": [
+        "Metric",
+        "Transaction",
+        "Category"
+      ],
+      "expectedWorkflows": [
+        "View Dashboard",
+        "Add Entry",
+        "Categorize",
+        "Report"
+      ],
+      "userRoles": [
+        "Owner",
+        "Viewer",
+        "Admin"
+      ],
+      "screenExpectations": [
+        "Dashboard",
+        "Reports",
+        "Settings",
+        "Activity"
+      ],
+      "dataModelComplexity": "MEDIUM",
+      "validationNeeds": [
+        "Metrics visibility",
+        "Reports",
+        "Filters"
+      ],
+      "strategy": "DASHBOARD_APP"
+    }
+  },
+  {
+    "profile": "JOB_BOARD_WEB_V1",
+    "domain": "JOB_BOARD",
+    "productName": "Job Board",
+    "strategy": "WORKFLOW_APP",
+    "definition": {
+      "readOnly": true,
+      "label": "Workflow Application",
+      "requiredEntities": [
+        "Primary Record",
+        "Status"
+      ],
+      "expectedWorkflows": [
+        "Create",
+        "Assign",
+        "Update Status",
+        "Complete",
+        "History"
+      ],
+      "userRoles": [
+        "Agent",
+        "Manager",
+        "Admin"
+      ],
+      "screenExpectations": [
+        "Dashboard",
+        "List",
+        "Detail",
+        "Workflow Step",
+        "Activity"
+      ],
+      "dataModelComplexity": "MEDIUM",
+      "validationNeeds": [
+        "State transitions",
+        "Role actions",
+        "Workflow completion"
+      ],
+      "strategy": "WORKFLOW_APP"
+    }
+  },
+  {
+    "profile": "PROPERTY_MANAGEMENT_WEB_V1",
+    "domain": "PROPERTY",
+    "productName": "Property Management",
+    "strategy": "WORKFLOW_APP",
+    "definition": {
+      "readOnly": true,
+      "label": "Workflow Application",
+      "requiredEntities": [
+        "Primary Record",
+        "Status"
+      ],
+      "expectedWorkflows": [
+        "Create",
+        "Assign",
+        "Update Status",
+        "Complete",
+        "History"
+      ],
+      "userRoles": [
+        "Agent",
+        "Manager",
+        "Admin"
+      ],
+      "screenExpectations": [
+        "Dashboard",
+        "List",
+        "Detail",
+        "Workflow Step",
+        "Activity"
+      ],
+      "dataModelComplexity": "MEDIUM",
+      "validationNeeds": [
+        "State transitions",
+        "Role actions",
+        "Workflow completion"
+      ],
+      "strategy": "WORKFLOW_APP"
+    }
+  },
+  {
+    "profile": "SOCIAL_PLATFORM_WEB_V1",
+    "domain": "COMMUNITY_PLATFORM",
+    "productName": "Community Platform",
+    "strategy": "COMMUNITY_APP",
+    "definition": {
+      "readOnly": true,
+      "label": "Community Application",
+      "requiredEntities": [
+        "Group",
+        "Post",
+        "Member"
+      ],
+      "expectedWorkflows": [
+        "Join Group",
+        "Create Post",
+        "Comment",
+        "Message",
+        "Moderate"
+      ],
+      "userRoles": [
+        "Member",
+        "Moderator",
+        "Admin"
+      ],
+      "screenExpectations": [
+        "Feed",
+        "Groups",
+        "Profile",
+        "Messages",
+        "Notifications"
+      ],
+      "dataModelComplexity": "HIGH",
+      "validationNeeds": [
+        "Social workflows",
+        "Role moderation",
+        "Activity feed"
+      ],
+      "strategy": "COMMUNITY_APP"
+    }
+  }
+]

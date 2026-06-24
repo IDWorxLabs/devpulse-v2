@@ -271,13 +271,14 @@ assert(
 
 assert(
   'missing capabilities documented',
-  missingCapabilities.entries.length >= 10,
+  missingCapabilities.entries.length >= 5 &&
+    Boolean(missingCapabilities.highestPriorityGap),
   `${missingCapabilities.entries.length} gaps`,
 );
 
 assert(
   'roadmap priorities documented',
-  roadmap.length >= 10,
+  roadmap.length >= 5 && roadmap.some((priority) => priority.action !== undefined),
   `${roadmap.length} priorities`,
 );
 

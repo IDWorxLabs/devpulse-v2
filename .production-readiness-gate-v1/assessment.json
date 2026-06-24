@@ -4,7 +4,7 @@
   "canonicalOwner": "Production Readiness Gate V1",
   "passToken": "PRODUCTION_READINESS_GATE_V1_PASS",
   "version": "V1",
-  "generatedAt": "2026-06-24T14:55:39.815Z",
+  "generatedAt": "2026-06-24T15:13:07.329Z",
   "categoriesEvaluated": 15,
   "categoriesProductionReady": 15,
   "productionReadinessScore": 84,
@@ -12,7 +12,7 @@
   "productionProofStatus": "PROVEN",
   "domainScores": {
     "readOnly": true,
-    "generatedAt": "2026-06-24T14:55:39.815Z",
+    "generatedAt": "2026-06-24T15:13:07.329Z",
     "overallScore": 84,
     "domains": [
       {

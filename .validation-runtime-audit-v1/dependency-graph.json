@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T14:19:32.113Z",
+  "generatedAt": "2026-06-24T16:00:21.684Z",
   "nodes": [
     {
       "validatorName": "validate:action-visibility-engine",
@@ -42,6 +42,7 @@
       "validatorName": "validate:afla-trust-calibration-v1",
       "triggers": [],
       "triggeredBy": [
+        "validate:production-readiness-gate-v1",
         "validate:validation-runtime-governance-v1"
       ],
       "nestedValidation": false,
@@ -197,6 +198,7 @@
       "triggers": [],
       "triggeredBy": [
         "validate:cqi-integration-repair-v1",
+        "validate:production-readiness-gate-v1",
         "validate:validation-runtime-governance-v1"
       ],
       "nestedValidation": false,
@@ -301,15 +303,6 @@
       "circularRisk": false
     },
     {
-      "validatorName": "validate:canonical-capability-ownership-v1",
-      "triggers": [],
-      "triggeredBy": [
-        "validate:cqi-integration-repair-v1"
-      ],
-      "nestedValidation": false,
-      "circularRisk": false
-    },
-    {
       "validatorName": "validate:capability-audit-v1",
       "triggers": [],
       "triggeredBy": [],
@@ -328,6 +321,17 @@
       "triggers": [],
       "triggeredBy": [
         "validate:validation-runtime-governance-v1"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:capability-audit-v3-1",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:cloud-execution-path-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:production-readiness-gate-v1"
       ],
       "nestedValidation": false,
       "circularRisk": false
@@ -521,6 +525,21 @@
       "triggers": [],
       "triggeredBy": [],
       "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:cloud-execution-path-v1",
+      "triggers": [
+        "validate:production-readiness-gate-v1",
+        "validate:uvl-verification-execution-v1",
+        "validate:real-build-execution-pipeline-v1-1",
+        "validate:validation-runtime-governance-v1",
+        "validate:capability-audit-v3-1"
+      ],
+      "triggeredBy": [
+        "validate:general-purpose-code-generation-v1"
+      ],
+      "nestedValidation": true,
       "circularRisk": false
     },
     {
@@ -1171,15 +1190,6 @@
       "circularRisk": false
     },
     {
-      "validatorName": "validate:founder-review-operator-dashboard-v1",
-      "triggers": [],
-      "triggeredBy": [
-        "validate:cqi-integration-repair-v1"
-      ],
-      "nestedValidation": false,
-      "circularRisk": false
-    },
-    {
       "validatorName": "validate:founder-sensemaking-engine",
       "triggers": [],
       "triggeredBy": [],
@@ -1446,6 +1456,20 @@
       "triggers": [],
       "triggeredBy": [],
       "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:general-purpose-code-generation-v1",
+      "triggers": [
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:uvl-verification-execution-v1",
+        "validate:real-build-execution-pipeline-v1-1",
+        "validate:validation-runtime-governance-v1",
+        "validate:capability-audit-v3-1"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
       "circularRisk": false
     },
     {
@@ -2050,6 +2074,7 @@
       "validatorName": "validate:product-architect-intelligence-v1",
       "triggers": [],
       "triggeredBy": [
+        "validate:production-readiness-gate-v1",
         "validate:validation-runtime-governance-v1"
       ],
       "nestedValidation": false,
@@ -2140,6 +2165,24 @@
       "circularRisk": false
     },
     {
+      "validatorName": "validate:production-readiness-gate-v1",
+      "triggers": [
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1",
+        "validate:uvl-verification-execution-v1",
+        "validate:real-build-execution-pipeline-v1-1",
+        "validate:product-architect-intelligence-v1",
+        "validate:afla-trust-calibration-v1",
+        "validate:autonomous-founder-launch-authority-v1"
+      ],
+      "triggeredBy": [
+        "validate:cloud-execution-path-v1",
+        "validate:general-purpose-code-generation-v1"
+      ],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
       "validatorName": "validate:progress-intelligence",
       "triggers": [],
       "triggeredBy": [
@@ -2224,7 +2267,11 @@
     {
       "validatorName": "validate:real-build-execution-pipeline-v1-1",
       "triggers": [],
-      "triggeredBy": [],
+      "triggeredBy": [
+        "validate:cloud-execution-path-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:production-readiness-gate-v1"
+      ],
       "nestedValidation": false,
       "circularRisk": false
     },
@@ -2674,16 +2721,13 @@
       "circularRisk": false
     },
     {
-      "validatorName": "validate:uvl-maturity-verification-hub-v1",
-      "triggers": [],
-      "triggeredBy": [],
-      "nestedValidation": false,
-      "circularRisk": false
-    },
-    {
       "validatorName": "validate:uvl-verification-execution-v1",
       "triggers": [],
-      "triggeredBy": [],
+      "triggeredBy": [
+        "validate:cloud-execution-path-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:production-readiness-gate-v1"
+      ],
       "nestedValidation": false,
       "circularRisk": false
     },
@@ -2719,7 +2763,11 @@
         "validate:product-architect-intelligence-v1",
         "validate:afla-trust-calibration-v1"
       ],
-      "triggeredBy": [],
+      "triggeredBy": [
+        "validate:cloud-execution-path-v1",
+        "validate:general-purpose-code-generation-v1",
+        "validate:production-readiness-gate-v1"
+      ],
       "nestedValidation": true,
       "circularRisk": false
     },
@@ -3074,9 +3122,105 @@
     },
     {
       "chain": [
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:cloud-execution-path-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
         "validate:founder-readiness-authority",
         "validate:founder-testing-chat-readiness",
         "validate:chat-intelligence-reality"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:general-purpose-code-generation-v1",
+        "validate:cloud-execution-path-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:uvl-verification-execution-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:general-purpose-code-generation-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:general-purpose-code-generation-v1",
+        "validate:production-readiness-gate-v1",
+        "validate:capability-audit-v3-1",
+        "validate:validation-runtime-governance-v1"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:general-purpose-code-generation-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
       ],
       "circular": false
     },
@@ -3140,6 +3284,15 @@
         "validate:governance-stack-checkpoint",
         "validate:execution-authority",
         "validate:execution-verification"
+      ],
+      "circular": false
+    },
+    {
+      "chain": [
+        "validate:production-readiness-gate-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:autonomous-founder-launch-authority-v1",
+        "validate:validation-runtime-audit-v1"
       ],
       "circular": false
     }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T14:19:30.939Z",
+  "generatedAt": "2026-06-24T16:00:18.953Z",
   "nodes": [
     {
       "capabilityCategory": "CQI",
@@ -29,7 +29,6 @@
         "validate:connected-verification-execution-proof",
         "validate:unified-verification-entry",
         "validate:unified-verification-lab-runtime",
-        "validate:uvl-maturity-verification-hub-v1",
         "validate:uvl-verification-execution-v1"
       ]
     },
@@ -180,7 +179,6 @@
         "validate:command-center-ux-stabilization",
         "validate:founder-reality-surface",
         "validate:founder-report-access-operator-feed-state",
-        "validate:founder-review-operator-dashboard-v1",
         "validate:founder-test-operator-feed-trace",
         "validate:inline-operator-feed",
         "validate:operator-feed-detail-upgrade",
@@ -265,7 +263,8 @@
       "validators": [
         "validate:capability-audit-v1",
         "validate:capability-audit-v2",
-        "validate:capability-audit-v3"
+        "validate:capability-audit-v3",
+        "validate:capability-audit-v3-1"
       ]
     },
     {

@@ -1,0 +1,152 @@
+[
+  {
+    "readOnly": true,
+    "profile": "MARKETPLACE_WEB_V1",
+    "domain": "MARKETPLACE",
+    "logicIndicators": [
+      {
+        "readOnly": true,
+        "id": "order-status",
+        "label": "Order Status Timeline",
+        "indicatorType": "timeline",
+        "description": "Shows order progression states"
+      }
+    ],
+    "visibleInGeneratedApp": true
+  },
+  {
+    "readOnly": true,
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "domain": "BOOKING",
+    "logicIndicators": [
+      {
+        "readOnly": true,
+        "id": "booking-conflict",
+        "label": "Booking Conflict Warning",
+        "indicatorType": "warning",
+        "description": "Warns when slot unavailable"
+      }
+    ],
+    "visibleInGeneratedApp": true
+  },
+  {
+    "readOnly": true,
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "domain": "LEARNING_PLATFORM",
+    "logicIndicators": [
+      {
+        "readOnly": true,
+        "id": "course-progress",
+        "label": "Course Progress Tracker",
+        "indicatorType": "progress",
+        "description": "Tracks lesson completion percent"
+      }
+    ],
+    "visibleInGeneratedApp": true
+  },
+  {
+    "readOnly": true,
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "domain": "CUSTOMER_SUPPORT",
+    "logicIndicators": [
+      {
+        "readOnly": true,
+        "id": "ticket-priority",
+        "label": "Ticket Priority Indicator",
+        "indicatorType": "badge",
+        "description": "Visual priority for support tickets"
+      }
+    ],
+    "visibleInGeneratedApp": true
+  },
+  {
+    "readOnly": true,
+    "profile": "EVENT_PLATFORM_WEB_V1",
+    "domain": "EVENT",
+    "logicIndicators": [
+      {
+        "readOnly": true,
+        "id": "ticket-priority",
+        "label": "Ticket Priority Indicator",
+        "indicatorType": "badge",
+        "description": "Visual priority for support tickets"
+      }
+    ],
+    "visibleInGeneratedApp": true
+  },
+  {
+    "readOnly": true,
+    "profile": "HEALTHCARE_PORTAL_WEB_V1",
+    "domain": "HEALTHCARE",
+    "logicIndicators": [
+      {
+        "readOnly": true,
+        "id": "appointment-status",
+        "label": "Appointment Status",
+        "indicatorType": "badge",
+        "description": "Healthcare appointment state"
+      }
+    ],
+    "visibleInGeneratedApp": true
+  },
+  {
+    "readOnly": true,
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "domain": "FINANCE",
+    "logicIndicators": [
+      {
+        "readOnly": true,
+        "id": "invoice-status",
+        "label": "Invoice Status Badge",
+        "indicatorType": "badge",
+        "description": "Finance transaction status indicator"
+      }
+    ],
+    "visibleInGeneratedApp": true
+  },
+  {
+    "readOnly": true,
+    "profile": "JOB_BOARD_WEB_V1",
+    "domain": "JOB_BOARD",
+    "logicIndicators": [
+      {
+        "readOnly": true,
+        "id": "ticket-priority",
+        "label": "Ticket Priority Indicator",
+        "indicatorType": "badge",
+        "description": "Visual priority for support tickets"
+      }
+    ],
+    "visibleInGeneratedApp": true
+  },
+  {
+    "readOnly": true,
+    "profile": "PROPERTY_MANAGEMENT_WEB_V1",
+    "domain": "PROPERTY",
+    "logicIndicators": [
+      {
+        "readOnly": true,
+        "id": "low-stock",
+        "label": "Low Stock Warning",
+        "indicatorType": "warning",
+        "description": "Alerts when inventory below threshold"
+      }
+    ],
+    "visibleInGeneratedApp": true
+  },
+  {
+    "readOnly": true,
+    "profile": "SOCIAL_PLATFORM_WEB_V1",
+    "domain": "COMMUNITY_PLATFORM",
+    "logicIndicators": [
+      {
+        "readOnly": true,
+        "id": "member-activity",
+        "label": "Member Activity Feed",
+        "indicatorType": "feed",
+        "description": "Community activity visibility"
+      }
+    ],
+    "visibleInGeneratedApp": true
+  }
+]

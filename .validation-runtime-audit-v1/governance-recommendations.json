@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-24T14:19:32.113Z",
+  "generatedAt": "2026-06-24T16:00:21.684Z",
   "readOnly": true,
   "notImplemented": true,
   "recommendations": [
     {
       "action": "CACHE",
       "target": "build outputs across validators",
-      "rationale": "22 validators trigger npm build or real-build pipeline work; measured RBEP runs 65s+ per invocation.",
+      "rationale": "23 validators trigger npm build or real-build pipeline work; measured RBEP runs 65s+ per invocation.",
       "evidenceValidators": [
         "validate:autonomous-build-execution-proof",
         "validate:autonomous-fixing",
@@ -17,7 +17,7 @@
         "validate:connected-launch-final-blocker",
         "validate:consistency-audit-authoritative-evidence-repoint"
       ],
-      "estimatedSavingsMinutes": 16
+      "estimatedSavingsMinutes": 19
     },
     {
       "action": "REUSE",
@@ -55,6 +55,7 @@
         "validate:afla-trust-calibration-v1",
         "validate:autonomous-founder-launch-authority-v1",
         "validate:founder-review-operator-dashboard-v1",
+        "validate:production-readiness-gate-v1",
         "validate:validation-runtime-governance-v1"
       ],
       "estimatedSavingsMinutes": 7.1
@@ -62,7 +63,7 @@
     {
       "action": "MERGE",
       "target": "high-duplicate regression validators",
-      "rationale": "126 validators show ≥50% duplicate work overlap within their category.",
+      "rationale": "128 validators show ≥50% duplicate work overlap within their category.",
       "evidenceValidators": [
         "validate:action-visibility-engine",
         "validate:afla-trust-calibration-v1",
@@ -80,18 +81,18 @@
     {
       "action": "REUSE",
       "target": "nested validator results",
-      "rationale": "10 validators trigger multiple child validators; results could be shared.",
+      "rationale": "13 validators trigger multiple child validators; results could be shared.",
       "evidenceValidators": [
         "validate:brain-memory-visibility-stack",
         "validate:chat-authority",
+        "validate:cloud-execution-path-v1",
         "validate:cqi-integration-repair-v1",
         "validate:founder-readiness-authority",
+        "validate:general-purpose-code-generation-v1",
         "validate:governance-stack-checkpoint",
-        "validate:inline-operator-feed",
-        "validate:phase8-governance-stack-checkpoint",
-        "validate:phase9-governance-stack-checkpoint"
+        "validate:inline-operator-feed"
       ],
-      "estimatedSavingsMinutes": 20
+      "estimatedSavingsMinutes": 26
     },
     {
       "action": "TIER",

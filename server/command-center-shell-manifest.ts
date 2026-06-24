@@ -40,6 +40,7 @@ export const OPERATOR_FEED_SECTIONS = [
   'Product Architect Review',
   'Founder Trust Calibration',
   'Production Readiness',
+  'Cloud Execution',
   'Large-Scale Validation',
   'Execution Pipeline',
   'Production Readiness',

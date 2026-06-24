@@ -1,6 +1,6 @@
 # Validation Runtime Governance V1
 
-**Generated:** 2026-06-24T14:19:30.939Z  
+**Generated:** 2026-06-24T16:00:18.953Z  
 **Governance Active:** YES  
 **Audit Baseline:** `VALIDATION_RUNTIME_AUDIT_V1_PASS`  
 **Pass Token:** `VALIDATION_RUNTIME_GOVERNANCE_V1_PASS`
@@ -33,10 +33,10 @@ Validation Runtime Governance V1 transforms validation from **Run Everything** t
 
 | Tier | Validators Assigned |
 |------|---------------------|
-| FAST | 252 |
+| FAST | 251 |
 | STANDARD | 115 |
-| FULL | 29 |
-| LAUNCH | 11 |
+| FULL | 30 |
+| LAUNCH | 12 |
 
 ### Tier Targets
 
@@ -47,7 +47,7 @@ Validation Runtime Governance V1 transforms validation from **Run Everything** t
 | FULL | < 15 min | Milestone completion |
 | LAUNCH | Maximum confidence | Launch candidate only |
 
-**LAUNCH validators:** `validate:afla-trust-calibration-v1`, `validate:autonomous-founder-launch-authority-v1`, `validate:capability-audit-v1`, `validate:capability-audit-v2`, `validate:capability-audit-v3`, `validate:founder-launch-decision-authority`, `validate:large-scale-multi-app-validation-v1`, `validate:product-architect-intelligence-v1`
+**LAUNCH validators:** `validate:afla-trust-calibration-v1`, `validate:autonomous-founder-launch-authority-v1`, `validate:capability-audit-v1`, `validate:capability-audit-v2`, `validate:capability-audit-v3`, `validate:capability-audit-v3-1`, `validate:founder-launch-decision-authority`, `validate:large-scale-multi-app-validation-v1`
 
 ---
 
@@ -96,9 +96,9 @@ FAST tier plan for CQI change: 1 validators, ~0s
 | Operation | Affected Validators | Action |
 |-----------|---------------------|--------|
 | Repeated npm install | 12 | BLOCK |
-| Repeated npm build | 47 | BLOCK |
+| Repeated npm build | 48 | BLOCK |
 | Repeated preview startup | 74 | BLOCK |
-| Repeated UVL execution | 4 | BLOCK |
+| Repeated UVL execution | 3 | BLOCK |
 | Repeated AFLA execution | 4 | BLOCK |
 | Repeated Playwright execution | 13 | BLOCK |
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T14:19:32.113Z",
+  "generatedAt": "2026-06-24T16:00:21.684Z",
   "bottlenecks": [
     {
       "bottleneck": "Repeated Playwright suites",
@@ -17,16 +17,16 @@
     },
     {
       "bottleneck": "Repeated npm builds",
-      "impactScore": 143,
-      "affectedValidatorCount": 49,
-      "estimatedAggregateMinutes": 44.9,
+      "impactScore": 146,
+      "affectedValidatorCount": 50,
+      "estimatedAggregateMinutes": 45.5,
       "rank": 3
     },
     {
       "bottleneck": "Repeated AFLA execution",
-      "impactScore": 64,
-      "affectedValidatorCount": 4,
-      "estimatedAggregateMinutes": 56,
+      "impactScore": 68,
+      "affectedValidatorCount": 5,
+      "estimatedAggregateMinutes": 58,
       "rank": 4
     },
     {
@@ -51,17 +51,17 @@
       "rank": 7
     },
     {
+      "bottleneck": "Repeated real build pipeline execution",
+      "impactScore": 17,
+      "affectedValidatorCount": 4,
+      "estimatedAggregateMinutes": 9,
+      "rank": 8
+    },
+    {
       "bottleneck": "Repeated UVL execution",
       "impactScore": 13,
       "affectedValidatorCount": 4,
       "estimatedAggregateMinutes": 4.7,
-      "rank": 8
-    },
-    {
-      "bottleneck": "Repeated real build pipeline execution",
-      "impactScore": 13,
-      "affectedValidatorCount": 3,
-      "estimatedAggregateMinutes": 7,
       "rank": 9
     }
   ]
