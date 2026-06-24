@@ -41,6 +41,7 @@ export const OPERATOR_FEED_SECTIONS = [
   'Founder Trust Calibration',
   'Production Readiness',
   'Cloud Execution',
+  'World2',
   'Large-Scale Validation',
   'Execution Pipeline',
   'Production Readiness',

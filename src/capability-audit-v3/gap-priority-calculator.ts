@@ -5,6 +5,7 @@
 import type { MissingCapabilityEntry, RoadmapPriority } from './capability-audit-types.js';
 import type { UvlEvidenceSnapshot } from './uvl-evidence-loader.js';
 import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeline-integration-v1/index.js';
+import { isWorld2RealInstantiationProven } from '../world2-real-instantiation-v1/index.js';
 
 const PHASE_BY_CAPABILITY: Readonly<Record<string, string>> = {
   'Production readiness gate': 'Production Readiness Gate',
@@ -212,6 +213,22 @@ export function buildRoadmapFromEvidence(input: {
         'Real Build Execution Pipeline V1.1',
         'UVL Verification Execution V1',
         'Large-Scale Multi-App Validation V1',
+      ],
+    });
+  }
+
+  if (input.projectRootDir && isWorld2RealInstantiationProven(input.projectRootDir)) {
+    completePhases.push({
+      rank: 0,
+      phase: 'World2 Real Instantiation',
+      action: 'COMPLETE',
+      rationale:
+        'World2 Real Instantiation V1 PASS: 3/3 disposable worlds instantiated, executed, isolated, with promotion and destruction paths proven.',
+      impact: 'HIGH',
+      dependencies: [
+        'World2 Disposable Workspace Pipeline (24E–24Y)',
+        'Real Build Execution Pipeline V1.1',
+        'Cloud Execution Path V1',
       ],
     });
   }

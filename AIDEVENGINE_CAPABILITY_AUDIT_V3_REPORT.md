@@ -56,12 +56,13 @@ The refreshed audit catalogues **98 capabilities** across **16 categories** with
 - Execution generalization score 96/100 (threshold 85)
 - UVL verification execution (UVL Verification Execution V1 PASS: 15/15 verified, 100% coverage, 100/100 confidence)
 - Large-scale pipeline integration (authoritative build 100%, verification 100%)
+- World2 real filesystem instantiation (World2 Real Instantiation V1 PASS)
 
 ### Key Findings
 
 1. **Real Build Execution is proven** — V1/V1.1 PASS closes the V2 rank-1 gap; build/preview/launch at 100% for 15 categories.
 2. **UVL Verification Execution is proven** — UVL Verification Execution V1 PASS: verifiedCount 15/15, verification coverage 100%, confidence 100/100.
-3. **World2 Real Instantiation is the new highest-priority gap** — recalculated from current maturity and gap evidence after UVL verification closed.
+3. **Mobile Runtime Validation at Scale is the new highest-priority gap** — recalculated from current maturity and gap evidence after UVL verification closed.
 4. **Production Readiness is largely absent** — score 33/100; no production gate, monitoring, or deployment path.
 5. **Code generation remains CRUD-limited** — 5 profiles proven; complex workflows and domain-specific apps not yet supported.
 6. **One Capability = One Canonical Owner** holds for CQI, UVL, AFLA, PAI, and World2 domains.
@@ -429,7 +430,7 @@ Code Generation Engine V1 materializes 5 CRUD profiles with Real Build Execution
 **Operational Readiness:** PARTIAL
 **Should World2 be next phase?** NO
 
-**Rationale:** World2 Real Instantiation is the highest-priority gap after UVL Verification Execution V1 closed verification at 15/15. World2 should follow production readiness and canonical ownership registration.
+**Rationale:** Mobile Runtime Validation at Scale is the highest-priority gap after UVL Verification Execution V1 closed verification at 15/15. World2 should follow production readiness and canonical ownership registration.
 
 ### Remaining Gaps
 
@@ -444,14 +445,13 @@ Code Generation Engine V1 materializes 5 CRUD profiles with Real Build Execution
 
 ### Highest-Priority Gap
 
-**World2 Real Instantiation — Dry-run composer bridge sets realExecutionPerformed=false; execution proven outside World2 boundary.**
+**Mobile Runtime Validation at Scale — Mobile preview modes exist; no large-scale mobile runtime validation harness.**
 
 ### What is still missing (BLOCKING)?
 
 
 ### What remains weak?
 
-- World2 real filesystem instantiation
 - Canonical ownership registration for V2/V3 modules
 - Mobile runtime validation at scale
 - Self-modification execution
@@ -466,11 +466,10 @@ Code Generation Engine V1 materializes 5 CRUD profiles with Real Build Execution
 
 | Rank | Phase | Action | Impact | Rationale |
 |------|-------|--------|--------|-----------|
-| 1 | World2 Real Instantiation | EXTEND | HIGH | World2 modules validate in isolation; dry-run bridge does not activate real execution. Connect to Real Build Execution a… |
-| 2 | Mobile Runtime Validation at Scale | BUILD | HIGH | Mobile preview modes exist; large-scale mobile runtime validation harness needed for cross-platform vision. Current gap:… |
-| 3 | Self-Evolution Execution | EXTEND | MEDIUM | Self-evolution is advisory only. Wire gap detection → capability research → build → verify loop with human approval gate… |
-| 4 | Canonical Ownership V2 Registration | REGISTER | HIGH | Real Build Execution V1/V1.1, CQI Maturity V1, UVL Verification Execution V1, Capability Audit V2/V3, and Production Rea… |
-| 5 | Multi-Project Concurrent Execution | EXTEND | MEDIUM | Multi-project foundation and tabs are mature; parallel build orchestration must move from planning to execution. Current… |
+| 1 | Mobile Runtime Validation at Scale | BUILD | HIGH | Mobile preview modes exist; large-scale mobile runtime validation harness needed for cross-platform vision. Current gap:… |
+| 2 | Self-Evolution Execution | EXTEND | MEDIUM | Self-evolution is advisory only. Wire gap detection → capability research → build → verify loop with human approval gate… |
+| 3 | Canonical Ownership V2 Registration | REGISTER | HIGH | Real Build Execution V1/V1.1, CQI Maturity V1, UVL Verification Execution V1, Capability Audit V2/V3, and Production Rea… |
+| 4 | Multi-Project Concurrent Execution | EXTEND | MEDIUM | Multi-project foundation and tabs are mature; parallel build orchestration must move from planning to execution. Current… |
 
 ---
 
@@ -501,8 +500,8 @@ Code Generation Engine V1 materializes 5 CRUD profiles with Real Build Execution
 | What capabilities are mature? | 38 MATURE |
 | What capabilities are incomplete? | 55 PARTIAL, 4 EXPERIMENTAL, 1 MISSING |
 | What capabilities overlap? | 49 with duplicate risk; 5 new since V2 |
-| Highest-priority remaining gap? | World2 Real Instantiation — Dry-run composer bridge sets realExecutionPerformed=false; execution proven outside World2 boundary. |
-| What should AiDevEngine build next? | World2 Real Instantiation |
+| Highest-priority remaining gap? | Mobile Runtime Validation at Scale — Mobile preview modes exist; no large-scale mobile runtime validation harness. |
+| What should AiDevEngine build next? | Mobile Runtime Validation at Scale |
 
 ---
 

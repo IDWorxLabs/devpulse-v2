@@ -1,0 +1,38 @@
+[
+  {
+    "readOnly": true,
+    "worldId": "10718067-9201-4aeb-a889-c16e7b6786f0",
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "executionMode": "LOCAL",
+    "passed": true,
+    "buildProof": true,
+    "previewProof": true,
+    "verificationProof": true,
+    "isolationPassed": true
+  },
+  {
+    "readOnly": true,
+    "worldId": "bcd6a46f-0f41-4912-8117-f7ab71d4f9eb",
+    "profile": "CRM_WEB_V1",
+    "productName": "CRM",
+    "executionMode": "CLOUD_SIMULATED",
+    "passed": true,
+    "buildProof": true,
+    "previewProof": true,
+    "verificationProof": true,
+    "isolationPassed": true
+  },
+  {
+    "readOnly": true,
+    "worldId": "4eb1e475-8c5f-400c-ab8a-a9c2a786bfc9",
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "executionMode": "CLOUD_SIMULATED",
+    "passed": true,
+    "buildProof": true,
+    "previewProof": true,
+    "verificationProof": true,
+    "isolationPassed": true
+  }
+]

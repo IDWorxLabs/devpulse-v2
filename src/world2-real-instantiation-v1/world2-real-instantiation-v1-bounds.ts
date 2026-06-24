@@ -1,0 +1,43 @@
+/**
+ * World2 Real Instantiation V1 — bounds and pass token.
+ */
+
+export const WORLD2_REAL_INSTANTIATION_V1_PASS_TOKEN = 'WORLD2_REAL_INSTANTIATION_V1_PASS';
+
+export const WORLD2_REAL_INSTANTIATION_V1_FAIL_TOKEN = 'WORLD2_REAL_INSTANTIATION_V1_FAIL';
+
+export const WORLD2_REAL_INSTANTIATION_V1_REPORT_TITLE = 'WORLD2_REAL_INSTANTIATION_V1_REPORT.md';
+
+export const WORLD2_REAL_INSTANTIATION_V1_ARTIFACT_DIR = '.world2-real-instantiation-v1';
+
+export const WORLD2_WORKSPACE_PREFIX = 'w2';
+
+export const WORLD2_WORLDS_DIR = '.world2-real-instantiation-v1/worlds';
+
+export const MAX_WORLD2_REGISTRY_SIZE = 100;
+
+export const MIN_MULTI_WORLD_PROOF = 3;
+
+export const WORLD2_PROOF_PROFILES = [
+  'TASK_TRACKER_WEB_V1',
+  'CRM_WEB_V1',
+  'MARKETPLACE_WEB_V1',
+] as const;
+
+export const WORLD2_EXECUTION_MODES = ['LOCAL', 'CLOUD_SIMULATED', 'CLOUD_SIMULATED'] as const;
+
+export const WORLD1_SENTINEL_PATHS = [
+  'package.json',
+  'src/capability-audit-v3/index.ts',
+  'server/founder-reality-server.ts',
+] as const;
+
+export const PRIOR_PASS_TOKENS = [
+  'LARGE_SCALE_PIPELINE_INTEGRATION_V1_PASS',
+  'CLOUD_EXECUTION_PATH_V1_PASS',
+  'PRODUCTION_READINESS_GATE_V1_PASS',
+  'GENERAL_PURPOSE_CODE_GENERATION_V1_PASS',
+  'UVL_VERIFICATION_EXECUTION_V1_PASS',
+  'REAL_BUILD_EXECUTION_PIPELINE_V1_1_PASS',
+  'AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS',
+] as const;

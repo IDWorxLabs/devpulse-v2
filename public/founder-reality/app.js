@@ -31,6 +31,8 @@
   var productionReadinessProfile = 'CRM_WEB_V1';
   var cloudExecutionData = null;
   var cloudExecutionLoadPromise = null;
+  var world2InstantiationData = null;
+  var world2InstantiationLoadPromise = null;
   var productArchitectData = null;
   var productArchitectLoadPromise = null;
   var productArchitectProfile = 'CRM_WEB_V1';
@@ -125,7 +127,7 @@
     ],
   };
   var conversationStarted = false;
-  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Production Readiness', 'Cloud Execution', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
+  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Verification Hub', 'Founder Review', 'Product Architect Review', 'Founder Trust Calibration', 'Production Readiness', 'Cloud Execution', 'World2', 'Large-Scale Validation', 'Execution Pipeline', 'Requirement Discovery', 'Approvals', 'Learning'];
   var feedSectionIdleCopy = {
     Planning: {
       action: 'Ready to classify your next request',
@@ -162,6 +164,10 @@
     'Cloud Execution': {
       action: 'Cloud execution path ready',
       detail: 'Submit, claim, and run build jobs through the cloud execution contract with isolated workspaces.',
+    },
+    World2: {
+      action: 'World2 instantiation ready',
+      detail: 'Create disposable isolated execution worlds with real build, verify, review, and promotion paths.',
     },
     'Large-Scale Validation': {
       action: 'Large-scale validation ready',
@@ -5053,6 +5059,67 @@
     return cloudExecutionLoadPromise;
   }
 
+  function renderWorld2Panel(data) {
+    if (!data) {
+      return renderProductCard(
+        'World2',
+        '<p class="product-lead">Loading World2 real instantiation visibility…</p>',
+      );
+    }
+
+    var worldRows = (data.worlds || [])
+      .map(function (world) {
+        return (
+          '<div class="cloud-execution-row">' +
+          '<span>' + escapeHtml(world.productName) + '</span>' +
+          '<span>' + escapeHtml(world.status) + '</span>' +
+          '<span>' + escapeHtml(world.executionMode) + '</span>' +
+          '<span>' + escapeHtml(world.promotionState) + '</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'World2',
+      '<p class="product-lead">World2 Real Instantiation V1 — disposable isolated execution worlds with real filesystem proof. Informational only.</p>' +
+        '<p><strong>World Count:</strong> ' + String(data.worldCount) + ' · ' +
+        '<strong>Active:</strong> ' + String(data.activeWorlds) + ' · ' +
+        '<strong>Completed:</strong> ' + String(data.completedWorlds) + ' · ' +
+        '<strong>Promoted:</strong> ' + String(data.promotedWorlds) + ' · ' +
+        '<strong>Destroyed:</strong> ' + String(data.destroyedWorlds) + '</p>' +
+        '<p><strong>Isolation Status:</strong> ' + escapeHtml(data.isolationStatus) + ' · ' +
+        '<strong>Promotion Status:</strong> ' + escapeHtml(data.promotionStatus) + ' · ' +
+        '<strong>Execution Status:</strong> ' + escapeHtml(data.executionStatus) + '</p>' +
+        '<p><strong>World1 Protected:</strong> ' + (data.world1Protected ? 'Yes' : 'No') + ' · ' +
+        '<strong>Contamination Incidents:</strong> ' + String(data.contaminationIncidents) + '</p>' +
+        '<p><strong>World instances</strong></p>' +
+        '<div class="cloud-execution-grid">' + (worldRows || '<p class="hint">No World2 instances yet.</p>') + '</div>',
+    );
+  }
+
+  function loadWorld2Instantiation(force) {
+    if (!force && world2InstantiationData) {
+      return Promise.resolve(world2InstantiationData);
+    }
+    if (world2InstantiationLoadPromise) {
+      return world2InstantiationLoadPromise;
+    }
+    world2InstantiationLoadPromise = fetch('/api/founder/world2-real-instantiation-v1?refresh=false', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('world2-real-instantiation HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        world2InstantiationData = data;
+        return data;
+      })
+      .finally(function () {
+        world2InstantiationLoadPromise = null;
+      });
+    return world2InstantiationLoadPromise;
+  }
+
   var PRODUCT_ARCHITECT_SUITE_PROFILES = [
     { profile: 'CRM_WEB_V1', label: 'CRM' },
     { profile: 'MARKETPLACE_WEB_V1', label: 'Marketplace' },
@@ -5563,6 +5630,7 @@
     html += renderExecutionPipelinePanel(executionPipelineData);
     html += renderProductionReadinessPanel(productionReadinessData);
     html += renderCloudExecutionPanel(cloudExecutionData);
+    html += renderWorld2Panel(world2InstantiationData);
     html +=
       renderProductCard(
         'Verification Readiness',
@@ -6424,6 +6492,7 @@
     'Founder Trust Calibration': '<svg viewBox="0 0 24 24"><path d="M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7l7-4z"/><path d="M9 12l2 2 4-4"/></svg>',
     'Production Readiness': '<svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>',
     'Cloud Execution': '<svg viewBox="0 0 24 24"><path d="M6 16h12l-1-2v-5a7 7 0 0 0-14 0v5l-1 2z"/><path d="M4 10a8 8 0 0 1 16 0"/></svg>',
+    World2: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>',
     'Product Architect Review': '<svg viewBox="0 0 24 24"><path d="M3 7h18v12H3z"/><path d="M7 7V5h10v2"/><path d="M8 11h8M8 15h5"/></svg>',
     'Large-Scale Validation': '<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>',
     'Execution Pipeline': '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
@@ -10880,6 +10949,21 @@
     })
     .catch(function () {
       /* Cloud Execution falls back to loading state */
+    });
+
+  loadWorld2Instantiation(false)
+    .then(function () {
+      if (currentViewId === 'verification' || currentViewId === 'founder-review') {
+        if (currentViewId === 'verification') {
+          renderVerificationSurface(workspaceData, manifestData);
+        }
+        if (currentViewId === 'founder-review') {
+          renderFounderReviewSurface(workspaceData);
+        }
+      }
+    })
+    .catch(function () {
+      /* World2 falls back to loading state */
     });
 
   fetch(buildFounderTestApiUrl('/api/founder-reality.json', null))

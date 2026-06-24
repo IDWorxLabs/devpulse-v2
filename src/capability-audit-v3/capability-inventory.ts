@@ -21,6 +21,7 @@ import { buildRecommendedRoadmap } from './recommended-roadmap.js';
 import { buildMissingCapabilitiesReport } from './missing-capabilities.js';
 import { V2_INVENTORY_UPGRADES } from './v2-inventory-upgrades.js';
 import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeline-integration-v1/index.js';
+import { isWorld2RealInstantiationProven } from '../world2-real-instantiation-v1/index.js';
 
 export const AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN =
   'AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS';
@@ -324,16 +325,19 @@ export function buildCapabilityAuditV3Assessment(projectRootDir?: string): Capab
       `Large-scale pipeline integration (authoritative build ${pipelineIntegration.assessment.metrics.buildSuccessRate}%, verification ${pipelineIntegration.assessment.metrics.verificationSuccessRate}%)`,
     );
   }
+  if (projectRootDir && isWorld2RealInstantiationProven(projectRootDir)) {
+    closedGapsSinceV2.push('World2 real filesystem instantiation (World2 Real Instantiation V1 PASS)');
+  }
 
   const world2Gaps = [
     'Dry-run composer bridge sets realExecutionPerformed=false',
     'Real Build Execution proven outside World2 isolation boundary',
     'Phase 7, Phase 15, and Phase 24E–24Y eras still parallel',
-    'Cloud execution path absent',
   ];
-  if (!pipelineIntegration.integrationComplete) {
-    world2Gaps.splice(3, 0, 'Large-scale validation harness not wired to Real Build Execution Pipeline');
+  if (!projectRootDir || !isWorld2RealInstantiationProven(projectRootDir)) {
+    world2Gaps.push('World2 execution proof not established — dry-run only');
   }
+  world2Gaps.push('Cloud execution path absent');
 
   const world2Rationale = uvlComplete
     ? `${nextPriority} is the highest-priority gap after UVL Verification Execution V1 closed verification at 15/15. World2 should follow production readiness and canonical ownership registration.`

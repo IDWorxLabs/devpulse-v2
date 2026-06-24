@@ -1,0 +1,17 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T20:37:42.654Z",
+  "workspaceSeparation": true,
+  "artifactSeparation": true,
+  "buildSeparation": true,
+  "previewSeparation": true,
+  "executionSeparation": true,
+  "world1Protected": true,
+  "contaminationIncidents": 0,
+  "violations": [],
+  "world1SentinelHashes": {
+    "package.json": "4b34b657d09168df",
+    "src/capability-audit-v3/index.ts": "5fbdfeae6430a68d",
+    "server/founder-reality-server.ts": "1befd8a602e03109"
+  }
+}

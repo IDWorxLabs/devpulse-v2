@@ -1,0 +1,117 @@
+{
+  "readOnly": true,
+  "job": {
+    "readOnly": true,
+    "jobId": "10718067-9201-4aeb-a889-c16e7b6786f0",
+    "projectId": "world2-task_tracker_web_v1",
+    "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+    "requirementsSnapshot": {
+      "readOnly": true,
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+      "requirementConfidence": 25
+    },
+    "buildPlan": {
+      "readOnly": true,
+      "contractId": "build-ready-idea-1",
+      "planningSummary": "Contract build-ready-idea-1",
+      "codegenProfile": "TASK_TRACKER_WEB_V1"
+    },
+    "workspaceSpec": {
+      "readOnly": true,
+      "workspaceId": "w2-10718067-9201-4aeb-a889-c16e7b6786f0",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-10718067-9201-4aeb-a889-c16e7b6786f0",
+      "isolationToken": "10718067-9201-4aeb-a889-c16e7b6786f0",
+      "boundedLogsMaxLines": 500,
+      "boundedArtifactsMaxBytes": 5000000,
+      "runtimeTimeoutMs": 300000
+    },
+    "executionMode": "LOCAL",
+    "requestedAt": "2026-06-24T20:37:03.475Z",
+    "status": "COMPLETED",
+    "claimedAt": null,
+    "completedAt": "2026-06-24T20:37:15.518Z",
+    "workerId": "w2-worker-10718067",
+    "currentStage": "COMPLETED",
+    "runtimeDurationMs": 12042
+  },
+  "passed": true,
+  "failureReport": null,
+  "artifactStatus": {
+    "readOnly": true,
+    "sourceManifest": true,
+    "buildLogs": true,
+    "previewProof": true,
+    "uvlVerificationProof": true,
+    "productArchitectProof": true,
+    "aflaVerdict": true,
+    "productionReadinessResult": true,
+    "executionSummary": true,
+    "cloudJobPackage": true
+  },
+  "cloudJobPackage": {
+    "readOnly": true,
+    "contractVersion": "V1",
+    "jobId": "10718067-9201-4aeb-a889-c16e7b6786f0",
+    "projectId": "world2-task_tracker_web_v1",
+    "executionMode": "LOCAL",
+    "jobMetadata": {
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "requestedAt": "2026-06-24T20:37:03.475Z",
+      "workerId": null
+    },
+    "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+    "requirementsSnapshot": {
+      "readOnly": true,
+      "profile": "TASK_TRACKER_WEB_V1",
+      "productName": "Task Tracker",
+      "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+      "requirementConfidence": 25
+    },
+    "buildPlan": {
+      "readOnly": true,
+      "contractId": "build-ready-idea-1",
+      "planningSummary": "Contract build-ready-idea-1",
+      "codegenProfile": "TASK_TRACKER_WEB_V1"
+    },
+    "workspaceSpec": {
+      "readOnly": true,
+      "workspaceId": "w2-10718067-9201-4aeb-a889-c16e7b6786f0",
+      "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-10718067-9201-4aeb-a889-c16e7b6786f0",
+      "isolationToken": "10718067-9201-4aeb-a889-c16e7b6786f0",
+      "boundedLogsMaxLines": 500,
+      "boundedArtifactsMaxBytes": 5000000,
+      "runtimeTimeoutMs": 300000
+    },
+    "expectedArtifactOutputs": [
+      "generated-source-manifest.json",
+      "build-logs.txt",
+      "preview-proof.json",
+      "uvl-verification-proof.json",
+      "product-architect-proof.json",
+      "afla-verdict.json",
+      "production-readiness-result.json",
+      "execution-summary.json",
+      "cloud-job-package.json"
+    ],
+    "validationRequirements": [
+      "Build proof required",
+      "Preview proof required",
+      "UVL verification proof required",
+      "AFLA verdict required",
+      "Production readiness gate required",
+      "Unique isolated workspace required"
+    ],
+    "generatedAt": "2026-06-24T20:37:15.513Z"
+  },
+  "buildProof": true,
+  "previewProof": true,
+  "verificationProof": false,
+  "aflaVerdict": "NOT_LAUNCH_READY",
+  "productionReadinessScore": 89,
+  "productionReadinessVerdict": "PRODUCTION_READY",
+  "executionSummary": "Cloud execution completed for Task Tracker in 12044ms",
+  "contaminationCheckPassed": true
+}

@@ -11,6 +11,7 @@ import { PRODUCTION_READINESS_GATE_V1_ARTIFACT_DIR } from '../production-readine
 import { CLOUD_EXECUTION_PATH_V1_ARTIFACT_DIR } from '../cloud-execution-path-v1/cloud-execution-path-v1-bounds.js';
 import { GENERAL_PURPOSE_CODE_GENERATION_V1_ARTIFACT_DIR } from '../general-purpose-code-generation-v1/general-purpose-code-generation-v1-bounds.js';
 import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeline-integration-v1/index.js';
+import { isWorld2RealInstantiationProven } from '../world2-real-instantiation-v1/index.js';
 
 const BASE_MISSING_CAPABILITIES: readonly MissingCapabilitiesReport['entries'][number][] = [
   {
@@ -131,6 +132,12 @@ export function buildMissingCapabilitiesReport(input?: {
     if (
       pipelineIntegration.integrationComplete &&
       entry.capability === 'Large-scale pipeline integration with Real Build Execution'
+    ) {
+      return false;
+    }
+    if (
+      isWorld2RealInstantiationProven(root) &&
+      entry.capability === 'World2 real filesystem instantiation'
     ) {
       return false;
     }

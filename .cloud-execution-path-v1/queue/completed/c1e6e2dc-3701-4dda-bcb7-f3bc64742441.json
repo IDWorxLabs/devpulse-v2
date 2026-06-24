@@ -1,0 +1,36 @@
+{
+  "readOnly": true,
+  "jobId": "c1e6e2dc-3701-4dda-bcb7-f3bc64742441",
+  "projectId": "world2-task_tracker_web_v1",
+  "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+  "requirementsSnapshot": {
+    "readOnly": true,
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+    "requirementConfidence": 25
+  },
+  "buildPlan": {
+    "readOnly": true,
+    "contractId": "build-ready-idea-1",
+    "planningSummary": "Contract build-ready-idea-1",
+    "codegenProfile": "TASK_TRACKER_WEB_V1"
+  },
+  "workspaceSpec": {
+    "readOnly": true,
+    "workspaceId": "w2-c1e6e2dc-3701-4dda-bcb7-f3bc64742441",
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\w2-c1e6e2dc-3701-4dda-bcb7-f3bc64742441",
+    "isolationToken": "c1e6e2dc-3701-4dda-bcb7-f3bc64742441",
+    "boundedLogsMaxLines": 500,
+    "boundedArtifactsMaxBytes": 5000000,
+    "runtimeTimeoutMs": 300000
+  },
+  "executionMode": "LOCAL",
+  "requestedAt": "2026-06-24T20:35:39.489Z",
+  "status": "COMPLETED",
+  "claimedAt": null,
+  "completedAt": "2026-06-24T20:35:53.000Z",
+  "workerId": "w2-worker-c1e6e2dc",
+  "currentStage": "COMPLETED",
+  "runtimeDurationMs": 13510
+}

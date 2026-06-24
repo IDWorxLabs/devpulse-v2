@@ -303,6 +303,18 @@ assert(
   'COMPLETE action',
 );
 
+assert(
+  'world2 real instantiation gap resolved',
+  !assessment.highestPriorityGap.includes('World2 real filesystem instantiation'),
+  assessment.highestPriorityGap.slice(0, 100),
+);
+
+assert(
+  'world2 real instantiation complete in roadmap',
+  roadmap.some((p) => p.phase === 'World2 Real Instantiation' && p.action === 'COMPLETE'),
+  'COMPLETE action',
+);
+
 const failed = results.filter((r) => !r.passed);
 console.log('\n--- AiDevEngine Capability Audit V3.1 Validation (UVL Evidence Refresh) ---');
 for (const r of results) {
