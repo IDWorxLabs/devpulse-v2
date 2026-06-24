@@ -18,6 +18,7 @@ import {
   MAX_RECOMMENDED_QUESTIONS,
 } from './clarifying-question-bounds.js';
 import { recordClarifyingQuestionAssessment } from './clarifying-question-history.js';
+import { assessCqiMaturity } from './cqi-maturity-assessor.js';
 import { buildClarifyingQuestionReportMarkdown } from './clarifying-question-report-builder.js';
 import type {
   ClarifyingQuestionAssessment,
@@ -196,6 +197,13 @@ export function buildClarifyingQuestionIntelligenceArtifacts(
   clarifyingQuestionIntelligenceReportMarkdown: string;
 } {
   const clarifyingQuestionIntelligence = assessClarifyingQuestionIntelligence(report);
+  const userPrompt =
+    report.ideaToAppResults.map((result) => result.prompt).find(Boolean) ??
+    'Build application from founder test evidence';
+  assessCqiMaturity({
+    userPrompt,
+    supplementalEvidence: collectRequirementEvidenceText(report),
+  });
   return {
     clarifyingQuestionIntelligence,
     clarifyingQuestionIntelligenceReportMarkdown: buildClarifyingQuestionReportMarkdown(

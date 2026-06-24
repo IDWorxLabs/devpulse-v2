@@ -14,13 +14,14 @@ import type {
   FounderTestV4ReportWithAdoptionPrediction,
 } from '../founder-testing-mode/founder-testing-v4-types.js';
 import { getClarifyingLiveGateMetrics } from '../clarifying-question-intelligence/clarifying-question-live-gate.js';
+import { getLastCqiMaturityAssessment } from '../clarifying-question-intelligence/index.js';
 import { mapUniversalAppBlueprintVisualLaunchCouncilAuthority } from '../universal-app-blueprint-visual/universal-app-blueprint-visual-integration.js';
 import { mapFeatureRealityLaunchCouncilAuthority } from '../feature-reality-validation/feature-reality-validation-integration.js';
 import { mapUniversalFeatureContractLaunchCouncilAuthority } from '../universal-feature-contract-intelligence/universal-feature-contract-integration.js';
 import { mapEngineeringRealityLaunchCouncilAuthority } from '../engineering-reality-authority/engineering-reality-integration.js';
 import { mapAutonomousFounderLaunchCouncilAuthority } from '../autonomous-founder-launch-authority/autonomous-founder-launch-integration.js';
-import { mapAutonomousFounderLaunchCouncilAuthority } from '../autonomous-founder-launch-authority/autonomous-founder-launch-integration.js';
 import { listLaunchCouncilAuthorities } from './launch-council-registry.js';
+import { assessLaunchCouncil, buildLaunchCouncilArtifacts } from './launch-council-authority.js';
 import type {
   LaunchCouncilAssessment,
   LaunchCouncilAuthorityResult,
@@ -643,6 +644,7 @@ function mapClarifyingQuestionIntelligence(
 ): LaunchCouncilAuthorityResult {
   const clarifying = report.clarifyingQuestionIntelligence;
   const liveMetrics = getClarifyingLiveGateMetrics();
+  const cqiMaturity = getLastCqiMaturityAssessment();
   const liveGateActive = liveMetrics.gateEvaluations > 0;
   const adjustedScore = Math.max(
     0,
@@ -666,12 +668,22 @@ function mapClarifyingQuestionIntelligence(
       break;
   }
 
+  const maturityFindings = cqiMaturity
+    ? [
+        `Requirement confidence score: ${cqiMaturity.requirementConfidenceScore}/100`,
+        `Coverage matrix: ${cqiMaturity.coverageMatrix.map((row) => `${row.category}=${row.status}`).slice(0, 6).join(', ')}`,
+        `Requirement gap summary: ${cqiMaturity.gapSummary.slice(0, 3).join(' | ')}`,
+        `Open questions: ${cqiMaturity.openQuestions.length}`,
+        `Resolved questions: ${cqiMaturity.resolvedQuestions.length}`,
+      ]
+    : [];
+
   return {
     authorityId: 'clarifying-question-intelligence',
     authorityName: 'Clarifying Question Intelligence',
     authorityCategory: 'CLARIFYING_QUESTION_INTELLIGENCE',
-    score: adjustedScore,
-    confidence: clarifying.confidenceToProceed,
+    score: cqiMaturity?.requirementConfidenceScore ?? adjustedScore,
+    confidence: cqiMaturity?.requirementConfidenceScore ?? clarifying.confidenceToProceed,
     status,
     launchBlocker: clarifying.readinessState === 'CRITICAL_INFORMATION_MISSING' || clarifying.readinessState === 'CANNOT_PROCEED',
     findings: [
@@ -682,9 +694,13 @@ function mapClarifyingQuestionIntelligence(
       `Clarification required: ${clarifying.clarificationRequired ? 'Yes' : 'No'}`,
       `Live gate evaluations: ${liveMetrics.gateEvaluations}`,
       `Assumption prevention events: ${liveMetrics.assumptionPreventedCount}`,
+      ...maturityFindings,
       ...clarifying.assumptionsPrevented.slice(0, 2).map((item) => `Assumption prevented: ${item}`),
     ],
-    recommendations: clarifying.recommendedQuestions.slice(0, 4).map((item) => item.question),
+    recommendations: [
+      ...clarifying.recommendedQuestions.slice(0, 2).map((item) => item.question),
+      ...(cqiMaturity?.openQuestions.slice(0, 2).map((item) => item.question) ?? []),
+    ].slice(0, 4),
   };
 }
 

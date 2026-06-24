@@ -7,6 +7,9 @@ import {
   resolveBlueprintVisualValidationReady,
 } from '../universal-app-blueprint-visual/index.js';
 import type { LivePreviewSessionSignal } from '../live-preview-reality/live-preview-reality-types.js';
+import type { LivePreviewRealityAssessment } from '../live-preview-reality/live-preview-reality-types.js';
+import { assessLivePreviewReality } from '../live-preview-reality/index.js';
+import { getLastCqiMaturityAssessment } from '../clarifying-question-intelligence/index.js';
 import {
   assessRunningApplicationVisibility,
   type RunningApplicationVisibilityAssessment,
@@ -120,6 +123,13 @@ export interface CanonicalLivePreviewWorkspaceSlice {
   livePreview: CanonicalLivePreviewBlock;
   runningApplication: RunningApplicationVisibilityAssessment;
   runtimeLivePreviewConnected: boolean;
+  requirementDiscovery: {
+    confidenceScore: number;
+    coverageSummary: string;
+    gapSummary: readonly string[];
+    openQuestionCount: number;
+    resolvedQuestionCount: number;
+  } | null;
 }
 
 function buildOnePromptSession(
@@ -279,10 +289,23 @@ export function resolveCanonicalLivePreviewState(
     targetType: runtime.targets[0]?.targetType ?? (onePromptReady ? 'WEB_APP' : null),
   });
 
+  const cqiMaturity = getLastCqiMaturityAssessment();
+
   return {
     livePreview: livePreviewBlock,
     runningApplication,
     runtimeLivePreviewConnected: mergedConnected,
+    requirementDiscovery: cqiMaturity
+      ? {
+          confidenceScore: cqiMaturity.requirementConfidenceScore,
+          coverageSummary: cqiMaturity.coverageMatrix
+            .map((row) => `${row.category}: ${row.status}`)
+            .join(' | '),
+          gapSummary: cqiMaturity.gapSummary,
+          openQuestionCount: cqiMaturity.openQuestions.length,
+          resolvedQuestionCount: cqiMaturity.resolvedQuestions.length,
+        }
+      : null,
   };
 }
 

@@ -37,6 +37,7 @@ import {
 import { buildFounderTestPingResponse, FOUNDER_TEST_SERVER_STARTED_AT } from './founder-test-server-process-metadata.js';
 import { sendExecutionProofJson } from './execution-proof-handler.js';
 import { sendFounderReviewJson } from './founder-review-handler.js';
+import { sendRequirementDiscoveryJson } from './requirement-discovery-handler.js';
 import { buildPortfolioInsightsDemo } from './portfolio-demo-data.js';
 import { buildProductWorkspaceSnapshot } from './product-workspace-snapshot.js';
 
@@ -266,9 +267,19 @@ export function createFounderRealityServer() {
       return;
     }
 
+    if (urlPath === '/api/founder/requirement-discovery' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendRequirementDiscoveryJson(res, url.searchParams.get('prompt'), url.searchParams.get('domain'));
+      return;
+    }
+
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       sendJson(res, 405, JSON.stringify({
-        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/founder/founder-review, GET /api/brain/*, GET /api/build/live-preview, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
+        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/founder/founder-review, GET /api/founder/requirement-discovery, GET /api/brain/*, GET /api/build/live-preview, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
         hint: 'Restart DevPulse with npm run dev if Brain POST returns read-only errors',
       }));
       return;

@@ -202,7 +202,7 @@ export function assertLaunchCouncilRegistryIntegrity(): boolean {
   const orders = REGISTERED_AUTHORITIES.map((entry) => entry.registrationOrder);
   const uniqueOrders = new Set(orders);
   return (
-    REGISTERED_AUTHORITIES.length === 26 &&
+    REGISTERED_AUTHORITIES.length === 28 &&
     uniqueOrders.size === REGISTERED_AUTHORITIES.length &&
     REGISTERED_AUTHORITIES.every((entry) => entry.authorityId.length > 0)
   );

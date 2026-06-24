@@ -10,9 +10,14 @@ import { getLastFeatureRealityAssessment } from '../feature-reality-validation/i
 import { getLastUniversalFeatureContractAssessment } from '../universal-feature-contract-intelligence/index.js';
 import { getLastEngineeringRealityAssessment } from '../engineering-reality-authority/index.js';
 import { getLatestLaunchReadinessAssessment } from '../launch-readiness-authority/index.js';
+import {
+  assessCqiMaturity,
+  getLastCqiMaturityAssessment,
+} from '../clarifying-question-intelligence/index.js';
 import type {
   FounderEvidenceSnapshot,
   FounderEvidenceSource,
+  FounderRequirementDiscoveryEvidence,
 } from './autonomous-founder-launch-authority-types.js';
 
 function clamp(n: number): number {
@@ -314,12 +319,34 @@ export function synthesizeLaunchReadinessEvidenceFromPipeline(
   };
 }
 
+function buildRequirementDiscoveryEvidence(
+  productPrompt?: string | null,
+): FounderRequirementDiscoveryEvidence | null {
+  const assessment = productPrompt
+    ? assessCqiMaturity({ userPrompt: productPrompt })
+    : getLastCqiMaturityAssessment();
+  if (!assessment) return null;
+
+  return {
+    readOnly: true,
+    requirementConfidenceScore: assessment.requirementConfidenceScore,
+    coverageMatrix: assessment.coverageMatrix.map((row) => ({
+      category: row.category,
+      status: row.status,
+    })),
+    gapSummary: assessment.gapSummary,
+    poorlyUnderstood: assessment.requirementConfidenceScore < 75 || assessment.criticalGapCount > 0,
+    canProceedToPlanning: assessment.canProceedToPlanning,
+  };
+}
+
 export function collectFounderLaunchEvidence(input: {
   projectRootDir?: string | null;
   workspaceDir?: string | null;
   buildReality?: FounderEvidenceSource | null;
   blueprintStructure?: FounderEvidenceSource | null;
   synthesizeLaunchReadiness?: boolean;
+  productPrompt?: string | null;
 }): FounderEvidenceSnapshot {
   const buildReality = buildBuildRealityEvidence({
     projectRootDir: input.projectRootDir ?? null,
@@ -345,6 +372,7 @@ export function collectFounderLaunchEvidence(input: {
     featureReality,
     universalFeatureContract,
     engineeringReality,
+    requirementDiscovery: buildRequirementDiscoveryEvidence(input.productPrompt ?? null),
   };
 
   const launchReadiness = input.synthesizeLaunchReadiness
@@ -363,11 +391,16 @@ export function collectFounderLaunchEvidence(input: {
     .filter((source) => !source.available || !source.passed)
     .map((source) => source.sourceName);
 
+  const requirementDiscovery = partial.requirementDiscovery;
+  const extendedMissing = requirementDiscovery?.poorlyUnderstood
+    ? [...missingPrerequisites, 'Requirement Discovery incomplete']
+    : missingPrerequisites;
+
   return {
     ...partial,
     launchReadiness,
-    allPrerequisitesPassed: missingPrerequisites.length === 0,
-    missingPrerequisites,
+    allPrerequisitesPassed: extendedMissing.length === 0,
+    missingPrerequisites: extendedMissing,
   };
 }
 

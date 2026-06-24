@@ -266,4 +266,58 @@ export {
 } from './clarifying-question-consolidation-ownership.js';
 export type { ClarifyingQuestionConsolidationOwnership } from './clarifying-question-consolidation-ownership.js';
 
+export {
+  CLARIFYING_QUESTION_INTELLIGENCE_MATURITY_V1_PASS_TOKEN,
+  REQUIREMENT_CONFIDENCE_THRESHOLD,
+  FORBIDDEN_GENERIC_QUESTIONS,
+} from './cqi-maturity-bounds.js';
 
+export {
+  CQI_DOMAIN_DEFINITIONS,
+  detectCqiProductDomain,
+  getCqiDomainDefinition,
+} from './cqi-domain-registry.js';
+
+export {
+  REQUIREMENT_GAP_CATEGORY_DEFINITIONS,
+  detectRequirementGaps,
+  buildCategoryScores,
+  scoreRequirementCategory,
+} from './cqi-requirement-gap-detector.js';
+
+export {
+  buildRequirementCoverageMatrix,
+  summarizeCoverageMatrix,
+  computeRequirementConfidenceScore,
+} from './cqi-coverage-matrix.js';
+
+export {
+  generateAdaptiveQuestions,
+  validateQuestionQuality,
+  extractResolvedQuestions,
+} from './cqi-adaptive-question-generator.js';
+
+export {
+  assessCqiMaturity,
+  canProceedToPlanningMaturity,
+  shouldStopQuestioning,
+} from './cqi-maturity-assessor.js';
+
+export {
+  resetCqiMaturityHistoryForTests,
+  getLastCqiMaturityAssessment,
+  listCqiMaturityHistory,
+  getCqiMaturityHistorySize,
+} from './cqi-maturity-history.js';
+
+export type {
+  CqiProductDomain,
+  RequirementGapCategory,
+  RequirementCoverageStatus,
+  RequirementGapSeverity,
+  RequirementGap,
+  RequirementCoverageRow,
+  CqiAdaptiveQuestion,
+  CqiMaturityAssessment,
+  AssessCqiMaturityInput,
+} from './cqi-maturity-types.js';

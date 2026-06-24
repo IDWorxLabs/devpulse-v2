@@ -18,6 +18,8 @@
   var founderReviewData = null;
   var founderReviewLoadPromise = null;
   var founderReviewProfile = 'TASK_TRACKER_WEB_V1';
+  var requirementDiscoveryData = null;
+  var requirementDiscoveryLoadPromise = null;
   var insightsSelectedProjectId = null;
 
   /** Client-side demo fallback — used only when workspace API is unavailable. */
@@ -103,7 +105,7 @@
     ],
   };
   var conversationStarted = false;
-  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Founder Review', 'Approvals', 'Learning'];
+  var defaultFeedSections = ['Planning', 'Execution', 'Verification', 'Founder Review', 'Requirement Discovery', 'Approvals', 'Learning'];
   var feedSectionIdleCopy = {
     Planning: {
       action: 'Ready to classify your next request',
@@ -120,6 +122,10 @@
     'Founder Review': {
       action: 'Launch review pipeline idle',
       detail: 'Open Founder Review to see evidence chain, reviewer panel, verdict, and AutoFix status.',
+    },
+    'Requirement Discovery': {
+      action: 'Requirement discovery ready',
+      detail: 'CQI identifies missing requirements and asks domain-aware questions before planning.',
     },
     Approvals: {
       action: 'Waiting for founder decisions when needed',
@@ -4363,6 +4369,76 @@
     }).join('') + '</ul>';
   }
 
+  function renderRequirementDiscoveryPanel(data) {
+    if (!data) {
+      return renderProductCard(
+        'Requirement Discovery',
+        '<p class="product-lead">Loading Clarifying Question Intelligence maturity visibility…</p>',
+      );
+    }
+
+    var coverageRows = (data.requirementCoverage || [])
+      .map(function (row) {
+        return (
+          '<div class="requirement-discovery-row">' +
+          '<span>' + escapeHtml(row.category) + '</span>' +
+          '<span class="status-pill requirement-discovery-' + String(row.status).toLowerCase() + '">' +
+          escapeHtml(row.status) +
+          '</span>' +
+          '<span>' + String(row.score) + '/100</span>' +
+          '</div>'
+        );
+      })
+      .join('');
+
+    return renderProductCard(
+      'Requirement Discovery',
+      '<p class="product-lead">Clarifying Question Intelligence — understand first, build second. Informational only.</p>' +
+        '<p><strong>Confidence Score:</strong> ' + String(data.confidenceScore) + '/100</p>' +
+        '<p><strong>Product Domain:</strong> ' + escapeHtml(data.productDomain || 'GENERIC') + '</p>' +
+        '<p><strong>Can Proceed To Planning:</strong> ' + (data.canProceedToPlanning ? 'Yes' : 'No') + '</p>' +
+        '<p><strong>Requirement Coverage</strong></p>' +
+        '<div class="requirement-discovery-grid">' + coverageRows + '</div>' +
+        '<p><strong>Open Questions</strong></p>' +
+        renderFounderReviewList(
+          (data.openQuestions || []).map(function (item) {
+            return item.question;
+          }),
+          'No open questions — sufficient understanding for planning.',
+        ) +
+        '<p><strong>Resolved Questions</strong></p>' +
+        renderFounderReviewList(data.resolvedQuestions, 'No resolved questions yet.') +
+        '<p><strong>Critical Gaps</strong></p>' +
+        renderFounderReviewList(data.criticalGaps, 'No critical requirement gaps.'),
+    );
+  }
+
+  function loadRequirementDiscovery(force, prompt) {
+    if (!force && requirementDiscoveryData) {
+      return Promise.resolve(requirementDiscoveryData);
+    }
+    if (requirementDiscoveryLoadPromise) {
+      return requirementDiscoveryLoadPromise;
+    }
+    var url = '/api/founder/requirement-discovery';
+    if (prompt) {
+      url += '?prompt=' + encodeURIComponent(prompt);
+    }
+    requirementDiscoveryLoadPromise = fetch(url, { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('requirement-discovery HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        requirementDiscoveryData = data;
+        return data;
+      })
+      .finally(function () {
+        requirementDiscoveryLoadPromise = null;
+      });
+    return requirementDiscoveryLoadPromise;
+  }
+
   function renderFounderReviewDashboard(data) {
     if (!data) {
       return (
@@ -4431,6 +4507,7 @@
         '<p><strong>Current Status:</strong> <span class="status-pill founder-review-phase">' + escapeHtml(data.launchReadiness.currentPhase) + '</span></p>' +
         '<p class="hint">' + escapeHtml(data.launchReadiness.userLabel || '') + '</p>',
       ) +
+      renderRequirementDiscoveryPanel(requirementDiscoveryData) +
       renderProductCard(
         'Evidence Chain',
         '<div class="founder-review-evidence-grid">' + evidenceRows + '</div>',
@@ -5295,7 +5372,7 @@
         });
     }
     if (viewId === 'founder-review') {
-      loadFounderReview(false)
+      Promise.all([loadFounderReview(false), loadRequirementDiscovery(false)])
         .then(function () {
           refreshFounderReviewPanel();
         })
@@ -5434,6 +5511,7 @@
     Execution: '<svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 10-14h-7l0-6z"/></svg>',
     Verification: '<svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg>',
     'Founder Review': '<svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>',
+    'Requirement Discovery': '<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M12 4h9"/><path d="M4 9h16"/><path d="M4 15h16"/><path d="M4 4v16"/></svg>',
     Approvals: '<svg viewBox="0 0 24 24"><path d="M12 3l7 4v6c0 4-3 7-7 8-4-1-7-4-7-8V7l7-4z"/></svg>',
     Learning: '<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
   };

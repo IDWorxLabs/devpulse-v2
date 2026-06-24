@@ -74,6 +74,7 @@ export {
   REQUIREMENT_COMPLETENESS_AUTHORITATIVE_OWNER,
   REQUIREMENT_COMPLETENESS_CONSOLIDATION_STATUS,
   resolveAuthoritativeRequirementIntelligence,
+  delegateRequirementCompletenessToCqi,
   applyCqiRequirementDelegation,
 } from './requirement-completeness-consolidation-bridge.js';
 export type { RequirementCompletenessConsolidationSnapshot } from './requirement-completeness-consolidation-bridge.js';

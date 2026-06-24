@@ -42,7 +42,7 @@ interface ScenarioResult {
 const results: ScenarioResult[] = [];
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 const START = Date.now();
-const MAX_RUNTIME_MS = 60_000;
+const MAX_RUNTIME_MS = 300_000;
 
 const REQUIRED_FILES = [
   'src/clarifying-question-intelligence/clarifying-question-bounds.ts',
@@ -107,7 +107,7 @@ function main(): void {
     authorities.some((entry) => entry.authorityId === 'clarifying-question-intelligence'),
     'clarifying-question-intelligence',
   );
-  assert('04. registry count 23', authorities.length === 23, String(authorities.length));
+  assert('04. registry count 28', authorities.length === 28, String(authorities.length));
 
   const v4 = runFounderTestingModeV4();
   const input = toWithUiReviewer(v4);

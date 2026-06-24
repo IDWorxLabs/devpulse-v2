@@ -36,6 +36,7 @@ export const OPERATOR_FEED_SECTIONS = [
   'Execution',
   'Verification',
   'Founder Review',
+  'Requirement Discovery',
   'Approvals',
   'Learning',
 ] as const;

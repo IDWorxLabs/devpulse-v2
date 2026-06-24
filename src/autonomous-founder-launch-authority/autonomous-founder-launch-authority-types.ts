@@ -47,8 +47,18 @@ export interface FounderEvidenceSnapshot {
   universalFeatureContract: FounderEvidenceSource;
   engineeringReality: FounderEvidenceSource;
   launchReadiness: FounderEvidenceSource;
+  requirementDiscovery: FounderRequirementDiscoveryEvidence | null;
   allPrerequisitesPassed: boolean;
   missingPrerequisites: string[];
+}
+
+export interface FounderRequirementDiscoveryEvidence {
+  readOnly: true;
+  requirementConfidenceScore: number;
+  coverageMatrix: readonly { category: string; status: string }[];
+  gapSummary: readonly string[];
+  poorlyUnderstood: boolean;
+  canProceedToPlanning: boolean;
 }
 
 export interface FounderReviewerAssessment {

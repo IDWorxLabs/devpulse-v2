@@ -22,7 +22,7 @@ export function validateLaunchCouncilRegistry(): { passed: boolean; detail: stri
   const ids = authorities.map((entry) => entry.authorityId);
   const validation = validateLaunchCouncilAuthorityIds(ids);
   const integrity = assertLaunchCouncilRegistryIntegrity();
-  const passed = integrity && validation.valid && authorities.length === 23;
+  const passed = integrity && validation.valid && authorities.length === 28;
   return {
     passed,
     detail: passed

@@ -2138,6 +2138,41 @@ body {
   margin-top: 0.75rem;
 }
 
+.requirement-discovery-grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.requirement-discovery-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.requirement-discovery-complete {
+  background: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+}
+
+.requirement-discovery-partial {
+  background: rgba(234, 179, 8, 0.15);
+  color: #fde047;
+}
+
+.requirement-discovery-missing {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+}
+
+@media (max-width: 900px) {
+  .requirement-discovery-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 900px) {
   .founder-review-evidence-row,
   .founder-review-history-row {
