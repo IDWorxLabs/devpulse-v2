@@ -10,6 +10,7 @@ import { join } from 'node:path';
 import { PRODUCTION_READINESS_GATE_V1_ARTIFACT_DIR } from '../production-readiness-gate-v1/production-readiness-gate-v1-bounds.js';
 import { CLOUD_EXECUTION_PATH_V1_ARTIFACT_DIR } from '../cloud-execution-path-v1/cloud-execution-path-v1-bounds.js';
 import { GENERAL_PURPOSE_CODE_GENERATION_V1_ARTIFACT_DIR } from '../general-purpose-code-generation-v1/general-purpose-code-generation-v1-bounds.js';
+import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeline-integration-v1/index.js';
 
 const BASE_MISSING_CAPABILITIES: readonly MissingCapabilitiesReport['entries'][number][] = [
   {
@@ -99,6 +100,7 @@ export function buildMissingCapabilitiesReport(input?: {
   const generalPurposeCodegenProven = existsSync(
     join(root, GENERAL_PURPOSE_CODE_GENERATION_V1_ARTIFACT_DIR, 'assessment.json'),
   );
+  const pipelineIntegration = loadLargeScalePipelineIntegrationSnapshot(root);
   const entries = BASE_MISSING_CAPABILITIES.filter((entry) => {
     if (
       uvlEvidence.uvlVerificationExecutionComplete &&
@@ -123,6 +125,12 @@ export function buildMissingCapabilitiesReport(input?: {
     if (
       generalPurposeCodegenProven &&
       entry.capability === 'General-purpose code generation beyond CRUD profiles'
+    ) {
+      return false;
+    }
+    if (
+      pipelineIntegration.integrationComplete &&
+      entry.capability === 'Large-scale pipeline integration with Real Build Execution'
     ) {
       return false;
     }

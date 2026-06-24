@@ -1,0 +1,590 @@
+[
+  {
+    "readOnly": true,
+    "profile": "ACCOUNTING_PLATFORM_WEB_V1",
+    "productName": "Accounting Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "AGRICULTURE_MANAGEMENT_WEB_V1",
+    "productName": "Agriculture Management",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "APPOINTMENT_BOOKING_WEB_V1",
+    "productName": "Booking Platform",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "GP_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "ASSET_MANAGEMENT_WEB_V1",
+    "productName": "Asset Management",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "B2B_MARKETPLACE_WEB_V1",
+    "productName": "B2B Marketplace",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "BOOKING_PLATFORM_WEB_V1",
+    "productName": "Booking Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "BUDGET_PLANNER_WEB_V1",
+    "productName": "Budget Planner",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "CERTIFICATION_SYSTEM_WEB_V1",
+    "productName": "Certification System",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "CLINIC_OPERATIONS_WEB_V1",
+    "productName": "Clinic Operations",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "COMMUNITY_PORTAL_WEB_V1",
+    "productName": "Community Portal",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "COMPLIANCE_TRACKING_WEB_V1",
+    "productName": "Compliance Tracking",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "CONSTRUCTION_MANAGEMENT_WEB_V1",
+    "productName": "Construction Management",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "CRM_WEB_V1",
+    "productName": "CRM",
+    "classification": "CLOUD_SIMULATED_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "CLOUD_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "CUSTOMER_SUPPORT_WEB_V1",
+    "productName": "Customer Support Platform",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "GP_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "DONATION_PLATFORM_WEB_V1",
+    "productName": "Donation Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "ERP_WEB_V1",
+    "productName": "ERP",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "EVENT_PLATFORM_WEB_V1",
+    "productName": "Event Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED",
+      "GP_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "EXPENSE_TRACKER_WEB_V1",
+    "productName": "Expense Tracker",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "E_COMMERCE_PLATFORM_WEB_V1",
+    "productName": "E-Commerce Platform",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "FINANCE_TRACKER_WEB_V1",
+    "productName": "Finance Tracker",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "GP_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "FITNESS_APP_WEB_V1",
+    "productName": "Fitness App",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "FLEET_MANAGEMENT_WEB_V1",
+    "productName": "Fleet Management",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "FORUM_PLATFORM_WEB_V1",
+    "productName": "Forum Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "FREELANCER_PLATFORM_WEB_V1",
+    "productName": "Freelancer Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "HEALTHCARE_PORTAL_WEB_V1",
+    "productName": "Healthcare Portal",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED",
+      "GP_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "HOTEL_MANAGEMENT_WEB_V1",
+    "productName": "Hotel Management",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "HR_PLATFORM_WEB_V1",
+    "productName": "HR Platform",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "INSURANCE_CRM_WEB_V1",
+    "productName": "Insurance CRM",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "INVENTORY_WEB_V1",
+    "productName": "Inventory",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "INVOICE_PLATFORM_WEB_V1",
+    "productName": "Invoice Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "JOB_BOARD_WEB_V1",
+    "productName": "Job Board",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED",
+      "GP_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "LEARNING_PLATFORM_WEB_V1",
+    "productName": "Learning Platform",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "GP_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "LEGAL_CASE_MANAGEMENT_WEB_V1",
+    "productName": "Legal Case Management",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "LIBRARY_SYSTEM_WEB_V1",
+    "productName": "Library System",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "LOGISTICS_PLATFORM_WEB_V1",
+    "productName": "Logistics Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "MAINTENANCE_TRACKING_WEB_V1",
+    "productName": "Maintenance Tracking",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "classification": "CLOUD_SIMULATED_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "GP_PROVEN",
+      "CLOUD_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "MEDICAL_RECORDS_WEB_V1",
+    "productName": "Medical Records",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "MEMBERSHIP_PLATFORM_WEB_V1",
+    "productName": "Membership Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "ONLINE_COURSES_WEB_V1",
+    "productName": "Online Courses",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "PATIENT_MANAGEMENT_WEB_V1",
+    "productName": "Patient Management",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "PROCUREMENT_SYSTEM_WEB_V1",
+    "productName": "Procurement System",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "PROJECT_MANAGEMENT_WEB_V1",
+    "productName": "Project Management",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "PROPERTY_LISTINGS_WEB_V1",
+    "productName": "Property Listings",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "PROPERTY_MANAGEMENT_WEB_V1",
+    "productName": "Property Management",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED",
+      "GP_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "REAL_ESTATE_CRM_WEB_V1",
+    "productName": "Real Estate CRM",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "RENTAL_MARKETPLACE_WEB_V1",
+    "productName": "Rental Marketplace",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "RESERVATION_PLATFORM_WEB_V1",
+    "productName": "Reservation Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "RESTAURANT_POS_WEB_V1",
+    "productName": "Restaurant POS",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "SCHOOL_MANAGEMENT_WEB_V1",
+    "productName": "School Management",
+    "classification": "PRODUCTION_PROVEN",
+    "flags": [
+      "BROAD_VALIDATED",
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "SOCIAL_PLATFORM_WEB_V1",
+    "productName": "Community Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED",
+      "GP_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "SUBSCRIPTION_MANAGER_WEB_V1",
+    "productName": "Subscription Manager",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "classification": "CLOUD_SIMULATED_PROVEN",
+    "flags": [
+      "BUILD_PROVEN",
+      "VERIFICATION_PROVEN",
+      "CLOUD_PROVEN",
+      "PRODUCTION_PROVEN"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "TELEMEDICINE_WEB_V1",
+    "productName": "Telemedicine",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "TOUR_BOOKING_WEB_V1",
+    "productName": "Tour Booking",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "TRAINING_PLATFORM_WEB_V1",
+    "productName": "Training Platform",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "TRAVEL_PLANNER_WEB_V1",
+    "productName": "Travel Planner",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "UNIVERSITY_PORTAL_WEB_V1",
+    "productName": "University Portal",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  },
+  {
+    "readOnly": true,
+    "profile": "WAREHOUSE_MANAGEMENT_WEB_V1",
+    "productName": "Warehouse Management",
+    "classification": "BREADTH_ONLY",
+    "flags": [
+      "BROAD_VALIDATED"
+    ]
+  }
+]

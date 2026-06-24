@@ -1,0 +1,19 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-24T20:08:03.231Z",
+  "broadCategoriesTested": 58,
+  "buildProvenCategories": 15,
+  "verificationProvenCategories": 15,
+  "productionProvenCategories": 15,
+  "cloudProvenCategories": 3,
+  "gpProvenCategories": 10,
+  "buildSuccessRate": 100,
+  "previewSuccessRate": 100,
+  "verificationSuccessRate": 100,
+  "productReadinessRate": 100,
+  "launchReadinessRate": 100,
+  "productionReadinessRate": 100,
+  "cloudSimulatedSuccessRate": 100,
+  "generalPurposeGenerationSuccessRate": 100,
+  "legacyLargeScaleBuildSuccessRate": 0
+}

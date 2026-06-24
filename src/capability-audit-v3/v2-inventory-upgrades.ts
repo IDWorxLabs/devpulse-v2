@@ -13,9 +13,10 @@ export const V2_INVENTORY_UPGRADES: readonly InventoryUpgrade[] = [
   {
     name: 'Large-Scale Multi-App Validation V1',
     patch: {
-      maturity: 74,
+      maturity: 88,
+      status: 'MATURE',
       summary:
-        '58-category multi-app validation harness; generation 100% but downstream build/verification disconnected from Real Build Execution Pipeline V1.1 proof chain.',
+        '58-category broad validation harness integrated with authoritative pipeline evidence via Large-Scale Pipeline Integration V1; umbrella view aggregates RBEP, UVL, PRG, GPCG, and cloud proof.',
     },
   },
   {

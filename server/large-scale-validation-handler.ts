@@ -9,7 +9,9 @@ import {
   LARGE_SCALE_MULTI_APP_VALIDATION_V1_PASS_TOKEN,
   LARGE_SCALE_VALIDATION_SUITE,
 } from '../src/large-scale-multi-app-validation-v1/index.js';
+import { runLargeScalePipelineIntegrationV1 } from '../src/large-scale-pipeline-integration-v1/index.js';
 import type { LargeScaleMultiAppValidationAssessment } from '../src/large-scale-multi-app-validation-v1/large-scale-multi-app-validation-types.js';
+import type { LargeScalePipelineIntegrationAssessment } from '../src/large-scale-pipeline-integration-v1/large-scale-pipeline-integration-v1-types.js';
 
 export { LARGE_SCALE_MULTI_APP_VALIDATION_V1_PASS_TOKEN };
 
@@ -29,6 +31,23 @@ export interface LargeScaleValidationPayload {
   strongestCategories: readonly string[];
   calibrationHistory: ReturnType<typeof listLargeScaleValidationHistory>;
   assessment: LargeScaleMultiAppValidationAssessment | null;
+  pipelineIntegration: LargeScalePipelineIntegrationAssessment | null;
+  broadCategoriesTested: number;
+  buildProvenCategories: number;
+  verificationProvenCategories: number;
+  productionProvenCategories: number;
+  cloudProvenCategories: number;
+  largeScalePipelineScore: number;
+  remainingGaps: readonly string[];
+  authoritativePassRates: {
+    readOnly: true;
+    buildSuccessRate: number;
+    previewSuccessRate: number;
+    verificationSuccessRate: number;
+    productionReadinessRate: number;
+    cloudSimulatedSuccessRate: number;
+    generalPurposeGenerationSuccessRate: number;
+  };
 }
 
 export function buildLargeScaleValidationPayload(input?: {
@@ -41,6 +60,8 @@ export function buildLargeScaleValidationPayload(input?: {
           input?.profile ? { profiles: [input.profile] } : undefined,
         )
       : getLastLargeScaleValidationAssessment()!;
+
+  const pipelineIntegration = runLargeScalePipelineIntegrationV1();
 
   return {
     readOnly: true,
@@ -58,6 +79,24 @@ export function buildLargeScaleValidationPayload(input?: {
     strongestCategories: assessment.strongestCategories,
     calibrationHistory: listLargeScaleValidationHistory(),
     assessment,
+    pipelineIntegration,
+    broadCategoriesTested: pipelineIntegration.metrics.broadCategoriesTested,
+    buildProvenCategories: pipelineIntegration.metrics.buildProvenCategories,
+    verificationProvenCategories: pipelineIntegration.metrics.verificationProvenCategories,
+    productionProvenCategories: pipelineIntegration.metrics.productionProvenCategories,
+    cloudProvenCategories: pipelineIntegration.metrics.cloudProvenCategories,
+    largeScalePipelineScore: pipelineIntegration.pipelineScore.score,
+    remainingGaps: pipelineIntegration.remainingGaps,
+    authoritativePassRates: {
+      readOnly: true,
+      buildSuccessRate: pipelineIntegration.metrics.buildSuccessRate,
+      previewSuccessRate: pipelineIntegration.metrics.previewSuccessRate,
+      verificationSuccessRate: pipelineIntegration.metrics.verificationSuccessRate,
+      productionReadinessRate: pipelineIntegration.metrics.productionReadinessRate,
+      cloudSimulatedSuccessRate: pipelineIntegration.metrics.cloudSimulatedSuccessRate,
+      generalPurposeGenerationSuccessRate:
+        pipelineIntegration.metrics.generalPurposeGenerationSuccessRate,
+    },
   };
 }
 

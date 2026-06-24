@@ -5203,13 +5203,20 @@
 
     return renderProductCard(
       'Large-Scale Validation',
-      '<p class="product-lead">AiDevEngine generalization proof — one prompt per category across 50+ industries. Informational only.</p>' +
-        '<p><strong>Categories Tested:</strong> ' + String(data.categoriesTested) + '</p>' +
-        '<p><strong>Pass Rate:</strong> ' + String(data.passRates.overallPassRate) + '%</p>' +
-        '<p><strong>Generalization Score:</strong> ' + String(data.generalizationScore) + '/100</p>' +
-        '<p><strong>Generation Success:</strong> ' + String(data.passRates.generationSuccessRate) + '% · ' +
-        '<strong>Blueprint:</strong> ' + String(data.passRates.blueprintSuccessRate) + '% · ' +
-        '<strong>AFLA:</strong> ' + String(data.passRates.aflaSuccessRate) + '%</p>' +
+      '<p class="product-lead">AiDevEngine umbrella pipeline view — broad validation plus authoritative build, verification, production, cloud, and GP evidence. Informational only.</p>' +
+        '<p><strong>Broad Categories Tested:</strong> ' + String(data.broadCategoriesTested || data.categoriesTested) + '</p>' +
+        '<p><strong>Build-Proven Categories:</strong> ' + String(data.buildProvenCategories || 0) + ' · ' +
+        '<strong>Verification-Proven:</strong> ' + String(data.verificationProvenCategories || 0) + ' · ' +
+        '<strong>Production-Proven:</strong> ' + String(data.productionProvenCategories || 0) + ' · ' +
+        '<strong>Cloud-Proven:</strong> ' + String(data.cloudProvenCategories || 0) + '</p>' +
+        '<p><strong>Large-Scale Pipeline Score:</strong> ' + String(data.largeScalePipelineScore || 0) + '/100</p>' +
+        '<p><strong>Authoritative Build Success:</strong> ' + String((data.authoritativePassRates && data.authoritativePassRates.buildSuccessRate) || 0) + '% · ' +
+        '<strong>Verification:</strong> ' + String((data.authoritativePassRates && data.authoritativePassRates.verificationSuccessRate) || 0) + '% · ' +
+        '<strong>Production:</strong> ' + String((data.authoritativePassRates && data.authoritativePassRates.productionReadinessRate) || 0) + '%</p>' +
+        '<p><strong>Harness Pass Rate:</strong> ' + String(data.passRates.overallPassRate) + '% · ' +
+        '<strong>Generalization Score:</strong> ' + String(data.generalizationScore) + '/100</p>' +
+        '<p><strong>Remaining Gaps</strong></p>' +
+        renderFounderReviewList(data.remainingGaps, 'No remaining pipeline gaps flagged.') +
         '<p><strong>Failure Distribution</strong></p>' +
         '<div class="large-scale-grid">' + failureRows + '</div>' +
         '<p><strong>Category Leaderboard</strong></p>' +

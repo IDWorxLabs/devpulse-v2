@@ -1,0 +1,15 @@
+{
+  "readOnly": true,
+  "score": 93,
+  "status": "PROVEN",
+  "breakdown": {
+    "readOnly": true,
+    "breadth": 100,
+    "buildProof": 100,
+    "verificationProof": 100,
+    "generalPurposeProof": 100,
+    "productionProof": 100,
+    "cloudProof": 100,
+    "consistency": 26
+  }
+}

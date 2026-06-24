@@ -1,0 +1,86 @@
+[
+  {
+    "readOnly": true,
+    "system": "Real Build Execution Pipeline V1.1",
+    "artifactDir": ".real-build-execution-pipeline-v1-1",
+    "artifacts": [
+      ".real-build-execution-pipeline-v1-1\\build-proof.json",
+      ".real-build-execution-pipeline-v1-1\\proof-coverage.json",
+      ".real-build-execution-pipeline-v1-1\\generalization-score.json"
+    ],
+    "passToken": "REAL_BUILD_EXECUTION_PIPELINE_V1_1_PASS",
+    "evidenceAvailable": true
+  },
+  {
+    "readOnly": true,
+    "system": "UVL Verification Execution V1",
+    "artifactDir": ".uvl-verification-execution-v1",
+    "artifacts": [
+      ".uvl-verification-execution-v1\\verification-coverage.json",
+      ".uvl-verification-execution-v1\\verification-proof.json",
+      ".uvl-verification-execution-v1\\verification-confidence.json"
+    ],
+    "passToken": "UVL_VERIFICATION_EXECUTION_V1_PASS",
+    "evidenceAvailable": true
+  },
+  {
+    "readOnly": true,
+    "system": "Production Readiness Gate V1",
+    "artifactDir": ".production-readiness-gate-v1",
+    "artifacts": [
+      ".production-readiness-gate-v1\\assessment.json"
+    ],
+    "passToken": "PRODUCTION_READINESS_GATE_V1_PASS",
+    "evidenceAvailable": true
+  },
+  {
+    "readOnly": true,
+    "system": "General-Purpose Code Generation V1",
+    "artifactDir": ".general-purpose-code-generation-v1",
+    "artifacts": [
+      ".general-purpose-code-generation-v1\\assessment.json"
+    ],
+    "passToken": "GENERAL_PURPOSE_CODE_GENERATION_V1_PASS",
+    "evidenceAvailable": true
+  },
+  {
+    "readOnly": true,
+    "system": "Cloud Execution Path V1",
+    "artifactDir": ".cloud-execution-path-v1",
+    "artifacts": [
+      ".cloud-execution-path-v1\\assessment.json"
+    ],
+    "passToken": "CLOUD_EXECUTION_PATH_V1_PASS",
+    "evidenceAvailable": true
+  },
+  {
+    "readOnly": true,
+    "system": "Autonomous Founder Launch Authority",
+    "artifactDir": ".autonomous-founder-launch-authority",
+    "artifacts": [
+      ".autonomous-founder-launch-authority\\suite-summary.json"
+    ],
+    "passToken": null,
+    "evidenceAvailable": true
+  },
+  {
+    "readOnly": true,
+    "system": "Product Architect Intelligence V1",
+    "artifactDir": ".product-architect-intelligence-v1",
+    "artifacts": [
+      ".product-architect-intelligence-v1\\assessment.json"
+    ],
+    "passToken": null,
+    "evidenceAvailable": true
+  },
+  {
+    "readOnly": true,
+    "system": "Large-Scale Multi-App Validation V1",
+    "artifactDir": ".large-scale-multi-app-validation",
+    "artifacts": [
+      ".large-scale-multi-app-validation\\assessment.json"
+    ],
+    "passToken": null,
+    "evidenceAvailable": true
+  }
+]

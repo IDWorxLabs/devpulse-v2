@@ -135,6 +135,7 @@
     "validate:afla-trust-calibration-v1": "tsx scripts/validate-afla-trust-calibration-v1.ts",
     "validate:uvl-verification-execution-v1": "tsx scripts/validate-uvl-verification-execution-v1.ts",
     "validate:large-scale-multi-app-validation-v1": "tsx scripts/validate-large-scale-multi-app-validation-v1.ts",
+    "validate:large-scale-pipeline-integration-v1": "tsx scripts/validate-large-scale-pipeline-integration-v1.ts",
     "validate:product-architect-intelligence-v1": "tsx scripts/validate-product-architect-intelligence-v1.ts",
     "validate:clarifying-question-intelligence-maturity-v1": "tsx scripts/validate-clarifying-question-intelligence-maturity-v1.ts",
     "validate:cqi-integration-repair-v1": "tsx scripts/validate-cqi-integration-repair-v1.ts",

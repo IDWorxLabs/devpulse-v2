@@ -4,6 +4,7 @@
 
 import type { MissingCapabilityEntry, RoadmapPriority } from './capability-audit-types.js';
 import type { UvlEvidenceSnapshot } from './uvl-evidence-loader.js';
+import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeline-integration-v1/index.js';
 
 const PHASE_BY_CAPABILITY: Readonly<Record<string, string>> = {
   'Production readiness gate': 'Production Readiness Gate',
@@ -170,6 +171,7 @@ export function buildRoadmapFromEvidence(input: {
   productionReadinessScore: number;
   codeGenerationMaturityScore: number;
   uvlEvidence: UvlEvidenceSnapshot;
+  projectRootDir?: string;
 }): {
   priorities: readonly RoadmapPriority[];
   world2IsNextPhase: boolean;
@@ -195,6 +197,22 @@ export function buildRoadmapFromEvidence(input: {
       rationale: `UVL Verification Execution V1 PASS: ${input.uvlEvidence.uvlVerifiedCount}/${input.uvlEvidence.suiteCoverage.categoriesRequired} verified, ${input.uvlEvidence.suiteCoverage.verificationCoveragePercent}% coverage, ${input.uvlEvidence.suiteCoverage.verificationConfidenceScore}/100 confidence.`,
       impact: 'CRITICAL',
       dependencies: ['UVL Verification Hub V1', 'Real Build Execution Pipeline V1.1'],
+    });
+  }
+
+  const pipelineIntegration = loadLargeScalePipelineIntegrationSnapshot(input.projectRootDir);
+  if (pipelineIntegration.integrationComplete) {
+    completePhases.push({
+      rank: 0,
+      phase: 'Large-Scale Pipeline Integration',
+      action: 'COMPLETE',
+      rationale: `Large-Scale Pipeline Integration V1 PASS: authoritative build ${pipelineIntegration.assessment.metrics.buildSuccessRate}%, verification ${pipelineIntegration.assessment.metrics.verificationSuccessRate}%, pipeline score ${pipelineIntegration.assessment.pipelineScore.score}/100.`,
+      impact: 'HIGH',
+      dependencies: [
+        'Real Build Execution Pipeline V1.1',
+        'UVL Verification Execution V1',
+        'Large-Scale Multi-App Validation V1',
+      ],
     });
   }
 

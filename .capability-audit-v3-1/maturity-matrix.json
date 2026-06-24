@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T16:02:31.794Z",
+  "generatedAt": "2026-06-24T20:08:19.085Z",
   "entries": [
     {
       "capabilityName": "Chat Authority",
@@ -448,8 +448,8 @@
     {
       "capabilityName": "Large-Scale Multi-App Validation V1",
       "category": "VERIFICATION_SYSTEMS",
-      "maturityScore": 74,
-      "status": "PARTIAL"
+      "maturityScore": 88,
+      "status": "MATURE"
     },
     {
       "capabilityName": "Founder Review Operator Dashboard V1",

@@ -291,6 +291,18 @@ assert(
   'report audit answers',
 );
 
+assert(
+  'large-scale pipeline gap resolved',
+  !assessment.highestPriorityGap.includes('0% buildSuccessRate'),
+  assessment.highestPriorityGap.slice(0, 100),
+);
+
+assert(
+  'large-scale pipeline integration complete in roadmap',
+  roadmap.some((p) => p.phase === 'Large-Scale Pipeline Integration' && p.action === 'COMPLETE'),
+  'COMPLETE action',
+);
+
 const failed = results.filter((r) => !r.passed);
 console.log('\n--- AiDevEngine Capability Audit V3.1 Validation (UVL Evidence Refresh) ---');
 for (const r of results) {

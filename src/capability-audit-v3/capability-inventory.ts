@@ -20,6 +20,7 @@ import { buildProductionReadinessAssessment } from './production-readiness-asses
 import { buildRecommendedRoadmap } from './recommended-roadmap.js';
 import { buildMissingCapabilitiesReport } from './missing-capabilities.js';
 import { V2_INVENTORY_UPGRADES } from './v2-inventory-upgrades.js';
+import { loadLargeScalePipelineIntegrationSnapshot } from '../large-scale-pipeline-integration-v1/index.js';
 
 export const AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS_TOKEN =
   'AIDEVENGINE_CAPABILITY_AUDIT_V3_PASS';
@@ -306,6 +307,7 @@ export function buildCapabilityAuditV3Assessment(projectRootDir?: string): Capab
     codeGenerationMaturityScore: codeGeneration.codeGenerationMaturityScore,
   });
   const uvlComplete = operationalMaturity.uvlEvidenceRefresh.uvlVerificationExecutionComplete;
+  const pipelineIntegration = loadLargeScalePipelineIntegrationSnapshot(projectRootDir);
 
   const closedGapsSinceV2 = [
     'Real build execution beyond simulation (Real Build Execution Pipeline V1/V1.1 PASS)',
@@ -316,6 +318,21 @@ export function buildCapabilityAuditV3Assessment(projectRootDir?: string): Capab
     closedGapsSinceV2.push(
       'UVL verification execution (UVL Verification Execution V1 PASS: 15/15 verified, 100% coverage, 100/100 confidence)',
     );
+  }
+  if (pipelineIntegration.integrationComplete) {
+    closedGapsSinceV2.push(
+      `Large-scale pipeline integration (authoritative build ${pipelineIntegration.assessment.metrics.buildSuccessRate}%, verification ${pipelineIntegration.assessment.metrics.verificationSuccessRate}%)`,
+    );
+  }
+
+  const world2Gaps = [
+    'Dry-run composer bridge sets realExecutionPerformed=false',
+    'Real Build Execution proven outside World2 isolation boundary',
+    'Phase 7, Phase 15, and Phase 24E–24Y eras still parallel',
+    'Cloud execution path absent',
+  ];
+  if (!pipelineIntegration.integrationComplete) {
+    world2Gaps.splice(3, 0, 'Large-scale validation harness not wired to Real Build Execution Pipeline');
   }
 
   const world2Rationale = uvlComplete
@@ -345,13 +362,7 @@ export function buildCapabilityAuditV3Assessment(projectRootDir?: string): Capab
       currentMaturity: 64,
       status: 'PARTIAL',
       moduleCount: capabilities.filter((c) => c.category === 'WORLD2').length,
-      gaps: [
-        'Dry-run composer bridge sets realExecutionPerformed=false',
-        'Real Build Execution proven outside World2 isolation boundary',
-        'Phase 7, Phase 15, and Phase 24E–24Y eras still parallel',
-        'Large-scale validation harness not wired to Real Build Execution Pipeline',
-        'Cloud execution path absent',
-      ],
+      gaps: world2Gaps,
       shouldBeNextPhase: false,
       nextPhaseRationale: world2Rationale,
       operationalReadiness: 'PARTIAL',

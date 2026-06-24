@@ -25,6 +25,7 @@ export function buildRecommendedRoadmap(input?: {
     productionReadinessScore: input?.productionReadinessScore ?? 33,
     codeGenerationMaturityScore: input?.codeGenerationMaturityScore ?? 58,
     uvlEvidence,
+    projectRootDir: input?.projectRootDir,
   });
 
   return {
