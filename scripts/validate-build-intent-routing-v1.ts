@@ -8,6 +8,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Server } from 'node:http';
 import {
+  BUILD_INTENT_ROUTING_HEALTH_MARKER,
   BUILD_INTENT_ROUTING_PASS_TOKEN,
   getBuildIntentRun,
   isBuildIntentRequest,
@@ -31,6 +32,26 @@ const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 
 const EXPENSE_TRACKER_PROMPT =
   'Build a modern expense tracking web application with categories, receipts, monthly budgets, and spending reports. Generate architecture, plan, tasks, and begin build execution.';
+
+/** Exact Command Center UI prompt observed falling through to generic chat. */
+const EXPENSE_TRACKER_REAL_UI_PROMPT =
+  'Build a modern expense tracking web application called ExpenseTracker with categories, receipts, monthly budgets, and spending reports. Begin build execution now.';
+
+/** Mirrors public/founder-reality/app.js askBrain() POST body shape. */
+function buildCommandCenterBrainPayload(input: {
+  message: string;
+  activeProjectId?: string | null;
+  projectName?: string;
+  confirmProjectContextAlignment?: boolean;
+}): Record<string, unknown> {
+  return {
+    message: input.message,
+    timestamp: Date.now(),
+    activeProjectId: input.activeProjectId ?? null,
+    projectName: input.projectName ?? 'New Project',
+    confirmProjectContextAlignment: input.confirmProjectContextAlignment === true,
+  };
+}
 
 interface Check {
   name: string;
@@ -81,6 +102,11 @@ async function main(): Promise<void> {
   assert('01. package script', Boolean(pkg.scripts?.['validate:build-intent-routing']), 'script');
   assert('02. build intent detector', isBuildIntentRequest(EXPENSE_TRACKER_PROMPT), 'expense prompt');
   assert(
+    '02b. real UI expense prompt detected',
+    isBuildIntentRequest(EXPENSE_TRACKER_REAL_UI_PROMPT),
+    'real ui prompt',
+  );
+  assert(
     '03. expense profile resolved',
     resolveBuildIntentProfile(EXPENSE_TRACKER_PROMPT) === 'PROJECT_MANAGEMENT_WEB_V1',
     String(resolveBuildIntentProfile(EXPENSE_TRACKER_PROMPT)),
@@ -93,6 +119,21 @@ async function main(): Promise<void> {
   );
   assert('06. UI handles BUILD category', appJs.includes("result.category === 'BUILD'"), 'ui build');
   assert('07. UI applies onePromptLivePreview', appJs.includes('applyOnePromptLivePreview'), 'preview sync');
+  assert(
+    '07b. UI sends activeProjectId + projectName',
+    appJs.includes('activeProjectId: activeProjectId') && appJs.includes('projectName: getActiveProjectName()'),
+    'ui payload',
+  );
+  assert(
+    '07c. brain handler logs classification',
+    brainHandler.includes('BRAIN_BUILD_INTENT_CLASSIFICATION'),
+    'server log',
+  );
+  assert(
+    '07d. health exposes buildIntentRouting',
+    brainHandler.includes('buildLocalRuntimeHealthPayload'),
+    'health',
+  );
 
   const TEST_ROOT = mkdtempSync(join(tmpdir(), 'devpulse-build-intent-test-'));
   resetProjectRegistryV1ForTests(TEST_ROOT);
@@ -101,15 +142,31 @@ async function main(): Promise<void> {
 
   const { server, baseUrl } = await startTestServer(TEST_ROOT);
   try {
+    const healthRes = await fetch(`${baseUrl}/api/brain/health`);
+    const healthJson = (await healthRes.json()) as {
+      buildIntentRouting?: boolean;
+      registryLoaded?: boolean;
+      runtimeReady?: boolean;
+    };
+    assert(
+      '07e. health buildIntentRouting marker',
+      healthJson.buildIntentRouting === BUILD_INTENT_ROUTING_HEALTH_MARKER &&
+        healthJson.registryLoaded === true &&
+        healthJson.runtimeReady === true,
+      String(healthJson.buildIntentRouting),
+    );
+
     const startedAt = Date.now();
     const chatRes = await fetch(`${baseUrl}/api/brain/respond`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: EXPENSE_TRACKER_PROMPT,
-        timestamp: Date.now(),
-        projectName: 'LISA',
-      }),
+      body: JSON.stringify(
+        buildCommandCenterBrainPayload({
+          message: EXPENSE_TRACKER_REAL_UI_PROMPT,
+          activeProjectId: 'expense-tracker-ui-1',
+          projectName: 'ExpenseTracker',
+        }),
+      ),
     });
     const elapsedMs = Date.now() - startedAt;
 
@@ -144,7 +201,8 @@ async function main(): Promise<void> {
     assert(
       '11. not generic refusal',
       !/cannot execute the build directly/i.test(brainResponse) &&
-        !/execution chain is not proven/i.test(brainResponse),
+        !/execution chain is not proven/i.test(brainResponse) &&
+        !/can't claim full autonomous/i.test(brainResponse),
       brainResponse.slice(0, 120),
     );
     assert(
@@ -157,6 +215,18 @@ async function main(): Promise<void> {
       '14. activeProjectId linked',
       Boolean(chatJson.activeProjectId && chatJson.onePromptLivePreview?.projectId === chatJson.activeProjectId),
       String(chatJson.activeProjectId),
+    );
+    assert(
+      '14b. buildExecution stage present',
+      Boolean(chatJson.buildExecution?.stage),
+      String(chatJson.buildExecution?.stage),
+    );
+    assert(
+      '14c. workspace path present',
+      Boolean(
+        chatJson.buildExecution?.workspacePath || chatJson.onePromptLivePreview?.workspacePath,
+      ),
+      String(chatJson.buildExecution?.workspacePath ?? chatJson.onePromptLivePreview?.workspacePath),
     );
     assert(
       '15. operator feed events',

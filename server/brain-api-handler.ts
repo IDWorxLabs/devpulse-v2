@@ -1,5 +1,6 @@
 /**
- * Brain API handler — POST /api/brain/respond only. Local intelligence, no execution.
+ * Brain API handler — POST /api/brain/respond.
+ * Build-intent prompts route into autonomous builder execution before chat/LLM fallback.
  */
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
@@ -20,9 +21,12 @@ import {
 } from '../src/project-context-alignment-v1/index.js';
 import { resolveProjectRegistryRootDir } from '../src/project-registry-v1/project-registry-v1-store.js';
 import {
-  buildBrainHealthPayload,
   buildBrainRuntimeVerificationReportFromResult,
 } from '../src/command-center-brain/runtime-verification/index.js';
+import {
+  buildLocalRuntimeHealthPayload,
+  isLocalRuntimeReady,
+} from '../src/local-runtime-launcher/index.js';
 import { getLiveOperationalTruthDiagnostics } from '../src/chat-operational-self-knowledge/index.js';
 import { getLaunchProofDiagnostics } from '../src/connected-launch-readiness-proof/index.js';
 import {
@@ -51,24 +55,46 @@ export function sendBrainOperationalTruth(res: ServerResponse): void {
   res.end(JSON.stringify(payload));
 }
 
-export function sendBrainHealth(res: ServerResponse): void {
-  const payload = buildBrainHealthPayload();
+export function sendBrainHealth(res: ServerResponse, options?: { headOnly?: boolean }): void {
+  const payload = buildLocalRuntimeHealthPayload();
+  const ready = isLocalRuntimeReady();
+  const status = ready ? 200 : 503;
   const llmStatus = getLlmProviderStatus();
   const llmConfig = loadLlmModelConfig();
   const probeContext = buildDevPulseContextPackage({ message: 'project status and launch readiness' });
   const probeHydration = probeContext.hydration ?? hydrateContextForMessage({ message: 'project status and launch readiness' });
   const fd = probeContext.foundationDiagnostics;
-  res.writeHead(200, {
+
+  if (options?.headOnly) {
+    res.writeHead(status, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'X-DevPulse-Brain': 'command-center',
+      'X-DevPulse-Runtime-Ready': ready ? 'yes' : 'no',
+    });
+    res.end();
+    return;
+  }
+
+  res.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
     'X-DevPulse-Brain': 'command-center',
-    'X-DevPulse-Phase': '26.3.1',
+    'X-DevPulse-Phase': '27.3',
     'X-DevPulse-Brain-Capability': payload.serverCapability,
     'X-DevPulse-Llm-Connected': llmStatus.connected ? 'yes' : 'no',
+    'X-DevPulse-Runtime-Ready': ready ? 'yes' : 'no',
   });
   res.end(
     JSON.stringify({
       ...payload,
+      ...(ready
+        ? {}
+        : {
+            error: 'Local runtime not ready',
+            operatorMessage:
+              'AiDevEngine local runtime is stale or unavailable. Restart using Start-AiDevEngine.',
+          }),
       llmConnected: llmStatus.connected,
       llmProvider: llmStatus.provider,
       llmModel: llmStatus.model,
@@ -168,7 +194,12 @@ export async function handleBrainRespondRequest(req: IncomingMessage, res: Serve
       return;
     }
 
-    if (isBuildIntentRequest(body.message)) {
+    const isBuildIntent = isBuildIntentRequest(body.message);
+    console.log(
+      `BRAIN_BUILD_INTENT_CLASSIFICATION isBuildIntent=${isBuildIntent} activeProjectId=${body.activeProjectId ?? 'none'} projectName=${body.projectName ?? 'none'}`,
+    );
+
+    if (isBuildIntent) {
       const registryRoot = resolveProjectRegistryRootDir();
       const alignment = assessProjectContextAlignment({
         prompt: body.message,

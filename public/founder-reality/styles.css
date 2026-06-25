@@ -63,6 +63,31 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.local-runtime-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  font-weight: 600;
+  background: rgba(239, 68, 68, 0.95);
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-md);
+}
+
+.local-runtime-banner.hidden {
+  display: none;
+}
+
+body.local-runtime-blocked .app-shell {
+  pointer-events: none;
+  opacity: 0.72;
+  filter: grayscale(0.15);
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr var(--feed-w);
@@ -1498,25 +1523,269 @@ body {
   flex-shrink: 0;
   font-size: 0.9375rem;
   font-weight: 600;
-  padding: 1.25rem 1.25rem 0.75rem;
+  padding: 0;
   margin: 0;
   color: var(--teal-bright);
   letter-spacing: -0.01em;
 }
 
+.feed-subtitle {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: var(--text-soft);
+  line-height: 1.4;
+}
+
+.operator-feed-header {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1.25rem 1.25rem 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.operator-feed-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+}
+
+.operator-feed-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.operator-feed-toggle input {
+  accent-color: var(--teal-bright);
+}
+
+.operator-feed-tool-btn,
+.operator-feed-filter-btn {
+  font-size: 0.6875rem;
+  font-family: var(--mono);
+  padding: 0.28rem 0.55rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+}
+
+.operator-feed-tool-btn:hover,
+.operator-feed-filter-btn:hover {
+  border-color: var(--border-glow);
+  color: var(--text);
+}
+
+.operator-feed-filter-btn.active {
+  border-color: rgba(0, 229, 192, 0.45);
+  color: var(--teal-bright);
+  background: var(--teal-soft);
+}
+
+.operator-feed-search {
+  flex: 1 1 120px;
+  min-width: 100px;
+  max-width: 180px;
+  font-size: 0.6875rem;
+  font-family: var(--mono);
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.operator-feed-footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.65rem 1.25rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  background: rgba(0, 0, 0, 0.12);
+}
+
 .operator-feed-body {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 0 1.25rem 1.25rem;
-  scroll-behavior: smooth;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0.75rem 1.25rem;
   display: flex;
   flex-direction: column;
+  gap: 0;
 }
 
-.operator-feed-body.founder-test-runtime-active .feed-stream-log,
-.operator-feed-body.founder-test-runtime-active .feed-sections {
+.operator-feed-empty {
+  flex-shrink: 0;
+  padding: 0.75rem 0.875rem;
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.operator-feed-empty p {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.operator-feed-empty[hidden] {
+  display: none !important;
+}
+
+.feed-sections-legacy {
+  display: none !important;
+}
+
+.operator-stream-viewport,
+.feed-stream-terminal {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-height: none;
+  margin: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.375rem 0.5rem;
+  font-family: var(--mono);
+}
+
+.operator-stream-log {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.feed-stream-terminal.compact .operator-feed-row,
+.feed-stream-terminal.compact .operator-stream-line {
+  margin-bottom: 3px;
+  font-size: 0.625rem;
+  line-height: 1.3;
+}
+
+.operator-feed-row,
+.operator-stream-line {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: 0 0 4px;
+  padding: 0;
+  font-size: 0.6875rem;
+  line-height: 1.35;
+  border: 0;
+  flex: none;
+}
+
+.operator-feed-row:last-child,
+.operator-stream-line:last-child {
+  margin-bottom: 0;
+}
+
+.operator-feed-row.active-line,
+.operator-stream-line.active-line {
+  background: rgba(0, 229, 192, 0.06);
+  border-radius: var(--radius-sm);
+  padding: 2px 4px;
+}
+
+.operator-log-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.5rem;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.operator-log-ts {
+  color: var(--text-muted);
+  flex: none;
+}
+
+.operator-log-level {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  flex: none;
+}
+
+.operator-log-level.level-info {
+  color: var(--teal);
+}
+
+.operator-log-level.level-warn {
+  color: #f0c060;
+}
+
+.operator-log-level.level-error {
+  color: #ff7b7b;
+}
+
+.operator-log-level.level-debug {
+  color: #9aa7b8;
+}
+
+.operator-log-stage {
+  color: var(--teal-dim);
+  text-transform: lowercase;
+  flex: none;
+}
+
+.operator-log-message {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.operator-feed-row.operator-stream-indent .operator-log-meta,
+.operator-stream-line.operator-stream-indent .operator-log-meta {
+  display: none;
+}
+
+.operator-feed-row.operator-stream-indent .operator-log-message,
+.operator-stream-line.operator-stream-indent .operator-log-message {
+  padding-left: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.6625rem;
+}
+
+.operator-feed-body.founder-test-runtime-active .operator-stream-viewport,
+.operator-feed-body.founder-test-runtime-active .feed-stream-terminal,
+.operator-feed-body.founder-test-runtime-active .operator-feed-empty {
   display: none;
 }
 
@@ -1535,6 +1804,13 @@ body {
   max-height: 160px;
   overflow-y: auto;
   scroll-behavior: smooth;
+}
+
+.feed-stream-log.feed-stream-terminal {
+  background: rgba(0, 0, 0, 0.28);
+  max-height: none;
+  margin-bottom: 0;
+  padding: 0.375rem 0.5rem;
 }
 
 .feed-section {

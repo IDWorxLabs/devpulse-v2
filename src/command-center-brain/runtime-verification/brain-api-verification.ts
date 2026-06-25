@@ -3,6 +3,7 @@
  */
 
 import type { BrainResponseResult } from '../brain-types.js';
+import { BUILD_INTENT_ROUTING_HEALTH_MARKER } from '../../build-intent-routing/index.js';
 import { processBrainRequest } from '../command-center-brain.js';
 
 export const BRAIN_SERVER_CAPABILITY = 'command-center-brain-v11.1a';
@@ -16,6 +17,7 @@ export interface BrainHealthPayload {
   endpointReachable: true;
   phase: '11.1A';
   serverCapability: typeof BRAIN_SERVER_CAPABILITY;
+  buildIntentRouting: typeof BUILD_INTENT_ROUTING_HEALTH_MARKER;
   postAllowed: true;
   respondPath: typeof BRAIN_RESPOND_PATH;
   healthPath: typeof BRAIN_HEALTH_PATH;
@@ -37,6 +39,7 @@ export function buildBrainHealthPayload(timestamp = Date.now()): BrainHealthPayl
     endpointReachable: true,
     phase: '11.1A',
     serverCapability: BRAIN_SERVER_CAPABILITY,
+    buildIntentRouting: BUILD_INTENT_ROUTING_HEALTH_MARKER,
     postAllowed: true,
     respondPath: BRAIN_RESPOND_PATH,
     healthPath: BRAIN_HEALTH_PATH,
@@ -105,12 +108,13 @@ export function verifyHealthResponsePayload(payload: unknown): BrainApiVerificat
   const capability = typeof record.serverCapability === 'string' ? record.serverCapability : null;
   const postAllowed = record.postAllowed === true;
   const healthPayload: BrainHealthPayload | null =
-    capability === BRAIN_SERVER_CAPABILITY && postAllowed
+    capability === BRAIN_SERVER_CAPABILITY && postAllowed && record.buildIntentRouting === BUILD_INTENT_ROUTING_HEALTH_MARKER
       ? {
           brainConnected: true,
           endpointReachable: true,
           phase: '11.1A',
           serverCapability: BRAIN_SERVER_CAPABILITY,
+          buildIntentRouting: BUILD_INTENT_ROUTING_HEALTH_MARKER,
           postAllowed: true,
           respondPath: BRAIN_RESPOND_PATH,
           healthPath: BRAIN_HEALTH_PATH,

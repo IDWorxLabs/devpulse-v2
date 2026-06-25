@@ -220,6 +220,8 @@
     "validate:command-center-identity-realignment": "tsx scripts/validate-command-center-identity-realignment.ts",
     "validate:project-intelligence-clarity": "tsx scripts/validate-project-intelligence-clarity.ts",
     "validate:operator-feed-detail-upgrade": "tsx scripts/validate-operator-feed-detail-upgrade.ts",
+    "validate:operator-feed-stream-redesign": "tsx scripts/validate-operator-feed-stream-redesign.ts",
+    "validate:operator-feed-layout": "tsx scripts/validate-operator-feed-layout.ts",
     "validate:live-preview-reality": "tsx scripts/validate-live-preview-reality.ts",
     "validate:verification-reality": "tsx scripts/validate-verification-reality.ts",
     "validate:end-to-end-founder-workflow-reality": "tsx scripts/validate-end-to-end-founder-workflow-reality.ts",

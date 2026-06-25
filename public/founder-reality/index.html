@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+  <div id="local-runtime-banner" class="local-runtime-banner hidden" role="alert" aria-live="assertive">
+    AiDevEngine local runtime is stale or unavailable. Restart using Start-AiDevEngine.
+  </div>
   <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
   <div class="feed-backdrop" id="feed-backdrop" hidden></div>
 
@@ -518,11 +521,42 @@
     </main>
 
     <aside class="operator-feed" id="operator-feed" aria-label="Operator Feed">
-      <h2 class="feed-title">Operator Feed</h2>
+      <div class="operator-feed-header">
+        <h2 class="feed-title">Operator Feed</h2>
+        <p class="feed-subtitle">Real-time execution stream • Full context • No abstraction</p>
+        <div class="operator-feed-toolbar" role="toolbar" aria-label="Operator Feed controls">
+          <label class="operator-feed-toggle" title="Live Stream mode">
+            <input type="checkbox" id="operator-feed-stream-mode" checked />
+            <span>Live Stream</span>
+          </label>
+          <button type="button" class="operator-feed-tool-btn" id="operator-feed-compact-btn" aria-pressed="false">Compact</button>
+          <button type="button" class="operator-feed-tool-btn" id="operator-feed-errors-only-btn" aria-pressed="false">Errors Only</button>
+          <input type="search" class="operator-feed-search" id="operator-feed-search" placeholder="Search feed…" aria-label="Search in feed" />
+          <label class="operator-feed-toggle" title="Auto-scroll">
+            <input type="checkbox" id="operator-feed-autoscroll" checked />
+            <span>Auto-scroll</span>
+          </label>
+          <button type="button" class="operator-feed-tool-btn" id="operator-feed-copy-btn">Copy log</button>
+          <button type="button" class="operator-feed-tool-btn" id="operator-feed-export-btn">Export</button>
+          <button type="button" class="operator-feed-tool-btn" id="operator-feed-clear-btn">Clear</button>
+        </div>
+      </div>
       <div class="operator-feed-body" id="operator-feed-body">
         <div class="founder-test-operator-trace" id="founder-test-operator-trace" hidden aria-live="polite"></div>
-        <div class="feed-stream-log" id="feed-stream-log" aria-live="polite"></div>
-        <div class="feed-sections" id="feed-sections"></div>
+        <div class="operator-feed-empty" id="operator-feed-empty">
+          <p>No active run. Execution logs will stream here when AiDevEngine starts planning, building, validating, or previewing.</p>
+        </div>
+        <div class="operator-stream-viewport feed-stream-log feed-stream-terminal" id="feed-stream-log" role="log" aria-live="polite" aria-relevant="additions">
+          <div class="operator-stream-log" id="operator-stream-log"></div>
+        </div>
+        <div class="feed-sections feed-sections-legacy" id="feed-sections" hidden aria-hidden="true"></div>
+      </div>
+      <div class="operator-feed-footer" role="group" aria-label="Log level filters">
+        <button type="button" class="operator-feed-filter-btn active" data-level-filter="ALL">All <span class="operator-feed-level-count" data-count-level="ALL">(0)</span></button>
+        <button type="button" class="operator-feed-filter-btn" data-level-filter="INFO">INFO <span class="operator-feed-level-count" data-count-level="INFO">(0)</span></button>
+        <button type="button" class="operator-feed-filter-btn" data-level-filter="WARN">WARN <span class="operator-feed-level-count" data-count-level="WARN">(0)</span></button>
+        <button type="button" class="operator-feed-filter-btn" data-level-filter="ERROR">ERROR <span class="operator-feed-level-count" data-count-level="ERROR">(0)</span></button>
+        <button type="button" class="operator-feed-filter-btn" data-level-filter="DEBUG">DEBUG <span class="operator-feed-level-count" data-count-level="DEBUG">(0)</span></button>
       </div>
     </aside>
 

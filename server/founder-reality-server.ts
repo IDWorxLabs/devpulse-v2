@@ -7,6 +7,7 @@ import './load-env.js';
 
 import { readFileSync, statSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
+import { execSync } from 'node:child_process';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -72,6 +73,11 @@ import {
   resolveProjectRegistryRootDir,
   setDefaultProjectRegistryRootDir,
 } from '../src/project-registry-v1/index.js';
+import {
+  configureLocalRuntimeMetadata,
+  markLocalRuntimeRegistryFailed,
+  markLocalRuntimeRegistryReady,
+} from '../src/local-runtime-launcher/index.js';
 import { probePortOwner } from './port-probe.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -92,11 +98,45 @@ const MIME_TYPES: Record<string, string> = {
   '.ico': 'image/x-icon',
 };
 
+const PACKAGE_JSON = JSON.parse(readFileSync(PACKAGE_JSON_PATH, 'utf8')) as {
+  version?: string;
+  scripts?: Record<string, string>;
+};
+
 function loadValidatorScripts(): string[] {
-  const pkg = JSON.parse(readFileSync(PACKAGE_JSON_PATH, 'utf8')) as { scripts?: Record<string, string> };
-  return Object.keys(pkg.scripts ?? {})
+  return Object.keys(PACKAGE_JSON.scripts ?? {})
     .filter((key) => key.startsWith('validate:'))
     .sort();
+}
+
+function resolveGitCommitShort(): string | null {
+  try {
+    const commit = execSync('git rev-parse --short HEAD', {
+      cwd: ROOT_DIR,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    return commit || null;
+  } catch {
+    return null;
+  }
+}
+
+function bootstrapLocalRuntimeRegistry(): void {
+  const registryRoot = getRegistryRootDir();
+  try {
+    const registryState = bootstrapProjectRegistryV1(registryRoot);
+    markLocalRuntimeRegistryReady({ rootDir: registryRoot, state: registryState });
+  } catch (err) {
+    markLocalRuntimeRegistryFailed(err);
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('');
+    console.error('[local-runtime] REGISTRY_BOOTSTRAP_FAILED — AiDevEngine cannot start safely.');
+    console.error(`  ${message}`);
+    console.error('  Fix the project registry file or permissions, then restart with Start-AiDevEngine.');
+    console.error('');
+    process.exit(1);
+  }
 }
 
 const VALIDATOR_SCRIPTS = loadValidatorScripts();
@@ -119,7 +159,13 @@ function buildManifestSafely(): { manifest: ReturnType<typeof buildFounderRealit
 
 const { manifest: MANIFEST, json: MANIFEST_JSON } = buildManifestSafely();
 setDefaultProjectRegistryRootDir(ROOT_DIR);
-bootstrapProjectRegistryV1(getRegistryRootDir());
+configureLocalRuntimeMetadata({
+  port: FOUNDER_REALITY_PORT,
+  version: PACKAGE_JSON.version ?? '0.0.0',
+  commit: resolveGitCommitShort(),
+  serverStartedAt: FOUNDER_TEST_SERVER_STARTED_AT,
+});
+bootstrapLocalRuntimeRegistry();
 
 function buildProductWorkspaceJson(projectId?: string | null): string {
   return JSON.stringify(
@@ -234,8 +280,7 @@ export function createFounderRealityServer() {
 
     if (urlPath === '/api/brain/health' && (req.method === 'GET' || req.method === 'HEAD')) {
       if (req.method === 'HEAD') {
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.end();
+        sendBrainHealth(res, { headOnly: true });
         return;
       }
       sendBrainHealth(res);
@@ -821,6 +866,12 @@ export function startFounderRealityServer(port = FOUNDER_REALITY_PORT, host = FO
     console.error('[founder-reality-server] server error:', err);
   });
   server.listen(port, host, () => {
+    configureLocalRuntimeMetadata({
+      port,
+      version: PACKAGE_JSON.version ?? '0.0.0',
+      commit: resolveGitCommitShort(),
+      serverStartedAt: FOUNDER_TEST_SERVER_STARTED_AT,
+    });
     const ping = buildFounderTestPingResponse();
     console.log('');
     console.log('DevPulse V2 — Command Center + Unified Brain');
@@ -841,8 +892,8 @@ export function startFounderRealityServer(port = FOUNDER_REALITY_PORT, host = FO
     console.log('');
     console.log('Phase 11.1A Brain Runtime — POST /api/brain/respond + GET /api/brain/health');
     console.log('Phase 27.2 One-Prompt Live Preview — POST /api/build/from-prompt + GET /api/build/live-preview');
-    console.log('If Brain fails with 405, stop stale servers on port 4321 and restart.');
-    console.log('No execution, no external AI, no file modification.');
+    console.log('Phase 27.3 Local Runtime Launcher — use Start-AiDevEngine.bat for desktop startup');
+    console.log('If APIs fail, restart with Start-AiDevEngine (do not leave stale servers on port 4321).');
     console.log('');
   });
   return server;

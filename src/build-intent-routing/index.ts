@@ -4,6 +4,9 @@
 
 export const BUILD_INTENT_ROUTING_PASS_TOKEN = 'BUILD_INTENT_ROUTING_V1_PASS';
 
+/** Health payload marker — stale servers without build intent routing omit this field. */
+export const BUILD_INTENT_ROUTING_HEALTH_MARKER = true as const;
+
 export {
   isBuildIntentRequest,
   classifyBuildIntentRoute,

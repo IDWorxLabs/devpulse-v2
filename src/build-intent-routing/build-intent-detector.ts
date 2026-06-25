@@ -8,7 +8,7 @@ import { detectUniversalAppProfile } from '../universal-feature-contract-intelli
 import { classifyIntent } from '../intent-architecture/intent-extractor.js';
 
 const BUILD_EXECUTION_CUES =
-  /\b(begin build|build execution|start (the )?build|generate architecture|generate plan|generate tasks|begin materialization|begin execution)\b/i;
+  /\b(begin build execution(?:\s+now)?|begin build|build execution|start (the )?build|generate architecture|generate plan|generate tasks|begin materialization|begin execution)\b/i;
 
 const BUILD_VERBS = /\b(build|create|make|develop|generate|implement|scaffold|ship|materialize)\b/i;
 

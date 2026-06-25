@@ -355,6 +355,16 @@
   var founderTestRunningDiagnosticDelivered = false;
   var OPERATOR_FEED_MODE_DEFAULT = 'default';
   var OPERATOR_FEED_MODE_FOUNDER_TEST = 'founder-test-runtime';
+  var operatorLogBuffer = [];
+  var operatorLogSeq = 0;
+  var operatorFeedUi = {
+    streamMode: true,
+    compact: false,
+    errorsOnly: false,
+    searchQuery: '',
+    autoScroll: true,
+    levelFilter: 'ALL',
+  };
   var FOUNDER_TEST_RUNNING_DIAGNOSTIC_MS = 45000;
   var runtimeDiagnostics = {
     brainConnected: false,
@@ -364,6 +374,11 @@
     lastRequestStatus: 'Not started',
     lastError: 'None',
   };
+  var localRuntimeHealthy = false;
+  var LOCAL_RUNTIME_BANNER_TEXT =
+    'AiDevEngine local runtime is stale or unavailable. Restart using Start-AiDevEngine.';
+  var OPERATOR_LOG_EMPTY_TEXT =
+    'No active run. Execution logs will stream here when AiDevEngine starts planning, building, validating, or previewing.';
   var previewClientReality = { loaded: false, error: false };
   var activeProjectId = null;
   var multiProjectWorkspaces = [];
@@ -551,6 +566,11 @@
   }
 
   function showProjectNameDialog() {
+    if (!localRuntimeHealthy) {
+      renderLocalRuntimeBanner(true);
+      pushNotification('Project creation blocked — local runtime unavailable');
+      return;
+    }
     var dialog = el('project-name-dialog');
     var input = el('project-name-input');
     if (!dialog) return;
@@ -965,6 +985,10 @@
 
   function createProjectViaRegistry(name, options) {
     options = options || {};
+    if (!localRuntimeHealthy) {
+      renderLocalRuntimeBanner(true);
+      return Promise.reject(new Error(LOCAL_RUNTIME_BANNER_TEXT));
+    }
     if (projectCreateInFlight) {
       return projectCreateInFlight;
     }
@@ -1134,10 +1158,435 @@
   }
 
   function scrollFeedToLatest() {
-    var body = el('operator-feed-body');
-    if (body) body.scrollTop = body.scrollHeight;
-    var log = el('feed-stream-log');
-    if (log) log.scrollTop = log.scrollHeight;
+    if (!operatorFeedUi.autoScroll) return;
+    var viewport = el('feed-stream-log');
+    if (viewport) viewport.scrollTop = viewport.scrollHeight;
+  }
+
+  function formatOperatorLogTimestamp(ts) {
+    var d = new Date(ts || Date.now());
+    var hh = String(d.getHours()).padStart(2, '0');
+    var mm = String(d.getMinutes()).padStart(2, '0');
+    var ss = String(d.getSeconds()).padStart(2, '0');
+    var ms = String(d.getMilliseconds()).padStart(3, '0');
+    return hh + ':' + mm + ':' + ss + '.' + ms;
+  }
+
+  function inferOperatorLogLevel(event, pres) {
+    var status = (pres && pres.status) || (event && event.status) || '';
+    if (status === 'Blocked' || status === 'Failed' || /fail|error|blocked/i.test((pres && pres.action) || '')) {
+      return 'ERROR';
+    }
+    if (status === 'Warning' || /warn|fallback|retry/i.test((pres && pres.detail) || '')) {
+      return 'WARN';
+    }
+    if (/debug|trace|diagnostic/i.test((pres && pres.detail) || '')) {
+      return 'DEBUG';
+    }
+    return 'INFO';
+  }
+
+  function inferOperatorLogStage(event, pres) {
+    var blob = [
+      pres && pres.section,
+      pres && pres.action,
+      pres && pres.detail,
+      event && event.eventType,
+      event && event.section,
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+    if (/alignment|context guard|misplaced/.test(blob)) return 'alignment';
+    if (/classif|routing|intent/.test(blob)) return 'classification';
+    if (/plan|architecture|blueprint|contract|requirements/.test(blob)) return 'planning';
+    if (/npm install|installing dependencies/.test(blob)) return 'npm install';
+    if (/npm build|npm run build|building app/.test(blob)) return 'npm build';
+    if (/preview|live preview|dev server|vite/.test(blob)) return 'preview';
+    if (/verif|valid|uvl|readiness/.test(blob)) return 'validation';
+    if (/material|workspace|generat|file|source/.test(blob)) return 'materialization';
+    if (/execut|build run|orchestr/.test(blob)) return 'build';
+    return (pres && pres.section ? String(pres.section) : 'build').toLowerCase();
+  }
+
+  function composeOperatorLogMessage(pres) {
+    if (!pres) return '';
+    var parts = [];
+    if (pres.action) parts.push(pres.action);
+    if (pres.detail) parts.push(pres.detail);
+    if (pres.evidence) parts.push('[' + pres.evidence + ']');
+    if (pres.stepIndex && pres.stepTotal) parts.push('step ' + pres.stepIndex + '/' + pres.stepTotal);
+    return parts.join(' — ');
+  }
+
+  function createOperatorLogEntry(input) {
+    operatorLogSeq += 1;
+    return {
+      id: 'oplog-' + String(operatorLogSeq),
+      timestamp: input.timestamp || Date.now(),
+      level: input.level || 'INFO',
+      stage: input.stage || 'build',
+      message: input.message || '',
+      active: Boolean(input.active),
+      indent: Boolean(input.indent),
+    };
+  }
+
+  function showOperatorFeedEmptyState(show) {
+    var empty = el('operator-feed-empty');
+    if (!empty) return;
+    if (show) empty.removeAttribute('hidden');
+    else empty.setAttribute('hidden', '');
+  }
+
+  function finalizeActiveOperatorLogLine() {
+    for (var i = operatorLogBuffer.length - 1; i >= 0; i -= 1) {
+      if (operatorLogBuffer[i].active) {
+        operatorLogBuffer[i].active = false;
+        break;
+      }
+    }
+  }
+
+  function appendOperatorLogEntry(entry, options) {
+    if (isOperatorFeedFounderTestMode()) return entry;
+    options = options || {};
+    if (options.finalizePrevious !== false) finalizeActiveOperatorLogLine();
+    operatorLogBuffer.push(entry);
+    runtimeDiagnostics.operatorFeedActive = operatorLogBuffer.length > 0;
+    showOperatorFeedEmptyState(false);
+    renderOperatorStreamLog();
+    if (options.notify) pushNotification(String(options.notify));
+    return entry;
+  }
+
+  function appendOperatorLogFromEvent(event, options) {
+    if (isOperatorFeedFounderTestMode()) return null;
+    var pres = resolveFeedEventPresentation(event);
+    return appendOperatorLogEntry(
+      createOperatorLogEntry({
+        timestamp: event && event.timestamp ? event.timestamp : Date.now(),
+        level: inferOperatorLogLevel(event, pres),
+        stage: inferOperatorLogStage(event, pres),
+        message: composeOperatorLogMessage(pres),
+        active: options && options.active,
+      }),
+      options,
+    );
+  }
+
+  function appendOperatorLogLines(lines, options) {
+    if (!lines || !lines.length) return;
+    for (var i = 0; i < lines.length; i += 1) {
+      appendOperatorLogEntry(createOperatorLogEntry(lines[i]), {
+        finalizePrevious: i === 0 ? (options && options.finalizePrevious) : false,
+        notify: i === 0 ? options && options.notify : null,
+      });
+    }
+  }
+
+  function appendBuildResponseOperatorLog(result) {
+    if (!result || isOperatorFeedFounderTestMode()) return;
+    var lines = [];
+    function pushLine(level, stage, message) {
+      lines.push({ level: level, stage: stage, message: message, timestamp: Date.now() });
+    }
+    pushLine('INFO', 'build', 'Build response received from AiDevEngine brain API');
+    if (result.buildRunId) pushLine('INFO', 'build', 'Build run started — run ID ' + result.buildRunId);
+    if (result.activeProjectId) {
+      pushLine('INFO', 'classification', 'Project selected — ' + result.activeProjectId);
+    }
+    if (result.userMessage) pushLine('INFO', 'classification', 'Prompt received');
+    if (result.category) pushLine('INFO', 'classification', 'Request category — ' + result.category);
+    if (result.classification) {
+      if (result.classification.reason) {
+        pushLine('INFO', 'classification', 'Classification reason — ' + result.classification.reason);
+      }
+      if (result.classification.matchedSignals && result.classification.matchedSignals.length) {
+        pushLine(
+          'DEBUG',
+          'classification',
+          'Detected keywords — ' + result.classification.matchedSignals.join(', '),
+        );
+      }
+      if (result.classification.confidence) {
+        pushLine('INFO', 'classification', 'Confidence — ' + result.classification.confidence);
+      }
+    }
+    var be = result.buildExecution || {};
+    var preview = result.onePromptLivePreview || {};
+    if (be.projectName) pushLine('INFO', 'build', 'Active project — ' + be.projectName);
+    if (be.generatedProfile) {
+      pushLine('INFO', 'planning', 'Profile matched — ' + be.generatedProfile);
+      pushLine('INFO', 'planning', 'Why profile selected — build-intent routing matched ' + be.generatedProfile);
+    }
+    if (be.architectureSummary) {
+      pushLine('INFO', 'planning', 'Blueprint loaded — ' + be.architectureSummary);
+    }
+    if (be.planTaskCount != null) {
+      pushLine('INFO', 'planning', 'Plan tasks — ' + String(be.planTaskCount));
+    }
+    if (be.workspacePath) {
+      pushLine('INFO', 'materialization', 'Workspace path created — ' + be.workspacePath);
+      pushLine('INFO', 'materialization', 'Files generated in workspace — ' + be.workspacePath);
+    }
+    if (preview.planningProofLevel) {
+      pushLine('INFO', 'planning', 'Planning proof — ' + preview.planningProofLevel);
+    }
+    if (preview.materializationProofLevel) {
+      pushLine('INFO', 'materialization', 'Materialization proof — ' + preview.materializationProofLevel);
+    }
+    if (be.stage) pushLine('INFO', 'build', 'Build stage — ' + be.stage);
+    if (be.status) pushLine(be.status === 'FAILED' ? 'ERROR' : 'INFO', 'build', 'Build status — ' + be.status);
+    if (be.failureReason) pushLine('ERROR', 'build', 'Build failure — ' + be.failureReason);
+    if (be.previewUrl) pushLine('INFO', 'preview', 'Preview URL — ' + be.previewUrl);
+    if (preview.generatedProfile && preview.generatedProfile !== be.generatedProfile) {
+      pushLine('INFO', 'planning', 'Materialized profile — ' + preview.generatedProfile);
+    }
+    if (preview.workspacePath && preview.workspacePath !== be.workspacePath) {
+      pushLine('INFO', 'materialization', 'Generated workspace — ' + preview.workspacePath);
+    }
+    if (preview.status === 'BUILDING' && preview.npmInstallOk !== true) {
+      pushLine('INFO', 'npm install', 'npm install started');
+    }
+    if (preview.npmInstallOk === true) pushLine('INFO', 'npm install', 'npm install completed');
+    if (preview.npmInstallOk === false) pushLine('ERROR', 'npm install', 'npm install failed');
+    if (preview.status === 'BUILDING' && preview.npmInstallOk === true && preview.npmBuildOk !== true) {
+      pushLine('INFO', 'npm build', 'npm build started');
+    }
+    if (preview.npmBuildOk === true) pushLine('INFO', 'npm build', 'npm build completed');
+    if (preview.npmBuildOk === false) pushLine('ERROR', 'npm build', 'npm build failed');
+    if (preview.livePreviewAvailable && preview.previewUrl) {
+      pushLine('INFO', 'preview', 'Live preview started — ' + preview.previewUrl);
+    }
+    if (preview.status === 'READY') pushLine('INFO', 'build', 'Build completed — preview ready');
+    if (preview.status === 'FAILED') {
+      pushLine('ERROR', 'build', 'Build failed — ' + (preview.failureReason || 'unknown reason'));
+    }
+    if (preview.status === 'BUILDING') pushLine('INFO', 'build', 'Build in progress');
+    if (result.projectContextAlignment) {
+      var alignment = result.projectContextAlignment;
+      pushLine(
+        alignment.blocksExecution ? 'WARN' : 'INFO',
+        'alignment',
+        'Project context alignment — ' +
+          alignment.verdict +
+          (alignment.reason ? ' — ' + alignment.reason : ''),
+      );
+      if (alignment.proposedNewProjectName) {
+        pushLine('WARN', 'alignment', 'Suggested new project — ' + alignment.proposedNewProjectName);
+      }
+    }
+    appendOperatorLogLines(lines, { finalizePrevious: true });
+  }
+
+  function getFilteredOperatorLogEntries() {
+    var query = (operatorFeedUi.searchQuery || '').trim().toLowerCase();
+    var filtered = [];
+    for (var i = 0; i < operatorLogBuffer.length; i += 1) {
+      var entry = operatorLogBuffer[i];
+      if (operatorFeedUi.errorsOnly && entry.level !== 'ERROR') continue;
+      if (operatorFeedUi.levelFilter !== 'ALL' && entry.level !== operatorFeedUi.levelFilter) continue;
+      if (query) {
+        var hay = (entry.message + ' ' + entry.stage + ' ' + entry.level).toLowerCase();
+        if (hay.indexOf(query) === -1) continue;
+      }
+      filtered.push(entry);
+    }
+    return filtered;
+  }
+
+  function updateOperatorFeedLevelCounts() {
+    var counts = { ALL: 0, INFO: 0, WARN: 0, ERROR: 0, DEBUG: 0 };
+    for (var c = 0; c < operatorLogBuffer.length; c += 1) {
+      counts.ALL += 1;
+      if (counts[operatorLogBuffer[c].level] !== undefined) {
+        counts[operatorLogBuffer[c].level] += 1;
+      }
+    }
+    var countNodes = document.querySelectorAll('.operator-feed-level-count');
+    for (var n = 0; n < countNodes.length; n += 1) {
+      var node = countNodes[n];
+      var level = node.getAttribute('data-count-level') || 'ALL';
+      node.textContent = '(' + String(counts[level] || 0) + ')';
+    }
+  }
+
+  function renderOperatorStreamLog() {
+    if (isOperatorFeedFounderTestMode()) return;
+    var viewport = el('feed-stream-log');
+    var log = el('operator-stream-log');
+    if (!viewport || !log) return;
+    viewport.classList.toggle('compact', operatorFeedUi.compact);
+    if (!operatorLogBuffer.length) {
+      log.innerHTML = '';
+      showOperatorFeedEmptyState(true);
+      updateOperatorFeedLevelCounts();
+      return;
+    }
+    showOperatorFeedEmptyState(false);
+    var entries = getFilteredOperatorLogEntries();
+    if (!entries.length) {
+      log.innerHTML =
+        '<div class="operator-feed-row operator-stream-line"><div class="operator-log-message">No log lines match the current filters.</div></div>';
+      updateOperatorFeedLevelCounts();
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < entries.length; i += 1) {
+      var entry = entries[i];
+      html +=
+        '<div class="operator-feed-row operator-stream-line' +
+        (entry.active ? ' active-line' : '') +
+        (entry.indent ? ' operator-stream-indent' : '') +
+        '">' +
+        '<div class="operator-log-meta">' +
+        '<span class="operator-log-ts">' +
+        escapeHtml(formatOperatorLogTimestamp(entry.timestamp)) +
+        '</span>' +
+        '<span class="operator-log-level level-' +
+        entry.level.toLowerCase() +
+        '">[' +
+        escapeHtml(entry.level) +
+        ']</span>' +
+        '<span class="operator-log-stage">' +
+        escapeHtml(entry.stage) +
+        '</span>' +
+        '</div>' +
+        '<div class="operator-log-message">' +
+        escapeHtml(entry.message) +
+        '</div>' +
+        '</div>';
+    }
+    log.innerHTML = html;
+    updateOperatorFeedLevelCounts();
+    scrollFeedToLatest();
+  }
+
+  function clearOperatorLogBuffer() {
+    if (isOperatorFeedFounderTestMode()) return;
+    operatorLogBuffer = [];
+    runtimeDiagnostics.operatorFeedActive = false;
+    showOperatorFeedEmptyState(true);
+    renderOperatorStreamLog();
+  }
+
+  function copyOperatorLogToClipboard() {
+    var entries = getFilteredOperatorLogEntries();
+    var text = entries
+      .map(function (entry) {
+        return (
+          formatOperatorLogTimestamp(entry.timestamp) +
+          ' [' +
+          entry.level +
+          '] [' +
+          entry.stage +
+          '] ' +
+          entry.message
+        );
+      })
+      .join('\n');
+    if (!text) text = 'No operator feed entries.';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        pushNotification('Operator feed copied');
+      });
+      return;
+    }
+    pushNotification('Copy unavailable in this browser');
+  }
+
+  function exportOperatorLog() {
+    var entries = getFilteredOperatorLogEntries();
+    var text = entries
+      .map(function (entry) {
+        return (
+          formatOperatorLogTimestamp(entry.timestamp) +
+          ' [' +
+          entry.level +
+          '] [' +
+          entry.stage +
+          '] ' +
+          entry.message
+        );
+      })
+      .join('\n');
+    if (!text) text = 'No operator feed entries.';
+    var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'aidevengine-operator-feed-' + String(Date.now()) + '.log';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    pushNotification('Operator feed exported');
+  }
+
+  function initOperatorFeedControls() {
+    var streamMode = el('operator-feed-stream-mode');
+    var compactBtn = el('operator-feed-compact-btn');
+    var errorsOnlyBtn = el('operator-feed-errors-only-btn');
+    var searchInput = el('operator-feed-search');
+    var autoScroll = el('operator-feed-autoscroll');
+    var copyBtn = el('operator-feed-copy-btn');
+    var exportBtn = el('operator-feed-export-btn');
+    var clearBtn = el('operator-feed-clear-btn');
+    var filterBtns = document.querySelectorAll('.operator-feed-filter-btn');
+
+    if (streamMode) {
+      streamMode.checked = operatorFeedUi.streamMode;
+      streamMode.addEventListener('change', function () {
+        operatorFeedUi.streamMode = streamMode.checked;
+      });
+    }
+    if (compactBtn) {
+      compactBtn.addEventListener('click', function () {
+        operatorFeedUi.compact = !operatorFeedUi.compact;
+        compactBtn.setAttribute('aria-pressed', operatorFeedUi.compact ? 'true' : 'false');
+        renderOperatorStreamLog();
+      });
+    }
+    if (errorsOnlyBtn) {
+      errorsOnlyBtn.addEventListener('click', function () {
+        operatorFeedUi.errorsOnly = !operatorFeedUi.errorsOnly;
+        errorsOnlyBtn.setAttribute('aria-pressed', operatorFeedUi.errorsOnly ? 'true' : 'false');
+        renderOperatorStreamLog();
+      });
+    }
+    if (searchInput) {
+      searchInput.addEventListener('input', function () {
+        operatorFeedUi.searchQuery = searchInput.value || '';
+        renderOperatorStreamLog();
+      });
+    }
+    if (autoScroll) {
+      autoScroll.checked = operatorFeedUi.autoScroll;
+      autoScroll.addEventListener('change', function () {
+        operatorFeedUi.autoScroll = autoScroll.checked;
+        if (operatorFeedUi.autoScroll) scrollFeedToLatest();
+      });
+    }
+    if (copyBtn) copyBtn.addEventListener('click', copyOperatorLogToClipboard);
+    if (exportBtn) exportBtn.addEventListener('click', exportOperatorLog);
+    if (clearBtn) clearBtn.addEventListener('click', clearOperatorLogBuffer);
+    for (var i = 0; i < filterBtns.length; i += 1) {
+      (function (btn) {
+        btn.addEventListener('click', function () {
+          operatorFeedUi.levelFilter = btn.getAttribute('data-level-filter') || 'ALL';
+          for (var j = 0; j < filterBtns.length; j += 1) {
+            filterBtns[j].classList.toggle(
+              'active',
+              filterBtns[j].getAttribute('data-level-filter') === operatorFeedUi.levelFilter,
+            );
+          }
+          renderOperatorStreamLog();
+        });
+      })(filterBtns[i]);
+    }
+    showOperatorFeedEmptyState(operatorLogBuffer.length === 0);
+    renderOperatorStreamLog();
   }
 
   function showWelcomeState() {
@@ -7723,9 +8172,11 @@
   }
 
   function clearFeedStreamLog() {
-    if (isOperatorFeedFounderTestMode()) return;
-    var log = el('feed-stream-log');
-    if (log) log.innerHTML = '';
+    /* Session history preserved — use Clear control to reset operatorLogBuffer. */
+  }
+
+  function appendFeedStreamEvent(event, active) {
+    appendOperatorLogFromEvent(event, { active: active, finalizePrevious: true });
   }
 
   function resolveFeedEventPresentation(event) {
@@ -7742,20 +8193,6 @@
       evidence: event.evidence || '',
       status: event.status || 'Active',
     };
-  }
-
-  function appendFeedStreamEvent(event, active) {
-    if (isOperatorFeedFounderTestMode()) return;
-    var log = el('feed-stream-log');
-    if (!log) return;
-    var pres = resolveFeedEventPresentation(event);
-    var div = document.createElement('div');
-    div.className = 'feed-event' + (active ? ' active-event' : '');
-    var line = (active ? '▸ ' : '✓ ') + pres.action;
-    if (pres.detail) line += ' — ' + pres.detail;
-    div.textContent = line;
-    log.appendChild(div);
-    scrollFeedToLatest();
   }
 
   var feedSectionIcons = {
@@ -7851,129 +8288,74 @@
       applyOperatorFeedModeLayout();
       return;
     }
-    var container = el('feed-sections');
-    if (!container) return;
     options = options || {};
-    var activeEvent = options.activeEvent || null;
-    var completedEvents = options.completedEvents || [];
-    var idle = Boolean(options.idle);
-    var activePres = activeEvent ? resolveFeedEventPresentation(activeEvent) : null;
-    var latestBySection = {};
-    for (var c = 0; c < completedEvents.length; c += 1) {
-      var completedPres = resolveFeedEventPresentation(completedEvents[c]);
-      latestBySection[completedPres.section] = completedPres;
+    var container = el('feed-sections');
+    if (container) {
+      container.innerHTML = '';
+      container.setAttribute('hidden', '');
+      container.setAttribute('aria-hidden', 'true');
     }
-    if (activePres) latestBySection[activePres.section] = activePres;
-
-    container.innerHTML = '';
-    for (var i = 0; i < sections.length; i += 1) {
-      var section = sections[i];
-      var sectionState = latestBySection[section];
-      var isActive = activePres && activePres.section === section;
-      var isCompleted = Boolean(sectionState && !isActive && (sectionState.status === 'Completed' || completedEvents.length > 0));
-      var isReady =
-        section === 'Learning' &&
-        ((activeEvent && (activeEvent.eventType === 'Response Ready' || activePres.action === 'Next action prepared')) ||
-          (sectionState && sectionState.action === 'Next action prepared'));
-      var idleCopy = feedSectionIdleCopy[section] || { action: section + ' ready', detail: '' };
-      var actionText = idle ? idleCopy.action : sectionState ? sectionState.action : idleCopy.action;
-      var detailText = idle ? idleCopy.detail : sectionState ? sectionState.detail : idleCopy.detail;
-      var badgeStatus = 'Queued';
-      if (isActive) badgeStatus = activePres.status || 'Active';
-      else if (isCompleted) badgeStatus = sectionState && sectionState.status ? sectionState.status : 'Completed';
-      else if (idle) badgeStatus = 'Queued';
-
-      var stepText = '';
-      if (sectionState && sectionState.stepIndex && sectionState.stepTotal) {
-        stepText = 'Step: ' + String(sectionState.stepIndex) + '/' + String(sectionState.stepTotal);
-      }
-
-      var div = document.createElement('div');
-      div.className =
-        'feed-section' +
-        (isActive ? ' active-feed' : '') +
-        (isCompleted && !isActive ? ' completed-feed' : '') +
-        (isReady ? ' ready-feed' : '') +
-        (idle ? ' idle-feed' : '');
-      var icon = feedSectionIcons[section] || feedSectionIcons.Planning;
-      div.innerHTML =
-        '<div class="feed-section-header">' +
-        '<span class="feed-section-icon" aria-hidden="true">' + icon + '</span>' +
-        '<div class="feed-section-content">' +
-        '<h3>' + escapeHtml(section) + '</h3>' +
-        '<p class="feed-action-line"><strong>Action:</strong> ' + escapeHtml(actionText) + '</p>' +
-        (detailText ? '<p class="feed-detail-line">' + escapeHtml(detailText) + '</p>' : '') +
-        (sectionState && sectionState.evidence
-          ? '<p class="feed-evidence-line"><strong>Evidence:</strong> ' + escapeHtml(sectionState.evidence) + '</p>'
-          : '') +
-        '</div></div>' +
-        '<div class="feed-section-footer">' +
-        '<span class="feed-status-badge ' + feedBadgeClass(badgeStatus) + '">' + escapeHtml(badgeStatus) + '</span>' +
-        (stepText ? '<span class="feed-step-line">' + escapeHtml(stepText) + '</span>' : '') +
-        '</div>';
-      container.appendChild(div);
+    if (options.idle && !operatorLogBuffer.length) {
+      showOperatorFeedEmptyState(true);
     }
-    scrollFeedToLatest();
+    renderOperatorStreamLog();
   }
 
   function publishFeedFailure(reason) {
-    runtimeDiagnostics.operatorFeedActive = false;
-    renderOperatorFeed(defaultFeedSections, { idle: true });
-    appendFeedStreamEvent({ action: 'Feed blocked', detail: reason, status: 'Blocked' }, true);
+    runtimeDiagnostics.operatorFeedActive = true;
+    appendOperatorLogEntry(
+      createOperatorLogEntry({
+        level: 'ERROR',
+        stage: 'build',
+        message: 'Feed blocked — ' + reason,
+      }),
+      { finalizePrevious: true },
+    );
     pushNotification('Brain Request Failed');
     setLastError(reason);
     renderRuntimeDiagnostics();
   }
 
-  function streamOperatorFeedEvents(events, onComplete) {
+  function streamOperatorFeedEvents(events, onComplete, responseForTrail) {
     if (!events || !events.length) {
       publishFeedFailure('Operator Feed events missing');
       if (onComplete) onComplete();
       return;
     }
 
-    clearFeedStreamLog();
     runtimeDiagnostics.operatorFeedActive = true;
     pushNotification('Operator Feed Active');
     renderRuntimeDiagnostics();
 
+    if (!operatorFeedUi.streamMode) {
+      for (var fast = 0; fast < events.length; fast += 1) {
+        appendOperatorLogFromEvent(events[fast], { active: false, finalizePrevious: fast === 0 });
+      }
+      if (responseForTrail) appendBuildResponseOperatorLog(responseForTrail);
+      finalizeActiveOperatorLogLine();
+      renderOperatorStreamLog();
+      if (onComplete) onComplete();
+      return;
+    }
+
     var index = 0;
-    var completedEvents = [];
 
     function tick() {
       if (index >= events.length) {
+        finalizeActiveOperatorLogLine();
+        if (responseForTrail) appendBuildResponseOperatorLog(responseForTrail);
         runtimeDiagnostics.operatorFeedActive = true;
-        renderOperatorFeed(defaultFeedSections, {
-          activeEvent: events[events.length - 1],
-          completedEvents: completedEvents.slice(),
-          idle: false,
-        });
         renderRuntimeDiagnostics();
         scrollFeedToLatest();
         if (onComplete) onComplete();
         return;
       }
 
-      var event = events[index];
-      completedEvents.push(event);
-      renderOperatorFeed(defaultFeedSections, { activeEvent: event, completedEvents: completedEvents.slice(), idle: false });
-      appendFeedStreamEvent(event, true);
-
-      if (index > 0) {
-        var prevLog = el('feed-stream-log');
-        if (prevLog && prevLog.children.length > 1) {
-          var prevPres = resolveFeedEventPresentation(events[index - 1]);
-          prevLog.children[prevLog.children.length - 2].className = 'feed-event';
-          prevLog.children[prevLog.children.length - 2].textContent =
-            '✓ ' + prevPres.action + (prevPres.detail ? ' — ' + prevPres.detail : '');
-        }
-      }
-
+      appendOperatorLogFromEvent(events[index], { active: true, finalizePrevious: true });
       index += 1;
       setTimeout(tick, FEED_STAGE_DELAY_MS);
     }
 
-    renderOperatorFeed(defaultFeedSections, { activeEvent: events[0], completedEvents: [], idle: false });
     tick();
   }
 
@@ -8002,16 +8384,7 @@
         eventType: step.action,
       };
       completed.push(event);
-      renderOperatorFeed(defaultFeedSections, { activeEvent: event, completedEvents: completed.slice(), idle: false });
-      appendFeedStreamEvent(event, index < founderTestFeedSteps.length - 1);
-      if (index > 0) {
-        var prevLog = el('feed-stream-log');
-        if (prevLog && prevLog.children.length > 1) {
-          var prev = founderTestFeedSteps[index - 1];
-          prevLog.children[prevLog.children.length - 2].className = 'feed-event';
-          prevLog.children[prevLog.children.length - 2].textContent = '✓ ' + prev.action + (prev.detail ? ' — ' + prev.detail : '');
-        }
-      }
+      appendOperatorLogFromEvent(event, { active: index < founderTestFeedSteps.length - 1, finalizePrevious: true });
       index += 1;
       setTimeout(tick, 140);
     }
@@ -8063,24 +8436,72 @@
     return 'Brain API request failed — HTTP ' + status;
   }
 
+  function isLocalRuntimeHealthPayloadOk(payload) {
+    return (
+      payload &&
+      payload.postAllowed === true &&
+      payload.serverCapability === 'command-center-brain-v11.1a' &&
+      payload.buildIntentRouting === true &&
+      payload.registryLoaded === true &&
+      payload.runtimeReady === true
+    );
+  }
+
+  function renderLocalRuntimeBanner(show) {
+    var banner = el('local-runtime-banner');
+    if (banner) {
+      banner.textContent = LOCAL_RUNTIME_BANNER_TEXT;
+      if (show) {
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+    if (show) {
+      document.body.classList.add('local-runtime-blocked');
+      setLastError('Local runtime unavailable — restart using Start-AiDevEngine');
+    } else {
+      document.body.classList.remove('local-runtime-blocked');
+    }
+  }
+
   function checkBrainHealth() {
     return fetch('/api/brain/health', { method: 'GET', cache: 'no-store' })
       .then(function (res) {
-        if (!res.ok) throw new Error('Health check HTTP ' + res.status);
-        return res.json();
+        return res.text().then(function (bodyText) {
+          var payload = null;
+          try {
+            payload = JSON.parse(bodyText);
+          } catch (parseErr) {
+            payload = null;
+          }
+          if (!res.ok) {
+            localRuntimeHealthy = false;
+            renderLocalRuntimeBanner(true);
+            throw new Error('Health check HTTP ' + res.status);
+          }
+          return payload;
+        });
       })
       .then(function (payload) {
-        var ok =
-          payload &&
-          payload.postAllowed === true &&
-          payload.serverCapability === 'command-center-brain-v11.1a';
+        var ok = isLocalRuntimeHealthPayloadOk(payload);
+        localRuntimeHealthy = ok;
         runtimeDiagnostics.brainEndpointReachable = ok;
         runtimeDiagnostics.brainConnected = ok;
+        renderLocalRuntimeBanner(!ok);
         if (ok) {
           pushNotification('AiDevEngine Command Center brain active');
           setLastError('None');
+        } else if (payload && payload.postAllowed === true && payload.buildIntentRouting !== true) {
+          setLastError(
+            'Stale AiDevEngine server — restart using Start-AiDevEngine (build intent routing missing)',
+          );
+          pushNotification('Stale server detected — use Start-AiDevEngine');
+        } else if (payload && payload.registryLoaded !== true) {
+          setLastError('Project registry not loaded — restart using Start-AiDevEngine');
+          pushNotification('Registry not ready — use Start-AiDevEngine');
         } else {
-          setLastError('Brain health payload missing expected capability');
+          setLastError('Brain health payload missing expected local runtime markers');
         }
         renderRuntimeDiagnostics();
         if (payload && typeof payload.llmConnected === 'boolean') {
@@ -8114,9 +8535,11 @@
         return ok;
       })
       .catch(function () {
+        localRuntimeHealthy = false;
         runtimeDiagnostics.brainEndpointReachable = false;
         runtimeDiagnostics.brainConnected = false;
-        setLastError('Brain health endpoint unreachable — stale server or npm run dev not running');
+        renderLocalRuntimeBanner(true);
+        setLastError('Brain health endpoint unreachable — restart using Start-AiDevEngine');
         renderRuntimeDiagnostics();
         return false;
       });
@@ -8296,7 +8719,20 @@
   }
 
   function isOnePromptBuildPrompt(message) {
-    var text = String(message || '');
+    var text = String(message || '').trim();
+    if (text.length < 20) return false;
+    if (
+      /expense track|expense tracker|task tracker|todo app|todo list/i.test(text) &&
+      /build|begin build execution|create.*application/i.test(text)
+    ) {
+      return true;
+    }
+    if (
+      /begin build execution|build execution now|generate architecture/i.test(text) &&
+      /\b(build|create|develop|implement|scaffold)\b/i.test(text)
+    ) {
+      return true;
+    }
     return (
       /task tracker|todo app|todo list/i.test(text) &&
       /add tasks?|mark them complete|filter by all\/active\/completed/i.test(text)
@@ -8361,25 +8797,18 @@
       },
     ];
     var index = 0;
-    var completed = [];
-    renderOperatorFeed(defaultFeedSections, {
-      activeEvent: stages[0],
-      completedEvents: [],
-      idle: false,
-    });
-    appendFeedStreamEvent(stages[0], true);
+    appendOperatorLogEntry(
+      createOperatorLogEntry({
+        level: 'INFO',
+        stage: 'build',
+        message: 'Build progress ticker started — awaiting server build events',
+      }),
+      { finalizePrevious: true },
+    );
     var timer = window.setInterval(function () {
       if (index >= stages.length - 1) return;
-      completed.push(stages[index]);
       index += 1;
-      renderOperatorFeed(defaultFeedSections, {
-        activeEvent: stages[index],
-        completedEvents: completed.map(function (item) {
-          return item.action;
-        }),
-        idle: false,
-      });
-      appendFeedStreamEvent(stages[index], true);
+      appendOperatorLogFromEvent(stages[index], { active: true, finalizePrevious: true });
     }, 6000);
     return function stopBuildProgressFeedTicker() {
       window.clearInterval(timer);
@@ -8508,30 +8937,39 @@
 
   function askBrain(message, options) {
     options = options || {};
+    if (!localRuntimeHealthy) {
+      renderLocalRuntimeBanner(true);
+      pushNotification('Brain request blocked — local runtime unavailable');
+      appendChatMessage(LOCAL_RUNTIME_BANNER_TEXT, 'system');
+      setLastRequestStatus('Blocked');
+      setLastError('Local runtime unavailable');
+      return;
+    }
     showThinking();
     setLastRequestStatus('In progress');
     pushNotification('Brain Request Started');
-    clearFeedStreamLog();
     var stopBuildTicker = null;
     if (isOnePromptBuildPrompt(message)) {
       stopBuildTicker = startBuildProgressFeedTicker();
     } else {
-      var requestReceived = {
-        eventType: 'Classifying Request',
-        action: 'Request received',
-        detail: 'AiDevEngine received your message and started routing.',
-        section: 'Planning',
-        status: 'Active',
-        stepIndex: 1,
-        stepTotal: 7,
-      };
-      renderOperatorFeed(defaultFeedSections, { activeEvent: requestReceived, completedEvents: [], idle: false });
-      appendFeedStreamEvent(requestReceived, true);
+      appendOperatorLogFromEvent(
+        {
+          eventType: 'Classifying Request',
+          action: 'Request received',
+          detail: 'AiDevEngine received your message and started routing.',
+          section: 'Planning',
+          status: 'Active',
+          stepIndex: 1,
+          stepTotal: 7,
+        },
+        { active: true, finalizePrevious: true },
+      );
     }
 
     fetch('/api/brain/respond', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
       body: JSON.stringify({
         message: message,
         timestamp: Date.now(),
@@ -8557,7 +8995,19 @@
       })
       .then(function (result) {
         if (stopBuildTicker) stopBuildTicker();
-        streamOperatorFeedEvents(result.operatorFeedEvents, function () {
+        if (
+          isOnePromptBuildPrompt(message) &&
+          result.category !== 'BUILD' &&
+          !result.projectContextAlignment
+        ) {
+          setLastError(
+            'Build prompt fell through to chat — stale server likely. Stop port 4321 process and run npm run dev.',
+          );
+          pushNotification('Build routing missed — restart npm run dev');
+        }
+        streamOperatorFeedEvents(
+          result.operatorFeedEvents,
+          function () {
           removeThinkingMessage();
           appendChatMessage(result.brainResponse, 'brain');
           if (result.projectContextAlignment) {
@@ -8647,7 +9097,9 @@
           if (result.unifiedDecisionLayerDiagnostics) {
             renderDecisionLayerDiagnostics(result.unifiedDecisionLayerDiagnostics);
           }
-        });
+        },
+          result,
+        );
       })
       .catch(function (err) {
         if (stopBuildTicker) stopBuildTicker();
@@ -12153,6 +12605,7 @@
     }
 
     wireProjectRegistryActions(el('projects-surface'));
+    initOperatorFeedControls();
 
     if (form) {
       form.addEventListener('submit', function (e) {
@@ -12565,4 +13018,6 @@
     .catch(function () {
       setLastError('Brain health check failed');
     });
+
+  initOperatorFeedControls();
 })();

@@ -224,7 +224,7 @@ async function main(): Promise<void> {
   assert('03. brain handler runs guard', brainHandler.includes('assessProjectContextAlignment'), 'brain');
   assert(
     '04. brain handler blocks before build',
-    /if \(isBuildIntentRequest\(body\.message\)\) \{[\s\S]*assessProjectContextAlignment[\s\S]*alignmentBlocksBuildExecution[\s\S]*runOnePromptLivePreviewBuild/.test(
+    /if \(isBuildIntent\) \{[\s\S]*assessProjectContextAlignment[\s\S]*alignmentBlocksBuildExecution[\s\S]*runOnePromptLivePreviewBuild/.test(
       brainHandler,
     ),
     'brain order',
