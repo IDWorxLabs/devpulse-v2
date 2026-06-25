@@ -2,6 +2,7 @@
  * Universal Feature Contract Intelligence V1 — dynamic Playwright runtime runner.
  */
 
+import type { PlaywrightPageAdapter } from '../playwright-adapter/playwright-page-types.js';
 import type {
   FeatureRealityValidationPlan,
   FeatureRealityValidationStep,
@@ -348,27 +349,12 @@ export async function runUniversalFeatureRealityChecks(
   return checks;
 }
 
-export function createPlaywrightUniversalValidationPage(page: {
-  goto(url: string, options?: { waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' }): Promise<void | null>;
-  waitForSelector(selector: string, options?: { timeout?: number; state?: 'visible' | 'attached' }): Promise<unknown>;
-  locator(selector: string): {
-    isVisible(): Promise<boolean>;
-    count(): Promise<number>;
-    textContent(): Promise<string | null>;
-    click(): Promise<void>;
-    fill(value: string): Promise<void>;
-    first(): {
-      isVisible(): Promise<boolean>;
-      count(): Promise<number>;
-      textContent(): Promise<string | null>;
-      click(): Promise<void>;
-      fill(value: string): Promise<void>;
-    };
-  };
-  getByText(text: string, options?: { exact?: boolean }): { first(): { click(): Promise<void> } };
-  evaluate<T, U>(fn: (arg: U) => T | Promise<T>, arg: U): Promise<T>;
-  reload(options?: { waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' }): Promise<void | null>;
-}): UniversalValidationPage {
+export function createPlaywrightUniversalValidationPage(
+  page: PlaywrightPageAdapter & {
+    evaluate<T, U>(fn: (arg: U) => T | Promise<T>, arg: U): Promise<T>;
+    reload(options?: { waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' }): Promise<unknown | null>;
+  },
+): UniversalValidationPage {
   return {
     goto: async (url) => {
       await page.goto(url, { waitUntil: 'domcontentloaded' });

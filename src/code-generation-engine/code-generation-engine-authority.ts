@@ -142,6 +142,7 @@ export function usesViteReactRuntime(packageJsonSource: string): boolean {
       devDependencies?: Record<string, string>;
       devpulseGeneratedApp?: string;
       devpulseUniversalBlueprint?: string;
+      devpulseUniversalFeatureContract?: string;
     };
     return (
       parsed.devpulseGeneratedApp === 'task-tracker-v1' ||

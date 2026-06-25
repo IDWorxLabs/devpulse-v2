@@ -36,22 +36,22 @@ export function detectVerificationGaps(input: {
   for (const row of input.categoryCoverage) {
     if (row.status === 'Complete') continue;
 
-    if (row.category === 'Feature' && row.status !== 'Complete') {
+    if (row.category === 'Feature') {
       addGap('Feature', 'Feature not validated', row.status === 'Missing' ? 'CRITICAL' : 'HIGH', row.status === 'Missing');
     }
-    if (row.category === 'Engineering' && row.status !== 'Complete') {
+    if (row.category === 'Engineering') {
       addGap('Engineering', 'Missing engineering assessment', row.status === 'Missing' ? 'CRITICAL' : 'HIGH', row.status === 'Missing');
     }
-    if (row.category === 'Visual' && row.status !== 'Complete') {
+    if (row.category === 'Visual') {
       addGap('Visual', 'Missing visual proof', row.status === 'Missing' ? 'HIGH' : 'MEDIUM', false);
     }
-    if (row.category === 'Requirement' && row.status !== 'Complete') {
+    if (row.category === 'Requirement') {
       addGap('Requirement', 'Insufficient requirement discovery', row.status === 'Missing' ? 'CRITICAL' : 'HIGH', row.status === 'Missing');
     }
-    if (row.category === 'Launch' && row.status !== 'Complete') {
+    if (row.category === 'Launch') {
       addGap('Launch', 'Missing founder review', row.status === 'Missing' ? 'CRITICAL' : 'HIGH', row.status === 'Missing');
     }
-    if (row.category === 'Structure' && row.status !== 'Complete') {
+    if (row.category === 'Structure') {
       addGap('Structure', 'Blueprint structure verification incomplete', row.status === 'Missing' ? 'HIGH' : 'MEDIUM', false);
     }
 

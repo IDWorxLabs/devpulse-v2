@@ -30,7 +30,7 @@ export interface RoadmapV4Priority {
   readOnly: true;
   rank: number;
   phase: string;
-  action: 'BUILD' | 'EXTEND' | 'REGISTER' | 'MAINTAIN' | 'RESEARCH';
+  action: 'BUILD' | 'EXTEND' | 'REGISTER' | 'MAINTAIN' | 'RESEARCH' | 'COMPLETE';
   rationale: string;
   impact: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
   dependencies: readonly string[];

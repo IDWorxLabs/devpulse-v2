@@ -8,6 +8,7 @@ import {
   assessCqiMaturity,
   CLARIFYING_QUESTION_INTELLIGENCE_MATURITY_V1_PASS_TOKEN,
   getLastCqiMaturityAssessment,
+  type CqiMaturityAssessment,
 } from '../src/clarifying-question-intelligence/index.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));

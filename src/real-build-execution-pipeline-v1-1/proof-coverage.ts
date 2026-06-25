@@ -9,7 +9,7 @@ import type { ProofCoverageReport } from './real-build-execution-pipeline-v11-ty
 export function buildProofCoverageReport(
   results: readonly RealBuildCategoryResult[],
 ): ProofCoverageReport {
-  const required = MIN_FULL_PROOF_CATEGORIES;
+  const required: number = MIN_FULL_PROOF_CATEGORIES;
   const fullProof = results.filter((r) => r.executionProof.proofComplete);
   const built = results.filter((r) => r.metrics.buildSuccess);
   const previewed = results.filter((r) => r.metrics.previewSuccess);

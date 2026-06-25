@@ -26,7 +26,7 @@ export function runGeneralPurposeCodeGenerationV1(input?: {
   runNpmBuild?: boolean;
 }): GeneralPurposeCodeGenerationV1Assessment {
   const projectRootDir = input?.projectRootDir ?? DEFAULT_ROOT;
-  const runNpmBuild = input.runNpmBuild !== false;
+  const runNpmBuild = input?.runNpmBuild !== false;
 
   const domainResults = GENERAL_PURPOSE_PROOF_SUITE.map((suiteEntry) =>
     runGeneralPurposeGenerationForDomain({

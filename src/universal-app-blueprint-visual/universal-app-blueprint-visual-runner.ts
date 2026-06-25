@@ -2,6 +2,7 @@
  * Universal App Blueprint Visual Validation Authority V1 — rendered-app Playwright runner.
  */
 
+import type { PlaywrightPageAdapter } from '../playwright-adapter/playwright-page-types.js';
 import { VIEWPORTS } from './universal-app-blueprint-visual-registry.js';
 import type { BlueprintVisualCheck } from './universal-app-blueprint-visual-types.js';
 
@@ -455,7 +456,7 @@ export async function runBlueprintVisualChecks(
   });
 
   const labeledInputs = await page.evaluate(() => {
-    const inputs = [...document.querySelectorAll('input')];
+    const inputs = Array.from(document.querySelectorAll('input'));
     return inputs.filter((input) => {
       const aria = input.getAttribute('aria-label');
       const id = input.getAttribute('id');
@@ -474,7 +475,7 @@ export async function runBlueprintVisualChecks(
     critical: false,
   });
   const buttonsReachable = await page.evaluate(() => {
-    const buttons = [...document.querySelectorAll('button')];
+    const buttons = Array.from(document.querySelectorAll('button'));
     return buttons.filter((button) => {
       const rect = button.getBoundingClientRect();
       return rect.width > 0 && rect.height > 0;
@@ -532,21 +533,14 @@ export async function runBlueprintVisualChecks(
   return { checks, viewportEvidence };
 }
 
-export function createPlaywrightVisualValidationPage(page: {
-  goto(url: string, options?: { waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' }): Promise<void | null>;
-  setViewportSize(size: { width: number; height: number }): Promise<void>;
-  waitForSelector(selector: string, options?: { timeout?: number; state?: 'visible' | 'attached' }): Promise<unknown>;
-  locator(selector: string): {
-    isVisible(): Promise<boolean>;
-    count(): Promise<number>;
-    textContent(): Promise<string | null>;
-    click(): Promise<void>;
-  };
-  getByText(text: string, options?: { exact?: boolean }): { click(): Promise<void> };
-  evaluate<T>(fn: () => T | Promise<T>): Promise<T>;
-  keyboard: { press(key: string): Promise<void> };
-  waitForTimeout(ms: number): Promise<void>;
-}): VisualValidationPage {
+export function createPlaywrightVisualValidationPage(
+  page: PlaywrightPageAdapter & {
+    setViewportSize(size: { width: number; height: number }): Promise<void>;
+    waitForTimeout(ms: number): Promise<void>;
+    keyboard: { press(key: string): Promise<void> };
+    evaluate<T>(fn: () => T | Promise<T>): Promise<T>;
+  },
+): VisualValidationPage {
   return {
     goto: async (url) => {
       await page.goto(url, { waitUntil: 'domcontentloaded' });

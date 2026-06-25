@@ -130,6 +130,7 @@ export interface CloudExecutionJobResult {
   previewProof: boolean;
   verificationProof: boolean;
   aflaVerdict: string | null;
+  paiResult: string | null;
   productionReadinessScore: number | null;
   productionReadinessVerdict: string | null;
   executionSummary: string;

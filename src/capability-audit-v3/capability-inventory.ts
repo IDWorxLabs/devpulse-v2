@@ -300,7 +300,7 @@ export function buildCapabilityAuditV3Assessment(projectRootDir?: string): Capab
   const highDuplicateRiskCount = capabilities.filter((c) => c.duplicateRisk === 'HIGH').length;
   const categoryAssessments = buildCategoryAssessments(capabilities);
   const operationalMaturity = buildOperationalMaturityReport(projectRootDir);
-  const productionReadiness = buildProductionReadinessAssessment(projectRootDir);
+  const productionReadiness = buildProductionReadinessAssessment();
   const codeGeneration = buildCodeGenerationAssessment({ projectRootDir });
   const missingCapabilities = buildMissingCapabilitiesReport({
     projectRootDir,

@@ -229,9 +229,11 @@ export function runRealBuildForCategory(input: {
     productName: input.category.productName,
   });
 
+  const productReadinessScore = pai.scores.productReadinessScore;
+
   const executionReality = assessExecutionRealityForProductArchitect({
-    architecturallyComplete: pai.productReadinessScore >= 70,
-    productReadinessScore: pai.productReadinessScore,
+    architecturallyComplete: productReadinessScore >= 70,
+    productReadinessScore,
     proof: buildExecutionProof({
       category: input.category,
       planningSummary,
@@ -282,7 +284,7 @@ export function runRealBuildForCategory(input: {
     generatedFiles,
     preview,
     uvlSummary: `Coverage ${uvlBase.overallCoveragePercent}% · confidence ${uvlBase.verificationConfidenceScore}`,
-    paiSummary: `${executionReality.actuallyRunning ? 'Actually Running' : 'Architecturally Complete'} · score ${pai.productReadinessScore}`,
+    paiSummary: `${executionReality.actuallyRunning ? 'Actually Running' : 'Architecturally Complete'} · score ${productReadinessScore}`,
     aflaVerdict,
     missingEvidence,
   });
@@ -329,29 +331,32 @@ export function runRealBuildForCategory(input: {
   const paiExecuted = input.fullProofMode
     ? buildSuccess && previewSuccess
     : executionReality.actuallyRunning && preview.previewNavigationOk && buildSuccess;
-  const paiPassed = input.fullProofMode ? paiExecuted : pai.productReadinessScore >= 60 && paiExecuted;
+  const paiPassed = input.fullProofMode ? paiExecuted : productReadinessScore >= 60 && paiExecuted;
   const aflaVerdictIssued = aflaVerdict !== 'pending' && materializationSuccess;
   const uvlPassed = input.fullProofMode
     ? buildSuccess && previewSuccess && preview.previewNavigationOk
     : verificationSuccess && buildSuccess;
 
-  const fullProofComplete =
+  const fullProofComplete = Boolean(
     input.fullProofMode &&
-    generationSuccess &&
-    materializationSuccess &&
-    npmInstallOk &&
-    npmBuildOk &&
-    previewSuccess &&
-    uvlPassed &&
-    paiPassed &&
-    aflaVerdictIssued;
+      generationSuccess &&
+      materializationSuccess &&
+      npmInstallOk &&
+      npmBuildOk &&
+      previewSuccess &&
+      uvlPassed &&
+      paiPassed &&
+      aflaVerdictIssued,
+  );
 
   const launchSuccess = input.fullProofMode
     ? fullProofComplete
-    : buildSuccess &&
-      previewSuccess &&
-      executionProof.proofComplete &&
-      !aflaAdjusted.blockers.some((b) => b.includes('Build output') || b.includes('Preview proof'));
+    : Boolean(
+        buildSuccess &&
+          previewSuccess &&
+          executionProof.proofComplete &&
+          !aflaAdjusted.blockers.some((b) => b.includes('Build output') || b.includes('Preview proof')),
+      );
 
   const metrics: RealBuildCategoryMetrics = {
     readOnly: true,
@@ -363,7 +368,7 @@ export function runRealBuildForCategory(input: {
     launchSuccess,
     requirementConfidence: cqi.requirementConfidenceScore,
     verificationConfidence,
-    productReadinessScore: pai.productReadinessScore,
+    productReadinessScore,
     aflaOverallScore: aflaAdjusted.adjustedScore,
     executionProofComplete: input.fullProofMode
       ? fullProofComplete

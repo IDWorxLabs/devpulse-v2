@@ -115,7 +115,7 @@ export function buildCustomerProjectRegistry(now = new Date()): CustomerProjectR
 }
 
 export function buildPlanDefinitions(): PlanDefinition[] {
-  return [
+  const plans: PlanDefinition[] = [
     {
       readOnly: true,
       planType: 'FREE',
@@ -152,7 +152,8 @@ export function buildPlanDefinitions(): PlanDefinition[] {
       world2ExecutionLimit: 999,
       upgradePath: null,
     },
-  ].filter((p) => PLAN_TYPES.includes(p.planType));
+  ];
+  return plans.filter((p) => PLAN_TYPES.includes(p.planType));
 }
 
 export function getTenantForProject(

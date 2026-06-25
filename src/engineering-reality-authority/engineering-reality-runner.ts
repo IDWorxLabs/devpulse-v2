@@ -2,6 +2,7 @@
  * Engineering Reality Authority V1 — Playwright runtime runner.
  */
 
+import type { PlaywrightPageAdapter } from '../playwright-adapter/playwright-page-types.js';
 import type {
   EngineeringLoadAnalysis,
   EngineeringRealityCheck,
@@ -135,7 +136,7 @@ export async function runEngineeringRuntimeChecks(
   });
 
   const xssVectors = await page.evaluate(() => {
-    const scripts = [...document.querySelectorAll('script')].filter(
+    const scripts = Array.from(document.querySelectorAll('script')).filter(
       (node) => !node.src && (node.textContent ?? '').includes('innerHTML'),
     );
     return scripts.length;
@@ -222,7 +223,7 @@ export async function runEngineeringRuntimeChecks(
   });
 
   const labeledInputs = await page.evaluate(() => {
-    const inputs = [...document.querySelectorAll('input')];
+    const inputs = Array.from(document.querySelectorAll('input'));
     const labeled = inputs.filter((input) => {
       const aria = input.getAttribute('aria-label');
       const id = input.getAttribute('id');
@@ -242,7 +243,7 @@ export async function runEngineeringRuntimeChecks(
   });
 
   const buttonsReachable = await page.evaluate(() =>
-    [...document.querySelectorAll('button')].filter((button) => {
+    Array.from(document.querySelectorAll('button')).filter((button) => {
       const rect = button.getBoundingClientRect();
       return rect.width > 0 && rect.height > 0;
     }).length,
@@ -267,7 +268,7 @@ export async function runEngineeringRuntimeChecks(
   });
 
   const imageLabels = await page.evaluate(() => {
-    const images = [...document.querySelectorAll('img')];
+    const images = Array.from(document.querySelectorAll('img'));
     if (images.length === 0) return { ok: true, detail: 'No images on core route' };
     const labeled = images.filter((img) => (img.getAttribute('alt') ?? '').trim().length > 0).length;
     return { ok: labeled / images.length >= 0.5, detail: `${labeled}/${images.length} images labeled` };
@@ -313,22 +314,15 @@ export async function runEngineeringRuntimeChecks(
   };
 }
 
-export function createPlaywrightEngineeringValidationPage(page: {
-  goto(url: string, options?: { waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' }): Promise<void | null>;
-  waitForSelector(selector: string, options?: { timeout?: number; state?: 'visible' | 'attached' }): Promise<unknown>;
-  locator(selector: string): {
-    isVisible(): Promise<boolean>;
-    count(): Promise<number>;
-    click(): Promise<void>;
-    first(): { isVisible(): Promise<boolean>; count(): Promise<number>; click(): Promise<void> };
-  };
-  getByText(text: string, options?: { exact?: boolean }): { first(): { click(): Promise<void> } };
-  evaluate<T, U>(fn: (arg: U) => T | Promise<T>, arg: U): Promise<T>;
-  keyboard: { press(key: string): Promise<void> };
-  waitForTimeout(ms: number): Promise<void>;
-  content(): Promise<string>;
-  on(event: 'console', handler: (message: { type(): string; text(): string }) => void): void;
-}): { page: EngineeringValidationPage; runtimeHealth: EngineeringRuntimeHealth } {
+export function createPlaywrightEngineeringValidationPage(
+  page: PlaywrightPageAdapter & {
+    waitForTimeout(ms: number): Promise<void>;
+    evaluate<T, U>(fn: (arg: U) => T | Promise<T>, arg: U): Promise<T>;
+    keyboard: { press(key: string): Promise<void> };
+    content(): Promise<string>;
+    on(event: 'console', handler: (message: { type(): string; text(): string }) => void): void;
+  },
+): { page: EngineeringValidationPage; runtimeHealth: EngineeringRuntimeHealth } {
   const consoleErrors: string[] = [];
   const consoleWarnings: string[] = [];
   page.on('console', (message) => {

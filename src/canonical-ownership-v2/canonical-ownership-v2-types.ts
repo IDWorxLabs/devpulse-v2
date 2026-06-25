@@ -16,7 +16,9 @@ export type CanonicalOwnerId =
   | 'Self-Evolution Execution'
   | 'Mobile Runtime Validation'
   | 'General-Purpose Code Generation'
-  | 'Capability Audit';
+  | 'Capability Audit'
+  | 'Customer Operations Platform'
+  | 'Production Observability Platform';
 
 export interface CanonicalOwnershipEntry {
   readOnly: true;

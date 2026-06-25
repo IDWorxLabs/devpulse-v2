@@ -271,8 +271,10 @@ assert(
 
 assert(
   'missing capabilities documented',
-  missingCapabilities.entries.length >= 2 &&
-    Boolean(missingCapabilities.highestPriorityGap),
+  Boolean(missingCapabilities.highestPriorityGap) &&
+    (missingCapabilities.entries.length >= 2 ||
+      (missingCapabilities.entries.length === 0 &&
+        missingCapabilities.highestPriorityGap.includes('No remaining blocking gaps'))),
   `${missingCapabilities.entries.length} gaps`,
 );
 

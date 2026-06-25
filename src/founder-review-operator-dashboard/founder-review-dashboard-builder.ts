@@ -5,7 +5,7 @@
 
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { AutonomousFounderLaunchAssessment } from '../autonomous-founder-launch-authority/autonomous-founder-launch-authority-types.js';
+import type { AutonomousFounderLaunchAssessment, FounderEvidenceSource } from '../autonomous-founder-launch-authority/autonomous-founder-launch-authority-types.js';
 import {
   FOUNDER_LAUNCH_SUITE_APPS,
   FOUNDER_LAUNCH_USER_LABELS,
@@ -36,7 +36,17 @@ const REVIEWER_TITLES: Record<string, string> = {
   founder: 'Founder Review',
 };
 
-const EVIDENCE_ROWS: readonly { key: keyof AutonomousFounderLaunchAssessment['evidence']; label: string }[] = [
+const EVIDENCE_ROWS: readonly {
+  key:
+    | 'buildReality'
+    | 'blueprintStructure'
+    | 'blueprintVisual'
+    | 'featureReality'
+    | 'universalFeatureContract'
+    | 'engineeringReality'
+    | 'launchReadiness';
+  label: string;
+}[] = [
   { key: 'buildReality', label: 'Build Reality' },
   { key: 'blueprintStructure', label: 'Blueprint Structure' },
   { key: 'blueprintVisual', label: 'Blueprint Visual' },
@@ -66,10 +76,7 @@ function mapUserPhaseToLabel(
   }
 }
 
-function mapEvidenceStatus(source: {
-  available: boolean;
-  passed: boolean;
-}): EvidenceChainStatus {
+function mapEvidenceStatus(source: FounderEvidenceSource): EvidenceChainStatus {
   if (!source.available) return 'WAITING';
   return source.passed ? 'PASS' : 'FAIL';
 }

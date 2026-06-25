@@ -28,7 +28,7 @@ export function detectFalseNegatives(assessment: AutonomousFounderLaunchAssessme
   const allCorePassed = coreSources.every((source) => source.available && source.passed);
   const noCriticalBlockers = coreSources.every((source) => source.blockers.length === 0);
   const highVerification =
-    evidence.verificationHub?.verificationConfidenceScore >= 75 &&
+    (evidence.verificationHub?.verificationConfidenceScore ?? 0) >= 75 &&
     !evidence.verificationHub?.incompleteVerification;
   const requirementsClear = !evidence.requirementDiscovery?.poorlyUnderstood;
   const highScore = scores.overallFounderScore >= 80;

@@ -2,6 +2,7 @@
  * Feature Reality Validation Authority V1 — rendered runtime Playwright runner.
  */
 
+import type { PlaywrightPageAdapter } from '../playwright-adapter/playwright-page-types.js';
 import type { FeatureContract, FeatureRealityCheck } from './feature-reality-validation-types.js';
 
 export interface FeatureValidationPage {
@@ -249,27 +250,9 @@ export async function runFeatureRealityChecks(
   return checks;
 }
 
-export function createPlaywrightFeatureValidationPage(page: {
-  goto(url: string, options?: { waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' }): Promise<void | null>;
-  waitForSelector(selector: string, options?: { timeout?: number; state?: 'visible' | 'attached' }): Promise<unknown>;
-  locator(selector: string): {
-    isVisible(): Promise<boolean>;
-    count(): Promise<number>;
-    textContent(): Promise<string | null>;
-    click(): Promise<void>;
-    fill(value: string): Promise<void>;
-    first(): {
-      isVisible(): Promise<boolean>;
-      count(): Promise<number>;
-      textContent(): Promise<string | null>;
-      click(): Promise<void>;
-      fill(value: string): Promise<void>;
-    };
-  };
-  getByText(text: string, options?: { exact?: boolean }): { first(): { click(): Promise<void> } };
-  evaluate<T>(fn: () => T | Promise<T>): Promise<T>;
-  reload(options?: { waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' }): Promise<void | null>;
+export function createPlaywrightFeatureValidationPage(page: PlaywrightPageAdapter & {
   waitForTimeout(ms: number): Promise<void>;
+  evaluate<T>(fn: () => T | Promise<T>): Promise<T>;
 }): FeatureValidationPage {
   return {
     goto: async (url) => {
@@ -289,7 +272,9 @@ export function createPlaywrightFeatureValidationPage(page: {
     clickNavText: (text) => page.locator('.blueprint-sidenav').getByText(text, { exact: false }).click(),
     fill: (selector, value) => page.locator(selector).first().fill(value),
     reload: async () => {
-      await page.reload({ waitUntil: 'domcontentloaded' });
+      if (page.reload) {
+        await page.reload({ waitUntil: 'domcontentloaded' });
+      }
     },
     evaluate: (fn) => page.evaluate(fn),
     waitForTimeout: (ms) => page.waitForTimeout(ms),

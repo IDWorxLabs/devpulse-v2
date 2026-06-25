@@ -248,6 +248,7 @@ export const CANONICAL_OWNERSHIP_V2_ENTRIES: readonly CanonicalOwnershipEntry[] 
     '.large-scale-multi-app-validation/assessment.json',
     ['Feature Reality Validation'],
     ['58-category breadth validation', 'generalization score'],
+    [],
     'MEDIUM',
     'PARTIAL',
   ),

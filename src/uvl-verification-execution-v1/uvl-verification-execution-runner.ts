@@ -151,7 +151,7 @@ export async function runVerificationForCategory(input: {
       workspaceRoot: workspacePath,
       workspaceId,
       previewUrl: preview.url,
-      executionMode: 'REAL',
+      executionMode: 'REAL_VERIFICATION',
     });
     executionSucceeded = execution.success;
     artifactPath = join(workspacePath, '.verification-executed.json');

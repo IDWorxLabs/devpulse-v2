@@ -232,8 +232,8 @@ export function runCloudExecutionWorker(input: {
     });
     writeJobArtifact(jobDir, 'product-architect-proof.json', {
       readOnly: true,
-      productReadinessScore: pai.productReadinessScore,
-      passed: pai.productReadinessScore >= 60,
+      productReadinessScore: pai.scores.productReadinessScore,
+      passed: pai.scores.productReadinessScore >= 60,
     });
 
     const buildRealityOverride = buildBuildRealityEvidenceFromWorkspace({
@@ -325,6 +325,7 @@ export function runCloudExecutionWorker(input: {
       previewProof: preview.previewHtmlOk,
       verificationProof: uvl.overallCoveragePercent >= 40,
       aflaVerdict: afla.verdict,
+      paiResult: pai.scores.productReadinessScore >= 60 ? 'PASS' : 'FAIL',
       productionReadinessScore: prg.productionReadinessScore,
       productionReadinessVerdict: prg.productionVerdict,
       executionSummary: `Cloud execution completed for ${suite.productName} in ${Date.now() - start}ms`,
@@ -366,6 +367,7 @@ export function runCloudExecutionWorker(input: {
       previewProof: false,
       verificationProof: false,
       aflaVerdict: null,
+      paiResult: null,
       productionReadinessScore: null,
       productionReadinessVerdict: null,
       executionSummary: detail,

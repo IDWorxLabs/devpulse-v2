@@ -9,7 +9,7 @@ export function buildTaskTrackerFeatureContract(input: {
   contractId: string;
   requirements: TaskTrackerRequirements;
 }): FeatureContract {
-  const features: FeatureContract['features'] = [
+  const allFeatures: FeatureContract['features'] = [
     {
       id: 'create-task',
       label: 'Create Task',
@@ -40,7 +40,8 @@ export function buildTaskTrackerFeatureContract(input: {
       category: 'search',
       required: input.requirements.filterAllActiveCompleted,
     },
-  ].filter((feature) => feature.required);
+  ];
+  const features = allFeatures.filter((feature) => feature.required);
 
   return {
     contractVersion: '1.0',

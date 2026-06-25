@@ -12,7 +12,6 @@ import type {
   CommercializationReadinessAssessment,
   FactoryReadinessAssessment,
 } from './strategic-capability-audit-v4-types.js';
-import type { StrategicEvidenceSnapshot } from './strategic-evidence-collector.js';
 import {
   collectProvenStrategicCapabilities,
   gapCapabilityToPhase,

@@ -11,7 +11,7 @@ import type {
 export function buildVerificationCoverageReport(
   results: readonly VerificationCategoryResult[],
 ): VerificationCoverageReport {
-  const required = MIN_VERIFIED_CATEGORIES;
+  const required: number = MIN_VERIFIED_CATEGORIES;
   const verified = results.filter((r) => r.verified);
   const failed = results.filter((r) => !r.verified && r.workspacePath !== null);
   const skipped = results.filter((r) => r.workspacePath === null);

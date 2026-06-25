@@ -5,6 +5,7 @@
 import type {
   LargeScaleCategoryMetrics,
   LargeScaleFailureClass,
+  LargeScaleFailureDistributionEntry,
 } from './large-scale-multi-app-validation-types.js';
 
 export function classifyCategoryFailure(input: {
@@ -76,7 +77,7 @@ export function classifyCategoryFailure(input: {
 
 export function buildFailureDistribution(
   results: readonly { failureClass: LargeScaleFailureClass }[],
-): Array<{ failureClass: LargeScaleFailureClass; count: number; percentage: number }> {
+): readonly LargeScaleFailureDistributionEntry[] {
   const counts = new Map<LargeScaleFailureClass, number>();
   const classes: LargeScaleFailureClass[] = [
     'Requirement Failure',

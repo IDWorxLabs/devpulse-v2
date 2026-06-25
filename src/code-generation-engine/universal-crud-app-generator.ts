@@ -3,7 +3,7 @@
  * Generates profile-aware feature modules from Universal Feature Contracts.
  */
 
-import type { GeneratedWorkspaceFile } from './code-generation-engine-types.js';
+import type { GeneratedWorkspaceFile, GeneratedAppProfile } from './code-generation-engine-types.js';
 import { composeGeneratedAppWorkspaceFiles } from '../universal-app-blueprint/universal-app-blueprint-authority.js';
 import { mergePackageJsonWithBlueprint } from '../universal-app-blueprint/universal-app-blueprint-generator.js';
 import { UNIVERSAL_APP_BLUEPRINT_VERSION } from '../universal-app-blueprint/universal-app-blueprint-types.js';

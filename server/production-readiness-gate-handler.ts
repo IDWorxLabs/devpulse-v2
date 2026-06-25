@@ -8,7 +8,6 @@ import {
   PRODUCTION_READINESS_GATE_V1_PASS_TOKEN,
   runProductionReadinessGateV1,
 } from '../src/production-readiness-gate-v1/index.js';
-import { runProductionReadinessGateV1 } from '../src/production-readiness-gate-v1/index.js';
 import type { ProductionReadinessGateV1Assessment } from '../src/production-readiness-gate-v1/production-readiness-gate-v1-types.js';
 import { listRealBuildSuiteProfiles } from '../src/real-build-execution-pipeline-v1/real-build-execution-suite-registry.js';
 import { join } from 'node:path';

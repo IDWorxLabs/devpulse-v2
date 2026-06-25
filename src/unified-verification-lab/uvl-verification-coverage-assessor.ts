@@ -153,7 +153,7 @@ export function buildVerificationCoverageAssessment(
   ];
 
   const timeline: VerificationTimelineEntry[] = [
-    buildTimelineEntry('build-reality', 'Build Reality', buildAvailable, buildPassed, buildAvailable ? (buildPassed ? 'Build proof satisfied' : 'Build proof incomplete') : 'Build not evaluated'),
+    buildTimelineEntry('build-reality', 'Build Reality', buildAvailable, buildPassed === true, buildAvailable ? (buildPassed ? 'Build proof satisfied' : 'Build proof incomplete') : 'Build not evaluated'),
     buildTimelineEntry('blueprint-validation', 'Blueprint Validation', structureAvailable, structurePassed, structureAvailable ? (structurePassed ? 'Blueprint structure validated' : 'Blueprint structure gaps remain') : 'Blueprint validation pending'),
     buildTimelineEntry('blueprint-visual', 'Blueprint Visual', visualAvailable, visualPassed, visualAvailable ? (visualPassed ? 'Visual blueprint validated' : 'Visual proof incomplete') : 'Blueprint visual pending'),
     buildTimelineEntry('feature-reality', 'Feature Reality', featureAvailable, featurePassed, featureAvailable ? (featurePassed ? 'Feature workflows validated' : 'Feature validation incomplete') : 'Feature reality pending'),

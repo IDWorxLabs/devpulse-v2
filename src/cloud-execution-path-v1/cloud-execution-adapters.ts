@@ -80,6 +80,7 @@ export const CloudReadyPackageAdapter: CloudExecutionAdapter = {
       previewProof: false,
       verificationProof: false,
       aflaVerdict: null,
+      paiResult: null,
       productionReadinessScore: null,
       productionReadinessVerdict: null,
       executionSummary: 'Cloud-ready package generated without local execution.',

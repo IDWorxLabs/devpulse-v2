@@ -40,7 +40,7 @@ export function collectFailureEvidence(projectRootDir: string): {
   for (const src of bundle.evidenceSources) {
     if (src.evidenceAvailable) sourceSystemsConsumed.add('Large-Scale Validation');
   }
-  if (bundle.legacyLargeScaleBuildSuccessRate === 0 && bundle.rbepGeneralization.buildSuccessRate > 0) {
+  if (bundle.largeScaleAssessment.buildSuccessRate === 0 && bundle.rbepGeneralization.buildSuccessRate > 0) {
     signals.push({
       sourceSystem: 'Large-Scale Validation',
       signalType: 'evidence_contrast',

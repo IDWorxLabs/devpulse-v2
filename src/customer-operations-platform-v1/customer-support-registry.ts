@@ -7,7 +7,7 @@ import type { SupportIncident } from './customer-operations-platform-v1-types.js
 
 export function buildCustomerSupportRegistry(now = new Date()): SupportIncident[] {
   const iso = now.toISOString();
-  return [
+  const incidents: SupportIncident[] = [
     {
       readOnly: true,
       incidentId: 'support-acme-onboarding',
@@ -38,5 +38,6 @@ export function buildCustomerSupportRegistry(now = new Date()): SupportIncident[
       detail: 'Starter Studio trial activation — first project guidance',
       createdAt: iso,
     },
-  ].filter((i) => DEMO_CUSTOMER_SUITE.some((c) => c.customerId === i.customerId));
+  ];
+  return incidents.filter((i) => DEMO_CUSTOMER_SUITE.some((c) => c.customerId === i.customerId));
 }

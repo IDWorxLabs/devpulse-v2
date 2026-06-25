@@ -15,6 +15,7 @@ import type {
   ReuseEvidenceType,
   TierRegistry,
   ValidationGovernancePlan,
+  ValidationPlanEntry,
   ValidationTier,
 } from './validation-runtime-governance-types.js';
 
@@ -68,8 +69,8 @@ export function planValidation(input: PlanValidationInput): ValidationGovernance
       ? resolveAffectedCapabilities(input.capabilityGraph, changedFiles)
       : [];
 
-  const toRun: ValidationGovernancePlan['validatorsToRun'] = [];
-  const skipped: ValidationGovernancePlan['validatorsSkipped'] = [];
+  const toRun: ValidationPlanEntry[] = [];
+  const skipped: { validatorName: string; reason: string }[] = [];
 
   for (const entry of input.tierRegistry.entries) {
     const metric = byName.get(entry.validatorName);

@@ -98,5 +98,5 @@ export function explainCapabilityImpact(
     'validate:large-scale-multi-app-validation-v1',
   ].filter((v) => !validators.includes(v));
 
-  return { categories, validators, excluded };
+  return { categories, validators: [...validators], excluded };
 }

@@ -35,13 +35,15 @@ function classifyGap(
   return 'UNVALIDATED';
 }
 
+export type { CategoryMappingEntry } from './large-scale-pipeline-integration-v1-types.js';
+
 export function buildCategoryMapping(
   bundle: PipelineEvidenceBundle,
 ): readonly CategoryMappingEntry[] {
   const broadProfiles = profileSet(LARGE_SCALE_VALIDATION_SUITE);
   const rbepProfiles = profileSet(REAL_BUILD_EXECUTION_SUITE);
   const gpProfiles = profileSet(GENERAL_PURPOSE_PROOF_SUITE);
-  const cloudProfiles = new Set(CLOUD_EXECUTION_PROOF_PROFILES);
+  const cloudProfiles = new Set<string>(CLOUD_EXECUTION_PROOF_PROFILES);
 
   const rbepByProfile = new Map(
     bundle.rbepBuildProof.map((e) => [e.profile ?? e.category ?? '', e]),
