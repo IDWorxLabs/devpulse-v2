@@ -332,10 +332,15 @@ export function synthesizeLaunchReadinessEvidenceFromPipeline(
 
 function buildRequirementDiscoveryEvidence(
   productPrompt?: string | null,
+  useRegistered?: boolean,
 ): FounderRequirementDiscoveryEvidence | null {
-  const assessment = productPrompt
-    ? assessCqiMaturity({ userPrompt: productPrompt })
-    : getLastCqiMaturityAssessment();
+  const registered = getLastCqiMaturityAssessment();
+  const assessment =
+    useRegistered && registered
+      ? registered
+      : productPrompt
+        ? assessCqiMaturity({ userPrompt: productPrompt })
+        : registered;
   if (!assessment) return null;
 
   return {
@@ -457,6 +462,7 @@ export function collectFounderLaunchEvidence(input: {
   profile?: string | null;
   useRegisteredProductArchitecture?: boolean;
   useRegisteredVerificationHub?: boolean;
+  useRegisteredRequirementDiscovery?: boolean;
 }): FounderEvidenceSnapshot {
   const buildReality = buildBuildRealityEvidence({
     projectRootDir: input.projectRootDir ?? null,
@@ -482,7 +488,10 @@ export function collectFounderLaunchEvidence(input: {
     featureReality,
     universalFeatureContract,
     engineeringReality,
-    requirementDiscovery: buildRequirementDiscoveryEvidence(input.productPrompt ?? null),
+    requirementDiscovery: buildRequirementDiscoveryEvidence(
+      input.productPrompt ?? null,
+      input.useRegisteredRequirementDiscovery,
+    ),
     verificationHub: buildVerificationHubEvidence(
       input.productPrompt ?? null,
       input.profile ?? null,
