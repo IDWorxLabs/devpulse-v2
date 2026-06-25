@@ -337,6 +337,8 @@
     "validate:autonomous-builder-execution-foundation": "tsx scripts/validate-autonomous-builder-execution-foundation.ts",
     "validate:controlled-builder-execution-engine": "tsx scripts/validate-controlled-builder-execution-engine.ts",
     "validate:mobile-runtime-experience-reality": "tsx scripts/validate-mobile-runtime-experience-reality.ts",
+    "validate:mobile-runtime-preview-v1": "tsx scripts/validate-mobile-runtime-preview-v1.ts",
+    "validate:mobile-runtime-preview-v2": "tsx scripts/validate-mobile-runtime-preview-v2.ts",
     "validate:real-file-workspace-execution": "tsx scripts/validate-real-file-workspace-execution.ts",
     "validate:running-application-visibility": "tsx scripts/validate-running-application-visibility.ts",
     "validate:verification-results-visibility": "tsx scripts/validate-verification-results-visibility.ts",

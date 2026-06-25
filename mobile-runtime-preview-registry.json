@@ -1,0 +1,122 @@
+{
+  "generatedAt": 1782381479659,
+  "ownerModule": "mobile-runtime-preview-v1",
+  "availableRuntimes": [
+    "BROWSER",
+    "MOBILE_WEB",
+    "ANDROID",
+    "EXPO"
+  ],
+  "unavailableRuntimes": [
+    "IOS"
+  ],
+  "entries": [
+    {
+      "runtimeId": "BROWSER",
+      "available": true,
+      "launchable": true,
+      "verificationSupported": true,
+      "unavailableReason": null,
+      "requiredInstallationSteps": []
+    },
+    {
+      "runtimeId": "MOBILE_WEB",
+      "available": true,
+      "launchable": true,
+      "verificationSupported": true,
+      "unavailableReason": null,
+      "requiredInstallationSteps": []
+    },
+    {
+      "runtimeId": "ANDROID",
+      "available": true,
+      "launchable": true,
+      "verificationSupported": false,
+      "unavailableReason": null,
+      "requiredInstallationSteps": []
+    },
+    {
+      "runtimeId": "IOS",
+      "available": false,
+      "launchable": false,
+      "verificationSupported": false,
+      "unavailableReason": "iOS development requires macOS",
+      "requiredInstallationSteps": [
+        "Use macOS with Xcode installed from the App Store",
+        "Run xcode-select --install if needed",
+        "Open Xcode once to accept license and install simulator runtimes"
+      ]
+    },
+    {
+      "runtimeId": "EXPO",
+      "available": true,
+      "launchable": false,
+      "verificationSupported": false,
+      "unavailableReason": "No Expo project detected in workspace root",
+      "requiredInstallationSteps": [
+        "npm install expo (or use npx expo)",
+        "Ensure app.json or app.config.* exists for Expo projects",
+        "For Expo Go: install Expo Go app on device and run npx expo start"
+      ]
+    }
+  ],
+  "reusedModules": [
+    "mobile-preview-modes",
+    "mobile-preview-runtime",
+    "mobile-live-preview-foundation",
+    "mobile-runtime-experience-reality",
+    "one-prompt-live-preview/generated-dev-server-manager",
+    "playwright-adapter",
+    "runtime-startup-proof-repair"
+  ],
+  "livePreviewTree": {
+    "browserRuntime": {
+      "runtimeId": "BROWSER",
+      "available": true,
+      "launchable": true,
+      "verificationSupported": true,
+      "unavailableReason": null,
+      "requiredInstallationSteps": []
+    },
+    "mobileWebRuntime": {
+      "runtimeId": "MOBILE_WEB",
+      "available": true,
+      "launchable": true,
+      "verificationSupported": true,
+      "unavailableReason": null,
+      "requiredInstallationSteps": []
+    },
+    "androidRuntime": {
+      "runtimeId": "ANDROID",
+      "available": true,
+      "launchable": true,
+      "verificationSupported": false,
+      "unavailableReason": null,
+      "requiredInstallationSteps": []
+    },
+    "iosRuntime": {
+      "runtimeId": "IOS",
+      "available": false,
+      "launchable": false,
+      "verificationSupported": false,
+      "unavailableReason": "iOS development requires macOS",
+      "requiredInstallationSteps": [
+        "Use macOS with Xcode installed from the App Store",
+        "Run xcode-select --install if needed",
+        "Open Xcode once to accept license and install simulator runtimes"
+      ]
+    },
+    "expoRuntime": {
+      "runtimeId": "EXPO",
+      "available": true,
+      "launchable": false,
+      "verificationSupported": false,
+      "unavailableReason": "No Expo project detected in workspace root",
+      "requiredInstallationSteps": [
+        "npm install expo (or use npx expo)",
+        "Ensure app.json or app.config.* exists for Expo projects",
+        "For Expo Go: install Expo Go app on device and run npx expo start"
+      ]
+    }
+  }
+}
