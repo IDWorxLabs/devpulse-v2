@@ -1,0 +1,7 @@
+{
+  "reachable": true,
+  "healthStatus": 200,
+  "manifestStatus": 200,
+  "manifestDegraded": false,
+  "manifestLoadError": null
+}

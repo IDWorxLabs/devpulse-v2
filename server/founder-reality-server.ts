@@ -63,6 +63,7 @@ import { sendRealBuildExecutionPipelineV11Json } from './real-build-execution-pi
 import { sendUvlVerificationExecutionV1Json } from './uvl-verification-execution-v1-handler.js';
 import { buildPortfolioInsightsDemo } from './portfolio-demo-data.js';
 import { buildProductWorkspaceSnapshot } from './product-workspace-snapshot.js';
+import { probePortOwner } from './port-probe.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = join(__dirname, '..');
@@ -86,8 +87,24 @@ function loadValidatorScripts(): string[] {
 }
 
 const VALIDATOR_SCRIPTS = loadValidatorScripts();
-const MANIFEST = buildFounderRealityManifest(VALIDATOR_SCRIPTS);
-const MANIFEST_JSON = JSON.stringify(MANIFEST, null, 2);
+
+function buildManifestSafely(): { manifest: ReturnType<typeof buildFounderRealityManifest>; json: string } {
+  try {
+    const manifest = buildFounderRealityManifest(VALIDATOR_SCRIPTS);
+    return { manifest, json: JSON.stringify(manifest, null, 2) };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'manifest assembly failed';
+    const manifest = buildFounderRealityManifest([]);
+    const degraded = {
+      ...manifest,
+      currentStatus: `Command Center manifest degraded — ${message}`,
+      manifestLoadError: message,
+    };
+    return { manifest: degraded, json: JSON.stringify(degraded, null, 2) };
+  }
+}
+
+const { manifest: MANIFEST, json: MANIFEST_JSON } = buildManifestSafely();
 
 function buildProductWorkspaceJson(): string {
   return JSON.stringify(buildProductWorkspaceSnapshot(VALIDATOR_SCRIPTS), null, 2);
@@ -117,6 +134,53 @@ function sendText(res: ServerResponse, status: number, contentType: string, body
   res.end(body);
 }
 
+function parseRequestUrl(req: IncomingMessage): URL {
+  const hostHeader = req.headers.host ?? `localhost:${FOUNDER_REALITY_PORT}`;
+  return new URL(req.url ?? '/', `http://${hostHeader}`);
+}
+
+function sendFounderDashboardSafe(res: ServerResponse, surface: string, run: () => void): void {
+  try {
+    run();
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'dashboard handler failed';
+    sendJson(
+      res,
+      200,
+      JSON.stringify({
+        readOnly: true,
+        informationalOnly: true,
+        degraded: true,
+        loadError: message,
+        ownerModule: surface,
+      }),
+    );
+  }
+}
+
+async function runFounderDashboardSafeAsync(
+  res: ServerResponse,
+  surface: string,
+  run: () => void | Promise<void>,
+): Promise<void> {
+  try {
+    await run();
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'dashboard handler failed';
+    sendJson(
+      res,
+      200,
+      JSON.stringify({
+        readOnly: true,
+        informationalOnly: true,
+        degraded: true,
+        loadError: message,
+        ownerModule: surface,
+      }),
+    );
+  }
+}
+
 function resolvePublicPath(urlPath: string): string | null {
   const safePath = urlPath === '/' ? '/index.html' : urlPath;
   const normalized = normalize(safePath).replace(/^(\.\.[/\\])+/, '');
@@ -136,7 +200,9 @@ async function serveStaticFile(res: ServerResponse, filePath: string): Promise<v
 
 export function createFounderRealityServer() {
   return createServer(async (req: IncomingMessage, res: ServerResponse) => {
-    const urlPath = (req.url ?? '/').split('?')[0] ?? '/';
+    try {
+    const requestUrl = parseRequestUrl(req);
+    const urlPath = requestUrl.pathname;
 
     const forbiddenPaths = ['/api/exec', '/api/run-command', '/api/write', '/api/deploy', '/api/auto-fix'];
     if (forbiddenPaths.some((p) => urlPath.startsWith(p))) {
@@ -285,7 +351,7 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      const profile = url.searchParams.get('profile');
+      const profile = requestUrl.searchParams.get('profile');
       sendFounderReviewJson(res, profile, ROOT_DIR);
       return;
     }
@@ -296,7 +362,7 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendRequirementDiscoveryJson(res, url.searchParams.get('prompt'), url.searchParams.get('domain'));
+      sendRequirementDiscoveryJson(res, requestUrl.searchParams.get('prompt'), requestUrl.searchParams.get('domain'));
       return;
     }
 
@@ -308,8 +374,8 @@ export function createFounderRealityServer() {
       }
       sendVerificationHubJson(
         res,
-        url.searchParams.get('profile'),
-        url.searchParams.get('prompt'),
+        requestUrl.searchParams.get('profile'),
+        requestUrl.searchParams.get('prompt'),
         ROOT_DIR,
       );
       return;
@@ -323,8 +389,8 @@ export function createFounderRealityServer() {
       }
       sendTrustCalibrationJson(
         res,
-        url.searchParams.get('profile'),
-        url.searchParams.get('prompt'),
+        requestUrl.searchParams.get('profile'),
+        requestUrl.searchParams.get('prompt'),
       );
       return;
     }
@@ -337,8 +403,8 @@ export function createFounderRealityServer() {
       }
       sendProductionReadinessJson(
         res,
-        url.searchParams.get('profile'),
-        url.searchParams.get('prompt'),
+        requestUrl.searchParams.get('profile'),
+        requestUrl.searchParams.get('prompt'),
       );
       return;
     }
@@ -351,8 +417,8 @@ export function createFounderRealityServer() {
       }
       sendProductArchitectIntelligenceJson(
         res,
-        url.searchParams.get('profile'),
-        url.searchParams.get('prompt'),
+        requestUrl.searchParams.get('profile'),
+        requestUrl.searchParams.get('prompt'),
       );
       return;
     }
@@ -365,8 +431,8 @@ export function createFounderRealityServer() {
       }
       sendLargeScaleValidationJson(
         res,
-        url.searchParams.get('profile'),
-        url.searchParams.get('refresh') === 'true',
+        requestUrl.searchParams.get('profile'),
+        requestUrl.searchParams.get('refresh') === 'true',
       );
       return;
     }
@@ -377,7 +443,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendWorld2RealInstantiationJson(res, url.searchParams.get('refresh') === 'true');
+      sendFounderDashboardSafe(res, 'world2-real-instantiation-v1', () =>
+        sendWorld2RealInstantiationJson(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -387,7 +455,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendMobileRuntimeValidationJson(res, url.searchParams.get('refresh') === 'true');
+      sendFounderDashboardSafe(res, 'mobile-runtime-validation-at-scale-v1', () =>
+        sendMobileRuntimeValidationJson(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -397,7 +467,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendSelfEvolutionExecutionJson(res, url.searchParams.get('refresh') === 'true');
+      sendFounderDashboardSafe(res, 'self-evolution-execution-v1', () =>
+        sendSelfEvolutionExecutionJson(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -407,7 +479,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendCanonicalOwnershipV2Json(res, url.searchParams.get('refresh') === 'true');
+      sendFounderDashboardSafe(res, 'canonical-ownership-v2', () =>
+        sendCanonicalOwnershipV2Json(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -420,7 +494,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendMultiProjectConcurrentExecutionJson(res, url.searchParams.get('refresh') === 'true');
+      sendFounderDashboardSafe(res, 'multi-project-concurrent-execution-v1', () =>
+        sendMultiProjectConcurrentExecutionJson(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -433,7 +509,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendUnifiedFailureEscalationJson(res, url.searchParams.get('refresh') === 'true');
+      sendFounderDashboardSafe(res, 'unified-failure-escalation-authority-v1', () =>
+        sendUnifiedFailureEscalationJson(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -446,7 +524,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendOperationalEvidenceFreshnessJson(res, url.searchParams.get('refresh') === 'true');
+      sendFounderDashboardSafe(res, 'operational-evidence-freshness-authority-v1', () =>
+        sendOperationalEvidenceFreshnessJson(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -459,7 +539,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendCustomerOperationsJson(res, url.searchParams.get('refresh') === 'true');
+      sendFounderDashboardSafe(res, 'customer-operations-platform-v1', () =>
+        sendCustomerOperationsJson(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -472,7 +554,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendProductionObservabilityJson(res, url.searchParams.get('refresh') === 'true');
+      sendFounderDashboardSafe(res, 'production-observability-platform-v1', () =>
+        sendProductionObservabilityJson(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -485,7 +569,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendContinuousDeploymentJson(res, url.searchParams.get('refresh') === 'true');
+      sendFounderDashboardSafe(res, 'continuous-deployment-pipeline-v1', () =>
+        sendContinuousDeploymentJson(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -498,7 +584,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendEvidenceRevalidationJson(res, url.searchParams.get('refresh') === 'true');
+      sendFounderDashboardSafe(res, 'evidence-revalidation-cycle-v1', () =>
+        sendEvidenceRevalidationJson(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -510,8 +598,8 @@ export function createFounderRealityServer() {
       }
       sendRealBuildExecutionPipelineJson(
         res,
-        url.searchParams.get('profile'),
-        url.searchParams.get('refresh') === 'true',
+        requestUrl.searchParams.get('profile'),
+        requestUrl.searchParams.get('refresh') === 'true',
       );
       return;
     }
@@ -522,7 +610,7 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendRealBuildExecutionPipelineV11Json(res, url.searchParams.get('refresh') === 'true');
+      sendRealBuildExecutionPipelineV11Json(res, requestUrl.searchParams.get('refresh') === 'true');
       return;
     }
 
@@ -532,7 +620,7 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendProductionReadinessGateV1Json(res, url.searchParams.get('refresh') === 'true', ROOT_DIR);
+      sendProductionReadinessGateV1Json(res, requestUrl.searchParams.get('refresh') === 'true', ROOT_DIR);
       return;
     }
 
@@ -542,7 +630,7 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendCloudExecutionPathV1Json(res, url.searchParams.get('refresh') === 'true', ROOT_DIR);
+      sendCloudExecutionPathV1Json(res, requestUrl.searchParams.get('refresh') === 'true', ROOT_DIR);
       return;
     }
 
@@ -552,7 +640,9 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      void sendUvlVerificationExecutionV1Json(res, url.searchParams.get('refresh') === 'true');
+      await runFounderDashboardSafeAsync(res, 'uvl-verification-execution-v1', () =>
+        sendUvlVerificationExecutionV1Json(res, requestUrl.searchParams.get('refresh') === 'true'),
+      );
       return;
     }
 
@@ -635,6 +725,13 @@ export function createFounderRealityServer() {
     } catch {
       sendJson(res, 404, JSON.stringify({ error: 'File not found' }));
     }
+    } catch (err) {
+      if (!res.headersSent) {
+        const message = err instanceof Error ? err.message : 'internal server error';
+        sendJson(res, 500, JSON.stringify({ error: message, degraded: true }));
+      }
+      console.error('[founder-reality-server] request failed:', err);
+    }
   });
 }
 
@@ -648,6 +745,28 @@ export function getFounderRealityManifestJson(): string {
 
 export function startFounderRealityServer(port = FOUNDER_REALITY_PORT, host = FOUNDER_REALITY_HOST): ReturnType<typeof createFounderRealityServer> {
   const server = createFounderRealityServer();
+  server.on('error', (err: NodeJS.ErrnoException) => {
+    if (err.code === 'EADDRINUSE') {
+      const owner = probePortOwner(port);
+      console.error('');
+      console.error(`[founder-reality-server] Port ${port} is already in use (EADDRINUSE).`);
+      if (owner.pids.length > 0) {
+        console.error(`  Existing listener PID(s): ${owner.pids.join(', ')}`);
+        for (const line of owner.commandLines) {
+          console.error(`  ${line}`);
+        }
+      }
+      if (owner.intendedAiDevEngine) {
+        console.error(`  AiDevEngine may already be running — open ${FOUNDER_REALITY_URL}`);
+        console.error('  Stop the existing server before starting another npm run dev instance.');
+      } else {
+        console.error('  Another process owns this port. Free port 4321 or choose a different port.');
+      }
+      console.error('');
+      process.exit(1);
+    }
+    console.error('[founder-reality-server] server error:', err);
+  });
   server.listen(port, host, () => {
     const ping = buildFounderTestPingResponse();
     console.log('');

@@ -1,0 +1,165 @@
+{
+  "generatedAt": "2026-06-25T00:19:33.371Z",
+  "passToken": "COMMAND_CENTER_RUNTIME_HEALTH_PASS",
+  "port": 4323,
+  "baseUrl": "http://127.0.0.1:4323",
+  "portOwner": {
+    "port": 4321,
+    "listening": true,
+    "listenerCount": 1,
+    "pids": [
+      22420
+    ],
+    "intendedAiDevEngine": true,
+    "commandLines": [
+      "pid 22420: \"C:\\Program Files\\nodejs\\node.exe\" --require C:\\Users\\Richa\\Desktop\\DevPulse-V2\\node_modules\\tsx\\dist\\preflight.cjs --import file:///C:/Users/Richa/Desktop/DevPulse-V2/node_modules/tsx/dist/loader.mjs server/founder-reality-server.ts"
+    ]
+  },
+  "duplicateServerRisk": false,
+  "manifestHealthy": true,
+  "manifestDegraded": false,
+  "manifestLoadError": null,
+  "operatorFeedSectionCount": 26,
+  "validatorCount": 470,
+  "criticalEndpoints": [
+    {
+      "path": "/",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 11
+    },
+    {
+      "path": "/api/founder-reality.json",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 3
+    },
+    {
+      "path": "/api/product-workspace.json",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 49
+    },
+    {
+      "path": "/api/brain/health",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 9
+    }
+  ],
+  "dashboardEndpoints": [
+    {
+      "path": "/api/founder/canonical-ownership-v2",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 3
+    },
+    {
+      "path": "/api/founder/customer-operations-platform-v1",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 2
+    },
+    {
+      "path": "/api/founder/production-observability-platform-v1",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 4
+    },
+    {
+      "path": "/api/founder/continuous-deployment-pipeline-v1",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 2
+    },
+    {
+      "path": "/api/founder/evidence-revalidation-cycle-v1",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 2
+    },
+    {
+      "path": "/api/founder/operational-evidence-freshness-authority-v1",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 4
+    },
+    {
+      "path": "/api/founder/unified-failure-escalation-authority-v1",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 1
+    },
+    {
+      "path": "/api/founder/multi-project-concurrent-execution-v1",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 3
+    },
+    {
+      "path": "/api/founder/world2-real-instantiation-v1",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 3
+    },
+    {
+      "path": "/api/founder/self-evolution-execution-v1",
+      "status": 200,
+      "ok": true,
+      "validJson": true,
+      "degraded": false,
+      "loadError": null,
+      "durationMs": 2
+    }
+  ],
+  "stressRequests": 50,
+  "stressFailures": 0,
+  "stressDurationMs": 99,
+  "serverAliveAfterStress": true,
+  "refreshSimulationPasses": 5,
+  "refreshSimulationFailures": 0,
+  "remainingRisks": [],
+  "recommendedActions": [
+    "AiDevEngine already running on http://localhost:4321 — reuse it or stop PID 22420 before restarting"
+  ],
+  "proofStatus": "PROVEN"
+}
