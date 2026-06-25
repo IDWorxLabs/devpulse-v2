@@ -63,6 +63,11 @@ import { sendRealBuildExecutionPipelineV11Json } from './real-build-execution-pi
 import { sendUvlVerificationExecutionV1Json } from './uvl-verification-execution-v1-handler.js';
 import { buildPortfolioInsightsDemo } from './portfolio-demo-data.js';
 import { buildProductWorkspaceSnapshot } from './product-workspace-snapshot.js';
+import {
+  handleProjectRegistryMutation,
+  sendProjectRegistryJson,
+} from './project-registry-handler.js';
+import { loadProjectRegistryV1 } from '../src/project-registry-v1/index.js';
 import { probePortOwner } from './port-probe.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -105,6 +110,7 @@ function buildManifestSafely(): { manifest: ReturnType<typeof buildFounderRealit
 }
 
 const { manifest: MANIFEST, json: MANIFEST_JSON } = buildManifestSafely();
+loadProjectRegistryV1(ROOT_DIR);
 
 function buildProductWorkspaceJson(): string {
   return JSON.stringify(buildProductWorkspaceSnapshot(VALIDATOR_SCRIPTS), null, 2);
@@ -237,6 +243,36 @@ export function createFounderRealityServer() {
 
     if (urlPath === '/api/build/from-prompt' && req.method === 'POST') {
       await handleBuildFromPromptRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/projects/registry.json' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendProjectRegistryJson(res, ROOT_DIR);
+      return;
+    }
+
+    if (urlPath === '/api/projects/create' && req.method === 'POST') {
+      await handleProjectRegistryMutation(req, res, 'create', ROOT_DIR);
+      return;
+    }
+
+    if (urlPath === '/api/projects/rename' && req.method === 'POST') {
+      await handleProjectRegistryMutation(req, res, 'rename', ROOT_DIR);
+      return;
+    }
+
+    if (urlPath === '/api/projects/archive' && req.method === 'POST') {
+      await handleProjectRegistryMutation(req, res, 'archive', ROOT_DIR);
+      return;
+    }
+
+    if (urlPath === '/api/projects/set-active' && req.method === 'POST') {
+      await handleProjectRegistryMutation(req, res, 'set-active', ROOT_DIR);
       return;
     }
 

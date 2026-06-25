@@ -4,5 +4,6 @@ build/
 coverage/
 .playwright/
 .generated-builder-workspaces/
+.aidevengine/
 *.log
 .env

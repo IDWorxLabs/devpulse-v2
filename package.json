@@ -353,6 +353,7 @@
     "validate:founder-authority-suite": "tsx scripts/validation-runtime-orchestrator.ts",
     "validate:command-center-runtime-shell": "tsx scripts/validate-command-center-runtime-shell.ts",
     "validate:command-center-manifest-stability": "tsx scripts/validate-command-center-manifest-stability.ts",
+    "validate:project-registry-consistency-v1": "tsx scripts/validate-project-registry-consistency-v1.ts",
     "validate:command-center-runtime-health": "tsx scripts/validate-command-center-runtime-health.ts",
     "validate:command-center-brain": "tsx scripts/validate-command-center-brain.ts",
     "validate:command-center-brain-runtime": "tsx scripts/validate-command-center-brain-runtime.ts",

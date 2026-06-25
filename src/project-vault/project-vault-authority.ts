@@ -85,6 +85,36 @@ export class DevPulseV2ProjectVaultAuthority {
     return cloneProject(project);
   }
 
+  ensureProjectWithId(input: { projectId: string; name: string; summary?: string }): ProjectRecord {
+    const existing = this.projects.get(input.projectId);
+    if (existing) {
+      return cloneProject(existing);
+    }
+    const now = Date.now();
+    const project: ProjectRecord = {
+      projectId: input.projectId,
+      name: input.name.trim(),
+      createdAt: now,
+      updatedAt: now,
+      status: 'ACTIVE',
+      phase: DEFAULT_PROJECT_PHASE,
+      summary: (input.summary ?? '').trim() || `Workspace project — ${input.name.trim()}`,
+      facts: [],
+      warnings: [],
+      errors: [],
+    };
+    this.projects.set(project.projectId, project);
+    return cloneProject(project);
+  }
+
+  renameProject(projectId: string, name: string): ProjectRecord | null {
+    const project = this.projects.get(projectId);
+    if (!project) return null;
+    project.name = name.trim();
+    project.updatedAt = Date.now();
+    return cloneProject(project);
+  }
+
   getProject(projectId: string): ProjectRecord | null {
     const project = this.projects.get(projectId);
     return project ? cloneProject(project) : null;

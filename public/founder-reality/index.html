@@ -173,6 +173,25 @@
         </div>
       </div>
 
+      <div class="project-name-dialog" id="project-name-dialog" hidden aria-hidden="true" role="dialog" aria-labelledby="project-name-dialog-title">
+        <div class="project-name-dialog-backdrop" id="project-name-dialog-backdrop"></div>
+        <div class="project-name-dialog-panel">
+          <div class="project-name-dialog-header">
+            <h3 id="project-name-dialog-title">Create New Project</h3>
+            <button type="button" class="project-name-dialog-close" id="project-name-dialog-close" aria-label="Close dialog">×</button>
+          </div>
+          <form id="project-name-form" class="project-name-form">
+            <label for="project-name-input">Project name</label>
+            <input type="text" id="project-name-input" name="projectName" maxlength="120" placeholder="LISA, Asgard Dynamics Website, CRM Platform…" autocomplete="off" required />
+            <p class="hint">Give your project a clear name. You can rename it later from Projects.</p>
+            <div class="project-name-dialog-actions">
+              <button type="button" class="btn-secondary" id="project-name-skip">Use default name</button>
+              <button type="submit" class="btn-primary" id="project-name-submit">Create Project</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       <div class="founder-test-panel" id="founder-test-panel" hidden>
         <div class="founder-test-panel-header">
           <h3>Founder Test Results</h3>

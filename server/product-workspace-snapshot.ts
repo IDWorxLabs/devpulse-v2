@@ -44,6 +44,7 @@ import { getDevPulseV2ProjectVaultAuthority } from '../src/project-vault/index.j
 import { ALL_UVL_ROWS } from '../src/unified-verification-lab/uvl-row-registry.js';
 import { buildPortfolioInsightsDemo, type PortfolioInsightsDemo } from './portfolio-demo-data.js';
 import { resolveCanonicalLivePreviewState } from '../src/one-prompt-live-preview/canonical-live-preview-state.js';
+import { buildProjectRegistrySummary, loadProjectRegistryV1 } from '../src/project-registry-v1/index.js';
 import {
   getActiveProjectId,
   listMultiProjectWorkspaces,
@@ -182,7 +183,15 @@ export interface ProductWorkspaceSnapshot {
   projects: {
     count: number;
     activeCount: number;
-    items: Array<{ projectId: string; name: string; status: string; summary: string }>;
+    items: Array<{
+      projectId: string;
+      name: string;
+      status: string;
+      summary: string;
+      createdAt?: string;
+      lastActivityAt?: string;
+      isActive?: boolean;
+    }>;
   };
   notifications: {
     items: string[];
@@ -211,7 +220,9 @@ export function buildProductWorkspaceSnapshot(
   const executionConnected = resolvedExecution.executionConnected;
   const vault = getDevPulseV2ProjectVaultAuthority();
   const vaultState = vault.getVaultState();
-  const projects = vault.listProjects();
+  const vaultProjects = vault.listProjects();
+  const registrySummary = buildProjectRegistrySummary(rootDir);
+  loadProjectRegistryV1(rootDir);
 
   const sessions = listPreviewSessions();
   const targets = listPreviewTargets();
@@ -279,13 +290,20 @@ export function buildProductWorkspaceSnapshot(
       latestProjectId: vaultState.latestProjectId,
       projectCount: vaultState.projectCount,
       projectName:
-        projects.find((p) => p.projectId === vaultState.latestProjectId)?.name ?? projects[0]?.name ?? null,
+        registrySummary.items.find((p) => p.projectId === registrySummary.activeProjectId)?.name ??
+        vaultProjects.find((p) => p.projectId === vaultState.latestProjectId)?.name ??
+        vaultProjects[0]?.name ??
+        null,
       recentChangeSummary: (() => {
         const latest =
-          projects.find((p) => p.projectId === vaultState.latestProjectId) ?? projects[0] ?? null;
+          registrySummary.items.find((p) => p.isActive) ??
+          vaultProjects.find((p) => p.projectId === vaultState.latestProjectId) ??
+          vaultProjects[0] ??
+          null;
         if (!latest) return null;
-        const facts = latest.facts.slice(-1).map((f) => `${f.label}: ${f.value}`);
-        return facts.length > 0 ? `Latest known change: ${facts[0]}` : latest.summary;
+        if ('summary' in latest && latest.summary) return latest.summary;
+        const facts = (latest as { facts?: Array<{ label: string; value: string }> }).facts?.slice(-1).map((f) => `${f.label}: ${f.value}`);
+        return facts && facts.length > 0 ? `Latest known change: ${facts[0]}` : null;
       })(),
       generatedAt: Date.now(),
       activeProjectId,
@@ -295,7 +313,7 @@ export function buildProductWorkspaceSnapshot(
   const livePreviewBlock = canonicalLivePreview.livePreview;
 
   const nextSuggestedActions: string[] = [];
-  if (projects.length === 0) {
+  if (registrySummary.count === 0) {
     nextSuggestedActions.push('Start or select a project in Command Center to populate Project Memory.');
   } else {
     nextSuggestedActions.push('Ask Command Center about project status, risks, or next build steps.');
@@ -326,7 +344,7 @@ export function buildProductWorkspaceSnapshot(
       latestProjectId: vaultState.latestProjectId,
       warnings: vaultState.warnings,
     },
-    projects: projects.map((p) => ({
+    projects: vaultProjects.map((p) => ({
       projectId: p.projectId,
       name: p.name,
       status: p.status,
@@ -366,13 +384,16 @@ export function buildProductWorkspaceSnapshot(
       executionConnected,
     },
     projects: {
-      count: projects.length,
-      activeCount: vaultState.activeProjectCount,
-      items: projects.map((p) => ({
+      count: registrySummary.count,
+      activeCount: registrySummary.activeCount,
+      items: registrySummary.items.map((p) => ({
         projectId: p.projectId,
         name: p.name,
         status: p.status,
         summary: p.summary,
+        createdAt: p.createdAt,
+        lastActivityAt: p.lastActivityAt,
+        isActive: p.isActive,
       })),
     },
     notifications: { items: [] as string[] },

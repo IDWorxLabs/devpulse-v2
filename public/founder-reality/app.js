@@ -530,25 +530,158 @@
     }
   }
 
-  function createNewProjectTab(name) {
-    projectTabCounter += 1;
-    var projectId = 'project-' + Date.now() + '-' + projectTabCounter;
-    var projectName = name || 'Project ' + projectTabCounter;
-    multiProjectWorkspaces.push({
-      projectId: projectId,
-      projectName: projectName,
-      workspacePath: null,
-      chatThreadId: 'chat-' + projectId,
-      previewUrl: null,
-      buildProfile: null,
-      buildStatus: 'IDLE',
-      lastUpdated: new Date().toISOString(),
-      active: false,
-      devServerPort: null,
-      buildId: null,
+  function formatProjectTimestamp(iso) {
+    if (!iso) return 'Unknown';
+    try {
+      return new Date(iso).toLocaleString();
+    } catch (err) {
+      return String(iso);
+    }
+  }
+
+  function showProjectNameDialog() {
+    var dialog = el('project-name-dialog');
+    var input = el('project-name-input');
+    if (!dialog) return;
+    dialog.removeAttribute('hidden');
+    dialog.setAttribute('aria-hidden', 'false');
+    if (input) {
+      input.value = '';
+      setTimeout(function () {
+        input.focus();
+      }, 0);
+    }
+  }
+
+  function hideProjectNameDialog() {
+    var dialog = el('project-name-dialog');
+    if (!dialog) return;
+    dialog.setAttribute('hidden', '');
+    dialog.setAttribute('aria-hidden', 'true');
+  }
+
+  function applyProjectRegistryResponse(payload) {
+    if (!payload) return;
+    if (Array.isArray(payload.multiProjectWorkspaces)) {
+      multiProjectWorkspaces = payload.multiProjectWorkspaces.slice();
+    }
+    workspaceData = workspaceData || {};
+    if (payload.projects) {
+      workspaceData.projects = payload.projects;
+    }
+    if (payload.activeProjectId) {
+      workspaceData.activeProjectId = payload.activeProjectId;
+      switchActiveProject(payload.activeProjectId, {
+        skipChatSave: true,
+        skipChatRestore: false,
+        skipViewSwitch: true,
+      });
+    } else {
+      renderWorkspaceTabs('workspace-tabs');
+      renderWorkspaceTabs('preview-workspace-tabs');
+      updateWorkspaceLinkedIndicator();
+    }
+    renderProductSurfaces();
+  }
+
+  function mutateProjectRegistry(action, body) {
+    return fetch('/api/projects/' + action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body || {}),
+    }).then(function (res) {
+      return res.text().then(function (text) {
+        var json;
+        try {
+          json = JSON.parse(text);
+        } catch (parseErr) {
+          throw new Error('Invalid registry response');
+        }
+        if (!res.ok || json.ok === false) {
+          throw new Error(json.error || 'Registry request failed (' + res.status + ')');
+        }
+        applyProjectRegistryResponse(json);
+        return json;
+      });
     });
-    switchActiveProject(projectId);
-    pushNotification('Created project tab — ' + projectName);
+  }
+
+  function createProjectViaRegistry(name) {
+    var trimmed = String(name || '').trim();
+    if (!trimmed) {
+      projectTabCounter += 1;
+      trimmed = 'Project ' + projectTabCounter;
+    }
+    return mutateProjectRegistry('create', { name: trimmed }).then(function (json) {
+      pushNotification('Created project — ' + (json.project && json.project.name ? json.project.name : trimmed));
+      hideProjectNameDialog();
+      return loadProductWorkspace(true);
+    });
+  }
+
+  function loadProjectRegistryState() {
+    return fetch('/api/projects/registry.json', { method: 'GET', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('registry HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (payload) {
+        applyProjectRegistryResponse(payload);
+      });
+  }
+
+  function wireProjectRegistryActions(container) {
+    if (!container || container.getAttribute('data-registry-bound') === 'true') return;
+    container.setAttribute('data-registry-bound', 'true');
+    container.addEventListener('click', function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest('[data-project-action]') : null;
+      if (!btn) return;
+      var action = btn.getAttribute('data-project-action');
+      var projectId = btn.getAttribute('data-project-id');
+      if (!projectId) return;
+      if (action === 'open' || action === 'set-active') {
+        mutateProjectRegistry('set-active', { projectId: projectId })
+          .then(function () {
+            switchView('command-center');
+            return loadProductWorkspace(true);
+          })
+          .catch(function (err) {
+            pushNotification('Could not activate project — ' + err.message);
+          });
+        return;
+      }
+      if (action === 'rename') {
+        var currentName = btn.getAttribute('data-project-name') || '';
+        var nextName = window.prompt('Rename project', currentName);
+        if (!nextName || !nextName.trim() || nextName.trim() === currentName) return;
+        mutateProjectRegistry('rename', { projectId: projectId, name: nextName.trim() })
+          .then(function () {
+            return loadProductWorkspace(true);
+          })
+          .catch(function (err) {
+            pushNotification('Could not rename project — ' + err.message);
+          });
+        return;
+      }
+      if (action === 'archive') {
+        if (!window.confirm('Archive this project? It will be hidden from the active project list.')) return;
+        mutateProjectRegistry('archive', { projectId: projectId })
+          .then(function () {
+            return loadProductWorkspace(true);
+          })
+          .catch(function (err) {
+            pushNotification('Could not archive project — ' + err.message);
+          });
+      }
+    });
+  }
+
+  function createNewProjectTab(name) {
+    if (name && String(name).trim()) {
+      createProjectViaRegistry(name);
+      return;
+    }
+    showProjectNameDialog();
   }
 
   function mergeMultiProjectWorkspacesFromResponse(nextSessions) {
@@ -2560,7 +2693,7 @@
     var html = renderProductCard(
       'Your Projects',
         '<p class="founder-path-guidance">Start by creating a project or opening an existing one.</p>' +
-        '<p class="product-lead">Active workspaces and applications you are building now — not stored vault knowledge in Project Memory.</p>' +
+        '<p class="product-lead">Active workspaces and applications you are building now — synced with Command Center.</p>' +
         '<p><strong>Total:</strong> ' +
         String((ws && ws.projects && ws.projects.count) || 0) +
         ' · <strong>Active:</strong> ' +
@@ -2571,29 +2704,70 @@
       html +=
         renderProductCard(
           'Get Started',
-          '<p class="empty-state">No projects in memory yet.</p>' +
-            '<p>Start or select a project in Command Center to begin planning and building.</p>',
+          '<p class="empty-state">No projects in the registry yet.</p>' +
+            '<p>Click <strong>+ New project</strong> in Command Center to name and create your first project.</p>' +
+            '<p><button type="button" class="btn-primary" id="projects-create-first">Create Project</button></p>',
         );
     } else {
       html += '<div class="project-grid">';
       for (var i = 0; i < projects.length; i += 1) {
         var p = projects[i];
+        var activeBadge = p.isActive
+          ? '<span class="badge badge-complete">Active</span>'
+          : '<span class="badge">Inactive</span>';
         html +=
           '<section class="card project-card-item">' +
           '<h3>' +
           escapeHtml(p.name) +
           '</h3>' +
-          '<p class="project-meta"><span class="badge">' +
-          escapeHtml(p.status) +
+          '<p class="project-meta">' +
+          activeBadge +
+          ' <span class="badge">' +
+          escapeHtml(p.status || 'ACTIVE') +
           '</span></p>' +
+          '<p class="project-registry-meta"><strong>Created:</strong> ' +
+          escapeHtml(formatProjectTimestamp(p.createdAt)) +
+          '<br><strong>Last activity:</strong> ' +
+          escapeHtml(formatProjectTimestamp(p.lastActivityAt)) +
+          '</p>' +
           '<p>' +
           escapeHtml(p.summary || 'No summary yet.') +
           '</p>' +
+          '<div class="project-registry-actions">' +
+          '<button type="button" class="btn-secondary" data-project-action="open" data-project-id="' +
+          escapeHtml(p.projectId) +
+          '" data-project-name="' +
+          escapeHtml(p.name) +
+          '">Open Project</button>' +
+          (p.isActive
+            ? ''
+            : '<button type="button" class="btn-secondary" data-project-action="set-active" data-project-id="' +
+              escapeHtml(p.projectId) +
+              '" data-project-name="' +
+              escapeHtml(p.name) +
+              '">Set Active</button>') +
+          '<button type="button" class="btn-secondary" data-project-action="rename" data-project-id="' +
+          escapeHtml(p.projectId) +
+          '" data-project-name="' +
+          escapeHtml(p.name) +
+          '">Rename</button>' +
+          '<button type="button" class="btn-secondary" data-project-action="archive" data-project-id="' +
+          escapeHtml(p.projectId) +
+          '" data-project-name="' +
+          escapeHtml(p.name) +
+          '">Archive</button>' +
+          '</div>' +
           '</section>';
       }
       html += '</div>';
     }
     container.innerHTML = html;
+    var createFirst = el('projects-create-first');
+    if (createFirst) {
+      createFirst.addEventListener('click', function () {
+        showProjectNameDialog();
+      });
+    }
   }
 
   function renderAutonomousBuilderSurface(ws) {
@@ -11398,9 +11572,40 @@
     var workspaceTabAdd = el('workspace-tab-add');
     if (workspaceTabAdd) {
       workspaceTabAdd.addEventListener('click', function () {
-        createNewProjectTab('Project ' + (projectTabCounter + 1));
+        showProjectNameDialog();
       });
     }
+
+    var projectNameForm = el('project-name-form');
+    var projectNameSkip = el('project-name-skip');
+    var projectNameClose = el('project-name-dialog-close');
+    var projectNameBackdrop = el('project-name-dialog-backdrop');
+    if (projectNameForm) {
+      projectNameForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var input = el('project-name-input');
+        createProjectViaRegistry(input ? input.value : '').catch(function (err) {
+          pushNotification('Could not create project — ' + err.message);
+        });
+      });
+    }
+    if (projectNameSkip) {
+      projectNameSkip.addEventListener('click', function () {
+        projectTabCounter += 1;
+        createProjectViaRegistry('Project ' + projectTabCounter).catch(function (err) {
+          pushNotification('Could not create project — ' + err.message);
+        });
+      });
+    }
+    if (projectNameClose) {
+      projectNameClose.addEventListener('click', hideProjectNameDialog);
+    }
+    if (projectNameBackdrop) {
+      projectNameBackdrop.addEventListener('click', hideProjectNameDialog);
+    }
+
+    wireProjectRegistryActions(el('projects-surface'));
+
     if (form) {
       form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -11800,6 +12005,9 @@
     });
 
   loadProductWorkspace(false)
+    .then(function () {
+      return loadProjectRegistryState();
+    })
     .then(function () {
       return checkBrainHealth();
     })
