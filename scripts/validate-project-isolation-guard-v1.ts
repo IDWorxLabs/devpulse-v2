@@ -214,6 +214,7 @@ function seedIsolationFixtures(ids: { smartQrId: string; expenseId: string }, te
       livePreviewAvailable: true,
       failureReason: null,
       featureSignals: null,
+      materializationManifest: null,
       updatedAt: stamp,
     },
   });
@@ -240,6 +241,7 @@ function seedIsolationFixtures(ids: { smartQrId: string; expenseId: string }, te
       livePreviewAvailable: true,
       failureReason: null,
       featureSignals: null,
+      materializationManifest: null,
       updatedAt: stamp,
     },
   });

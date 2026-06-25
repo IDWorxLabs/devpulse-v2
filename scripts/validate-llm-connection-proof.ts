@@ -66,6 +66,7 @@ function sampleBuildResult(overrides: Partial<OnePromptLivePreviewBuildResult> =
     livePreviewAvailable: true,
     failureReason: null,
     featureSignals: null,
+    materializationManifest: null,
     updatedAt: new Date().toISOString(),
     ...overrides,
   };

@@ -102,6 +102,16 @@ export function materializeBuildContractExpectations(
 
   expectedArtifacts.push({
     readOnly: true,
+    artifactId: `${contract.contractId}-generated-app-manifest`,
+    buildUnitId: contract.buildUnits[0]?.unitId ?? 'unit-001',
+    contractId: contract.contractId,
+    category: 'configuration',
+    expectedPath: `${workspaceRoot}/.generated-app-manifest.json`.replace(/\\/g, '/'),
+    layer: 'VERIFICATION',
+  });
+
+  expectedArtifacts.push({
+    readOnly: true,
     artifactId: `${contract.contractId}-manifest`,
     buildUnitId: contract.buildUnits[0]?.unitId ?? 'unit-001',
     contractId: contract.contractId,

@@ -31,17 +31,10 @@ import {
 import { buildLlmConnectionProof } from '../llm-connection-proof-v1/index.js';
 import type { BuildResultLlmResponseSource } from '../llm-connection-proof-v1/index.js';
 import { buildUnifiedBuildConversationDiagnostics } from './unified-build-conversation-diagnostics.js';
+import { chatContainsMechanicalRuntimeDump } from '../execution-trace/index.js';
+import type { ExecutionTraceEvidenceBundle } from '../execution-trace/execution-trace-types.js';
 
 const BUILD_RESULT_LLM_CALL_FUNCTION = 'createLlmProvider(config).chat';
-
-function looksLikeMechanicalTemplate(text: string): boolean {
-  const markers = ['Build run:', 'Workspace:', 'Profile:', 'Build execution started for project'];
-  let hits = 0;
-  for (const marker of markers) {
-    if (text.includes(marker)) hits += 1;
-  }
-  return hits >= 2;
-}
 
 function buildTemplateFallbackBrainResponse(templateFallback: string, reason: string): string {
   return `${BUILD_RESULT_TEMPLATE_FALLBACK_MARKER}\n\n${templateFallback}\n\n_${reason}_`;
@@ -141,7 +134,10 @@ export function buildBuildResultConversationalContext(input: {
     architectureSummary: buildRun?.architectureSummary ?? null,
     planTaskCount: buildRun?.planTaskCount ?? null,
     buildStage: buildRun?.stage ?? null,
-    generatedFilesCount: null,
+    generatedFilesCount:
+      input.buildResult.materializationManifest?.generatedFilesCount ??
+      input.buildResult.materializationManifest?.generatedFiles.length ??
+      null,
     classification,
     templateFallback: input.templateFallback,
   };
@@ -158,6 +154,9 @@ export async function applyBuildResultConversationalIntelligence(
     templateFallback,
   });
   const profileMismatchEvidence = hasProfileMismatchEvidence(context);
+  const executionTraceEvidence = input.payload.executionTraceEvidence as
+    | ExecutionTraceEvidenceBundle
+    | undefined;
 
   const llmStatus = getLlmProviderStatus();
   const basePayload = {
@@ -176,7 +175,11 @@ export async function applyBuildResultConversationalIntelligence(
   };
 
   const systemInstruction = buildBuildResultConversationalSystemInstructions(context, rootDir);
-  const userMessage = buildBuildResultConversationalUserMessage(context, input.buildResult);
+  const userMessage = buildBuildResultConversationalUserMessage(
+    context,
+    input.buildResult,
+    executionTraceEvidence ?? null,
+  );
   const structuredEvidencePrompt = promptUsesStructuredEvidence(userMessage);
 
   if (!llmStatus.connected) {
@@ -262,9 +265,9 @@ export async function applyBuildResultConversationalIntelligence(
       provider: llmStatus.provider,
       model: llmStatus.model,
       ...metadataFromContextPackage(contextPackage),
-      judgeScore: looksLikeMechanicalTemplate(conversationalAnswer) ? 60 : 85,
-      warnings: looksLikeMechanicalTemplate(conversationalAnswer)
-        ? ['LLM response resembled template — consider review']
+      judgeScore: chatContainsMechanicalRuntimeDump(conversationalAnswer) ? 60 : 85,
+      warnings: chatContainsMechanicalRuntimeDump(conversationalAnswer)
+        ? ['LLM response contained mechanical runtime dump markers — consider review']
         : [],
       repaired: false,
       repairAttempted: false,

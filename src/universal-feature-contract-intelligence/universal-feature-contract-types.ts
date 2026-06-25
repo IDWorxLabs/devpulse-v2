@@ -17,7 +17,10 @@ export type UniversalAppProfile =
   | 'PROJECT_MANAGEMENT_WEB_V1'
   | 'EXPENSE_TRACKER_WEB_V1'
   | 'FINANCE_TRACKER_WEB_V1'
-  | 'QR_APP';
+  | 'QR_APP'
+  | 'BOOKING_WEB_V1'
+  | 'HABIT_TRACKER_WEB_V1'
+  | 'GENERIC_CUSTOM_APP_V1';
 
 export interface UniversalFeatureEntity {
   id: string;

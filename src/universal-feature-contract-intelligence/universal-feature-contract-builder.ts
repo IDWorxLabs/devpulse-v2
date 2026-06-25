@@ -3,6 +3,7 @@
  */
 
 import { rankBuildProfiles } from '../build-profile-classification/index.js';
+import { extractPromptAppTitle } from '../universal-prompt-to-app-materialization/prompt-app-metadata.js';
 import type {
   BuildUniversalFeatureContractInput,
   UniversalAppProfile,
@@ -353,7 +354,11 @@ function buildProfileContract(input: {
       const transaction = entity('transaction', 'Transaction', 'Transactions', 'Transactions', true);
       const category = entity('category', 'Category', 'Categories', 'Categories', false);
       const productName =
-        input.profile === 'EXPENSE_TRACKER_WEB_V1' ? 'Expense Tracker' : 'Finance Tracker';
+        extractPromptAppTitle(input.rawPrompt) !== 'Custom App'
+          ? extractPromptAppTitle(input.rawPrompt)
+          : input.profile === 'EXPENSE_TRACKER_WEB_V1'
+            ? 'Expense Tracker'
+            : 'Finance Tracker';
       return {
         contractVersion: '1.0',
         contractId: input.contractId,
@@ -416,7 +421,9 @@ function buildProfileContract(input: {
         contractVersion: '1.0',
         contractId: input.contractId,
         productProfile: input.profile,
-        productName: 'QR App',
+        productName: extractPromptAppTitle(input.rawPrompt) !== 'Custom App'
+          ? extractPromptAppTitle(input.rawPrompt)
+          : 'QR App',
         generatedAt,
         sourcePrompt: input.rawPrompt,
         entities: [qrCode],
@@ -442,6 +449,43 @@ function buildProfileContract(input: {
           { id: 'qr-generated', entityId: qrCode.id, label: 'QR code generated', required: true },
           { id: 'qr-scannable', entityId: qrCode.id, label: 'QR code is scannable', required: true },
         ],
+      };
+    }
+
+    case 'BOOKING_WEB_V1': {
+      const appointment = entity('appointment', 'Appointment', 'Appointments', 'Bookings', true);
+      return {
+        contractVersion: '1.0',
+        contractId: input.contractId,
+        productProfile: input.profile,
+        productName: extractPromptAppTitle(input.rawPrompt),
+        generatedAt,
+        sourcePrompt: input.rawPrompt,
+        entities: [appointment],
+        actions: crudActions(appointment),
+        rules: [{ id: 'appointment-slot-required', entityId: appointment.id, label: 'Appointment requires a time slot', required: true }],
+        workflows: [{ id: 'booking-flow', entityId: appointment.id, label: 'Select → Confirm → Schedule', stages: ['selected', 'confirmed', 'scheduled'], required: true }],
+        outcomes: [{ id: 'appointment-scheduled', entityId: appointment.id, label: 'Appointment appears on calendar', required: true }],
+      };
+    }
+
+    case 'HABIT_TRACKER_WEB_V1':
+    case 'GENERIC_CUSTOM_APP_V1': {
+      const habit = entity('habit', 'Habit', 'Habits', 'Habits', true);
+      return {
+        contractVersion: '1.0',
+        contractId: input.contractId,
+        productProfile: input.profile,
+        productName: extractPromptAppTitle(input.rawPrompt),
+        generatedAt,
+        sourcePrompt: input.rawPrompt,
+        entities: [habit],
+        actions: crudActions(habit, [
+          { id: 'track-streak', entityId: habit.id, verb: 'complete', label: 'Track Streak', required: includesAny(lower, ['streak']) },
+        ]),
+        rules: [{ id: 'habit-name-required', entityId: habit.id, label: 'Habit must have a name', required: true }],
+        workflows: [{ id: 'daily-routine', entityId: habit.id, label: 'Check-in → Streak', stages: ['pending', 'completed'], required: true }],
+        outcomes: [{ id: 'habit-tracked', entityId: habit.id, label: 'Habit check-in recorded', required: true }],
       };
     }
 

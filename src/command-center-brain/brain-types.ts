@@ -299,7 +299,10 @@ export interface BrainResponseResult {
   unifiedVerificationResponses?: import('../unified-verification-entry/unified-verification-types.js').VerificationResponse[];
   llmChatBrainDiagnostics?: import('../llm-chat-brain/llm-chat-types.js').LlmChatBrainDiagnostics;
   pipelineStages: BrainPipelineStage[];
+  /** @deprecated Use executionTraceEvents — retained for backward compatibility. */
   operatorFeedEvents: OperatorFeedEvent[];
+  executionTraceEvents: import('../execution-trace/execution-trace-types.js').ExecutionTraceEvent[];
+  executionTraceEvidence?: import('../execution-trace/execution-trace-types.js').ExecutionTraceEvidenceBundle;
   confirmation: BrainConfirmation;
   createdAt: number;
 }

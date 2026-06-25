@@ -2,7 +2,7 @@
  * One-prompt build orchestrator — planning → materialization → build → live preview.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { execSync } from 'node:child_process';
 import { getDevPulseV2AiDevEngineAuthority } from '../aidev-engine/aidev-engine-authority.js';
@@ -39,6 +39,28 @@ import {
 import { resolveProjectRegistryRootDir } from '../project-registry-v1/project-registry-v1-store.js';
 import { upsertProjectContextMetadata } from '../project-context-alignment-v1/project-context-metadata-store.js';
 import { assertWorkspacePathBelongsToProject } from '../project-isolation-guard-v1/index.js';
+import {
+  validateUniversalAppMaterialization,
+  type MaterializationValidationResult,
+} from '../universal-prompt-to-app-materialization/index.js';
+import { rankBuildProfiles } from '../build-profile-classification/index.js';
+import {
+  getProfileFeatureDefinition,
+  resolveMaterializationProfile,
+} from '../universal-prompt-to-app-materialization/profile-feature-map.js';
+import { summarizePrompt } from '../universal-prompt-to-app-materialization/prompt-app-metadata.js';
+import type { GeneratedAppManifest } from '../universal-prompt-to-app-materialization/generated-app-manifest.js';
+import {
+  completeMaterializationEvidence,
+  createEmptyMaterializationTimings,
+  extractExecCommandFailure,
+  finalizeForensicManifestFailure,
+  initializeForensicManifest,
+  roundDurationMs,
+  updateForensicManifestStage,
+} from '../materialization-evidence/index.js';
+import type { ForensicBuildStage, ForensicManifestFailureInput } from '../materialization-evidence/forensic-manifest-types.js';
+import { performance } from 'node:perf_hooks';
 import {
   getActiveProjectId,
   getBuildResultForProject,
@@ -99,6 +121,7 @@ function composeFailureResult(input: {
   materializationProofLevel?: string | null;
   npmInstallOk?: boolean;
   npmBuildOk?: boolean;
+  materializationManifest?: GeneratedAppManifest | null;
 }): OnePromptLivePreviewBuildResult {
   return {
     readOnly: true,
@@ -120,17 +143,48 @@ function composeFailureResult(input: {
     livePreviewAvailable: false,
     failureReason: input.failureReason,
     featureSignals: null,
+    materializationManifest: input.materializationManifest ?? null,
     updatedAt: new Date().toISOString(),
   };
 }
 
-function inspectUniversalFeatureSignals(workspaceDir: string): boolean {
-  const candidates = [
-    join(workspaceDir, 'src/App.tsx'),
-    join(workspaceDir, 'src/features/universal-feature.tsx'),
-    join(workspaceDir, 'src/gpcg/GeneralPurposeManifest.json'),
-  ];
-  return candidates.some((path) => existsSync(path));
+function registerFailedBuild(input: {
+  projectId: string;
+  projectName: string;
+  workspaceDir: string;
+  failure: ForensicManifestFailureInput;
+  result: Parameters<typeof composeFailureResult>[0];
+}): OnePromptLivePreviewBuildResult {
+  const manifest = finalizeForensicManifestFailure(input.workspaceDir, input.failure);
+  return registerBuildOutcome(input.projectId, input.projectName, {
+    ...composeFailureResult(input.result),
+    materializationManifest: manifest,
+  });
+}
+
+function touchForensicStage(
+  workspaceDir: string,
+  update: Parameters<typeof updateForensicManifestStage>[1],
+): void {
+  updateForensicManifestStage(workspaceDir, update);
+}
+
+function inspectUniversalFeatureSignals(
+  workspaceDir: string,
+  prompt: string,
+  generatedProfile: OnePromptLivePreviewBuildResult['generatedProfile'],
+  projectId: string,
+  projectName: string,
+  buildId: string,
+): MaterializationValidationResult {
+  return validateUniversalAppMaterialization({
+    workspaceDir,
+    rawPrompt: prompt,
+    selectedProfile: generatedProfile,
+    projectId,
+    projectName,
+    buildRunId: buildId,
+  });
 }
 
 function persistBuildIntentRun(input: {
@@ -203,11 +257,46 @@ export async function runOnePromptLivePreviewBuild(
   const resolvedProfile =
     resolveBuildIntentProfile(prompt) ?? resolveGeneratedAppProfile(prompt);
 
+  const workspaceRel = `${GENERATED_BUILDER_WORKSPACES_DIR}/${projectId}`.replace(/\\/g, '/');
+  assertWorkspacePathBelongsToProject(workspaceRel, projectId);
+  const workspaceDir = join(input.projectRootDir, workspaceRel);
+  mkdirSync(workspaceDir, { recursive: true });
+
+  const ranking = rankBuildProfiles(prompt);
+  const materializationProfile = resolveMaterializationProfile(
+    resolvedProfile ?? 'GENERIC_CUSTOM_APP_V1',
+    prompt,
+  );
+  const definition = getProfileFeatureDefinition(materializationProfile, prompt);
+
   if (!isOnePromptBuildRequest(prompt) && !resolvedProfile) {
-    return registerBuildOutcome(
+    initializeForensicManifest({
+      workspaceDir,
+      workspacePath: workspaceRel,
       projectId,
       projectName,
-      composeFailureResult({
+      buildRunId: buildId,
+      prompt,
+      selectedProfile: String(materializationProfile),
+      expectedAppType: definition.expectedAppType,
+      promptSummary: summarizePrompt(prompt),
+      confidence: ranking.confidence,
+      featureModules: definition.featureModules,
+      routes: definition.routes,
+      fallbackUsed: Boolean(ranking.fallbackReason),
+    });
+    return registerFailedBuild({
+      projectId,
+      projectName,
+      workspaceDir,
+      failure: {
+        failureStage: 'PROFILE_SELECTED',
+        failureReason:
+          'Build intent detected but no supported application profile matched this prompt. Add product type details (e.g. expense tracker, CRM, task tracker).',
+        status: 'ABORTED',
+        lastSuccessfulStage: 'STARTED',
+      },
+      result: {
         buildId,
         projectId,
         projectName,
@@ -215,10 +304,40 @@ export async function runOnePromptLivePreviewBuild(
         source,
         failureReason:
           'Build intent detected but no supported application profile matched this prompt. Add product type details (e.g. expense tracker, CRM, task tracker).',
-      }),
-    );
+        workspaceId: projectId,
+        workspacePath: workspaceRel,
+      },
+    });
   }
 
+  const buildStartedAt = performance.now();
+  const timings = createEmptyMaterializationTimings();
+  let lastSuccessfulStage: ForensicBuildStage = 'STARTED';
+
+  initializeForensicManifest({
+    workspaceDir,
+    workspacePath: workspaceRel,
+    projectId,
+    projectName,
+    buildRunId: buildId,
+    prompt,
+    selectedProfile: String(resolvedProfile),
+    expectedAppType: definition.expectedAppType,
+    promptSummary: summarizePrompt(prompt),
+    confidence: ranking.confidence,
+    featureModules: definition.featureModules,
+    routes: definition.routes,
+    fallbackUsed: Boolean(ranking.fallbackReason),
+  });
+  touchForensicStage(workspaceDir, { stage: 'PROMPT_RECEIVED' });
+  touchForensicStage(workspaceDir, {
+    stage: 'PROFILE_SELECTED',
+    selectedProfile: String(resolvedProfile),
+    confidence: ranking.confidence,
+  });
+  lastSuccessfulStage = 'PROFILE_SELECTED';
+
+  try {
   persistBuildIntentRun({
     buildRunId: buildId,
     projectId,
@@ -258,6 +377,7 @@ export async function runOnePromptLivePreviewBuild(
       livePreviewAvailable: false,
       failureReason: null,
       featureSignals: null,
+      materializationManifest: null,
       updatedAt: new Date().toISOString(),
     },
   });
@@ -266,6 +386,7 @@ export async function runOnePromptLivePreviewBuild(
   aidev.intakeBuildRequest(prompt);
 
   const contractAssessment = assessRequirementsToPlanExecutionContract({ rawPrompt: prompt });
+  timings.planningDurationMs = roundDurationMs(buildStartedAt);
   const contract = contractAssessment.report.buildReadyContract;
   const planTaskCount = contractAssessment.report.planContract?.tasks.length ?? null;
   const architectureSummary = contract
@@ -289,41 +410,79 @@ export async function runOnePromptLivePreviewBuild(
   });
 
   if (!contract) {
-    return registerBuildOutcome(
+    touchForensicStage(workspaceDir, {
+      stage: 'PLANNING',
+      durationMs: timings.planningDurationMs,
+      timingsPatch: { planningDurationMs: timings.planningDurationMs },
+      errors: ['Planning did not produce a build-ready contract'],
+    });
+    return registerFailedBuild({
       projectId,
       projectName,
-      composeFailureResult({
+      workspaceDir,
+      failure: {
+        failureStage: 'PLANNING',
+        failureReason: 'Planning did not produce a build-ready contract',
+        lastSuccessfulStage,
+      },
+      result: {
         buildId,
         projectId,
         projectName,
         prompt,
         source,
         failureReason: 'Planning did not produce a build-ready contract',
+        workspaceId: projectId,
+        workspacePath: workspaceRel,
         generatedProfile: resolvedProfile,
         planningProofLevel: contractAssessment.report.proofLevel,
-      }),
-    );
+      },
+    });
   }
 
-  const workspaceRel = `${GENERATED_BUILDER_WORKSPACES_DIR}/${projectId}`.replace(/\\/g, '/');
-  assertWorkspacePathBelongsToProject(workspaceRel, projectId);
-  const workspaceDir = join(input.projectRootDir, workspaceRel);
+  touchForensicStage(workspaceDir, {
+    stage: 'PLANNING',
+    durationMs: timings.planningDurationMs,
+    timingsPatch: { planningDurationMs: timings.planningDurationMs },
+  });
+  lastSuccessfulStage = 'PLANNING';
 
+  touchForensicStage(workspaceDir, { stage: 'WORKSPACE_CREATED' });
+  lastSuccessfulStage = 'WORKSPACE_CREATED';
+
+  const materializationRoot = input.projectRootDir;
+
+  const materializationStartedAt = performance.now();
   const materialization = materializeBuildProofGapArtifacts({
-    projectRootDir: resolveProjectRegistryRootDir(),
+    projectRootDir: materializationRoot,
     contract: { ...contract, contractId: projectId },
     rawPrompt: prompt,
   });
 
   const engineResult = materializeGeneratedApplication({
-    projectRootDir: resolveProjectRegistryRootDir(),
+    projectRootDir: materializationRoot,
     workspaceId: projectId,
     contract: { ...contract, contractId: projectId },
     rawPrompt: prompt,
     profileOverride: resolvedProfile,
   });
+  timings.materializationDurationMs = roundDurationMs(materializationStartedAt);
+  timings.fileGenerationDurationMs = timings.materializationDurationMs;
+  timings.generationDurationMs = timings.materializationDurationMs;
 
   if (!engineResult.generated || !engineResult.profile) {
+    const failureReason =
+      engineResult.skippedReason ?? 'Code Generation Engine V1 did not materialize application files';
+    touchForensicStage(workspaceDir, {
+      stage: 'MATERIALIZATION',
+      durationMs: timings.materializationDurationMs,
+      timingsPatch: {
+        materializationDurationMs: timings.materializationDurationMs,
+        fileGenerationDurationMs: timings.fileGenerationDurationMs,
+        generationDurationMs: timings.generationDurationMs,
+      },
+      errors: [failureReason],
+    });
     persistBuildIntentRun({
       buildRunId: buildId,
       projectId,
@@ -336,32 +495,49 @@ export async function runOnePromptLivePreviewBuild(
       previewUrl: null,
       planTaskCount,
       architectureSummary,
-      failureReason:
-        engineResult.skippedReason ?? 'Code Generation Engine V1 did not materialize application files',
+      failureReason,
       projectRootDir: resolveProjectRegistryRootDir(),
     });
-    return registerBuildOutcome(
+    return registerFailedBuild({
       projectId,
       projectName,
-      composeFailureResult({
+      workspaceDir,
+      failure: {
+        failureStage: 'MATERIALIZATION',
+        failureReason,
+        lastSuccessfulStage,
+      },
+      result: {
         buildId,
         projectId,
         projectName,
         prompt,
         source,
-        failureReason:
-          engineResult.skippedReason ?? 'Code Generation Engine V1 did not materialize application files',
+        failureReason,
         workspaceId: projectId,
         workspacePath: workspaceRel,
         generatedProfile: engineResult.profile ?? resolvedProfile,
         planningProofLevel: contractAssessment.report.proofLevel,
         materializationProofLevel: materialization.proofLevel,
-      }),
-    );
+      },
+    });
   }
+
+  touchForensicStage(workspaceDir, {
+    stage: 'MATERIALIZATION',
+    durationMs: timings.materializationDurationMs,
+    timingsPatch: {
+      materializationDurationMs: timings.materializationDurationMs,
+      fileGenerationDurationMs: timings.fileGenerationDurationMs,
+      generationDurationMs: timings.generationDurationMs,
+    },
+  });
+  lastSuccessfulStage = 'MATERIALIZATION';
 
   const isTaskTracker = engineResult.profile === 'TASK_TRACKER_WEB_V1';
   const generatedProfile = engineResult.profile;
+
+  let materializationValidation: MaterializationValidationResult | null = null;
 
   if (isTaskTracker) {
     const featurePath = join(workspaceDir, TASK_TRACKER_FEATURE_RELATIVE_PATH);
@@ -371,46 +547,99 @@ export async function runOnePromptLivePreviewBuild(
     const hasTaskTrackerFeature =
       isTaskTrackerFeatureSource(featureSource) || isTaskTrackerAppSource(appSource);
     if (!hasTaskTrackerFeature) {
-      return registerBuildOutcome(
+      const failureReason =
+        'Generated app missing Task Tracker features or Universal App Blueprint shell';
+      touchForensicStage(workspaceDir, {
+        stage: 'MATERIALIZATION_VALIDATION',
+        errors: [failureReason],
+      });
+      return registerFailedBuild({
         projectId,
         projectName,
-        composeFailureResult({
+        workspaceDir,
+        failure: {
+          failureStage: 'MATERIALIZATION_VALIDATION',
+          failureReason,
+          lastSuccessfulStage,
+        },
+        result: {
           buildId,
           projectId,
           projectName,
           prompt,
           source,
-          failureReason: 'Generated app missing Task Tracker features or Universal App Blueprint shell',
+          failureReason,
           workspaceId: projectId,
           workspacePath: workspaceRel,
           generatedProfile,
           planningProofLevel: contractAssessment.report.proofLevel,
           materializationProofLevel: materialization.proofLevel,
-        }),
-      );
+        },
+      });
     }
-  } else if (!inspectUniversalFeatureSignals(workspaceDir)) {
-    return registerBuildOutcome(
+    touchForensicStage(workspaceDir, { stage: 'MATERIALIZATION_VALIDATION' });
+    lastSuccessfulStage = 'MATERIALIZATION_VALIDATION';
+  } else {
+    const validationStartedAt = performance.now();
+    materializationValidation = inspectUniversalFeatureSignals(
+      workspaceDir,
+      prompt,
+      generatedProfile,
       projectId,
       projectName,
-      composeFailureResult({
-        buildId,
+      buildId,
+    );
+    timings.validationDurationMs = roundDurationMs(validationStartedAt);
+    if (!materializationValidation.passed) {
+      const failureDetail =
+        materializationValidation.missingArtifacts.join(', ') ||
+        materializationValidation.warnings.join('; ') ||
+        'Universal app materialization validation failed';
+      const failureReason = `Generated app materialization validation failed: ${failureDetail}`;
+      touchForensicStage(workspaceDir, {
+        stage: 'MATERIALIZATION_VALIDATION',
+        durationMs: timings.validationDurationMs,
+        timingsPatch: { validationDurationMs: timings.validationDurationMs },
+        errors: [failureReason],
+      });
+      return registerFailedBuild({
         projectId,
         projectName,
-        prompt,
-        source,
-        failureReason: 'Generated app missing Universal App Blueprint shell or feature module',
-        workspaceId: projectId,
-        workspacePath: workspaceRel,
-        generatedProfile,
-        planningProofLevel: contractAssessment.report.proofLevel,
-        materializationProofLevel: materialization.proofLevel,
-      }),
-    );
+        workspaceDir,
+        failure: {
+          failureStage: 'MATERIALIZATION_VALIDATION',
+          failureReason,
+          lastSuccessfulStage,
+          warnings: materializationValidation.warnings,
+          errors: materializationValidation.missingArtifacts,
+        },
+        result: {
+          buildId,
+          projectId,
+          projectName,
+          prompt,
+          source,
+          failureReason,
+          workspaceId: projectId,
+          workspacePath: workspaceRel,
+          generatedProfile,
+          planningProofLevel: contractAssessment.report.proofLevel,
+          materializationProofLevel: materialization.proofLevel,
+        },
+      });
+    }
+    touchForensicStage(workspaceDir, {
+      stage: 'MATERIALIZATION_VALIDATION',
+      durationMs: timings.validationDurationMs,
+      timingsPatch: { validationDurationMs: timings.validationDurationMs },
+    });
+    lastSuccessfulStage = 'MATERIALIZATION_VALIDATION';
   }
 
   let npmInstallOk = false;
   let npmBuildOk = false;
+  touchForensicStage(workspaceDir, { stage: 'NPM_INSTALL' });
+  const npmInstallStartedAt = performance.now();
   try {
     execSync('npm install --ignore-scripts', {
       cwd: workspaceDir,
@@ -419,27 +648,52 @@ export async function runOnePromptLivePreviewBuild(
       timeout: 180_000,
     });
     npmInstallOk = true;
+    timings.npmInstallDurationMs = roundDurationMs(npmInstallStartedAt);
+    touchForensicStage(workspaceDir, {
+      stage: 'NPM_INSTALL',
+      durationMs: timings.npmInstallDurationMs,
+      timingsPatch: { npmInstallDurationMs: timings.npmInstallDurationMs },
+    });
+    lastSuccessfulStage = 'NPM_INSTALL';
   } catch (err) {
-    return registerBuildOutcome(
+    timings.npmInstallDurationMs = roundDurationMs(npmInstallStartedAt);
+    const commandFailure = extractExecCommandFailure(err, 'npm install --ignore-scripts');
+    touchForensicStage(workspaceDir, {
+      stage: 'NPM_INSTALL',
+      durationMs: timings.npmInstallDurationMs,
+      timingsPatch: { npmInstallDurationMs: timings.npmInstallDurationMs },
+      errors: [commandFailure.failureMessage],
+    });
+    return registerFailedBuild({
       projectId,
       projectName,
-      composeFailureResult({
+      workspaceDir,
+      failure: {
+        failureStage: 'NPM_INSTALL',
+        failureReason: `npm install failed: ${commandFailure.failureMessage}`,
+        failureMessage: commandFailure.failureMessage,
+        lastSuccessfulStage,
+        commandFailure,
+      },
+      result: {
         buildId,
         projectId,
         projectName,
         prompt,
         source,
-        failureReason: `npm install failed: ${String(err)}`,
+        failureReason: `npm install failed: ${commandFailure.failureMessage}`,
         workspaceId: projectId,
         workspacePath: workspaceRel,
         generatedProfile,
         planningProofLevel: contractAssessment.report.proofLevel,
         materializationProofLevel: materialization.proofLevel,
         npmInstallOk: false,
-      }),
-    );
+      },
+    });
   }
 
+  touchForensicStage(workspaceDir, { stage: 'NPM_BUILD' });
+  const npmBuildStartedAt = performance.now();
   try {
     execSync('npm run build', {
       cwd: workspaceDir,
@@ -448,17 +702,40 @@ export async function runOnePromptLivePreviewBuild(
       timeout: 180_000,
     });
     npmBuildOk = true;
+    timings.npmBuildDurationMs = roundDurationMs(npmBuildStartedAt);
+    touchForensicStage(workspaceDir, {
+      stage: 'NPM_BUILD',
+      durationMs: timings.npmBuildDurationMs,
+      timingsPatch: { npmBuildDurationMs: timings.npmBuildDurationMs },
+    });
+    lastSuccessfulStage = 'NPM_BUILD';
   } catch (err) {
-    return registerBuildOutcome(
+    timings.npmBuildDurationMs = roundDurationMs(npmBuildStartedAt);
+    const commandFailure = extractExecCommandFailure(err, 'npm run build');
+    touchForensicStage(workspaceDir, {
+      stage: 'NPM_BUILD',
+      durationMs: timings.npmBuildDurationMs,
+      timingsPatch: { npmBuildDurationMs: timings.npmBuildDurationMs },
+      errors: [commandFailure.failureMessage],
+    });
+    return registerFailedBuild({
       projectId,
       projectName,
-      composeFailureResult({
+      workspaceDir,
+      failure: {
+        failureStage: 'NPM_BUILD',
+        failureReason: `npm run build failed: ${commandFailure.failureMessage}`,
+        failureMessage: commandFailure.failureMessage,
+        lastSuccessfulStage,
+        commandFailure,
+      },
+      result: {
         buildId,
         projectId,
         projectName,
         prompt,
         source,
-        failureReason: `npm run build failed: ${String(err)}`,
+        failureReason: `npm run build failed: ${commandFailure.failureMessage}`,
         workspaceId: projectId,
         workspacePath: workspaceRel,
         generatedProfile,
@@ -466,26 +743,43 @@ export async function runOnePromptLivePreviewBuild(
         materializationProofLevel: materialization.proofLevel,
         npmInstallOk: true,
         npmBuildOk: false,
-      }),
-    );
+      },
+    });
   }
 
+  touchForensicStage(workspaceDir, { stage: 'PREVIEW' });
+  const previewStartedAt = performance.now();
   const devServer = await startGeneratedAppDevServer({
     workspaceDir,
     workspaceId: projectId,
   });
+  timings.previewDurationMs = roundDurationMs(previewStartedAt);
 
   if (!devServer.ok || !devServer.url) {
-    return registerBuildOutcome(
+    const failureReason = devServer.error ?? 'Dev server failed to start';
+    touchForensicStage(workspaceDir, {
+      stage: 'PREVIEW',
+      durationMs: timings.previewDurationMs,
+      timingsPatch: { previewDurationMs: timings.previewDurationMs },
+      errors: [failureReason],
+    });
+    return registerFailedBuild({
       projectId,
       projectName,
-      composeFailureResult({
+      workspaceDir,
+      failure: {
+        failureStage: 'PREVIEW',
+        failureReason,
+        lastSuccessfulStage,
+        status: 'PARTIAL',
+      },
+      result: {
         buildId,
         projectId,
         projectName,
         prompt,
         source,
-        failureReason: devServer.error ?? 'Dev server failed to start',
+        failureReason,
         workspaceId: projectId,
         workspacePath: workspaceRel,
         generatedProfile,
@@ -493,9 +787,16 @@ export async function runOnePromptLivePreviewBuild(
         materializationProofLevel: materialization.proofLevel,
         npmInstallOk: true,
         npmBuildOk: true,
-      }),
-    );
+      },
+    });
   }
+
+  touchForensicStage(workspaceDir, {
+    stage: 'PREVIEW',
+    durationMs: timings.previewDurationMs,
+    timingsPatch: { previewDurationMs: timings.previewDurationMs },
+  });
+  lastSuccessfulStage = 'PREVIEW';
 
   createPreviewSession({
     projectId,
@@ -508,6 +809,64 @@ export async function runOnePromptLivePreviewBuild(
   });
 
   const featureSignals = isTaskTracker ? inspectFeatureSignals(workspaceDir) : null;
+
+  if (!materializationValidation) {
+    const validationStartedAt = performance.now();
+    materializationValidation = validateUniversalAppMaterialization({
+      workspaceDir,
+      rawPrompt: prompt,
+      selectedProfile: generatedProfile,
+      projectId,
+      projectName,
+      buildRunId: buildId,
+      npmInstallOk,
+      npmBuildOk,
+    });
+    timings.validationDurationMs = roundDurationMs(validationStartedAt);
+  }
+
+  touchForensicStage(workspaceDir, {
+    stage: 'FINAL_VALIDATION',
+    durationMs: timings.validationDurationMs,
+    timingsPatch: { validationDurationMs: timings.validationDurationMs },
+  });
+
+  const successDefinition = getProfileFeatureDefinition(
+    resolveMaterializationProfile(generatedProfile, prompt),
+    prompt,
+  );
+
+  const evidenceCompletion = completeMaterializationEvidence({
+    workspaceDir,
+    prompt,
+    projectId,
+    projectName,
+    buildRunId: buildId,
+    selectedProfile: String(generatedProfile),
+    expectedAppType: successDefinition.expectedAppType,
+    promptSummary: summarizePrompt(prompt),
+    confidence: ranking.confidence,
+    featureModules: successDefinition.featureModules,
+    routes: successDefinition.routes,
+    fallbackUsed: Boolean(ranking.fallbackReason),
+    validation: {
+      passed: materializationValidation.passed && npmInstallOk && npmBuildOk,
+      blueprintShellPresent: materializationValidation.blueprintShellPresent,
+      featureModulesPresent: materializationValidation.featureModulesPresent,
+      promptSpecificTermsPresent: materializationValidation.promptSpecificTermsPresent,
+      warnings: materializationValidation.warnings,
+      errors: materializationValidation.passed
+        ? []
+        : [
+            ...materializationValidation.missingArtifacts.map((a) => `Missing artifact: ${a}`),
+            ...materializationValidation.missingFeatureModules.map(
+              (m) => `Missing feature module: ${m}`,
+            ),
+          ],
+    },
+    timings,
+  });
+
   const success: OnePromptLivePreviewBuildResult = {
     readOnly: true,
     buildId,
@@ -528,6 +887,7 @@ export async function runOnePromptLivePreviewBuild(
     livePreviewAvailable: true,
     failureReason: null,
     featureSignals,
+    materializationManifest: evidenceCompletion.manifest,
     updatedAt: new Date().toISOString(),
   };
   persistBuildIntentRun({
@@ -557,6 +917,53 @@ export async function runOnePromptLivePreviewBuild(
     resolveProjectRegistryRootDir(),
   );
   return registerBuildOutcome(projectId, projectName, success, devServer.port ?? null);
+  } catch (unexpected) {
+    const commandFailure = extractExecCommandFailure(unexpected, 'one-prompt-build-orchestrator');
+    const failureStage: ForensicBuildStage =
+      lastSuccessfulStage === 'PREVIEW'
+        ? 'FINAL_VALIDATION'
+        : lastSuccessfulStage === 'NPM_BUILD'
+          ? 'PREVIEW'
+          : lastSuccessfulStage === 'NPM_INSTALL'
+            ? 'NPM_BUILD'
+            : lastSuccessfulStage === 'MATERIALIZATION_VALIDATION'
+              ? 'NPM_INSTALL'
+              : lastSuccessfulStage === 'MATERIALIZATION'
+                ? 'MATERIALIZATION_VALIDATION'
+                : lastSuccessfulStage === 'WORKSPACE_CREATED'
+                  ? 'MATERIALIZATION'
+                  : lastSuccessfulStage === 'PLANNING'
+                    ? 'WORKSPACE_CREATED'
+                    : 'PLANNING';
+    touchForensicStage(workspaceDir, {
+      stage: failureStage,
+      errors: [commandFailure.failureMessage],
+    });
+    return registerFailedBuild({
+      projectId,
+      projectName,
+      workspaceDir,
+      failure: {
+        failureStage,
+        failureReason: `Unexpected build error: ${commandFailure.failureMessage}`,
+        failureMessage: commandFailure.failureMessage,
+        lastSuccessfulStage,
+        commandFailure,
+        stackPreview: commandFailure.stackPreview,
+      },
+      result: {
+        buildId,
+        projectId,
+        projectName,
+        prompt,
+        source,
+        failureReason: `Unexpected build error: ${commandFailure.failureMessage}`,
+        workspaceId: projectId,
+        workspacePath: workspaceRel,
+        generatedProfile: resolvedProfile,
+      },
+    });
+  }
 }
 
 export function getOnePromptLivePreviewPublicState(
@@ -614,43 +1021,41 @@ export function getOnePromptLivePreviewPublicState(
   };
 }
 
+/** Conversational fallback when LLM is unavailable — no mechanical runtime dumps. */
 export function composeOnePromptBuildChatResponse(result: OnePromptLivePreviewBuildResult): string {
-  const profileLabel = result.generatedProfile ?? 'application';
+  const profileLabel = result.generatedProfile ?? 'your application';
+
   if (result.status === 'READY') {
+    const previewNote = result.previewUrl
+      ? 'A live preview is available — open Live Preview to review the generated application while validation continues.'
+      : 'Live Preview is not yet available; check Execution Trace for preview runtime status.';
     return [
-      `Build execution started for project "${result.projectName}" — ${profileLabel} materialization complete.`,
+      `I've completed the initial build for "${result.projectName}" using the ${profileLabel} profile.`,
       '',
-      `Build run: ${result.buildId}`,
-      `Project: ${result.projectId}`,
-      `Workspace: ${result.workspacePath ?? result.workspaceId ?? 'unknown'}`,
-      `Profile: ${profileLabel}`,
-      `Build: ${result.buildResult ?? 'unknown'} (npm install ${result.npmInstallOk ? 'ok' : 'fail'}, npm build ${result.npmBuildOk ? 'ok' : 'fail'})`,
-      `Live Preview: ${result.previewUrl ?? 'pending'}`,
+      result.npmInstallOk && result.npmBuildOk
+        ? 'The generated workspace compiled successfully.'
+        : 'The workspace was materialized, but one or more compile steps did not fully succeed.',
+      previewNote,
       '',
-      'Open Live Preview to interact with the generated application.',
+      'See Execution Trace for chronological runtime evidence — profile selection, materialization, npm steps, and validation.',
     ].join('\n');
   }
 
   if (result.status === 'BUILDING') {
     return [
-      `Build execution started for project "${result.projectName}".`,
+      `I'm materializing "${result.projectName}" now — generating architecture, plan contracts, and workspace files for ${profileLabel}.`,
       '',
-      `Build run: ${result.buildId}`,
-      `Stage: materializing ${profileLabel} workspace`,
-      '',
-      'AiDevEngine is generating architecture, plan, tasks, and workspace files.',
+      "Execution Trace will stream each runtime stage as it completes. I'll summarize the outcome here when the build finishes.",
     ].join('\n');
   }
 
   return [
-    `Build execution was started for project "${result.projectName}" but failed during ${profileLabel} build.`,
+    `The build for "${result.projectName}" did not complete successfully.`,
     '',
-    `Build run: ${result.buildId}`,
-    `Reason: ${result.failureReason ?? 'Unknown failure'}`,
-    result.workspacePath ? `Workspace: ${result.workspacePath}` : '',
+    result.failureReason
+      ? `Runtime reported: ${result.failureReason}`
+      : 'The orchestrator stopped before reaching a ready state.',
     '',
-    'Fix the build issue and try again, or check build status in Autonomous Builder / Live Preview.',
-  ]
-    .filter(Boolean)
-    .join('\n');
+    'Review Execution Trace for the exact failing stage, then retry or adjust the request.',
+  ].join('\n');
 }

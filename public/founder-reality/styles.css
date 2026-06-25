@@ -1585,7 +1585,8 @@ body.local-runtime-blocked .app-shell {
   color: var(--text);
 }
 
-.operator-feed-filter-btn.active {
+.operator-feed-filter-btn.active,
+.execution-trace-mode-btn.active {
   border-color: rgba(0, 229, 192, 0.45);
   color: var(--teal-bright);
   background: var(--teal-soft);

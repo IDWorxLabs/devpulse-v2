@@ -72,6 +72,7 @@ function sampleExpenseMismatch(overrides: Partial<OnePromptLivePreviewBuildResul
     livePreviewAvailable: true,
     failureReason: null,
     featureSignals: null,
+    materializationManifest: null,
     updatedAt: new Date().toISOString(),
     ...overrides,
   };

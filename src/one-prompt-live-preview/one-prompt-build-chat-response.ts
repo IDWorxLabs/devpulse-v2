@@ -1,8 +1,8 @@
 /**
  * Command Center chat response helpers for one-prompt build path.
+ * Chat explains; Execution Trace records runtime evidence.
  */
 
-import type { OperatorFeedEvent } from '../command-center-brain/brain-types.js';
 import type { OnePromptLivePreviewBuildResult } from './one-prompt-live-preview-types.js';
 import { composeOnePromptBuildChatResponse, getOnePromptLivePreviewPublicState } from './one-prompt-build-orchestrator.js';
 import { analyzeBuildProfileClassification } from '../build-result-conversational-intelligence/build-result-classification-evidence.js';
@@ -10,7 +10,13 @@ import { rankBuildProfiles } from '../build-profile-classification/index.js';
 import { buildOnePromptLivePreviewWorkspaceSync } from './canonical-live-preview-state.js';
 import { getPreviewRuntimeDiagnostics, listPreviewSessions, listPreviewTargets } from '../live-preview-runtime/index.js';
 import { getBuildIntentRun } from '../build-intent-routing/build-intent-run-store.js';
-import { tagOperatorFeedEventWithProjectId } from '../project-isolation-guard-v1/index.js';
+import {
+  buildOnePromptExecutionTraceEvents,
+  buildOnePromptExecutionTraceEvidence,
+  buildOnePromptOperatorFeedEvents,
+  executionTraceEventsToOperatorFeed,
+} from '../execution-trace/index.js';
+import { materializationEvidenceSummaryForChat } from '../materialization-evidence/index.js';
 import {
   getActiveProjectId,
   listMultiProjectWorkspaces,
@@ -18,127 +24,7 @@ import {
   resolveProjectContext,
 } from './workspace-tab-registry.js';
 
-const BUILD_FEED_STAGES: Array<{
-  action: string;
-  detail: string;
-  eventType: OperatorFeedEvent['eventType'];
-  section: string;
-  when: (r: OnePromptLivePreviewBuildResult) => boolean;
-}> = [
-  {
-    action: 'Detecting build prompt',
-    detail: 'Recognized build request — routing to AiDevEngine build orchestration.',
-    eventType: 'Classifying Request',
-    section: 'Build',
-    when: () => true,
-  },
-  {
-    action: 'Planning contract',
-    detail: 'Architecture, requirements, and build-ready plan contract produced.',
-    eventType: 'Understanding Project',
-    section: 'Build',
-    when: (r) => Boolean(r.planningProofLevel),
-  },
-  {
-    action: 'Materializing workspace',
-    detail: 'Generated application source files under .generated-builder-workspaces/.',
-    eventType: 'Gathering Facts',
-    section: 'Build',
-    when: (r) => Boolean(r.materializationProofLevel || r.workspacePath),
-  },
-  {
-    action: 'Installing dependencies',
-    detail: 'npm install completed for generated Vite React workspace.',
-    eventType: 'Analyzing Project Status',
-    section: 'Build',
-    when: (r) => r.npmInstallOk,
-  },
-  {
-    action: 'Building app',
-    detail: 'npm run build completed for generated application.',
-    eventType: 'Generating Response',
-    section: 'Build',
-    when: (r) => r.npmBuildOk,
-  },
-  {
-    action: 'Starting Live Preview',
-    detail: 'Vite dev server started for generated workspace.',
-    eventType: 'Generating Response',
-    section: 'Build',
-    when: (r) => r.status === 'READY' && Boolean(r.previewUrl),
-  },
-];
-
-function feedStatusForStage(
-  result: OnePromptLivePreviewBuildResult,
-  stageIndex: number,
-  stageMatched: boolean,
-  failedAt: number | null,
-): OperatorFeedEvent['status'] {
-  if (stageMatched) return 'Completed';
-  if (result.status === 'FAILED' && failedAt === stageIndex) return 'Blocked';
-  return 'Queued';
-}
-
-export function buildOnePromptOperatorFeedEvents(
-  result: OnePromptLivePreviewBuildResult,
-): OperatorFeedEvent[] {
-  const events: OperatorFeedEvent[] = [];
-  let step = 0;
-  const total = BUILD_FEED_STAGES.length + 1;
-  let failedAt: number | null = null;
-
-  for (const stage of BUILD_FEED_STAGES) {
-    step += 1;
-    const matched = stage.when(result);
-    if (!matched && failedAt === null && result.status === 'FAILED') {
-      failedAt = step;
-    }
-    events.push({
-      eventId: `${result.buildId}-feed-${step}`,
-      eventType: stage.eventType,
-      timestamp: Date.parse(result.updatedAt) || Date.now(),
-      informationalOnly: true,
-      section: stage.section,
-      action: stage.action,
-      detail:
-        failedAt === step
-          ? result.failureReason ?? `${stage.action} failed`
-          : matched
-            ? stage.detail
-            : `${stage.action} — pending`,
-      status: feedStatusForStage(result, step, matched, failedAt),
-      stepIndex: step,
-      stepTotal: total,
-      evidence: matched ? 'one-prompt-live-preview' : undefined,
-    });
-  }
-
-  step += 1;
-  const finalAction = result.status === 'READY' ? 'Live Preview ready' : 'Build failed';
-  const finalDetail =
-    result.status === 'READY'
-      ? `Live Preview available at ${result.previewUrl ?? 'unknown URL'}`
-      : result.failureReason ?? 'One-prompt build failed';
-
-  events.push({
-    eventId: `${result.buildId}-feed-final`,
-    eventType: result.status === 'READY' ? 'Response Ready' : 'Checking Blockers',
-    timestamp: Date.parse(result.updatedAt) || Date.now(),
-    informationalOnly: true,
-    section: 'Build',
-    action: finalAction,
-    detail: finalDetail,
-    status: result.status === 'READY' ? 'Completed' : 'Blocked',
-    stepIndex: step,
-    stepTotal: total,
-    evidence: result.workspacePath ?? undefined,
-  });
-
-  return events.map((event) =>
-    tagOperatorFeedEventWithProjectId(event, result.projectId ?? null, { scope: 'PROJECT' }),
-  );
-}
+export { buildOnePromptOperatorFeedEvents, buildOnePromptExecutionTraceEvents };
 
 export function composeOnePromptBuildBrainApiPayload(input: {
   message: string;
@@ -208,6 +94,16 @@ export function composeOnePromptBuildBrainApiPayload(input: {
     input.buildResult.generatedProfile,
   );
 
+  const executionTraceEvents = buildOnePromptExecutionTraceEvents(
+    input.buildResult,
+    input.message,
+  );
+  const executionTraceEvidence = buildOnePromptExecutionTraceEvidence(
+    input.buildResult,
+    input.message,
+  );
+  const operatorFeedEvents = executionTraceEventsToOperatorFeed(executionTraceEvents);
+
   return {
     responseId: `brain-build-${input.buildResult.buildId}`,
     userMessage: input.message,
@@ -239,8 +135,19 @@ export function composeOnePromptBuildBrainApiPayload(input: {
       matchedKeywords: classificationEvidence.matchedKeywords,
       profileMismatchWarnings: classificationEvidence.profileMismatchWarnings,
     },
-    systemsReferenced: ['code_generation_engine', 'one_prompt_live_preview', 'build_result_conversational_intelligence'],
-    operatorFeedEvents: buildOnePromptOperatorFeedEvents(input.buildResult),
+    systemsReferenced: [
+      'code_generation_engine',
+      'one_prompt_live_preview',
+      'build_result_conversational_intelligence',
+      'execution_trace',
+    ],
+    executionTraceEvents,
+    executionTraceEvidence,
+    operatorFeedEvents,
+    materializationEvidence: materializationEvidenceSummaryForChat(
+      input.buildResult.materializationManifest,
+    ),
+    materializationManifest: input.buildResult.materializationManifest,
     onePromptLivePreview: input.buildResult,
     buildLivePreview,
     livePreviewWorkspaceSync,
@@ -292,6 +199,7 @@ export function composeOnePromptBuildFailurePayload(input: {
     livePreviewAvailable: false,
     failureReason: input.failureReason,
     featureSignals: null,
+    materializationManifest: null,
     updatedAt: new Date().toISOString(),
   };
 

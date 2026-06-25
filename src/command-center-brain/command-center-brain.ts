@@ -108,6 +108,7 @@ import {
   resetOperatorFeedEventCounterForTests,
   resetOperatorFeedTimelineCounterForTests,
 } from '../operator-feed/index.js';
+import { operatorFeedEventsToExecutionTrace } from '../execution-trace/index.js';
 import type { OperatorFeedDiagnostics } from '../operator-feed/operator-feed-types.js';
 import {
   getActionVisibilityContext,
@@ -886,6 +887,7 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
         decisionRouterOwns,
         productIdentityOwns,
       );
+  const executionTraceEvents = operatorFeedEventsToExecutionTrace(operatorFeedEvents);
   const feedStages = operatorFeedEvents.map((e) => e.eventType);
 
   const routingReport = isCrossSystem
@@ -1345,6 +1347,7 @@ export function processBrainRequest(input: BrainRequestInput): BrainResponseResu
     llmChatBrainDiagnostics,
     pipelineStages,
     operatorFeedEvents,
+    executionTraceEvents,
     confirmation: {
       intelligenceOnly: true,
       noExecutionPerformed: true,

@@ -149,7 +149,7 @@
             <span class="founder-test-btn-hint" id="founder-test-btn-hint">Complete founder validation — one report, one verdict.</span>
           </button>
           </div>
-          <button type="button" class="mobile-feed-toggle" id="mobile-feed-toggle" aria-label="Open operator feed" aria-expanded="false" aria-controls="operator-feed">
+          <button type="button" class="mobile-feed-toggle" id="mobile-feed-toggle" aria-label="Open execution trace" aria-expanded="false" aria-controls="operator-feed">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h14"/></svg>
           </button>
           <button type="button" class="notif-btn" id="notif-toggle" aria-expanded="false" aria-controls="notification-drawer">
@@ -447,7 +447,7 @@
             <p class="diag-line"><strong>Highest Risk Project:</strong> <span id="highest-risk-project">None</span></p>
             <p class="diag-line"><strong>Highest Priority Project:</strong> <span id="highest-priority-project">None</span></p>
             <p class="diag-line"><strong>Last Portfolio Query:</strong> <span id="last-portfolio-query">None</span></p>
-            <p class="diag-line"><strong>Operator Feed Active:</strong> <span id="operator-feed-active">NO</span></p>
+            <p class="diag-line"><strong>Execution Trace Active:</strong> <span id="operator-feed-active">NO</span></p>
             <p class="diag-line"><strong>Feed Event Count:</strong> <span id="feed-event-count">0</span></p>
             <p class="diag-line"><strong>Feed Stage Count:</strong> <span id="feed-stage-count">0</span></p>
             <p class="diag-line"><strong>Response Ready Emitted:</strong> <span id="feed-response-ready">NO</span></p>
@@ -520,18 +520,20 @@
       </div>
     </main>
 
-    <aside class="operator-feed" id="operator-feed" aria-label="Operator Feed">
-      <div class="operator-feed-header">
-        <h2 class="feed-title">Operator Feed</h2>
-        <p class="feed-subtitle">Real-time execution stream • Full context • No abstraction</p>
-        <div class="operator-feed-toolbar" role="toolbar" aria-label="Operator Feed controls">
+    <aside class="operator-feed execution-trace" id="operator-feed" data-panel="execution-trace" aria-label="Execution Trace">
+      <div class="operator-feed-header execution-trace-header">
+        <h2 class="feed-title">Execution Trace</h2>
+        <p class="feed-subtitle">Chronological runtime evidence • Timestamped • Searchable</p>
+        <div class="operator-feed-toolbar execution-trace-toolbar" role="toolbar" aria-label="Execution Trace controls">
+          <button type="button" class="operator-feed-tool-btn execution-trace-mode-btn active" id="execution-trace-mode-stream" data-trace-mode="stream" aria-pressed="true">Stream</button>
+          <button type="button" class="operator-feed-tool-btn execution-trace-mode-btn" id="execution-trace-mode-compact" data-trace-mode="compact" aria-pressed="false">Compact</button>
+          <button type="button" class="operator-feed-tool-btn execution-trace-mode-btn" id="execution-trace-mode-errors" data-trace-mode="errors" aria-pressed="false">Errors</button>
+          <button type="button" class="operator-feed-tool-btn execution-trace-mode-btn" id="execution-trace-mode-artifacts" data-trace-mode="artifacts" aria-pressed="false">Artifacts</button>
           <label class="operator-feed-toggle" title="Live Stream mode">
             <input type="checkbox" id="operator-feed-stream-mode" checked />
             <span>Live Stream</span>
           </label>
-          <button type="button" class="operator-feed-tool-btn" id="operator-feed-compact-btn" aria-pressed="false">Compact</button>
-          <button type="button" class="operator-feed-tool-btn" id="operator-feed-errors-only-btn" aria-pressed="false">Errors Only</button>
-          <input type="search" class="operator-feed-search" id="operator-feed-search" placeholder="Search feed…" aria-label="Search in feed" />
+          <input type="search" class="operator-feed-search" id="operator-feed-search" placeholder="Search trace…" aria-label="Search execution trace" />
           <label class="operator-feed-toggle" title="Auto-scroll">
             <input type="checkbox" id="operator-feed-autoscroll" checked />
             <span>Auto-scroll</span>
@@ -544,7 +546,7 @@
       <div class="operator-feed-body" id="operator-feed-body">
         <div class="founder-test-operator-trace" id="founder-test-operator-trace" hidden aria-live="polite"></div>
         <div class="operator-feed-empty" id="operator-feed-empty">
-          <p>No active run. Execution logs will stream here when AiDevEngine starts planning, building, validating, or previewing.</p>
+          <p>No active run. Runtime events will stream here when AiDevEngine starts planning, building, validating, or previewing.</p>
         </div>
         <div class="operator-stream-viewport feed-stream-log feed-stream-terminal" id="feed-stream-log" role="log" aria-live="polite" aria-relevant="additions">
           <div class="operator-stream-log" id="operator-stream-log"></div>

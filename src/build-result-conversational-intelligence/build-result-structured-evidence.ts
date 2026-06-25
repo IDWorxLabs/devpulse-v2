@@ -5,6 +5,9 @@
 import type { OnePromptLivePreviewBuildResult } from '../one-prompt-live-preview/one-prompt-live-preview-types.js';
 import type { BuildResultConversationalContext } from './build-result-conversational-types.js';
 import { resolveExpectedProfileLabel } from './build-profile-mismatch-response.js';
+import type { ExecutionTraceEvidenceBundle } from '../execution-trace/execution-trace-types.js';
+import { executionTraceEvidenceForLlm } from '../execution-trace/index.js';
+import { materializationEvidenceSummaryForChat } from '../materialization-evidence/index.js';
 
 export interface BuildResultStructuredEvidence {
   readOnly: true;
@@ -45,6 +48,8 @@ export interface BuildResultStructuredEvidence {
     | 'PROFILE_MISMATCH'
     | 'PREVIEW_UNAVAILABLE'
     | 'IN_PROGRESS';
+  executionTraceEvidence: Record<string, unknown> | null;
+  materializationEvidence: Record<string, unknown> | null;
 }
 
 function inferBuildStage(
@@ -116,6 +121,7 @@ function collectBlueprintWarnings(
 export function buildBuildResultStructuredEvidence(
   context: BuildResultConversationalContext,
   buildResult: OnePromptLivePreviewBuildResult,
+  executionTraceBundle?: ExecutionTraceEvidenceBundle | null,
 ): BuildResultStructuredEvidence {
   return {
     readOnly: true,
@@ -150,5 +156,11 @@ export function buildBuildResultStructuredEvidence(
     npmBuildOk: buildResult.npmBuildOk,
     blueprintWarnings: collectBlueprintWarnings(context, buildResult),
     outcomeCategory: inferOutcomeCategory(context, buildResult),
+    executionTraceEvidence: executionTraceBundle
+      ? executionTraceEvidenceForLlm(executionTraceBundle)
+      : null,
+    materializationEvidence: materializationEvidenceSummaryForChat(
+      buildResult.materializationManifest,
+    ),
   };
 }

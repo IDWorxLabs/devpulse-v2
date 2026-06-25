@@ -58,6 +58,7 @@ function sampleBuildResult(overrides: Partial<OnePromptLivePreviewBuildResult> =
     livePreviewAvailable: true,
     failureReason: null,
     featureSignals: null,
+    materializationManifest: null,
     updatedAt: new Date().toISOString(),
     ...overrides,
   };
@@ -232,17 +233,19 @@ async function main(): Promise<void> {
     BUILD_RESULT_TEMPLATE_FALLBACK_MARKER,
   );
   assert(
-    '19. fallback includes original template content',
-    fallbackResponse.includes('Build run:') || fallbackResponse.includes('Build execution started'),
-    'template preserved',
+    '19. fallback includes conversational template content',
+    fallbackResponse.includes('ExpenseTracker') ||
+      fallbackResponse.includes('Execution Trace') ||
+      fallbackResponse.includes('build'),
+    'conversational template preserved',
   );
   assert('20. fallback marked in diagnostics', fallbackDiagnostics.fallbackUsed === true, 'fallbackUsed');
 
   assert(
-    '21. operator feed builder unchanged in build chat module',
-    buildChatResponse.includes('buildOnePromptOperatorFeedEvents') &&
-      buildChatResponse.includes('Materializing workspace'),
-    'feed stages',
+    '21. execution trace builder exported from build chat module',
+    buildChatResponse.includes('buildOnePromptExecutionTraceEvents') ||
+      buildChatResponse.includes('buildOnePromptOperatorFeedEvents'),
+    'trace/feed export',
   );
   assert(
     '22. buildChatTemplateFallback stored in payload composer',

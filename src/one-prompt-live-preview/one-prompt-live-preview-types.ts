@@ -41,6 +41,7 @@ export interface OnePromptLivePreviewBuildResult {
     activeCount: boolean;
     reactMount: boolean;
   } | null;
+  materializationManifest: import('../universal-prompt-to-app-materialization/generated-app-manifest.js').GeneratedAppManifest | null;
   updatedAt: string;
 }
 

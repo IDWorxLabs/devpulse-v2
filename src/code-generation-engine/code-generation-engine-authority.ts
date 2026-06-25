@@ -53,17 +53,7 @@ export function materializeGeneratedApplication(
 
   if (!detectTaskTrackerIdea(input.rawPrompt) || input.profileOverride) {
     const universalProfile =
-      input.profileOverride ?? detectUniversalAppProfile(input.rawPrompt);
-    if (!universalProfile) {
-      return {
-        readOnly: true,
-        generated: false,
-        profile: null,
-        workspaceId,
-        generatedFiles: [],
-        skippedReason: 'No supported application profile detected for prompt',
-      };
-    }
+      input.profileOverride ?? detectUniversalAppProfile(input.rawPrompt) ?? 'GENERIC_CUSTOM_APP_V1';
 
     if (universalProfile !== 'TASK_TRACKER_WEB_V1') {
       const files = buildUniversalCrudWorkspaceFiles({
@@ -72,6 +62,7 @@ export function materializeGeneratedApplication(
         buildUnits: input.contract.buildUnits.map((unit) => unit.unitId),
         rawPrompt: input.rawPrompt,
         profile: universalProfile as GeneratedAppProfile,
+        buildRunId: input.contract.contractId,
       });
 
       const generatedFiles: string[] = [];
@@ -94,17 +85,6 @@ export function materializeGeneratedApplication(
         skippedReason: generatedFiles.length > 0 ? null : 'File writes failed',
       };
     }
-  }
-
-  if (!detectTaskTrackerIdea(input.rawPrompt) && input.profileOverride !== 'TASK_TRACKER_WEB_V1') {
-    return {
-      readOnly: true,
-      generated: false,
-      profile: null,
-      workspaceId,
-      generatedFiles: [],
-      skippedReason: 'No supported application profile detected for prompt',
-    };
   }
 
   const files = buildTaskTrackerWorkspaceFiles({
@@ -148,6 +128,10 @@ export function usesViteReactRuntime(packageJsonSource: string): boolean {
       parsed.devpulseGeneratedApp === 'task-tracker-v1' ||
       parsed.devpulseGeneratedApp === 'crm-v1' ||
       parsed.devpulseGeneratedApp === 'inventory-v1' ||
+      parsed.devpulseGeneratedApp === 'booking-web-v1' ||
+      parsed.devpulseGeneratedApp === 'habit-tracker-web-v1' ||
+      parsed.devpulseGeneratedApp === 'generic-custom-app-v1' ||
+      parsed.devpulseGeneratedApp === 'expense-tracker-v1' ||
       parsed.devpulseGeneratedApp === 'school-management-v1' ||
       parsed.devpulseGeneratedApp === 'project-management-v1' ||
       parsed.devpulseUniversalFeatureContract === 'v1' ||

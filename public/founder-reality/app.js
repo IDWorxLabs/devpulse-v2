@@ -361,6 +361,7 @@
     streamMode: true,
     compact: false,
     errorsOnly: false,
+    viewMode: 'stream',
     searchQuery: '',
     autoScroll: true,
     levelFilter: 'ALL',
@@ -378,7 +379,7 @@
   var LOCAL_RUNTIME_BANNER_TEXT =
     'AiDevEngine local runtime is stale or unavailable. Restart using Start-AiDevEngine.';
   var OPERATOR_LOG_EMPTY_TEXT =
-    'No active run. Execution logs will stream here when AiDevEngine starts planning, building, validating, or previewing.';
+    'No active run. Runtime events will stream here when AiDevEngine starts planning, building, validating, or previewing.';
   var previewClientReality = { loaded: false, error: false };
   var activeProjectId = null;
   var multiProjectWorkspaces = [];
@@ -1173,6 +1174,7 @@
   }
 
   function inferOperatorLogLevel(event, pres) {
+    if (event && event.severity) return event.severity;
     var status = (pres && pres.status) || (event && event.status) || '';
     if (status === 'Blocked' || status === 'Failed' || /fail|error|blocked/i.test((pres && pres.action) || '')) {
       return 'ERROR';
@@ -1409,12 +1411,54 @@
     appendOperatorLogLines(lines, { finalizePrevious: true });
   }
 
+  function resolveExecutionTraceEventsFromPayload(payload) {
+    if (!payload) return [];
+    if (payload.executionTraceEvents && payload.executionTraceEvents.length) {
+      return payload.executionTraceEvents;
+    }
+    return payload.operatorFeedEvents || [];
+  }
+
+  function normalizeTraceEventForStream(event) {
+    if (!event) return event;
+    return {
+      eventId: event.eventId,
+      timestamp: event.timestamp,
+      section: event.runtimeStage || event.section || 'Runtime',
+      action: event.eventTitle || event.action || event.eventType || 'Runtime event',
+      detail: event.technicalDetail || event.detail || '',
+      status: event.status,
+      evidence: event.evidence,
+      artifactLinks: event.artifactLinks,
+      metadata: event.metadata,
+      stepIndex: event.stepIndex,
+      stepTotal: event.stepTotal,
+      eventType: event.component || event.eventType,
+      severity: event.severity,
+    };
+  }
+
   function getFilteredOperatorLogEntries() {
     var query = (operatorFeedUi.searchQuery || '').trim().toLowerCase();
     var filtered = [];
     for (var i = 0; i < operatorLogBuffer.length; i += 1) {
       var entry = operatorLogBuffer[i];
+      if (operatorFeedUi.viewMode === 'errors' && entry.level !== 'ERROR' && entry.level !== 'WARN') continue;
       if (operatorFeedUi.errorsOnly && entry.level !== 'ERROR') continue;
+      if (operatorFeedUi.viewMode === 'compact') {
+        var msg = (entry.message || '').toLowerCase();
+        var isMilestone =
+          entry.level === 'ERROR' ||
+          entry.level === 'WARN' ||
+          /preview|npm install|npm build|manifest|workspace|classified|validation|failed|ready/.test(msg);
+        if (!isMilestone) continue;
+      }
+      if (operatorFeedUi.viewMode === 'artifacts') {
+        var artifactMsg = (entry.message || '').toLowerCase();
+        var isArtifact =
+          /workspace|manifest|generated|preview|npm install|npm build|\.tsx|artifact|http:\/\//.test(artifactMsg);
+        if (!isArtifact) continue;
+      }
       if (operatorFeedUi.levelFilter !== 'ALL' && entry.level !== operatorFeedUi.levelFilter) continue;
       if (query) {
         var hay = (entry.message + ' ' + entry.stage + ' ' + entry.level).toLowerCase();
@@ -1446,7 +1490,7 @@
     var viewport = el('feed-stream-log');
     var log = el('operator-stream-log');
     if (!viewport || !log) return;
-    viewport.classList.toggle('compact', operatorFeedUi.compact);
+    viewport.classList.toggle('compact', operatorFeedUi.compact || operatorFeedUi.viewMode === 'compact');
     if (!operatorLogBuffer.length) {
       log.innerHTML = '';
       showOperatorFeedEmptyState(true);
@@ -1540,48 +1584,55 @@
         );
       })
       .join('\n');
-    if (!text) text = 'No operator feed entries.';
+    if (!text) text = 'No execution trace entries.';
     var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'aidevengine-operator-feed-' + String(Date.now()) + '.log';
+    a.download = 'aidevengine-execution-trace-' + String(Date.now()) + '.log';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    pushNotification('Operator feed exported');
+    pushNotification('Execution trace exported');
+  }
+
+  function setExecutionTraceViewMode(mode) {
+    operatorFeedUi.viewMode = mode || 'stream';
+    operatorFeedUi.compact = mode === 'compact';
+    operatorFeedUi.errorsOnly = mode === 'errors';
+    var modeBtns = document.querySelectorAll('.execution-trace-mode-btn');
+    for (var m = 0; m < modeBtns.length; m += 1) {
+      var btn = modeBtns[m];
+      var active = btn.getAttribute('data-trace-mode') === operatorFeedUi.viewMode;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    }
+    renderOperatorStreamLog();
   }
 
   function initOperatorFeedControls() {
     var streamMode = el('operator-feed-stream-mode');
-    var compactBtn = el('operator-feed-compact-btn');
-    var errorsOnlyBtn = el('operator-feed-errors-only-btn');
     var searchInput = el('operator-feed-search');
     var autoScroll = el('operator-feed-autoscroll');
     var copyBtn = el('operator-feed-copy-btn');
     var exportBtn = el('operator-feed-export-btn');
     var clearBtn = el('operator-feed-clear-btn');
     var filterBtns = document.querySelectorAll('.operator-feed-filter-btn');
+    var modeBtns = document.querySelectorAll('.execution-trace-mode-btn');
+
+    for (var mi = 0; mi < modeBtns.length; mi += 1) {
+      (function (btn) {
+        btn.addEventListener('click', function () {
+          setExecutionTraceViewMode(btn.getAttribute('data-trace-mode') || 'stream');
+        });
+      })(modeBtns[mi]);
+    }
 
     if (streamMode) {
       streamMode.checked = operatorFeedUi.streamMode;
       streamMode.addEventListener('change', function () {
         operatorFeedUi.streamMode = streamMode.checked;
-      });
-    }
-    if (compactBtn) {
-      compactBtn.addEventListener('click', function () {
-        operatorFeedUi.compact = !operatorFeedUi.compact;
-        compactBtn.setAttribute('aria-pressed', operatorFeedUi.compact ? 'true' : 'false');
-        renderOperatorStreamLog();
-      });
-    }
-    if (errorsOnlyBtn) {
-      errorsOnlyBtn.addEventListener('click', function () {
-        operatorFeedUi.errorsOnly = !operatorFeedUi.errorsOnly;
-        errorsOnlyBtn.setAttribute('aria-pressed', operatorFeedUi.errorsOnly ? 'true' : 'false');
-        renderOperatorStreamLog();
       });
     }
     if (searchInput) {
@@ -3391,7 +3442,7 @@
     var rows = [
       { label: 'Brain Connected', ok: runtimeDiagnostics.brainConnected },
       { label: 'Brain Endpoint Reachable', ok: runtimeDiagnostics.brainEndpointReachable },
-      { label: 'Operator Feed Active', ok: runtimeDiagnostics.operatorFeedActive },
+      { label: 'Execution Trace Active', ok: runtimeDiagnostics.operatorFeedActive },
       { label: 'Chat Integration Active', ok: runtimeDiagnostics.chatIntegrationActive },
     ];
     list.innerHTML = '';
@@ -3941,8 +3992,8 @@
   }
 
   function streamRunningApplicationFeed(visibility) {
-    if (!visibility || !visibility.operatorFeedEvents || !visibility.operatorFeedEvents.length) return;
-    var events = visibility.operatorFeedEvents;
+    var events = resolveExecutionTraceEventsFromPayload(visibility);
+    if (!events.length) return;
     var index = 0;
     function step() {
       if (index >= events.length) return;
@@ -3969,10 +4020,10 @@
   }
 
   function streamPreviewRealityFeed(reality) {
-    if (!reality || !reality.operatorFeedEvents || !reality.operatorFeedEvents.length) return;
+    var events = resolveExecutionTraceEventsFromPayload(reality);
+    if (!events.length) return;
     clearFeedStreamLog();
     runtimeDiagnostics.operatorFeedActive = true;
-    var events = reality.operatorFeedEvents;
     var index = 0;
     function step() {
       if (index >= events.length) return;
@@ -8225,9 +8276,9 @@
       return { action: event, detail: '', section: mapEventToSection(event), stepIndex: 0, stepTotal: 0, evidence: '' };
     }
     return {
-      action: event.action || event.eventType || 'Working',
-      detail: event.detail || '',
-      section: event.section || mapEventToSection(event.eventType),
+      action: event.eventTitle || event.action || event.eventType || 'Working',
+      detail: event.technicalDetail || event.detail || '',
+      section: event.runtimeStage || event.section || mapEventToSection(event.eventType),
       stepIndex: event.stepIndex || 0,
       stepTotal: event.stepTotal || 0,
       evidence: event.evidence || '',
@@ -8358,20 +8409,27 @@
 
   function streamOperatorFeedEvents(events, onComplete, responseForTrail) {
     if (!events || !events.length) {
-      publishFeedFailure('Operator Feed events missing');
+      publishFeedFailure('Execution Trace events missing');
       if (onComplete) onComplete();
       return;
     }
 
     runtimeDiagnostics.operatorFeedActive = true;
-    pushNotification('Operator Feed Active');
+    pushNotification('Execution Trace active');
     renderRuntimeDiagnostics();
 
+    var normalized = [];
+    for (var n = 0; n < events.length; n += 1) {
+      normalized.push(normalizeTraceEventForStream(events[n]));
+    }
+
     if (!operatorFeedUi.streamMode) {
-      for (var fast = 0; fast < events.length; fast += 1) {
-        appendOperatorLogFromEvent(events[fast], { active: false, finalizePrevious: fast === 0 });
+      for (var fast = 0; fast < normalized.length; fast += 1) {
+        appendOperatorLogFromEvent(normalized[fast], { active: false, finalizePrevious: fast === 0 });
       }
-      if (responseForTrail) appendBuildResponseOperatorLog(responseForTrail);
+      if (responseForTrail && responseForTrail.category !== 'BUILD') {
+        appendBuildResponseOperatorLog(responseForTrail);
+      }
       finalizeActiveOperatorLogLine();
       renderOperatorStreamLog();
       if (onComplete) onComplete();
@@ -8381,9 +8439,11 @@
     var index = 0;
 
     function tick() {
-      if (index >= events.length) {
+      if (index >= normalized.length) {
         finalizeActiveOperatorLogLine();
-        if (responseForTrail) appendBuildResponseOperatorLog(responseForTrail);
+        if (responseForTrail && responseForTrail.category !== 'BUILD') {
+          appendBuildResponseOperatorLog(responseForTrail);
+        }
         runtimeDiagnostics.operatorFeedActive = true;
         renderRuntimeDiagnostics();
         scrollFeedToLatest();
@@ -8391,7 +8451,7 @@
         return;
       }
 
-      appendOperatorLogFromEvent(events[index], { active: true, finalizePrevious: true });
+      appendOperatorLogFromEvent(normalized[index], { active: true, finalizePrevious: true });
       index += 1;
       setTimeout(tick, FEED_STAGE_DELAY_MS);
     }
@@ -9048,7 +9108,7 @@
           pushNotification('Build routing missed — restart npm run dev');
         }
         streamOperatorFeedEvents(
-          result.operatorFeedEvents,
+          resolveExecutionTraceEventsFromPayload(result),
           function () {
           removeThinkingMessage();
           appendChatMessage(result.brainResponse, 'brain');
