@@ -26,6 +26,12 @@ function profileSlug(profile: UniversalFeatureContract['productProfile']): strin
       return 'school-management-v1';
     case 'PROJECT_MANAGEMENT_WEB_V1':
       return 'project-management-v1';
+    case 'EXPENSE_TRACKER_WEB_V1':
+      return 'expense-tracker-v1';
+    case 'FINANCE_TRACKER_WEB_V1':
+      return 'finance-tracker-v1';
+    case 'QR_APP':
+      return 'qr-app-v1';
   }
 }
 

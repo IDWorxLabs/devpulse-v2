@@ -51,6 +51,11 @@ function sampleRecordText(entity: UniversalFeatureEntity, profile: UniversalFeat
       return 'Jane Student';
     case 'PROJECT_MANAGEMENT_WEB_V1':
       return 'Launch Website';
+    case 'EXPENSE_TRACKER_WEB_V1':
+    case 'FINANCE_TRACKER_WEB_V1':
+      return 'Coffee expense';
+    case 'QR_APP':
+      return 'https://example.com';
     case 'TASK_TRACKER_WEB_V1':
     default:
       return 'Buy groceries';
@@ -67,6 +72,11 @@ function editedRecordText(entity: UniversalFeatureEntity, profile: UniversalFeat
       return 'Jane Smith';
     case 'PROJECT_MANAGEMENT_WEB_V1':
       return 'Website Relaunch';
+    case 'EXPENSE_TRACKER_WEB_V1':
+    case 'FINANCE_TRACKER_WEB_V1':
+      return 'Updated expense';
+    case 'QR_APP':
+      return 'https://example.org';
     case 'TASK_TRACKER_WEB_V1':
     default:
       return 'Published task';

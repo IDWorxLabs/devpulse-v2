@@ -2,6 +2,7 @@
  * Universal Feature Contract Intelligence V1 — contract builder.
  */
 
+import { rankBuildProfiles } from '../build-profile-classification/index.js';
 import type {
   BuildUniversalFeatureContractInput,
   UniversalAppProfile,
@@ -25,64 +26,7 @@ function includesAny(text: string, terms: string[]): boolean {
 }
 
 export function detectUniversalAppProfile(rawPrompt: string): UniversalAppProfile | null {
-  const lower = rawPrompt.toLowerCase();
-
-  if (
-    includesAny(lower, [
-      'school management',
-      'school system',
-      'students and teachers',
-      'student',
-      'teacher',
-      'classroom',
-      'classes',
-    ]) &&
-    includesAny(lower, ['school', 'student', 'teacher', 'class'])
-  ) {
-    return 'SCHOOL_MANAGEMENT_WEB_V1';
-  }
-
-  if (includesAny(lower, ['crm', 'customer relationship', 'sales pipeline', 'manage customers'])) {
-    return 'CRM_WEB_V1';
-  }
-
-  if (includesAny(lower, ['inventory', 'stock', 'warehouse', 'inventory system', 'inventory item'])) {
-    return 'INVENTORY_WEB_V1';
-  }
-
-  if (
-    includesAny(lower, [
-      'project management',
-      'manage projects',
-      'milestones',
-      'sprint',
-      'kanban board',
-      'assign team',
-    ])
-  ) {
-    return 'PROJECT_MANAGEMENT_WEB_V1';
-  }
-
-  if (includesAny(lower, ['task tracker', 'todo', 'to-do', 'checklist', 'add tasks', 'mark them complete'])) {
-    return 'TASK_TRACKER_WEB_V1';
-  }
-
-  if (
-    includesAny(lower, [
-      'expense',
-      'expenses',
-      'expense tracking',
-      'expense tracker',
-      'finance tracker',
-      'budget',
-      'spending',
-      'receipt',
-    ])
-  ) {
-    return 'PROJECT_MANAGEMENT_WEB_V1';
-  }
-
-  return null;
+  return rankBuildProfiles(rawPrompt).selectedProfile;
 }
 
 function entity(
@@ -400,6 +344,103 @@ function buildProfileContract(input: {
         outcomes: [
           { id: 'project-created', entityId: project.id, label: 'Project created', required: true },
           { id: 'project-updated', entityId: project.id, label: 'Project updates persist', required: true },
+        ],
+      };
+    }
+
+    case 'EXPENSE_TRACKER_WEB_V1':
+    case 'FINANCE_TRACKER_WEB_V1': {
+      const transaction = entity('transaction', 'Transaction', 'Transactions', 'Transactions', true);
+      const category = entity('category', 'Category', 'Categories', 'Categories', false);
+      const productName =
+        input.profile === 'EXPENSE_TRACKER_WEB_V1' ? 'Expense Tracker' : 'Finance Tracker';
+      return {
+        contractVersion: '1.0',
+        contractId: input.contractId,
+        productProfile: input.profile,
+        productName,
+        generatedAt,
+        sourcePrompt: input.rawPrompt,
+        entities: [transaction, category],
+        actions: [
+          ...crudActions(transaction),
+          {
+            id: 'categorize-transaction',
+            entityId: category.id,
+            verb: 'assign',
+            label: 'Assign Category',
+            required: includesAny(lower, ['category', 'categories']),
+          },
+          {
+            id: 'export-transactions',
+            entityId: transaction.id,
+            verb: 'search',
+            label: 'Export Transactions',
+            required: includesAny(lower, ['csv', 'export', 'report']),
+          },
+        ],
+        rules: [
+          {
+            id: 'transaction-amount-required',
+            entityId: transaction.id,
+            label: 'Transaction must have an amount',
+            required: true,
+          },
+          {
+            id: 'category-name-required',
+            entityId: category.id,
+            label: 'Category must have a name',
+            required: includesAny(lower, ['category', 'categories']),
+          },
+        ],
+        workflows: [
+          {
+            id: 'expense-flow',
+            entityId: transaction.id,
+            label: 'Record → Categorize → Report',
+            stages: ['recorded', 'categorized', 'reported'],
+            required: includesAny(lower, ['report', 'reports', 'chart', 'charts']),
+          },
+        ],
+        outcomes: [
+          { id: 'transaction-recorded', entityId: transaction.id, label: 'Transaction recorded', required: true },
+          { id: 'balance-updated', entityId: transaction.id, label: 'Balance reflects transaction', required: includesAny(lower, ['balance', 'income']) },
+          { id: 'report-available', entityId: transaction.id, label: 'Reports/charts available', required: includesAny(lower, ['report', 'chart']) },
+        ],
+      };
+    }
+
+    case 'QR_APP': {
+      const qrCode = entity('qr-code', 'QR Code', 'QR Codes', 'QR Codes', true);
+      return {
+        contractVersion: '1.0',
+        contractId: input.contractId,
+        productProfile: input.profile,
+        productName: 'QR App',
+        generatedAt,
+        sourcePrompt: input.rawPrompt,
+        entities: [qrCode],
+        actions: crudActions(qrCode),
+        rules: [
+          {
+            id: 'qr-content-required',
+            entityId: qrCode.id,
+            label: 'QR code must have content',
+            required: true,
+          },
+        ],
+        workflows: [
+          {
+            id: 'qr-generate-scan',
+            entityId: qrCode.id,
+            label: 'Generate → Scan',
+            stages: ['generated', 'scanned'],
+            required: includesAny(lower, ['scan', 'barcode']),
+          },
+        ],
+        outcomes: [
+          { id: 'qr-generated', entityId: qrCode.id, label: 'QR code generated', required: true },
+          { id: 'qr-scannable', entityId: qrCode.id, label: 'QR code is scannable', required: true },
         ],
       };
     }

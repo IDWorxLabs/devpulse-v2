@@ -2,9 +2,8 @@
  * Build intent routing — detect prompts that must enter autonomous builder execution.
  */
 
-import { detectTaskTrackerIdea } from '../code-generation-engine/task-tracker-detector.js';
 import type { GeneratedAppProfile } from '../code-generation-engine/code-generation-engine-types.js';
-import { detectUniversalAppProfile } from '../universal-feature-contract-intelligence/universal-feature-contract-builder.js';
+import { rankBuildProfiles } from '../build-profile-classification/index.js';
 import { classifyIntent } from '../intent-architecture/intent-extractor.js';
 
 const BUILD_EXECUTION_CUES =
@@ -18,8 +17,7 @@ const APP_TARGETS =
 export function resolveBuildIntentProfile(message: string): GeneratedAppProfile | null {
   const normalized = message.trim();
   if (!normalized) return null;
-  if (detectTaskTrackerIdea(normalized)) return 'TASK_TRACKER_WEB_V1';
-  return detectUniversalAppProfile(normalized);
+  return rankBuildProfiles(normalized).selectedProfile;
 }
 
 export function isBuildIntentRequest(message: string): boolean {

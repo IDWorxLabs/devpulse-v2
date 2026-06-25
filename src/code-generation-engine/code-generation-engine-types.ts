@@ -9,7 +9,10 @@ export type GeneratedAppProfile =
   | 'CRM_WEB_V1'
   | 'INVENTORY_WEB_V1'
   | 'SCHOOL_MANAGEMENT_WEB_V1'
-  | 'PROJECT_MANAGEMENT_WEB_V1';
+  | 'PROJECT_MANAGEMENT_WEB_V1'
+  | 'EXPENSE_TRACKER_WEB_V1'
+  | 'FINANCE_TRACKER_WEB_V1'
+  | 'QR_APP';
 
 export interface TaskTrackerRequirements {
   readOnly: true;

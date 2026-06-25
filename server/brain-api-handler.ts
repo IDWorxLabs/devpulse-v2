@@ -13,6 +13,8 @@ import {
   composeOnePromptBuildFailurePayload,
   runOnePromptLivePreviewBuild,
 } from '../src/one-prompt-live-preview/index.js';
+import { applyBuildResultConversationalIntelligence } from '../src/build-result-conversational-intelligence/index.js';
+import type { OnePromptLivePreviewBuildResult } from '../src/one-prompt-live-preview/one-prompt-live-preview-types.js';
 import { isBuildIntentRequest } from '../src/build-intent-routing/index.js';
 import {
   alignmentBlocksBuildExecution,
@@ -237,7 +239,13 @@ export async function handleBrainRespondRequest(req: IncomingMessage, res: Serve
           message: body.message,
           buildResult,
         });
-        sendBuildBrainResponse(res, payload, buildResult.status);
+        const enrichedPayload = await applyBuildResultConversationalIntelligence({
+          message: body.message,
+          payload,
+          buildResult,
+          rootDir: ROOT_DIR,
+        });
+        sendBuildBrainResponse(res, enrichedPayload, buildResult.status);
       } catch (err) {
         const failureReason = err instanceof Error ? err.message : String(err);
         const payload = composeOnePromptBuildFailurePayload({
@@ -246,7 +254,13 @@ export async function handleBrainRespondRequest(req: IncomingMessage, res: Serve
           projectId: body.activeProjectId,
           projectName: body.projectName,
         });
-        sendBuildBrainResponse(res, payload, 'FAILED');
+        const enrichedPayload = await applyBuildResultConversationalIntelligence({
+          message: body.message,
+          payload,
+          buildResult: payload.onePromptLivePreview as OnePromptLivePreviewBuildResult,
+          rootDir: ROOT_DIR,
+        });
+        sendBuildBrainResponse(res, enrichedPayload, 'FAILED');
       }
       return;
     }

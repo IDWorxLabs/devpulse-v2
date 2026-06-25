@@ -5,6 +5,8 @@
 import type { OperatorFeedEvent } from '../command-center-brain/brain-types.js';
 import type { OnePromptLivePreviewBuildResult } from './one-prompt-live-preview-types.js';
 import { composeOnePromptBuildChatResponse, getOnePromptLivePreviewPublicState } from './one-prompt-build-orchestrator.js';
+import { analyzeBuildProfileClassification } from '../build-result-conversational-intelligence/build-result-classification-evidence.js';
+import { rankBuildProfiles } from '../build-profile-classification/index.js';
 import { buildOnePromptLivePreviewWorkspaceSync } from './canonical-live-preview-state.js';
 import { getPreviewRuntimeDiagnostics, listPreviewSessions, listPreviewTargets } from '../live-preview-runtime/index.js';
 import { getBuildIntentRun } from '../build-intent-routing/build-intent-run-store.js';
@@ -200,6 +202,11 @@ export function composeOnePromptBuildBrainApiPayload(input: {
   );
 
   const buildRun = getBuildIntentRun(input.buildResult.buildId);
+  const ranking = rankBuildProfiles(input.message);
+  const classificationEvidence = analyzeBuildProfileClassification(
+    input.message,
+    input.buildResult.generatedProfile,
+  );
 
   return {
     responseId: `brain-build-${input.buildResult.buildId}`,
@@ -223,22 +230,21 @@ export function composeOnePromptBuildBrainApiPayload(input: {
       livePreviewPending: input.buildResult.status === 'BUILDING',
       livePreviewAvailable: input.buildResult.livePreviewAvailable,
     },
-    classification: {
-      category: 'BUILD',
-      confidence: 'HIGH',
-      matchedSignals: ['build intent', input.buildResult.generatedProfile ?? 'application'],
-      reason: 'Build-intent prompt routed to AiDevEngine autonomous builder execution',
+    classification: classificationEvidence,
+    profileAlignment: {
+      verdict: classificationEvidence.alignmentVerdict,
+      reason: classificationEvidence.alignmentReason,
+      selectedProfile: input.buildResult.generatedProfile,
+      rankedProfile: ranking.selectedProfile,
+      matchedKeywords: classificationEvidence.matchedKeywords,
+      profileMismatchWarnings: classificationEvidence.profileMismatchWarnings,
     },
-    systemsReferenced: ['code_generation_engine', 'one_prompt_live_preview'],
+    systemsReferenced: ['code_generation_engine', 'one_prompt_live_preview', 'build_result_conversational_intelligence'],
     operatorFeedEvents: buildOnePromptOperatorFeedEvents(input.buildResult),
     onePromptLivePreview: input.buildResult,
     buildLivePreview,
     livePreviewWorkspaceSync,
-    llmChatBrainDiagnostics: {
-      llmConnected: false,
-      usedLlm: false,
-      skippedReason: 'One-prompt build path uses local deterministic generation — LLM not required',
-    },
+    buildChatTemplateFallback: brainResponse,
     confirmation: {
       intelligenceOnly: false,
       noExecutionPerformed: false,

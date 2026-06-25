@@ -1302,7 +1302,13 @@
       if (result.classification.reason) {
         pushLine('INFO', 'classification', 'Classification reason — ' + result.classification.reason);
       }
-      if (result.classification.matchedSignals && result.classification.matchedSignals.length) {
+      if (result.classification.matchedKeywords && result.classification.matchedKeywords.length) {
+        pushLine(
+          'DEBUG',
+          'classification',
+          'Detected keywords — ' + result.classification.matchedKeywords.join(', '),
+        );
+      } else if (result.classification.matchedSignals && result.classification.matchedSignals.length) {
         pushLine(
           'DEBUG',
           'classification',
@@ -1312,13 +1318,36 @@
       if (result.classification.confidence) {
         pushLine('INFO', 'classification', 'Confidence — ' + result.classification.confidence);
       }
+      if (result.classification.profileMismatchWarnings && result.classification.profileMismatchWarnings.length) {
+        for (var w = 0; w < result.classification.profileMismatchWarnings.length; w += 1) {
+          pushLine('ERROR', 'classification', 'Profile warning — ' + result.classification.profileMismatchWarnings[w]);
+        }
+      }
+    }
+    if (result.profileAlignment) {
+      var paVerdict = result.profileAlignment.verdict || 'UNKNOWN';
+      var paLevel = paVerdict === 'ALIGNED' ? 'INFO' : 'ERROR';
+      pushLine(paLevel, 'classification', 'Profile alignment — ' + paVerdict);
+      if (result.profileAlignment.reason) {
+        pushLine(paLevel, 'classification', 'Alignment reason — ' + result.profileAlignment.reason);
+      }
     }
     var be = result.buildExecution || {};
     var preview = result.onePromptLivePreview || {};
     if (be.projectName) pushLine('INFO', 'build', 'Active project — ' + be.projectName);
     if (be.generatedProfile) {
       pushLine('INFO', 'planning', 'Profile matched — ' + be.generatedProfile);
-      pushLine('INFO', 'planning', 'Why profile selected — build-intent routing matched ' + be.generatedProfile);
+      if (result.classification && result.classification.matchedKeywords && result.classification.matchedKeywords.length) {
+        pushLine(
+          'INFO',
+          'planning',
+          'Why profile selected — keyword evidence: ' + result.classification.matchedKeywords.join(', '),
+        );
+      } else if (result.classification && result.classification.reason) {
+        pushLine('INFO', 'planning', 'Why profile selected — ' + result.classification.reason);
+      } else {
+        pushLine('INFO', 'planning', 'Why profile selected — build-intent routing matched ' + be.generatedProfile);
+      }
     }
     if (be.architectureSummary) {
       pushLine('INFO', 'planning', 'Blueprint loaded — ' + be.architectureSummary);
@@ -3734,14 +3763,25 @@
             },
       });
       if (!resolvedRa || resolvedRa.outputState === 'NO_RUNNING_APP' || resolvedRa.testReadiness === 'NOT_TESTABLE') {
+        var profileAligned =
+          !lp.onePromptBuild ||
+          !lp.onePromptBuild.profileAlignment ||
+          lp.onePromptBuild.profileAlignment.verdict === 'ALIGNED';
         resolvedRa = Object.assign({}, resolvedRa || {}, {
           runningAppTitle: targetName + ' Preview',
           outputState: 'OUTPUT_READY_FOR_TESTING',
           outputStateLabel: 'Ready for testing',
-          testReadiness: 'TESTABLE',
-          testReadinessReason: 'Output is visible, current, interactive, and meaningful to test.',
-          requestAlignment: 'ALIGNED',
-          alignmentReason: 'Active preview matches the latest one-prompt build request.',
+          testReadiness: profileAligned ? 'TESTABLE' : 'TESTABLE_WITH_WARNINGS',
+          testReadinessReason: profileAligned
+            ? 'Output is visible, current, interactive, and meaningful to test.'
+            : 'Output is visible but profile alignment is not confirmed — review before sign-off.',
+          requestAlignment: profileAligned ? 'ALIGNED' : 'NOT_ALIGNED',
+          alignmentReason: profileAligned
+            ? 'Active preview matches the latest one-prompt build request.'
+            : (lp.onePromptBuild &&
+                lp.onePromptBuild.profileAlignment &&
+                lp.onePromptBuild.profileAlignment.reason) ||
+              'Build profile may not match the founder request.',
           recommendedAction: 'Interact with the running app in Live Preview',
           buildOutput: Object.assign({}, (resolvedRa && resolvedRa.buildOutput) || {}, {
             buildState: 'PREVIEW_READY',
@@ -8861,6 +8901,8 @@
         failureReason: build.failureReason,
         npmInstallOk: build.npmInstallOk,
         npmBuildOk: build.npmBuildOk,
+        profileAlignment: responseMeta.profileAlignment || null,
+        classification: responseMeta.classification || null,
       };
       var canonicalPanels = resolveCanonicalLivePreviewPanels(workspaceData.livePreview, workspaceData.runningApplication);
       workspaceData.livePreview = canonicalPanels.livePreview;
@@ -9023,6 +9065,8 @@
               {
                 activeProjectId: result.activeProjectId,
                 multiProjectWorkspaces: result.multiProjectWorkspaces,
+                profileAlignment: result.profileAlignment,
+                classification: result.classification,
               },
             );
             if (result.onePromptLivePreview && result.onePromptLivePreview.status === 'FAILED') {
