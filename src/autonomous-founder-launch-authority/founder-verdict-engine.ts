@@ -23,13 +23,40 @@ function clamp(n: number): number {
 }
 
 function hasCriticalLaunchBlockers(evidence: FounderEvidenceSnapshot): boolean {
-  if (evidence.featureReality.available && !evidence.featureReality.passed) return true;
-  if (evidence.engineeringReality.available && !evidence.engineeringReality.passed) return true;
-  if (evidence.verificationHub?.incompleteVerification) return true;
-  if (evidence.productArchitecture?.architecturallyIncomplete) return true;
-  if (evidence.requirementDiscovery?.poorlyUnderstood) return true;
-  if (evidence.missingPrerequisites.length > 0) return true;
-  return false;
+  return resolveFounderLaunchBlockingRules(evidence).length > 0;
+}
+
+/** Exact blocking rules applied before score-based verdict derivation. */
+export function resolveFounderLaunchBlockingRules(evidence: FounderEvidenceSnapshot): string[] {
+  const rules: string[] = [];
+  if (evidence.featureReality.available && !evidence.featureReality.passed) {
+    rules.push('Feature Reality prerequisite failed');
+  }
+  if (evidence.engineeringReality.available && !evidence.engineeringReality.passed) {
+    rules.push('Engineering Reality prerequisite failed');
+  }
+  if (
+    evidence.verificationHub &&
+    !evidence.verificationHub.verificationSufficientForLaunch
+  ) {
+    rules.push(
+      `Verification Hub insufficient (coverage ${evidence.verificationHub.overallCoveragePercent}%, confidence ${evidence.verificationHub.verificationConfidenceScore}, gaps: ${evidence.verificationHub.gapSummary.slice(0, 2).join('; ') || 'see gap report'})`,
+    );
+  }
+  if (evidence.productArchitecture?.architecturallyIncomplete) {
+    rules.push(
+      `Product Architecture incomplete (readiness ${evidence.productArchitecture.productReadinessScore}/100, ${evidence.productArchitecture.criticalProductGapCount} critical gap(s))`,
+    );
+  }
+  if (evidence.requirementDiscovery?.poorlyUnderstood) {
+    rules.push('Requirement Discovery poorly understood');
+  }
+  for (const prereq of evidence.missingPrerequisites) {
+    if (!rules.some((rule) => rule.includes(prereq))) {
+      rules.push(`Founder prerequisite missing: ${prereq}`);
+    }
+  }
+  return rules;
 }
 
 export function buildFounderLaunchScores(reviewers: FounderReviewerAssessment[]): FounderLaunchScores {
@@ -181,6 +208,7 @@ export function buildAutonomousFounderLaunchAssessment(input: {
   const userLabel = resolveFounderLaunchUserLabel(userPhase);
   const passed = verdict === 'LAUNCH_READY' || verdict === 'LAUNCH_READY_WITH_WARNINGS';
   const blocksLaunch = !passed;
+  const blockingRules = resolveFounderLaunchBlockingRules(input.evidence);
 
   const launchDecisionExplainability = buildLaunchDecisionExplainability({
     verdict,
@@ -210,10 +238,12 @@ export function buildAutonomousFounderLaunchAssessment(input: {
     remediationPlan: verdict === 'NEEDS_AUTOFIX' ? input.remediationPlan : null,
     blocksLaunch,
     blocksLaunchReason: blocksLaunch
-      ? (input.evidence.missingPrerequisites[0] ??
-        input.reviewers.flatMap((reviewer) => reviewer.risks)[0] ??
-        `Verdict: ${verdict}`)
+      ? (blockingRules[0] ??
+          input.evidence.missingPrerequisites[0] ??
+          input.reviewers.flatMap((reviewer) => reviewer.risks)[0] ??
+          `Verdict: ${verdict}`)
       : null,
+    blockingRules,
     userPhase,
     userLabel,
     contractId: input.contractId ?? null,

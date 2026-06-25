@@ -54,6 +54,7 @@ export {
 
 export {
   runUniversalFeatureValidation,
+  registerSourceDerivedUniversalFeatureContractAssessment,
   getLastUniversalFeatureContractAssessment,
   resetUniversalFeatureContractAssessmentForTests,
 } from './universal-feature-contract-authority.js';

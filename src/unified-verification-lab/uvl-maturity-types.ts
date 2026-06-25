@@ -86,4 +86,6 @@ export interface AssessUvlMaturityInput {
   productPrompt?: string;
   projectRootDir?: string | null;
   workspaceDir?: string | null;
+  /** Optional build-proof materialization handoff from AIDEVENGINE_BUILD_PROOF_V1_2. */
+  buildProofHandoff?: import('../aidevengine-build-proof-v1-2/launch-evidence-handoff-types.js').BuildProofMaterializationHandoff | null;
 }

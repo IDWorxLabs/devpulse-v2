@@ -28,6 +28,7 @@ export function assessUvlMaturity(input: AssessUvlMaturityInput = {}): UvlMaturi
     productPrompt,
     projectRootDir: input.projectRootDir ?? null,
     workspaceDir: input.workspaceDir ?? null,
+    buildProofHandoff: input.buildProofHandoff ?? null,
   });
 
   const verificationGapReport = detectVerificationGaps({ categoryCoverage, timeline });

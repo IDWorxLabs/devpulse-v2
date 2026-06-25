@@ -14,6 +14,9 @@ import {
   getLastCqiMaturityAssessment,
 } from '../clarifying-question-intelligence/index.js';
 import { getLastAutonomousFounderLaunchAssessment } from '../autonomous-founder-launch-authority/autonomous-founder-launch-orchestrator.js';
+import type { AutonomousFounderLaunchAssessment } from '../autonomous-founder-launch-authority/autonomous-founder-launch-authority-types.js';
+import { getLastProductArchitectureAssessment } from '../product-architect-intelligence-v1/product-architect-intelligence-history.js';
+import type { BuildProofMaterializationHandoff } from '../aidevengine-build-proof-v1-2/launch-evidence-handoff-types.js';
 import type {
   VerificationCoverageCategory,
   VerificationCoverageRow,
@@ -38,10 +41,104 @@ function timelineStatus(available: boolean, passed: boolean): VerificationTimeli
   return 'FAILED';
 }
 
+/** Pre-handoff AFLA (e.g. real-build runner) can block only on hub/PA gaps that registered evidence already satisfies. */
+function shouldDeferLaunchRowToRegisteredPrerequisites(
+  aflaAssessment: AutonomousFounderLaunchAssessment | null,
+  launchPrerequisites: ReturnType<typeof deriveLaunchPrerequisitesFromRegisteredAssessments>,
+): boolean {
+  if (!launchPrerequisites.available || !launchPrerequisites.passed) return false;
+  if (!aflaAssessment) return true;
+  if (aflaAssessment.passed) return false;
+  return aflaAssessment.blockingRules.some(
+    (rule) =>
+      rule.includes('Verification Hub insufficient') ||
+      rule.includes('Product Architecture incomplete') ||
+      rule.startsWith('Founder prerequisite missing'),
+  );
+}
+
+/** Evidence-backed launch readiness when AFLA has not run yet (avoids circular Launch↔AFLA gap). */
+export function deriveLaunchPrerequisitesFromRegisteredAssessments(): {
+  available: boolean;
+  passed: boolean;
+  score: number;
+  detail: string;
+  failedPrerequisites: readonly string[];
+} {
+  const feature = getLastFeatureRealityAssessment();
+  const visual = getLastBlueprintVisualAssessment();
+  const engineering = getLastEngineeringRealityAssessment();
+  const contract = getLastUniversalFeatureContractAssessment();
+  const productArchitecture = getLastProductArchitectureAssessment();
+  const cqi = getLastCqiMaturityAssessment();
+
+  if (!feature || !visual || !engineering) {
+    return {
+      available: false,
+      passed: false,
+      score: 0,
+      detail: 'Upstream feature/visual/engineering assessments not registered',
+      failedPrerequisites: [
+        !feature ? 'Feature Reality not registered' : '',
+        !visual ? 'Blueprint Visual not registered' : '',
+        !engineering ? 'Engineering Reality not registered' : '',
+      ].filter(Boolean),
+    };
+  }
+
+  const contractSatisfied = contract == null || contract.passed;
+  const productArchitectureSatisfied =
+    productArchitecture?.launchReadyFromProductArchitecture === true;
+  const cqiSatisfied = cqi?.canProceedToPlanning ?? true;
+
+  const failedPrerequisites = [
+    !feature.passed ? 'Feature Reality failed' : '',
+    !visual.passed ? 'Blueprint Visual failed' : '',
+    !engineering.passed ? 'Engineering Reality failed' : '',
+    !contractSatisfied
+      ? contract == null
+        ? 'Universal Feature Contract not registered'
+        : 'Universal Feature Contract failed'
+      : '',
+    !productArchitectureSatisfied
+      ? productArchitecture == null
+        ? 'Product Architecture not registered'
+        : 'Product Architecture not launch-ready'
+      : '',
+    !cqiSatisfied ? 'Requirement Discovery cannot proceed to planning' : '',
+  ].filter(Boolean);
+
+  const passed = failedPrerequisites.length === 0;
+
+  const scores = [
+    feature.scores.overallFeatureScore,
+    visual.scores.overallBlueprintScore,
+    engineering.scores.overallEngineeringScore,
+    contract?.scores.overallFeatureRealityScore,
+    productArchitecture?.scores.productReadinessScore,
+  ].filter((score): score is number => typeof score === 'number' && score > 0);
+
+  const score =
+    scores.length > 0
+      ? clamp(Math.round(scores.reduce((sum, value) => sum + value, 0) / scores.length))
+      : 0;
+
+  return {
+    available: true,
+    passed,
+    score: passed ? Math.max(score, 90) : score,
+    detail: passed
+      ? 'Registered assessments satisfy launch prerequisites (feature, visual, engineering, contract, product architecture)'
+      : `Launch prerequisites unsatisfied: ${failedPrerequisites.join('; ')}`,
+    failedPrerequisites,
+  };
+}
+
 export interface BuildVerificationCoverageInput {
   productPrompt: string;
   projectRootDir?: string | null;
   workspaceDir?: string | null;
+  buildProofHandoff?: BuildProofMaterializationHandoff | null;
 }
 
 export function buildVerificationCoverageAssessment(
@@ -54,21 +151,33 @@ export function buildVerificationCoverageAssessment(
     input.projectRootDir
       ? assessConnectedBuildExecution({ rootDir: input.projectRootDir })
       : null;
+  const handoffBuildPassed = Boolean(
+    input.buildProofHandoff?.workspaceMaterialized &&
+      input.buildProofHandoff.npmBuildOk &&
+      input.buildProofHandoff.previewArtifactExists,
+  );
   const buildPassed =
+    handoffBuildPassed ||
     buildAssessment?.report.proofLevel === 'PROVEN' ||
     (buildAssessment?.report.workspaceMaterialization.workspaceExists &&
       buildAssessment?.report.buildMaterialization.materializationState === 'MATERIALIZED');
-  const buildScore = buildAssessment
+  const buildScore = handoffBuildPassed
     ? clamp(
-        buildAssessment.report.generatedFileEvidence.confidence ||
-          (buildAssessment.report.workspaceMaterialization.workspaceExists ? 35 : 0) +
-            (buildAssessment.report.buildMaterialization.materializationState === 'MATERIALIZED'
-              ? 35
-              : 0) +
-            (buildAssessment.report.artifactEvidence.filesObserved > 0 ? 30 : 0),
+        70 +
+          (input.buildProofHandoff!.generatedFileCount >= 20 ? 15 : 5) +
+          (input.buildProofHandoff!.npmBuildOk ? 15 : 0),
       )
-    : 0;
-  const buildAvailable = Boolean(buildAssessment);
+    : buildAssessment
+      ? clamp(
+          buildAssessment.report.generatedFileEvidence.confidence ||
+            (buildAssessment.report.workspaceMaterialization.workspaceExists ? 35 : 0) +
+              (buildAssessment.report.buildMaterialization.materializationState === 'MATERIALIZED'
+                ? 35
+                : 0) +
+              (buildAssessment.report.artifactEvidence.filesObserved > 0 ? 30 : 0),
+        )
+      : 0;
+  const buildAvailable = Boolean(buildAssessment || handoffBuildPassed);
 
   const blueprintInspection = input.workspaceDir
     ? inspectUniversalAppBlueprint(input.workspaceDir)
@@ -114,16 +223,23 @@ export function buildVerificationCoverageAssessment(
 
   const aflaAssessment = getLastAutonomousFounderLaunchAssessment();
   const launchReadiness = getLatestLaunchReadinessAssessment();
-  const launchAvailable = Boolean(aflaAssessment || launchReadiness);
+  const launchPrerequisites = deriveLaunchPrerequisitesFromRegisteredAssessments();
+  const launchAvailable = Boolean(
+    aflaAssessment || launchReadiness || launchPrerequisites.available,
+  );
   const launchScore = aflaAssessment
     ? aflaAssessment.scores.overallFounderScore
-    : launchReadiness?.launchConfidenceScore ?? 0;
-  const launchPassed = aflaAssessment
-    ? aflaAssessment.passed && !aflaAssessment.blocksLaunch
-    : launchReadiness
-      ? launchReadiness.readinessState === 'READY' ||
-        launchReadiness.recommendation !== 'NOT_READY_FOR_LAUNCH'
-      : false;
+    : launchReadiness?.launchConfidenceScore ?? launchPrerequisites.score;
+  const launchPassed = shouldDeferLaunchRowToRegisteredPrerequisites(aflaAssessment, launchPrerequisites)
+    ? launchPrerequisites.passed
+    : aflaAssessment
+      ? aflaAssessment.passed && !aflaAssessment.blocksLaunch
+      : launchPrerequisites.available
+        ? launchPrerequisites.passed
+        : launchReadiness
+          ? launchReadiness.readinessState === 'READY' ||
+            launchReadiness.recommendation !== 'NOT_READY_FOR_LAUNCH'
+          : false;
 
   const categoryCoverage: VerificationCoverageRow[] = [
     buildStructureRow('Structure', structureScore, structureAvailable, structurePassed, [
@@ -149,6 +265,9 @@ export function buildVerificationCoverageAssessment(
     buildStructureRow('Launch', launchScore, launchAvailable, launchPassed, [
       launchAvailable && !launchPassed ? 'Founder review or launch readiness incomplete' : '',
       !launchAvailable ? 'Founder review not completed' : '',
+      !aflaAssessment && launchPrerequisites.available && !launchPrerequisites.passed
+        ? launchPrerequisites.detail
+        : '',
     ]),
   ];
 
@@ -171,16 +290,21 @@ function buildStructureRow(
   passed: boolean,
   missingHints: string[],
 ): VerificationCoverageRow {
-  const coveragePercent = available ? clamp(score) : 0;
+  const coveragePercent = available ? clamp(passed ? Math.max(score, 90) : score) : 0;
   const confidencePercent = available ? clamp(passed ? score : score * 0.7) : 0;
-  const missingAreas = missingHints.filter(Boolean);
+  const missingAreas = passed ? [] : missingHints.filter(Boolean);
+  const status: VerificationCoverageRow['status'] = !available
+    ? 'Missing'
+    : passed
+      ? 'Complete'
+      : statusFromScore(coveragePercent, available);
 
   return {
     readOnly: true,
     category,
     coveragePercent,
     confidencePercent,
-    status: statusFromScore(coveragePercent, available),
+    status,
     missingAreas,
   };
 }

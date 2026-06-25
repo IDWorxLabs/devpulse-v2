@@ -354,7 +354,32 @@ function buildRequirementDiscoveryEvidence(
 function buildProductArchitectureEvidence(
   productPrompt?: string | null,
   profile?: string | null,
+  useRegistered?: boolean,
 ): FounderProductArchitectureEvidence | null {
+  if (useRegistered) {
+    const registered = getLastProductArchitectureAssessment();
+    if (registered) {
+      const penalty = computeProductArchitectureAflaPenalty(registered);
+      return {
+        readOnly: true,
+        productReadinessScore: registered.scores.productReadinessScore,
+        architectureScore: registered.scores.architectureScore,
+        workflowCompletenessScore: registered.scores.workflowCompletenessScore,
+        userJourneyScore: registered.scores.userJourneyScore,
+        screenCoverageScore: registered.scores.screenCoverageScore,
+        readinessLabel: registered.scores.readinessLabel,
+        criticalProductGapCount: registered.gapReport.criticalGapCount,
+        gapSummary: registered.gapReport.gapSummary,
+        missingScreens: registered.missingScreens.map((screen) => screen.screen),
+        missingWorkflows: registered.workflowAnalysis
+          .filter((workflow) => !workflow.complete)
+          .map((workflow) => workflow.workflow),
+        architecturallyIncomplete: penalty.architecturallyIncomplete,
+        productArchitecturePenalty: penalty.penalty,
+        cqiRootCause: registered.cqiContext?.rootCause ?? null,
+      };
+    }
+  }
   const assessment = productPrompt || profile
     ? assessProductArchitecture({
         productPrompt: productPrompt ?? undefined,
@@ -388,7 +413,23 @@ function buildProductArchitectureEvidence(
 function buildVerificationHubEvidence(
   productPrompt?: string | null,
   profile?: string | null,
+  useRegistered?: boolean,
 ): FounderVerificationHubEvidence | null {
+  if (useRegistered) {
+    const registered = getLastUvlMaturityAssessment();
+    if (registered) {
+      return {
+        readOnly: true,
+        overallCoveragePercent: registered.overallCoveragePercent,
+        verificationConfidenceScore: registered.verificationConfidenceScore,
+        gapSummary: registered.verificationGapReport.gapSummary,
+        missingVerificationAreas: registered.missingVerificationAreas,
+        incompleteVerification: registered.incompleteVerification,
+        verificationSufficientForLaunch: registered.verificationSufficientForLaunch,
+        verificationConfidencePenalty: registered.verificationConfidencePenalty,
+      };
+    }
+  }
   const assessment = productPrompt || profile
     ? assessUvlMaturity({ productPrompt: productPrompt ?? undefined, profile: profile ?? undefined })
     : getLastUvlMaturityAssessment();
@@ -414,6 +455,8 @@ export function collectFounderLaunchEvidence(input: {
   synthesizeLaunchReadiness?: boolean;
   productPrompt?: string | null;
   profile?: string | null;
+  useRegisteredProductArchitecture?: boolean;
+  useRegisteredVerificationHub?: boolean;
 }): FounderEvidenceSnapshot {
   const buildReality = buildBuildRealityEvidence({
     projectRootDir: input.projectRootDir ?? null,
@@ -440,8 +483,16 @@ export function collectFounderLaunchEvidence(input: {
     universalFeatureContract,
     engineeringReality,
     requirementDiscovery: buildRequirementDiscoveryEvidence(input.productPrompt ?? null),
-    verificationHub: buildVerificationHubEvidence(input.productPrompt ?? null, input.profile ?? null),
-    productArchitecture: buildProductArchitectureEvidence(input.productPrompt ?? null, input.profile ?? null),
+    verificationHub: buildVerificationHubEvidence(
+      input.productPrompt ?? null,
+      input.profile ?? null,
+      input.useRegisteredVerificationHub,
+    ),
+    productArchitecture: buildProductArchitectureEvidence(
+      input.productPrompt ?? null,
+      input.profile ?? null,
+      input.useRegisteredProductArchitecture,
+    ),
   };
 
   const launchReadiness = input.synthesizeLaunchReadiness
@@ -465,7 +516,9 @@ export function collectFounderLaunchEvidence(input: {
   const productArchitecture = partial.productArchitecture;
   const extendedMissing = [
     ...(requirementDiscovery?.poorlyUnderstood ? ['Requirement Discovery incomplete'] : []),
-    ...(verificationHub?.incompleteVerification ? ['Verification Hub incomplete'] : []),
+    ...(verificationHub && !verificationHub.verificationSufficientForLaunch
+      ? ['Verification Hub incomplete']
+      : []),
     ...(productArchitecture?.architecturallyIncomplete ? ['Product Architecture incomplete'] : []),
     ...missingPrerequisites,
   ];

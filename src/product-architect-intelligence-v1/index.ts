@@ -68,6 +68,7 @@ export {
 
 export {
   assessProductArchitecture,
+  registerSourceDerivedProductArchitectureAssessment,
   getProductReadinessScore,
   isArchitecturallyIncomplete,
 } from './product-architecture-assessor.js';

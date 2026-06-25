@@ -101,3 +101,20 @@ export async function runFeatureRealityValidation(
     await browser.close();
   }
 }
+
+/** Register source-derived feature checks (static inspection — not Playwright runtime). */
+export function registerSourceDerivedFeatureRealityAssessment(input: {
+  previewUrl: string;
+  contractId: string;
+  checks: import('./feature-reality-validation-types.js').FeatureRealityCheck[];
+}): FeatureRealityAssessment {
+  const assessment = buildFeatureRealityAssessment({
+    previewUrl: input.previewUrl,
+    contractId: input.contractId,
+    checks: input.checks,
+    reportMarkdown: '',
+  });
+  assessment.reportMarkdown = formatFeatureRealityReportMarkdown(assessment);
+  lastAssessment = assessment;
+  return assessment;
+}

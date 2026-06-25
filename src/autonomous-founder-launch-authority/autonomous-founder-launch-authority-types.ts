@@ -153,6 +153,7 @@ export interface AutonomousFounderLaunchAssessment {
   remediationPlan: FounderRemediationPlan | null;
   blocksLaunch: boolean;
   blocksLaunchReason: string | null;
+  blockingRules: readonly string[];
   userPhase: FounderLaunchUserPhase;
   userLabel: string;
   contractId: string | null;
@@ -171,6 +172,11 @@ export interface RunAutonomousFounderLaunchAuthorityInput {
   blueprintStructure?: FounderEvidenceSource | null;
   maxAutofixRetries?: number;
   skipAutofix?: boolean;
+  projectRootDir?: string | null;
+  productPrompt?: string | null;
+  profile?: string | null;
+  useRegisteredProductArchitecture?: boolean;
+  useRegisteredVerificationHub?: boolean;
   onUserPhase?: (phase: FounderLaunchUserPhase, label: string) => void;
 }
 

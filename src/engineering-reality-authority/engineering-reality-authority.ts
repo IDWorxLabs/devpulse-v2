@@ -126,3 +126,35 @@ export async function runEngineeringRealityValidation(
     await browser.close();
   }
 }
+
+/** Register build-only engineering checks from build-proof handoff (no Playwright runtime). */
+export function registerSourceDerivedEngineeringRealityAssessment(input: {
+  previewUrl: string;
+  contractId: string;
+  productName: string;
+  checks: import('./engineering-reality-types.js').EngineeringRealityCheck[];
+  buildAnalysis: import('./engineering-reality-types.js').EngineeringBuildAnalysis;
+}): EngineeringRealityAssessment {
+  const assessment = buildEngineeringRealityAssessment({
+    previewUrl: input.previewUrl,
+    contractId: input.contractId,
+    productName: input.productName,
+    checks: input.checks,
+    buildAnalysis: input.buildAnalysis,
+    loadTimeAnalysis: {
+      launchMs: 0,
+      shellMs: 0,
+      navigationMs: 0,
+      detail: 'Runtime load not measured — build-proof source-derived handoff only',
+    },
+    runtimeHealth: {
+      consoleErrors: [],
+      consoleWarnings: ['Playwright runtime engineering checks not run in build-proof handoff'],
+      detail: 'Build-only engineering evidence',
+    },
+    reportMarkdown: '',
+  });
+  assessment.reportMarkdown = formatEngineeringRealityReportMarkdown(assessment);
+  lastAssessment = assessment;
+  return assessment;
+}

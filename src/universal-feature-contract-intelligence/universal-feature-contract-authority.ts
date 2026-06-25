@@ -112,3 +112,22 @@ export async function runUniversalFeatureValidation(
     await browser.close();
   }
 }
+
+/** Register source-derived universal feature checks (bounded runtime — not full Playwright suite). */
+export function registerSourceDerivedUniversalFeatureContractAssessment(input: {
+  previewUrl: string;
+  contract: import('./universal-feature-contract-types.js').UniversalFeatureContract;
+  plan: import('./universal-feature-contract-types.js').FeatureRealityValidationPlan;
+  checks: import('./universal-feature-contract-types.js').UniversalFeatureRealityCheck[];
+}): UniversalFeatureContractAssessment {
+  const assessment = buildUniversalFeatureContractAssessment({
+    previewUrl: input.previewUrl,
+    contract: input.contract,
+    plan: input.plan,
+    checks: input.checks,
+    reportMarkdown: '',
+  });
+  assessment.reportMarkdown = formatUniversalFeatureContractReportMarkdown(assessment);
+  lastAssessment = assessment;
+  return assessment;
+}

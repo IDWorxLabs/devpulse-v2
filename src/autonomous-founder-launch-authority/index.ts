@@ -40,6 +40,7 @@ export {
   buildFounderLaunchScores,
   deriveFounderLaunchVerdict,
   buildAutonomousFounderLaunchAssessment,
+  resolveFounderLaunchBlockingRules,
 } from './founder-verdict-engine.js';
 
 export { buildLaunchDecisionExplainability } from './founder-launch-decision-explainability.js';

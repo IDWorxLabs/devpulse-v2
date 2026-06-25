@@ -46,11 +46,15 @@ function emitPhase(
 
 function assessOnce(input: RunAutonomousFounderLaunchAuthorityInput): AutonomousFounderLaunchAssessment {
   const evidence = collectFounderLaunchEvidence({
-    projectRootDir: process.cwd(),
+    projectRootDir: input.projectRootDir ?? process.cwd(),
     workspaceDir: input.workspaceDir ?? null,
     buildReality: input.buildReality,
     blueprintStructure: input.blueprintStructure,
+    productPrompt: input.productPrompt ?? null,
+    profile: input.profile ?? null,
     synthesizeLaunchReadiness: true,
+    useRegisteredProductArchitecture: input.useRegisteredProductArchitecture,
+    useRegisteredVerificationHub: input.useRegisteredVerificationHub,
   });
 
   const reviewers = runFounderReviewerPanel(evidence);

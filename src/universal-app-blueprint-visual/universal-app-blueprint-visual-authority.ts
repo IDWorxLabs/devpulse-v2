@@ -101,3 +101,20 @@ export async function runUniversalAppBlueprintVisualValidation(
     await browser.close();
   }
 }
+
+/** Register source-derived blueprint visual checks (structure/build artifact — not Playwright viewport). */
+export function registerSourceDerivedBlueprintVisualAssessment(input: {
+  previewUrl: string;
+  checks: import('./universal-app-blueprint-visual-types.js').BlueprintVisualCheck[];
+  viewportEvidence?: string[];
+}): BlueprintVisualAssessment {
+  const assessment = buildBlueprintVisualAssessment({
+    previewUrl: input.previewUrl,
+    checks: input.checks,
+    viewportEvidence: input.viewportEvidence ?? [],
+    reportMarkdown: '',
+  });
+  assessment.reportMarkdown = formatBlueprintVisualReportMarkdown(assessment);
+  lastAssessment = assessment;
+  return assessment;
+}
