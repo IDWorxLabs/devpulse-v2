@@ -22,7 +22,7 @@ import {
   assessRequirementsToPlanExecutionContract,
 } from '../requirements-to-plan-execution-contract/index.js';
 import { createPreviewSession } from '../live-preview-runtime/preview-session-manager.js';
-import { isOnePromptBuildRequest } from './build-request-detector.js';
+import { isOnePromptBuildRequest, resolveBuildIntentProfile } from './build-request-detector.js';
 import {
   getActiveGeneratedDevServerState,
   listGeneratedDevServers,
@@ -33,6 +33,12 @@ import type {
   OnePromptLivePreviewBuildResult,
   OnePromptLivePreviewPublicState,
 } from './one-prompt-live-preview-types.js';
+import {
+  recordBuildIntentRun,
+} from '../build-intent-routing/build-intent-run-store.js';
+import { resolveProjectRegistryRootDir } from '../project-registry-v1/project-registry-v1-store.js';
+import { upsertProjectContextMetadata } from '../project-context-alignment-v1/project-context-metadata-store.js';
+import { assertWorkspacePathBelongsToProject } from '../project-isolation-guard-v1/index.js';
 import {
   getActiveProjectId,
   getBuildResultForProject,
@@ -118,6 +124,55 @@ function composeFailureResult(input: {
   };
 }
 
+function inspectUniversalFeatureSignals(workspaceDir: string): boolean {
+  const candidates = [
+    join(workspaceDir, 'src/App.tsx'),
+    join(workspaceDir, 'src/features/universal-feature.tsx'),
+    join(workspaceDir, 'src/gpcg/GeneralPurposeManifest.json'),
+  ];
+  return candidates.some((path) => existsSync(path));
+}
+
+function persistBuildIntentRun(input: {
+  buildRunId: string;
+  projectId: string;
+  projectName: string;
+  prompt: string;
+  profile: string | null;
+  status: 'BUILDING' | 'READY' | 'FAILED' | 'QUEUED';
+  stage: string;
+  workspacePath: string | null;
+  previewUrl: string | null;
+  planTaskCount: number | null;
+  architectureSummary: string | null;
+  failureReason: string | null;
+  projectRootDir: string;
+  createdAt?: string;
+}): void {
+  const stamp = new Date().toISOString();
+  recordBuildIntentRun(
+    {
+      readOnly: true,
+      buildRunId: input.buildRunId,
+      projectId: input.projectId,
+      projectName: input.projectName,
+      prompt: input.prompt,
+      profile: input.profile,
+      status: input.status,
+      stage: input.stage,
+      workspacePath: input.workspacePath,
+      previewUrl: input.previewUrl,
+      activeProjectId: input.projectId,
+      planTaskCount: input.planTaskCount,
+      architectureSummary: input.architectureSummary,
+      failureReason: input.failureReason,
+      createdAt: input.createdAt ?? stamp,
+      updatedAt: stamp,
+    },
+    input.projectRootDir,
+  );
+}
+
 function registerBuildOutcome(
   projectId: string,
   projectName: string,
@@ -145,8 +200,10 @@ export async function runOnePromptLivePreviewBuild(
     createIfMissing: true,
   });
   const { projectId, projectName } = projectContext;
+  const resolvedProfile =
+    resolveBuildIntentProfile(prompt) ?? resolveGeneratedAppProfile(prompt);
 
-  if (!isOnePromptBuildRequest(prompt)) {
+  if (!isOnePromptBuildRequest(prompt) && !resolvedProfile) {
     return registerBuildOutcome(
       projectId,
       projectName,
@@ -156,10 +213,27 @@ export async function runOnePromptLivePreviewBuild(
         projectName,
         prompt,
         source,
-        failureReason: 'Prompt is not a supported one-prompt build request (Task Tracker V1)',
+        failureReason:
+          'Build intent detected but no supported application profile matched this prompt. Add product type details (e.g. expense tracker, CRM, task tracker).',
       }),
     );
   }
+
+  persistBuildIntentRun({
+    buildRunId: buildId,
+    projectId,
+    projectName,
+    prompt,
+    profile: resolvedProfile,
+    status: 'BUILDING',
+    stage: 'PLANNING',
+    workspacePath: null,
+    previewUrl: null,
+    planTaskCount: null,
+    architectureSummary: null,
+    failureReason: null,
+    projectRootDir: resolveProjectRegistryRootDir(),
+  });
 
   registerProjectBuildResult({
     projectId,
@@ -174,7 +248,7 @@ export async function runOnePromptLivePreviewBuild(
       requestType: source === 'chat' ? 'CHAT_BUILD' : 'BUILD_FROM_PROMPT',
       workspaceId: null,
       workspacePath: null,
-      generatedProfile: resolveGeneratedAppProfile(prompt),
+      generatedProfile: resolvedProfile,
       planningProofLevel: null,
       materializationProofLevel: null,
       buildResult: null,
@@ -193,6 +267,27 @@ export async function runOnePromptLivePreviewBuild(
 
   const contractAssessment = assessRequirementsToPlanExecutionContract({ rawPrompt: prompt });
   const contract = contractAssessment.report.buildReadyContract;
+  const planTaskCount = contractAssessment.report.planContract?.tasks.length ?? null;
+  const architectureSummary = contract
+    ? `Build-ready contract with ${contract.buildUnits.length} units and ${planTaskCount ?? 0} plan tasks`
+    : null;
+
+  persistBuildIntentRun({
+    buildRunId: buildId,
+    projectId,
+    projectName,
+    prompt,
+    profile: resolvedProfile,
+    status: contract ? 'BUILDING' : 'FAILED',
+    stage: contract ? 'MATERIALIZATION' : 'PLANNING',
+    workspacePath: null,
+    previewUrl: null,
+    planTaskCount,
+    architectureSummary,
+    failureReason: contract ? null : 'Planning did not produce a build-ready contract',
+    projectRootDir: resolveProjectRegistryRootDir(),
+  });
+
   if (!contract) {
     return registerBuildOutcome(
       projectId,
@@ -204,29 +299,47 @@ export async function runOnePromptLivePreviewBuild(
         prompt,
         source,
         failureReason: 'Planning did not produce a build-ready contract',
-        generatedProfile: resolveGeneratedAppProfile(prompt),
+        generatedProfile: resolvedProfile,
         planningProofLevel: contractAssessment.report.proofLevel,
       }),
     );
   }
 
   const workspaceRel = `${GENERATED_BUILDER_WORKSPACES_DIR}/${projectId}`.replace(/\\/g, '/');
+  assertWorkspacePathBelongsToProject(workspaceRel, projectId);
   const workspaceDir = join(input.projectRootDir, workspaceRel);
 
   const materialization = materializeBuildProofGapArtifacts({
-    projectRootDir: input.projectRootDir,
+    projectRootDir: resolveProjectRegistryRootDir(),
     contract: { ...contract, contractId: projectId },
     rawPrompt: prompt,
   });
 
   const engineResult = materializeGeneratedApplication({
-    projectRootDir: input.projectRootDir,
+    projectRootDir: resolveProjectRegistryRootDir(),
     workspaceId: projectId,
     contract: { ...contract, contractId: projectId },
     rawPrompt: prompt,
+    profileOverride: resolvedProfile,
   });
 
-  if (!engineResult.generated || engineResult.profile !== 'TASK_TRACKER_WEB_V1') {
+  if (!engineResult.generated || !engineResult.profile) {
+    persistBuildIntentRun({
+      buildRunId: buildId,
+      projectId,
+      projectName,
+      prompt,
+      profile: resolvedProfile,
+      status: 'FAILED',
+      stage: 'MATERIALIZATION',
+      workspacePath: workspaceRel,
+      previewUrl: null,
+      planTaskCount,
+      architectureSummary,
+      failureReason:
+        engineResult.skippedReason ?? 'Code Generation Engine V1 did not materialize application files',
+      projectRootDir: resolveProjectRegistryRootDir(),
+    });
     return registerBuildOutcome(
       projectId,
       projectName,
@@ -236,23 +349,47 @@ export async function runOnePromptLivePreviewBuild(
         projectName,
         prompt,
         source,
-        failureReason: engineResult.skippedReason ?? 'Code Generation Engine V1 did not materialize Task Tracker profile',
+        failureReason:
+          engineResult.skippedReason ?? 'Code Generation Engine V1 did not materialize application files',
         workspaceId: projectId,
         workspacePath: workspaceRel,
-        generatedProfile: engineResult.profile,
+        generatedProfile: engineResult.profile ?? resolvedProfile,
         planningProofLevel: contractAssessment.report.proofLevel,
         materializationProofLevel: materialization.proofLevel,
       }),
     );
   }
 
-  const featurePath = join(workspaceDir, TASK_TRACKER_FEATURE_RELATIVE_PATH);
-  const appPath = join(workspaceDir, 'src/App.tsx');
-  const featureSource = existsSync(featurePath) ? readFileSync(featurePath, 'utf8') : '';
-  const appSource = existsSync(appPath) ? readFileSync(appPath, 'utf8') : '';
-  const hasTaskTrackerFeature =
-    isTaskTrackerFeatureSource(featureSource) || isTaskTrackerAppSource(appSource);
-  if (!hasTaskTrackerFeature) {
+  const isTaskTracker = engineResult.profile === 'TASK_TRACKER_WEB_V1';
+  const generatedProfile = engineResult.profile;
+
+  if (isTaskTracker) {
+    const featurePath = join(workspaceDir, TASK_TRACKER_FEATURE_RELATIVE_PATH);
+    const appPath = join(workspaceDir, 'src/App.tsx');
+    const featureSource = existsSync(featurePath) ? readFileSync(featurePath, 'utf8') : '';
+    const appSource = existsSync(appPath) ? readFileSync(appPath, 'utf8') : '';
+    const hasTaskTrackerFeature =
+      isTaskTrackerFeatureSource(featureSource) || isTaskTrackerAppSource(appSource);
+    if (!hasTaskTrackerFeature) {
+      return registerBuildOutcome(
+        projectId,
+        projectName,
+        composeFailureResult({
+          buildId,
+          projectId,
+          projectName,
+          prompt,
+          source,
+          failureReason: 'Generated app missing Task Tracker features or Universal App Blueprint shell',
+          workspaceId: projectId,
+          workspacePath: workspaceRel,
+          generatedProfile,
+          planningProofLevel: contractAssessment.report.proofLevel,
+          materializationProofLevel: materialization.proofLevel,
+        }),
+      );
+    }
+  } else if (!inspectUniversalFeatureSignals(workspaceDir)) {
     return registerBuildOutcome(
       projectId,
       projectName,
@@ -262,10 +399,10 @@ export async function runOnePromptLivePreviewBuild(
         projectName,
         prompt,
         source,
-        failureReason: 'Generated app missing Task Tracker features or Universal App Blueprint shell',
+        failureReason: 'Generated app missing Universal App Blueprint shell or feature module',
         workspaceId: projectId,
         workspacePath: workspaceRel,
-        generatedProfile: 'TASK_TRACKER_WEB_V1',
+        generatedProfile,
         planningProofLevel: contractAssessment.report.proofLevel,
         materializationProofLevel: materialization.proofLevel,
       }),
@@ -295,7 +432,7 @@ export async function runOnePromptLivePreviewBuild(
         failureReason: `npm install failed: ${String(err)}`,
         workspaceId: projectId,
         workspacePath: workspaceRel,
-        generatedProfile: 'TASK_TRACKER_WEB_V1',
+        generatedProfile,
         planningProofLevel: contractAssessment.report.proofLevel,
         materializationProofLevel: materialization.proofLevel,
         npmInstallOk: false,
@@ -324,7 +461,7 @@ export async function runOnePromptLivePreviewBuild(
         failureReason: `npm run build failed: ${String(err)}`,
         workspaceId: projectId,
         workspacePath: workspaceRel,
-        generatedProfile: 'TASK_TRACKER_WEB_V1',
+        generatedProfile,
         planningProofLevel: contractAssessment.report.proofLevel,
         materializationProofLevel: materialization.proofLevel,
         npmInstallOk: true,
@@ -351,7 +488,7 @@ export async function runOnePromptLivePreviewBuild(
         failureReason: devServer.error ?? 'Dev server failed to start',
         workspaceId: projectId,
         workspacePath: workspaceRel,
-        generatedProfile: 'TASK_TRACKER_WEB_V1',
+        generatedProfile,
         planningProofLevel: contractAssessment.report.proofLevel,
         materializationProofLevel: materialization.proofLevel,
         npmInstallOk: true,
@@ -370,7 +507,7 @@ export async function runOnePromptLivePreviewBuild(
     allowDuplicate: true,
   });
 
-  const featureSignals = inspectFeatureSignals(workspaceDir);
+  const featureSignals = isTaskTracker ? inspectFeatureSignals(workspaceDir) : null;
   const success: OnePromptLivePreviewBuildResult = {
     readOnly: true,
     buildId,
@@ -381,7 +518,7 @@ export async function runOnePromptLivePreviewBuild(
     requestType: source === 'chat' ? 'CHAT_BUILD' : 'BUILD_FROM_PROMPT',
     workspaceId: projectId,
     workspacePath: workspaceRel,
-    generatedProfile: 'TASK_TRACKER_WEB_V1',
+    generatedProfile,
     planningProofLevel: contractAssessment.report.proofLevel,
     materializationProofLevel: materialization.proofLevel,
     buildResult: 'PASS',
@@ -393,6 +530,32 @@ export async function runOnePromptLivePreviewBuild(
     featureSignals,
     updatedAt: new Date().toISOString(),
   };
+  persistBuildIntentRun({
+    buildRunId: buildId,
+    projectId,
+    projectName,
+    prompt,
+    profile: generatedProfile,
+    status: 'READY',
+    stage: 'LIVE_PREVIEW',
+    workspacePath: workspaceRel,
+    previewUrl: devServer.url,
+    planTaskCount,
+    architectureSummary,
+    failureReason: null,
+    projectRootDir: resolveProjectRegistryRootDir(),
+  });
+  upsertProjectContextMetadata(
+    {
+      projectId,
+      name: projectName,
+      prompt,
+      profile: generatedProfile,
+      summary: architectureSummary,
+      profileConfidence: 'HIGH',
+    },
+    resolveProjectRegistryRootDir(),
+  );
   return registerBuildOutcome(projectId, projectName, success, devServer.port ?? null);
 }
 
@@ -452,27 +615,41 @@ export function getOnePromptLivePreviewPublicState(
 }
 
 export function composeOnePromptBuildChatResponse(result: OnePromptLivePreviewBuildResult): string {
+  const profileLabel = result.generatedProfile ?? 'application';
   if (result.status === 'READY') {
     return [
-      `I detected a Task Tracker build request and generated your app for project "${result.projectName}".`,
+      `Build execution started for project "${result.projectName}" — ${profileLabel} materialization complete.`,
       '',
+      `Build run: ${result.buildId}`,
       `Project: ${result.projectId}`,
       `Workspace: ${result.workspacePath ?? result.workspaceId ?? 'unknown'}`,
-      `Profile: ${result.generatedProfile ?? 'unknown'}`,
+      `Profile: ${profileLabel}`,
       `Build: ${result.buildResult ?? 'unknown'} (npm install ${result.npmInstallOk ? 'ok' : 'fail'}, npm build ${result.npmBuildOk ? 'ok' : 'fail'})`,
-      `Live Preview: ${result.previewUrl ?? 'unavailable'}`,
+      `Live Preview: ${result.previewUrl ?? 'pending'}`,
       '',
-      'Open Live Preview to add, complete, delete, and filter tasks and see the active count.',
+      'Open Live Preview to interact with the generated application.',
+    ].join('\n');
+  }
+
+  if (result.status === 'BUILDING') {
+    return [
+      `Build execution started for project "${result.projectName}".`,
+      '',
+      `Build run: ${result.buildId}`,
+      `Stage: materializing ${profileLabel} workspace`,
+      '',
+      'AiDevEngine is generating architecture, plan, tasks, and workspace files.',
     ].join('\n');
   }
 
   return [
-    `I detected a build request for project "${result.projectName}" but the one-prompt live preview build failed.`,
+    `Build execution was started for project "${result.projectName}" but failed during ${profileLabel} build.`,
     '',
+    `Build run: ${result.buildId}`,
     `Reason: ${result.failureReason ?? 'Unknown failure'}`,
     result.workspacePath ? `Workspace: ${result.workspacePath}` : '',
     '',
-    'Fix the build issue and try again, or check build status in Live Preview.',
+    'Fix the build issue and try again, or check build status in Autonomous Builder / Live Preview.',
   ]
     .filter(Boolean)
     .join('\n');

@@ -7,7 +7,14 @@ import type { OnePromptLivePreviewBuildResult } from './one-prompt-live-preview-
 import { composeOnePromptBuildChatResponse, getOnePromptLivePreviewPublicState } from './one-prompt-build-orchestrator.js';
 import { buildOnePromptLivePreviewWorkspaceSync } from './canonical-live-preview-state.js';
 import { getPreviewRuntimeDiagnostics, listPreviewSessions, listPreviewTargets } from '../live-preview-runtime/index.js';
-import { getActiveProjectId, listMultiProjectWorkspaces, registerProjectBuildResult, resolveProjectContext } from './workspace-tab-registry.js';
+import { getBuildIntentRun } from '../build-intent-routing/build-intent-run-store.js';
+import { tagOperatorFeedEventWithProjectId } from '../project-isolation-guard-v1/index.js';
+import {
+  getActiveProjectId,
+  listMultiProjectWorkspaces,
+  registerProjectBuildResult,
+  resolveProjectContext,
+} from './workspace-tab-registry.js';
 
 const BUILD_FEED_STAGES: Array<{
   action: string;
@@ -18,21 +25,21 @@ const BUILD_FEED_STAGES: Array<{
 }> = [
   {
     action: 'Detecting build prompt',
-    detail: 'Recognized Task Tracker build request — routing to Code Generation Engine V1.',
+    detail: 'Recognized build request — routing to AiDevEngine build orchestration.',
     eventType: 'Classifying Request',
     section: 'Build',
     when: () => true,
   },
   {
     action: 'Planning contract',
-    detail: 'Requirements-to-plan contract produced for isolated builder workspace.',
+    detail: 'Architecture, requirements, and build-ready plan contract produced.',
     eventType: 'Understanding Project',
     section: 'Build',
     when: (r) => Boolean(r.planningProofLevel),
   },
   {
     action: 'Materializing workspace',
-    detail: 'Generated Task Tracker source files under .generated-builder-workspaces/.',
+    detail: 'Generated application source files under .generated-builder-workspaces/.',
     eventType: 'Gathering Facts',
     section: 'Build',
     when: (r) => Boolean(r.materializationProofLevel || r.workspacePath),
@@ -46,7 +53,7 @@ const BUILD_FEED_STAGES: Array<{
   },
   {
     action: 'Building app',
-    detail: 'npm run build completed for generated Task Tracker app.',
+    detail: 'npm run build completed for generated application.',
     eventType: 'Generating Response',
     section: 'Build',
     when: (r) => r.npmBuildOk,
@@ -126,7 +133,9 @@ export function buildOnePromptOperatorFeedEvents(
     evidence: result.workspacePath ?? undefined,
   });
 
-  return events;
+  return events.map((event) =>
+    tagOperatorFeedEventWithProjectId(event, result.projectId ?? null, { scope: 'PROJECT' }),
+  );
 }
 
 export function composeOnePromptBuildBrainApiPayload(input: {
@@ -190,18 +199,35 @@ export function composeOnePromptBuildBrainApiPayload(input: {
     },
   );
 
+  const buildRun = getBuildIntentRun(input.buildResult.buildId);
+
   return {
     responseId: `brain-build-${input.buildResult.buildId}`,
     userMessage: input.message,
     brainResponse,
     category: 'BUILD',
-    activeProjectId: getActiveProjectId(),
+    buildRunId: input.buildResult.buildId,
+    activeProjectId: input.buildResult.projectId ?? getActiveProjectId(),
     multiProjectWorkspaces: listMultiProjectWorkspaces(),
+    buildExecution: {
+      buildRunId: input.buildResult.buildId,
+      projectId: input.buildResult.projectId,
+      projectName: input.buildResult.projectName,
+      status: input.buildResult.status,
+      stage: buildRun?.stage ?? input.buildResult.status,
+      workspacePath: input.buildResult.workspacePath,
+      previewUrl: input.buildResult.previewUrl,
+      generatedProfile: input.buildResult.generatedProfile,
+      planTaskCount: buildRun?.planTaskCount ?? null,
+      architectureSummary: buildRun?.architectureSummary ?? null,
+      livePreviewPending: input.buildResult.status === 'BUILDING',
+      livePreviewAvailable: input.buildResult.livePreviewAvailable,
+    },
     classification: {
       category: 'BUILD',
       confidence: 'HIGH',
-      matchedSignals: ['task tracker', 'build prompt'],
-      reason: 'Supported one-prompt Task Tracker build request',
+      matchedSignals: ['build intent', input.buildResult.generatedProfile ?? 'application'],
+      reason: 'Build-intent prompt routed to AiDevEngine autonomous builder execution',
     },
     systemsReferenced: ['code_generation_engine', 'one_prompt_live_preview'],
     operatorFeedEvents: buildOnePromptOperatorFeedEvents(input.buildResult),

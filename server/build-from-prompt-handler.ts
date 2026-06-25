@@ -15,16 +15,28 @@ import {
   setActiveProjectId,
 } from '../src/one-prompt-live-preview/index.js';
 import { listMultiProjectWorkspaces } from '../src/one-prompt-live-preview/workspace-tab-registry.js';
+import {
+  alignmentBlocksBuildExecution,
+  assessProjectContextAlignment,
+  composeProjectContextAlignmentBuildFromPromptPayload,
+} from '../src/project-context-alignment-v1/index.js';
+import { resolveProjectRegistryRootDir } from '../src/project-registry-v1/project-registry-v1-store.js';
 import { readRequestBody } from './brain-api-handler.js';
 
 const ROOT_DIR = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 
-function sendBuildJson(res: ServerResponse, status: number, payload: unknown): void {
+function sendBuildJson(
+  res: ServerResponse,
+  status: number,
+  payload: unknown,
+  extraHeaders?: Record<string, string>,
+): void {
   res.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
     'X-DevPulse-Surface': 'one-prompt-live-preview',
     'X-DevPulse-Phase': '27.3',
+    ...extraHeaders,
   });
   res.end(JSON.stringify(payload));
 }
@@ -37,6 +49,7 @@ export async function handleBuildFromPromptRequest(req: IncomingMessage, res: Se
       message?: string;
       projectId?: string;
       projectName?: string;
+      confirmProjectContextAlignment?: boolean;
     };
     const prompt = (body.prompt ?? body.message ?? '').trim();
 
@@ -47,6 +60,26 @@ export async function handleBuildFromPromptRequest(req: IncomingMessage, res: Se
 
     if (body.projectId) {
       setActiveProjectId(body.projectId);
+    }
+
+    const registryRoot = resolveProjectRegistryRootDir();
+    const alignment = assessProjectContextAlignment({
+      prompt,
+      activeProjectId: body.projectId,
+      activeProjectName: body.projectName,
+      confirmProjectContextAlignment: body.confirmProjectContextAlignment === true,
+      rootDir: registryRoot,
+    });
+
+    if (alignmentBlocksBuildExecution(alignment)) {
+      const payload = composeProjectContextAlignmentBuildFromPromptPayload({
+        prompt,
+        alignment,
+      });
+      sendBuildJson(res, 200, payload, {
+        'X-DevPulse-Alignment': alignment.verdict,
+      });
+      return;
     }
 
     const result = await runOnePromptLivePreviewBuild({

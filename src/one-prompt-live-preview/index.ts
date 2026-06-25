@@ -21,6 +21,7 @@ export type {
 export {
   isOnePromptBuildRequest,
   classifyOnePromptBuildRequest,
+  resolveBuildIntentProfile,
 } from './build-request-detector.js';
 
 export {

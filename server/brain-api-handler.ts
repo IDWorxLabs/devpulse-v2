@@ -10,9 +10,15 @@ import type { BrainResponseResult } from '../src/command-center-brain/brain-type
 import {
   composeOnePromptBuildBrainApiPayload,
   composeOnePromptBuildFailurePayload,
-  isOnePromptBuildRequest,
   runOnePromptLivePreviewBuild,
 } from '../src/one-prompt-live-preview/index.js';
+import { isBuildIntentRequest } from '../src/build-intent-routing/index.js';
+import {
+  alignmentBlocksBuildExecution,
+  assessProjectContextAlignment,
+  composeProjectContextAlignmentBrainApiPayload,
+} from '../src/project-context-alignment-v1/index.js';
+import { resolveProjectRegistryRootDir } from '../src/project-registry-v1/project-registry-v1-store.js';
 import {
   buildBrainHealthPayload,
   buildBrainRuntimeVerificationReportFromResult,
@@ -153,6 +159,7 @@ export async function handleBrainRespondRequest(req: IncomingMessage, res: Serve
       timestamp?: number;
       activeProjectId?: string;
       projectName?: string;
+      confirmProjectContextAlignment?: boolean;
     };
 
     if (!body.message?.trim()) {
@@ -161,7 +168,32 @@ export async function handleBrainRespondRequest(req: IncomingMessage, res: Serve
       return;
     }
 
-    if (isOnePromptBuildRequest(body.message)) {
+    if (isBuildIntentRequest(body.message)) {
+      const registryRoot = resolveProjectRegistryRootDir();
+      const alignment = assessProjectContextAlignment({
+        prompt: body.message,
+        activeProjectId: body.activeProjectId,
+        activeProjectName: body.projectName,
+        confirmProjectContextAlignment: body.confirmProjectContextAlignment === true,
+        rootDir: registryRoot,
+      });
+
+      if (alignmentBlocksBuildExecution(alignment)) {
+        const payload = composeProjectContextAlignmentBrainApiPayload({
+          message: body.message,
+          alignment,
+        });
+        res.writeHead(200, {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-store',
+          'X-DevPulse-Brain': 'command-center',
+          'X-DevPulse-Phase': '27.3',
+          'X-DevPulse-Alignment': alignment.verdict,
+        });
+        res.end(JSON.stringify(payload));
+        return;
+      }
+
       try {
         const buildResult = await runOnePromptLivePreviewBuild({
           rawPrompt: body.message,

@@ -121,8 +121,15 @@ const { manifest: MANIFEST, json: MANIFEST_JSON } = buildManifestSafely();
 setDefaultProjectRegistryRootDir(ROOT_DIR);
 bootstrapProjectRegistryV1(getRegistryRootDir());
 
-function buildProductWorkspaceJson(): string {
-  return JSON.stringify(buildProductWorkspaceSnapshot(VALIDATOR_SCRIPTS), null, 2);
+function buildProductWorkspaceJson(projectId?: string | null): string {
+  return JSON.stringify(
+    buildProductWorkspaceSnapshot(VALIDATOR_SCRIPTS, {
+      rootDir: getRegistryRootDir(),
+      projectId: projectId ?? null,
+    }),
+    null,
+    2,
+  );
 }
 
 const PORTFOLIO_DEMO_JSON = JSON.stringify(buildPortfolioInsightsDemo(), null, 2);
@@ -721,7 +728,8 @@ export function createFounderRealityServer() {
         return;
       }
       try {
-        sendJson(res, 200, buildProductWorkspaceJson());
+        const scopedProjectId = requestUrl.searchParams.get('projectId');
+        sendJson(res, 200, buildProductWorkspaceJson(scopedProjectId));
       } catch (err) {
         const message = err instanceof Error ? err.message : 'workspace snapshot failed';
         sendJson(

@@ -1175,9 +1175,21 @@
     return null;
   }
 
+  function getNotificationsForActiveProject() {
+    var scoped = [];
+    for (var n = 0; n < runtimeNotifications.length; n += 1) {
+      var note = normalizeNotificationEntry(runtimeNotifications[n]);
+      if (note.scope === 'GLOBAL' || !note.projectId || note.projectId === activeProjectId) {
+        scoped.push(runtimeNotifications[n]);
+      }
+    }
+    return scoped;
+  }
+
   function refreshNotificationSurfaces() {
-    renderNotifications(runtimeNotifications);
-    renderNotificationsSurface(workspaceData, runtimeNotifications);
+    var visible = getNotificationsForActiveProject();
+    renderNotifications(visible);
+    renderNotificationsSurface(workspaceData, visible);
     updateNotificationUnreadBadge();
   }
 
@@ -1185,8 +1197,9 @@
     var badge = el('notif-unread-badge');
     var toggle = el('notif-toggle');
     var unread = 0;
-    for (var u = 0; u < runtimeNotifications.length; u += 1) {
-      var note = normalizeNotificationEntry(runtimeNotifications[u]);
+    var visibleNotes = getNotificationsForActiveProject();
+    for (var u = 0; u < visibleNotes.length; u += 1) {
+      var note = normalizeNotificationEntry(visibleNotes[u]);
       if (note.read !== true) unread += 1;
     }
     if (badge) {
@@ -1245,6 +1258,8 @@
         text: text,
         timestamp: new Date().toISOString(),
         read: false,
+        projectId: activeProjectId || null,
+        scope: activeProjectId ? 'PROJECT' : 'GLOBAL',
       });
     }
     refreshNotificationSurfaces();
@@ -8439,7 +8454,60 @@
     }
   }
 
-  function askBrain(message) {
+  function appendChatMessage(text, role) {
+    var history = el('chat-history');
+    if (!history) return;
+    var div = document.createElement('div');
+    div.className = 'chat-message ' + role;
+    div.textContent = text;
+    history.appendChild(div);
+    scrollChatToBottom();
+    return div;
+  }
+
+  function appendChatAlignmentActions(alignment, pendingMessage) {
+    if (!alignment || !alignment.actions || !alignment.actions.length) return;
+    var history = el('chat-history');
+    if (!history) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'chat-alignment-actions';
+    for (var i = 0; i < alignment.actions.length; i += 1) {
+      (function (action) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = action.type === 'continue_anyway' ? 'btn-secondary' : 'btn-primary';
+        btn.textContent = action.label;
+        btn.addEventListener('click', function () {
+          if (action.type === 'create_project') {
+            showProjectNameDialog();
+            var input = el('project-name-input');
+            if (input && action.projectName) input.value = action.projectName;
+            return;
+          }
+          if (action.type === 'switch_project' && action.projectId) {
+            mutateProjectRegistry('set-active', { projectId: action.projectId })
+              .then(function () {
+                switchView('command-center');
+                pushNotification('Switched active project — ' + (action.projectName || action.projectId));
+              })
+              .catch(function (err) {
+                pushNotification('Could not switch project — ' + err.message);
+              });
+            return;
+          }
+          if (action.type === 'continue_anyway') {
+            askBrain(pendingMessage, { confirmProjectContextAlignment: true });
+          }
+        });
+        wrap.appendChild(btn);
+      })(alignment.actions[i]);
+    }
+    history.appendChild(wrap);
+    scrollChatToBottom();
+  }
+
+  function askBrain(message, options) {
+    options = options || {};
     showThinking();
     setLastRequestStatus('In progress');
     pushNotification('Brain Request Started');
@@ -8469,6 +8537,7 @@
         timestamp: Date.now(),
         activeProjectId: activeProjectId,
         projectName: getActiveProjectName(),
+        confirmProjectContextAlignment: options.confirmProjectContextAlignment === true,
       }),
     })
       .then(function (res) {
@@ -8491,6 +8560,11 @@
         streamOperatorFeedEvents(result.operatorFeedEvents, function () {
           removeThinkingMessage();
           appendChatMessage(result.brainResponse, 'brain');
+          if (result.projectContextAlignment) {
+            appendChatAlignmentActions(result.projectContextAlignment, message);
+            setLastRequestStatus('Alignment guard');
+            pushNotification('Project context alignment — build not started');
+          }
           if (result.category === 'BUILD') {
             applyOnePromptLivePreview(
               result.onePromptLivePreview,
@@ -8510,10 +8584,13 @@
               pushNotification('Brain Request Completed');
               setLastError('None');
             }
-          } else {
+          } else if (!result.projectContextAlignment) {
             setLastRequestStatus('Completed');
             pushNotification('Brain Request Completed');
             setLastError('None');
+          }
+          if (result.projectContextAlignment) {
+            renderProductSurfaces();
           }
           renderRuntimeDiagnostics();
           if (result.llmChatBrainDiagnostics) {

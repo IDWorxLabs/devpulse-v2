@@ -48,8 +48,12 @@ import { buildProjectRegistrySummaryFast } from '../src/project-registry-v1/inde
 import {
   getActiveProjectId,
   listMultiProjectWorkspaces,
+  listMultiProjectWorkspacesForProject,
   type MultiProjectWorkspaceSession,
 } from '../src/one-prompt-live-preview/workspace-tab-registry.js';
+import {
+  filterLivePreviewsByProject,
+} from '../src/project-isolation-guard-v1/index.js';
 
 export const PROJECT_MEMORY_DESCRIPTION =
   'Project Memory stores everything AiDevEngine knows about a project: the idea, requirements, decisions, files, history, plans, validations, and context, so the AI does not forget what it is building.';
@@ -213,9 +217,10 @@ const DEFAULT_ROOT_DIR = join(fileURLToPath(new URL('.', import.meta.url)), '..'
 
 export function buildProductWorkspaceSnapshot(
   validatorScripts: string[],
-  options?: { rootDir?: string },
+  options?: { rootDir?: string; projectId?: string | null },
 ): ProductWorkspaceSnapshot {
   const rootDir = options?.rootDir ?? DEFAULT_ROOT_DIR;
+  const scopedProjectId = options?.projectId?.trim() || null;
   const resolvedExecution = resolveExecutionConnectedForRoot(rootDir);
   const executionConnected = resolvedExecution.executionConnected;
   const vault = getDevPulseV2ProjectVaultAuthority();
@@ -227,22 +232,29 @@ export function buildProductWorkspaceSnapshot(
   const targets = listPreviewTargets();
   const previewDiag = getPreviewRuntimeDiagnostics();
 
-  const activeProjectId = getActiveProjectId();
-  const multiProjectWorkspaces = listMultiProjectWorkspaces();
+  const activeProjectId = scopedProjectId ?? getActiveProjectId();
+  const allMultiProjectWorkspaces = listMultiProjectWorkspaces();
+  const multiProjectWorkspaces = scopedProjectId
+    ? listMultiProjectWorkspacesForProject(scopedProjectId)
+    : allMultiProjectWorkspaces;
+
+  const scopedSessions = scopedProjectId
+    ? filterLivePreviewsByProject(sessions, scopedProjectId)
+    : sessions;
 
   const readySession =
     (activeProjectId
-      ? sessions.find((s) => s.projectId === activeProjectId && s.previewState === 'PREVIEW_READY')
+      ? scopedSessions.find((s) => s.projectId === activeProjectId && s.previewState === 'PREVIEW_READY')
       : null) ??
-    sessions.find((s) => s.previewState === 'PREVIEW_READY') ??
-    sessions.find((s) => s.previewUrl) ??
-    sessions[0] ??
+    scopedSessions.find((s) => s.previewState === 'PREVIEW_READY') ??
+    scopedSessions.find((s) => s.previewUrl) ??
+    scopedSessions[0] ??
     null;
 
   const previewUrl = readySession?.previewUrl ?? null;
   const previewConnected = sessions.length > 0 || targets.length > 0;
 
-  const livePreviewSessions = sessions.map((s) => ({
+  const livePreviewSessions = scopedSessions.map((s) => ({
     previewSessionId: s.previewSessionId,
     projectId: s.projectId,
     previewState: s.previewState,
@@ -333,17 +345,21 @@ export function buildProductWorkspaceSnapshot(
   }
   workspacesDisconnected.push('Autonomous Builder execution');
 
+  const scopedVaultProjects = scopedProjectId
+    ? vaultProjects.filter((p) => p.projectId === scopedProjectId)
+    : vaultProjects;
+
   const projectMemoryBlock = {
     description: PROJECT_MEMORY_DESCRIPTION,
     vaultState: {
-      projectCount: vaultState.projectCount,
-      activeProjectCount: vaultState.activeProjectCount,
+      projectCount: scopedProjectId ? scopedVaultProjects.length : vaultState.projectCount,
+      activeProjectCount: scopedProjectId ? scopedVaultProjects.length : vaultState.activeProjectCount,
       factCount: vaultState.factCount,
       snapshotCount: vaultState.snapshotCount,
-      latestProjectId: vaultState.latestProjectId,
+      latestProjectId: scopedProjectId ?? vaultState.latestProjectId,
       warnings: vaultState.warnings,
     },
-    projects: vaultProjects.map((p) => ({
+    projects: scopedVaultProjects.map((p) => ({
       projectId: p.projectId,
       name: p.name,
       status: p.status,

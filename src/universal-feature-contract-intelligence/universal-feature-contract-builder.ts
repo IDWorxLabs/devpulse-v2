@@ -67,6 +67,21 @@ export function detectUniversalAppProfile(rawPrompt: string): UniversalAppProfil
     return 'TASK_TRACKER_WEB_V1';
   }
 
+  if (
+    includesAny(lower, [
+      'expense',
+      'expenses',
+      'expense tracking',
+      'expense tracker',
+      'finance tracker',
+      'budget',
+      'spending',
+      'receipt',
+    ])
+  ) {
+    return 'PROJECT_MANAGEMENT_WEB_V1';
+  }
+
   return null;
 }
 

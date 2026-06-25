@@ -147,6 +147,11 @@ export function listMultiProjectWorkspaces(): MultiProjectWorkspaceSession[] {
   return [...sessions.values()].sort((a, b) => a.projectName.localeCompare(b.projectName));
 }
 
+export function listMultiProjectWorkspacesForProject(projectId: string): MultiProjectWorkspaceSession[] {
+  const session = sessions.get(projectId);
+  return session ? [{ ...session }] : [];
+}
+
 export function listProjectBuildResults(): Array<{ projectId: string; build: OnePromptLivePreviewBuildResult }> {
   return [...buildResultsByProject.entries()].map(([projectId, build]) => ({ projectId, build }));
 }
