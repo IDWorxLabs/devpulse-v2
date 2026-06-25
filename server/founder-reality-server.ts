@@ -67,11 +67,19 @@ import {
   handleProjectRegistryMutation,
   sendProjectRegistryJson,
 } from './project-registry-handler.js';
-import { loadProjectRegistryV1 } from '../src/project-registry-v1/index.js';
+import {
+  bootstrapProjectRegistryV1,
+  resolveProjectRegistryRootDir,
+  setDefaultProjectRegistryRootDir,
+} from '../src/project-registry-v1/index.js';
 import { probePortOwner } from './port-probe.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = join(__dirname, '..');
+
+function getRegistryRootDir(): string {
+  return resolveProjectRegistryRootDir();
+}
 const PUBLIC_DIR = join(ROOT_DIR, 'public', 'founder-reality');
 const PACKAGE_JSON_PATH = join(ROOT_DIR, 'package.json');
 
@@ -110,7 +118,8 @@ function buildManifestSafely(): { manifest: ReturnType<typeof buildFounderRealit
 }
 
 const { manifest: MANIFEST, json: MANIFEST_JSON } = buildManifestSafely();
-loadProjectRegistryV1(ROOT_DIR);
+setDefaultProjectRegistryRootDir(ROOT_DIR);
+bootstrapProjectRegistryV1(getRegistryRootDir());
 
 function buildProductWorkspaceJson(): string {
   return JSON.stringify(buildProductWorkspaceSnapshot(VALIDATOR_SCRIPTS), null, 2);
@@ -252,27 +261,27 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      sendProjectRegistryJson(res, ROOT_DIR);
+      sendProjectRegistryJson(res, getRegistryRootDir());
       return;
     }
 
     if (urlPath === '/api/projects/create' && req.method === 'POST') {
-      await handleProjectRegistryMutation(req, res, 'create', ROOT_DIR);
+      await handleProjectRegistryMutation(req, res, 'create', getRegistryRootDir());
       return;
     }
 
     if (urlPath === '/api/projects/rename' && req.method === 'POST') {
-      await handleProjectRegistryMutation(req, res, 'rename', ROOT_DIR);
+      await handleProjectRegistryMutation(req, res, 'rename', getRegistryRootDir());
       return;
     }
 
     if (urlPath === '/api/projects/archive' && req.method === 'POST') {
-      await handleProjectRegistryMutation(req, res, 'archive', ROOT_DIR);
+      await handleProjectRegistryMutation(req, res, 'archive', getRegistryRootDir());
       return;
     }
 
     if (urlPath === '/api/projects/set-active' && req.method === 'POST') {
-      await handleProjectRegistryMutation(req, res, 'set-active', ROOT_DIR);
+      await handleProjectRegistryMutation(req, res, 'set-active', getRegistryRootDir());
       return;
     }
 
@@ -684,7 +693,7 @@ export function createFounderRealityServer() {
 
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       sendJson(res, 405, JSON.stringify({
-        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/founder/founder-review, GET /api/founder/requirement-discovery, GET /api/founder/verification-hub, GET /api/founder/uvl-verification-execution-v1, GET /api/founder/production-readiness-gate-v1, GET /api/founder/cloud-execution-path-v1, GET /api/founder/trust-calibration, GET /api/founder/production-readiness-gate, GET /api/founder/product-architect-intelligence, GET /api/founder/large-scale-validation, GET /api/founder/real-build-execution-pipeline, GET /api/founder/real-build-execution-pipeline-v11, GET /api/brain/*, GET /api/build/live-preview, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
+        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/founder/founder-review, GET /api/founder/requirement-discovery, GET /api/founder/verification-hub, GET /api/founder/uvl-verification-execution-v1, GET /api/founder/production-readiness-gate-v1, GET /api/founder/cloud-execution-path-v1, GET /api/founder/trust-calibration, GET /api/founder/production-readiness-gate, GET /api/founder/product-architect-intelligence, GET /api/founder/large-scale-validation, GET /api/founder/real-build-execution-pipeline, GET /api/founder/real-build-execution-pipeline-v11, GET /api/brain/*, GET /api/build/live-preview, GET /api/projects/registry.json, POST /api/projects/create, POST /api/projects/rename, POST /api/projects/archive, POST /api/projects/set-active, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
         hint: 'Restart DevPulse with npm run dev if Brain POST returns read-only errors',
       }));
       return;

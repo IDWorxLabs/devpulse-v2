@@ -44,7 +44,7 @@ import { getDevPulseV2ProjectVaultAuthority } from '../src/project-vault/index.j
 import { ALL_UVL_ROWS } from '../src/unified-verification-lab/uvl-row-registry.js';
 import { buildPortfolioInsightsDemo, type PortfolioInsightsDemo } from './portfolio-demo-data.js';
 import { resolveCanonicalLivePreviewState } from '../src/one-prompt-live-preview/canonical-live-preview-state.js';
-import { buildProjectRegistrySummary, loadProjectRegistryV1 } from '../src/project-registry-v1/index.js';
+import { buildProjectRegistrySummaryFast } from '../src/project-registry-v1/index.js';
 import {
   getActiveProjectId,
   listMultiProjectWorkspaces,
@@ -221,8 +221,7 @@ export function buildProductWorkspaceSnapshot(
   const vault = getDevPulseV2ProjectVaultAuthority();
   const vaultState = vault.getVaultState();
   const vaultProjects = vault.listProjects();
-  const registrySummary = buildProjectRegistrySummary(rootDir);
-  loadProjectRegistryV1(rootDir);
+  const registrySummary = buildProjectRegistrySummaryFast(rootDir);
 
   const sessions = listPreviewSessions();
   const targets = listPreviewTargets();

@@ -1874,6 +1874,29 @@ body {
   color: var(--text);
 }
 
+.project-name-error {
+  margin: 0.5rem 0 0;
+  padding: 0.55rem 0.65rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  background: rgba(127, 29, 29, 0.22);
+  color: #fecaca;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.project-name-error.hidden {
+  display: none;
+}
+
+.project-name-form.is-creating .project-name-dialog-actions button {
+  pointer-events: none;
+}
+
+.project-name-form.is-creating #project-name-submit {
+  opacity: 0.75;
+}
+
 .project-name-dialog-actions {
   display: flex;
   justify-content: flex-end;

@@ -2,7 +2,7 @@
  * Project Registry V1 — file-backed canonical project store.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { getDevPulseV2ProjectVaultAuthority } from '../project-vault/index.js';
 import {
@@ -10,15 +10,22 @@ import {
   setActiveProjectId,
   type MultiProjectWorkspaceSession,
 } from '../one-prompt-live-preview/workspace-tab-registry.js';
-import type {
-  ProjectRegistryFile,
-  ProjectRegistryRecord,
-  ProjectRegistrySummary,
-  ProjectRegistrySummaryItem,
+import {
+  ProjectRegistryDuplicateNameError,
+  PROJECT_REGISTRY_DUPLICATES_REPAIRED,
+  PROJECT_REGISTRY_LOADED,
+  PROJECT_REGISTRY_PROJECT_PERSISTED,
+  PROJECT_REGISTRY_TEST_ROOT_SEGMENT,
+  type ProjectRegistryDuplicateRepairResult,
+  type ProjectRegistryFile,
+  type ProjectRegistryRecord,
+  type ProjectRegistrySummary,
+  type ProjectRegistrySummaryItem,
 } from './project-registry-v1-types.js';
 
 const REGISTRY_DIR = '.aidevengine';
 const REGISTRY_FILE = 'project-registry-v1.json';
+const OPERATOR_LOG_FILE = 'project-registry-operator-log.jsonl';
 
 let cachedRootDir: string | null = null;
 let cachedState: ProjectRegistryFile | null = null;
@@ -26,6 +33,10 @@ let projectCounter = 0;
 
 function registryPath(rootDir: string): string {
   return join(rootDir, REGISTRY_DIR, REGISTRY_FILE);
+}
+
+function operatorLogPath(rootDir: string): string {
+  return join(rootDir, REGISTRY_DIR, OPERATOR_LOG_FILE);
 }
 
 function emptyState(): ProjectRegistryFile {
@@ -48,7 +59,50 @@ function generateProjectId(name: string): string {
 }
 
 function resolveRootDir(rootDir?: string): string {
-  return rootDir ?? cachedRootDir ?? process.cwd();
+  if (rootDir) return rootDir;
+  if (cachedRootDir) return cachedRootDir;
+  return resolveProjectRegistryRootDir();
+}
+
+let defaultRegistryRootDir: string | null = null;
+
+export function setDefaultProjectRegistryRootDir(rootDir: string): void {
+  defaultRegistryRootDir = rootDir;
+}
+
+export function resolveProjectRegistryRootDir(): string {
+  const override = process.env.AIDEVENGINE_REGISTRY_ROOT?.trim();
+  if (override) return override;
+  if (defaultRegistryRootDir) return defaultRegistryRootDir;
+  return process.cwd();
+}
+
+export function isProjectRegistryTestRoot(rootDir: string): boolean {
+  const normalized = rootDir.replace(/\\/g, '/');
+  return (
+    normalized.includes(PROJECT_REGISTRY_TEST_ROOT_SEGMENT) ||
+    normalized.includes('/devpulse-registry-test-')
+  );
+}
+
+export function createProjectRegistryTestRoot(parentDir: string): string {
+  const root = join(parentDir, `${PROJECT_REGISTRY_TEST_ROOT_SEGMENT}-${Date.now()}-${process.pid}`);
+  mkdirSync(join(root, REGISTRY_DIR), { recursive: true });
+  return root;
+}
+
+function logProjectRegistryLoaded(state: ProjectRegistryFile, rootDir: string): void {
+  const activeCount = state.projects.filter((project) => project.status === 'ACTIVE').length;
+  const path = registryPath(rootDir);
+  console.info(
+    `[project-registry-v1] ${PROJECT_REGISTRY_LOADED} count=${state.projects.length} active=${activeCount} path=${path}`,
+  );
+}
+
+function logProjectRegistryProjectPersisted(record: ProjectRegistryRecord, rootDir: string): void {
+  console.info(
+    `[project-registry-v1] ${PROJECT_REGISTRY_PROJECT_PERSISTED} projectId=${record.projectId} name=${record.name} path=${registryPath(rootDir)}`,
+  );
 }
 
 function persistState(state: ProjectRegistryFile, rootDir?: string): void {
@@ -79,6 +133,14 @@ function loadState(rootDir?: string): ProjectRegistryFile {
         ? parsed
         : emptyState();
     projectCounter = cachedState.projects.length;
+    const repair = repairDuplicateActiveProjects(cachedState);
+    if (repair.mutated) {
+      persistState(cachedState, resolvedRoot);
+    }
+    if (repair.repairedCount > 0) {
+      logProjectRegistryDuplicatesRepaired(repair, resolvedRoot);
+    }
+    logProjectRegistryLoaded(cachedState, resolvedRoot);
     return cachedState;
   } catch {
     cachedRootDir = resolvedRoot;
@@ -123,6 +185,140 @@ function touchRecord(record: ProjectRegistryRecord): void {
   record.lastActivityAt = stamp;
 }
 
+function normalizeProjectName(name: string): string {
+  return name.trim().toLowerCase();
+}
+
+function pickPrimaryActiveProject(group: ProjectRegistryRecord[]): ProjectRegistryRecord {
+  return group
+    .slice()
+    .sort((a, b) => {
+      const byCreated = a.createdAt.localeCompare(b.createdAt);
+      if (byCreated !== 0) return byCreated;
+      return a.projectId.localeCompare(b.projectId);
+    })[0]!;
+}
+
+function ensureActiveProjectSelection(state: ProjectRegistryFile): boolean {
+  let mutated = false;
+  if (state.activeProjectId) {
+    const current = state.projects.find((p) => p.projectId === state.activeProjectId);
+    if (!current || current.status !== 'ACTIVE') {
+      const fallback = state.projects.find((p) => p.status === 'ACTIVE');
+      state.activeProjectId = fallback?.projectId ?? null;
+      mutated = true;
+    }
+  } else {
+    const fallback = state.projects.find((p) => p.status === 'ACTIVE');
+    if (fallback) {
+      state.activeProjectId = fallback.projectId;
+      mutated = true;
+    }
+  }
+  return mutated;
+}
+
+function logProjectRegistryDuplicatesRepaired(
+  repair: ProjectRegistryDuplicateRepairResult,
+  rootDir: string,
+): void {
+  const entry = {
+    event: PROJECT_REGISTRY_DUPLICATES_REPAIRED,
+    at: nowIso(),
+    count: repair.repairedCount,
+    names: repair.archivedNames,
+    archivedProjectIds: repair.archivedProjectIds,
+    keptProjectIds: repair.keptProjectIds,
+  };
+  const message = `${PROJECT_REGISTRY_DUPLICATES_REPAIRED} count=${repair.repairedCount} names=${repair.archivedNames.join(', ')}`;
+  console.info(`[project-registry-v1] ${message}`);
+  const path = operatorLogPath(rootDir);
+  mkdirSync(dirname(path), { recursive: true });
+  appendFileSync(path, `${JSON.stringify(entry)}\n`, 'utf8');
+}
+
+export function repairDuplicateActiveProjects(state: ProjectRegistryFile): ProjectRegistryDuplicateRepairResult {
+  let repairedCount = 0;
+  let mutated = false;
+  const archivedNames: string[] = [];
+  const archivedProjectIds: string[] = [];
+  const keptProjectIds: string[] = [];
+
+  for (const record of state.projects) {
+    const trimmed = record.name.trim();
+    if (trimmed !== record.name) {
+      record.name = trimmed;
+      touchRecord(record);
+      mutated = true;
+    }
+  }
+
+  const activeByNormalizedName = new Map<string, ProjectRegistryRecord[]>();
+  for (const record of state.projects) {
+    if (record.status !== 'ACTIVE') continue;
+    const normalized = normalizeProjectName(record.name);
+    const group = activeByNormalizedName.get(normalized) ?? [];
+    group.push(record);
+    activeByNormalizedName.set(normalized, group);
+  }
+
+  for (const group of activeByNormalizedName.values()) {
+    if (group.length <= 1) continue;
+    const primary = pickPrimaryActiveProject(group);
+    keptProjectIds.push(primary.projectId);
+    for (const duplicate of group) {
+      if (duplicate.projectId === primary.projectId) continue;
+      duplicate.status = 'ARCHIVED';
+      touchRecord(duplicate);
+      archivedNames.push(duplicate.name);
+      archivedProjectIds.push(duplicate.projectId);
+      repairedCount += 1;
+      mutated = true;
+      if (state.activeProjectId === duplicate.projectId) {
+        state.activeProjectId = primary.projectId;
+        mutated = true;
+      }
+    }
+  }
+
+  if (ensureActiveProjectSelection(state)) {
+    mutated = true;
+  }
+
+  return {
+    repairedCount,
+    archivedNames,
+    archivedProjectIds,
+    keptProjectIds,
+    mutated,
+  };
+}
+
+function findActiveProjectByNormalizedName(
+  state: ProjectRegistryFile,
+  normalizedName: string,
+  excludeProjectId?: string,
+): ProjectRegistryRecord | undefined {
+  return state.projects.find(
+    (p) =>
+      p.status === 'ACTIVE' &&
+      p.projectId !== excludeProjectId &&
+      normalizeProjectName(p.name) === normalizedName,
+  );
+}
+
+function assertActiveProjectNameAvailable(
+  state: ProjectRegistryFile,
+  name: string,
+  excludeProjectId?: string,
+): void {
+  const normalized = normalizeProjectName(name);
+  const existing = findActiveProjectByNormalizedName(state, normalized, excludeProjectId);
+  if (existing) {
+    throw new ProjectRegistryDuplicateNameError(existing.name, existing.projectId);
+  }
+}
+
 function toSummaryItem(record: ProjectRegistryRecord, activeProjectId: string | null): ProjectRegistrySummaryItem {
   return {
     projectId: record.projectId,
@@ -136,18 +332,19 @@ function toSummaryItem(record: ProjectRegistryRecord, activeProjectId: string | 
 }
 
 export function resetProjectRegistryV1ForTests(rootDir?: string): void {
-  cachedState = null;
-  cachedRootDir = null;
-  projectCounter = 0;
+  invalidateProjectRegistryV1Cache();
   const resolvedRoot = resolveRootDir(rootDir);
-  const path = registryPath(resolvedRoot);
-  if (existsSync(path)) {
-    writeFileSync(path, JSON.stringify(emptyState(), null, 2), 'utf8');
+  if (!isProjectRegistryTestRoot(resolvedRoot)) {
+    console.warn(`[project-registry-v1] skip registry reset — not a test root: ${resolvedRoot}`);
+    return;
   }
+  const path = registryPath(resolvedRoot);
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, JSON.stringify(emptyState(), null, 2), 'utf8');
 }
 
-export function getProjectRegistryV1FilePath(rootDir?: string): string {
-  return registryPath(resolveRootDir(rootDir));
+export function readProjectRegistryState(rootDir?: string): ProjectRegistryFile {
+  return loadState(rootDir);
 }
 
 export function loadProjectRegistryV1(rootDir?: string): ProjectRegistryFile {
@@ -158,6 +355,42 @@ export function loadProjectRegistryV1(rootDir?: string): ProjectRegistryFile {
 
 export function buildProjectRegistrySummary(rootDir?: string): ProjectRegistrySummary {
   const state = loadProjectRegistryV1(rootDir);
+  return buildSummaryFromState(state);
+}
+
+export function invalidateProjectRegistryV1Cache(): void {
+  cachedState = null;
+  cachedRootDir = null;
+  projectCounter = 0;
+}
+
+export function writeProjectRegistryV1ForTests(state: ProjectRegistryFile, rootDir?: string): void {
+  invalidateProjectRegistryV1Cache();
+  persistState(state, rootDir);
+}
+
+export function getProjectRegistryOperatorLogPath(rootDir?: string): string {
+  return operatorLogPath(resolveRootDir(rootDir));
+}
+
+export function getProjectRegistryV1FilePath(rootDir?: string): string {
+  return registryPath(resolveRootDir(rootDir));
+}
+
+function scheduleRegistryProjectMaterialization(record: ProjectRegistryRecord, rootDir?: string): void {
+  setImmediate(() => {
+    try {
+      ensureVaultProject(record);
+      ensureWorkspaceSession(record);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.warn(`[project-registry-v1] background materialization failed for ${record.projectId}: ${message}`);
+    }
+  });
+  void rootDir;
+}
+
+function buildSummaryFromState(state: ProjectRegistryFile): ProjectRegistrySummary {
   const activeProjects = state.projects.filter((p) => p.status === 'ACTIVE');
   const hasActiveSelection =
     Boolean(state.activeProjectId) &&
@@ -172,15 +405,37 @@ export function buildProjectRegistrySummary(rootDir?: string): ProjectRegistrySu
   };
 }
 
+export function buildProjectRegistrySummaryFromState(state: ProjectRegistryFile): ProjectRegistrySummary {
+  return buildSummaryFromState(state);
+}
+
+export function buildProjectRegistrySummaryFast(rootDir?: string): ProjectRegistrySummary {
+  const state = loadState(rootDir);
+  return buildSummaryFromState(state);
+}
+
+export function bootstrapProjectRegistryV1(rootDir?: string): ProjectRegistryFile {
+  invalidateProjectRegistryV1Cache();
+  return loadProjectRegistryV1(rootDir);
+}
+
+export function validateCreateRegistryProjectName(name: string, rootDir?: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) {
+    throw new Error('Project name is required');
+  }
+
+  const state = loadState(rootDir);
+  assertActiveProjectNameAvailable(state, trimmed);
+  return trimmed;
+}
+
 export function createRegistryProject(input: {
   name: string;
   summary?: string;
   rootDir?: string;
 }): ProjectRegistryRecord {
-  const trimmed = input.name.trim();
-  if (!trimmed) {
-    throw new Error('Project name is required');
-  }
+  const trimmed = validateCreateRegistryProjectName(input.name, input.rootDir);
 
   const state = loadState(input.rootDir);
   const stamp = nowIso();
@@ -197,10 +452,10 @@ export function createRegistryProject(input: {
   state.projects.push(record);
   state.activeProjectId = record.projectId;
   persistState(state, input.rootDir);
+  logProjectRegistryProjectPersisted(record, resolveRootDir(input.rootDir));
 
-  ensureVaultProject(record);
-  ensureWorkspaceSession(record);
   setActiveProjectId(record.projectId);
+  scheduleRegistryProjectMaterialization(record, input.rootDir);
 
   return record;
 }
@@ -223,6 +478,8 @@ export function renameRegistryProject(input: {
   if (record.status === 'ARCHIVED') {
     throw new Error('Cannot rename archived project');
   }
+
+  assertActiveProjectNameAvailable(state, trimmed, record.projectId);
 
   record.name = trimmed;
   touchRecord(record);
@@ -273,8 +530,8 @@ export function setRegistryActiveProject(input: { projectId: string; rootDir?: s
   touchRecord(record);
   persistState(state, input.rootDir);
 
-  ensureWorkspaceSession(record);
   setActiveProjectId(record.projectId);
+  scheduleRegistryProjectMaterialization(record, input.rootDir);
 
   return record;
 }

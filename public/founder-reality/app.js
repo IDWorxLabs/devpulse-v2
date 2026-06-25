@@ -13,6 +13,17 @@
   var currentViewId = 'command-center';
   var workspaceLoadState = 'idle';
   var workspaceLoadPromise = null;
+  var projectRegistryHydrationState = 'pending';
+  var projectRegistryHydrationError = null;
+  var REGISTRY_LOAD_TIMEOUT_MS = 5000;
+  var projectRegistryLoadTimeoutId = null;
+  var projectRegistryClient = {
+    hydrationState: 'pending',
+    error: null,
+    endpoint: '/api/projects/registry.json',
+    projects: null,
+    activeProjectId: null,
+  };
   var executionProofData = null;
   var executionProofLoadPromise = null;
   var founderReviewData = null;
@@ -512,7 +523,7 @@
   }
 
   function applyMultiProjectWorkspaceState(data) {
-    if (data && Array.isArray(data.multiProjectWorkspaces)) {
+    if (data && Array.isArray(data.multiProjectWorkspaces) && data.multiProjectWorkspaces.length) {
       multiProjectWorkspaces = data.multiProjectWorkspaces.slice();
     }
     if (data && data.activeProjectId) {
@@ -543,6 +554,8 @@
     var dialog = el('project-name-dialog');
     var input = el('project-name-input');
     if (!dialog) return;
+    clearProjectCreateError();
+    setProjectCreateBusy(false);
     dialog.removeAttribute('hidden');
     dialog.setAttribute('aria-hidden', 'false');
     if (input) {
@@ -556,32 +569,319 @@
   function hideProjectNameDialog() {
     var dialog = el('project-name-dialog');
     if (!dialog) return;
+    setProjectCreateBusy(false);
+    clearProjectCreateError();
     dialog.setAttribute('hidden', '');
     dialog.setAttribute('aria-hidden', 'true');
   }
 
+  function clearProjectCreateError() {
+    var errorEl = el('project-name-error');
+    if (!errorEl) return;
+    errorEl.textContent = '';
+    errorEl.classList.add('hidden');
+  }
+
+  function showProjectCreateError(message) {
+    var errorEl = el('project-name-error');
+    if (!errorEl) return;
+    errorEl.textContent = String(message || 'Could not create project');
+    errorEl.classList.remove('hidden');
+  }
+
+  function setProjectCreateBusy(busy) {
+    var form = el('project-name-form');
+    var submit = el('project-name-submit');
+    var skip = el('project-name-skip');
+    var close = el('project-name-dialog-close');
+    var input = el('project-name-input');
+    if (form) {
+      if (busy) {
+        form.classList.add('is-creating');
+      } else {
+        form.classList.remove('is-creating');
+      }
+    }
+    if (submit) {
+      submit.disabled = Boolean(busy);
+      submit.setAttribute('aria-busy', busy ? 'true' : 'false');
+      submit.textContent = busy ? 'Creating…' : 'Create Project';
+    }
+    if (skip) skip.disabled = Boolean(busy);
+    if (close) close.disabled = Boolean(busy);
+    if (input) input.disabled = Boolean(busy);
+  }
+
+  function formatProjectRegistryError(res, json, fallbackText) {
+    var message = (json && json.error) || fallbackText || 'Registry request failed';
+    if (res && res.status === 409 && json && json.error) {
+      return json.error;
+    }
+    if (res && (res.status === 404 || res.status === 405)) {
+      return (
+        'Project Registry API is unavailable (HTTP ' +
+        res.status +
+        '). Stop stale servers on port 4321 and restart with npm run dev.'
+      );
+    }
+    if (res && res.status) {
+      return message + ' (HTTP ' + res.status + ')';
+    }
+    return message;
+  }
+
+  function emptyProjectRegistrySummary() {
+    return { count: 0, activeCount: 0, items: [], activeProjectId: null };
+  }
+
+  function syncProjectRegistryHydrationAliases() {
+    projectRegistryHydrationState = projectRegistryClient.hydrationState;
+    projectRegistryHydrationError = projectRegistryClient.error;
+  }
+
+  function clearProjectRegistryLoadTimeout() {
+    if (projectRegistryLoadTimeoutId) {
+      clearTimeout(projectRegistryLoadTimeoutId);
+      projectRegistryLoadTimeoutId = null;
+    }
+  }
+
+  function scheduleProjectRegistryLoadTimeout() {
+    clearProjectRegistryLoadTimeout();
+    projectRegistryLoadTimeoutId = setTimeout(function () {
+      if (projectRegistryClient.hydrationState !== 'loading') return;
+      projectRegistryClient.hydrationState = 'error';
+      projectRegistryClient.error =
+        'Project registry failed to load. Check server registry endpoint.';
+      syncProjectRegistryHydrationAliases();
+      renderProductSurfaces();
+    }, REGISTRY_LOAD_TIMEOUT_MS);
+  }
+
+  function logProjectRegistryClientLoaded() {
+    var summary = projectRegistryClient.projects || emptyProjectRegistrySummary();
+    console.info(
+      'PROJECT_REGISTRY_CLIENT_LOADED count=' +
+        summary.count +
+        ' active=' +
+        summary.activeCount +
+        ' activeProjectId=' +
+        (projectRegistryClient.activeProjectId || 'none'),
+    );
+  }
+
+  function normalizeRegistryPayload(payload) {
+    if (!payload) return null;
+    var projects = payload.projects;
+    if (
+      (!projects || !Array.isArray(projects.items)) &&
+      payload.registry &&
+      Array.isArray(payload.registry.projects)
+    ) {
+      var activeItems = [];
+      var registryProjects = payload.registry.projects;
+      var activeProjectId = payload.activeProjectId || payload.registry.activeProjectId || null;
+      for (var i = 0; i < registryProjects.length; i += 1) {
+        var record = registryProjects[i];
+        if (record.status !== 'ACTIVE') continue;
+        activeItems.push({
+          projectId: record.projectId,
+          name: record.name,
+          status: record.status,
+          summary: record.summary || '',
+          createdAt: record.createdAt,
+          lastActivityAt: record.lastActivityAt,
+          isActive: record.projectId === activeProjectId,
+        });
+      }
+      projects = {
+        count: activeItems.length,
+        activeCount:
+          activeProjectId && activeItems.some(function (item) {
+            return item.projectId === activeProjectId;
+          })
+            ? 1
+            : 0,
+        items: activeItems,
+        activeProjectId: activeProjectId,
+      };
+    }
+    if (!projects || !Array.isArray(projects.items)) {
+      return null;
+    }
+    return {
+      projects: projects,
+      activeProjectId: payload.activeProjectId || projects.activeProjectId || null,
+      multiProjectWorkspaces: payload.multiProjectWorkspaces,
+    };
+  }
+
+  function syncRegistryChipsFromProjects(activeProjectIdValue) {
+    if (!projectRegistryClient.projects || !projectRegistryClient.projects.items.length) return;
+    if (multiProjectWorkspaces.length >= projectRegistryClient.projects.items.length) return;
+    multiProjectWorkspaces = projectRegistryClient.projects.items.map(function (project) {
+      return {
+        projectId: project.projectId,
+        projectName: project.name,
+        active: project.projectId === activeProjectIdValue,
+        buildStatus: 'IDLE',
+        workspacePath: null,
+        previewUrl: null,
+      };
+    });
+  }
+
+  function applyProjectRegistryPayload(payload) {
+    var normalized = normalizeRegistryPayload(payload);
+    if (!normalized) {
+      projectRegistryClient.hydrationState = 'error';
+      projectRegistryClient.error =
+        'Registry response missing projects/items from ' + projectRegistryClient.endpoint;
+      syncProjectRegistryHydrationAliases();
+      renderProductSurfaces();
+      return;
+    }
+    projectRegistryClient.projects = normalized.projects;
+    projectRegistryClient.activeProjectId = normalized.activeProjectId;
+    projectRegistryClient.hydrationState = 'ready';
+    projectRegistryClient.error = null;
+    syncProjectRegistryHydrationAliases();
+    workspaceData = workspaceData || {};
+    workspaceData.projects = normalized.projects;
+    workspaceData.activeProjectId = normalized.activeProjectId;
+    if (Array.isArray(normalized.multiProjectWorkspaces) && normalized.multiProjectWorkspaces.length) {
+      multiProjectWorkspaces = normalized.multiProjectWorkspaces.slice();
+    } else {
+      syncRegistryChipsFromProjects(normalized.activeProjectId);
+    }
+    if (normalized.activeProjectId) {
+      activeProjectId = normalized.activeProjectId;
+    }
+    logProjectRegistryClientLoaded();
+    renderWorkspaceTabs('workspace-tabs');
+    renderWorkspaceTabs('preview-workspace-tabs');
+    updateWorkspaceLinkedIndicator();
+    renderProductSurfaces();
+  }
+
+  function markProjectRegistryHydrated(payload) {
+    applyProjectRegistryPayload(payload);
+  }
+
+  function isProjectRegistryHydrated() {
+    return (
+      projectRegistryClient.hydrationState === 'ready' &&
+      projectRegistryClient.projects &&
+      Array.isArray(projectRegistryClient.projects.items)
+    );
+  }
+
+  function hasVisibleProjectChips() {
+    return Array.isArray(multiProjectWorkspaces) && multiProjectWorkspaces.length > 0;
+  }
+
+  function buildProjectSummaryFromChips() {
+    if (!hasVisibleProjectChips()) return emptyProjectRegistrySummary();
+    var items = [];
+    for (var i = 0; i < multiProjectWorkspaces.length; i += 1) {
+      var chip = multiProjectWorkspaces[i];
+      items.push({
+        projectId: chip.projectId,
+        name: chip.projectName,
+        status: 'ACTIVE',
+        isActive: chip.projectId === activeProjectId,
+      });
+    }
+    var activeCount = activeProjectId && items.some(function (item) {
+      return item.projectId === activeProjectId;
+    })
+      ? 1
+      : 0;
+    return {
+      count: items.length,
+      activeCount: activeCount,
+      items: items,
+      activeProjectId: activeProjectId || null,
+    };
+  }
+
+  function getProjectRegistrySummaryForUi() {
+    if (projectRegistryClient.projects && Array.isArray(projectRegistryClient.projects.items)) {
+      return projectRegistryClient.projects;
+    }
+    var registryView = getWorkspaceViewForProjects();
+    if (registryView.projects && Array.isArray(registryView.projects.items) && registryView.projects.items.length) {
+      return registryView.projects;
+    }
+    if (hasVisibleProjectChips()) {
+      return buildProjectSummaryFromChips();
+    }
+    return emptyProjectRegistrySummary();
+  }
+
+  function canUseProjectRegistryForCreate() {
+    return isProjectRegistryHydrated() || hasVisibleProjectChips();
+  }
+
+  function getWorkspaceViewForProjects() {
+    workspaceData = workspaceData || {};
+    if (projectRegistryClient.projects) {
+      workspaceData.projects = projectRegistryClient.projects;
+    }
+    if (projectRegistryClient.activeProjectId) {
+      workspaceData.activeProjectId = projectRegistryClient.activeProjectId;
+    }
+    return workspaceData;
+  }
+
+  function getActiveProjectRegistryItems() {
+    if (isProjectRegistryHydrated()) {
+      return projectRegistryClient.projects.items;
+    }
+    if (hasVisibleProjectChips()) {
+      var fallbackItems = [];
+      for (var i = 0; i < multiProjectWorkspaces.length; i += 1) {
+        fallbackItems.push({
+          projectId: multiProjectWorkspaces[i].projectId,
+          name: multiProjectWorkspaces[i].projectName,
+          status: 'ACTIVE',
+        });
+      }
+      return fallbackItems;
+    }
+    return [];
+  }
+
+  function submitProjectCreateForm() {
+    var input = el('project-name-input');
+    var name = input ? input.value : '';
+    var guard = guardProjectCreateSubmit(name);
+    if (!guard.ok) {
+      return Promise.resolve();
+    }
+    setProjectCreateBusy(true);
+    return createProjectViaRegistry(guard.name, { skipClientDuplicateCheck: true })
+      .catch(function (err) {
+        var message = err && err.message ? err.message : 'Could not create project';
+        showProjectCreateError(message);
+        pushNotification('Could not create project — ' + message);
+        throw err;
+      })
+      .finally(function () {
+        setProjectCreateBusy(false);
+      });
+  }
+
   function applyProjectRegistryResponse(payload) {
     if (!payload) return;
-    if (Array.isArray(payload.multiProjectWorkspaces)) {
-      multiProjectWorkspaces = payload.multiProjectWorkspaces.slice();
-    }
-    workspaceData = workspaceData || {};
-    if (payload.projects) {
-      workspaceData.projects = payload.projects;
-    }
+    applyProjectRegistryPayload(payload);
     if (payload.activeProjectId) {
-      workspaceData.activeProjectId = payload.activeProjectId;
       switchActiveProject(payload.activeProjectId, {
         skipChatSave: true,
         skipChatRestore: false,
         skipViewSwitch: true,
       });
-    } else {
-      renderWorkspaceTabs('workspace-tabs');
-      renderWorkspaceTabs('preview-workspace-tabs');
-      updateWorkspaceLinkedIndicator();
     }
-    renderProductSurfaces();
   }
 
   function mutateProjectRegistry(action, body) {
@@ -591,42 +891,150 @@
       body: JSON.stringify(body || {}),
     }).then(function (res) {
       return res.text().then(function (text) {
-        var json;
-        try {
-          json = JSON.parse(text);
-        } catch (parseErr) {
-          throw new Error('Invalid registry response');
+        var json = null;
+        if (text) {
+          try {
+            json = JSON.parse(text);
+          } catch (parseErr) {
+            throw new Error(formatProjectRegistryError(res, null, 'Invalid registry response'));
+          }
         }
-        if (!res.ok || json.ok === false) {
-          throw new Error(json.error || 'Registry request failed (' + res.status + ')');
+        if (!res.ok || (json && json.ok === false)) {
+          throw new Error(formatProjectRegistryError(res, json, 'Registry request failed'));
         }
-        applyProjectRegistryResponse(json);
-        return json;
+        applyProjectRegistryResponse(json || {});
+        return json || {};
       });
     });
   }
 
-  function createProjectViaRegistry(name) {
+  function findActiveProjectByName(name) {
+    var normalized = String(name || '').trim().toLowerCase();
+    if (!normalized) return null;
+    var items = getActiveProjectRegistryItems();
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].status === 'ARCHIVED') continue;
+      if (String(items[i].name || '').trim().toLowerCase() === normalized) {
+        return items[i];
+      }
+    }
+    return null;
+  }
+
+  function buildDuplicateProjectNameError(name) {
+    var displayName = String(name || '').trim() || 'this project';
+    return (
+      'A project named ' +
+      displayName +
+      ' already exists. Choose a different name or open the existing project.'
+    );
+  }
+
+  function guardProjectCreateSubmit(name) {
+    clearProjectCreateError();
+    var registryLoading =
+      projectRegistryClient.hydrationState === 'pending' || projectRegistryClient.hydrationState === 'loading';
+    var canUseFallback = canUseProjectRegistryForCreate();
+    if (registryLoading && !canUseFallback) {
+      showProjectCreateError('Loading projects...');
+      return { ok: false };
+    }
+    if (projectRegistryClient.hydrationState === 'error' && !canUseFallback) {
+      showProjectCreateError(
+        projectRegistryClient.error || 'Could not load project registry. Try refreshing the page.',
+      );
+      return { ok: false };
+    }
+    if (!canUseFallback) {
+      showProjectCreateError('Loading projects...');
+      return { ok: false };
+    }
+    var trimmed = String(name || '').trim();
+    if (trimmed) {
+      var normalized = trimmed.toLowerCase();
+      var duplicate = findActiveProjectByName(normalized);
+      if (duplicate) {
+        showProjectCreateError(buildDuplicateProjectNameError(trimmed));
+        return { ok: false };
+      }
+    }
+    return { ok: true, name: name };
+  }
+
+  var projectCreateInFlight = null;
+
+  function createProjectViaRegistry(name, options) {
+    options = options || {};
+    if (projectCreateInFlight) {
+      return projectCreateInFlight;
+    }
     var trimmed = String(name || '').trim();
     if (!trimmed) {
       projectTabCounter += 1;
       trimmed = 'Project ' + projectTabCounter;
     }
-    return mutateProjectRegistry('create', { name: trimmed }).then(function (json) {
-      pushNotification('Created project — ' + (json.project && json.project.name ? json.project.name : trimmed));
-      hideProjectNameDialog();
-      return loadProductWorkspace(true);
-    });
+    if (!options.skipClientDuplicateCheck) {
+      var duplicate = findActiveProjectByName(trimmed);
+      if (duplicate) {
+        return Promise.reject(new Error(buildDuplicateProjectNameError(trimmed)));
+      }
+    }
+    projectCreateInFlight = mutateProjectRegistry('create', { name: trimmed })
+      .then(function (json) {
+        var createdName = json.project && json.project.name ? json.project.name : trimmed;
+        var createdProjectId =
+          json.project && json.project.projectId ? json.project.projectId : json.activeProjectId;
+        setProjectCreateBusy(false);
+        hideProjectNameDialog();
+        if (createdProjectId) {
+          switchActiveProject(createdProjectId, {
+            skipChatSave: true,
+            skipChatRestore: false,
+            skipViewSwitch: false,
+          });
+        }
+        switchView('command-center');
+        pushNotification('Created project — ' + createdName);
+        return json;
+      })
+      .catch(function (err) {
+        setProjectCreateBusy(false);
+        throw err;
+      })
+      .finally(function () {
+        projectCreateInFlight = null;
+      });
+    return projectCreateInFlight;
   }
 
   function loadProjectRegistryState() {
-    return fetch('/api/projects/registry.json', { method: 'GET', cache: 'no-store' })
+    projectRegistryClient.hydrationState = 'loading';
+    projectRegistryClient.error = null;
+    syncProjectRegistryHydrationAliases();
+    scheduleProjectRegistryLoadTimeout();
+    renderProductSurfaces();
+    return fetch(projectRegistryClient.endpoint, { method: 'GET', cache: 'no-store' })
       .then(function (res) {
-        if (!res.ok) throw new Error('registry HTTP ' + res.status);
+        if (!res.ok) {
+          throw new Error(
+            'registry HTTP ' + res.status + ' from ' + projectRegistryClient.endpoint,
+          );
+        }
         return res.json();
       })
       .then(function (payload) {
+        clearProjectRegistryLoadTimeout();
         applyProjectRegistryResponse(payload);
+      })
+      .catch(function (err) {
+        clearProjectRegistryLoadTimeout();
+        projectRegistryClient.hydrationState = 'error';
+        projectRegistryClient.error =
+          (err && err.message ? err.message : 'Registry load failed') +
+          ' — check server logs for PROJECT_REGISTRY_LOADED';
+        syncProjectRegistryHydrationAliases();
+        renderProductSurfaces();
+        throw err;
       });
   }
 
@@ -643,7 +1051,9 @@
         mutateProjectRegistry('set-active', { projectId: projectId })
           .then(function () {
             switchView('command-center');
-            return loadProductWorkspace(true);
+            void loadProductWorkspace(true).catch(function () {
+              return null;
+            });
           })
           .catch(function (err) {
             pushNotification('Could not activate project — ' + err.message);
@@ -2689,17 +3099,38 @@
   function renderProjectsSurface(ws) {
     var container = el('projects-surface');
     if (!container) return;
-    var projects = (ws && ws.projects && ws.projects.items) || [];
+    var projectSummary = getProjectRegistrySummaryForUi();
+    var registryLoading =
+      projectRegistryClient.hydrationState === 'pending' ||
+      projectRegistryClient.hydrationState === 'loading';
     var html = renderProductCard(
       'Your Projects',
         '<p class="founder-path-guidance">Start by creating a project or opening an existing one.</p>' +
         '<p class="product-lead">Active workspaces and applications you are building now — synced with Command Center.</p>' +
         '<p><strong>Total:</strong> ' +
-        String((ws && ws.projects && ws.projects.count) || 0) +
+        String(projectSummary.count || 0) +
         ' · <strong>Active:</strong> ' +
-        String((ws && ws.projects && ws.projects.activeCount) || 0) +
+        String(projectSummary.activeCount || 0) +
         '</p>',
     );
+    if (registryLoading && !projectSummary.items.length) {
+      html += renderProductCard('Projects', '<p class="hint">Loading projects...</p>');
+      container.innerHTML = html;
+      wireProjectRegistryActions(container);
+      return;
+    }
+    if (projectRegistryClient.hydrationState === 'error') {
+      html += renderProductCard(
+        'Projects',
+        '<p class="project-create-error">' +
+          escapeHtml(projectRegistryClient.error || 'Could not load project registry.') +
+          '</p>',
+      );
+      container.innerHTML = html;
+      wireProjectRegistryActions(container);
+      return;
+    }
+    var projects = projectSummary.items || [];
     if (!projects.length) {
       html +=
         renderProductCard(
@@ -2762,6 +3193,7 @@
       html += '</div>';
     }
     container.innerHTML = html;
+    wireProjectRegistryActions(container);
     var createFirst = el('projects-create-first');
     if (createFirst) {
       createFirst.addEventListener('click', function () {
@@ -7130,7 +7562,7 @@
   function renderProductSurfaces() {
     renderFounderActionCenterSurface(workspaceData);
     renderProductCoherenceSurface(workspaceData);
-    renderProjectsSurface(workspaceData);
+    renderProjectsSurface(getWorkspaceViewForProjects());
     renderAutonomousBuilderSurface(workspaceData);
     renderLivePreviewSurface(buildWorkspaceViewForActiveProject(workspaceData));
     renderProjectMemorySurface(workspaceData);
@@ -7802,7 +8234,26 @@
   }
 
   function applyWorkspace(data) {
-    workspaceData = data;
+    var preservedRegistry =
+      isProjectRegistryHydrated() && projectRegistryClient.projects
+        ? {
+            projects: projectRegistryClient.projects,
+            activeProjectId: projectRegistryClient.activeProjectId,
+          }
+        : null;
+    workspaceData = Object.assign({}, workspaceData || {}, data || {});
+    if (data && data.projects && Array.isArray(data.projects.items) && data.projects.items.length) {
+      applyProjectRegistryPayload({
+        projects: data.projects,
+        activeProjectId: data.activeProjectId,
+        multiProjectWorkspaces: data.multiProjectWorkspaces,
+      });
+    } else if (preservedRegistry) {
+      workspaceData.projects = preservedRegistry.projects;
+      workspaceData.activeProjectId = preservedRegistry.activeProjectId;
+      projectRegistryClient.projects = preservedRegistry.projects;
+      projectRegistryClient.activeProjectId = preservedRegistry.activeProjectId;
+    }
     applyMultiProjectWorkspaceState(data);
     if (data && data.runtime) {
       var statusItems = [];
@@ -11583,18 +12034,38 @@
     if (projectNameForm) {
       projectNameForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        var input = el('project-name-input');
-        createProjectViaRegistry(input ? input.value : '').catch(function (err) {
-          pushNotification('Could not create project — ' + err.message);
-        });
+        submitProjectCreateForm();
       });
     }
     if (projectNameSkip) {
       projectNameSkip.addEventListener('click', function () {
+        var registryLoading =
+          projectRegistryClient.hydrationState === 'pending' ||
+          projectRegistryClient.hydrationState === 'loading';
+        if (registryLoading && !canUseProjectRegistryForCreate()) {
+          clearProjectCreateError();
+          showProjectCreateError('Loading projects...');
+          return;
+        }
+        if (projectRegistryClient.hydrationState === 'error' && !canUseProjectRegistryForCreate()) {
+          clearProjectCreateError();
+          showProjectCreateError(
+            projectRegistryClient.error || 'Could not load project registry. Try refreshing the page.',
+          );
+          return;
+        }
         projectTabCounter += 1;
-        createProjectViaRegistry('Project ' + projectTabCounter).catch(function (err) {
-          pushNotification('Could not create project — ' + err.message);
-        });
+        clearProjectCreateError();
+        setProjectCreateBusy(true);
+        createProjectViaRegistry('Project ' + projectTabCounter, { skipClientDuplicateCheck: true })
+          .catch(function (err) {
+            var message = err && err.message ? err.message : 'Could not create project';
+            showProjectCreateError(message);
+            pushNotification('Could not create project — ' + message);
+          })
+          .finally(function () {
+            setProjectCreateBusy(false);
+          });
       });
     }
     if (projectNameClose) {
@@ -12004,9 +12475,12 @@
       setLastError('Manifest load failed');
     });
 
-  loadProductWorkspace(false)
+  loadProjectRegistryState()
+    .catch(function () {
+      return null;
+    })
     .then(function () {
-      return loadProjectRegistryState();
+      return loadProductWorkspace(false);
     })
     .then(function () {
       return checkBrainHealth();

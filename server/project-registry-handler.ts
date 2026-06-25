@@ -6,17 +6,17 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import {
+  PROJECT_REGISTRY_DUPLICATE_NAME_CODE,
   archiveRegistryProject,
-  buildProjectRegistrySummary,
+  buildProjectRegistrySummaryFast,
   createRegistryProject,
-  loadProjectRegistryV1,
+  readProjectRegistryState,
+  ProjectRegistryDuplicateNameError,
   renameRegistryProject,
   setRegistryActiveProject,
+  validateCreateRegistryProjectName,
 } from '../src/project-registry-v1/index.js';
-import {
-  getActiveProjectId,
-  listMultiProjectWorkspaces,
-} from '../src/one-prompt-live-preview/workspace-tab-registry.js';
+import { listMultiProjectWorkspaces } from '../src/one-prompt-live-preview/workspace-tab-registry.js';
 
 function sendJson(res: ServerResponse, status: number, body: unknown): void {
   res.writeHead(status, {
@@ -36,19 +36,20 @@ async function readJsonBody(req: IncomingMessage): Promise<Record<string, unknow
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as Record<string, unknown>;
 }
 
-function buildRegistryResponse(rootDir: string) {
-  const summary = buildProjectRegistrySummary(rootDir);
+function buildFastRegistryResponse(rootDir: string) {
+  const state = readProjectRegistryState(rootDir);
+  const summary = buildProjectRegistrySummaryFast(rootDir);
   return {
     ok: true,
-    registry: loadProjectRegistryV1(rootDir),
+    registry: state,
     projects: summary,
-    activeProjectId: getActiveProjectId(),
+    activeProjectId: state.activeProjectId,
     multiProjectWorkspaces: listMultiProjectWorkspaces(),
   };
 }
 
 export function sendProjectRegistryJson(res: ServerResponse, rootDir: string): void {
-  sendJson(res, 200, buildRegistryResponse(rootDir));
+  sendJson(res, 200, buildFastRegistryResponse(rootDir));
 }
 
 export async function handleProjectRegistryMutation(
@@ -62,8 +63,23 @@ export async function handleProjectRegistryMutation(
     if (action === 'create') {
       const name = String(body.name ?? '').trim();
       const summary = body.summary ? String(body.summary) : undefined;
+      try {
+        validateCreateRegistryProjectName(name, rootDir);
+      } catch (validationErr) {
+        if (validationErr instanceof ProjectRegistryDuplicateNameError) {
+          sendJson(res, 409, {
+            ok: false,
+            error: validationErr.message,
+            code: PROJECT_REGISTRY_DUPLICATE_NAME_CODE,
+            existingProjectId: validationErr.existingProjectId,
+            existingProjectName: validationErr.displayName,
+          });
+          return;
+        }
+        throw validationErr;
+      }
       const record = createRegistryProject({ name, summary, rootDir });
-      sendJson(res, 200, { ...buildRegistryResponse(rootDir), project: record, action: 'create' });
+      sendJson(res, 200, { ...buildFastRegistryResponse(rootDir), project: record, action: 'create' });
       return;
     }
 
@@ -76,19 +92,29 @@ export async function handleProjectRegistryMutation(
     if (action === 'rename') {
       const name = String(body.name ?? '').trim();
       const record = renameRegistryProject({ projectId, name, rootDir });
-      sendJson(res, 200, { ...buildRegistryResponse(rootDir), project: record, action: 'rename' });
+      sendJson(res, 200, { ...buildFastRegistryResponse(rootDir), project: record, action: 'rename' });
       return;
     }
 
     if (action === 'archive') {
       const record = archiveRegistryProject({ projectId, rootDir });
-      sendJson(res, 200, { ...buildRegistryResponse(rootDir), project: record, action: 'archive' });
+      sendJson(res, 200, { ...buildFastRegistryResponse(rootDir), project: record, action: 'archive' });
       return;
     }
 
     const record = setRegistryActiveProject({ projectId, rootDir });
-    sendJson(res, 200, { ...buildRegistryResponse(rootDir), project: record, action: 'set-active' });
+    sendJson(res, 200, { ...buildFastRegistryResponse(rootDir), project: record, action: 'set-active' });
   } catch (err) {
+    if (err instanceof ProjectRegistryDuplicateNameError) {
+      sendJson(res, 409, {
+        ok: false,
+        error: err.message,
+        code: PROJECT_REGISTRY_DUPLICATE_NAME_CODE,
+        existingProjectId: err.existingProjectId,
+        existingProjectName: err.displayName,
+      });
+      return;
+    }
     const message = err instanceof Error ? err.message : 'project registry mutation failed';
     sendJson(res, 400, { ok: false, error: message });
   }

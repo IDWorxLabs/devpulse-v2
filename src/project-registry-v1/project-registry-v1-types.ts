@@ -38,3 +38,38 @@ export interface ProjectRegistrySummary {
 }
 
 export const PROJECT_REGISTRY_V1_PASS_TOKEN = 'PROJECT_REGISTRY_CONSISTENCY_V1_PASS' as const;
+
+export const PROJECT_REGISTRY_DUPLICATE_NAME_CODE = 'DUPLICATE_PROJECT_NAME' as const;
+
+export const PROJECT_REGISTRY_DUPLICATES_REPAIRED = 'PROJECT_REGISTRY_DUPLICATES_REPAIRED' as const;
+
+export const PROJECT_REGISTRY_LOADED = 'PROJECT_REGISTRY_LOADED' as const;
+
+export const PROJECT_REGISTRY_PROJECT_PERSISTED = 'PROJECT_REGISTRY_PROJECT_PERSISTED' as const;
+
+export const PROJECT_REGISTRY_TEST_ROOT_SEGMENT = '.project-registry-test-root' as const;
+
+export interface ProjectRegistryDuplicateRepairResult {
+  repairedCount: number;
+  archivedNames: string[];
+  archivedProjectIds: string[];
+  keptProjectIds: string[];
+  mutated: boolean;
+}
+
+export class ProjectRegistryDuplicateNameError extends Error {
+  readonly code: typeof PROJECT_REGISTRY_DUPLICATE_NAME_CODE;
+  readonly displayName: string;
+  readonly existingProjectId: string;
+
+  constructor(displayName: string, existingProjectId: string) {
+    super(
+      `A project named ${displayName} already exists. Choose a different name or open the existing project.`,
+    );
+    this.name = 'ProjectRegistryDuplicateNameError';
+    this.code = PROJECT_REGISTRY_DUPLICATE_NAME_CODE;
+    this.displayName = displayName;
+    this.existingProjectId = existingProjectId;
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
