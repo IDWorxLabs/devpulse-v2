@@ -1,0 +1,18 @@
+{
+  "panelState": "COMPLETE",
+  "launchReadinessVerdict": "NOT_LAUNCH_READY",
+  "founderReadinessScore": 75,
+  "confidenceLevel": "MEDIUM",
+  "orchestratorVerdict": "FOUNDER_ACCEPTS",
+  "topBlockerCount": 9,
+  "topBlockers": [
+    "Execution chain NOT CONNECTED — first break at BUILD. VERIFY→LAUNCH: Verification not linked to proven launch readiness; First broken link: artifacts→files",
+    "Launch proof NOT_PROVEN — state BLOCKED. Execution chain disconnected — first break at BUILD; Verification proof level: NOT_PROVEN",
+    "[HIGH] No proven running application — runtime signals are claimed or partially observed only.",
+    "[MEDIUM] VERIFY: Verification remains VERIFICATION_OBSERVED — validator inventory ≠ execution verification.",
+    "Launch-facing surfaces still expose unfinished or demo-only presentation elements.",
+    "Visible placeholder or demo surfaces can make the product appear unfinished to founders.",
+    "Device frame preview is not proven — phone images and metadata alone do not prove familiar device environments.",
+    "Touch, safe-area, keyboard, and orientation simulation are not proven."
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "overallCoveragePercent": 35,
+  "verificationConfidenceScore": 48,
+  "verificationSufficientForLaunch": false,
+  "criticalGapCount": 4,
+  "coverageThreshold": 80,
+  "confidenceThreshold": 75
+}

@@ -1,0 +1,24 @@
+{
+  "scenarioId": "booking-system",
+  "productDomain": "Booking System",
+  "productRequest": "Build a simple booking system where users can create bookings, choose a date and time, enter customer details, cancel bookings, filter upcoming and past bookings, and see the next upcoming booking. It should work in the browser.",
+  "clarificationAnswers": [
+    "Business: Browser-based appointment booking system for small teams with a clean modern UI.",
+    "Users: Individual users and team members working in the browser.",
+    "Roles: Single end-user role; no separate admin portal for MVP.",
+    "Permissions: Users have full CRUD permissions on records they create.",
+    "Workflows: Create booking, choose date/time, enter customer details, cancel booking, filter upcoming/past, show next upcoming booking.",
+    "Data: Primary Booking records stored in client state with explicit fields.",
+    "Files: No file upload or document storage required for MVP.",
+    "Notifications: No email, SMS, or push notifications in MVP.",
+    "Integrations: Standalone web app with no third-party integrations.",
+    "AI: No AI or recommendation features.",
+    "Monetization: Free productivity tool with no billing.",
+    "Deployment: Static Vite React SPA for modern browsers; npm build produces dist/index.html."
+  ],
+  "initialConfidence": 33,
+  "enrichedConfidence": 93,
+  "initialOpenQuestions": 8,
+  "enrichedOpenQuestions": 2,
+  "canProceedToPlanning": false
+}

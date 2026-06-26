@@ -70,7 +70,9 @@ export function upsertProjectContextMetadata(
 ): ProjectContextMetadata {
   const state = loadFile(rootDir);
   const existing = state.projects[input.projectId];
-  const promptSignals = input.prompt ? extractPromptDomainSignals(input.prompt) : null;
+  const promptSignals = input.prompt
+    ? extractPromptDomainSignals(input.prompt, { activeProjectName: input.name })
+    : null;
   const nameSignals = extractProjectNameDomainSignals(input.name);
   const domainIds = [
     ...new Set([

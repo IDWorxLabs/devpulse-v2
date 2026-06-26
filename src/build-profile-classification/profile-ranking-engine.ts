@@ -10,6 +10,10 @@ import type {
   ProfileRankingResult,
   RejectedProfileRanking,
 } from './profile-ranking-types.js';
+import {
+  shouldSuppressTaskTrackingClassification,
+  promptMentionsLisaOrAccessibility,
+} from '../project-context-switching/project-context-classifier-guard.js';
 
 interface ProfileRuleSet {
   profile: GeneratedAppProfile;
@@ -137,6 +141,22 @@ const PROFILE_RULES: ProfileRuleSet[] = [
       { term: 'mark them complete', weight: 9 },
       { term: 'mark complete', weight: 8 },
       { term: 'complete tasks', weight: 8 },
+    ],
+    disqualifiers: [
+      'locked in syndrome',
+      'locked-in syndrome',
+      'lisa',
+      'assistive communication',
+      'eye movement',
+      'eye tracking',
+      'gaze',
+      'blink',
+      'communication board',
+      'text to speech',
+      'text-to-speech',
+      'caregiver',
+      'calibration',
+      'accessibility',
     ],
   },
   {
@@ -292,6 +312,7 @@ function inferProductIntent(text: string, selected: GeneratedAppProfile | null):
     return 'qr code application';
   }
   if (matchProfileKeyword(text, 'task tracker') || matchProfileKeyword(text, 'todo')) return 'task tracking';
+  if (promptMentionsLisaOrAccessibility(text)) return 'assistive communication';
   if (matchProfileKeyword(text, 'inventory')) return 'inventory management';
   if (matchProfileKeyword(text, 'school')) return 'school management';
   if (matchProfileKeyword(text, 'project management')) return 'project management';

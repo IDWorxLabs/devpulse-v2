@@ -1,0 +1,12 @@
+{
+  "readOnly": true,
+  "jobId": "a528dc73-dcf0-41a7-a16a-8bc108d8b852",
+  "profile": "MARKETPLACE_WEB_V1",
+  "executionMode": "CLOUD_SIMULATED",
+  "buildProof": true,
+  "previewProof": true,
+  "verificationProof": false,
+  "aflaVerdict": "NOT_LAUNCH_READY",
+  "productionReadinessScore": 81,
+  "runtimeDurationMs": 12309
+}

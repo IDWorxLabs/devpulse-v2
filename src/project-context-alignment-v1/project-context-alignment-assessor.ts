@@ -17,6 +17,14 @@ import {
   normalizeProjectDisplayName,
 } from './prompt-domain-analyzer.js';
 import { getProjectContextMetadata } from './project-context-metadata-store.js';
+import {
+  isLisaProjectName,
+  lisaKeywordsForProject,
+  promptMentionsActiveProjectName,
+  promptMentionsLisaOrAccessibility,
+  proposedNameShouldNotBeTaskTracker,
+  resolveLisaProjectDomain,
+} from '../project-context-switching/index.js';
 
 const GENERIC_GUIDANCE =
   /\b(what should i do next|what next|help me decide|any suggestions|status update|how is the project)\b/i;
@@ -162,7 +170,9 @@ export function assessProjectContextAlignment(
   }
 
   if (input.confirmProjectContextAlignment) {
-    const promptSignals = extractPromptDomainSignals(prompt);
+    const promptSignals = extractPromptDomainSignals(prompt, {
+      activeProjectName: activeProjectName,
+    });
     return alignedResult({
       activeProjectId,
       activeProjectName,
@@ -173,7 +183,9 @@ export function assessProjectContextAlignment(
     });
   }
 
-  const promptSignals = extractPromptDomainSignals(prompt);
+  const promptSignals = extractPromptDomainSignals(prompt, {
+    activeProjectName: activeProjectName,
+  });
   const registry = readProjectRegistryState(rootDir);
   const activeRecord =
     registry.projects.find(
@@ -193,8 +205,13 @@ export function assessProjectContextAlignment(
     ? getProjectContextMetadata(resolvedActiveId, rootDir)
     : null;
   const activeNameSignals = extractProjectNameDomainSignals(resolvedActiveName);
+  const lisaDomain = resolveLisaProjectDomain(resolvedActiveName);
   const activeDomainIds = [
-    ...new Set([...activeNameSignals.domainIds, ...(activeMetadata?.keywords ?? [])]),
+    ...new Set([
+      ...activeNameSignals.domainIds,
+      ...(activeMetadata?.keywords ?? []),
+      ...(lisaDomain ? lisaKeywordsForProject() : []),
+    ]),
   ];
   if (activeMetadata?.lastBuildIntentSummary) {
     const summaryDomainSignals = extractPromptDomainSignals(activeMetadata.lastBuildIntentSummary);
@@ -203,14 +220,29 @@ export function assessProjectContextAlignment(
     }
   }
   const activeDomainLabel =
-    activeMetadata?.domain && activeMetadata.domain !== 'general application'
+    lisaDomain ??
+    (activeMetadata?.domain && activeMetadata.domain !== 'general application'
       ? activeMetadata.domain
-      : activeNameSignals.domainLabel;
+      : activeNameSignals.domainLabel);
 
   const activeScore = resolvedActiveId
     ? scoreProjectAgainstPrompt(resolvedActiveName, resolvedActiveId, promptSignals.domainIds, rootDir)
     : 0;
   const activeHasSpecificDomain = activeDomainIds.length > 0;
+
+  if (
+    promptMentionsActiveProjectName(prompt, resolvedActiveName) ||
+    (isLisaProjectName(resolvedActiveName) && promptMentionsLisaOrAccessibility(prompt))
+  ) {
+    return alignedResult({
+      activeProjectId: resolvedActiveId,
+      activeProjectName: resolvedActiveName,
+      promptDomain: promptSignals.domainLabel,
+      activeProjectDomain: activeDomainLabel,
+      reason: `Prompt explicitly targets active project "${resolvedActiveName}".`,
+      alignmentScore: Math.max(activeScore, 0.85),
+    });
+  }
 
   const activeProjects = registry.projects.filter((project) => project.status === 'ACTIVE');
   let bestOther: { projectId: string; name: string; score: number } | null = null;
@@ -245,7 +277,12 @@ export function assessProjectContextAlignment(
     activeScore < 0.35 &&
     !allowFirstBuildOnGenericProject
   ) {
-    const proposedName = promptSignals.proposedProjectName ?? 'New Project';
+    const proposedName =
+      proposedNameShouldNotBeTaskTracker(prompt, promptSignals.proposedProjectName)
+        ? isLisaProjectName(resolvedActiveName)
+          ? 'LISA'
+          : 'New Project'
+        : (promptSignals.proposedProjectName ?? 'New Project');
     return blockedResult({
       verdict: 'NEW_PROJECT_SUGGESTED',
       activeProjectId: resolvedActiveId,
@@ -312,7 +349,12 @@ export function assessProjectContextAlignment(
     overlap === 0 &&
     activeScore < 0.25
   ) {
-    const proposedName = promptSignals.proposedProjectName ?? 'New Project';
+    const proposedName =
+      proposedNameShouldNotBeTaskTracker(prompt, promptSignals.proposedProjectName)
+        ? isLisaProjectName(resolvedActiveName)
+          ? 'LISA'
+          : 'New Project'
+        : (promptSignals.proposedProjectName ?? 'New Project');
     return blockedResult({
       verdict: 'DEFINITELY_MISPLACED',
       activeProjectId: resolvedActiveId,
@@ -335,7 +377,12 @@ export function assessProjectContextAlignment(
   }
 
   if (activeScore < 0.45) {
-    const proposedName = promptSignals.proposedProjectName ?? 'New Project';
+    const proposedName =
+      proposedNameShouldNotBeTaskTracker(prompt, promptSignals.proposedProjectName)
+        ? isLisaProjectName(resolvedActiveName)
+          ? 'LISA'
+          : 'New Project'
+        : (promptSignals.proposedProjectName ?? 'New Project');
     return blockedResult({
       verdict: 'POSSIBLY_MISPLACED',
       activeProjectId: resolvedActiveId,

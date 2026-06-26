@@ -1,0 +1,28 @@
+{
+  "scenarioId": "client-portal",
+  "launchBlockers": [
+    "UVL hub insufficient for launch (1 critical gap(s): Requirement)",
+    "AFLA verdict NOT_LAUNCH_READY (score 100)",
+    "Founder prerequisite: Requirement Discovery incomplete",
+    "Founder prerequisite: Verification Hub incomplete"
+  ],
+  "launchReady": false,
+  "aflaVerdict": "NOT_LAUNCH_READY",
+  "aflaScore": 100,
+  "aflaBlockingRules": [
+    "Verification Hub insufficient (coverage 98%, confidence 98, gaps: Requirement: Insufficient requirement discovery; Requirement: Requirement discovery insufficient)",
+    "Requirement Discovery poorly understood",
+    "Founder prerequisite missing: Requirement Discovery incomplete",
+    "Founder prerequisite missing: Verification Hub incomplete"
+  ],
+  "uvlCoverage": 98,
+  "uvlConfidence": 98,
+  "uvlSufficient": false,
+  "founderMissingPrerequisites": [
+    "Requirement Discovery incomplete",
+    "Verification Hub incomplete"
+  ],
+  "visualRuntimeSupported": true,
+  "boundedRuntimePassed": true,
+  "founderLaunchVerdict": "NOT_LAUNCH_READY"
+}

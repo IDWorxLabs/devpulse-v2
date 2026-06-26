@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T21:30:07.094Z",
+  "generatedAt": "2026-06-25T06:29:39.026Z",
   "nodes": [
     {
       "capabilityCategory": "CQI",
@@ -175,6 +175,8 @@
         "validate:command-center-brain",
         "validate:command-center-brain-runtime",
         "validate:command-center-identity-realignment",
+        "validate:command-center-manifest-stability",
+        "validate:command-center-runtime-health",
         "validate:command-center-runtime-shell",
         "validate:command-center-ui-wiring-founder-report-delivery",
         "validate:command-center-ux-stabilization",
@@ -265,7 +267,8 @@
         "validate:capability-audit-v1",
         "validate:capability-audit-v2",
         "validate:capability-audit-v3",
-        "validate:capability-audit-v3-1"
+        "validate:capability-audit-v3-1",
+        "validate:strategic-capability-audit-v4"
       ]
     },
     {

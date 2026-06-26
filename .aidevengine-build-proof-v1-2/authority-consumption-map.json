@@ -1,0 +1,119 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-25T07:03:12.814Z",
+  "entries": [
+    {
+      "readOnly": true,
+      "authority": "Clarifying Question Intelligence",
+      "consumed": true,
+      "fieldsUsed": [
+        "requirementConfidenceScore",
+        "canProceedToPlanning",
+        "coverageMatrix",
+        "enrichedPrompt"
+      ],
+      "fieldsIgnored": [
+        "openQuestions when enriched canProceedToPlanning"
+      ],
+      "fieldsUnsupported": [],
+      "detail": "Recorded enriched CQI assessment (confidence 96)"
+    },
+    {
+      "readOnly": true,
+      "authority": "Feature Reality Validation",
+      "consumed": true,
+      "fieldsUsed": [
+        "checks from UVL behaviour evidence",
+        "previewUrl",
+        "contractId"
+      ],
+      "fieldsIgnored": [],
+      "fieldsUnsupported": [
+        "playwright runtime execution"
+      ],
+      "detail": "Registered source-derived assessment passed=true score=100"
+    },
+    {
+      "readOnly": true,
+      "authority": "Universal App Blueprint Visual",
+      "consumed": true,
+      "fieldsUsed": [
+        "blueprint structure inspection",
+        "dist artifact path"
+      ],
+      "fieldsIgnored": [
+        "viewportEvidence runtime measurements"
+      ],
+      "fieldsUnsupported": [
+        "playwright responsive viewport runs"
+      ],
+      "detail": "Registered source-derived assessment passed=false score=67"
+    },
+    {
+      "readOnly": true,
+      "authority": "Engineering Reality",
+      "consumed": true,
+      "fieldsUsed": [
+        "build checks",
+        "buildAnalysis from materialization evidence"
+      ],
+      "fieldsIgnored": [],
+      "fieldsUnsupported": [
+        "playwright runtime security/accessibility/performance probes"
+      ],
+      "detail": "Registered build-only assessment passed=true score=89"
+    },
+    {
+      "readOnly": true,
+      "authority": "Autonomous Founder Launch Authority (AFLA)",
+      "consumed": true,
+      "fieldsUsed": [
+        "workspaceDir",
+        "buildReality from materialization",
+        "enriched CQI via getLastCqiMaturityAssessment"
+      ],
+      "fieldsIgnored": [
+        "productPrompt direct injection"
+      ],
+      "fieldsUnsupported": [
+        "playwright-derived feature/visual overrides without registration"
+      ],
+      "detail": "AFLA verdict=NEEDS_AUTOFIX score=57"
+    },
+    {
+      "readOnly": true,
+      "authority": "UVL Verification Hub",
+      "consumed": true,
+      "fieldsUsed": [
+        "buildProofHandoff",
+        "workspaceDir",
+        "getLastCqiMaturityAssessment",
+        "getLastFeatureRealityAssessment",
+        "getLastBlueprintVisualAssessment",
+        "getLastEngineeringRealityAssessment",
+        "getLastAutonomousFounderLaunchAssessment"
+      ],
+      "fieldsIgnored": [],
+      "fieldsUnsupported": [
+        "uvlBehaviour direct field — consumed via registered assessments"
+      ],
+      "detail": "UVL coverage=85% confidence=84"
+    },
+    {
+      "readOnly": true,
+      "authority": "Founder Launch Readiness (evidence collector)",
+      "consumed": true,
+      "fieldsUsed": [
+        "workspaceDir",
+        "buildReality",
+        "productPrompt enriched",
+        "registered feature/visual/engineering assessments"
+      ],
+      "fieldsIgnored": [],
+      "fieldsUnsupported": [
+        "founderExecutionProofInput connected assessment injection in this path"
+      ],
+      "detail": "Prerequisites passed=false missing=4"
+    }
+  ]
+}

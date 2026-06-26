@@ -1,0 +1,48 @@
+[
+  {
+    "runtimeId": "BROWSER",
+    "detected": true,
+    "launchAttempted": true,
+    "launchSuccessful": true,
+    "verificationAttempted": true,
+    "verificationSuccessful": true,
+    "unsupportedReason": null
+  },
+  {
+    "runtimeId": "MOBILE_WEB",
+    "detected": true,
+    "launchAttempted": true,
+    "launchSuccessful": true,
+    "verificationAttempted": true,
+    "verificationSuccessful": true,
+    "unsupportedReason": null
+  },
+  {
+    "runtimeId": "ANDROID",
+    "detected": true,
+    "launchAttempted": true,
+    "launchSuccessful": true,
+    "verificationAttempted": true,
+    "verificationSuccessful": true,
+    "unsupportedReason": null,
+    "androidRuntimeState": "DEVICE_RUNNING"
+  },
+  {
+    "runtimeId": "IOS",
+    "detected": false,
+    "launchAttempted": false,
+    "launchSuccessful": false,
+    "verificationAttempted": false,
+    "verificationSuccessful": false,
+    "unsupportedReason": "iOS development requires macOS"
+  },
+  {
+    "runtimeId": "EXPO",
+    "detected": true,
+    "launchAttempted": false,
+    "launchSuccessful": false,
+    "verificationAttempted": false,
+    "verificationSuccessful": false,
+    "unsupportedReason": "No Expo project detected in workspace root"
+  }
+]

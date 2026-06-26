@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T21:30:07.094Z",
+  "generatedAt": "2026-06-25T06:29:39.026Z",
   "tiers": [
     {
       "tier": "FAST",
@@ -749,6 +749,22 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:command-center-manifest-stability",
+      "tier": "STANDARD",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:command-center-runtime-health",
+      "tier": "FAST",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:command-center-runtime-shell",
       "tier": "STANDARD",
       "category": "OPERATOR",
@@ -949,6 +965,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:continuous-deployment-pipeline-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:controlled-builder-execution-engine",
       "tier": "STANDARD",
       "category": "OTHER",
@@ -1021,6 +1045,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:customer-operations-platform-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:customer-value-authority",
       "tier": "FAST",
       "category": "OTHER",
@@ -1086,6 +1118,14 @@
     },
     {
       "validatorName": "validate:evidence-propagation-reconciliation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:evidence-revalidation-cycle-v1",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -1685,6 +1725,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:general-purpose-code-generation-gap-investigation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:general-purpose-code-generation-v1",
       "tier": "FULL",
       "category": "OTHER",
@@ -2085,6 +2133,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:multi-project-concurrent-execution-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 840,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:multi-project-foundation",
       "tier": "FAST",
       "category": "FOUNDATION",
@@ -2150,6 +2206,14 @@
     },
     {
       "validatorName": "validate:openai-connectivity-proof",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:operational-evidence-freshness-authority-v1",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -2421,6 +2485,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:production-observability-platform-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:production-readiness-gate-v1",
       "tier": "LAUNCH",
       "category": "OTHER",
@@ -2454,6 +2526,14 @@
     },
     {
       "validatorName": "validate:project-knowledge-reasoning",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-registry-consistency-v1",
       "tier": "STANDARD",
       "category": "OTHER",
       "runtimeBudgetSeconds": 27,
@@ -2837,6 +2917,22 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:strategic-audit-roadmap-consistency-repair-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:strategic-capability-audit-v4",
+      "tier": "LAUNCH",
+      "category": "CAPABILITY_AUDIT",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:strategic-defensibility-reality-authority",
       "tier": "FAST",
       "category": "OTHER",
@@ -2906,6 +3002,14 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 27,
       "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:unified-failure-escalation-authority-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
       "aflaBlockedInFastStandard": false
     },
     {

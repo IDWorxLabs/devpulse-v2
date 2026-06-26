@@ -1,0 +1,15 @@
+{
+  "scenarioId": "crm-lite",
+  "launchBlockers": [],
+  "launchReady": true,
+  "aflaVerdict": "LAUNCH_READY",
+  "aflaScore": 100,
+  "aflaBlockingRules": [],
+  "uvlCoverage": 100,
+  "uvlConfidence": 100,
+  "uvlSufficient": true,
+  "founderMissingPrerequisites": [],
+  "visualRuntimeSupported": true,
+  "boundedRuntimePassed": true,
+  "founderLaunchVerdict": "NOT_LAUNCH_READY"
+}

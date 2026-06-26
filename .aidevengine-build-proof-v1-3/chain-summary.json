@@ -1,0 +1,104 @@
+{
+  "chainVerdict": "PARTIAL",
+  "launchReady": false,
+  "launchBlockers": [
+    "UVL hub insufficient for launch (1 critical gap(s): Launch)",
+    "AFLA verdict NEEDS_AUTOFIX (score 80)",
+    "Founder launch verdict NOT_LAUNCH_READY",
+    "Founder prerequisite: Verification Hub incomplete",
+    "Founder prerequisite: Product Architecture incomplete"
+  ],
+  "validationChecks": [
+    {
+      "name": "enriched requirements evidence exists",
+      "passed": true,
+      "detail": "initial=15 enriched=96"
+    },
+    {
+      "name": "build materialization evidence exists",
+      "passed": true,
+      "detail": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-task-tracker-web-v1"
+    },
+    {
+      "name": "UVL behaviour evidence exists",
+      "passed": true,
+      "detail": "6/6 behaviours"
+    },
+    {
+      "name": "visual runtime evidence file written",
+      "passed": true,
+      "detail": "11/11 checks"
+    },
+    {
+      "name": "static artifact inspection completed",
+      "passed": true,
+      "detail": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-task-tracker-web-v1\\dist\\index.html"
+    },
+    {
+      "name": "Playwright runtime passed bounded checks or explicitly unsupported",
+      "passed": true,
+      "detail": "bounded runtime passed=true"
+    },
+    {
+      "name": "launch evidence bundle created",
+      "passed": true,
+      "detail": "materialized"
+    },
+    {
+      "name": "authority-prerequisite-map.json written",
+      "passed": true,
+      "detail": "4 authorities mapped"
+    },
+    {
+      "name": "blueprint visual evidence consumed or unsupported reason recorded",
+      "passed": true,
+      "detail": "Registered assessment passed=true score=100"
+    },
+    {
+      "name": "UVL hub critical visual/runtime gap cleared or exact remaining reason recorded",
+      "passed": true,
+      "detail": "visual/runtime gap cleared"
+    },
+    {
+      "name": "AFLA verdict produced",
+      "passed": true,
+      "detail": "NEEDS_AUTOFIX (score 80)"
+    },
+    {
+      "name": "Founder launch verdict produced",
+      "passed": true,
+      "detail": "NOT_LAUNCH_READY"
+    },
+    {
+      "name": "report written",
+      "passed": true,
+      "detail": "AIDEVENGINE_BUILD_PROOF_V1_3_REPORT.md"
+    }
+  ],
+  "v12Baseline": {
+    "uvlCoverage": 85,
+    "uvlConfidence": 84,
+    "blueprintVisualScore": 67,
+    "blueprintVisualPassed": false,
+    "aflaVerdict": "NEEDS_AUTOFIX",
+    "aflaScore": 57,
+    "founderLaunchVerdict": "NOT_LAUNCH_READY",
+    "criticalVisualRuntimeGap": "Playwright viewport/runtime checks not run"
+  },
+  "v13Results": {
+    "blueprintVisualScore": 100,
+    "blueprintVisualImproved": true,
+    "uvlVisualGapCleared": true,
+    "aflaVerdict": "NEEDS_AUTOFIX",
+    "aflaMovedFromNeedsAutofix": false,
+    "founderPrerequisitesSatisfied": false,
+    "visualRuntimePassed": true,
+    "playwrightSupported": true
+  },
+  "uvlAfterHandoff": {
+    "coverage": 96,
+    "confidence": 96,
+    "criticalGapCount": 1
+  },
+  "passToken": null
+}

@@ -1,0 +1,32 @@
+{
+  "recordedAt": 1782384690765,
+  "sdkPath": "C:\\Users\\Richa\\AppData\\Local\\Android\\Sdk",
+  "adbPath": "C:\\Users\\Richa\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe",
+  "emulatorPath": "C:\\Users\\Richa\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe",
+  "avdList": [
+    "Medium_Phone_API_36.1"
+  ],
+  "selectedAvd": null,
+  "emulatorAlreadyRunning": true,
+  "startedByAiDevEngine": false,
+  "launchAttempted": false,
+  "launchSuccessful": true,
+  "deviceSerial": "emulator-5554",
+  "deviceType": "emulator",
+  "bootCompleted": true,
+  "deviceState": {
+    "sysBootCompleted": "1",
+    "devBootcomplete": "1",
+    "apiLevel": "36",
+    "deviceModel": "sdk_gphone64_x86_64",
+    "screenSize": "Physical size: 1080x2400",
+    "density": "Physical density: 420"
+  },
+  "verificationVerdict": "VERIFIED",
+  "blockerDetail": "Reused running emulator — verified",
+  "launchLogs": [
+    "reusing running emulator emulator-5554",
+    "boot complete for emulator-5554 (sys.boot_completed=1)"
+  ],
+  "elapsedMs": 784
+}

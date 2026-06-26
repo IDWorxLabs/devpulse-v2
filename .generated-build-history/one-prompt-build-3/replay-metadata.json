@@ -1,0 +1,81 @@
+{
+  "readOnly": true,
+  "originalPrompt": "Build a modern QR code scanning web application with camera scan, URL redirect, and scan history. Generate architecture, plan, tasks, and begin build execution.",
+  "selectedProfile": "QR_APP",
+  "generationInputs": {
+    "projectId": "smartqr-test-1",
+    "buildRunId": "one-prompt-build-3",
+    "expectedAppType": "qr-app",
+    "featureModules": [
+      "auth",
+      "dashboard",
+      "generator",
+      "scanner",
+      "code-history",
+      "analytics",
+      "settings",
+      "persistence"
+    ],
+    "routes": [
+      "/",
+      "/dashboard",
+      "/generator",
+      "/scanner",
+      "/code-history",
+      "/analytics",
+      "/settings"
+    ],
+    "fallbackUsed": false
+  },
+  "featureContractSummary": {
+    "featureModuleCount": 13,
+    "featureModuleIds": [
+      "auth",
+      "dashboard",
+      "generator",
+      "scanner",
+      "code-history",
+      "analytics",
+      "settings",
+      "persistence"
+    ],
+    "routes": [
+      "/",
+      "/dashboard",
+      "/generator",
+      "/scanner",
+      "/code-history",
+      "/analytics",
+      "/settings"
+    ]
+  },
+  "profileFeatureMapVersion": "materialization-v1",
+  "blueprintVersion": "1.0",
+  "generatorVersion": "universal-prompt-to-app-materialization-v1",
+  "dependencySnapshot": {
+    "runtime": "vite-react:qr-app",
+    "packageManager": "npm",
+    "note": "Captured from generated workspace package.json when present"
+  },
+  "validationCommands": [
+    "npm install",
+    "npm run build",
+    "npm run preview",
+    "npm run validate:blueprint-purity",
+    "npm run validate:production-validation"
+  ],
+  "expectedArtifacts": [
+    ".generated-app-manifest.json",
+    "src/features/registry.ts",
+    "src/features/routes.ts",
+    "src/features/FeatureAppRouter.tsx",
+    "src/blueprint/AppShell.tsx",
+    "universal-feature-contract.json"
+  ],
+  "replayInstructions": [
+    "Use originalPrompt and selectedProfile with Universal Prompt-to-App Materialization engine.",
+    "Regenerate workspace with the same contractId/projectId when possible.",
+    "Run validationCommands in the generated workspace to reproduce validation evidence.",
+    "Compare manifestHash and workspaceHash against build-record.json for regression tracking."
+  ]
+}

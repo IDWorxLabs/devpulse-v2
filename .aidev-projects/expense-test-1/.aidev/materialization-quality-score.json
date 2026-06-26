@@ -1,0 +1,288 @@
+{
+  "readOnly": true,
+  "overallScore": 78,
+  "verdict": "ACCEPTABLE",
+  "categories": [
+    {
+      "readOnly": true,
+      "id": "blueprint",
+      "label": "Blueprint",
+      "score": 100,
+      "weight": 0.08,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Blueprint purity passed",
+        "Shell purity verified",
+        "Domain language boundary verified"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "promptAlignment",
+      "label": "Prompt Alignment",
+      "score": 70,
+      "weight": 0.08,
+      "weightedContribution": 6,
+      "status": "WARN",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Prompt-specific UI terms detected (expense, income, categories, reports, chart, csv)",
+        "Universal materialization validation passed"
+      ],
+      "missingEvidence": [
+        "profileSpecificUiVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "featureCoverage",
+      "label": "Feature Coverage",
+      "score": 100,
+      "weight": 0.12,
+      "weightedContribution": 12,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/universal-feature-contract.json",
+        "src/features/auth/AuthFeature.tsx",
+        "src/features/dashboard/DashboardFeature.tsx",
+        "src/features/income/IncomeFeature.tsx",
+        "src/features/expenses/ExpensesFeature.tsx",
+        "src/features/categories/CategoriesFeature.tsx",
+        "src/features/reports/ReportsFeature.tsx",
+        "src/features/charts/ChartsFeature.tsx",
+        "src/features/csv-export/CsvExportFeature.tsx"
+      ],
+      "reasons": [
+        "All 8 expected feature modules present"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "modularArchitecture",
+      "label": "Modular Architecture",
+      "score": 80,
+      "weight": 0.1,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/src/features/FeatureAppRouter.tsx"
+      ],
+      "reasons": [
+        "9 modular feature modules generated",
+        "Modular registry/router architecture verified"
+      ],
+      "missingEvidence": [
+        "featureModuleDirectories incomplete"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "routeReachability",
+      "label": "Routes",
+      "score": 85,
+      "weight": 0.07,
+      "weightedContribution": 6,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/src/features/FeatureAppRouter.tsx"
+      ],
+      "reasons": [
+        "8/8 routes generated"
+      ],
+      "missingEvidence": [
+        "modularRoutesVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "serviceTypesValidation",
+      "label": "Services/Types/Validation",
+      "score": 100,
+      "weight": 0.07,
+      "weightedContribution": 7,
+      "status": "PASS",
+      "evidencePaths": [
+        "src/features/auth/auth.service.ts",
+        "src/features/categories/categories.service.ts",
+        "src/features/charts/charts.service.ts",
+        "src/features/csv-export/csv-export.service.ts",
+        "src/features/dashboard/dashboard.service.ts",
+        "src/features/expenses/expenses.service.ts",
+        "src/features/income/income.service.ts",
+        "src/features/reports/reports.service.ts"
+      ],
+      "reasons": [
+        "8 service files",
+        "8 types files",
+        "8 validation files"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "build",
+      "label": "Build",
+      "score": 100,
+      "weight": 0.08,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Validation status PASS",
+        "npm build completed in 3522ms",
+        "dist/index.html present"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "preview",
+      "label": "Preview",
+      "score": 15,
+      "weight": 0.08,
+      "weightedContribution": 1,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/.generated-app-manifest.json"
+      ],
+      "reasons": [],
+      "missingEvidence": [
+        "previewVerified",
+        "previewHtmlStatus pending",
+        "previewUrl"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "productionValidation",
+      "label": "Production Validation",
+      "score": 25,
+      "weight": 0.1,
+      "weightedContribution": 3,
+      "status": "FAIL",
+      "evidencePaths": [],
+      "reasons": [],
+      "missingEvidence": [
+        "productionValidationStatus pending",
+        "productionValidationStages"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "buildHistory",
+      "label": "Build History",
+      "score": 100,
+      "weight": 0.05,
+      "weightedContribution": 5,
+      "status": "PASS",
+      "evidencePaths": [
+        ".generated-build-history/one-prompt-build-2",
+        ".generated-build-history/one-prompt-build-2/replay-metadata.json",
+        ".generated-build-history/one-prompt-build-2/audit-timeline.json"
+      ],
+      "reasons": [
+        "Build history recorded",
+        "Immutable build record hash present"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "persistentProjectReality",
+      "label": "Persistent Project Reality",
+      "score": 100,
+      "weight": 0.08,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        ".aidev-projects/expense-test-1/source",
+        ".aidev-projects/expense-test-1/.aidev/project-file-index.json",
+        ".aidev-projects/expense-test-1/.aidev/export-metadata.json"
+      ],
+      "reasons": [
+        "Persistent project reality PASS",
+        "Export metadata reports exportReady",
+        "Workspace reality audit passed"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "genericityAvoidance",
+      "label": "Genericity Avoidance",
+      "score": 100,
+      "weight": 0.08,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Prompt-specific terms present in allowed areas",
+        "No generic Project Management fallback in shell"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "launchReadiness",
+      "label": "Launch Readiness",
+      "score": 60,
+      "weight": 0.11,
+      "weightedContribution": 7,
+      "status": "WARN",
+      "evidencePaths": [
+        ".aidev-projects/expense-test-1/.aidev/export-metadata.json",
+        ".aidev-projects/expense-test-1/source"
+      ],
+      "reasons": [
+        "Launch readiness partially met"
+      ],
+      "missingEvidence": [
+        "preview not verified",
+        "production validation not PASS"
+      ]
+    }
+  ],
+  "strengths": [
+    "Blueprint",
+    "Feature Coverage",
+    "Services/Types/Validation",
+    "Build",
+    "Build History"
+  ],
+  "gaps": [
+    "Balance",
+    "Live preview verification incomplete"
+  ],
+  "criticalFailures": [],
+  "recommendedNextActions": [
+    "Verify preview HTML and dev server startup"
+  ],
+  "computedFromCategories": true,
+  "recordedAt": "2026-06-26T05:13:45.771Z",
+  "buildRunId": "one-prompt-build-2",
+  "projectId": "expense-test-1",
+  "scoreArtifactPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/.materialization-quality-score.json",
+  "persistentScoreArtifactPath": ".aidev-projects/expense-test-1/.aidev/materialization-quality-score.json",
+  "featureContractRealityPath": ".aidev-projects/expense-test-1/.aidev/feature-contract-reality.json",
+  "featureContractRealityScore": 100,
+  "featureContractRealityStatus": "PASS",
+  "workspaceRealityAuditPath": ".aidev-projects/expense-test-1/.aidev/workspace-reality-audit.json",
+  "workspaceRealityAuditScore": 100,
+  "workspaceRealityAuditStatus": "PASS"
+}

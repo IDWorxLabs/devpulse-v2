@@ -1,0 +1,69 @@
+{
+  "readOnly": true,
+  "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-inventory-web-v1",
+  "behaviours": [
+    {
+      "readOnly": true,
+      "id": "add-product",
+      "label": "Add product",
+      "category": "execution",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "update-stock",
+      "label": "Update stock quantity",
+      "category": "workflow",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "low-stock-flag",
+      "label": "Low-stock flag/filter",
+      "category": "discoverability",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "delete-product",
+      "label": "Delete product",
+      "category": "delete",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "total-inventory-value",
+      "label": "Total inventory value",
+      "category": "ux",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "browserBuildArtifactExists",
+      "label": "Browser build artifact exists",
+      "category": "build",
+      "critical": true,
+      "passed": true,
+      "detail": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-inventory-web-v1/dist/index.html with #root mount",
+      "source": "build-artifact"
+    }
+  ],
+  "passedCount": 6,
+  "totalCount": 6,
+  "allBehavioursPresent": true
+}

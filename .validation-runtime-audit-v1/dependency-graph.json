@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T21:30:09.530Z",
+  "generatedAt": "2026-06-25T06:29:40.793Z",
   "nodes": [
     {
       "validatorName": "validate:action-visibility-engine",
@@ -312,7 +312,15 @@
         "validate:large-scale-pipeline-integration-v1",
         "validate:validation-runtime-governance-v1"
       ],
-      "triggeredBy": [],
+      "triggeredBy": [
+        "validate:continuous-deployment-pipeline-v1",
+        "validate:customer-operations-platform-v1",
+        "validate:evidence-revalidation-cycle-v1",
+        "validate:multi-project-concurrent-execution-v1",
+        "validate:operational-evidence-freshness-authority-v1",
+        "validate:production-observability-platform-v1",
+        "validate:unified-failure-escalation-authority-v1"
+      ],
       "nestedValidation": true,
       "circularRisk": false
     },
@@ -345,11 +353,18 @@
       "triggeredBy": [
         "validate:canonical-ownership-v2",
         "validate:cloud-execution-path-v1",
+        "validate:continuous-deployment-pipeline-v1",
+        "validate:customer-operations-platform-v1",
+        "validate:evidence-revalidation-cycle-v1",
         "validate:general-purpose-code-generation-v1",
         "validate:large-scale-pipeline-integration-v1",
         "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:multi-project-concurrent-execution-v1",
+        "validate:operational-evidence-freshness-authority-v1",
+        "validate:production-observability-platform-v1",
         "validate:production-readiness-gate-v1",
         "validate:self-evolution-execution-v1",
+        "validate:unified-failure-escalation-authority-v1",
         "validate:world2-real-instantiation-v1"
       ],
       "nestedValidation": false,
@@ -628,6 +643,20 @@
       "circularRisk": false
     },
     {
+      "validatorName": "validate:command-center-manifest-stability",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:command-center-runtime-health",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
       "validatorName": "validate:command-center-runtime-shell",
       "triggers": [],
       "triggeredBy": [],
@@ -807,6 +836,24 @@
       "circularRisk": false
     },
     {
+      "validatorName": "validate:continuous-deployment-pipeline-v1",
+      "triggers": [
+        "validate:production-observability-platform-v1",
+        "validate:customer-operations-platform-v1",
+        "validate:strategic-capability-audit-v4",
+        "validate:operational-evidence-freshness-authority-v1",
+        "validate:unified-failure-escalation-authority-v1",
+        "validate:canonical-ownership-v2",
+        "validate:capability-audit-v3-1"
+      ],
+      "triggeredBy": [
+        "validate:evidence-revalidation-cycle-v1",
+        "validate:production-observability-platform-v1"
+      ],
+      "nestedValidation": true,
+      "circularRisk": true
+    },
+    {
       "validatorName": "validate:controlled-builder-execution-engine",
       "triggers": [],
       "triggeredBy": [],
@@ -882,6 +929,24 @@
       "circularRisk": false
     },
     {
+      "validatorName": "validate:customer-operations-platform-v1",
+      "triggers": [
+        "validate:strategic-capability-audit-v4",
+        "validate:operational-evidence-freshness-authority-v1",
+        "validate:unified-failure-escalation-authority-v1",
+        "validate:multi-project-concurrent-execution-v1",
+        "validate:canonical-ownership-v2",
+        "validate:capability-audit-v3-1"
+      ],
+      "triggeredBy": [
+        "validate:continuous-deployment-pipeline-v1",
+        "validate:evidence-revalidation-cycle-v1",
+        "validate:production-observability-platform-v1"
+      ],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
       "validatorName": "validate:customer-value-authority",
       "triggers": [],
       "triggeredBy": [],
@@ -945,6 +1010,23 @@
       "triggeredBy": [],
       "nestedValidation": false,
       "circularRisk": false
+    },
+    {
+      "validatorName": "validate:evidence-revalidation-cycle-v1",
+      "triggers": [
+        "validate:strategic-audit-roadmap-consistency-repair-v1",
+        "validate:operational-evidence-freshness-authority-v1",
+        "validate:continuous-deployment-pipeline-v1",
+        "validate:production-observability-platform-v1",
+        "validate:customer-operations-platform-v1",
+        "validate:unified-failure-escalation-authority-v1",
+        "validate:canonical-ownership-v2",
+        "validate:capability-audit-v3-1",
+        "validate:strategic-capability-audit-v4"
+      ],
+      "triggeredBy": [],
+      "nestedValidation": true,
+      "circularRisk": true
     },
     {
       "validatorName": "validate:execution-proof-contradiction-elimination",
@@ -1481,6 +1563,13 @@
       "circularRisk": false
     },
     {
+      "validatorName": "validate:general-purpose-code-generation-gap-investigation",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
       "validatorName": "validate:general-purpose-code-generation-v1",
       "triggers": [
         "validate:cloud-execution-path-v1",
@@ -1630,7 +1719,10 @@
       "triggeredBy": [
         "validate:canonical-ownership-v2",
         "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:multi-project-concurrent-execution-v1",
+        "validate:operational-evidence-freshness-authority-v1",
         "validate:self-evolution-execution-v1",
+        "validate:unified-failure-escalation-authority-v1",
         "validate:world2-real-instantiation-v1"
       ],
       "nestedValidation": true,
@@ -1907,7 +1999,29 @@
       ],
       "triggeredBy": [
         "validate:canonical-ownership-v2",
-        "validate:self-evolution-execution-v1"
+        "validate:multi-project-concurrent-execution-v1",
+        "validate:operational-evidence-freshness-authority-v1",
+        "validate:self-evolution-execution-v1",
+        "validate:unified-failure-escalation-authority-v1"
+      ],
+      "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:multi-project-concurrent-execution-v1",
+      "triggers": [
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:capability-audit-v3-1"
+      ],
+      "triggeredBy": [
+        "validate:customer-operations-platform-v1",
+        "validate:operational-evidence-freshness-authority-v1",
+        "validate:unified-failure-escalation-authority-v1"
       ],
       "nestedValidation": true,
       "circularRisk": false
@@ -1973,6 +2087,28 @@
       "triggers": [],
       "triggeredBy": [],
       "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:operational-evidence-freshness-authority-v1",
+      "triggers": [
+        "validate:unified-failure-escalation-authority-v1",
+        "validate:multi-project-concurrent-execution-v1",
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:capability-audit-v3-1"
+      ],
+      "triggeredBy": [
+        "validate:continuous-deployment-pipeline-v1",
+        "validate:customer-operations-platform-v1",
+        "validate:evidence-revalidation-cycle-v1",
+        "validate:production-observability-platform-v1"
+      ],
+      "nestedValidation": true,
       "circularRisk": false
     },
     {
@@ -2234,6 +2370,24 @@
       "circularRisk": false
     },
     {
+      "validatorName": "validate:production-observability-platform-v1",
+      "triggers": [
+        "validate:customer-operations-platform-v1",
+        "validate:strategic-capability-audit-v4",
+        "validate:operational-evidence-freshness-authority-v1",
+        "validate:unified-failure-escalation-authority-v1",
+        "validate:canonical-ownership-v2",
+        "validate:capability-audit-v3-1",
+        "validate:continuous-deployment-pipeline-v1"
+      ],
+      "triggeredBy": [
+        "validate:continuous-deployment-pipeline-v1",
+        "validate:evidence-revalidation-cycle-v1"
+      ],
+      "nestedValidation": true,
+      "circularRisk": true
+    },
+    {
       "validatorName": "validate:production-readiness-gate-v1",
       "triggers": [
         "validate:capability-audit-v3-1",
@@ -2287,6 +2441,13 @@
       ],
       "triggeredBy": [],
       "nestedValidation": true,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:project-registry-consistency-v1",
+      "triggers": [],
+      "triggeredBy": [],
+      "nestedValidation": false,
       "circularRisk": false
     },
     {
@@ -2594,7 +2755,10 @@
         "validate:validation-runtime-governance-v1"
       ],
       "triggeredBy": [
-        "validate:canonical-ownership-v2"
+        "validate:canonical-ownership-v2",
+        "validate:multi-project-concurrent-execution-v1",
+        "validate:operational-evidence-freshness-authority-v1",
+        "validate:unified-failure-escalation-authority-v1"
       ],
       "nestedValidation": true,
       "circularRisk": false
@@ -2654,6 +2818,27 @@
       "validatorName": "validate:stage2-chat-stress-boundary-observability",
       "triggers": [],
       "triggeredBy": [],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:strategic-audit-roadmap-consistency-repair-v1",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:evidence-revalidation-cycle-v1"
+      ],
+      "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:strategic-capability-audit-v4",
+      "triggers": [],
+      "triggeredBy": [
+        "validate:continuous-deployment-pipeline-v1",
+        "validate:customer-operations-platform-v1",
+        "validate:evidence-revalidation-cycle-v1",
+        "validate:production-observability-platform-v1"
+      ],
       "nestedValidation": false,
       "circularRisk": false
     },
@@ -2727,6 +2912,28 @@
       "triggers": [],
       "triggeredBy": [],
       "nestedValidation": false,
+      "circularRisk": false
+    },
+    {
+      "validatorName": "validate:unified-failure-escalation-authority-v1",
+      "triggers": [
+        "validate:multi-project-concurrent-execution-v1",
+        "validate:canonical-ownership-v2",
+        "validate:self-evolution-execution-v1",
+        "validate:world2-real-instantiation-v1",
+        "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:large-scale-pipeline-integration-v1",
+        "validate:validation-runtime-governance-v1",
+        "validate:capability-audit-v3-1"
+      ],
+      "triggeredBy": [
+        "validate:continuous-deployment-pipeline-v1",
+        "validate:customer-operations-platform-v1",
+        "validate:evidence-revalidation-cycle-v1",
+        "validate:operational-evidence-freshness-authority-v1",
+        "validate:production-observability-platform-v1"
+      ],
+      "nestedValidation": true,
       "circularRisk": false
     },
     {
@@ -2866,8 +3073,11 @@
         "validate:general-purpose-code-generation-v1",
         "validate:large-scale-pipeline-integration-v1",
         "validate:mobile-runtime-validation-at-scale-v1",
+        "validate:multi-project-concurrent-execution-v1",
+        "validate:operational-evidence-freshness-authority-v1",
         "validate:production-readiness-gate-v1",
         "validate:self-evolution-execution-v1",
+        "validate:unified-failure-escalation-authority-v1",
         "validate:world2-real-instantiation-v1"
       ],
       "nestedValidation": true,
@@ -3153,7 +3363,10 @@
       "triggeredBy": [
         "validate:canonical-ownership-v2",
         "validate:mobile-runtime-validation-at-scale-v1",
-        "validate:self-evolution-execution-v1"
+        "validate:multi-project-concurrent-execution-v1",
+        "validate:operational-evidence-freshness-authority-v1",
+        "validate:self-evolution-execution-v1",
+        "validate:unified-failure-escalation-authority-v1"
       ],
       "nestedValidation": true,
       "circularRisk": false
@@ -3886,6 +4099,12 @@
       "circular": false
     }
   ],
-  "circularValidationPaths": [],
-  "repeatedValidationPaths": []
+  "circularValidationPaths": [
+    "validate:continuous-deployment-pipeline-v1 → validate:production-observability-platform-v1 → validate:continuous-deployment-pipeline-v1",
+    "validate:production-observability-platform-v1 → validate:continuous-deployment-pipeline-v1 → validate:production-observability-platform-v1"
+  ],
+  "repeatedValidationPaths": [
+    "validate:continuous-deployment-pipeline-v1→validate:production-observability-platform-v1→validate:continuous-deployment-pipeline-v1 (2x)",
+    "validate:production-observability-platform-v1→validate:continuous-deployment-pipeline-v1→validate:production-observability-platform-v1 (2x)"
+  ]
 }

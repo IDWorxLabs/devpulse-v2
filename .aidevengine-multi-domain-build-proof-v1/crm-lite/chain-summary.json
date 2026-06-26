@@ -1,0 +1,31 @@
+{
+  "scenarioId": "crm-lite",
+  "productDomain": "CRM Lite",
+  "productRequest": "Build a simple CRM for small teams where users can add contacts, search contacts, add notes to a contact, mark follow-up status, and view a count of open follow-ups. It should have a clean browser UI.",
+  "initialCqiConfidence": 29,
+  "enrichedCqiConfidence": 85,
+  "requirementCount": 11,
+  "architectureScore": 100,
+  "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-crm-web-v1",
+  "generatedFileCount": 52,
+  "npmBuildExitCode": 0,
+  "previewResult": "bounded runtime 11/11",
+  "visualRuntimePassed": 11,
+  "visualRuntimeTotal": 11,
+  "featureRealityScore": 100,
+  "engineeringRealityScore": 100,
+  "productArchitectureScore": 100,
+  "uvlCoverage": 98,
+  "uvlConfidence": 98,
+  "aflaVerdict": "NOT_LAUNCH_READY",
+  "aflaScore": 100,
+  "founderLaunchVerdict": "NOT_LAUNCH_READY",
+  "launchBlockers": [
+    "UVL hub insufficient for launch (1 critical gap(s): Requirement)",
+    "AFLA verdict NOT_LAUNCH_READY (score 100)",
+    "Founder prerequisite: Requirement Discovery incomplete",
+    "Founder prerequisite: Verification Hub incomplete"
+  ],
+  "scenarioVerdict": "PARTIAL",
+  "launchReady": false
+}

@@ -1,0 +1,69 @@
+{
+  "readOnly": true,
+  "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-customer-support-web-v1",
+  "behaviours": [
+    {
+      "readOnly": true,
+      "id": "add-client",
+      "label": "Add client",
+      "category": "execution",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "create-request",
+      "label": "Create project request",
+      "category": "workflow",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "status-update",
+      "label": "Request status update",
+      "category": "workflow",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "open-completed-filter",
+      "label": "Open/completed filter",
+      "category": "discoverability",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "open-request-count",
+      "label": "Open request count",
+      "category": "ux",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "browserBuildArtifactExists",
+      "label": "Browser build artifact exists",
+      "category": "build",
+      "critical": true,
+      "passed": true,
+      "detail": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-customer-support-web-v1/dist/index.html with #root mount",
+      "source": "build-artifact"
+    }
+  ],
+  "passedCount": 6,
+  "totalCount": 6,
+  "allBehavioursPresent": true
+}

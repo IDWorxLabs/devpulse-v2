@@ -1,0 +1,101 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-25T09:06:19.186Z",
+  "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-fleet-management-web-v1",
+  "previewArtifactPath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-fleet-management-web-v1\\dist\\index.html",
+  "previewUrl": "http://127.0.0.1:5173/",
+  "staticArtifactInspectionCompleted": true,
+  "playwrightSupported": true,
+  "playwrightUnsupportedReason": null,
+  "devServerOk": true,
+  "checks": [
+    {
+      "readOnly": true,
+      "id": "static-preview-artifact",
+      "label": "Preview artifact dist/index.html exists",
+      "category": "static-artifact",
+      "passed": true,
+      "detail": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-fleet-management-web-v1/dist/index.html",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "static-root-mount",
+      "label": "Static artifact contains #root mount point",
+      "category": "static-artifact",
+      "passed": true,
+      "detail": "#root present in dist/index.html",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "static-script-bundle",
+      "label": "Static artifact references bundled script",
+      "category": "static-artifact",
+      "passed": true,
+      "detail": "script tag present in dist/index.html",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "id": "runtime-entity-input",
+      "label": "Job input is present in rendered UI",
+      "category": "runtime-ui",
+      "passed": true,
+      "detail": "inventory-item-input visible",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "runtime-add-action",
+      "label": "Add Job action is visible",
+      "category": "runtime-ui",
+      "passed": true,
+      "detail": "add-inventory-item-button visible",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "runtime-entity-count",
+      "label": "Job count element exists",
+      "category": "runtime-ui",
+      "passed": true,
+      "detail": "inventory-item-count=Active: 0",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "runtime-preview-loads",
+      "label": "Preview artifact loads in browser runtime",
+      "category": "runtime-ui",
+      "passed": true,
+      "detail": "loaded http://127.0.0.1:5173/",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "viewport-mobile",
+      "label": "mobile viewport check",
+      "category": "viewport",
+      "passed": true,
+      "detail": "375x667 — core controls visible, no horizontal overflow",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "viewport-desktop",
+      "label": "desktop viewport check",
+      "category": "viewport",
+      "passed": true,
+      "detail": "1280x800 — core controls visible, no horizontal overflow",
+      "critical": false
+    }
+  ],
+  "viewportEvidence": [
+    "mobile: inputVisible=true, addVisible=true, horizontalOverflow=false",
+    "desktop: inputVisible=true, addVisible=true, horizontalOverflow=false"
+  ],
+  "passedCount": 9,
+  "totalCount": 9,
+  "boundedRuntimePassed": true
+}

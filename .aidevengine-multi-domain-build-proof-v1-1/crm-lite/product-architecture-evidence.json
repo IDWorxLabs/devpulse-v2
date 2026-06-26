@@ -1,0 +1,157 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-25T09:02:45.735Z",
+  "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-crm-web-v1",
+  "contractId": "build-ready-idea-1",
+  "observedEvidence": "--- Bounded workspace product architecture evidence (multi-domain) ---\nScenario: crm-lite (CRM Lite)\nWorkspace: C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-crm-web-v1\nContract: build-ready-idea-1\nDomain: Small-team CRM with contacts, notes, and follow-up tracking\nEntity Customer: primary record in client state\nBehaviours: Add contact, Search contact, Add note to contact, Follow-up status, Open follow-up count\nFrontend: React + Vite SPA with Customers feature route\nVerification: UVL 6/6; runtime 11/11\nKnown limitations:\n- MVP uses universal CRUD shell — advanced pipeline stages may be simplified\n- Notes and follow-up status depend on generated feature module patterns\n- No server-side persistence or multi-user collaboration in MVP",
+  "items": [
+    {
+      "readOnly": true,
+      "id": "domain-purpose",
+      "category": "domain",
+      "label": "App purpose / product domain captured",
+      "passed": true,
+      "detail": "Small-team CRM with contacts, notes, and follow-up tracking identified from product request and workspace",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "user-roles",
+      "category": "roles",
+      "label": "User roles defined or explicitly single-user",
+      "passed": true,
+      "detail": "Single end-user role documented in clarifications and/or guest auth blueprint",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "entity-primary",
+      "category": "entities",
+      "label": "Core entity Customer defined",
+      "passed": true,
+      "detail": "Customer entity/interface or contract feature present in generated workspace",
+      "critical": true,
+      "entity": "Customer"
+    },
+    {
+      "readOnly": true,
+      "id": "behaviour-add-contact",
+      "category": "behaviours",
+      "label": "Add contact behaviour mapped to Customer",
+      "passed": true,
+      "detail": "Source + verification: source=true uvl=true runtime=true",
+      "critical": true,
+      "entity": "Customer"
+    },
+    {
+      "readOnly": true,
+      "id": "behaviour-search-contact",
+      "category": "behaviours",
+      "label": "Search contact behaviour mapped to Customer",
+      "passed": true,
+      "detail": "Source + verification: source=true uvl=true runtime=true",
+      "critical": true,
+      "entity": "Customer"
+    },
+    {
+      "readOnly": true,
+      "id": "behaviour-add-note",
+      "category": "behaviours",
+      "label": "Add note to contact behaviour mapped to Customer",
+      "passed": true,
+      "detail": "Source + verification: source=true uvl=true runtime=true",
+      "critical": true,
+      "entity": "Customer"
+    },
+    {
+      "readOnly": true,
+      "id": "behaviour-follow-up-status",
+      "category": "behaviours",
+      "label": "Follow-up status behaviour mapped to Customer",
+      "passed": true,
+      "detail": "Source + verification: source=true uvl=true runtime=true",
+      "critical": true,
+      "entity": "Customer"
+    },
+    {
+      "readOnly": true,
+      "id": "behaviour-open-follow-up-count",
+      "category": "behaviours",
+      "label": "Open follow-up count behaviour mapped to Customer",
+      "passed": true,
+      "detail": "Source + verification: source=true uvl=true runtime=true",
+      "critical": true,
+      "entity": "Customer"
+    },
+    {
+      "readOnly": true,
+      "id": "frontend-architecture",
+      "category": "frontend",
+      "label": "Frontend architecture exists (React/Vite blueprint shell)",
+      "passed": true,
+      "detail": "React/Vite SPA with universal app blueprint shell and Customers feature module",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "state-data-flow",
+      "category": "state",
+      "label": "State/data flow identifiable in feature module",
+      "passed": true,
+      "detail": "React state hooks and record list derivation present in generated sources",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "id": "persistence-model",
+      "category": "persistence",
+      "label": "Persistence model explicit (local/session/in-memory)",
+      "passed": true,
+      "detail": "Client localStorage persistence identified for Customer records",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "id": "deployment-target",
+      "category": "deployment",
+      "label": "Deployment/build target is browser Vite static dist",
+      "passed": true,
+      "detail": "Vite build script and/or dist/index.html artifact present",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "verification-link",
+      "category": "verification",
+      "label": "Verification evidence links to UVL/runtime behaviour proof",
+      "passed": true,
+      "detail": "UVL 6/6 + visual runtime 11/11",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "limitations-documented",
+      "category": "limitations",
+      "label": "Known limitations documented honestly",
+      "passed": true,
+      "detail": "MVP uses universal CRUD shell — advanced pipeline stages may be simplified; Notes and follow-up status depend on generated feature module patterns; No server-side persistence or multi-user collaboration in MVP",
+      "critical": false
+    }
+  ],
+  "knownLimitations": [
+    "MVP uses universal CRUD shell — advanced pipeline stages may be simplified",
+    "Notes and follow-up status depend on generated feature module patterns",
+    "No server-side persistence or multi-user collaboration in MVP"
+  ],
+  "verificationLinks": [
+    "uvl-behaviour:6/6",
+    "visual-runtime:11/11"
+  ],
+  "passedCount": 14,
+  "totalCount": 14,
+  "taskEntityDetected": true,
+  "behavioursMappedToTask": true,
+  "frontendArchitectureDetected": true,
+  "buildTargetDetected": true,
+  "runtimeEvidenceLinked": true
+}

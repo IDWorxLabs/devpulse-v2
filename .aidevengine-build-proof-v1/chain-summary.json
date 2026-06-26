@@ -1,0 +1,72 @@
+{
+  "verdict": "PARTIAL",
+  "chain": [
+    {
+      "step": 1,
+      "name": "Requirements discovered",
+      "ok": false,
+      "detail": "confidence=15, categories=12, domain=GENERIC"
+    },
+    {
+      "step": 2,
+      "name": "Clarifying questions asked (if needed)",
+      "ok": true,
+      "detail": "8 open question(s): What are the requirements for business in this product? | What are the requirements for users in this product?"
+    },
+    {
+      "step": 3,
+      "name": "Product blueprint generated",
+      "ok": true,
+      "detail": "8 requirements in contract requirement-contract-idea-1"
+    },
+    {
+      "step": 4,
+      "name": "Architecture generated",
+      "ok": true,
+      "detail": "10 plan tasks across layers DATABASE, BACKEND, FRONTEND, DEPLOYMENT, VERIFICATION, DOCUMENTATION"
+    },
+    {
+      "step": 5,
+      "name": "Build plan generated",
+      "ok": true,
+      "detail": "contract=build-ready-idea-1, units=5, readiness=BUILD_READY"
+    },
+    {
+      "step": 6,
+      "name": "Real files created",
+      "ok": true,
+      "detail": "38 tracked generated paths"
+    },
+    {
+      "step": 7,
+      "name": "Real workspace created",
+      "ok": true,
+      "detail": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-task-tracker-web-v1 (53 files excl. node_modules)"
+    },
+    {
+      "step": 8,
+      "name": "npm build passes",
+      "ok": true,
+      "detail": "npm run build exit 0"
+    },
+    {
+      "step": 9,
+      "name": "Live Preview URL launches",
+      "ok": true,
+      "detail": "file://C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-task-tracker-web-v1/dist/index.html"
+    },
+    {
+      "step": 10,
+      "name": "Founder Test executes",
+      "ok": true,
+      "detail": "panel=COMPLETE, score=75"
+    },
+    {
+      "step": 11,
+      "name": "Launch readiness verdict produced",
+      "ok": true,
+      "detail": "launch=NOT_LAUNCH_READY, afla=NOT_LAUNCH_READY"
+    }
+  ],
+  "passToken": null
+}

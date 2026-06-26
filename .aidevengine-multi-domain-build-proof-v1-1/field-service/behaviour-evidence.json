@@ -1,0 +1,79 @@
+{
+  "readOnly": true,
+  "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-fleet-management-web-v1",
+  "behaviours": [
+    {
+      "readOnly": true,
+      "id": "create-job",
+      "label": "Create job",
+      "category": "execution",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "technician-assignment",
+      "label": "Technician assignment",
+      "category": "workflow",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "status-update",
+      "label": "Job status update",
+      "category": "workflow",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "scheduled-completed-filter",
+      "label": "Scheduled/completed filter",
+      "category": "discoverability",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "delete-job",
+      "label": "Delete job",
+      "category": "delete",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "active-job-count",
+      "label": "Active job count",
+      "category": "ux",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "browserBuildArtifactExists",
+      "label": "Browser build artifact exists",
+      "category": "build",
+      "critical": true,
+      "passed": true,
+      "detail": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-fleet-management-web-v1/dist/index.html with #root mount",
+      "source": "build-artifact"
+    }
+  ],
+  "passedCount": 7,
+  "totalCount": 7,
+  "allBehavioursPresent": true
+}

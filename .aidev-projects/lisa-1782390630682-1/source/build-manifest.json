@@ -1,0 +1,17 @@
+{
+  "manifestId": "lisa-1782390630682-1-manifest",
+  "contractId": "lisa-1782390630682-1",
+  "ideaId": "idea-41",
+  "generatedAt": "2026-06-26T05:48:27.920Z",
+  "materializationSource": "modular-feature-materialization-v1",
+  "applicationProfile": "PROJECT_MANAGEMENT_WEB_V1",
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "modularFeatureMaterialization": true,
+  "buildUnits": [
+    "unit-001",
+    "unit-002",
+    "unit-003"
+  ],
+  "runtime": "vite-react"
+}

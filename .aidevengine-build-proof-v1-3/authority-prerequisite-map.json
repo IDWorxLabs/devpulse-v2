@@ -1,0 +1,52 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-25T07:14:49.810Z",
+  "entries": [
+    {
+      "readOnly": true,
+      "authority": "Verification Hub",
+      "evidenceSource": "UVL hub + bounded visual-runtime-evidence.json",
+      "consumed": true,
+      "score": 96,
+      "verdict": "INSUFFICIENT",
+      "missingFields": [
+        "verificationSufficientForLaunch",
+        "1 critical gap(s)",
+        "complete verification coverage"
+      ],
+      "detail": "coverage=96% confidence=96 criticalGaps=1"
+    },
+    {
+      "readOnly": true,
+      "authority": "Product Architecture",
+      "evidenceSource": "Product Architect Intelligence V1 assessment",
+      "consumed": true,
+      "score": 0,
+      "verdict": "Architecturally Incomplete",
+      "missingFields": [
+        "6 critical product gap(s)"
+      ],
+      "detail": "productReadiness=0 criticalGaps=6"
+    },
+    {
+      "readOnly": true,
+      "authority": "Blueprint Visual",
+      "evidenceSource": "registerSourceDerivedBlueprintVisualAssessment + bounded Playwright checks",
+      "consumed": true,
+      "score": 100,
+      "verdict": "BLUEPRINT_EXCELLENT",
+      "missingFields": [],
+      "detail": "passed=true score=100 viewportEvidence=2 item(s)"
+    },
+    {
+      "readOnly": true,
+      "authority": "Universal Feature Contract",
+      "evidenceSource": "registerSourceDerivedUniversalFeatureContractAssessment + bounded runtime UI checks",
+      "consumed": true,
+      "score": 100,
+      "verdict": "FEATURE_REALITY_EXCELLENT",
+      "missingFields": [],
+      "detail": "passed=true score=100"
+    }
+  ]
+}

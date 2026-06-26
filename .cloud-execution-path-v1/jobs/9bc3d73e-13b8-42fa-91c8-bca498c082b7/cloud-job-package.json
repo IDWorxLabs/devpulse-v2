@@ -1,0 +1,56 @@
+{
+  "readOnly": true,
+  "contractVersion": "V1",
+  "jobId": "9bc3d73e-13b8-42fa-91c8-bca498c082b7",
+  "projectId": "proj-marketplace_web_v1",
+  "executionMode": "CLOUD_SIMULATED",
+  "jobMetadata": {
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "requestedAt": "2026-06-25T00:27:45.504Z",
+    "workerId": "worker-9bc3d73e"
+  },
+  "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+  "requirementsSnapshot": {
+    "readOnly": true,
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+    "requirementConfidence": 22
+  },
+  "buildPlan": {
+    "readOnly": true,
+    "contractId": "build-ready-idea-34",
+    "planningSummary": "Contract build-ready-idea-34",
+    "codegenProfile": "CRM_WEB_V1"
+  },
+  "workspaceSpec": {
+    "readOnly": true,
+    "workspaceId": "cep-9bc3d73e-13b8-42fa-91c8-bca498c082b7",
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\cep-9bc3d73e-13b8-42fa-91c8-bca498c082b7",
+    "isolationToken": "9bc3d73e-13b8-42fa-91c8-bca498c082b7",
+    "boundedLogsMaxLines": 500,
+    "boundedArtifactsMaxBytes": 5000000,
+    "runtimeTimeoutMs": 300000
+  },
+  "expectedArtifactOutputs": [
+    "generated-source-manifest.json",
+    "build-logs.txt",
+    "preview-proof.json",
+    "uvl-verification-proof.json",
+    "product-architect-proof.json",
+    "afla-verdict.json",
+    "production-readiness-result.json",
+    "execution-summary.json",
+    "cloud-job-package.json"
+  ],
+  "validationRequirements": [
+    "Build proof required",
+    "Preview proof required",
+    "UVL verification proof required",
+    "AFLA verdict required",
+    "Production readiness gate required",
+    "Unique isolated workspace required"
+  ],
+  "generatedAt": "2026-06-25T00:28:26.627Z"
+}

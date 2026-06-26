@@ -1,0 +1,24 @@
+{
+  "verdict": "LAUNCH_READY",
+  "score": 100,
+  "blockingRules": [],
+  "blocksLaunchReason": null,
+  "uvlBeforeAfla": {
+    "verificationSufficientForLaunch": true,
+    "criticalGapCount": 0,
+    "gapSummary": []
+  },
+  "uvlAfterHandoff": {
+    "verificationSufficientForLaunch": true,
+    "criticalGapCount": 0,
+    "gapSummary": []
+  },
+  "founderMissingPrerequisites": [],
+  "launchPrerequisitesBeforeAfla": {
+    "available": true,
+    "passed": true,
+    "score": 100,
+    "detail": "Registered assessments satisfy launch prerequisites (feature, visual, engineering, contract, product architecture)",
+    "failedPrerequisites": []
+  }
+}

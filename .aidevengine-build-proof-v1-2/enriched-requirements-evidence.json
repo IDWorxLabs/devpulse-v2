@@ -1,0 +1,22 @@
+{
+  "productRequest": "I want a simple task tracker app where I can add tasks, mark them complete, delete them, filter by all/active/completed, and see a count of remaining active tasks. It should have a clean modern UI and work in the browser.",
+  "initialConfidence": 15,
+  "enrichedConfidence": 96,
+  "initialOpenQuestions": 8,
+  "enrichedOpenQuestions": 1,
+  "canProceedToPlanning": true,
+  "clarificationAnswers": [
+    "Business: Browser-based task tracker for founders and small teams to capture daily work and reduce dropped tasks.",
+    "Users: Individual users and team members who manage personal todo lists in the browser.",
+    "Roles: Single end-user role with access to own tasks; no separate admin portal for MVP.",
+    "Permissions: Users have full CRUD permissions on tasks they create; filter views for all, active, and completed.",
+    "Workflows: Core workflow is add task, mark complete, delete task, filter by all/active/completed, view remaining active count.",
+    "Data: Task entity with id, title, completed flag, and createdAt timestamp stored in client state.",
+    "Files: No file upload or document storage required for MVP.",
+    "Notifications: No email, SMS, or push notifications in MVP.",
+    "Integrations: Standalone web app with no third-party integrations.",
+    "AI: No AI or recommendation features.",
+    "Monetization: Free productivity tool with no billing.",
+    "Deployment: Static Vite React SPA for modern browsers; npm build produces dist/index.html."
+  ]
+}

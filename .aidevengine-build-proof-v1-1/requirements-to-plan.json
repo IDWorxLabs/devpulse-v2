@@ -1,0 +1,586 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "assessmentId": "req-plan-contract-1",
+  "generatedAt": "2026-06-25T06:51:55.669Z",
+  "proofLevel": "PROVEN",
+  "userIdea": {
+    "readOnly": true,
+    "ideaId": "idea-1",
+    "rawPrompt": "I want a simple task tracker app where I can add tasks, mark them complete, delete them, filter by all/active/completed, and see a count of remaining active tasks. It should have a clean modern UI and work in the browser. --- Proof scenario clarification answers --- Business: Browser-based task tracker for founders and small teams to capture daily work and reduce dropped tasks. Users: Individual users and team members who manage personal todo lists in the browser. Roles: Single end-user role with access to own tasks; no separate admin portal for MVP. Permissions: Users have full CRUD permissions on tasks they create; filter views for all, active, and completed. Workflows: Core workflow is add task, mark complete, delete task, filter by all/active/completed, view remaining active count. Data: Task entity with id, title, completed flag, and createdAt timestamp stored in client state. Files: No file upload or document storage required for MVP. Notifications: No email, SMS, or push notifications in MVP. Integrations: Standalone web app with no third-party integrations. AI: No AI or recommendation features. Monetization: Free productivity tool with no billing. Deployment: Static Vite React SPA for modern browsers; npm build produces dist/index.html.",
+    "normalizedGoal": "Simple browser task tracker with add, complete, delete, filter, and active task count",
+    "targetUsers": [
+      "Individual users managing personal tasks"
+    ],
+    "problemStatement": "User needs a lightweight way to manage daily tasks in the browser",
+    "desiredOutcome": "Working task tracker with filters and remaining active task count",
+    "productType": "MARKETPLACE",
+    "platformHints": [
+      "Web"
+    ],
+    "knownConstraints": [
+      "MVP scope for small team",
+      "Role-based access"
+    ],
+    "unknowns": [
+      "Authentication approach"
+    ],
+    "confidence": 86,
+    "status": "CAPTURED"
+  },
+  "requirementContract": {
+    "readOnly": true,
+    "contractId": "requirement-contract-idea-1",
+    "sourceIdeaId": "idea-1",
+    "requirements": [
+      {
+        "readOnly": true,
+        "requirementId": "req-001",
+        "sourceIdeaId": "idea-1",
+        "requirementType": "FUNCTIONAL",
+        "description": "Add new tasks from user input",
+        "priority": "CRITICAL",
+        "acceptanceCriteria": [
+          "User can type a task and add it to the list",
+          "Added task appears immediately"
+        ],
+        "evidenceSource": "prompt:add tasks",
+        "status": "EXTRACTED"
+      },
+      {
+        "readOnly": true,
+        "requirementId": "req-002",
+        "sourceIdeaId": "idea-1",
+        "requirementType": "FUNCTIONAL",
+        "description": "Mark tasks complete or incomplete",
+        "priority": "CRITICAL",
+        "acceptanceCriteria": [
+          "User can toggle task completion",
+          "Completed tasks are visually distinct"
+        ],
+        "evidenceSource": "prompt:mark them complete",
+        "status": "EXTRACTED"
+      },
+      {
+        "readOnly": true,
+        "requirementId": "req-003",
+        "sourceIdeaId": "idea-1",
+        "requirementType": "FUNCTIONAL",
+        "description": "Delete tasks from the list",
+        "priority": "CRITICAL",
+        "acceptanceCriteria": [
+          "User can delete a task",
+          "Deleted task is removed from all views"
+        ],
+        "evidenceSource": "prompt:delete them",
+        "status": "EXTRACTED"
+      },
+      {
+        "readOnly": true,
+        "requirementId": "req-004",
+        "sourceIdeaId": "idea-1",
+        "requirementType": "FUNCTIONAL",
+        "description": "Filter tasks by all, active, and completed",
+        "priority": "CRITICAL",
+        "acceptanceCriteria": [
+          "User can view all tasks",
+          "User can view active tasks only",
+          "User can view completed tasks only"
+        ],
+        "evidenceSource": "prompt:filter by all/active/completed",
+        "status": "EXTRACTED"
+      },
+      {
+        "readOnly": true,
+        "requirementId": "req-005",
+        "sourceIdeaId": "idea-1",
+        "requirementType": "FUNCTIONAL",
+        "description": "Display count of remaining active tasks",
+        "priority": "HIGH",
+        "acceptanceCriteria": [
+          "Active task count updates when tasks change",
+          "Count reflects incomplete tasks only"
+        ],
+        "evidenceSource": "prompt:count of remaining active tasks",
+        "status": "EXTRACTED"
+      },
+      {
+        "readOnly": true,
+        "requirementId": "req-006",
+        "sourceIdeaId": "idea-1",
+        "requirementType": "UI_UX",
+        "description": "Clean modern browser UI for task management",
+        "priority": "HIGH",
+        "acceptanceCriteria": [
+          "Layout is readable on desktop browser",
+          "Primary actions are obvious"
+        ],
+        "evidenceSource": "prompt:clean modern UI",
+        "status": "EXTRACTED"
+      },
+      {
+        "readOnly": true,
+        "requirementId": "req-007",
+        "sourceIdeaId": "idea-1",
+        "requirementType": "PLATFORM",
+        "description": "Browser-based task tracker application",
+        "priority": "CRITICAL",
+        "acceptanceCriteria": [
+          "Application runs in a modern web browser",
+          "Primary flows work without page reload"
+        ],
+        "evidenceSource": "prompt:work in the browser",
+        "status": "EXTRACTED"
+      },
+      {
+        "readOnly": true,
+        "requirementId": "req-008",
+        "sourceIdeaId": "idea-1",
+        "requirementType": "DATA",
+        "description": "In-browser task state for session usage",
+        "priority": "MEDIUM",
+        "acceptanceCriteria": [
+          "Tasks persist while the app is open",
+          "Task list state remains consistent during filtering"
+        ],
+        "evidenceSource": "inferred:client state",
+        "status": "INFERRED"
+      }
+    ]
+  },
+  "clarifyingGaps": {
+    "readOnly": true,
+    "contractReadiness": "BUILD_READY",
+    "criticalGaps": [],
+    "clarifyingQuestions": [],
+    "resolvedCategories": [
+      "target_users",
+      "roles_permissions",
+      "platform",
+      "data_model",
+      "authentication",
+      "integrations",
+      "design_theme",
+      "payment_needs",
+      "admin_needs",
+      "deployment_target",
+      "mvp_scope"
+    ],
+    "missingCategories": []
+  },
+  "planContract": {
+    "readOnly": true,
+    "contractId": "plan-contract-idea-1",
+    "sourceIdeaId": "idea-1",
+    "tasks": [
+      {
+        "readOnly": true,
+        "taskId": "task-001",
+        "sourceRequirementIds": [
+          "req-008"
+        ],
+        "title": "Implement: In-browser task state for session usage",
+        "description": "In-browser task state for session usage (DATA)",
+        "layer": "DATABASE",
+        "estimatedComplexity": "HIGH",
+        "dependencies": [],
+        "acceptanceCriteria": [
+          "Tasks persist while the app is open",
+          "Task list state remains consistent during filtering"
+        ],
+        "buildOrder": 1,
+        "status": "PLANNED"
+      },
+      {
+        "readOnly": true,
+        "taskId": "task-002",
+        "sourceRequirementIds": [
+          "req-001"
+        ],
+        "title": "Implement: Add new tasks from user input",
+        "description": "Add new tasks from user input (FUNCTIONAL)",
+        "layer": "BACKEND",
+        "estimatedComplexity": "MEDIUM",
+        "dependencies": [
+          "task-001"
+        ],
+        "acceptanceCriteria": [
+          "User can type a task and add it to the list",
+          "Added task appears immediately"
+        ],
+        "buildOrder": 2,
+        "status": "PLANNED"
+      },
+      {
+        "readOnly": true,
+        "taskId": "task-003",
+        "sourceRequirementIds": [
+          "req-002"
+        ],
+        "title": "Implement: Mark tasks complete or incomplete",
+        "description": "Mark tasks complete or incomplete (FUNCTIONAL)",
+        "layer": "BACKEND",
+        "estimatedComplexity": "MEDIUM",
+        "dependencies": [
+          "task-001"
+        ],
+        "acceptanceCriteria": [
+          "User can toggle task completion",
+          "Completed tasks are visually distinct"
+        ],
+        "buildOrder": 3,
+        "status": "PLANNED"
+      },
+      {
+        "readOnly": true,
+        "taskId": "task-004",
+        "sourceRequirementIds": [
+          "req-003"
+        ],
+        "title": "Implement: Delete tasks from the list",
+        "description": "Delete tasks from the list (FUNCTIONAL)",
+        "layer": "BACKEND",
+        "estimatedComplexity": "MEDIUM",
+        "dependencies": [
+          "task-001"
+        ],
+        "acceptanceCriteria": [
+          "User can delete a task",
+          "Deleted task is removed from all views"
+        ],
+        "buildOrder": 4,
+        "status": "PLANNED"
+      },
+      {
+        "readOnly": true,
+        "taskId": "task-005",
+        "sourceRequirementIds": [
+          "req-004"
+        ],
+        "title": "Implement: Filter tasks by all, active, and completed",
+        "description": "Filter tasks by all, active, and completed (FUNCTIONAL)",
+        "layer": "BACKEND",
+        "estimatedComplexity": "MEDIUM",
+        "dependencies": [
+          "task-001"
+        ],
+        "acceptanceCriteria": [
+          "User can view all tasks",
+          "User can view active tasks only",
+          "User can view completed tasks only"
+        ],
+        "buildOrder": 5,
+        "status": "PLANNED"
+      },
+      {
+        "readOnly": true,
+        "taskId": "task-006",
+        "sourceRequirementIds": [
+          "req-005"
+        ],
+        "title": "Implement: Display count of remaining active tasks",
+        "description": "Display count of remaining active tasks (FUNCTIONAL)",
+        "layer": "BACKEND",
+        "estimatedComplexity": "LOW",
+        "dependencies": [
+          "task-001"
+        ],
+        "acceptanceCriteria": [
+          "Active task count updates when tasks change",
+          "Count reflects incomplete tasks only"
+        ],
+        "buildOrder": 6,
+        "status": "PLANNED"
+      },
+      {
+        "readOnly": true,
+        "taskId": "task-007",
+        "sourceRequirementIds": [
+          "req-006"
+        ],
+        "title": "Implement: Clean modern browser UI for task management",
+        "description": "Clean modern browser UI for task management (UI_UX)",
+        "layer": "FRONTEND",
+        "estimatedComplexity": "MEDIUM",
+        "dependencies": [
+          "task-001"
+        ],
+        "acceptanceCriteria": [
+          "Layout is readable on desktop browser",
+          "Primary actions are obvious"
+        ],
+        "buildOrder": 7,
+        "status": "PLANNED"
+      },
+      {
+        "readOnly": true,
+        "taskId": "task-008",
+        "sourceRequirementIds": [
+          "req-007"
+        ],
+        "title": "Implement: Browser-based task tracker application",
+        "description": "Browser-based task tracker application (PLATFORM)",
+        "layer": "DEPLOYMENT",
+        "estimatedComplexity": "MEDIUM",
+        "dependencies": [],
+        "acceptanceCriteria": [
+          "Application runs in a modern web browser",
+          "Primary flows work without page reload"
+        ],
+        "buildOrder": 8,
+        "status": "PLANNED"
+      },
+      {
+        "readOnly": true,
+        "taskId": "task-009",
+        "sourceRequirementIds": [
+          "req-001",
+          "req-002",
+          "req-003",
+          "req-004",
+          "req-005",
+          "req-006",
+          "req-007",
+          "req-008"
+        ],
+        "title": "Verification harness for planned build units",
+        "description": "Define verification steps for each build unit before execution",
+        "layer": "VERIFICATION",
+        "estimatedComplexity": "MEDIUM",
+        "dependencies": [
+          "task-006",
+          "task-007",
+          "task-008"
+        ],
+        "acceptanceCriteria": [
+          "Each build unit has pass/fail criteria",
+          "Founder can inspect verification results"
+        ],
+        "buildOrder": 9,
+        "status": "PLANNED"
+      },
+      {
+        "readOnly": true,
+        "taskId": "task-010",
+        "sourceRequirementIds": [
+          "req-007"
+        ],
+        "title": "Document deployment and workspace requirements",
+        "description": "Capture workspace/runtime prerequisites for builder handoff",
+        "layer": "DOCUMENTATION",
+        "estimatedComplexity": "LOW",
+        "dependencies": [],
+        "acceptanceCriteria": [
+          "Workspace requirements documented",
+          "Runtime requirements documented"
+        ],
+        "buildOrder": 10,
+        "status": "PLANNED"
+      }
+    ]
+  },
+  "buildReadyContract": {
+    "readOnly": true,
+    "contractId": "build-ready-idea-1",
+    "ideaId": "idea-1",
+    "requirementIds": [
+      "req-001",
+      "req-002",
+      "req-003",
+      "req-004",
+      "req-005",
+      "req-006",
+      "req-007",
+      "req-008"
+    ],
+    "planTaskIds": [
+      "task-001",
+      "task-002",
+      "task-003",
+      "task-004",
+      "task-005",
+      "task-006",
+      "task-007",
+      "task-008",
+      "task-009",
+      "task-010"
+    ],
+    "buildUnits": [
+      {
+        "readOnly": true,
+        "unitId": "unit-001",
+        "sourcePlanTaskIds": [
+          "task-001"
+        ],
+        "sourceRequirementIds": [
+          "req-008"
+        ],
+        "label": "DATABASE build unit",
+        "layer": "DATABASE",
+        "verificationRequirements": [
+          "Verify: Tasks persist while the app is open",
+          "Verify: Task list state remains consistent during filtering",
+          "Layer DATABASE task task-001 produces inspectable output"
+        ]
+      },
+      {
+        "readOnly": true,
+        "unitId": "unit-002",
+        "sourcePlanTaskIds": [
+          "task-002",
+          "task-003",
+          "task-004",
+          "task-005",
+          "task-006"
+        ],
+        "sourceRequirementIds": [
+          "req-001",
+          "req-002",
+          "req-003",
+          "req-004",
+          "req-005"
+        ],
+        "label": "BACKEND build unit",
+        "layer": "BACKEND",
+        "verificationRequirements": [
+          "Verify: User can type a task and add it to the list",
+          "Verify: Added task appears immediately",
+          "Layer BACKEND task task-002 produces inspectable output",
+          "Verify: User can toggle task completion",
+          "Verify: Completed tasks are visually distinct",
+          "Layer BACKEND task task-003 produces inspectable output",
+          "Verify: User can delete a task",
+          "Verify: Deleted task is removed from all views",
+          "Layer BACKEND task task-004 produces inspectable output",
+          "Verify: User can view all tasks",
+          "Verify: User can view active tasks only",
+          "Verify: User can view completed tasks only",
+          "Layer BACKEND task task-005 produces inspectable output",
+          "Verify: Active task count updates when tasks change",
+          "Verify: Count reflects incomplete tasks only",
+          "Layer BACKEND task task-006 produces inspectable output"
+        ]
+      },
+      {
+        "readOnly": true,
+        "unitId": "unit-003",
+        "sourcePlanTaskIds": [
+          "task-007"
+        ],
+        "sourceRequirementIds": [
+          "req-006"
+        ],
+        "label": "FRONTEND build unit",
+        "layer": "FRONTEND",
+        "verificationRequirements": [
+          "Verify: Layout is readable on desktop browser",
+          "Verify: Primary actions are obvious",
+          "Layer FRONTEND task task-007 produces inspectable output"
+        ]
+      },
+      {
+        "readOnly": true,
+        "unitId": "unit-004",
+        "sourcePlanTaskIds": [
+          "task-008"
+        ],
+        "sourceRequirementIds": [
+          "req-007"
+        ],
+        "label": "DEPLOYMENT build unit",
+        "layer": "DEPLOYMENT",
+        "verificationRequirements": [
+          "Verify: Application runs in a modern web browser",
+          "Verify: Primary flows work without page reload",
+          "Layer DEPLOYMENT task task-008 produces inspectable output"
+        ]
+      },
+      {
+        "readOnly": true,
+        "unitId": "unit-005",
+        "sourcePlanTaskIds": [
+          "task-009"
+        ],
+        "sourceRequirementIds": [
+          "req-001",
+          "req-002",
+          "req-003",
+          "req-004",
+          "req-005",
+          "req-006",
+          "req-007",
+          "req-008"
+        ],
+        "label": "Verification build unit",
+        "layer": "VERIFICATION",
+        "verificationRequirements": [
+          "Verify: Each build unit has pass/fail criteria",
+          "Verify: Founder can inspect verification results",
+          "Layer VERIFICATION task task-009 produces inspectable output"
+        ]
+      }
+    ],
+    "executionOrder": [
+      "unit-001",
+      "unit-002",
+      "unit-003",
+      "unit-004",
+      "unit-005"
+    ],
+    "workspaceRequirements": [
+      "Isolated builder workspace with file generation capability",
+      "Rollback artifact before apply",
+      "Traceability to requirement and plan task IDs"
+    ],
+    "runtimeRequirements": [
+      "Modeled runtime activation path from build output",
+      "Preview activation path linked to runtime contract"
+    ],
+    "verificationRequirements": [
+      "Verify: Tasks persist while the app is open",
+      "Verify: Task list state remains consistent during filtering",
+      "Layer DATABASE task task-001 produces inspectable output",
+      "Verify: User can type a task and add it to the list",
+      "Verify: Added task appears immediately",
+      "Layer BACKEND task task-002 produces inspectable output",
+      "Verify: User can toggle task completion",
+      "Verify: Completed tasks are visually distinct",
+      "Layer BACKEND task task-003 produces inspectable output",
+      "Verify: User can delete a task",
+      "Verify: Deleted task is removed from all views",
+      "Layer BACKEND task task-004 produces inspectable output",
+      "Verify: User can view all tasks",
+      "Verify: User can view active tasks only",
+      "Verify: User can view completed tasks only",
+      "Layer BACKEND task task-005 produces inspectable output",
+      "Verify: Active task count updates when tasks change",
+      "Verify: Count reflects incomplete tasks only",
+      "Layer BACKEND task task-006 produces inspectable output",
+      "Verify: Layout is readable on desktop browser",
+      "Verify: Primary actions are obvious",
+      "Layer FRONTEND task task-007 produces inspectable output",
+      "Verify: Application runs in a modern web browser",
+      "Verify: Primary flows work without page reload"
+    ],
+    "readinessState": "BUILD_READY",
+    "blockers": [],
+    "confidence": 100
+  },
+  "linkageAnalysis": {
+    "readOnly": true,
+    "linkageConnected": true,
+    "firstBrokenLink": null,
+    "missingLinks": [],
+    "traceabilityScore": 100,
+    "ideaToRequirements": true,
+    "requirementsToPlanTasks": true,
+    "planTasksToBuildUnits": true,
+    "buildUnitsToVerification": true
+  },
+  "missingEvidence": [],
+  "recommendedFix": "Proceed to BUILD stage — requirements and plan contracts are connected.",
+  "recommendedNextActions": [
+    "Hand build-ready contract to autonomous builder execution proof BUILD stage."
+  ],
+  "cacheKey": "requirements-to-plan-contract-v1:b6a43eb33211bf23"
+}

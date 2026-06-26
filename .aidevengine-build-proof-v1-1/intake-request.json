@@ -1,0 +1,11 @@
+{
+  "requestId": "aidev-req-1782370315654-holb45",
+  "createdAt": 1782370315654,
+  "userInput": "I want a simple task tracker app where I can add tasks, mark them complete, delete them, filter by all/active/completed, and see a count of remaining active tasks. It should have a clean modern UI and work in the browser.",
+  "normalizedInput": "I want a simple task tracker app where I can add tasks, mark them complete, delete them, filter by all/active/completed, and see a count of remaining active tasks. It should have a clean modern UI and work in the browser.",
+  "status": "RECEIVED",
+  "warnings": [
+    "AiDev Engine intake only — no code generation, execution, or project modification."
+  ],
+  "errors": []
+}

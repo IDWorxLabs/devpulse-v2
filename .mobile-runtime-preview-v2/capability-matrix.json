@@ -1,0 +1,42 @@
+{
+  "androidSdkPresent": true,
+  "adbPresent": true,
+  "androidEmulatorAvailable": true,
+  "androidDeviceAttached": true,
+  "androidToolchain": {
+    "sdkPath": "C:\\Users\\Richa\\AppData\\Local\\Android\\Sdk",
+    "sdkPathSource": "standard SDK path",
+    "adbPath": "C:\\Users\\Richa\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe",
+    "emulatorPath": "C:\\Users\\Richa\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe",
+    "avdList": [
+      "Medium_Phone_API_36.1"
+    ],
+    "adbVersion": "Android Debug Bridge version 1.0.41\r",
+    "androidRuntimeState": "DEVICE_RUNNING"
+  },
+  "expoCliPresent": true,
+  "expoProjectDetected": false,
+  "reactNativeProjectDetected": false,
+  "xcodePresent": false,
+  "iosSimulatorAvailable": false,
+  "browserRuntimeAvailable": true,
+  "playwrightAvailable": true,
+  "operatingSystem": "win32",
+  "osCompatibleWithAndroidDev": true,
+  "osCompatibleWithIosDev": false,
+  "osCompatibleWithExpoDev": true,
+  "detectedAt": 1782384689981,
+  "detail": {
+    "androidSdk": "C:\\Users\\Richa\\AppData\\Local\\Android\\Sdk (standard SDK path)",
+    "adb": "C:\\Users\\Richa\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe — Android Debug Bridge version 1.0.41\r",
+    "androidEmulator": "C:\\Users\\Richa\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe — 1 AVD(s): Medium_Phone_API_36.1",
+    "androidDevice": "1 device(s) attached (1 emulator, 0 physical)",
+    "androidRuntimeState": "DEVICE_RUNNING",
+    "expoCli": "npx expo --version: 56.1.16",
+    "expoProject": "No expo dependency or app.json/app.config.* in root",
+    "reactNative": "No react-native dependency in root package.json",
+    "xcode": "Xcode requires macOS",
+    "iosSimulator": "iOS Simulator requires macOS",
+    "playwright": "Playwright Chromium launch succeeded"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "chainVerdict": "PASS",
+  "launchReady": true,
+  "launchBlockers": [],
+  "validationChecks": [
+    {
+      "name": "enriched requirements evidence exists",
+      "passed": true,
+      "detail": "initial=15 enriched=96"
+    },
+    {
+      "name": "build materialization evidence exists",
+      "passed": true,
+      "detail": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-task-tracker-web-v1"
+    },
+    {
+      "name": "UVL behaviour evidence exists",
+      "passed": true,
+      "detail": "6/6 behaviours"
+    },
+    {
+      "name": "visual runtime evidence file written",
+      "passed": true,
+      "detail": "11/11 checks"
+    },
+    {
+      "name": "static artifact inspection completed",
+      "passed": true,
+      "detail": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-task-tracker-web-v1\\dist\\index.html"
+    },
+    {
+      "name": "Playwright runtime passed bounded checks or explicitly unsupported",
+      "passed": true,
+      "detail": "bounded runtime passed=true"
+    },
+    {
+      "name": "product architecture evidence file written",
+      "passed": true,
+      "detail": "14/14 items"
+    },
+    {
+      "name": "at least 10 architecture evidence items recorded",
+      "passed": true,
+      "detail": "14 items"
+    },
+    {
+      "name": "Task entity detected",
+      "passed": true,
+      "detail": "Task entity/interface or contract feature present in generated workspace"
+    },
+    {
+      "name": "create/complete/delete/filter/count behaviours mapped to Task",
+      "passed": true,
+      "detail": "5/5 behaviours"
+    },
+    {
+      "name": "frontend architecture detected",
+      "passed": true,
+      "detail": "React/Vite SPA with universal app blueprint shell and task feature module"
+    },
+    {
+      "name": "build target detected",
+      "passed": true,
+      "detail": "Vite build script and/or dist/index.html artifact present"
+    },
+    {
+      "name": "runtime/UVL evidence linked",
+      "passed": true,
+      "detail": "uvl-behaviour:6/6, visual-runtime:11/11"
+    },
+    {
+      "name": "launch evidence bundle created",
+      "passed": true,
+      "detail": "materialized"
+    },
+    {
+      "name": "architecture consumption map written",
+      "passed": true,
+      "detail": "4 authorities mapped"
+    },
+    {
+      "name": "Product Architecture consumed or exact unsupported reason recorded",
+      "passed": true,
+      "detail": "criticalGaps 6 → 0; workspace evidence 14/14"
+    },
+    {
+      "name": "UVL / Verification Hub consumed or exact unsupported reason recorded",
+      "passed": true,
+      "detail": "coverage 99% → 99%"
+    },
+    {
+      "name": "blueprint visual evidence consumed or unsupported reason recorded",
+      "passed": true,
+      "detail": "Registered assessment passed=true score=100"
+    },
+    {
+      "name": "AFLA score/verdict consistency checked",
+      "passed": true,
+      "detail": "launch-ready verdict with score 100"
+    },
+    {
+      "name": "AFLA exact blocking rule recorded",
+      "passed": true,
+      "detail": "no blockers (launch-ready)"
+    },
+    {
+      "name": "Verification Hub exact blocking rule recorded",
+      "passed": true,
+      "detail": "none — verification sufficient for launch"
+    },
+    {
+      "name": "Founder launch exact blocking rule recorded",
+      "passed": true,
+      "detail": "Handoff prerequisites satisfied; founder test panel advisory: NOT_LAUNCH_READY"
+    },
+    {
+      "name": "Founder handoff prerequisites satisfied",
+      "passed": true,
+      "detail": "all prerequisites passed"
+    },
+    {
+      "name": "AFLA verdict produced",
+      "passed": true,
+      "detail": "LAUNCH_READY (score 100)"
+    },
+    {
+      "name": "Founder launch verdict produced",
+      "passed": true,
+      "detail": "NOT_LAUNCH_READY"
+    },
+    {
+      "name": "report written",
+      "passed": true,
+      "detail": "AIDEVENGINE_BUILD_PROOF_V1_4_REPORT.md"
+    }
+  ],
+  "v13Baseline": {
+    "uvlCoverage": 96,
+    "uvlConfidence": 96,
+    "blueprintVisualScore": 100,
+    "featureRealityScore": 100,
+    "engineeringRealityScore": 100,
+    "productArchitectureScore": 0,
+    "productArchitectureCriticalGaps": 6,
+    "aflaVerdict": "NEEDS_AUTOFIX",
+    "aflaScore": 80,
+    "founderLaunchVerdict": "NOT_LAUNCH_READY"
+  },
+  "v14Results": {
+    "productArchitectureScore": 100,
+    "productArchitectureCriticalGaps": 0,
+    "criticalGapsCleared": true,
+    "productArchitecturePrerequisiteSatisfied": true,
+    "verificationHubPrerequisiteSatisfied": true,
+    "aflaVerdict": "LAUNCH_READY",
+    "aflaMovedFromNeedsAutofix": true,
+    "visualRuntimePassed": true
+  },
+  "uvlAfterHandoff": {
+    "coverage": 99,
+    "confidence": 99,
+    "criticalGapCount": 0
+  },
+  "passToken": "AIDEVENGINE_BUILD_PROOF_V1_4_PASS"
+}

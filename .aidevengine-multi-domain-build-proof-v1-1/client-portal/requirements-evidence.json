@@ -1,0 +1,26 @@
+{
+  "scenarioId": "client-portal",
+  "productDomain": "Client Portal",
+  "productRequest": "Build a simple client portal where users can add clients, create project requests, update request status, filter open and completed requests, and see a dashboard count of open requests. It should work in the browser.",
+  "clarificationAnswers": [
+    "Business: Browser-based client portal for project management and customers for founders and small teams with clear value proposition and target market.",
+    "Users: Client users and team members who manage clients and project requests in the browser.",
+    "Roles: Single end-user role with member access; no separate admin portal for MVP.",
+    "Permissions: Users have full CRUD permissions and write access on clients and requests they create.",
+    "Workflows: Core workflow process covers add client, create project request stages, update request status process, open/completed filter, open request count dashboard.",
+    "Data: Client and project request entities with id, status, and createdAt fields stored in client state records",
+    "Files: No file upload or document attachments required for MVP.",
+    "Notifications: No email, SMS, push, alerts, or reminder notifications in MVP.",
+    "Integrations: No email integration, calendar sync, or third-party API partner required; product does not integrate with external systems for MVP.",
+    "AI: No AI, LLM, chatbot, or recommendation features in MVP.",
+    "Monetization: Free productivity tool with no subscription, billing, or payments.",
+    "Deployment: Static Vite React SPA for public launch in modern browsers; npm build produces dist/index.html for cloud hosting.",
+    "Lead management: No separate lead management pipeline — contact follow-up workflow process only for MVP.",
+    "Sales pipeline: No sales pipeline stages beyond follow-up status tracking for MVP scope."
+  ],
+  "initialConfidence": 25,
+  "enrichedConfidence": 100,
+  "initialOpenQuestions": 8,
+  "enrichedOpenQuestions": 1,
+  "canProceedToPlanning": true
+}

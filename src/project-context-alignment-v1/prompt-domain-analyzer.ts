@@ -3,6 +3,15 @@
  */
 
 import { resolveBuildIntentProfile } from '../build-intent-routing/build-intent-detector.js';
+import {
+  filterMisplacedTaskDomainIds,
+  filterTaskTrackingKeywordsFromBoilerplate,
+  isLisaProjectName,
+  LISA_DOMAIN_LABEL,
+  promptMentionsLisaOrAccessibility,
+  proposedNameShouldNotBeTaskTracker,
+  resolveLisaProjectDomain,
+} from '../project-context-switching/project-context-classifier-guard.js';
 import type { PromptDomainSignals } from './project-context-alignment-types.js';
 
 interface DomainTag {
@@ -63,6 +72,15 @@ const DOMAIN_TAGS: readonly DomainTag[] = [
     proposedName: 'CustomerPortal',
     patterns: [/\b(customer portal|self-service portal|client portal)\b/i],
   },
+  {
+    id: 'accessibility',
+    label: 'accessibility / assistive communication',
+    appType: 'assistive communication app',
+    proposedName: 'LISA',
+    patterns: [
+      /\b(lisa|locked[\s-]?in[\s-]?syndrome|assistive communication|eye tracking|eye movement|gaze|blink|blinks|text[\s-]?to[\s-]?speech|communication board|caregiver|calibration|health accessibility)\b/i,
+    ],
+  },
 ];
 
 function splitProjectNameTokens(name: string): string[] {
@@ -94,13 +112,17 @@ function proposedNameFromTags(tags: DomainTag[]): string | null {
   return tags[0]!.proposedName;
 }
 
-export function extractPromptDomainSignals(prompt: string): PromptDomainSignals {
+export function extractPromptDomainSignals(
+  prompt: string,
+  options?: { activeProjectName?: string | null },
+): PromptDomainSignals {
   const normalized = prompt.trim();
   const tags = matchDomainTags(normalized);
   const nameTokens = splitProjectNameTokens(normalized);
   const profile = resolveBuildIntentProfile(normalized);
+  const activeProjectName = options?.activeProjectName?.trim() || null;
 
-  const domainIds = [...new Set(tags.map((tag) => tag.id))];
+  let domainIds = [...new Set(tags.map((tag) => tag.id))];
   for (const token of nameTokens) {
     for (const tag of DOMAIN_TAGS) {
       if (tag.id === token || tag.patterns.some((pattern) => pattern.test(token))) {
@@ -109,22 +131,42 @@ export function extractPromptDomainSignals(prompt: string): PromptDomainSignals 
     }
   }
 
-  const keywords = [
+  domainIds = filterMisplacedTaskDomainIds(domainIds, normalized, activeProjectName);
+  if (promptMentionsLisaOrAccessibility(normalized) && !domainIds.includes('accessibility')) {
+    domainIds.push('accessibility');
+  }
+
+  const filteredTags = DOMAIN_TAGS.filter((tag) => domainIds.includes(tag.id));
+  let proposedProjectName = proposedNameFromTags(filteredTags);
+  if (proposedNameShouldNotBeTaskTracker(normalized, proposedProjectName)) {
+    proposedProjectName = promptMentionsLisaOrAccessibility(normalized) ? 'LISA' : null;
+  }
+
+  let keywords = [
     ...new Set([
-      ...tags.map((tag) => tag.id),
+      ...domainIds,
       ...nameTokens,
       ...(profile ? [profile.toLowerCase()] : []),
     ]),
   ];
+  keywords = filterTaskTrackingKeywordsFromBoilerplate(normalized, keywords);
+
+  const domainLabel =
+    promptMentionsLisaOrAccessibility(normalized) || (activeProjectName && isLisaProjectName(activeProjectName))
+      ? LISA_DOMAIN_LABEL
+      : domainLabelFromTags(filteredTags);
 
   return {
     readOnly: true,
     domainIds,
-    domainLabel: domainLabelFromTags(tags),
+    domainLabel,
     keywords,
     profile,
-    appType: tags[0]?.appType ?? (profile ? profile.replace(/_/g, ' ').toLowerCase() : null),
-    proposedProjectName: proposedNameFromTags(tags),
+    appType:
+      filteredTags[0]?.appType ??
+      (promptMentionsLisaOrAccessibility(normalized) ? 'assistive communication app' : null) ??
+      (profile ? profile.replace(/_/g, ' ').toLowerCase() : null),
+    proposedProjectName,
   };
 }
 
@@ -148,13 +190,17 @@ export function extractProjectNameDomainSignals(projectName: string): PromptDoma
 
   if (/\bqr\b/i.test(normalized) && !domainIds.includes('qr')) domainIds.push('qr');
   if (/\bexpense/i.test(normalized) && !domainIds.includes('expense')) domainIds.push('expense');
+  if (isLisaProjectName(normalized) && !domainIds.includes('accessibility')) domainIds.push('accessibility');
+
+  const lisaDomain = resolveLisaProjectDomain(normalized);
+  const resolvedDomainLabel =
+    lisaDomain ??
+    domainLabelFromTags(DOMAIN_TAGS.filter((tag) => domainIds.includes(tag.id)));
 
   return {
     readOnly: true,
     domainIds,
-    domainLabel: domainLabelFromTags(
-      DOMAIN_TAGS.filter((tag) => domainIds.includes(tag.id)),
-    ),
+    domainLabel: resolvedDomainLabel,
     keywords: [...new Set([...domainIds, ...nameTokens])],
     profile: null,
     appType: tags[0]?.appType ?? null,

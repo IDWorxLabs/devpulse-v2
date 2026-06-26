@@ -1,0 +1,24 @@
+{
+  "scenarioId": "inventory-manager",
+  "productDomain": "Inventory Manager",
+  "productRequest": "Build a simple inventory manager where users can add products, update stock quantity, mark low-stock products, delete products, filter all and low-stock items, and see total inventory value. It should have a clean modern browser UI.",
+  "clarificationAnswers": [
+    "Business: Browser-based inventory manager for small teams with a clean modern UI.",
+    "Users: Individual users and team members working in the browser.",
+    "Roles: Single end-user role; no separate admin portal for MVP.",
+    "Permissions: Users have full CRUD permissions on records they create.",
+    "Workflows: Add product, update stock quantity, mark low-stock, delete product, filter all/low-stock, show total inventory value.",
+    "Data: Primary Inventory Item/Product records stored in client state with explicit fields.",
+    "Files: No file upload or document storage required for MVP.",
+    "Notifications: No email, SMS, or push notifications in MVP.",
+    "Integrations: Standalone web app with no third-party integrations.",
+    "AI: No AI or recommendation features.",
+    "Monetization: Free productivity tool with no billing.",
+    "Deployment: Static Vite React SPA for modern browsers; npm build produces dist/index.html."
+  ],
+  "initialConfidence": 33,
+  "enrichedConfidence": 85,
+  "initialOpenQuestions": 8,
+  "enrichedOpenQuestions": 5,
+  "canProceedToPlanning": false
+}

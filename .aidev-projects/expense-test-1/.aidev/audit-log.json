@@ -1,0 +1,11 @@
+{
+  "readOnly": true,
+  "entries": [
+    {
+      "timestamp": "2026-06-26T05:13:45.442Z",
+      "event": "source_promoted",
+      "buildRunId": "one-prompt-build-2",
+      "sourcePath": ".aidev-projects/expense-test-1/source"
+    }
+  ]
+}

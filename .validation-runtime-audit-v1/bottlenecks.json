@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T21:30:09.530Z",
+  "generatedAt": "2026-06-25T06:29:40.793Z",
   "bottlenecks": [
     {
       "bottleneck": "Repeated Playwright suites",
@@ -10,16 +10,16 @@
     },
     {
       "bottleneck": "Repeated preview server startup",
-      "impactScore": 179,
-      "affectedValidatorCount": 74,
-      "estimatedAggregateMinutes": 31,
+      "impactScore": 184,
+      "affectedValidatorCount": 76,
+      "estimatedAggregateMinutes": 31.8,
       "rank": 2
     },
     {
       "bottleneck": "Repeated npm builds",
-      "impactScore": 146,
-      "affectedValidatorCount": 50,
-      "estimatedAggregateMinutes": 45.5,
+      "impactScore": 148,
+      "affectedValidatorCount": 51,
+      "estimatedAggregateMinutes": 46.1,
       "rank": 3
     },
     {

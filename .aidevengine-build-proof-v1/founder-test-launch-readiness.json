@@ -1,0 +1,15 @@
+{
+  "panelState": "COMPLETE",
+  "launchReadinessVerdict": "NOT_LAUNCH_READY",
+  "founderReadinessScore": 75,
+  "confidenceLevel": "MEDIUM",
+  "orchestratorVerdict": "FOUNDER_ACCEPTS",
+  "topBlockerCount": 9,
+  "topBlockers": [
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}

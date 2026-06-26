@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-06-25T06:52:01.827Z",
+  "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-task-tracker-web-v1",
+  "behaviours": {
+    "addTask": {
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    "markComplete": {
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    "deleteTask": {
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    "filterAllActiveCompleted": {
+      "passed": true,
+      "detail": "filter controls in generated sources",
+      "source": "generated-source"
+    },
+    "activeCountUpdates": {
+      "passed": true,
+      "detail": "active count signal in generated sources",
+      "source": "generated-source"
+    },
+    "browserBuildArtifactExists": {
+      "passed": true,
+      "detail": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-task-tracker-web-v1/dist/index.html with #root mount",
+      "source": "build-artifact"
+    }
+  },
+  "passedCount": 6,
+  "totalCount": 6,
+  "allBehavioursPresent": true
+}

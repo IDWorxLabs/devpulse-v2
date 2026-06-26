@@ -1,6 +1,6 @@
 {
   "version": "V1",
-  "generatedAt": "2026-06-24T21:30:07.094Z",
+  "generatedAt": "2026-06-25T06:29:39.026Z",
   "passToken": "VALIDATION_RUNTIME_GOVERNANCE_V1_PASS",
   "active": true,
   "tiers": [
@@ -189,12 +189,12 @@
     {
       "operation": "Repeated npm build",
       "blockWhenReusableEvidenceExists": true,
-      "affectedValidatorCount": 48
+      "affectedValidatorCount": 49
     },
     {
       "operation": "Repeated preview startup",
       "blockWhenReusableEvidenceExists": true,
-      "affectedValidatorCount": 74
+      "affectedValidatorCount": 76
     },
     {
       "operation": "Repeated UVL execution",

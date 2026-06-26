@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T21:30:09.530Z",
+  "generatedAt": "2026-06-25T06:29:40.793Z",
   "readOnly": true,
   "notImplemented": true,
   "recommendations": [
@@ -22,7 +22,7 @@
     {
       "action": "REUSE",
       "target": "preview servers across validators",
-      "rationale": "74 validators start preview servers independently.",
+      "rationale": "76 validators start preview servers independently.",
       "evidenceValidators": [
         "validate:action-visibility-engine",
         "validate:auto-fix-runtime-foundation",
@@ -33,7 +33,7 @@
         "validate:cloud-runtime-foundation",
         "validate:cloud-verification-foundation"
       ],
-      "estimatedSavingsMinutes": 59
+      "estimatedSavingsMinutes": 61
     },
     {
       "action": "MERGE",
@@ -63,7 +63,7 @@
     {
       "action": "MERGE",
       "target": "high-duplicate regression validators",
-      "rationale": "128 validators show ≥50% duplicate work overlap within their category.",
+      "rationale": "130 validators show ≥50% duplicate work overlap within their category.",
       "evidenceValidators": [
         "validate:action-visibility-engine",
         "validate:afla-trust-calibration-v1",
@@ -81,18 +81,28 @@
     {
       "action": "REUSE",
       "target": "nested validator results",
-      "rationale": "18 validators trigger multiple child validators; results could be shared.",
+      "rationale": "25 validators trigger multiple child validators; results could be shared.",
       "evidenceValidators": [
         "validate:brain-memory-visibility-stack",
         "validate:canonical-ownership-v2",
         "validate:chat-authority",
         "validate:cloud-execution-path-v1",
+        "validate:continuous-deployment-pipeline-v1",
         "validate:cqi-integration-repair-v1",
-        "validate:founder-readiness-authority",
-        "validate:general-purpose-code-generation-v1",
-        "validate:governance-stack-checkpoint"
+        "validate:customer-operations-platform-v1",
+        "validate:evidence-revalidation-cycle-v1"
       ],
-      "estimatedSavingsMinutes": 36
+      "estimatedSavingsMinutes": 50
+    },
+    {
+      "action": "REMOVE",
+      "target": "circular validation paths",
+      "rationale": "Detected 2 circular validation path(s).",
+      "evidenceValidators": [
+        "validate:continuous-deployment-pipeline-v1 → validate:production-observability-platform-v1 → validate:continuous-deployment-pipeline-v1",
+        "validate:production-observability-platform-v1 → validate:continuous-deployment-pipeline-v1 → validate:production-observability-platform-v1"
+      ],
+      "estimatedSavingsMinutes": 0
     },
     {
       "action": "TIER",
@@ -125,7 +135,7 @@
     {
       "action": "KEEP",
       "target": "fast validators as always-on regression",
-      "rationale": "261 registered validators are LOW tier (<30s estimated); safe for continuous regression.",
+      "rationale": "270 registered validators are LOW tier (<30s estimated); safe for continuous regression.",
       "evidenceValidators": [
         "validate:adaptive-autofix-intelligence",
         "validate:adoption-prediction-authority",

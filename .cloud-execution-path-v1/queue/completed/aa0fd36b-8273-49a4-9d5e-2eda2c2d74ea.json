@@ -1,0 +1,36 @@
+{
+  "readOnly": true,
+  "jobId": "aa0fd36b-8273-49a4-9d5e-2eda2c2d74ea",
+  "projectId": "proj-marketplace_web_v1",
+  "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+  "requirementsSnapshot": {
+    "readOnly": true,
+    "profile": "MARKETPLACE_WEB_V1",
+    "productName": "Marketplace",
+    "prompt": "Build a marketplace for buyers and sellers with listings, search, and transactions.",
+    "requirementConfidence": 22
+  },
+  "buildPlan": {
+    "readOnly": true,
+    "contractId": "build-ready-idea-34",
+    "planningSummary": "Contract build-ready-idea-34",
+    "codegenProfile": "CRM_WEB_V1"
+  },
+  "workspaceSpec": {
+    "readOnly": true,
+    "workspaceId": "cep-aa0fd36b-8273-49a4-9d5e-2eda2c2d74ea",
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\cep-aa0fd36b-8273-49a4-9d5e-2eda2c2d74ea",
+    "isolationToken": "aa0fd36b-8273-49a4-9d5e-2eda2c2d74ea",
+    "boundedLogsMaxLines": 500,
+    "boundedArtifactsMaxBytes": 5000000,
+    "runtimeTimeoutMs": 300000
+  },
+  "executionMode": "CLOUD_SIMULATED",
+  "requestedAt": "2026-06-25T12:00:38.902Z",
+  "status": "COMPLETED",
+  "claimedAt": "2026-06-25T12:01:07.610Z",
+  "completedAt": "2026-06-25T12:01:19.463Z",
+  "workerId": "worker-aa0fd36b",
+  "currentStage": "COMPLETED",
+  "runtimeDurationMs": 11851
+}

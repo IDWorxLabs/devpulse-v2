@@ -1,0 +1,13 @@
+{
+  "workspaceSignals": {
+    "deviceFramePreviewActive": true,
+    "touchSimulationEvidence": true,
+    "mobilePreviewLaunchEvidence": true,
+    "androidRuntimeLaunchEvidence": false,
+    "iosRuntimeLaunchEvidence": false,
+    "expoRuntimeLaunchEvidence": false,
+    "mobileRuntimeVerificationEvidence": true
+  },
+  "realityAssessmentScore": 39,
+  "realityAssessmentId": "mobile-runtime-reality-1"
+}

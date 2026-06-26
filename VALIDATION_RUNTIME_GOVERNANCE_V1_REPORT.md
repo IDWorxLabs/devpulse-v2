@@ -1,6 +1,6 @@
 # Validation Runtime Governance V1
 
-**Generated:** 2026-06-24T21:30:07.094Z  
+**Generated:** 2026-06-25T06:29:39.026Z  
 **Governance Active:** YES  
 **Audit Baseline:** `VALIDATION_RUNTIME_AUDIT_V1_PASS`  
 **Pass Token:** `VALIDATION_RUNTIME_GOVERNANCE_V1_PASS`
@@ -33,10 +33,10 @@ Validation Runtime Governance V1 transforms validation from **Run Everything** t
 
 | Tier | Validators Assigned |
 |------|---------------------|
-| FAST | 253 |
-| STANDARD | 115 |
-| FULL | 33 |
-| LAUNCH | 12 |
+| FAST | 262 |
+| STANDARD | 117 |
+| FULL | 34 |
+| LAUNCH | 13 |
 
 ### Tier Targets
 
@@ -96,8 +96,8 @@ FAST tier plan for CQI change: 1 validators, ~0s
 | Operation | Affected Validators | Action |
 |-----------|---------------------|--------|
 | Repeated npm install | 12 | BLOCK |
-| Repeated npm build | 48 | BLOCK |
-| Repeated preview startup | 74 | BLOCK |
+| Repeated npm build | 49 | BLOCK |
+| Repeated preview startup | 76 | BLOCK |
 | Repeated UVL execution | 3 | BLOCK |
 | Repeated AFLA execution | 4 | BLOCK |
 | Repeated Playwright execution | 13 | BLOCK |

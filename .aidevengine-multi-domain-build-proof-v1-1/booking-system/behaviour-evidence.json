@@ -1,0 +1,79 @@
+{
+  "readOnly": true,
+  "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-appointment-booking-web-v1",
+  "behaviours": [
+    {
+      "readOnly": true,
+      "id": "create-booking",
+      "label": "Create booking",
+      "category": "execution",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "date-time-field",
+      "label": "Date and time field",
+      "category": "workflow",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "customer-details",
+      "label": "Customer details",
+      "category": "execution",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "cancel-booking",
+      "label": "Cancel booking",
+      "category": "delete",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "upcoming-past-filter",
+      "label": "Upcoming/past filter",
+      "category": "discoverability",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "next-upcoming-booking",
+      "label": "Next upcoming booking",
+      "category": "ux",
+      "critical": true,
+      "passed": true,
+      "detail": "pattern in generated sources",
+      "source": "generated-source"
+    },
+    {
+      "readOnly": true,
+      "id": "browserBuildArtifactExists",
+      "label": "Browser build artifact exists",
+      "category": "build",
+      "critical": true,
+      "passed": true,
+      "detail": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/rbep-appointment-booking-web-v1/dist/index.html with #root mount",
+      "source": "build-artifact"
+    }
+  ],
+  "passedCount": 7,
+  "totalCount": 7,
+  "allBehavioursPresent": true
+}

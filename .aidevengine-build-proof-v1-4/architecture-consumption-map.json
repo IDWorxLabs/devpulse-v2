@@ -1,0 +1,82 @@
+{
+  "readOnly": true,
+  "generatedAt": "2026-06-25T08:08:55.000Z",
+  "entries": [
+    {
+      "readOnly": true,
+      "authority": "Product Architecture",
+      "consumed": true,
+      "evidenceFieldsConsumed": [
+        "domain-purpose",
+        "user-roles",
+        "entity-task",
+        "behaviour-create-task",
+        "behaviour-complete-task",
+        "behaviour-delete-task",
+        "behaviour-filter-task",
+        "behaviour-count-active",
+        "frontend-architecture",
+        "state-data-flow",
+        "persistence-model",
+        "deployment-target",
+        "verification-link",
+        "limitations-documented"
+      ],
+      "scoreBefore": 0,
+      "scoreAfter": 100,
+      "verdictBefore": "Architecturally Incomplete",
+      "verdictAfter": "Architecturally Complete",
+      "missingFields": [],
+      "detail": "criticalGaps 6 → 0; workspace evidence 14/14"
+    },
+    {
+      "readOnly": true,
+      "authority": "Verification Hub (UVL)",
+      "consumed": true,
+      "evidenceFieldsConsumed": [
+        "product-architecture-evidence",
+        "visual-runtime-evidence",
+        "uvl-behaviour-evidence",
+        "registered assessments"
+      ],
+      "scoreBefore": 99,
+      "scoreAfter": 99,
+      "verdictBefore": "SUFFICIENT",
+      "verdictAfter": "SUFFICIENT",
+      "missingFields": [],
+      "detail": "coverage 99% → 99%"
+    },
+    {
+      "readOnly": true,
+      "authority": "Autonomous Founder Launch Authority (AFLA)",
+      "consumed": true,
+      "evidenceFieldsConsumed": [
+        "registerSourceDerivedProductArchitectureAssessment",
+        "workspace architecture evidence",
+        "registered visual/feature/engineering assessments"
+      ],
+      "scoreBefore": 80,
+      "scoreAfter": 100,
+      "verdictBefore": "NEEDS_AUTOFIX",
+      "verdictAfter": "LAUNCH_READY",
+      "missingFields": [],
+      "detail": "AFLA NEEDS_AUTOFIX (80) → LAUNCH_READY (100)"
+    },
+    {
+      "readOnly": true,
+      "authority": "Founder Launch Readiness",
+      "consumed": true,
+      "evidenceFieldsConsumed": [
+        "productArchitectureEvidence",
+        "useRegisteredProductArchitecture",
+        "useRegisteredVerificationHub"
+      ],
+      "scoreBefore": null,
+      "scoreAfter": null,
+      "verdictBefore": "PREREQUISITES_INCOMPLETE",
+      "verdictAfter": "PREREQUISITES_MET",
+      "missingFields": [],
+      "detail": "missing prerequisites 2 → 0"
+    }
+  ]
+}

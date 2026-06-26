@@ -66,7 +66,8 @@ import { buildPortfolioInsightsDemo } from './portfolio-demo-data.js';
 import { buildProductWorkspaceSnapshot } from './product-workspace-snapshot.js';
 import {
   handleProjectRegistryMutation,
-  sendProjectRegistryJson,
+  handleProjectRegistryGetRequest,
+  isProjectRegistryGetPath,
 } from './project-registry-handler.js';
 import {
   bootstrapProjectRegistryV1,
@@ -307,13 +308,8 @@ export function createFounderRealityServer() {
       return;
     }
 
-    if (urlPath === '/api/projects/registry.json' && (req.method === 'GET' || req.method === 'HEAD')) {
-      if (req.method === 'HEAD') {
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.end();
-        return;
-      }
-      sendProjectRegistryJson(res, getRegistryRootDir());
+    if (isProjectRegistryGetPath(urlPath) && (req.method === 'GET' || req.method === 'HEAD')) {
+      handleProjectRegistryGetRequest(req, res, getRegistryRootDir());
       return;
     }
 
@@ -334,6 +330,11 @@ export function createFounderRealityServer() {
 
     if (urlPath === '/api/projects/set-active' && req.method === 'POST') {
       await handleProjectRegistryMutation(req, res, 'set-active', getRegistryRootDir());
+      return;
+    }
+
+    if (urlPath === '/api/projects/context-switch' && req.method === 'POST') {
+      await handleProjectRegistryMutation(req, res, 'context-switch', getRegistryRootDir());
       return;
     }
 
@@ -745,7 +746,7 @@ export function createFounderRealityServer() {
 
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       sendJson(res, 405, JSON.stringify({
-        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/founder/founder-review, GET /api/founder/requirement-discovery, GET /api/founder/verification-hub, GET /api/founder/uvl-verification-execution-v1, GET /api/founder/production-readiness-gate-v1, GET /api/founder/cloud-execution-path-v1, GET /api/founder/trust-calibration, GET /api/founder/production-readiness-gate, GET /api/founder/product-architect-intelligence, GET /api/founder/large-scale-validation, GET /api/founder/real-build-execution-pipeline, GET /api/founder/real-build-execution-pipeline-v11, GET /api/brain/*, GET /api/build/live-preview, GET /api/projects/registry.json, POST /api/projects/create, POST /api/projects/rename, POST /api/projects/archive, POST /api/projects/set-active, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
+        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/founder/founder-review, GET /api/founder/requirement-discovery, GET /api/founder/verification-hub, GET /api/founder/uvl-verification-execution-v1, GET /api/founder/production-readiness-gate-v1, GET /api/founder/cloud-execution-path-v1, GET /api/founder/trust-calibration, GET /api/founder/production-readiness-gate, GET /api/founder/product-architect-intelligence, GET /api/founder/large-scale-validation, GET /api/founder/real-build-execution-pipeline, GET /api/founder/real-build-execution-pipeline-v11, GET /api/brain/*, GET /api/build/live-preview, GET /api/projects/registry, GET /api/projects/registry.json, GET /api/projects, POST /api/projects/create, POST /api/projects/rename, POST /api/projects/archive, POST /api/projects/set-active, POST /api/projects/context-switch, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
         hint: 'Restart DevPulse with npm run dev if Brain POST returns read-only errors',
       }));
       return;

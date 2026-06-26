@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T21:30:09.530Z",
+  "generatedAt": "2026-06-25T06:29:40.793Z",
   "aggregateDuplicateWorkPercent": 95,
   "entries": [
     {
@@ -325,6 +325,7 @@
       "duplicateWorkPercent": 98,
       "overlappingValidators": [
         "validate:command-center-brain-runtime",
+        "validate:command-center-manifest-stability",
         "validate:command-center-runtime-shell",
         "validate:command-center-ux-stabilization",
         "validate:founder-reality-surface",
@@ -340,6 +341,23 @@
       "duplicateWorkPercent": 98,
       "overlappingValidators": [
         "validate:command-center-brain",
+        "validate:command-center-manifest-stability",
+        "validate:command-center-runtime-shell",
+        "validate:command-center-ux-stabilization",
+        "validate:founder-reality-surface",
+        "validate:operator-feed-foundation",
+        "validate:phase11-command-center"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:command-center-manifest-stability",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:command-center-brain",
+        "validate:command-center-brain-runtime",
         "validate:command-center-runtime-shell",
         "validate:command-center-ux-stabilization",
         "validate:founder-reality-surface",
@@ -356,6 +374,7 @@
       "overlappingValidators": [
         "validate:command-center-brain",
         "validate:command-center-brain-runtime",
+        "validate:command-center-manifest-stability",
         "validate:command-center-ux-stabilization",
         "validate:founder-reality-surface",
         "validate:operator-feed-foundation",
@@ -371,6 +390,7 @@
       "overlappingValidators": [
         "validate:command-center-brain",
         "validate:command-center-brain-runtime",
+        "validate:command-center-manifest-stability",
         "validate:command-center-runtime-shell",
         "validate:founder-reality-surface",
         "validate:operator-feed-foundation",
@@ -749,6 +769,7 @@
       "overlappingValidators": [
         "validate:command-center-brain",
         "validate:command-center-brain-runtime",
+        "validate:command-center-manifest-stability",
         "validate:command-center-runtime-shell",
         "validate:command-center-ux-stabilization",
         "validate:operator-feed-foundation",
@@ -1290,6 +1311,7 @@
       "overlappingValidators": [
         "validate:command-center-brain",
         "validate:command-center-brain-runtime",
+        "validate:command-center-manifest-stability",
         "validate:command-center-runtime-shell",
         "validate:command-center-ux-stabilization",
         "validate:founder-reality-surface",
@@ -1322,6 +1344,7 @@
       "overlappingValidators": [
         "validate:command-center-brain",
         "validate:command-center-brain-runtime",
+        "validate:command-center-manifest-stability",
         "validate:command-center-runtime-shell",
         "validate:command-center-ux-stabilization",
         "validate:founder-reality-surface",
@@ -1422,6 +1445,23 @@
     },
     {
       "validatorName": "validate:project-knowledge-reasoning",
+      "duplicateWorkPercent": 98,
+      "overlappingValidators": [
+        "validate:action-visibility-engine",
+        "validate:brain-memory-visibility-stack",
+        "validate:connected-live-preview-execution",
+        "validate:cross-system-awareness",
+        "validate:cross-system-routing",
+        "validate:dependency-intelligence",
+        "validate:failure-visibility-engine",
+        "validate:founder-test-result-payload-crash-repair"
+      ],
+      "duplicatedOperations": [
+        "preview server startup"
+      ]
+    },
+    {
+      "validatorName": "validate:project-registry-consistency-v1",
       "duplicateWorkPercent": 98,
       "overlappingValidators": [
         "validate:action-visibility-engine",
@@ -2464,6 +2504,12 @@
       "duplicatedOperations": []
     },
     {
+      "validatorName": "validate:command-center-runtime-health",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
       "validatorName": "validate:command-center-ui-wiring-founder-report-delivery",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
@@ -2566,6 +2612,12 @@
       "duplicatedOperations": []
     },
     {
+      "validatorName": "validate:continuous-deployment-pipeline-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
       "validatorName": "validate:controlled-execution-bridge",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
@@ -2591,6 +2643,12 @@
     },
     {
       "validatorName": "validate:customer-journey-simulation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:customer-operations-platform-v1",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
       "duplicatedOperations": []
@@ -2639,6 +2697,12 @@
     },
     {
       "validatorName": "validate:evidence-registry-foundation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:evidence-revalidation-cycle-v1",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
       "duplicatedOperations": []
@@ -3016,6 +3080,12 @@
       "duplicatedOperations": []
     },
     {
+      "validatorName": "validate:general-purpose-code-generation-gap-investigation",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
       "validatorName": "validate:generated-runtime-crash-diagnosis",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
@@ -3238,6 +3308,12 @@
       "duplicatedOperations": []
     },
     {
+      "validatorName": "validate:multi-project-concurrent-execution-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
       "validatorName": "validate:multi-project-foundation",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
@@ -3269,6 +3345,12 @@
     },
     {
       "validatorName": "validate:openai-connectivity-proof",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:operational-evidence-freshness-authority-v1",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
       "duplicatedOperations": []
@@ -3455,6 +3537,12 @@
     },
     {
       "validatorName": "validate:product-reality-orchestrator",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:production-observability-platform-v1",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
       "duplicatedOperations": []
@@ -3748,6 +3836,18 @@
       "duplicatedOperations": []
     },
     {
+      "validatorName": "validate:strategic-audit-roadmap-consistency-repair-v1",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:strategic-capability-audit-v4",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
       "validatorName": "validate:strategic-defensibility-reality-authority",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
@@ -3791,6 +3891,12 @@
     },
     {
       "validatorName": "validate:ui-reviewer-authority",
+      "duplicateWorkPercent": 0,
+      "overlappingValidators": [],
+      "duplicatedOperations": []
+    },
+    {
+      "validatorName": "validate:unified-failure-escalation-authority-v1",
       "duplicateWorkPercent": 0,
       "overlappingValidators": [],
       "duplicatedOperations": []

@@ -7,6 +7,7 @@ import {
   TASK_TRACKER_FEATURE_PATTERNS,
   TASK_TRACKER_PROFILE_ID,
 } from './code-generation-engine-registry.js';
+import { shouldSuppressTaskTrackingClassification } from '../project-context-switching/project-context-classifier-guard.js';
 import type { GeneratedAppProfile, TaskTrackerRequirements } from './code-generation-engine-types.js';
 
 function normalizePrompt(rawPrompt: string): string {
@@ -16,6 +17,7 @@ function normalizePrompt(rawPrompt: string): string {
 export function detectTaskTrackerIdea(rawPrompt: string): boolean {
   const normalized = normalizePrompt(rawPrompt);
   if (normalized.length < 20) return false;
+  if (shouldSuppressTaskTrackingClassification(normalized)) return false;
 
   const hasProductSignal = TASK_TRACKER_DETECTION_PATTERNS.some((pattern) => pattern.test(normalized));
   const hasTaskFlow =

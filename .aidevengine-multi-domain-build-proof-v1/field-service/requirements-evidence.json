@@ -1,0 +1,24 @@
+{
+  "scenarioId": "field-service",
+  "productDomain": "Field Service App",
+  "productRequest": "Build a simple field service job tracker where users can create jobs, assign a technician name, update job status, filter scheduled and completed jobs, delete jobs, and see a count of active jobs. It should have a clean browser UI.",
+  "clarificationAnswers": [
+    "Business: Browser-based field service job tracker for small teams with a clean modern UI.",
+    "Users: Individual users and team members working in the browser.",
+    "Roles: Single end-user role; no separate admin portal for MVP.",
+    "Permissions: Users have full CRUD permissions on records they create.",
+    "Workflows: Create job, assign technician name, update job status, filter scheduled/completed, delete job, active job count.",
+    "Data: Primary Job/Work Order records stored in client state with explicit fields.",
+    "Files: No file upload or document storage required for MVP.",
+    "Notifications: No email, SMS, or push notifications in MVP.",
+    "Integrations: Standalone web app with no third-party integrations.",
+    "AI: No AI or recommendation features.",
+    "Monetization: Free productivity tool with no billing.",
+    "Deployment: Static Vite React SPA for modern browsers; npm build produces dist/index.html."
+  ],
+  "initialConfidence": 36,
+  "enrichedConfidence": 93,
+  "initialOpenQuestions": 8,
+  "enrichedOpenQuestions": 2,
+  "canProceedToPlanning": false
+}

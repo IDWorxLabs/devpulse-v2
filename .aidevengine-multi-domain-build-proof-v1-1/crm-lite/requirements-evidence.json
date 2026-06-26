@@ -1,0 +1,26 @@
+{
+  "scenarioId": "crm-lite",
+  "productDomain": "CRM Lite",
+  "productRequest": "Build a simple CRM for small teams where users can add contacts, search contacts, add notes to a contact, mark follow-up status, and view a count of open follow-ups. It should have a clean browser UI.",
+  "clarificationAnswers": [
+    "Business: Browser-based CRM for contacts and follow-ups for founders and small teams with clear value proposition and target market.",
+    "Users: Individual users and team members who manage customer contacts in the browser.",
+    "Roles: Single end-user role with member access; no separate admin portal for MVP.",
+    "Permissions: Users have full CRUD permissions and write access on contacts they create; read-only views for shared lists.",
+    "Workflows: Core workflow process covers add contact, search contacts, add notes, follow-up status stages, and open follow-up count tracking.",
+    "Data: Contact entity with id, name, notes, follow-up flag, and createdAt timestamp stored in client state records",
+    "Files: No file upload or document attachments required for MVP.",
+    "Notifications: No email, SMS, push, alerts, or reminder notifications in MVP.",
+    "Integrations: No email integration, calendar sync, or third-party API partner required; product does not integrate with external systems for MVP.",
+    "AI: No AI, LLM, chatbot, or recommendation features in MVP.",
+    "Monetization: Free productivity tool with no subscription, billing, or payments.",
+    "Deployment: Static Vite React SPA for public launch in modern browsers; npm build produces dist/index.html for cloud hosting.",
+    "Lead management: No separate lead management pipeline — contact follow-up workflow process only for MVP.",
+    "Sales pipeline: No sales pipeline stages beyond follow-up status tracking for MVP scope."
+  ],
+  "initialConfidence": 29,
+  "enrichedConfidence": 100,
+  "initialOpenQuestions": 8,
+  "enrichedOpenQuestions": 1,
+  "canProceedToPlanning": true
+}

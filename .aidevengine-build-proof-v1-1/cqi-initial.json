@@ -1,0 +1,264 @@
+{
+  "readOnly": true,
+  "advisoryOnly": true,
+  "canonicalOwner": "Clarifying Question Intelligence",
+  "productDomain": "GENERIC",
+  "userPrompt": "I want a simple task tracker app where I can add tasks, mark them complete, delete them, filter by all/active/completed, and see a count of remaining active tasks. It should have a clean modern UI and work in the browser.",
+  "requirementConfidenceScore": 15,
+  "categoryScores": {
+    "Business": 15,
+    "Users": 15,
+    "Roles": 15,
+    "Permissions": 15,
+    "Workflows": 15,
+    "Data": 15,
+    "Files": 15,
+    "Notifications": 15,
+    "Integrations": 15,
+    "AI": 15,
+    "Monetization": 15,
+    "Deployment": 15
+  },
+  "coverageMatrix": [
+    {
+      "category": "Business",
+      "status": "Missing",
+      "score": 15
+    },
+    {
+      "category": "Users",
+      "status": "Missing",
+      "score": 15
+    },
+    {
+      "category": "Roles",
+      "status": "Missing",
+      "score": 15
+    },
+    {
+      "category": "Permissions",
+      "status": "Missing",
+      "score": 15
+    },
+    {
+      "category": "Workflows",
+      "status": "Missing",
+      "score": 15
+    },
+    {
+      "category": "Data",
+      "status": "Missing",
+      "score": 15
+    },
+    {
+      "category": "Files",
+      "status": "Missing",
+      "score": 15
+    },
+    {
+      "category": "Notifications",
+      "status": "Missing",
+      "score": 15
+    },
+    {
+      "category": "Integrations",
+      "status": "Missing",
+      "score": 15
+    },
+    {
+      "category": "AI",
+      "status": "Missing",
+      "score": 15
+    },
+    {
+      "category": "Monetization",
+      "status": "Missing",
+      "score": 15
+    },
+    {
+      "category": "Deployment",
+      "status": "Missing",
+      "score": 15
+    }
+  ],
+  "gaps": [
+    {
+      "readOnly": true,
+      "category": "Business",
+      "gapId": "BUSINESS_GAP",
+      "summary": "Business purpose and target outcome are underspecified",
+      "severity": "CRITICAL",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "category": "Users",
+      "gapId": "USERS_GAP",
+      "summary": "Primary users are not clearly defined",
+      "severity": "CRITICAL",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "category": "Roles",
+      "gapId": "ROLES_GAP",
+      "summary": "User roles and role count are unclear",
+      "severity": "CRITICAL",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "category": "Permissions",
+      "gapId": "PERMISSIONS_GAP",
+      "summary": "Permission boundaries are not defined",
+      "severity": "CRITICAL",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "category": "Workflows",
+      "gapId": "WORKFLOWS_GAP",
+      "summary": "Core workflows are underspecified",
+      "severity": "CRITICAL",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "category": "Data",
+      "gapId": "DATA_GAP",
+      "summary": "Data entities and persistence needs are unclear",
+      "severity": "MEDIUM",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "category": "Files",
+      "gapId": "FILES_GAP",
+      "summary": "File handling requirements are missing",
+      "severity": "MEDIUM",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "category": "Notifications",
+      "gapId": "NOTIFICATIONS_GAP",
+      "summary": "Notification expectations are unspecified",
+      "severity": "MEDIUM",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "category": "Integrations",
+      "gapId": "INTEGRATIONS_GAP",
+      "summary": "External integrations are not defined",
+      "severity": "MEDIUM",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "category": "AI",
+      "gapId": "AI_GAP",
+      "summary": "AI capabilities are not specified",
+      "severity": "MEDIUM",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "category": "Monetization",
+      "gapId": "MONETIZATION_GAP",
+      "summary": "Monetization model is unclear",
+      "severity": "MEDIUM",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "category": "Deployment",
+      "gapId": "DEPLOYMENT_GAP",
+      "summary": "Deployment target and launch scope are missing",
+      "severity": "MEDIUM",
+      "critical": false
+    }
+  ],
+  "gapSummary": [
+    "Business: Business purpose and target outcome are underspecified",
+    "Users: Primary users are not clearly defined",
+    "Roles: User roles and role count are unclear",
+    "Permissions: Permission boundaries are not defined",
+    "Workflows: Core workflows are underspecified",
+    "Data: Data entities and persistence needs are unclear",
+    "Files: File handling requirements are missing",
+    "Notifications: Notification expectations are unspecified"
+  ],
+  "openQuestions": [
+    {
+      "readOnly": true,
+      "domain": "GENERIC",
+      "question": "What are the requirements for business in this product?",
+      "whyItMatters": "Business purpose and target outcome are underspecified",
+      "category": "Business",
+      "priority": "CRITICAL"
+    },
+    {
+      "readOnly": true,
+      "domain": "GENERIC",
+      "question": "What are the requirements for users in this product?",
+      "whyItMatters": "Primary users are not clearly defined",
+      "category": "Users",
+      "priority": "CRITICAL"
+    },
+    {
+      "readOnly": true,
+      "domain": "GENERIC",
+      "question": "What are the requirements for roles in this product?",
+      "whyItMatters": "User roles and role count are unclear",
+      "category": "Roles",
+      "priority": "CRITICAL"
+    },
+    {
+      "readOnly": true,
+      "domain": "GENERIC",
+      "question": "What are the requirements for permissions in this product?",
+      "whyItMatters": "Permission boundaries are not defined",
+      "category": "Permissions",
+      "priority": "CRITICAL"
+    },
+    {
+      "readOnly": true,
+      "domain": "GENERIC",
+      "question": "What are the requirements for workflows in this product?",
+      "whyItMatters": "Core workflows are underspecified",
+      "category": "Workflows",
+      "priority": "CRITICAL"
+    },
+    {
+      "readOnly": true,
+      "domain": "GENERIC",
+      "question": "What are the requirements for data in this product?",
+      "whyItMatters": "Data entities and persistence needs are unclear",
+      "category": "Data",
+      "priority": "IMPORTANT"
+    },
+    {
+      "readOnly": true,
+      "domain": "GENERIC",
+      "question": "What are the requirements for files in this product?",
+      "whyItMatters": "File handling requirements are missing",
+      "category": "Files",
+      "priority": "IMPORTANT"
+    },
+    {
+      "readOnly": true,
+      "domain": "GENERIC",
+      "question": "What are the requirements for notifications in this product?",
+      "whyItMatters": "Notification expectations are unspecified",
+      "category": "Notifications",
+      "priority": "IMPORTANT"
+    }
+  ],
+  "resolvedQuestions": [],
+  "criticalGapCount": 5,
+  "questioningRequired": true,
+  "canProceedToPlanning": false,
+  "stopQuestioningReason": "Additional requirement discovery is needed before planning.",
+  "generatedAt": "2026-06-25T06:51:55.660Z"
+}

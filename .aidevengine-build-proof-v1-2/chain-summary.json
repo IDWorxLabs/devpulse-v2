@@ -1,0 +1,65 @@
+{
+  "chainVerdict": "PARTIAL",
+  "launchReady": false,
+  "launchBlockers": [
+    "UVL hub insufficient for launch (1 critical gap(s): Visual, Engineering, Launch)",
+    "AFLA verdict NEEDS_AUTOFIX (score 57)",
+    "Founder launch verdict NOT_LAUNCH_READY",
+    "Founder prerequisite: Verification Hub incomplete",
+    "Founder prerequisite: Product Architecture incomplete",
+    "Founder prerequisite: Blueprint Visual",
+    "Founder prerequisite: Universal Feature Contract"
+  ],
+  "validationChecks": [
+    {
+      "name": "enriched requirements evidence exists",
+      "passed": true,
+      "detail": "initial=15 enriched=96"
+    },
+    {
+      "name": "build materialization evidence exists",
+      "passed": true,
+      "detail": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-task-tracker-web-v1"
+    },
+    {
+      "name": "UVL behaviour evidence exists",
+      "passed": true,
+      "detail": "6/6 behaviours"
+    },
+    {
+      "name": "launch evidence bundle created",
+      "passed": true,
+      "detail": "materialized"
+    },
+    {
+      "name": "UVL hub consumes behaviour evidence or explicit unsupported mapping",
+      "passed": true,
+      "detail": "UVL coverage=85% confidence=84"
+    },
+    {
+      "name": "AFLA consumes build/UVL evidence or explicit unsupported mapping",
+      "passed": true,
+      "detail": "AFLA verdict=NEEDS_AUTOFIX score=57"
+    },
+    {
+      "name": "Founder launch consumes evidence or explicit unsupported mapping",
+      "passed": true,
+      "detail": "AFLA verdict=NEEDS_AUTOFIX score=57"
+    },
+    {
+      "name": "verdict produced",
+      "passed": true,
+      "detail": "NOT_LAUNCH_READY (7 blocker(s))"
+    },
+    {
+      "name": "report written",
+      "passed": true,
+      "detail": "AIDEVENGINE_BUILD_PROOF_V1_2_REPORT.md"
+    }
+  ],
+  "uvlAfterHandoff": {
+    "coverage": 85,
+    "confidence": 84
+  },
+  "passToken": null
+}

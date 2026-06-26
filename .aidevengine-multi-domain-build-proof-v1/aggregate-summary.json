@@ -1,0 +1,290 @@
+{
+  "scenarioCount": 5,
+  "launchReadyCount": 0,
+  "buildSuccessCount": 5,
+  "validationChecks": [
+    {
+      "name": "all 5 scenarios executed",
+      "detail": "5/5",
+      "passed": true
+    },
+    {
+      "name": "scenario crm-lite produced workspace or exact failure reason",
+      "detail": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-crm-web-v1",
+      "passed": true
+    },
+    {
+      "name": "scenario crm-lite attempted requirements enrichment",
+      "detail": "initial=29 enriched=85",
+      "passed": true
+    },
+    {
+      "name": "scenario crm-lite attempted build",
+      "detail": "build ok",
+      "passed": true
+    },
+    {
+      "name": "scenario crm-lite attempted runtime/visual verification",
+      "detail": "11/11 checks",
+      "passed": true
+    },
+    {
+      "name": "scenario crm-lite produced product architecture evidence",
+      "detail": "14/14 items",
+      "passed": true
+    },
+    {
+      "name": "scenario crm-lite produced UVL/AFLA/final verdict",
+      "detail": "NOT_LAUNCH_READY",
+      "passed": true
+    },
+    {
+      "name": "scenario crm-lite not falsely marked LAUNCH_READY",
+      "detail": "PARTIAL",
+      "passed": true
+    },
+    {
+      "name": "scenario booking-system produced workspace or exact failure reason",
+      "detail": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-appointment-booking-web-v1",
+      "passed": true
+    },
+    {
+      "name": "scenario booking-system attempted requirements enrichment",
+      "detail": "initial=33 enriched=93",
+      "passed": true
+    },
+    {
+      "name": "scenario booking-system attempted build",
+      "detail": "build ok",
+      "passed": true
+    },
+    {
+      "name": "scenario booking-system attempted runtime/visual verification",
+      "detail": "11/11 checks",
+      "passed": true
+    },
+    {
+      "name": "scenario booking-system produced product architecture evidence",
+      "detail": "15/15 items",
+      "passed": true
+    },
+    {
+      "name": "scenario booking-system produced UVL/AFLA/final verdict",
+      "detail": "NOT_LAUNCH_READY",
+      "passed": true
+    },
+    {
+      "name": "scenario booking-system not falsely marked LAUNCH_READY",
+      "detail": "PARTIAL",
+      "passed": true
+    },
+    {
+      "name": "scenario inventory-manager produced workspace or exact failure reason",
+      "detail": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-inventory-web-v1",
+      "passed": true
+    },
+    {
+      "name": "scenario inventory-manager attempted requirements enrichment",
+      "detail": "initial=33 enriched=85",
+      "passed": true
+    },
+    {
+      "name": "scenario inventory-manager attempted build",
+      "detail": "build ok",
+      "passed": true
+    },
+    {
+      "name": "scenario inventory-manager attempted runtime/visual verification",
+      "detail": "9/9 checks",
+      "passed": true
+    },
+    {
+      "name": "scenario inventory-manager produced product architecture evidence",
+      "detail": "14/14 items",
+      "passed": true
+    },
+    {
+      "name": "scenario inventory-manager produced UVL/AFLA/final verdict",
+      "detail": "NOT_LAUNCH_READY",
+      "passed": true
+    },
+    {
+      "name": "scenario inventory-manager not falsely marked LAUNCH_READY",
+      "detail": "PARTIAL",
+      "passed": true
+    },
+    {
+      "name": "scenario client-portal produced workspace or exact failure reason",
+      "detail": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-customer-support-web-v1",
+      "passed": true
+    },
+    {
+      "name": "scenario client-portal attempted requirements enrichment",
+      "detail": "initial=25 enriched=85",
+      "passed": true
+    },
+    {
+      "name": "scenario client-portal attempted build",
+      "detail": "build ok",
+      "passed": true
+    },
+    {
+      "name": "scenario client-portal attempted runtime/visual verification",
+      "detail": "11/11 checks",
+      "passed": true
+    },
+    {
+      "name": "scenario client-portal produced product architecture evidence",
+      "detail": "14/14 items",
+      "passed": true
+    },
+    {
+      "name": "scenario client-portal produced UVL/AFLA/final verdict",
+      "detail": "NOT_LAUNCH_READY",
+      "passed": true
+    },
+    {
+      "name": "scenario client-portal not falsely marked LAUNCH_READY",
+      "detail": "PARTIAL",
+      "passed": true
+    },
+    {
+      "name": "scenario field-service produced workspace or exact failure reason",
+      "detail": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\rbep-fleet-management-web-v1",
+      "passed": true
+    },
+    {
+      "name": "scenario field-service attempted requirements enrichment",
+      "detail": "initial=36 enriched=93",
+      "passed": true
+    },
+    {
+      "name": "scenario field-service attempted build",
+      "detail": "build ok",
+      "passed": true
+    },
+    {
+      "name": "scenario field-service attempted runtime/visual verification",
+      "detail": "9/9 checks",
+      "passed": true
+    },
+    {
+      "name": "scenario field-service produced product architecture evidence",
+      "detail": "15/15 items",
+      "passed": true
+    },
+    {
+      "name": "scenario field-service produced UVL/AFLA/final verdict",
+      "detail": "NOT_LAUNCH_READY",
+      "passed": true
+    },
+    {
+      "name": "scenario field-service not falsely marked LAUNCH_READY",
+      "detail": "PARTIAL",
+      "passed": true
+    },
+    {
+      "name": "aggregate report written",
+      "detail": "AIDEVENGINE_MULTI_DOMAIN_BUILD_PROOF_V1_REPORT.md",
+      "passed": true
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "crm-lite",
+      "productDomain": "CRM Lite",
+      "scenarioVerdict": "PARTIAL",
+      "launchReady": false,
+      "launchBlockers": [
+        "UVL hub insufficient for launch (1 critical gap(s): Requirement)",
+        "AFLA verdict NOT_LAUNCH_READY (score 100)",
+        "Founder prerequisite: Requirement Discovery incomplete",
+        "Founder prerequisite: Verification Hub incomplete"
+      ],
+      "initialCqiConfidence": 29,
+      "enrichedCqiConfidence": 85,
+      "uvlCoverage": 98,
+      "uvlConfidence": 98,
+      "aflaVerdict": "NOT_LAUNCH_READY",
+      "aflaScore": 100,
+      "founderLaunchVerdict": "NOT_LAUNCH_READY"
+    },
+    {
+      "id": "booking-system",
+      "productDomain": "Booking System",
+      "scenarioVerdict": "PARTIAL",
+      "launchReady": false,
+      "launchBlockers": [
+        "UVL hub insufficient for launch (1 critical gap(s): General: Founder Review failed: Founder review incomplete or blocked)",
+        "AFLA verdict NOT_LAUNCH_READY (score 100)",
+        "Founder prerequisite: Requirement Discovery incomplete",
+        "Founder prerequisite: Verification Hub incomplete"
+      ],
+      "initialCqiConfidence": 33,
+      "enrichedCqiConfidence": 93,
+      "uvlCoverage": 99,
+      "uvlConfidence": 99,
+      "aflaVerdict": "NOT_LAUNCH_READY",
+      "aflaScore": 100,
+      "founderLaunchVerdict": "NOT_LAUNCH_READY"
+    },
+    {
+      "id": "inventory-manager",
+      "productDomain": "Inventory Manager",
+      "scenarioVerdict": "PARTIAL",
+      "launchReady": false,
+      "launchBlockers": [
+        "UVL hub insufficient for launch (1 critical gap(s): Requirement)",
+        "AFLA verdict NOT_LAUNCH_READY (score 100)",
+        "Founder prerequisite: Requirement Discovery incomplete",
+        "Founder prerequisite: Verification Hub incomplete"
+      ],
+      "initialCqiConfidence": 33,
+      "enrichedCqiConfidence": 85,
+      "uvlCoverage": 98,
+      "uvlConfidence": 98,
+      "aflaVerdict": "NOT_LAUNCH_READY",
+      "aflaScore": 100,
+      "founderLaunchVerdict": "NOT_LAUNCH_READY"
+    },
+    {
+      "id": "client-portal",
+      "productDomain": "Client Portal",
+      "scenarioVerdict": "PARTIAL",
+      "launchReady": false,
+      "launchBlockers": [
+        "UVL hub insufficient for launch (1 critical gap(s): Requirement)",
+        "AFLA verdict NOT_LAUNCH_READY (score 100)",
+        "Founder prerequisite: Requirement Discovery incomplete",
+        "Founder prerequisite: Verification Hub incomplete"
+      ],
+      "initialCqiConfidence": 25,
+      "enrichedCqiConfidence": 85,
+      "uvlCoverage": 98,
+      "uvlConfidence": 98,
+      "aflaVerdict": "NOT_LAUNCH_READY",
+      "aflaScore": 100,
+      "founderLaunchVerdict": "NOT_LAUNCH_READY"
+    },
+    {
+      "id": "field-service",
+      "productDomain": "Field Service App",
+      "scenarioVerdict": "PARTIAL",
+      "launchReady": false,
+      "launchBlockers": [
+        "UVL hub insufficient for launch (1 critical gap(s): General: Founder Review failed: Founder review incomplete or blocked)",
+        "AFLA verdict NOT_LAUNCH_READY (score 100)",
+        "Founder prerequisite: Requirement Discovery incomplete",
+        "Founder prerequisite: Verification Hub incomplete"
+      ],
+      "initialCqiConfidence": 36,
+      "enrichedCqiConfidence": 93,
+      "uvlCoverage": 99,
+      "uvlConfidence": 99,
+      "aflaVerdict": "NOT_LAUNCH_READY",
+      "aflaScore": 100,
+      "founderLaunchVerdict": "NOT_LAUNCH_READY"
+    }
+  ],
+  "passToken": null
+}

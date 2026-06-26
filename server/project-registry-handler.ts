@@ -13,10 +13,12 @@ import {
   readProjectRegistryState,
   ProjectRegistryDuplicateNameError,
   renameRegistryProject,
-  setRegistryActiveProject,
+  getRegistryProject,
+  getProjectRegistryV1FilePath,
   validateCreateRegistryProjectName,
 } from '../src/project-registry-v1/index.js';
 import { listMultiProjectWorkspaces } from '../src/one-prompt-live-preview/workspace-tab-registry.js';
+import { executeProjectTabContextSwitch } from '../src/project-context-switching/index.js';
 
 function sendJson(res: ServerResponse, status: number, body: unknown): void {
   res.writeHead(status, {
@@ -36,26 +38,69 @@ async function readJsonBody(req: IncomingMessage): Promise<Record<string, unknow
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as Record<string, unknown>;
 }
 
-function buildFastRegistryResponse(rootDir: string) {
+function buildRegistryGetResponse(rootDir: string) {
   const state = readProjectRegistryState(rootDir);
   const summary = buildProjectRegistrySummaryFast(rootDir);
+  const registryPath = getProjectRegistryV1FilePath(rootDir);
+  const activeRecords = state.projects.filter((project) => project.status === 'ACTIVE');
+  const updatedAt =
+    activeRecords.reduce(
+      (latest, project) => (project.updatedAt > latest ? project.updatedAt : latest),
+      activeRecords[0]?.updatedAt ?? '',
+    ) || new Date().toISOString();
+
   return {
     ok: true,
     registry: state,
     projects: summary,
     activeProjectId: state.activeProjectId,
+    total: summary.count,
+    active: summary.activeCount,
+    registryPath,
+    updatedAt,
     multiProjectWorkspaces: listMultiProjectWorkspaces(),
   };
 }
 
+function buildFastRegistryResponse(rootDir: string) {
+  return buildRegistryGetResponse(rootDir);
+}
+
 export function sendProjectRegistryJson(res: ServerResponse, rootDir: string): void {
-  sendJson(res, 200, buildFastRegistryResponse(rootDir));
+  sendJson(res, 200, buildRegistryGetResponse(rootDir));
+}
+
+export const PROJECT_REGISTRY_GET_PATHS = [
+  '/api/projects/registry',
+  '/api/projects/registry.json',
+  '/api/projects',
+] as const;
+
+export function isProjectRegistryGetPath(urlPath: string): boolean {
+  return PROJECT_REGISTRY_GET_PATHS.includes(urlPath as (typeof PROJECT_REGISTRY_GET_PATHS)[number]);
+}
+
+export function handleProjectRegistryGetRequest(
+  req: IncomingMessage,
+  res: ServerResponse,
+  rootDir: string,
+): void {
+  if (req.method === 'HEAD') {
+    res.writeHead(200, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'X-DevPulse-Surface': 'project-registry-v1',
+    });
+    res.end();
+    return;
+  }
+  sendProjectRegistryJson(res, rootDir);
 }
 
 export async function handleProjectRegistryMutation(
   req: IncomingMessage,
   res: ServerResponse,
-  action: 'create' | 'rename' | 'archive' | 'set-active',
+  action: 'create' | 'rename' | 'archive' | 'set-active' | 'context-switch',
   rootDir: string,
 ): Promise<void> {
   try {
@@ -102,8 +147,27 @@ export async function handleProjectRegistryMutation(
       return;
     }
 
-    const record = setRegistryActiveProject({ projectId, rootDir });
-    sendJson(res, 200, { ...buildFastRegistryResponse(rootDir), project: record, action: 'set-active' });
+    if (action === 'context-switch' || action === 'set-active') {
+      const switchResult = executeProjectTabContextSwitch({ projectId, rootDir, source: 'api' });
+      if (!switchResult.ok) {
+        sendJson(res, 400, { ok: false, error: switchResult.error ?? 'context switch failed' });
+        return;
+      }
+      const record = getRegistryProject(projectId, rootDir);
+      sendJson(res, 200, {
+        ...buildFastRegistryResponse(rootDir),
+        project: record,
+        action: action === 'context-switch' ? 'context-switch' : 'set-active',
+        projectContext: switchResult.projectContext,
+        projectContextReset: {
+          clearedAlignmentWarnings: true,
+          clearedGreetingOverlap: true,
+          commandCenterWorkspaceMode: true,
+        },
+        executionTraceEvents: switchResult.executionTraceEvents,
+      });
+      return;
+    }
   } catch (err) {
     if (err instanceof ProjectRegistryDuplicateNameError) {
       sendJson(res, 409, {

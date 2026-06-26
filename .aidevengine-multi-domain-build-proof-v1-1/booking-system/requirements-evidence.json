@@ -1,0 +1,26 @@
+{
+  "scenarioId": "booking-system",
+  "productDomain": "Booking System",
+  "productRequest": "Build a simple booking system where users can create bookings, choose a date and time, enter customer details, cancel bookings, filter upcoming and past bookings, and see the next upcoming booking. It should work in the browser.",
+  "clarificationAnswers": [
+    "Business: Browser-based appointment booking platform for scheduling for founders and small teams with clear value proposition and target market.",
+    "Users: Customers and staff users who create and manage bookings in the browser.",
+    "Roles: Single end-user role for booking operators; no separate admin portal for MVP.",
+    "Permissions: Users have full CRUD permissions and write access on bookings they create with read access to schedules.",
+    "Workflows: Core workflow process covers create booking, date/time selection stages, customer details capture, cancel booking, upcoming/past filter, next upcoming booking.",
+    "Data: Booking entity with id, date, time, customer details, and status fields stored in client state records",
+    "Files: No file upload or document attachments required for MVP.",
+    "Notifications: No email, SMS, push, alerts, or reminder notifications in MVP.",
+    "Integrations: No email integration, calendar sync, or third-party API partner required; product does not integrate with external systems for MVP.",
+    "AI: No AI, LLM, chatbot, or recommendation features in MVP.",
+    "Monetization: Free productivity tool with no subscription, billing, or payments.",
+    "Deployment: Static Vite React SPA for public launch in modern browsers; npm build produces dist/index.html for cloud hosting.",
+    "Lead management: No separate lead management pipeline — contact follow-up workflow process only for MVP.",
+    "Sales pipeline: No sales pipeline stages beyond follow-up status tracking for MVP scope."
+  ],
+  "initialConfidence": 33,
+  "enrichedConfidence": 100,
+  "initialOpenQuestions": 8,
+  "enrichedOpenQuestions": 1,
+  "canProceedToPlanning": true
+}
