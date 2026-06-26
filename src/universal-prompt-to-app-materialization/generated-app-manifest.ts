@@ -22,6 +22,7 @@ import type {
   FeatureRealityRecord,
 } from '../feature-contract-reality/feature-contract-reality-types.js';
 import type { WorkspaceRealityAuditStatus } from '../workspace-reality-audit/workspace-reality-audit-types.js';
+import type { PromptFaithfulnessManifestFields } from '../prompt-faithful-generation/prompt-faithful-generation-types.js';
 
 export const GENERATED_APP_MANIFEST_FILENAME = '.generated-app-manifest.json';
 
@@ -169,6 +170,17 @@ export interface GeneratedAppManifest {
   universalProductionProofRecordedAt: string | null;
   createdAt: string;
   completedAt: string | null;
+  promptFaithfulnessStatus?: PromptFaithfulnessManifestFields['promptFaithfulnessStatus'];
+  promptFaithfulnessScore?: number;
+  promptDerivedAppName?: string;
+  promptDerivedDomain?: string;
+  promptDerivedModules?: string[];
+  promptDerivedInteractions?: string[];
+  rejectedFallbackProfiles?: string[];
+  bannedFallbackModulesDetected?: string[];
+  promptFaithfulnessFailureReasons?: string[];
+  androidPhonePreviewRequired?: boolean;
+  androidPhonePreviewStatus?: PromptFaithfulnessManifestFields['androidPhonePreviewStatus'];
 }
 
 export function buildInitialGeneratedAppManifest(input: {
@@ -187,6 +199,7 @@ export function buildInitialGeneratedAppManifest(input: {
   featureModuleDirectories?: string[];
   workspacePath?: string | null;
   fallbackUsed?: boolean;
+  promptFaithfulness?: PromptFaithfulnessManifestFields;
 }): GeneratedAppManifest {
   const now = new Date().toISOString();
   return {
@@ -327,6 +340,7 @@ export function buildInitialGeneratedAppManifest(input: {
     universalProductionProofProfileVerdict: null,
     universalProductionProofArtifactPath: null,
     universalProductionProofRecordedAt: null,
+    ...(input.promptFaithfulness ?? {}),
     createdAt: now,
     completedAt: null,
   };

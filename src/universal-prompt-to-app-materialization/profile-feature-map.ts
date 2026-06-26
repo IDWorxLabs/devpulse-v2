@@ -4,6 +4,11 @@
 
 import type { GeneratedAppProfile } from '../code-generation-engine/code-generation-engine-types.js';
 import { deriveGenericCustomFeatureModules, derivePromptFeatureTerms } from './prompt-app-metadata.js';
+import {
+  buildCustomProfileFeatureDefinition,
+  extractPromptFeatures,
+  shouldUseCustomFeatureDefinition,
+} from '../prompt-faithful-generation/index.js';
 
 export type MaterializationProfile = GeneratedAppProfile | 'GENERIC_CUSTOM_APP_V1' | 'HABIT_TRACKER_WEB_V1';
 
@@ -15,6 +20,8 @@ export interface ProfileFeatureDefinition {
   routes: string[];
   requiredUiTerms: string[];
   forbiddenGenericTerms: string[];
+  customDomainCopy?: Record<string, string>;
+  androidPhonePreviewRequired?: boolean;
 }
 
 const GENERIC_PM_FALLBACK = ['Project Management System', 'Welcome to Project Management'];
@@ -134,6 +141,11 @@ export function getProfileFeatureDefinition(
   profile: MaterializationProfile,
   rawPrompt: string,
 ): ProfileFeatureDefinition {
+  const extraction = extractPromptFeatures(rawPrompt);
+  if (shouldUseCustomFeatureDefinition(extraction, profile)) {
+    return buildCustomProfileFeatureDefinition(extraction);
+  }
+
   const base = PROFILE_FEATURE_MAP[profile];
   if (profile !== 'GENERIC_CUSTOM_APP_V1' && profile !== 'HABIT_TRACKER_WEB_V1') {
     return base;

@@ -15,6 +15,7 @@ import {
   buildMaterializationQualityCategoryScores,
   loadMaterializationQualityEvidence,
 } from './materialization-quality-score-breakdown.js';
+import { validatePromptFaithfulness } from '../prompt-faithful-generation/prompt-faithfulness-validator.js';
 import {
   detectMaterializationQualityGaps,
   deriveMaterializationStrengths,
@@ -76,6 +77,22 @@ export function calculateMaterializationQualityScore(input: {
     overallScore = Math.min(overallScore, 55);
   } else if (input.manifest.workspaceRealityAuditStatus === 'WARN') {
     overallScore = Math.min(overallScore, 75);
+  }
+
+  if (input.manifest.promptFaithfulnessStatus === 'FAIL') {
+    overallScore = Math.min(overallScore, 45);
+  } else if (input.manifest.promptFaithfulnessStatus === 'WARN') {
+    overallScore = Math.min(overallScore, 65);
+  }
+
+  const faithfulnessVerdict = validatePromptFaithfulness({
+    rawPrompt: input.manifest.prompt,
+    selectedProfile: String(input.manifest.selectedProfile),
+    generatedModules: input.manifest.featureModules,
+    workspaceDir: input.workspaceDir,
+  });
+  if (faithfulnessVerdict.status === 'FAIL') {
+    overallScore = Math.min(overallScore, 40);
   }
 
   const gapReport = detectMaterializationQualityGaps({

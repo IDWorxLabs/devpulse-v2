@@ -27,6 +27,11 @@ import { buildWorkspaceRealityAuditTraceEvents } from '../workspace-reality-audi
 import type { WorkspaceRealityAuditEvidence } from '../workspace-reality-audit/workspace-reality-audit-types.js';
 import { buildUniversalProductionProofTraceEvents } from '../universal-production-proof/universal-production-proof-trace-events.js';
 import type { UniversalProductionProofEvidence } from '../universal-production-proof/universal-production-proof-types.js';
+import {
+  buildPromptFaithfulnessManifestFields,
+  buildPromptFaithfulnessTraceEvents,
+  resolvePromptFaithfulBuildPlan,
+} from '../prompt-faithful-generation/index.js';
 
 type BuildTraceStage = {
   runtimeStage: string;
@@ -226,6 +231,36 @@ export function buildOnePromptExecutionTraceEvents(
       stepTotal: total,
     });
     step = 1;
+
+    const faithfulnessPlan = resolvePromptFaithfulBuildPlan(prompt, result.generatedProfile);
+    const faithfulnessModules =
+      result.materializationManifest?.featureModules ??
+      faithfulnessPlan.definition.featureModules;
+    const faithfulnessFields = buildPromptFaithfulnessManifestFields({
+      rawPrompt: prompt,
+      selectedProfile: String(result.generatedProfile ?? faithfulnessPlan.materializationProfile),
+      generatedModules: faithfulnessModules,
+      guardResult: faithfulnessPlan.guardResult,
+    });
+    const faithfulnessTrace = buildPromptFaithfulnessTraceEvents({
+      extraction: faithfulnessPlan.extraction,
+      guardResult: faithfulnessPlan.guardResult,
+      manifestFields: faithfulnessFields,
+    });
+    for (const faithEvent of faithfulnessTrace) {
+      step += 1;
+      events.push({
+        ...faithEvent,
+        eventId: `${result.buildId}-trace-faith-${step}`,
+        timestamp: ts + step,
+        informationalOnly: true,
+        section: 'Build',
+        action: faithEvent.eventTitle,
+        detail: faithEvent.technicalDetail,
+        stepIndex: step,
+        stepTotal: total + faithfulnessTrace.length,
+      });
+    }
   }
 
   for (const stage of BUILD_TRACE_STAGES) {

@@ -166,6 +166,8 @@
     "validate:local-runtime-launcher": "tsx scripts/validate-local-runtime-launcher-v1.ts",
     "validate:project-context-alignment": "tsx scripts/validate-project-context-alignment-v1.ts",
     "validate:project-tab-context-switch": "tsx scripts/validate-project-tab-context-switch.ts",
+    "validate:prompt-faithful-generation": "tsx scripts/validate-prompt-faithful-generation.ts",
+    "validate:launch-project-hydration": "tsx scripts/validate-launch-project-hydration.ts",
     "validate:project-registry-endpoints": "tsx scripts/validate-project-registry-endpoints.ts",
     "validate:frontend-project-registry-parsing": "tsx scripts/validate-frontend-project-registry-parsing.ts",
     "validate:project-isolation-guard": "tsx scripts/validate-project-isolation-guard-v1.ts",

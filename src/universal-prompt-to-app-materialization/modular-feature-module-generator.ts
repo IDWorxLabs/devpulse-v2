@@ -4,7 +4,7 @@
 
 import type { GeneratedWorkspaceFile } from '../code-generation-engine/code-generation-engine-types.js';
 import type { ProfileFeatureDefinition } from './profile-feature-map.js';
-import { profileDomainCopy } from './profile-feature-ui-generator.js';
+import { resolveDomainCopy } from './profile-feature-ui-generator.js';
 
 export interface GeneratedFeatureModuleManifestEntry {
   readOnly: true;
@@ -82,7 +82,7 @@ function buildFeatureComponentTsx(
 ): string {
   const pascal = moduleIdToPascalCase(moduleId);
   const displayName = moduleIdToDisplayName(moduleId);
-  const copy = profileDomainCopy(definition.profile, appTitle);
+  const copy = resolveDomainCopy(definition, appTitle);
   const description = copy[moduleId] ?? `${displayName} module for ${appTitle}.`;
   const terms = modulePromptTerms(moduleId, definition);
   const interactionControl = isInformationalFeatureModule(moduleId)
@@ -329,6 +329,10 @@ export function buildFeatureAppRouterTsx(definition: ProfileFeatureDefinition): 
     (moduleId) => moduleId !== 'auth',
   );
   const defaultModule = navModules[0] ?? 'dashboard';
+  const copy = definition.customDomainCopy ?? {};
+  const appTitle = copy.headline?.split(' — ')[0] ?? 'Custom App';
+  const androidPreview = definition.androidPhonePreviewRequired === true;
+  const isAssistiveApp = definition.profile === 'GENERIC_CUSTOM_APP_V1' && Boolean(definition.customDomainCopy);
 
   const navButtons = navModules
     .map(
@@ -342,6 +346,28 @@ export function buildFeatureAppRouterTsx(definition: ProfileFeatureDefinition): 
         </button>`,
     )
     .join('\n');
+
+  const assistiveHeader = isAssistiveApp
+    ? `
+      <header className="assistive-app-header" data-communication-board="true">
+        <h1>${esc(appTitle)}</h1>
+        <p className="assistive-subtitle">Locked In Syndrome App — communication board</p>
+        <div className="assistive-status-row">
+          <span data-blink-status="ready">Blink: ready</span>
+          <span data-gaze-status="tracking">Gaze: tracking</span>
+          <span data-speech-status="idle">Speech: idle</span>
+        </div>
+        <div className="assistive-controls">
+          <button type="button" className="assistive-speak-btn" data-text-to-speech="true">Speak</button>
+          <button type="button" className="assistive-emergency-btn" data-emergency-speech="true">Emergency speech</button>
+        </div>
+        <p className="assistive-safety-note">Large accessible tiles for assistive communication. Safety note: emergency speech is always visible.</p>
+      </header>`
+    : '';
+
+  const routerClass = androidPreview
+    ? 'feature-app-router android-phone-preview'
+    : 'feature-app-router';
 
   return `import { useMemo, useState } from 'react';
 import { FEATURE_REGISTRY } from './registry';
@@ -358,10 +384,10 @@ export default function FeatureAppRouter() {
 
   return (
     <div
-      className="feature-app-router"
+      className="${routerClass}"
       data-modular-feature-router="v1"
-      data-materialization-profile="${definition.profile}"
-    >
+      data-materialization-profile="${definition.profile}"${androidPreview ? '\n      data-android-phone-preview="true"' : ''}
+    >${assistiveHeader}
       <nav className="modular-nav" aria-label="Feature modules">
 ${navButtons}
       </nav>
@@ -374,11 +400,42 @@ ${navButtons}
 `;
 }
 
-export function buildFeatureAppRouterCss(): string {
+export function buildFeatureAppRouterCss(definition?: ProfileFeatureDefinition): string {
+  const phoneCss = definition?.androidPhonePreviewRequired
+    ? `
+.android-phone-preview {
+  max-width: 420px;
+  min-height: 720px;
+  margin: 0 auto;
+  border: 12px solid #1e293b;
+  border-radius: 28px;
+  padding: 1rem;
+  background: #f8fafc;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.25);
+}
+.assistive-app-header { margin-bottom: 1rem; }
+.assistive-app-header h1 { font-size: 1.35rem; margin: 0 0 0.25rem; }
+.assistive-subtitle { margin: 0 0 0.75rem; color: #475569; font-weight: 600; }
+.assistive-status-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; font-size: 0.9rem; }
+.assistive-controls { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+.assistive-speak-btn, .assistive-emergency-btn {
+  flex: 1;
+  min-height: 48px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+}
+.assistive-speak-btn { background: #2563eb; color: #fff; }
+.assistive-emergency-btn { background: #dc2626; color: #fff; font-weight: 700; }
+.assistive-safety-note { font-size: 0.85rem; color: #64748b; margin: 0; }
+.modular-nav-item { min-height: 44px; font-size: 0.95rem; }
+`
+    : '';
   return `.feature-app-router { width: 100%; max-width: 960px; margin: 0 auto; }
 .modular-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
 .modular-nav-item { border: 1px solid #cbd5e1; background: #fff; border-radius: 999px; padding: 0.4rem 0.85rem; cursor: pointer; }
 .modular-nav-item.is-active { background: #2563eb; color: #fff; border-color: transparent; }
 .modular-active-feature { min-height: 240px; }
-`;
+${phoneCss}`;
 }

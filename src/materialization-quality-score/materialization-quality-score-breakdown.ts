@@ -172,25 +172,42 @@ function scorePromptAlignment(
   const missingEvidence: string[] = [];
   let score = 0;
 
+  if (manifest.promptFaithfulnessStatus === 'PASS') {
+    score += 35;
+    reasons.push(`Prompt faithfulness PASS (score ${manifest.promptFaithfulnessScore ?? 0})`);
+  } else if (manifest.promptFaithfulnessStatus === 'FAIL') {
+    score = Math.min(score, 20);
+    reasons.push(
+      `Prompt faithfulness FAIL: ${(manifest.promptFaithfulnessFailureReasons ?? []).join('; ') || 'profile/module mismatch'}`,
+    );
+  } else if (manifest.promptFaithfulnessStatus === 'WARN') {
+    score += 15;
+    reasons.push('Prompt faithfulness WARN — partial module alignment');
+  }
+
   if (manifest.promptSpecificTermsPresent) {
-    score += 40;
+    score += 25;
     reasons.push(`Prompt-specific UI terms detected (${validation.matchedUiTerms.join(', ') || 'terms present'})`);
   } else {
     missingEvidence.push('promptSpecificTermsPresent');
   }
 
   if (manifest.profileSpecificUiVerified) {
-    score += 30;
+    score += 20;
     reasons.push('Profile-specific UI verified');
   } else {
     missingEvidence.push('profileSpecificUiVerified');
   }
 
   if (validation.passed) {
-    score += 30;
+    score += 20;
     reasons.push('Universal materialization validation passed');
   } else {
     reasons.push('Materialization validation incomplete');
+  }
+
+  if (manifest.promptFaithfulnessStatus === 'FAIL') {
+    score = Math.min(score, 35);
   }
 
   return categoryResult('promptAlignment', 'Prompt Alignment', clamp(score), [manifestPath], reasons, missingEvidence);

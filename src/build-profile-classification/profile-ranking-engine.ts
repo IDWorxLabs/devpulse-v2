@@ -14,6 +14,7 @@ import {
   shouldSuppressTaskTrackingClassification,
   promptMentionsLisaOrAccessibility,
 } from '../project-context-switching/project-context-classifier-guard.js';
+import { promptContainsNegatedProjectManagement } from '../prompt-faithful-generation/prompt-profile-selection-guard.js';
 
 interface ProfileRuleSet {
   profile: GeneratedAppProfile;
@@ -222,7 +223,26 @@ const PROFILE_RULES: ProfileRuleSet[] = [
       { term: 'sprint', weight: 8 },
       { term: 'assign team', weight: 8 },
     ],
-    disqualifiers: [...EXPENSE_STRONG_KEYWORDS, 'expense', 'expenses', 'finance tracking'],
+    disqualifiers: [
+      ...EXPENSE_STRONG_KEYWORDS,
+      'expense',
+      'expenses',
+      'finance tracking',
+      'locked in syndrome',
+      'locked-in syndrome',
+      'lisa',
+      'assistive communication',
+      'eye movement',
+      'eye tracking',
+      'gaze',
+      'blink',
+      'communication board',
+      'text to speech',
+      'text-to-speech',
+      'caregiver',
+      'calibration',
+      'accessibility',
+    ],
   },
   {
     profile: 'SCHOOL_MANAGEMENT_WEB_V1',
@@ -266,13 +286,20 @@ function collectMatchedKeywords(text: string, rules: ProfileKeywordRule[]): stri
   return matched;
 }
 
+function isNegatedKeywordMatch(text: string, keyword: string): boolean {
+  if (keyword !== 'project management') return false;
+  return promptContainsNegatedProjectManagement(text);
+}
+
 function scoreProfile(text: string, ruleSet: ProfileRuleSet): { score: number; matchedKeywords: string[] } {
   const disqualifierHit = (ruleSet.disqualifiers ?? []).some((term) => matchProfileKeyword(text, term));
   if (disqualifierHit) {
     return { score: 0, matchedKeywords: [] };
   }
 
-  const matchedKeywords = collectMatchedKeywords(text, ruleSet.keywords);
+  const matchedKeywords = collectMatchedKeywords(text, ruleSet.keywords).filter(
+    (term) => !isNegatedKeywordMatch(text, term),
+  );
   let score = 0;
   for (const rule of ruleSet.keywords) {
     if (matchedKeywords.includes(rule.term)) {

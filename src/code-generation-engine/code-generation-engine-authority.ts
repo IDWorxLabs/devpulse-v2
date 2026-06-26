@@ -8,8 +8,8 @@ import { executeRealFileOperation } from '../real-file-workspace-execution/real-
 import { resolveSafeWorkspaceRoot } from '../real-file-workspace-execution/real-file-workspace-path-authority.js';
 import type { MaterializeGeneratedAppInput, CodeGenerationEngineResult, GeneratedAppProfile } from './code-generation-engine-types.js';
 import { buildUniversalCrudWorkspaceFiles } from './universal-crud-app-generator.js';
-import { detectUniversalAppProfile } from '../universal-feature-contract-intelligence/universal-feature-contract-builder.js';
 import { resolveGeneratedAppProfile } from './task-tracker-detector.js';
+import { resolvePromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
 
 function writeWorkspaceFile(input: {
   projectRootDir: string;
@@ -40,8 +40,12 @@ function resolveMaterializationProfile(
   profileOverride?: GeneratedAppProfile | null,
 ): GeneratedAppProfile {
   if (profileOverride) return profileOverride;
+  const plan = resolvePromptFaithfulBuildPlan(rawPrompt, profileOverride ?? null);
+  if (plan.guardResult.guardApplied) {
+    return plan.materializationProfile as GeneratedAppProfile;
+  }
   return (
-    detectUniversalAppProfile(rawPrompt) ??
+    (plan.ranking.selectedProfile as GeneratedAppProfile | null) ??
     resolveGeneratedAppProfile(rawPrompt) ??
     'GENERIC_CUSTOM_APP_V1'
   );

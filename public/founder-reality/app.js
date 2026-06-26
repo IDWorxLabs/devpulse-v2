@@ -16,6 +16,13 @@
   var projectRegistryHydrationState = 'pending';
   var projectRegistryHydrationError = null;
   var REGISTRY_LOAD_TIMEOUT_MS = 15000;
+  var REGISTRY_HYDRATION_RETRY_ATTEMPTS = 3;
+  var REGISTRY_HYDRATION_RETRY_BASE_MS = 400;
+  var REGISTRY_CACHE_STORAGE_KEY = 'aidevengine.project-registry-cache.v1';
+  var projectRegistryHydrationStartedAt = 0;
+  var projectRegistryHydrationDurationMs = 0;
+  var projectRegistryUsedCachedFallback = false;
+  var projectRegistryHydrationRetryCount = 0;
   var projectRegistryLoadTimeoutId = null;
   var projectRegistryClient = {
     hydrationState: 'pending',
@@ -704,6 +711,70 @@
     return message;
   }
 
+  function loadCachedProjectRegistry() {
+    try {
+      var raw = window.localStorage.getItem(REGISTRY_CACHE_STORAGE_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (!parsed || !parsed.payload) return null;
+      return parsed;
+    } catch (cacheErr) {
+      return null;
+    }
+  }
+
+  function saveCachedProjectRegistry(payload) {
+    try {
+      if (!payload) return;
+      window.localStorage.setItem(
+        REGISTRY_CACHE_STORAGE_KEY,
+        JSON.stringify({
+          cachedAt: new Date().toISOString(),
+          registryPath: payload.registryPath || null,
+          updatedAt: payload.updatedAt || null,
+          payload: payload,
+        }),
+      );
+    } catch (cacheErr) {
+      /* ignore quota errors */
+    }
+  }
+
+  function applyCachedProjectRegistryFallback() {
+    var cached = loadCachedProjectRegistry();
+    if (!cached || !cached.payload) return false;
+    projectRegistryUsedCachedFallback = true;
+    projectRegistryClient.hydrationState = 'ready';
+    projectRegistryClient.error = null;
+    applyProjectRegistryPayload(cached.payload);
+    return true;
+  }
+
+  function logProjectRegistryHydrationEvidence() {
+    console.info(
+      'PROJECT_REGISTRY_HYDRATION state=' +
+        String(projectRegistryClient.hydrationState) +
+        ' durationMs=' +
+        String(projectRegistryHydrationDurationMs) +
+        ' count=' +
+        String(projectRegistryClient.total || 0) +
+        (projectRegistryUsedCachedFallback ? ' fallback=stale-cache' : ' fallback=none') +
+        (projectRegistryHydrationRetryCount > 0
+          ? ' retries=' + String(projectRegistryHydrationRetryCount)
+          : ''),
+    );
+  }
+
+  function formatRegistryCountForUi(count) {
+    if (
+      projectRegistryClient.hydrationState === 'pending' ||
+      projectRegistryClient.hydrationState === 'loading'
+    ) {
+      return '—';
+    }
+    return String(count || 0);
+  }
+
   function emptyProjectRegistrySummary() {
     return { count: 0, activeCount: 0, items: [], activeProjectId: null };
   }
@@ -897,6 +968,13 @@
     projectRegistryClient.updatedAt = normalized.updatedAt;
     projectRegistryClient.hydrationState = 'ready';
     projectRegistryClient.error = null;
+    if (projectRegistryHydrationStartedAt) {
+      projectRegistryHydrationDurationMs = Math.max(
+        0,
+        Date.now() - projectRegistryHydrationStartedAt,
+      );
+    }
+    saveCachedProjectRegistry(payload);
     syncProjectRegistryHydrationAliases();
     workspaceData = workspaceData || {};
     workspaceData.projects = summary;
@@ -910,6 +988,7 @@
       activeProjectId = normalized.activeProjectId;
     }
     logProjectRegistryClientLoaded();
+    logProjectRegistryHydrationEvidence();
     renderWorkspaceTabs('workspace-tabs');
     renderWorkspaceTabs('preview-workspace-tabs');
     updateWorkspaceLinkedIndicator();
@@ -1183,6 +1262,10 @@
   }
 
   function loadProjectRegistryState() {
+    projectRegistryHydrationStartedAt = Date.now();
+    projectRegistryHydrationDurationMs = 0;
+    projectRegistryUsedCachedFallback = false;
+    projectRegistryHydrationRetryCount = 0;
     projectRegistryClient.hydrationState = 'loading';
     projectRegistryClient.error = null;
     syncProjectRegistryHydrationAliases();
@@ -1209,19 +1292,40 @@
         return res.json();
       });
     }
-    return fetchRegistryFromEndpoint(0)
+    function attemptRegistryFetch(attempt) {
+      return fetchRegistryFromEndpoint(0).catch(function (err) {
+        if (attempt >= REGISTRY_HYDRATION_RETRY_ATTEMPTS) {
+          throw err;
+        }
+        projectRegistryHydrationRetryCount += 1;
+        var delayMs = REGISTRY_HYDRATION_RETRY_BASE_MS * Math.pow(2, Math.max(0, attempt - 1));
+        return new Promise(function (resolve) {
+          setTimeout(resolve, delayMs);
+        }).then(function () {
+          return attemptRegistryFetch(attempt + 1);
+        });
+      });
+    }
+    return attemptRegistryFetch(1)
       .then(function (payload) {
         clearProjectRegistryLoadTimeout();
         applyProjectRegistryResponse(payload);
       })
       .catch(function (err) {
         clearProjectRegistryLoadTimeout();
-        projectRegistryClient.hydrationState = 'error';
-        projectRegistryClient.error =
-          (err && err.message ? err.message : 'Registry load failed') +
-          ' — check server logs for PROJECT_REGISTRY_LOADED';
-        syncProjectRegistryHydrationAliases();
-        renderProductSurfaces();
+        if (applyCachedProjectRegistryFallback()) {
+          logProjectRegistryHydrationEvidence();
+          renderProductSurfaces();
+          return null;
+        }
+        if (projectRegistryClient.hydrationState === 'loading') {
+          projectRegistryClient.hydrationState = 'error';
+          projectRegistryClient.error =
+            (err && err.message ? err.message : 'Registry load failed') +
+            ' — check server logs for PROJECT_REGISTRY_LOADED';
+          syncProjectRegistryHydrationAliases();
+          renderProductSurfaces();
+        }
         throw err;
       });
   }
@@ -3847,10 +3951,16 @@
       'Your Projects',
         '<p class="founder-path-guidance">Start by creating a project or opening an existing one.</p>' +
         '<p class="product-lead">Active workspaces and applications you are building now — synced with Command Center.</p>' +
+        (registryLoading
+          ? '<p class="hint"><strong>Loading projects…</strong></p>'
+          : '') +
+        (projectRegistryUsedCachedFallback
+          ? '<p class="hint"><span class="badge">Stale registry cache</span> Showing last known projects while live registry reloads.</p>'
+          : '') +
         '<p><strong>Total:</strong> ' +
-        String(projectSummary.count || 0) +
+        formatRegistryCountForUi(projectSummary.count || 0) +
         ' · <strong>Active:</strong> ' +
-        String(projectSummary.activeCount || 0) +
+        formatRegistryCountForUi(projectSummary.activeCount || 0) +
         '</p>',
     );
     if (registryLoading && !projectSummary.items.length) {

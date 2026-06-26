@@ -41,6 +41,7 @@ import {
   type MaterializationValidationResult,
 } from '../universal-prompt-to-app-materialization/index.js';
 import { rankBuildProfiles } from '../build-profile-classification/index.js';
+import { resolvePromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
 import {
   getProfileFeatureDefinition,
   resolveMaterializationProfile,
@@ -268,12 +269,11 @@ export async function runOnePromptLivePreviewBuild(
   const workspaceDir = join(input.projectRootDir, workspaceRel);
   mkdirSync(workspaceDir, { recursive: true });
 
-  const ranking = rankBuildProfiles(prompt);
-  const materializationProfile = resolveMaterializationProfile(
-    resolvedProfile ?? 'GENERIC_CUSTOM_APP_V1',
-    prompt,
-  );
-  const definition = getProfileFeatureDefinition(materializationProfile, prompt);
+  const buildPlan = resolvePromptFaithfulBuildPlan(prompt, resolvedProfile);
+  const ranking = buildPlan.ranking;
+  const materializationProfile = buildPlan.materializationProfile;
+  const definition = buildPlan.definition;
+  const effectiveProfile = materializationProfile as typeof resolvedProfile;
 
   if (!isOnePromptBuildRequest(prompt) && !resolvedProfile) {
     initializeForensicManifest({
@@ -327,7 +327,7 @@ export async function runOnePromptLivePreviewBuild(
     projectName,
     buildRunId: buildId,
     prompt,
-    selectedProfile: String(resolvedProfile),
+    selectedProfile: String(effectiveProfile ?? materializationProfile),
     expectedAppType: definition.expectedAppType,
     promptSummary: summarizePrompt(prompt),
     confidence: ranking.confidence,
@@ -338,7 +338,7 @@ export async function runOnePromptLivePreviewBuild(
   touchForensicStage(workspaceDir, { stage: 'PROMPT_RECEIVED' });
   touchForensicStage(workspaceDir, {
     stage: 'PROFILE_SELECTED',
-    selectedProfile: String(resolvedProfile),
+    selectedProfile: String(effectiveProfile ?? materializationProfile),
     confidence: ranking.confidence,
   });
   lastSuccessfulStage = 'PROFILE_SELECTED';
@@ -349,7 +349,7 @@ export async function runOnePromptLivePreviewBuild(
     projectId,
     projectName,
     prompt,
-    profile: resolvedProfile,
+    profile: effectiveProfile,
     status: 'BUILDING',
     stage: 'PLANNING',
     workspacePath: null,
@@ -373,7 +373,7 @@ export async function runOnePromptLivePreviewBuild(
       requestType: source === 'chat' ? 'CHAT_BUILD' : 'BUILD_FROM_PROMPT',
       workspaceId: null,
       workspacePath: null,
-      generatedProfile: resolvedProfile,
+      generatedProfile: effectiveProfile,
       planningProofLevel: null,
       materializationProofLevel: null,
       buildResult: null,
@@ -404,7 +404,7 @@ export async function runOnePromptLivePreviewBuild(
     projectId,
     projectName,
     prompt,
-    profile: resolvedProfile,
+    profile: effectiveProfile,
     status: contract ? 'BUILDING' : 'FAILED',
     stage: contract ? 'MATERIALIZATION' : 'PLANNING',
     workspacePath: null,
@@ -440,7 +440,7 @@ export async function runOnePromptLivePreviewBuild(
         failureReason: 'Planning did not produce a build-ready contract',
         workspaceId: projectId,
         workspacePath: workspaceRel,
-        generatedProfile: resolvedProfile,
+        generatedProfile: effectiveProfile,
         planningProofLevel: contractAssessment.report.proofLevel,
       },
     });
@@ -470,7 +470,7 @@ export async function runOnePromptLivePreviewBuild(
     workspaceId: projectId,
     contract: { ...contract, contractId: projectId },
     rawPrompt: prompt,
-    profileOverride: resolvedProfile,
+    profileOverride: effectiveProfile,
   });
   timings.materializationDurationMs = roundDurationMs(materializationStartedAt);
   timings.fileGenerationDurationMs = timings.materializationDurationMs;
@@ -494,7 +494,7 @@ export async function runOnePromptLivePreviewBuild(
       projectId,
       projectName,
       prompt,
-      profile: resolvedProfile,
+      profile: effectiveProfile,
       status: 'FAILED',
       stage: 'MATERIALIZATION',
       workspacePath: workspaceRel,
@@ -522,7 +522,7 @@ export async function runOnePromptLivePreviewBuild(
         failureReason,
         workspaceId: projectId,
         workspacePath: workspaceRel,
-        generatedProfile: engineResult.profile ?? resolvedProfile,
+        generatedProfile: engineResult.profile ?? effectiveProfile,
         planningProofLevel: contractAssessment.report.proofLevel,
         materializationProofLevel: materialization.proofLevel,
       },
@@ -916,7 +916,7 @@ export async function runOnePromptLivePreviewBuild(
         failureReason: `Unexpected build error: ${commandFailure.failureMessage}`,
         workspaceId: projectId,
         workspacePath: workspaceRel,
-        generatedProfile: resolvedProfile,
+        generatedProfile: effectiveProfile,
       },
     });
   }
@@ -980,6 +980,17 @@ export function getOnePromptLivePreviewPublicState(
 /** Conversational fallback when LLM is unavailable — no mechanical runtime dumps. */
 export function composeOnePromptBuildChatResponse(result: OnePromptLivePreviewBuildResult): string {
   const profileLabel = result.generatedProfile ?? 'your application';
+  const manifest = result.materializationManifest;
+  const faithfulnessLine =
+    manifest?.promptFaithfulnessStatus
+      ? `Prompt faithfulness: ${manifest.promptFaithfulnessStatus}${
+          manifest.promptDerivedModules?.length
+            ? ` — modules: ${manifest.promptDerivedModules.slice(0, 8).join(', ')}${
+                manifest.promptDerivedModules.length > 8 ? '…' : ''
+              }`
+            : ''
+        }`
+      : null;
 
   if (result.status === 'READY') {
     const previewNote = result.previewUrl
@@ -991,10 +1002,13 @@ export function composeOnePromptBuildChatResponse(result: OnePromptLivePreviewBu
       result.npmInstallOk && result.npmBuildOk
         ? 'The generated workspace compiled successfully.'
         : 'The workspace was materialized, but one or more compile steps did not fully succeed.',
+      faithfulnessLine,
       previewNote,
       '',
-      'See Execution Trace for chronological runtime evidence — profile selection, materialization, npm steps, and validation.',
-    ].join('\n');
+      'See Execution Trace for chronological runtime evidence — profile selection, prompt faithfulness, materialization, npm steps, and validation.',
+    ]
+      .filter(Boolean)
+      .join('\n');
   }
 
   if (result.status === 'BUILDING') {

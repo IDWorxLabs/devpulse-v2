@@ -31,6 +31,10 @@ import {
   buildModularFeatureRoutesTs,
   materializableFeatureModules,
 } from './modular-feature-module-generator.js';
+import {
+  buildPromptFaithfulnessManifestFields,
+  resolvePromptFaithfulBuildPlan,
+} from '../prompt-faithful-generation/index.js';
 
 function profileSlug(profile: MaterializationProfile): string {
   return profile.toLowerCase().replace(/_/g, '-');
@@ -44,9 +48,12 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
   profile?: GeneratedAppProfile | null;
   buildRunId?: string;
 }): GeneratedWorkspaceFile[] {
-  const materializationProfile = resolveMaterializationProfile(input.profile ?? null, input.rawPrompt);
-  const definition = getProfileFeatureDefinition(materializationProfile, input.rawPrompt);
-  const appTitle = extractPromptAppTitle(input.rawPrompt);
+  const buildPlan = resolvePromptFaithfulBuildPlan(input.rawPrompt, input.profile ?? null);
+  const materializationProfile = buildPlan.materializationProfile;
+  const definition = buildPlan.definition;
+  const appTitle = buildPlan.extraction.appName !== 'Custom App'
+    ? buildPlan.extraction.appName
+    : extractPromptAppTitle(input.rawPrompt);
   const contract = buildUniversalFeatureContract({
     contractId: input.contractId,
     rawPrompt: input.rawPrompt,
@@ -67,13 +74,19 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
     selectedProfile: materializationProfile,
     expectedAppType: definition.expectedAppType,
     promptSummary: summarizePrompt(input.rawPrompt),
-    confidence: 'MEDIUM',
+    confidence: buildPlan.ranking.confidence,
     featureModules: moduleIds,
     routes: definition.routes,
     featureModuleDetails: modular.manifestEntries,
     generatedFeatureModuleFiles,
     featureModuleDirectories,
-    fallbackUsed: false,
+    fallbackUsed: buildPlan.guardResult.guardApplied,
+    promptFaithfulness: buildPromptFaithfulnessManifestFields({
+      rawPrompt: input.rawPrompt,
+      selectedProfile: String(materializationProfile),
+      generatedModules: moduleIds,
+      guardResult: buildPlan.guardResult,
+    }),
   });
   manifest.generatedFeatureModulesCount = modular.manifestEntries.length;
 
@@ -172,7 +185,7 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
     },
     {
       relativePath: 'src/features/feature-app-router.css',
-      content: buildFeatureAppRouterCss(),
+      content: buildFeatureAppRouterCss(definition),
     },
     {
       relativePath: 'src/data/demo-data.ts',
