@@ -559,6 +559,9 @@
       if (currentViewId === 'command-center' || currentViewId === 'live-preview') {
         renderLivePreviewSurface(buildWorkspaceViewForActiveProject(workspaceData));
       }
+      if (currentViewId === 'project-files' && window.ProjectWorkspaceExplorer) {
+        openProjectFilesView(projectId, btnProjectNameFromId(projectId), { skipViewSwitch: true });
+      }
     }
     renderCommandCenterWorkspaceState();
     refreshNotificationSurfaces();
@@ -1132,6 +1135,16 @@
       });
     }
     renderCommandCenterWorkspaceState();
+    if (currentViewId === 'project-files' && activeProjectId && window.ProjectWorkspaceExplorer) {
+      var surface = el('project-files-surface');
+      var html = surface ? String(surface.innerHTML || '') : '';
+      if (!html.includes('pwe-shell') && !html.includes('pwe-state-panel')) {
+        openProjectFilesView(activeProjectId, btnProjectNameFromId(activeProjectId), {
+          skipViewSwitch: true,
+          force: true,
+        });
+      }
+    }
   }
 
   function mutateProjectRegistry(action, body) {
@@ -1330,6 +1343,171 @@
       });
   }
 
+  function activateProjectAndNavigate(projectId, viewId) {
+    return mutateProjectRegistry('set-active', { projectId: projectId })
+      .then(function () {
+        if (viewId === 'project-files') {
+          primeProjectFilesSurface(projectId, btnProjectNameFromId(projectId));
+          switchView(viewId, { projectId: projectId, skipExplorerOpen: true });
+          return openProjectFilesView(projectId, btnProjectNameFromId(projectId), {
+            skipViewSwitch: true,
+            force: true,
+          });
+        }
+        switchView(viewId, { projectId: projectId });
+        if (viewId === 'command-center' || viewId === 'project-insights') {
+          return loadProductWorkspace(true).catch(function () {
+            return null;
+          });
+        }
+        return null;
+      })
+      .catch(function (err) {
+        pushNotification('Could not activate project — ' + err.message);
+      });
+  }
+
+  var navigationFromHistory = false;
+  var projectFilesOpenToken = 0;
+
+  function projectFilesLoadingHtml(projectId, projectName) {
+    return (
+      '<section class="pwe-state-panel pwe-loading-panel card" data-state="loading">' +
+      '<h2>Project Files</h2>' +
+      '<p class="pwe-state-lead"><strong>Loading project workspace…</strong></p>' +
+      '<p class="hint">Project: ' +
+      escapeHtml(projectName || projectId || '—') +
+      '</p></section>'
+    );
+  }
+
+  function renderProjectFilesMissingExplorer(projectId) {
+    var surface = el('project-files-surface');
+    if (!surface) return;
+    surface.innerHTML =
+      '<section class="pwe-state-panel card" data-state="error">' +
+      '<h2>Project Files module failed to load</h2>' +
+      '<p class="pwe-state-lead">ProjectWorkspaceExplorer is unavailable. Ensure <code>/workspace-explorer.js</code> and <code>/workspace-navigation.js</code> are served by the AiDevEngine runtime.</p>' +
+      '<p class="hint">Project: <code>' +
+      escapeHtml(projectId || '—') +
+      '</code></p>' +
+      '<div class="pwe-state-actions">' +
+      '<button type="button" class="btn-primary" data-pwe-action="retry-explorer">Retry</button>' +
+      '</div></section>';
+    if (window.emitProjectFilesTrace) {
+      window.emitProjectFilesTrace('ProjectWorkspaceExplorer missing — explorer script not loaded', 'ERROR');
+    }
+  }
+
+  function primeProjectFilesSurface(projectId, projectName) {
+    var surface = el('project-files-surface');
+    if (!surface) return false;
+    surface.innerHTML = projectFilesLoadingHtml(projectId, projectName);
+    return true;
+  }
+
+  function updateWorkspaceNavControls() {
+    if (!window.WorkspaceNavigation) return;
+    var snap = window.WorkspaceNavigation.snapshot(VIEW_TITLES, btnProjectNameFromId);
+    var backBtn = el('workspace-nav-back');
+    var forwardBtn = el('workspace-nav-forward');
+    var crumb = el('workspace-nav-breadcrumb');
+    if (backBtn) backBtn.disabled = !snap.canGoBack;
+    if (forwardBtn) forwardBtn.disabled = !snap.canGoForward;
+    if (crumb) crumb.textContent = snap.breadcrumb;
+  }
+
+  function recordWorkspaceNavigation(viewId, projectId, params) {
+    if (navigationFromHistory || !window.WorkspaceNavigation) return;
+    window.WorkspaceNavigation.push({
+      surfaceId: viewId,
+      projectId: projectId || activeProjectId || null,
+      label: VIEW_TITLES[viewId] || viewId,
+      timestamp: Date.now(),
+      params: params || null,
+    });
+    updateWorkspaceNavControls();
+  }
+
+  function applyNavigationEntry(entry) {
+    if (!entry) return;
+    navigationFromHistory = true;
+    if (entry.projectId && entry.projectId !== activeProjectId) {
+      switchActiveProject(entry.projectId, { skipViewSwitch: true, force: true });
+    }
+    if (entry.surfaceId === 'project-files' && entry.projectId) {
+      primeProjectFilesSurface(entry.projectId, btnProjectNameFromId(entry.projectId));
+    }
+    switchView(entry.surfaceId, {
+      skipHistory: true,
+      navParams: entry.params,
+      projectId: entry.projectId,
+      skipExplorerOpen: entry.surfaceId === 'project-files',
+    });
+    if (entry.surfaceId === 'project-files' && entry.projectId) {
+      openProjectFilesView(entry.projectId, btnProjectNameFromId(entry.projectId), {
+        skipViewSwitch: true,
+        force: true,
+      });
+    }
+    navigationFromHistory = false;
+    updateWorkspaceNavControls();
+    if (window.emitProjectFilesTrace) {
+      window.emitProjectFilesTrace(
+        'Navigation applied — ' + entry.label + (entry.projectId ? ' / ' + entry.projectId : ''),
+      );
+    }
+  }
+
+  function openProjectFilesView(projectId, projectName, options) {
+    options = options || {};
+    var name = projectName || btnProjectNameFromId(projectId);
+    if (!options.skipViewSwitch) {
+      primeProjectFilesSurface(projectId, name);
+      switchView('project-files', { projectId: projectId, navParams: options.navParams, skipExplorerOpen: true });
+    }
+    if (!window.ProjectWorkspaceExplorer) {
+      console.error('[ProjectFiles] ProjectWorkspaceExplorer is not defined — check /workspace-explorer.js');
+      renderProjectFilesMissingExplorer(projectId);
+      return Promise.resolve();
+    }
+    var token = ++projectFilesOpenToken;
+    return window.ProjectWorkspaceExplorer.open(projectId, name).then(function (result) {
+      if (token !== projectFilesOpenToken && !options.force) return result;
+      return result;
+    });
+  }
+
+  function wireWorkspaceNavigationControls() {
+    var backBtn = el('workspace-nav-back');
+    var forwardBtn = el('workspace-nav-forward');
+    if (!backBtn || backBtn.getAttribute('data-bound') === 'true') return;
+    backBtn.setAttribute('data-bound', 'true');
+    forwardBtn.setAttribute('data-bound', 'true');
+    backBtn.addEventListener('click', function () {
+      if (!window.WorkspaceNavigation || backBtn.disabled) return;
+      if (window.emitProjectFilesTrace) window.emitProjectFilesTrace('Navigation back clicked');
+      var entry = window.WorkspaceNavigation.back();
+      applyNavigationEntry(entry);
+    });
+    forwardBtn.addEventListener('click', function () {
+      if (!window.WorkspaceNavigation || forwardBtn.disabled) return;
+      if (window.emitProjectFilesTrace) window.emitProjectFilesTrace('Navigation forward clicked');
+      var entry = window.WorkspaceNavigation.forward();
+      applyNavigationEntry(entry);
+    });
+    updateWorkspaceNavControls();
+  }
+
+  function btnProjectNameFromId(projectId) {
+    var summary = getProjectRegistrySummaryForUi();
+    var items = summary.items || [];
+    for (var i = 0; i < items.length; i += 1) {
+      if (items[i].projectId === projectId) return items[i].name;
+    }
+    return projectId;
+  }
+
   function wireProjectRegistryActions(container) {
     if (!container || container.getAttribute('data-registry-bound') === 'true') return;
     container.setAttribute('data-registry-bound', 'true');
@@ -1340,16 +1518,31 @@
       var projectId = btn.getAttribute('data-project-id');
       if (!projectId) return;
       if (action === 'open' || action === 'set-active') {
-        mutateProjectRegistry('set-active', { projectId: projectId })
-          .then(function () {
-            switchView('command-center');
-            void loadProductWorkspace(true).catch(function () {
-              return null;
-            });
-          })
-          .catch(function (err) {
-            pushNotification('Could not activate project — ' + err.message);
-          });
+        activateProjectAndNavigate(projectId, 'command-center');
+        return;
+      }
+      if (action === 'open-files') {
+        activateProjectAndNavigate(projectId, 'project-files');
+        return;
+      }
+      if (action === 'live-preview') {
+        activateProjectAndNavigate(projectId, 'live-preview');
+        return;
+      }
+      if (action === 'project-memory') {
+        activateProjectAndNavigate(projectId, 'project-memory');
+        return;
+      }
+      if (action === 'build-history' || action === 'verification') {
+        activateProjectAndNavigate(projectId, 'verification');
+        return;
+      }
+      if (action === 'export') {
+        var exportName = btn.getAttribute('data-project-name') || btnProjectNameFromId(projectId);
+        activateProjectAndNavigate(projectId, 'project-files').then(function () {
+          var metaBtn = document.querySelector('.pwe-meta-link[data-file-path*="export-metadata"]');
+          if (metaBtn) metaBtn.click();
+        });
         return;
       }
       if (action === 'rename') {
@@ -3800,6 +3993,7 @@
     projects: 'Projects',
     'autonomous-builder': 'Autonomous Builder',
     'live-preview': 'Live Preview',
+    'project-files': 'Project Files',
     'project-memory': 'Project Memory',
     verification: 'Verification',
     'founder-review': 'Founder Review',
@@ -3815,6 +4009,7 @@
     'projects',
     'autonomous-builder',
     'live-preview',
+    'project-files',
     'project-memory',
     'verification',
     'founder-review',
@@ -4020,6 +4215,26 @@
           '" data-project-name="' +
           escapeHtml(p.name) +
           '">Open Project</button>' +
+          '<button type="button" class="btn-secondary" data-project-action="open-files" data-project-id="' +
+          escapeHtml(p.projectId) +
+          '" data-project-name="' +
+          escapeHtml(p.name) +
+          '">Open Files</button>' +
+          '<button type="button" class="btn-secondary" data-project-action="live-preview" data-project-id="' +
+          escapeHtml(p.projectId) +
+          '">Live Preview</button>' +
+          '<button type="button" class="btn-secondary" data-project-action="project-memory" data-project-id="' +
+          escapeHtml(p.projectId) +
+          '">Project Memory</button>' +
+          '<button type="button" class="btn-secondary" data-project-action="build-history" data-project-id="' +
+          escapeHtml(p.projectId) +
+          '">Build History</button>' +
+          '<button type="button" data-project-action="verification" data-project-id="' +
+          escapeHtml(p.projectId) +
+          '" class="btn-secondary">Verification</button>' +
+          '<button type="button" class="btn-secondary" data-project-action="export" data-project-id="' +
+          escapeHtml(p.projectId) +
+          '">Export</button>' +
           (p.isActive
             ? ''
             : '<button type="button" class="btn-secondary" data-project-action="set-active" data-project-id="' +
@@ -8435,7 +8650,8 @@
     renderFirstTimeFounderPath(currentViewId || 'command-center', workspaceData);
   }
 
-  function switchView(viewId) {
+  function switchView(viewId, options) {
+    options = options || {};
     hideAllViews();
     var centerTitle = el('center-title');
     var view = el('view-' + viewId);
@@ -8448,6 +8664,10 @@
     }
     var activeNav = document.querySelector('.nav-item[data-view="' + viewId + '"]');
     if (activeNav) activeNav.classList.add('active');
+
+    if (!options.skipHistory) {
+      recordWorkspaceNavigation(viewId, options.projectId || activeProjectId, options.navParams);
+    }
 
     if (viewId === 'notifications') {
       renderNotificationsSurface(workspaceData, runtimeNotifications);
@@ -8477,6 +8697,31 @@
         .catch(function () {
           refreshFounderReviewPanel();
         });
+    }
+    if (viewId === 'project-files') {
+      var filesProjectId = options.projectId || activeProjectId;
+      var filesProjectName = filesProjectId ? btnProjectNameFromId(filesProjectId) : '';
+      if (!options.skipExplorerOpen) {
+        if (filesProjectId) {
+          primeProjectFilesSurface(filesProjectId, filesProjectName);
+          if (window.ProjectWorkspaceExplorer) {
+            openProjectFilesView(filesProjectId, filesProjectName, { skipViewSwitch: true, force: true });
+          } else {
+            renderProjectFilesMissingExplorer(filesProjectId);
+          }
+        } else {
+          var filesSurface = el('project-files-surface');
+          if (filesSurface) {
+            filesSurface.innerHTML =
+              '<section class="pwe-state-panel card"><h2>Project Files</h2><p class="pwe-state-lead">Select a project from Projects and choose <strong>Open Files</strong>.</p></section>';
+          }
+        }
+      } else if (filesProjectId) {
+        var filesSurfacePrime = el('project-files-surface');
+        if (filesSurfacePrime && !String(filesSurfacePrime.innerHTML || '').trim()) {
+          primeProjectFilesSurface(filesProjectId, filesProjectName);
+        }
+      }
     }
     if (viewId === 'live-preview') {
       clearFeedStreamLog();
@@ -8516,6 +8761,7 @@
     }
     currentViewId = viewId;
     renderFirstTimeFounderPath(viewId, workspaceData);
+    updateWorkspaceNavControls();
   }
 
   function mapEventToSection(eventType) {
@@ -13022,6 +13268,53 @@
 
     wireProjectRegistryActions(el('projects-surface'));
     initOperatorFeedControls();
+    wireWorkspaceNavigationControls();
+
+    document.addEventListener('click', function (e) {
+      var retryBtn = e.target && e.target.closest ? e.target.closest('[data-pwe-action="retry-explorer"]') : null;
+      if (!retryBtn) return;
+      if (window.ProjectWorkspaceExplorer && activeProjectId) {
+        openProjectFilesView(activeProjectId, btnProjectNameFromId(activeProjectId), {
+          skipViewSwitch: true,
+          force: true,
+        });
+      } else {
+        renderProjectFilesMissingExplorer(activeProjectId);
+      }
+    });
+
+    if (!window.ProjectWorkspaceExplorer) {
+      console.error('[ProjectFiles] /workspace-explorer.js did not load — Project Files will not render.');
+    }
+    if (!window.WorkspaceNavigation) {
+      console.error('[Navigation] /workspace-navigation.js did not load — Back/Forward history disabled.');
+    }
+
+    window.switchView = switchView;
+    window.emitProjectFilesTrace = function (message, level) {
+      appendOperatorLogEntry(
+        createOperatorLogEntry({
+          timestamp: Date.now(),
+          level: level || 'INFO',
+          stage: 'build',
+          message: message,
+        }),
+      );
+    };
+    window.openProjectBuildFromFiles = function (projectId) {
+      mutateProjectRegistry('set-active', { projectId: projectId })
+        .then(function () {
+          switchView('command-center');
+          var input = el('chat-input');
+          if (input) {
+            input.value = 'Build this project now and begin autonomous build execution.';
+            input.focus();
+          }
+        })
+        .catch(function (err) {
+          pushNotification('Could not activate project — ' + err.message);
+        });
+    };
 
     if (form) {
       form.addEventListener('submit', function (e) {

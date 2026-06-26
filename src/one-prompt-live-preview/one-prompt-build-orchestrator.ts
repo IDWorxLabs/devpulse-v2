@@ -9,7 +9,6 @@ import { getDevPulseV2AiDevEngineAuthority } from '../aidev-engine/aidev-engine-
 import {
   isTaskTrackerMountEntry,
   materializeGeneratedApplication,
-  resolveGeneratedAppProfile,
 } from '../code-generation-engine/index.js';
 import {
   materializeBuildProofGapArtifacts,
@@ -40,12 +39,14 @@ import {
   validateUniversalAppMaterialization,
   type MaterializationValidationResult,
 } from '../universal-prompt-to-app-materialization/index.js';
-import { rankBuildProfiles } from '../build-profile-classification/index.js';
-import { resolvePromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
 import {
-  getProfileFeatureDefinition,
-  resolveMaterializationProfile,
-} from '../universal-prompt-to-app-materialization/profile-feature-map.js';
+  buildPromptFaithfulnessManifestFields,
+  buildPromptFaithfulnessTraceEvents,
+  enforcePromptFaithfulMaterialization,
+  listWorkspaceFeatureModuleIds,
+  resolvePromptFaithfulBuildPlan,
+} from '../prompt-faithful-generation/index.js';
+import type { GeneratedAppProfile } from '../code-generation-engine/code-generation-engine-types.js';
 import { summarizePrompt } from '../universal-prompt-to-app-materialization/prompt-app-metadata.js';
 import type { GeneratedAppManifest } from '../universal-prompt-to-app-materialization/generated-app-manifest.js';
 import {
@@ -261,21 +262,35 @@ export async function runOnePromptLivePreviewBuild(
     createIfMissing: true,
   });
   const { projectId, projectName } = projectContext;
-  const resolvedProfile =
-    resolveBuildIntentProfile(prompt) ?? resolveGeneratedAppProfile(prompt);
+
+  const buildPlan = resolvePromptFaithfulBuildPlan(prompt);
+  const ranking = buildPlan.ranking;
+  const materializationProfile = buildPlan.materializationProfile;
+  const definition = buildPlan.definition;
+  const effectiveProfile = materializationProfile as GeneratedAppProfile;
+  const faithfulnessManifestFields = buildPromptFaithfulnessManifestFields({
+    rawPrompt: prompt,
+    selectedProfile: String(materializationProfile),
+    generatedModules: definition.featureModules,
+    guardResult: buildPlan.guardResult,
+  });
+  const faithfulnessTraceEvents = buildPromptFaithfulnessTraceEvents({
+    extraction: buildPlan.extraction,
+    guardResult: buildPlan.guardResult,
+    manifestFields: faithfulnessManifestFields,
+  });
 
   const workspaceRel = `${GENERATED_BUILDER_WORKSPACES_DIR}/${projectId}`.replace(/\\/g, '/');
   assertWorkspacePathBelongsToProject(workspaceRel, projectId);
   const workspaceDir = join(input.projectRootDir, workspaceRel);
   mkdirSync(workspaceDir, { recursive: true });
 
-  const buildPlan = resolvePromptFaithfulBuildPlan(prompt, resolvedProfile);
-  const ranking = buildPlan.ranking;
-  const materializationProfile = buildPlan.materializationProfile;
-  const definition = buildPlan.definition;
-  const effectiveProfile = materializationProfile as typeof resolvedProfile;
+  const hasRecognizedBuildProfile =
+    Boolean(ranking.selectedProfile) ||
+    buildPlan.extraction.isCustomDomainPrompt ||
+    materializationProfile === 'GENERIC_CUSTOM_APP_V1';
 
-  if (!isOnePromptBuildRequest(prompt) && !resolvedProfile) {
+  if (!isOnePromptBuildRequest(prompt) && !hasRecognizedBuildProfile) {
     initializeForensicManifest({
       workspaceDir,
       workspacePath: workspaceRel,
@@ -289,7 +304,7 @@ export async function runOnePromptLivePreviewBuild(
       confidence: ranking.confidence,
       featureModules: definition.featureModules,
       routes: definition.routes,
-      fallbackUsed: Boolean(ranking.fallbackReason),
+      fallbackUsed: buildPlan.guardResult.guardApplied,
     });
     return registerFailedBuild({
       projectId,
@@ -333,7 +348,7 @@ export async function runOnePromptLivePreviewBuild(
     confidence: ranking.confidence,
     featureModules: definition.featureModules,
     routes: definition.routes,
-    fallbackUsed: Boolean(ranking.fallbackReason),
+    fallbackUsed: buildPlan.guardResult.guardApplied,
   });
   touchForensicStage(workspaceDir, { stage: 'PROMPT_RECEIVED' });
   touchForensicStage(workspaceDir, {
@@ -463,6 +478,7 @@ export async function runOnePromptLivePreviewBuild(
     projectRootDir: materializationRoot,
     contract: { ...contract, contractId: projectId },
     rawPrompt: prompt,
+    faithfulBuildPlan: buildPlan,
   });
 
   const engineResult = materializeGeneratedApplication({
@@ -470,6 +486,7 @@ export async function runOnePromptLivePreviewBuild(
     workspaceId: projectId,
     contract: { ...contract, contractId: projectId },
     rawPrompt: prompt,
+    faithfulBuildPlan: buildPlan,
     profileOverride: effectiveProfile,
   });
   timings.materializationDurationMs = roundDurationMs(materializationStartedAt);
@@ -540,7 +557,46 @@ export async function runOnePromptLivePreviewBuild(
   });
   lastSuccessfulStage = 'MATERIALIZATION';
 
-  const generatedProfile = engineResult.profile;
+  const faithfulnessGate = enforcePromptFaithfulMaterialization({
+    rawPrompt: prompt,
+    buildPlan,
+    workspaceDir,
+  });
+  if (!faithfulnessGate.ok) {
+    const failureReason =
+      faithfulnessGate.failureReason ??
+      'Prompt faithfulness validation failed — generated modules do not match the prompt.';
+    touchForensicStage(workspaceDir, {
+      stage: 'MATERIALIZATION_VALIDATION',
+      errors: [failureReason],
+    });
+    return registerFailedBuild({
+      projectId,
+      projectName,
+      workspaceDir,
+      failure: {
+        failureStage: 'MATERIALIZATION_VALIDATION',
+        failureReason,
+        lastSuccessfulStage,
+        errors: faithfulnessGate.verdict.promptFaithfulnessFailureReasons,
+      },
+      result: {
+        buildId,
+        projectId,
+        projectName,
+        prompt,
+        source,
+        failureReason,
+        workspaceId: projectId,
+        workspacePath: workspaceRel,
+        generatedProfile: effectiveProfile,
+        planningProofLevel: contractAssessment.report.proofLevel,
+        materializationProofLevel: materialization.proofLevel,
+      },
+    });
+  }
+
+  const generatedProfile = engineResult.profile ?? effectiveProfile;
 
   const validationStartedAt = performance.now();
   const materializationValidation = inspectUniversalFeatureSignals(
@@ -779,10 +835,14 @@ export async function runOnePromptLivePreviewBuild(
     timingsPatch: { validationDurationMs: timings.validationDurationMs },
   });
 
-  const successDefinition = getProfileFeatureDefinition(
-    resolveMaterializationProfile(generatedProfile, prompt),
-    prompt,
-  );
+  const successDefinition = buildPlan.definition;
+  const completedFaithfulnessManifestFields = buildPromptFaithfulnessManifestFields({
+    rawPrompt: prompt,
+    selectedProfile: String(effectiveProfile),
+    generatedModules: listWorkspaceFeatureModuleIds(workspaceDir),
+    guardResult: buildPlan.guardResult,
+    workspaceDir,
+  });
 
   const evidenceCompletion = completeMaterializationEvidence({
     workspaceDir,
@@ -790,13 +850,13 @@ export async function runOnePromptLivePreviewBuild(
     projectId,
     projectName,
     buildRunId: buildId,
-    selectedProfile: String(generatedProfile),
+    selectedProfile: String(effectiveProfile),
     expectedAppType: successDefinition.expectedAppType,
     promptSummary: summarizePrompt(prompt),
     confidence: ranking.confidence,
     featureModules: successDefinition.featureModules,
     routes: successDefinition.routes,
-    fallbackUsed: Boolean(ranking.fallbackReason),
+    fallbackUsed: buildPlan.guardResult.guardApplied,
     validation: {
       passed: materializationValidation.passed && npmInstallOk && npmBuildOk,
       blueprintShellPresent: materializationValidation.blueprintShellPresent,
@@ -813,6 +873,7 @@ export async function runOnePromptLivePreviewBuild(
           ],
     },
     timings,
+    promptFaithfulness: completedFaithfulnessManifestFields,
   });
 
   const success: OnePromptLivePreviewBuildResult = {

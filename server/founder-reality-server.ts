@@ -70,6 +70,10 @@ import {
   isProjectRegistryGetPath,
 } from './project-registry-handler.js';
 import {
+  handleProjectWorkspaceExplorerRequest,
+  parseProjectWorkspaceApiPath,
+} from './project-workspace-explorer-handler.js';
+import {
   bootstrapProjectRegistryV1,
   resolveProjectRegistryRootDir,
   setDefaultProjectRegistryRootDir,
@@ -335,6 +339,18 @@ export function createFounderRealityServer() {
 
     if (urlPath === '/api/projects/context-switch' && req.method === 'POST') {
       await handleProjectRegistryMutation(req, res, 'context-switch', getRegistryRootDir());
+      return;
+    }
+
+    const workspaceApi = parseProjectWorkspaceApiPath(urlPath);
+    if (workspaceApi.kind && workspaceApi.projectId) {
+      handleProjectWorkspaceExplorerRequest(
+        req,
+        res,
+        getRegistryRootDir(),
+        urlPath,
+        requestUrl.searchParams,
+      );
       return;
     }
 
@@ -798,12 +814,6 @@ export function createFounderRealityServer() {
         return;
       }
       sendJson(res, 200, PORTFOLIO_DEMO_JSON);
-      return;
-    }
-
-    const allowedStatic = ['/', '/index.html', '/styles.css', '/app.js'];
-    if (!allowedStatic.includes(urlPath)) {
-      sendJson(res, 404, JSON.stringify({ error: 'Not found' }));
       return;
     }
 

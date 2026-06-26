@@ -93,6 +93,7 @@ export interface MaterializationEvidenceCompletionInput {
     errors: string[];
   };
   timings: MaterializationRuntimeTimings;
+  promptFaithfulness?: import('../prompt-faithful-generation/prompt-faithful-generation-types.js').PromptFaithfulnessManifestFields;
 }
 
 export interface MaterializationEvidenceCompletionResult {

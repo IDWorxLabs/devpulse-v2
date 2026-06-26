@@ -2,7 +2,8 @@
  * Universal Feature Contract Intelligence V1 — contract builder.
  */
 
-import { rankBuildProfiles } from '../build-profile-classification/index.js';
+
+import { resolvePromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
 import { extractPromptAppTitle } from '../universal-prompt-to-app-materialization/prompt-app-metadata.js';
 import type {
   BuildUniversalFeatureContractInput,
@@ -27,7 +28,8 @@ function includesAny(text: string, terms: string[]): boolean {
 }
 
 export function detectUniversalAppProfile(rawPrompt: string): UniversalAppProfile | null {
-  return rankBuildProfiles(rawPrompt).selectedProfile;
+  const plan = resolvePromptFaithfulBuildPlan(rawPrompt);
+  return plan.materializationProfile as UniversalAppProfile;
 }
 
 function entity(

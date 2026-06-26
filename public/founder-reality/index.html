@@ -140,6 +140,11 @@
           <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
           </button>
+          <div class="workspace-nav-controls" id="workspace-nav-controls" aria-label="Workspace navigation">
+            <button type="button" class="workspace-nav-btn" id="workspace-nav-back" disabled title="Back">← Back</button>
+            <button type="button" class="workspace-nav-btn" id="workspace-nav-forward" disabled title="Forward">Forward →</button>
+            <span class="workspace-nav-breadcrumb" id="workspace-nav-breadcrumb">Command Center</span>
+          </div>
           <h2 id="center-title">AiDevEngine Command Center</h2>
         </div>
         <div class="center-header-actions">
@@ -278,6 +283,10 @@
 
       <div class="center-view hidden" id="view-live-preview">
         <div class="product-surface-scroll" id="live-preview-surface"></div>
+      </div>
+
+      <div class="center-view hidden" id="view-project-files">
+        <div class="product-surface-scroll pwe-surface-scroll" id="project-files-surface"></div>
       </div>
 
       <div class="center-view hidden" id="view-project-memory">
@@ -574,6 +583,8 @@
     </div>
   </noscript>
 
+  <script src="/workspace-navigation.js"></script>
+  <script src="/workspace-explorer.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

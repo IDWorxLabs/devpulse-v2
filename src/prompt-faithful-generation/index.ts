@@ -43,6 +43,11 @@ export {
   derivePendingFaithfulnessFields,
   mergeFaithfulnessIntoManifest,
 } from './prompt-faithfulness-manifest.js';
+export {
+  enforcePromptFaithfulMaterialization,
+  detectBannedFallbackModulesInWorkspace,
+  listWorkspaceFeatureModuleIds,
+} from './prompt-faithful-materialization-gate.js';
 export { buildPromptFaithfulnessTraceEvents } from './prompt-faithfulness-trace-events.js';
 
 import { rankBuildProfiles } from '../build-profile-classification/profile-ranking-engine.js';

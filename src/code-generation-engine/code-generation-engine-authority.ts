@@ -8,7 +8,6 @@ import { executeRealFileOperation } from '../real-file-workspace-execution/real-
 import { resolveSafeWorkspaceRoot } from '../real-file-workspace-execution/real-file-workspace-path-authority.js';
 import type { MaterializeGeneratedAppInput, CodeGenerationEngineResult, GeneratedAppProfile } from './code-generation-engine-types.js';
 import { buildUniversalCrudWorkspaceFiles } from './universal-crud-app-generator.js';
-import { resolveGeneratedAppProfile } from './task-tracker-detector.js';
 import { resolvePromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
 
 function writeWorkspaceFile(input: {
@@ -35,22 +34,6 @@ function writeWorkspaceFile(input: {
   return Boolean(executed.result?.success);
 }
 
-function resolveMaterializationProfile(
-  rawPrompt: string,
-  profileOverride?: GeneratedAppProfile | null,
-): GeneratedAppProfile {
-  if (profileOverride) return profileOverride;
-  const plan = resolvePromptFaithfulBuildPlan(rawPrompt, profileOverride ?? null);
-  if (plan.guardResult.guardApplied) {
-    return plan.materializationProfile as GeneratedAppProfile;
-  }
-  return (
-    (plan.ranking.selectedProfile as GeneratedAppProfile | null) ??
-    resolveGeneratedAppProfile(rawPrompt) ??
-    'GENERIC_CUSTOM_APP_V1'
-  );
-}
-
 export function materializeGeneratedApplication(
   input: MaterializeGeneratedAppInput,
 ): CodeGenerationEngineResult {
@@ -67,7 +50,10 @@ export function materializeGeneratedApplication(
     };
   }
 
-  const universalProfile = resolveMaterializationProfile(input.rawPrompt, input.profileOverride);
+  const buildPlan =
+    input.faithfulBuildPlan ??
+    resolvePromptFaithfulBuildPlan(input.rawPrompt, input.profileOverride ?? null);
+  const universalProfile = buildPlan.materializationProfile as GeneratedAppProfile;
 
   const files = buildUniversalCrudWorkspaceFiles({
     contractId: input.contract.contractId,
@@ -76,6 +62,7 @@ export function materializeGeneratedApplication(
     rawPrompt: input.rawPrompt,
     profile: universalProfile,
     buildRunId: input.contract.contractId,
+    faithfulBuildPlan: buildPlan,
   });
 
   const generatedFiles: string[] = [];

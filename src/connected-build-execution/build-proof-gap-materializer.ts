@@ -11,6 +11,7 @@ import { executeRealFileOperation } from '../real-file-workspace-execution/real-
 import { GENERATED_BUILDER_WORKSPACES_DIR } from '../real-file-workspace-execution/real-file-workspace-execution-bounds.js';
 import { resolveSafeWorkspaceRoot } from '../real-file-workspace-execution/real-file-workspace-path-authority.js';
 import { materializeGeneratedApplication } from '../code-generation-engine/index.js';
+import type { ResolvedPromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
 import { materializeBuildContractExpectations } from './build-contract-materializer.js';
 import { WORKSPACE_ROOT_DIR } from './connected-build-execution-registry.js';
 import type {
@@ -477,6 +478,7 @@ export function materializeBuildProofGapArtifacts(input: {
   projectRootDir: string;
   contract: BuildReadyExecutionContract;
   rawPrompt?: string;
+  faithfulBuildPlan?: ResolvedPromptFaithfulBuildPlan;
 }): BuildArtifactToFileProof {
   const workspaceId = input.contract.contractId;
   const expectations = materializeBuildContractExpectations(input.contract);
@@ -528,6 +530,10 @@ export function materializeBuildProofGapArtifacts(input: {
       workspaceId,
       contract: input.contract,
       rawPrompt: input.rawPrompt,
+      faithfulBuildPlan: input.faithfulBuildPlan,
+      profileOverride: input.faithfulBuildPlan
+        ? (input.faithfulBuildPlan.materializationProfile as import('../code-generation-engine/code-generation-engine-types.js').GeneratedAppProfile)
+        : undefined,
     });
   }
 

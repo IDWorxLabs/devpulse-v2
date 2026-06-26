@@ -47,8 +47,11 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
   rawPrompt: string;
   profile?: GeneratedAppProfile | null;
   buildRunId?: string;
+  faithfulBuildPlan?: import('../prompt-faithful-generation/index.js').ResolvedPromptFaithfulBuildPlan;
 }): GeneratedWorkspaceFile[] {
-  const buildPlan = resolvePromptFaithfulBuildPlan(input.rawPrompt, input.profile ?? null);
+  const buildPlan =
+    input.faithfulBuildPlan ??
+    resolvePromptFaithfulBuildPlan(input.rawPrompt, input.profile ?? null);
   const materializationProfile = buildPlan.materializationProfile;
   const definition = buildPlan.definition;
   const appTitle = buildPlan.extraction.appName !== 'Custom App'

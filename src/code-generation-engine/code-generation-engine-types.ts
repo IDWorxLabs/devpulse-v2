@@ -3,6 +3,7 @@
  */
 
 import type { BuildReadyExecutionContract } from '../requirements-to-plan-execution-contract/requirements-to-plan-contract-types.js';
+import type { ResolvedPromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
 
 export type GeneratedAppProfile =
   | 'TASK_TRACKER_WEB_V1'
@@ -49,4 +50,5 @@ export interface MaterializeGeneratedAppInput {
   contract: BuildReadyExecutionContract;
   rawPrompt: string;
   profileOverride?: GeneratedAppProfile | null;
+  faithfulBuildPlan?: ResolvedPromptFaithfulBuildPlan;
 }

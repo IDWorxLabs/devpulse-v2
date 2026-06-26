@@ -3,8 +3,8 @@
  */
 
 import type { GeneratedWorkspaceFile, GeneratedAppProfile } from './code-generation-engine-types.js';
-import { detectUniversalAppProfile } from '../universal-feature-contract-intelligence/universal-feature-contract-builder.js';
 import { buildUniversalMaterializedWorkspaceFiles } from '../universal-prompt-to-app-materialization/universal-app-materialization-engine.js';
+import type { ResolvedPromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
 
 export function buildUniversalCrudWorkspaceFiles(input: {
   contractId: string;
@@ -13,6 +13,7 @@ export function buildUniversalCrudWorkspaceFiles(input: {
   rawPrompt: string;
   profile?: GeneratedAppProfile;
   buildRunId?: string;
+  faithfulBuildPlan?: ResolvedPromptFaithfulBuildPlan;
 }): GeneratedWorkspaceFile[] {
   return buildUniversalMaterializedWorkspaceFiles({
     contractId: input.contractId,
@@ -21,9 +22,6 @@ export function buildUniversalCrudWorkspaceFiles(input: {
     rawPrompt: input.rawPrompt,
     profile: input.profile,
     buildRunId: input.buildRunId,
+    faithfulBuildPlan: input.faithfulBuildPlan,
   });
-}
-
-export function resolveUniversalGeneratedAppProfile(rawPrompt: string): GeneratedAppProfile {
-  return detectUniversalAppProfile(rawPrompt) ?? 'GENERIC_CUSTOM_APP_V1';
 }

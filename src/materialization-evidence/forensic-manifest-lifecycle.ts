@@ -559,6 +559,7 @@ export function finalizeForensicManifestSuccess(
     stdoutPreview: null,
     completedAt: new Date().toISOString(),
     stageHistory: existing?.stageHistory ?? [],
+    ...(input.promptFaithfulness ?? {}),
   };
 
   const withHashes = attachPartialAndFullHashes(baseManifest, input.workspaceDir);

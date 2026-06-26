@@ -232,7 +232,7 @@ export function buildOnePromptExecutionTraceEvents(
     });
     step = 1;
 
-    const faithfulnessPlan = resolvePromptFaithfulBuildPlan(prompt, result.generatedProfile);
+    const faithfulnessPlan = resolvePromptFaithfulBuildPlan(prompt);
     const faithfulnessModules =
       result.materializationManifest?.featureModules ??
       faithfulnessPlan.definition.featureModules;

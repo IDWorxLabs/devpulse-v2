@@ -3,7 +3,7 @@
  */
 
 import type { GeneratedAppProfile } from '../code-generation-engine/code-generation-engine-types.js';
-import { rankBuildProfiles } from '../build-profile-classification/index.js';
+import { resolvePromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
 import { classifyIntent } from '../intent-architecture/intent-extractor.js';
 
 const BUILD_EXECUTION_CUES =
@@ -17,7 +17,8 @@ const APP_TARGETS =
 export function resolveBuildIntentProfile(message: string): GeneratedAppProfile | null {
   const normalized = message.trim();
   if (!normalized) return null;
-  return rankBuildProfiles(normalized).selectedProfile;
+  const plan = resolvePromptFaithfulBuildPlan(normalized);
+  return plan.materializationProfile as GeneratedAppProfile;
 }
 
 export function isBuildIntentRequest(message: string): boolean {
