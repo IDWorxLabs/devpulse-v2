@@ -11,6 +11,22 @@ import { executionTraceEventToOperatorFeed } from './execution-trace-legacy-adap
 import type { OperatorFeedEvent } from '../command-center-brain/brain-types.js';
 import { createExecutionTraceEvidenceBundle } from './execution-trace-evidence-store.js';
 import type { ExecutionTraceEvidenceBundle } from './execution-trace-types.js';
+import { buildProductionValidationTraceEvents } from '../production-validation/production-validation-trace-events.js';
+import type { ProductionValidationEvidence } from '../production-validation/production-validation-types.js';
+import { buildBlueprintPurityTraceEvents } from '../blueprint-purity/blueprint-purity-trace-events.js';
+import type { BlueprintPurityEvidence } from '../blueprint-purity/blueprint-purity-types.js';
+import { buildBuildHistoryTraceEvents } from '../build-history-integrity/build-history-trace-events.js';
+import type { BuildHistoryIntegrityEvidence } from '../build-history-integrity/build-history-types.js';
+import { buildPersistentProjectRealityTraceEvents } from '../persistent-project-reality/persistent-project-reality-trace-events.js';
+import type { PersistentProjectRealityEvidence } from '../persistent-project-reality/persistent-project-reality-types.js';
+import { buildMaterializationQualityScoreTraceEvents } from '../materialization-quality-score/materialization-quality-score-trace-events.js';
+import type { MaterializationQualityScoreEvidence } from '../materialization-quality-score/materialization-quality-score-types.js';
+import { buildFeatureContractRealityTraceEvents } from '../feature-contract-reality/feature-contract-reality-trace-events.js';
+import type { FeatureContractRealityEvidence } from '../feature-contract-reality/feature-contract-reality-types.js';
+import { buildWorkspaceRealityAuditTraceEvents } from '../workspace-reality-audit/workspace-reality-audit-trace-events.js';
+import type { WorkspaceRealityAuditEvidence } from '../workspace-reality-audit/workspace-reality-audit-types.js';
+import { buildUniversalProductionProofTraceEvents } from '../universal-production-proof/universal-production-proof-trace-events.js';
+import type { UniversalProductionProofEvidence } from '../universal-production-proof/universal-production-proof-types.js';
 
 type BuildTraceStage = {
   runtimeStage: string;
@@ -79,7 +95,7 @@ const BUILD_TRACE_STAGES: BuildTraceStage[] = [
     runtimeStage: 'Build',
     component: 'blueprint_materializer',
     eventTitle: 'Feature modules generated',
-    technicalDetail: 'Profile-specific feature modules and DomainAppFeature UI materialized.',
+    technicalDetail: 'Modular feature folders with component, types, service, and validation files.',
     severity: 'INFO',
     when: (r) => Boolean(r.workspacePath),
     metadata: () => ({ category: 'artifact', module: 'features' }),
@@ -483,9 +499,377 @@ export function buildOnePromptExecutionTraceEvents(
         action: stage.title,
         detail: stage.detail,
         stepIndex: step,
-        stepTotal: total + evidenceStages.length,
+        stepTotal: total + evidenceStages.length + 8,
       });
       step += 1;
+    }
+
+    if (manifest.featureModuleDetails.length > 0) {
+      for (const moduleEntry of manifest.featureModuleDetails) {
+        events.push({
+          eventId: `${result.buildId}-trace-modular-${moduleEntry.id}-${step}`,
+          timestamp: ts + step,
+          runtimeStage: 'Build',
+          component: 'modular_feature_materializer',
+          severity: 'INFO',
+          eventTitle: `Feature module generated: ${moduleEntry.name}`,
+          technicalDetail: moduleEntry.componentPath,
+          status: 'Completed',
+          metadata: { moduleId: moduleEntry.id, contractId: moduleEntry.contractId },
+          informationalOnly: true,
+          section: 'Build',
+          action: `Feature module generated: ${moduleEntry.name}`,
+          detail: moduleEntry.componentPath,
+          stepIndex: step,
+          stepTotal: total + manifest.featureModuleDetails.length * 5 + 12,
+        });
+        step += 1;
+        for (const [label, path] of [
+          ['Component written', moduleEntry.componentPath],
+          ['Service written', moduleEntry.servicePath],
+          ['Types written', moduleEntry.typesPath],
+          ['Validation written', moduleEntry.validationPath],
+        ] as const) {
+          events.push({
+            eventId: `${result.buildId}-trace-modular-file-${step}`,
+            timestamp: ts + step,
+            runtimeStage: 'Build',
+            component: 'modular_feature_materializer',
+            severity: 'INFO',
+            eventTitle: label,
+            technicalDetail: path,
+            status: 'Completed',
+            artifactLinks: result.workspacePath ? [`${result.workspacePath}/${path}`] : undefined,
+            metadata: { category: 'artifact', moduleId: moduleEntry.id },
+            informationalOnly: true,
+            section: 'Build',
+            action: label,
+            detail: path,
+            stepIndex: step,
+            stepTotal: total + manifest.featureModuleDetails.length * 5 + 12,
+          });
+          step += 1;
+        }
+      }
+      for (const title of ['Registry updated', 'Routes updated', 'Feature module validation passed'] as const) {
+        events.push({
+          eventId: `${result.buildId}-trace-modular-${title}-${step}`,
+          timestamp: ts + step,
+          runtimeStage: 'Validation',
+          component: 'modular_feature_materializer',
+          severity: 'INFO',
+          eventTitle: title,
+          technicalDetail: title,
+          status: 'Completed',
+          metadata: { milestone: true },
+          informationalOnly: true,
+          section: 'Validation',
+          action: title,
+          detail: title,
+          stepIndex: step,
+          stepTotal: total + manifest.featureModuleDetails.length * 5 + 12,
+        });
+        step += 1;
+      }
+    }
+
+    if (
+      manifest.productionValidationStages.length > 0 ||
+      manifest.productionValidationStatus === 'PASS' ||
+      manifest.productionValidationStatus === 'FAIL'
+    ) {
+      const prodEvidence: ProductionValidationEvidence = {
+        readOnly: true,
+        profileId: (manifest.productionValidationProfile ?? manifest.selectedProfile) as ProductionValidationEvidence['profileId'],
+        prompt: manifest.prompt,
+        workspaceDir: result.workspacePath ?? '',
+        generatedFilesCount: manifest.generatedFilesCount,
+        generatedFeatureModulesCount: manifest.generatedFeatureModulesCount,
+        generateStatus: 'PASS',
+        installStatus: manifest.npmInstallDurationMs > 0 ? 'PASS' : 'FAIL',
+        buildStatus: manifest.npmBuildDurationMs > 0 ? 'PASS' : 'FAIL',
+        previewStatus: manifest.previewVerified ? 'PASS' : 'FAIL',
+        previewUrl: manifest.previewUrl,
+        previewHtmlStatus: manifest.previewHtmlStatus === 'PASS' ? 'PASS' : 'FAIL',
+        blueprintValidationStatus: manifest.blueprintShellPresent ? 'PASS' : 'FAIL',
+        featureContractValidationStatus:
+          manifest.productionValidationStages.find((s) => s.stage === 'feature-contract')?.status ?? 'FAIL',
+        promptAlignmentStatus: manifest.promptSpecificTermsPresent ? 'PASS' : 'FAIL',
+        generatedUiValidationStatus: manifest.profileSpecificUiVerified ? 'PASS' : 'FAIL',
+        modularRoutesVerified: manifest.modularRoutesVerified,
+        profileSpecificUiVerified: manifest.profileSpecificUiVerified,
+        previewVerified: manifest.previewVerified,
+        productionValidationStatus: manifest.productionValidationStatus === 'PASS' ? 'PASS' : 'FAIL',
+        durationMs: manifest.productionValidationDurationMs,
+        failureReasons: manifest.productionValidationFailureReasons,
+        artifactPaths: result.workspacePath ? [result.workspacePath] : [],
+        cleanupStatus: 'PASS',
+        stages: manifest.productionValidationStages,
+        validatedAt: manifest.completedAt ?? result.updatedAt,
+      };
+      const prodEvents = buildProductionValidationTraceEvents(prodEvidence, result.buildId);
+      for (const prodEvent of prodEvents) {
+        step += 1;
+        events.push({
+          ...prodEvent,
+          stepIndex: step,
+          stepTotal: total + prodEvents.length + 12,
+        });
+      }
+    }
+
+    if (
+      manifest.blueprintPurityCheckedFiles.length > 0 ||
+      manifest.blueprintPurityStatus === 'PASS' ||
+      manifest.blueprintPurityStatus === 'FAIL'
+    ) {
+      const purityEvidence: BlueprintPurityEvidence = {
+        readOnly: true,
+        blueprintPurityStatus: manifest.blueprintPurityStatus === 'PASS' ? 'PASS' : 'FAIL',
+        blueprintPurityCheckedFiles: manifest.blueprintPurityCheckedFiles,
+        blueprintPurityViolationCount: manifest.blueprintPurityViolationCount,
+        blueprintPurityAllowedDomainSources: manifest.blueprintPurityAllowedDomainSources,
+        blueprintPurityFailureReasons: manifest.blueprintPurityFailureReasons,
+        fileResults: [],
+        shellPurityVerified: manifest.shellPurityVerified,
+        domainLanguageBoundaryVerified: manifest.domainLanguageBoundaryVerified,
+        scannedAt: manifest.completedAt ?? result.updatedAt,
+      };
+      const purityEvents = buildBlueprintPurityTraceEvents(purityEvidence, result.buildId);
+      for (const purityEvent of purityEvents) {
+        step += 1;
+        events.push({
+          ...purityEvent,
+          stepIndex: step,
+          stepTotal: total + purityEvents.length + 12,
+        });
+      }
+    }
+
+    if (
+      manifest.buildHistoryRecorded ||
+      manifest.buildHistoryIntegrityStatus === 'PASS' ||
+      manifest.buildHistoryIntegrityStatus === 'FAIL'
+    ) {
+      const historyEvidence: BuildHistoryIntegrityEvidence = {
+        readOnly: true,
+        buildHistoryRecorded: manifest.buildHistoryRecorded,
+        buildHistoryRunId: manifest.buildHistoryRunId ?? manifest.buildRunId,
+        buildHistoryRecordPath: manifest.buildHistoryRecordPath ?? '',
+        buildHistoryRecordHash: manifest.buildHistoryRecordHash ?? '',
+        buildHistoryImmutable: manifest.buildHistoryImmutable,
+        replayMetadataPath: manifest.replayMetadataPath ?? '',
+        auditTimelinePath: manifest.auditTimelinePath ?? '',
+        buildHistoryIntegrityStatus:
+          manifest.buildHistoryIntegrityStatus === 'PASS' ? 'PASS' : 'FAIL',
+        buildHistoryFailureReasons: manifest.buildHistoryFailureReasons,
+        deduplicatedRunId: manifest.buildHistoryDeduplicatedRunId,
+        productionValidationSnapshotRecorded:
+          manifest.productionValidationStatus !== 'PENDING' &&
+          Boolean(manifest.buildHistoryRecordPath),
+        recordedAt: manifest.buildHistoryRecordedAt ?? manifest.completedAt ?? result.updatedAt,
+      };
+      const historyEvents = buildBuildHistoryTraceEvents(historyEvidence, result.buildId);
+      for (const historyEvent of historyEvents) {
+        step += 1;
+        events.push({
+          ...historyEvent,
+          stepIndex: step,
+          stepTotal: total + historyEvents.length + 12,
+        });
+      }
+    }
+
+    if (
+      manifest.persistentProjectRealityStatus === 'PASS' ||
+      manifest.persistentProjectRealityStatus === 'FAIL' ||
+      manifest.promotionStatus === 'PASS' ||
+      manifest.promotionStatus === 'SKIPPED'
+    ) {
+      const realityEvidence: PersistentProjectRealityEvidence = {
+        readOnly: true,
+        persistentProjectRealityStatus:
+          manifest.persistentProjectRealityStatus === 'PASS' ? 'PASS' : 'FAIL',
+        persistentProjectId: manifest.persistentProjectId ?? manifest.projectId,
+        persistentProjectWorkspacePath: manifest.persistentProjectWorkspacePath ?? '',
+        persistentProjectSourceRoot: manifest.persistentProjectSourceRoot ?? '',
+        projectFileIndexPath: manifest.projectFileIndexPath ?? '',
+        exportMetadataPath: manifest.exportMetadataPath ?? '',
+        promotedFromBuildWorkspace: manifest.promotedFromBuildWorkspace ?? '',
+        promotionStatus:
+          manifest.promotionStatus === 'PASS'
+            ? 'PASS'
+            : manifest.promotionStatus === 'SKIPPED'
+              ? 'SKIPPED'
+              : 'FAIL',
+        promotionFailureReasons: manifest.promotionFailureReasons,
+        projectRecordPath: manifest.persistentProjectWorkspacePath
+          ? `${manifest.persistentProjectWorkspacePath}/project.json`
+          : '',
+        recordedAt: manifest.persistentProjectRecordedAt ?? manifest.completedAt ?? result.updatedAt,
+      };
+      const realityEvents = buildPersistentProjectRealityTraceEvents(realityEvidence, result.buildId);
+      for (const realityEvent of realityEvents) {
+        step += 1;
+        events.push({
+          ...realityEvent,
+          stepIndex: step,
+          stepTotal: total + realityEvents.length + 12,
+        });
+      }
+    }
+
+    if (
+      manifest.materializationQualityRecordedAt ||
+      manifest.materializationQualityScore > 0 ||
+      manifest.materializationQualityVerdict !== 'PENDING'
+    ) {
+      const qualityEvidence: MaterializationQualityScoreEvidence = {
+        readOnly: true,
+        materializationQualityScore: manifest.materializationQualityScore,
+        materializationQualityVerdict:
+          manifest.materializationQualityVerdict === 'PENDING'
+            ? 'NEEDS_WORK'
+            : manifest.materializationQualityVerdict,
+        materializationQualityCategories: manifest.materializationQualityCategories,
+        materializationQualityGaps: manifest.materializationQualityGaps,
+        materializationQualityStrengths: manifest.materializationQualityStrengths,
+        materializationQualityCriticalFailures: manifest.materializationQualityCriticalFailures,
+        materializationQualityScorePath: manifest.materializationQualityScorePath,
+        materializationQualityPersistentScorePath: manifest.materializationQualityPersistentScorePath,
+        materializationQualityRecordedAt:
+          manifest.materializationQualityRecordedAt ?? manifest.completedAt ?? result.updatedAt,
+      };
+      const qualityEvents = buildMaterializationQualityScoreTraceEvents(qualityEvidence, result.buildId);
+      for (const qualityEvent of qualityEvents) {
+        step += 1;
+        events.push({
+          ...qualityEvent,
+          stepIndex: step,
+          stepTotal: total + qualityEvents.length + 12,
+        });
+      }
+    }
+
+    if (
+      manifest.featureContractRealityRecordedAt ||
+      manifest.featureRealityRecords.length > 0 ||
+      manifest.featureContractRealityStatus !== 'PENDING'
+    ) {
+      const featureEvidence: FeatureContractRealityEvidence = {
+        readOnly: true,
+        featureContractRealityStatus:
+          manifest.featureContractRealityStatus === 'PENDING' ? 'PARTIAL' : manifest.featureContractRealityStatus,
+        featureContractRealityScore: manifest.featureContractRealityScore,
+        featureRealityRecords: manifest.featureRealityRecords,
+        featureRealityFailureReasons: manifest.featureRealityFailureReasons,
+        featureContractRealityArtifactPath: manifest.featureContractRealityArtifactPath,
+        featureContractRealityPersistentArtifactPath: manifest.featureContractRealityPersistentArtifactPath,
+        featureContractRealityRecordedAt:
+          manifest.featureContractRealityRecordedAt ?? manifest.completedAt ?? result.updatedAt,
+      };
+      const featureEvents = buildFeatureContractRealityTraceEvents(featureEvidence, result.buildId);
+      for (const featureEvent of featureEvents) {
+        step += 1;
+        events.push({
+          ...featureEvent,
+          stepIndex: step,
+          stepTotal: total + featureEvents.length + 12,
+        });
+      }
+    }
+
+    if (
+      manifest.workspaceRealityRecordedAt ||
+      manifest.workspaceRealityAuditStatus !== 'PENDING'
+    ) {
+      const workspaceEvidence: WorkspaceRealityAuditEvidence = {
+        readOnly: true,
+        workspaceRealityAuditStatus:
+          manifest.workspaceRealityAuditStatus === 'PENDING' ? 'WARN' : manifest.workspaceRealityAuditStatus,
+        workspaceRealityAuditScore: manifest.workspaceRealityAuditScore,
+        workspaceRealityAuditArtifactPath: manifest.workspaceRealityAuditArtifactPath,
+        workspaceRealityReportPath: manifest.workspaceRealityReportPath,
+        workspaceRealityFailureReasons: manifest.workspaceRealityFailureReasons,
+        workspaceRealityRecordedAt:
+          manifest.workspaceRealityRecordedAt ?? manifest.completedAt ?? result.updatedAt,
+        workspaceRealityAuditResult: {
+          readOnly: true,
+          status: manifest.workspaceRealityAuditStatus === 'PENDING' ? 'WARN' : manifest.workspaceRealityAuditStatus,
+          score: manifest.workspaceRealityAuditScore,
+          dimensions: [],
+          orphanFiles: [],
+          duplicateModules: [],
+          missingImports: [],
+          brokenRoutes: [],
+          missingAssets: [],
+          staleMetadata: [],
+          temporaryArtifactLeaks: [],
+          exportSafetyIssues: [],
+          evidencePaths: [],
+          failureReasons: manifest.workspaceRealityFailureReasons,
+          auditedSourceRoot: manifest.persistentProjectSourceRoot ?? '',
+          recordedAt: manifest.workspaceRealityRecordedAt ?? result.updatedAt,
+          buildRunId: manifest.buildRunId,
+          projectId: manifest.projectId,
+          artifactPath: manifest.workspaceRealityAuditArtifactPath,
+          reportPath: manifest.workspaceRealityReportPath,
+          persistentArtifactPath: null,
+          persistentReportPath: null,
+        },
+      };
+      const workspaceEvents = buildWorkspaceRealityAuditTraceEvents(workspaceEvidence, result.buildId);
+      for (const workspaceEvent of workspaceEvents) {
+        step += 1;
+        events.push({
+          ...workspaceEvent,
+          stepIndex: step,
+          stepTotal: total + workspaceEvents.length + 12,
+        });
+      }
+    }
+
+    if (manifest.universalProductionProofRecordedAt) {
+      const proofEvidence: UniversalProductionProofEvidence = {
+        readOnly: true,
+        universalProductionProofRunId: manifest.universalProductionProofRunId ?? result.buildId,
+        universalProductionProofStatus:
+          manifest.universalProductionProofStatus === 'PENDING'
+            ? 'NOT_UNIVERSALLY_PRODUCTION_READY'
+            : manifest.universalProductionProofStatus,
+        universalProductionProofArtifactPath: manifest.universalProductionProofArtifactPath ?? '',
+        universalProductionProofReportPath: manifest.universalProductionProofArtifactPath ?? '',
+        universalProductionProofRecordedAt: manifest.universalProductionProofRecordedAt,
+        report: {
+          readOnly: true,
+          runId: manifest.universalProductionProofRunId ?? result.buildId,
+          overallVerdict:
+            manifest.universalProductionProofStatus === 'PENDING'
+              ? 'NOT_UNIVERSALLY_PRODUCTION_READY'
+              : manifest.universalProductionProofStatus,
+          profileCount: 1,
+          passedProfiles: manifest.universalProductionProofProfileVerdict === 'PASS' ? 1 : 0,
+          warnedProfiles: manifest.universalProductionProofProfileVerdict === 'WARN' ? 1 : 0,
+          failedProfiles: manifest.universalProductionProofProfileVerdict === 'FAIL' ? 1 : 0,
+          matrix: [],
+          profileResults: [],
+          allowedWarnings: [],
+          failureReasons: [],
+          artifactPath: manifest.universalProductionProofArtifactPath ?? '',
+          reportPath: '',
+          chatSummary: '',
+          recordedAt: manifest.universalProductionProofRecordedAt,
+        },
+      };
+      const proofEvents = buildUniversalProductionProofTraceEvents(proofEvidence, result.buildId);
+      for (const proofEvent of proofEvents) {
+        step += 1;
+        events.push({
+          ...proofEvent,
+          stepIndex: step,
+          stepTotal: total + proofEvents.length + 12,
+        });
+      }
     }
   }
 

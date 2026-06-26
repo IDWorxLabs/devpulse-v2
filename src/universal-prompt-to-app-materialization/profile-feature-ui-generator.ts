@@ -8,7 +8,7 @@ function esc(value: string): string {
   return value.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/`/g, '\\`');
 }
 
-function profileDomainCopy(profile: ProfileFeatureDefinition['profile'], appTitle: string): Record<string, string> {
+export function profileDomainCopy(profile: ProfileFeatureDefinition['profile'], appTitle: string): Record<string, string> {
   switch (profile) {
     case 'EXPENSE_TRACKER_WEB_V1':
     case 'FINANCE_TRACKER_WEB_V1':
@@ -32,27 +32,32 @@ function profileDomainCopy(profile: ProfileFeatureDefinition['profile'], appTitl
         pipeline: 'Move opportunities through pipeline stages.',
         deals: 'Review deal value, stage, and close dates.',
         contacts: 'Search contacts and communication history.',
+        'follow-ups': 'Schedule and track follow-up tasks with contacts and leads.',
         reports: 'Sales performance and conversion reports.',
       };
     case 'QR_APP':
       return {
         headline: `${appTitle} — generate, scan, and manage QR codes`,
         dashboard: 'Recent QR activity and quick generate actions.',
+        generator: 'Create QR codes from text or URLs.',
+        scanner: 'Scan QR codes with camera or manual input.',
+        'code-history': 'Review previously generated and scanned codes.',
+        analytics: 'QR usage analytics and scan trends.',
+        settings: 'Configure QR size, format, and defaults.',
         generate: 'Create QR codes from text or URLs.',
         scan: 'Scan QR codes with camera or manual input.',
         history: 'Review previously generated and scanned codes.',
-        settings: 'Configure QR size, format, and defaults.',
       };
     case 'INVENTORY_WEB_V1':
       return {
         headline: `${appTitle} — inventory, stock, products, and suppliers`,
         dashboard: 'Stock health overview and low-inventory alerts.',
-        inventory: 'Track inventory levels across locations.',
         products: 'Manage product catalog and SKUs.',
         stock: 'Adjust stock counts and movement history.',
         suppliers: 'Maintain supplier contacts and lead times.',
         reorder: 'Reorder suggestions based on stock thresholds.',
         reports: 'Inventory valuation and movement reports.',
+        inventory: 'Track inventory levels across locations.',
       };
     case 'BOOKING_WEB_V1':
       return {
@@ -66,12 +71,15 @@ function profileDomainCopy(profile: ProfileFeatureDefinition['profile'], appTitl
       };
     case 'TASK_TRACKER_WEB_V1':
       return {
-        headline: `${appTitle} — tasks, projects, and due dates`,
+        headline: `${appTitle} — tasks, projects, labels, and calendar views`,
         dashboard: 'Active tasks, due soon items, and completion rate.',
         tasks: 'Create tasks, mark complete, and filter by status.',
         projects: 'Organize tasks into projects and milestones.',
-        filters: 'Filter active, completed, and overdue tasks.',
+        labels: 'Tag and filter tasks with labels.',
+        calendar: 'View tasks and due dates on a calendar timeline.',
         reports: 'Productivity and completion reports.',
+        settings: 'Configure task defaults, labels, and notifications.',
+        filters: 'Filter active, completed, and overdue tasks.',
       };
     case 'HABIT_TRACKER_WEB_V1':
     case 'GENERIC_CUSTOM_APP_V1':
@@ -80,6 +88,9 @@ function profileDomainCopy(profile: ProfileFeatureDefinition['profile'], appTitl
         dashboard: 'Today\'s routines and current streak summary.',
         habits: 'Track daily habits and completion check-ins.',
         streaks: 'View streak counts and consistency trends.',
+        routines: 'Plan morning and evening routines.',
+        goals: 'Set and track habit goals and milestones.',
+        analytics: 'Weekly habit analytics and completion trends.',
         'daily-routines': 'Plan morning and evening routines.',
         reports: 'Weekly habit completion reports.',
         records: 'Log daily routine entries and notes.',

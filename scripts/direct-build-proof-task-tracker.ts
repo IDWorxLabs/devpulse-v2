@@ -19,11 +19,15 @@ import {
 } from '../src/connected-build-execution/index.js';
 import {
   isTaskTrackerAppSource,
-  isTaskTrackerFeatureSource,
   isTaskTrackerMountEntry,
   usesViteReactRuntime,
-  TASK_TRACKER_FEATURE_RELATIVE_PATH,
 } from '../src/code-generation-engine/index.js';
+import {
+  GENERATED_APP_MANIFEST_FILENAME,
+  validateModularFeatureModules,
+  validateUniversalAppMaterialization,
+} from '../src/universal-prompt-to-app-materialization/index.js';
+import { getProfileFeatureDefinition } from '../src/universal-prompt-to-app-materialization/profile-feature-map.js';
 import { inspectUniversalAppBlueprint } from '../src/universal-app-blueprint/index.js';
 import { GENERATED_BUILDER_WORKSPACES_DIR } from '../src/real-file-workspace-execution/real-file-workspace-execution-bounds.js';
 
@@ -159,14 +163,35 @@ for (const [key, hit] of Object.entries(featureHits)) {
 }
 
 const appTsxPath = join(workspaceDir, 'src/App.tsx');
-const featureTsxPath = join(workspaceDir, TASK_TRACKER_FEATURE_RELATIVE_PATH);
+const appShellPath = join(workspaceDir, 'src/blueprint/AppShell.tsx');
+const tasksFeaturePath = join(workspaceDir, 'src/features/tasks/TasksFeature.tsx');
+const featureRouterPath = join(workspaceDir, 'src/features/FeatureAppRouter.tsx');
+const legacyFeaturePath = join(workspaceDir, 'src/features/task-tracker/TaskTrackerFeature.tsx');
 const mainTsxPath = join(workspaceDir, 'src/main.tsx');
 const appContent = existsSync(appTsxPath) ? readFileSync(appTsxPath, 'utf8') : '';
-const featureContent = existsSync(featureTsxPath) ? readFileSync(featureTsxPath, 'utf8') : '';
+const appShellContent = existsSync(appShellPath) ? readFileSync(appShellPath, 'utf8') : '';
+const tasksFeatureContent = existsSync(tasksFeaturePath) ? readFileSync(tasksFeaturePath, 'utf8') : '';
 const mainContent = existsSync(mainTsxPath) ? readFileSync(mainTsxPath, 'utf8') : '';
-const hasFeature = isTaskTrackerFeatureSource(featureContent) || isTaskTrackerAppSource(appContent);
-const isStubApp = /return null/.test(appContent) || (!hasFeature && !/data-blueprint-router/.test(appContent));
-record('Non-stub generated app', !isStubApp, isStubApp ? 'App is stub/empty — no real UI implementation' : 'Blueprint shell and Task Tracker feature present');
+const combinedFeatureSource = `${appShellContent}\n${tasksFeatureContent}\n${appContent}`;
+const hasModularFeature =
+  !existsSync(legacyFeaturePath) &&
+  existsSync(tasksFeaturePath) &&
+  existsSync(featureRouterPath) &&
+  appShellContent.includes('FeatureAppRouter') &&
+  isTaskTrackerAppSource(combinedFeatureSource);
+const isStubApp = /return null/.test(appContent) || (!hasModularFeature && !/data-blueprint-router/.test(appShellContent));
+record(
+  'Non-stub generated app',
+  !isStubApp,
+  isStubApp ? 'App is stub/empty — no real UI implementation' : 'Universal modular Task Tracker feature present',
+);
+record(
+  'Universal modular Task Tracker path',
+  hasModularFeature,
+  hasModularFeature
+    ? 'FeatureAppRouter + tasks module (no legacy TaskTrackerFeature.tsx)'
+    : 'modular path missing or legacy monolith still present',
+);
 record(
   'Universal App Blueprint',
   inspectUniversalAppBlueprint(workspaceDir).passed,

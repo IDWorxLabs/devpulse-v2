@@ -2,6 +2,7 @@
  * AiDevEngine Universal App Blueprint v1.0 — generated workspace files.
  */
 
+import { buildPromptAppMetadataTs } from '../universal-prompt-to-app-materialization/prompt-app-metadata.js';
 import { UNIVERSAL_APP_BLUEPRINT_VERSION } from './universal-app-blueprint-types.js';
 import type {
   UniversalBlueprintBuildInput,
@@ -24,11 +25,10 @@ function esc(value: string): string {
   return value.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
-export function buildUniversalBlueprintAppTsx(appName: string, tagline: string): string {
-  const name = esc(appName);
-  const line = esc(tagline);
+export function buildUniversalBlueprintAppTsx(): string {
   return `import { useEffect, useState } from 'react';
 import './App.css';
+import { APP_NAME, APP_TAGLINE } from './blueprint/app-metadata';
 import LaunchScreen from './blueprint/LaunchScreen';
 import WelcomeScreen from './blueprint/WelcomeScreen';
 import AuthScreen from './blueprint/AuthScreen';
@@ -47,10 +47,10 @@ export default function App() {
   }, [phase]);
 
   if (phase === 'launch') {
-    return <LaunchScreen appName="${name}" tagline="${line}" />;
+    return <LaunchScreen appName={APP_NAME} tagline={APP_TAGLINE} />;
   }
   if (phase === 'welcome') {
-    return <WelcomeScreen appName="${name}" onContinue={() => setPhase('auth')} />;
+    return <WelcomeScreen appName={APP_NAME} onContinue={() => setPhase('auth')} />;
   }
   if (phase === 'auth') {
     return (
@@ -69,7 +69,7 @@ export default function App() {
     );
   }
 
-  return <AppShell appName="${name}" />;
+  return <AppShell appName={APP_NAME} />;
 }
 `;
 }
@@ -105,7 +105,7 @@ export default function WelcomeScreen({ appName, onContinue }: WelcomeScreenProp
   return (
     <div className="blueprint-screen blueprint-welcome" data-blueprint="welcome-screen">
       <h1>Welcome to {appName}</h1>
-      <p>A focused workspace to plan, track, and ship your work with clarity.</p>
+      <p>A modular application shell with navigation, settings, and feature routing.</p>
       <button type="button" className="blueprint-btn blueprint-btn-primary" onClick={onContinue}>
         Get started
       </button>
@@ -161,9 +161,9 @@ interface OnboardingScreenProps {
 }
 
 const SCREENS = [
-  { title: 'What this app does', body: 'Organize tasks, track progress, and stay focused on what matters.' },
-  { title: 'Why you will love it', body: 'Fast actions, clear filters, and a calm modern interface.' },
-  { title: 'Ready to begin', body: 'Jump into your dashboard and start adding work immediately.' },
+  { title: 'Explore your workspace', body: 'Navigate modules, review activity, and access settings from one shell.' },
+  { title: 'Built for clarity', body: 'Responsive layout, accessible navigation, and a consistent interface.' },
+  { title: 'Ready to begin', body: 'Open the feature area and explore generated modules.' },
 ];
 
 export default function OnboardingScreen({ onComplete, onSkip }: OnboardingScreenProps) {
@@ -194,8 +194,8 @@ export default function OnboardingScreen({ onComplete, onSkip }: OnboardingScree
 
 function buildAppShell(
   coreFeatureLabel: string,
-  coreFeatureImportPath = '../features/task-tracker/TaskTrackerFeature',
-  coreFeatureComponentName = 'TaskTrackerFeature',
+  coreFeatureImportPath = '../features/FeatureAppRouter',
+  coreFeatureComponentName = 'FeatureAppRouter',
 ): string {
   return `import { useState } from 'react';
 import HomePage from './pages/HomePage';
@@ -322,7 +322,7 @@ export default function HomePage({ appName, onNavigate, insightsOnly = false }: 
         <h1>Activity &amp; insights</h1>
         <div className="blueprint-card">
           <h2>Recommendations</h2>
-          <p>Review active tasks and complete your highest-priority item next.</p>
+          <p>Review recent activity and open the next recommended module.</p>
         </div>
       </section>
     );
@@ -331,25 +331,25 @@ export default function HomePage({ appName, onNavigate, insightsOnly = false }: 
   return (
     <section className="blueprint-page" data-blueprint="home-formula">
       <h1>Welcome back</h1>
-      <p className="blueprint-lead">Your {appName} dashboard is ready.</p>
+      <p className="blueprint-subtitle">Your {appName} dashboard is ready.</p>
       <div className="blueprint-grid">
         <div className="blueprint-card">
           <h2>Quick actions</h2>
           <button type="button" className="blueprint-btn blueprint-btn-primary" onClick={() => onNavigate('core')}>
-            Open tasks
+            Open features
           </button>
           <button type="button" className="blueprint-btn" onClick={() => onNavigate('search')}>Search</button>
         </div>
         <div className="blueprint-card">
           <h2>Recent activity</h2>
           <ul className="blueprint-list">
-            <li>Reviewed task filters</li>
+            <li>Reviewed module navigation</li>
             <li>Updated profile preferences</li>
           </ul>
         </div>
         <div className="blueprint-card">
           <h2>Insights</h2>
-          <p>Focus on active tasks first to maintain momentum.</p>
+          <p>Start with the feature area to explore generated modules.</p>
         </div>
       </div>
     </section>
@@ -361,7 +361,7 @@ export default function HomePage({ appName, onNavigate, insightsOnly = false }: 
 function buildSearchPage(): string {
   return `import EmptyState from '../components/EmptyState';
 
-const FILTERS = ['Projects', 'Files', 'Users', 'Messages', 'App content'];
+const FILTERS = ['Content', 'Modules', 'People', 'Messages', 'App data'];
 
 export default function SearchPage() {
   return (
@@ -373,7 +373,7 @@ export default function SearchPage() {
           <span key={filter} className="blueprint-chip">{filter}</span>
         ))}
       </div>
-      <EmptyState title="No results yet" message="Try a query to find projects, files, users, or messages." actionLabel="Clear filters" />
+      <EmptyState title="No results yet" message="Try a query to find content, modules, people, or messages." actionLabel="Clear filters" />
     </section>
   );
 }
@@ -393,9 +393,9 @@ interface Notice {
 }
 
 const SEED: Notice[] = [
-  { id: 'n1', kind: 'alert', text: 'Task deadline approaching', read: false, archived: false },
+  { id: 'n1', kind: 'alert', text: 'Scheduled maintenance reminder', read: false, archived: false },
   { id: 'n2', kind: 'update', text: 'New feature tips available', read: false, archived: false },
-  { id: 'n3', kind: 'message', text: 'Team mention in project', read: true, archived: false },
+  { id: 'n3', kind: 'message', text: 'Team mention in workspace', read: true, archived: false },
   { id: 'n4', kind: 'system', text: 'Backup completed', read: true, archived: false },
 ];
 
@@ -511,7 +511,7 @@ export default function HelpCenterPage() {
   return (
     <section className="blueprint-page" data-blueprint="help-center">
       <h1>Help Center</h1>
-      <div className="blueprint-card"><h2>FAQs</h2><p>How do I add a task? Use the Tasks tab and the add form.</p></div>
+      <div className="blueprint-card"><h2>FAQs</h2><p>How do I open modules? Use the Features tab in the application shell.</p></div>
       <div className="blueprint-card"><h2>Tutorials</h2><p>Getting started guide placeholder.</p></div>
       <button type="button" className="blueprint-btn">Contact support</button>
       <button type="button" className="blueprint-btn" onClick={() => setShowErrorDemo(true)}>Report a bug</button>
@@ -664,7 +664,7 @@ export default function UniversalAiAssistant({ appName }: UniversalAiAssistantPr
       {open && (
         <aside className="blueprint-ai-panel" aria-label="Universal AI assistant">
           <h2>{appName} Assistant</h2>
-          <p>Ask questions, get guided help, learn features, and complete tasks.</p>
+          <p>Ask questions, get guided help, and explore application features.</p>
           <input className="blueprint-input" placeholder="How can I help?" aria-label="Ask the assistant" />
         </aside>
       )}
@@ -894,7 +894,7 @@ body { margin: 0; min-height: 100vh; background: var(--bp-bg); color: var(--bp-t
 }
 
 .blueprint-page h1 { margin-top: 0; }
-.blueprint-lead { color: var(--bp-muted); }
+.blueprint-subtitle { color: var(--bp-muted); }
 .blueprint-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 .blueprint-card {
   background: var(--bp-surface);
@@ -958,16 +958,6 @@ body { margin: 0; min-height: 100vh; background: var(--bp-bg); color: var(--bp-t
   background: #c7d2fe;
   font-weight: 700;
 }
-
-.task-tracker-feature {
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
-  background: var(--bp-surface);
-  border: 1px solid var(--bp-border);
-  border-radius: 16px;
-  padding: 1.25rem;
-}
 `;
 }
 
@@ -976,12 +966,16 @@ export function buildUniversalBlueprintWorkspaceFiles(
 ): UniversalBlueprintWorkspaceFile[] {
   const appName = input.appName;
   const tagline = input.tagline;
-  const coreFeatureLabel = input.coreFeatureLabel ?? 'Tasks';
-  const coreFeatureImportPath = input.coreFeatureImportPath ?? '../features/task-tracker/TaskTrackerFeature';
-  const coreFeatureComponentName = input.coreFeatureComponentName ?? 'TaskTrackerFeature';
+  const coreFeatureLabel = input.coreFeatureLabel ?? 'Features';
+  const coreFeatureImportPath = input.coreFeatureImportPath ?? '../features/FeatureAppRouter';
+  const coreFeatureComponentName = input.coreFeatureComponentName ?? 'FeatureAppRouter';
 
   return [
-    { relativePath: 'src/App.tsx', content: buildUniversalBlueprintAppTsx(appName, tagline) },
+    {
+      relativePath: 'src/blueprint/app-metadata.ts',
+      content: buildPromptAppMetadataTs(appName, tagline),
+    },
+    { relativePath: 'src/App.tsx', content: buildUniversalBlueprintAppTsx() },
     { relativePath: 'src/App.css', content: buildAppCss() },
     { relativePath: 'src/blueprint/LaunchScreen.tsx', content: buildLaunchScreen() },
     { relativePath: 'src/blueprint/WelcomeScreen.tsx', content: buildWelcomeScreen() },

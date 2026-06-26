@@ -62,8 +62,16 @@ const SCENARIOS: Scenario[] = [
     id: 'E-habit-custom',
     prompt: 'Build a habit tracker for daily routines and streaks',
     expectedProfile: 'HABIT_TRACKER_WEB_V1',
-    requiredTerms: ['habit', 'streak', 'daily', 'routine'],
+    requiredTerms: ['habit', 'streak', 'routine', 'goal', 'analytics'],
     forbiddenTerms: ['Project Management System'],
+  },
+  {
+    id: 'F-task-tracker',
+    prompt:
+      'Build a task tracker web app with tasks, projects, labels, calendar, reports, and settings.',
+    expectedProfile: 'TASK_TRACKER_WEB_V1',
+    requiredTerms: ['task', 'project', 'label', 'calendar', 'complete'],
+    forbiddenTerms: ['Project Management System', 'ExpenseTracker'],
   },
 ];
 

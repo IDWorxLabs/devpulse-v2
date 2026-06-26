@@ -31,6 +31,10 @@ export function buildBuildResultConversationalSystemInstructions(
     '- Keep detailed execution logs out of chat — Execution Trace already carries technical runtime evidence.',
     '- Use 2–4 short paragraphs or a concise bullet list.',
     '- Mention Live Preview when previewUrl is available and build succeeded.',
+    '- When materializationQualityEvidence is present in structured evidence, summarize the evidence-backed materialization quality score, strongest areas, and remaining gaps. Do not invent a score.',
+    '- When featureContractRealityEvidence is present, summarize feature contract reality using planned/proven counts and informational vs interactive features from the artifact. Do not invent feature counts.',
+    '- When workspaceRealityAuditEvidence is present, summarize workspace reality audit using status, score, and chatSummary from the artifact. Do not invent audit results.',
+    '- When universalProductionProofEvidence is present, summarize universal production proof from the proof artifact status and profile verdict. Do not invent proof results.',
     '- Handle all outcomes uniformly: success, failure, partial build, profile mismatch, blueprint gaps, preview unavailable, fallback profile.',
   ].join('\n');
 }

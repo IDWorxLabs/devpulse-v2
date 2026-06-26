@@ -24,8 +24,44 @@ import type {
   ForensicManifestStatus,
 } from './forensic-manifest-types.js';
 import type { MaterializationEvidenceCompletionInput } from './materialization-evidence-types.js';
+import {
+  applyBlueprintPurityToManifest,
+  buildBlueprintPurityEvidence,
+  scanGeneratedWorkspaceShell,
+  verifyGeneratedAppDomainBoundary,
+} from '../blueprint-purity/index.js';
+import {
+  applyBuildHistoryToManifest,
+  recordBuildHistory,
+} from '../build-history-integrity/index.js';
+import {
+  applyPersistentProjectRealityToManifest,
+  buildFailurePersistentProjectEvidence,
+  recordPersistentProjectReality,
+} from '../persistent-project-reality/index.js';
+import {
+  applyMaterializationQualityScoreToManifest,
+  recordMaterializationQualityScore,
+} from '../materialization-quality-score/index.js';
+import {
+  applyFeatureContractRealityToManifest,
+  recordFeatureContractReality,
+} from '../feature-contract-reality/index.js';
+import {
+  applyWorkspaceRealityAuditToManifest,
+  recordWorkspaceRealityAudit,
+} from '../workspace-reality-audit/index.js';
+import type { MaterializationProfile } from '../universal-prompt-to-app-materialization/profile-feature-map.js';
 
 const PREVIEW_MAX = 2000;
+
+function inferProjectRootDir(workspaceDir: string): string {
+  const normalized = workspaceDir.replace(/\\/g, '/');
+  const marker = '/.generated-builder-workspaces/';
+  const idx = normalized.indexOf(marker);
+  if (idx >= 0) return normalized.slice(0, idx);
+  return join(workspaceDir, '..', '..');
+}
 
 function pathsByCategory(
   files: Array<{ path: string; category: GeneratedFileCategory }>,
@@ -101,6 +137,23 @@ function writeManifest(workspaceDir: string, manifest: GeneratedAppManifest): Ge
 function applyDiscovery(manifest: GeneratedAppManifest, workspaceDir: string): GeneratedAppManifest {
   if (!existsSync(workspaceDir)) return manifest;
   const discovery = discoverWorkspaceFiles(workspaceDir);
+  const featureModuleFiles = discovery.files
+    .filter((file) => file.path.startsWith('src/features/'))
+    .filter((file) => !file.path.endsWith('registry.ts') && !file.path.endsWith('routes.ts'))
+    .filter((file) => !file.path.endsWith('FeatureAppRouter.tsx'))
+    .map((file) => file.path);
+  const featureModuleDirectories = discovery.directories.filter(
+    (dir) =>
+      dir.startsWith('src/features/') &&
+      dir !== 'src/features' &&
+      dir !== 'src/features/domain',
+  );
+  const featureComponentCount = discovery.files.filter(
+    (file) =>
+      file.category === 'Feature' &&
+      file.path.startsWith('src/features/') &&
+      file.path.endsWith('Feature.tsx'),
+  ).length;
   return {
     ...manifest,
     generatedFilesCount: discovery.generatedFilesCount,
@@ -109,9 +162,12 @@ function applyDiscovery(manifest: GeneratedAppManifest, workspaceDir: string): G
     generatedPagesCount: discovery.generatedPagesCount,
     generatedRoutesCount: Math.max(manifest.routes.length, discovery.generatedRoutesCount),
     generatedFeatureModulesCount: Math.max(
-      manifest.featureModules.length,
-      discovery.generatedFeatureModulesCount,
+      manifest.featureModuleDetails.length,
+      featureComponentCount,
+      manifest.generatedFeatureModulesCount,
     ),
+    generatedFeatureModuleFiles: featureModuleFiles,
+    featureModuleDirectories,
     generatedServicesCount: discovery.generatedServicesCount,
     generatedModelsCount: discovery.generatedModelsCount,
     generatedAssetsCount: discovery.generatedAssetsCount,
@@ -314,7 +370,82 @@ export function finalizeForensicManifestFailure(
   });
 
   manifest = attachPartialAndFullHashes(manifest, workspaceDir);
-  return writeManifest(workspaceDir, manifest);
+
+  let finalManifest = manifest;
+  const projectRootDir = inferProjectRootDir(workspaceDir);
+  try {
+    const historyRecording = recordBuildHistory({
+      projectRootDir,
+      workspaceDir,
+      manifest,
+    });
+    finalManifest = applyBuildHistoryToManifest(manifest, historyRecording.evidence);
+  } catch (error) {
+    finalManifest = {
+      ...manifest,
+      buildHistoryRecorded: false,
+      buildHistoryIntegrityStatus: 'FAIL',
+      buildHistoryFailureReasons: [
+        error instanceof Error ? error.message : String(error),
+      ],
+    };
+  }
+
+  try {
+    const failureEvidence = buildFailurePersistentProjectEvidence({
+      projectRootDir,
+      workspaceDir,
+      manifest: finalManifest,
+      projectId: finalManifest.projectId,
+      projectName: finalManifest.projectName,
+    });
+    finalManifest = applyPersistentProjectRealityToManifest(finalManifest, failureEvidence);
+  } catch (error) {
+    finalManifest = {
+      ...finalManifest,
+      persistentProjectRealityStatus: 'FAIL',
+      promotionStatus: 'FAIL',
+      promotionFailureReasons: [
+        error instanceof Error ? error.message : String(error),
+      ],
+    };
+  }
+
+  try {
+    const scoreRecording = recordMaterializationQualityScore({
+      projectRootDir,
+      workspaceDir,
+      manifest: finalManifest,
+    });
+    finalManifest = applyMaterializationQualityScoreToManifest(finalManifest, scoreRecording.evidence);
+  } catch (error) {
+    finalManifest = {
+      ...finalManifest,
+      materializationQualityVerdict: 'NOT_MATERIALIZED',
+      materializationQualityCriticalFailures: [
+        error instanceof Error ? error.message : String(error),
+      ],
+    };
+  }
+
+  try {
+    const featureRealityRecording = recordFeatureContractReality({
+      projectRootDir,
+      workspaceDir,
+      manifest: finalManifest,
+    });
+    finalManifest = applyFeatureContractRealityToManifest(finalManifest, featureRealityRecording.evidence);
+  } catch (error) {
+    finalManifest = {
+      ...finalManifest,
+      featureContractRealityStatus: 'FAIL',
+      featureRealityFailureReasons: [
+        error instanceof Error ? error.message : String(error),
+      ],
+    };
+  }
+
+  return writeManifest(workspaceDir, finalManifest);
 }
 
 export function finalizeForensicManifestSuccess(
@@ -324,10 +455,27 @@ export function finalizeForensicManifestSuccess(
   const discovery = discoverWorkspaceFiles(input.workspaceDir);
   let existing = readManifest(input.workspaceDir);
 
-  const routeCount = Math.max(input.routes.length, discovery.generatedRoutesCount);
+  const featureComponentCount = discovery.files.filter(
+    (file) =>
+      file.category === 'Feature' &&
+      file.path.startsWith('src/features/') &&
+      file.path.endsWith('Feature.tsx'),
+  ).length;
   const featureModuleCount = Math.max(
+    existing?.featureModuleDetails.length ?? 0,
     input.featureModules.length,
-    discovery.generatedFeatureModulesCount,
+    featureComponentCount,
+  );
+  const featureModuleFiles = discovery.files
+    .filter((file) => file.path.startsWith('src/features/'))
+    .filter((file) => !file.path.endsWith('registry.ts') && !file.path.endsWith('routes.ts'))
+    .filter((file) => !file.path.endsWith('FeatureAppRouter.tsx'))
+    .map((file) => file.path);
+  const featureModuleDirectories = discovery.directories.filter(
+    (dir) =>
+      dir.startsWith('src/features/') &&
+      dir !== 'src/features' &&
+      dir !== 'src/features/domain',
   );
 
   const baseManifest: GeneratedAppManifest = {
@@ -360,8 +508,11 @@ export function finalizeForensicManifestSuccess(
     generatedDirectoriesCount: discovery.generatedDirectoriesCount,
     generatedComponentsCount: discovery.generatedComponentsCount,
     generatedPagesCount: discovery.generatedPagesCount,
-    generatedRoutesCount: routeCount,
+    generatedRoutesCount: Math.max(input.routes.length, discovery.generatedRoutesCount),
     generatedFeatureModulesCount: featureModuleCount,
+    generatedFeatureModuleFiles: featureModuleFiles,
+    featureModuleDirectories,
+    featureModuleDetails: existing?.featureModuleDetails ?? [],
     generatedServicesCount: discovery.generatedServicesCount,
     generatedModelsCount: discovery.generatedModelsCount,
     generatedAssetsCount: discovery.generatedAssetsCount,
@@ -422,12 +573,127 @@ export function finalizeForensicManifestSuccess(
     generatedDirectoriesCount: discovery.generatedDirectoriesCount,
   });
 
+  const { shellResults, allowedDomainSources } = scanGeneratedWorkspaceShell(input.workspaceDir);
+  const domainBoundary = verifyGeneratedAppDomainBoundary({
+    workspaceDir: input.workspaceDir,
+    profile: input.selectedProfile as MaterializationProfile,
+    prompt: input.prompt,
+  });
+  const purityEvidence = buildBlueprintPurityEvidence({
+    projectRootDir: inferProjectRootDir(input.workspaceDir),
+    workspaceDir: input.workspaceDir,
+    workspaceShellResults: shellResults,
+    allowedDomainSources,
+    domainBoundaryPassed: domainBoundary.passed,
+    domainBoundaryDetail: domainBoundary.detail,
+  });
+  const withPurity = applyBlueprintPurityToManifest(finalized, purityEvidence);
+
+  let withHistory = withPurity;
+  const projectRootDir = inferProjectRootDir(input.workspaceDir);
+  try {
+    const historyRecording = recordBuildHistory({
+      projectRootDir,
+      workspaceDir: input.workspaceDir,
+      manifest: withPurity,
+    });
+    withHistory = applyBuildHistoryToManifest(withPurity, historyRecording.evidence);
+  } catch (error) {
+    withHistory = {
+      ...withPurity,
+      buildHistoryRecorded: false,
+      buildHistoryIntegrityStatus: 'FAIL',
+      buildHistoryFailureReasons: [
+        error instanceof Error ? error.message : String(error),
+      ],
+    };
+  }
+
+  let withReality = withHistory;
+  try {
+    const promotion = recordPersistentProjectReality({
+      projectRootDir,
+      workspaceDir: input.workspaceDir,
+      manifest: withHistory,
+      projectId: input.projectId,
+      projectName: input.projectName,
+      promoteSource: input.validation.passed && withHistory.status === 'PASS',
+    });
+    withReality = applyPersistentProjectRealityToManifest(withHistory, promotion.evidence);
+  } catch (error) {
+    withReality = {
+      ...withHistory,
+      persistentProjectRealityStatus: 'FAIL',
+      promotionStatus: 'FAIL',
+      promotionFailureReasons: [
+        error instanceof Error ? error.message : String(error),
+      ],
+    };
+  }
+
+  let withFeatureReality = withReality;
+  try {
+    const featureRealityRecording = recordFeatureContractReality({
+      projectRootDir,
+      workspaceDir: input.workspaceDir,
+      manifest: withReality,
+    });
+    withFeatureReality = applyFeatureContractRealityToManifest(withReality, featureRealityRecording.evidence);
+  } catch (error) {
+    withFeatureReality = {
+      ...withReality,
+      featureContractRealityStatus: 'FAIL',
+      featureRealityFailureReasons: [
+        error instanceof Error ? error.message : String(error),
+      ],
+    };
+  }
+
+  let withWorkspaceAudit = withFeatureReality;
+  try {
+    const workspaceAuditRecording = recordWorkspaceRealityAudit({
+      projectRootDir,
+      workspaceDir: input.workspaceDir,
+      manifest: withFeatureReality,
+    });
+    withWorkspaceAudit = applyWorkspaceRealityAuditToManifest(
+      withFeatureReality,
+      workspaceAuditRecording.evidence,
+    );
+  } catch (error) {
+    withWorkspaceAudit = {
+      ...withFeatureReality,
+      workspaceRealityAuditStatus: 'FAIL',
+      workspaceRealityFailureReasons: [
+        error instanceof Error ? error.message : String(error),
+      ],
+    };
+  }
+
+  let withScore = withWorkspaceAudit;
+  try {
+    const scoreRecording = recordMaterializationQualityScore({
+      projectRootDir,
+      workspaceDir: input.workspaceDir,
+      manifest: withWorkspaceAudit,
+    });
+    withScore = applyMaterializationQualityScoreToManifest(withWorkspaceAudit, scoreRecording.evidence);
+  } catch (error) {
+    withScore = {
+      ...withWorkspaceAudit,
+      materializationQualityVerdict: 'NOT_MATERIALIZED',
+      materializationQualityCriticalFailures: [
+        error instanceof Error ? error.message : String(error),
+      ],
+    };
+  }
+
   writeFileSync(
     manifestPathFor(input.workspaceDir),
-    serializeGeneratedAppManifest(finalized),
+    serializeGeneratedAppManifest(withScore),
     'utf8',
   );
-  return finalized;
+  return withScore;
 }
 
 export function readForensicManifest(workspaceDir: string): GeneratedAppManifest | null {

@@ -6,12 +6,23 @@ import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 import { classifyGeneratedFile } from './file-category-classifier.js';
+import { WORKSPACE_QUALITY_SCORE_FILENAME } from '../materialization-quality-score/materialization-quality-score-types.js';
+import { WORKSPACE_FEATURE_CONTRACT_REALITY_FILENAME } from '../feature-contract-reality/feature-contract-reality-types.js';
+import { WORKSPACE_REALITY_AUDIT_WORKSPACE_FILENAME, WORKSPACE_REALITY_AUDIT_REPORT_MD } from '../workspace-reality-audit/workspace-reality-audit-types.js';
+import { PRODUCTION_VALIDATION_EVIDENCE_FILENAME } from '../production-validation/production-validation-types.js';
 import type {
   GeneratedFileInventoryEntry,
   WorkspaceDiscoveryResult,
 } from './materialization-evidence-types.js';
 
 const SKIP_DIR_NAMES = new Set(['node_modules', '.git', 'dist', '.vite']);
+const SKIP_FILE_NAMES = new Set([
+  WORKSPACE_QUALITY_SCORE_FILENAME,
+  WORKSPACE_FEATURE_CONTRACT_REALITY_FILENAME,
+  PRODUCTION_VALIDATION_EVIDENCE_FILENAME,
+  WORKSPACE_REALITY_AUDIT_WORKSPACE_FILENAME,
+  WORKSPACE_REALITY_AUDIT_REPORT_MD,
+]);
 const TEXT_EXTENSIONS = new Set([
   '.ts',
   '.tsx',
@@ -70,6 +81,8 @@ function scanDirectory(
 
     if (!stat.isFile()) continue;
 
+    if (SKIP_FILE_NAMES.has(entry)) continue;
+
     const relPath = relative(workspaceDir, absolutePath).replace(/\\/g, '/');
     const extension = extname(relPath).toLowerCase();
     let lines = 0;
@@ -127,7 +140,11 @@ export function discoverWorkspaceFiles(workspaceDir: string): WorkspaceDiscovery
 
   const components = files.filter((f) => f.category === 'Component').length;
   const pages = files.filter((f) => f.category === 'Page').length;
-  const features = files.filter((f) => f.category === 'Feature').length;
+  const features = files.filter(
+    (file) =>
+      file.path.startsWith('src/features/') &&
+      file.path.toLowerCase().endsWith('feature.tsx'),
+  ).length;
   const routes = files.filter((f) => f.category === 'Route').length;
   const services = files.filter((f) => f.category === 'Service').length;
   const models = files.filter((f) => f.category === 'Model').length;

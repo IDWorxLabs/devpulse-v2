@@ -55,29 +55,29 @@ const PROFILE_FEATURE_MAP: Record<MaterializationProfile, ProfileFeatureDefiniti
   CRM_WEB_V1: def(
     'CRM_WEB_V1',
     'crm',
-    ['auth', 'dashboard', 'customers', 'leads', 'pipeline', 'deals', 'contacts', 'reports'],
-    ['/', '/dashboard', '/customers', '/leads', '/pipeline', '/deals', '/contacts', '/reports'],
-    ['customer', 'lead', 'pipeline', 'deal', 'contact'],
+    ['auth', 'dashboard', 'customers', 'leads', 'pipeline', 'deals', 'contacts', 'follow-ups', 'reports', 'persistence'],
+    ['/', '/dashboard', '/customers', '/leads', '/pipeline', '/deals', '/contacts', '/follow-ups', '/reports'],
+    ['customer', 'lead', 'pipeline', 'deal', 'contact', 'follow-up'],
   ),
   TASK_TRACKER_WEB_V1: def(
     'TASK_TRACKER_WEB_V1',
     'task-tracker',
-    ['auth', 'dashboard', 'tasks', 'projects', 'filters', 'reports'],
-    ['/', '/dashboard', '/tasks', '/projects', '/reports'],
-    ['task', 'project', 'due', 'complete'],
+    ['auth', 'dashboard', 'tasks', 'projects', 'labels', 'calendar', 'reports', 'settings', 'persistence'],
+    ['/', '/dashboard', '/tasks', '/projects', '/labels', '/calendar', '/reports', '/settings'],
+    ['task', 'project', 'due', 'complete', 'label', 'calendar'],
   ),
   QR_APP: def(
     'QR_APP',
     'qr-app',
-    ['auth', 'dashboard', 'generate', 'scan', 'history', 'settings'],
-    ['/', '/dashboard', '/generate', '/scan', '/history', '/settings'],
-    ['qr', 'generate', 'scan', 'code', 'history'],
+    ['auth', 'dashboard', 'generator', 'scanner', 'code-history', 'analytics', 'settings', 'persistence'],
+    ['/', '/dashboard', '/generator', '/scanner', '/code-history', '/analytics', '/settings'],
+    ['qr', 'generate', 'scan', 'code', 'history', 'analytics'],
   ),
   INVENTORY_WEB_V1: def(
     'INVENTORY_WEB_V1',
     'inventory',
-    ['auth', 'dashboard', 'inventory', 'products', 'stock', 'suppliers', 'reorder', 'reports'],
-    ['/', '/dashboard', '/inventory', '/products', '/stock', '/suppliers', '/reorder', '/reports'],
+    ['auth', 'dashboard', 'products', 'stock', 'suppliers', 'reorder', 'reports', 'persistence'],
+    ['/', '/dashboard', '/products', '/stock', '/suppliers', '/reorder', '/reports'],
     ['inventory', 'stock', 'product', 'supplier', 'reorder'],
   ),
   BOOKING_WEB_V1: def(
@@ -104,9 +104,9 @@ const PROFILE_FEATURE_MAP: Record<MaterializationProfile, ProfileFeatureDefiniti
   HABIT_TRACKER_WEB_V1: def(
     'HABIT_TRACKER_WEB_V1',
     'habit-tracker',
-    ['auth', 'dashboard', 'habits', 'streaks', 'daily-routines', 'reports'],
-    ['/', '/dashboard', '/habits', '/streaks', '/routines', '/reports'],
-    ['habit', 'streak', 'daily', 'routine'],
+    ['auth', 'dashboard', 'habits', 'streaks', 'routines', 'goals', 'analytics', 'persistence'],
+    ['/', '/dashboard', '/habits', '/streaks', '/routines', '/goals', '/analytics'],
+    ['habit', 'streak', 'routine', 'goal', 'analytics'],
   ),
   GENERIC_CUSTOM_APP_V1: def(
     'GENERIC_CUSTOM_APP_V1',
@@ -143,11 +143,20 @@ export function getProfileFeatureDefinition(
       ? PROFILE_FEATURE_MAP.HABIT_TRACKER_WEB_V1.featureModules
       : deriveGenericCustomFeatureModules(rawPrompt);
   const terms = derivePromptFeatureTerms(rawPrompt);
+  const moduleTerms = modules.filter((moduleId) => !['auth', 'persistence'].includes(moduleId));
+  const requiredUiTerms =
+    terms.length >= 2
+      ? terms
+      : profile === 'HABIT_TRACKER_WEB_V1'
+        ? ['habit', 'streak', 'daily', 'routine']
+        : moduleTerms.length >= 2
+          ? moduleTerms
+          : ['dashboard', 'records', 'settings'];
   return {
     ...base,
     featureModules: modules,
     routes: modules.map((m) => `/${m}`),
-    requiredUiTerms: terms.length >= 2 ? terms : ['habit', 'streak', 'daily', 'routine'],
+    requiredUiTerms,
   };
 }
 

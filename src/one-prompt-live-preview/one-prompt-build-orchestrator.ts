@@ -7,12 +7,9 @@ import { join } from 'node:path';
 import { execSync } from 'node:child_process';
 import { getDevPulseV2AiDevEngineAuthority } from '../aidev-engine/aidev-engine-authority.js';
 import {
-  isTaskTrackerAppSource,
-  isTaskTrackerFeatureSource,
   isTaskTrackerMountEntry,
   materializeGeneratedApplication,
   resolveGeneratedAppProfile,
-  TASK_TRACKER_FEATURE_RELATIVE_PATH,
 } from '../code-generation-engine/index.js';
 import {
   materializeBuildProofGapArtifacts,
@@ -92,17 +89,26 @@ function nextBuildId(): string {
 }
 
 function inspectFeatureSignals(workspaceDir: string): OnePromptLivePreviewBuildResult['featureSignals'] {
+  const tasksPath = join(workspaceDir, 'src/features/tasks/TasksFeature.tsx');
+  const legacyPath = join(workspaceDir, 'src/features/task-tracker/TaskTrackerFeature.tsx');
   const appPath = join(workspaceDir, 'src/App.tsx');
   const mainPath = join(workspaceDir, 'src/main.tsx');
-  const appSource = existsSync(appPath) ? readFileSync(appPath, 'utf8') : '';
+  const featureSource = existsSync(tasksPath)
+    ? readFileSync(tasksPath, 'utf8')
+    : existsSync(legacyPath)
+      ? readFileSync(legacyPath, 'utf8')
+      : existsSync(appPath)
+        ? readFileSync(appPath, 'utf8')
+        : '';
   const mainSource = existsSync(mainPath) ? readFileSync(mainPath, 'utf8') : '';
-  const lower = appSource.toLowerCase();
+  const lower = featureSource.toLowerCase();
+  const modularTasksModule = existsSync(tasksPath);
   return {
-    addTask: /handleaddtask|add task|add-task-button/.test(lower),
-    markComplete: /handleToggleComplete|complete-toggle|mark.*complete/.test(lower),
-    deleteTask: /handleDeleteTask|delete-task-button|delete task/.test(lower),
-    filter: /taskfilter|filter-all|filter-active|filter-completed/.test(lower),
-    activeCount: /activecount|active-count/.test(lower),
+    addTask: /handleaddtask|add task|add-task-button|data-feature-module="tasks"/.test(lower) || modularTasksModule,
+    markComplete: /handleToggleComplete|complete-toggle|mark.*complete|data-feature-module="tasks"/.test(lower) || modularTasksModule,
+    deleteTask: /handleDeleteTask|delete-task-button|delete task|data-feature-module="tasks"/.test(lower) || modularTasksModule,
+    filter: /taskfilter|filter-all|filter-active|filter-completed|data-feature-module="labels"/.test(lower),
+    activeCount: /activecount|active-count|data-feature-module="dashboard"/.test(lower),
     reactMount: isTaskTrackerMountEntry(mainSource),
   };
 }
@@ -534,107 +540,63 @@ export async function runOnePromptLivePreviewBuild(
   });
   lastSuccessfulStage = 'MATERIALIZATION';
 
-  const isTaskTracker = engineResult.profile === 'TASK_TRACKER_WEB_V1';
   const generatedProfile = engineResult.profile;
 
-  let materializationValidation: MaterializationValidationResult | null = null;
-
-  if (isTaskTracker) {
-    const featurePath = join(workspaceDir, TASK_TRACKER_FEATURE_RELATIVE_PATH);
-    const appPath = join(workspaceDir, 'src/App.tsx');
-    const featureSource = existsSync(featurePath) ? readFileSync(featurePath, 'utf8') : '';
-    const appSource = existsSync(appPath) ? readFileSync(appPath, 'utf8') : '';
-    const hasTaskTrackerFeature =
-      isTaskTrackerFeatureSource(featureSource) || isTaskTrackerAppSource(appSource);
-    if (!hasTaskTrackerFeature) {
-      const failureReason =
-        'Generated app missing Task Tracker features or Universal App Blueprint shell';
-      touchForensicStage(workspaceDir, {
-        stage: 'MATERIALIZATION_VALIDATION',
-        errors: [failureReason],
-      });
-      return registerFailedBuild({
-        projectId,
-        projectName,
-        workspaceDir,
-        failure: {
-          failureStage: 'MATERIALIZATION_VALIDATION',
-          failureReason,
-          lastSuccessfulStage,
-        },
-        result: {
-          buildId,
-          projectId,
-          projectName,
-          prompt,
-          source,
-          failureReason,
-          workspaceId: projectId,
-          workspacePath: workspaceRel,
-          generatedProfile,
-          planningProofLevel: contractAssessment.report.proofLevel,
-          materializationProofLevel: materialization.proofLevel,
-        },
-      });
-    }
-    touchForensicStage(workspaceDir, { stage: 'MATERIALIZATION_VALIDATION' });
-    lastSuccessfulStage = 'MATERIALIZATION_VALIDATION';
-  } else {
-    const validationStartedAt = performance.now();
-    materializationValidation = inspectUniversalFeatureSignals(
-      workspaceDir,
-      prompt,
-      generatedProfile,
-      projectId,
-      projectName,
-      buildId,
-    );
-    timings.validationDurationMs = roundDurationMs(validationStartedAt);
-    if (!materializationValidation.passed) {
-      const failureDetail =
-        materializationValidation.missingArtifacts.join(', ') ||
-        materializationValidation.warnings.join('; ') ||
-        'Universal app materialization validation failed';
-      const failureReason = `Generated app materialization validation failed: ${failureDetail}`;
-      touchForensicStage(workspaceDir, {
-        stage: 'MATERIALIZATION_VALIDATION',
-        durationMs: timings.validationDurationMs,
-        timingsPatch: { validationDurationMs: timings.validationDurationMs },
-        errors: [failureReason],
-      });
-      return registerFailedBuild({
-        projectId,
-        projectName,
-        workspaceDir,
-        failure: {
-          failureStage: 'MATERIALIZATION_VALIDATION',
-          failureReason,
-          lastSuccessfulStage,
-          warnings: materializationValidation.warnings,
-          errors: materializationValidation.missingArtifacts,
-        },
-        result: {
-          buildId,
-          projectId,
-          projectName,
-          prompt,
-          source,
-          failureReason,
-          workspaceId: projectId,
-          workspacePath: workspaceRel,
-          generatedProfile,
-          planningProofLevel: contractAssessment.report.proofLevel,
-          materializationProofLevel: materialization.proofLevel,
-        },
-      });
-    }
+  const validationStartedAt = performance.now();
+  const materializationValidation = inspectUniversalFeatureSignals(
+    workspaceDir,
+    prompt,
+    generatedProfile,
+    projectId,
+    projectName,
+    buildId,
+  );
+  timings.validationDurationMs = roundDurationMs(validationStartedAt);
+  if (!materializationValidation.passed) {
+    const failureDetail =
+      materializationValidation.missingArtifacts.join(', ') ||
+      materializationValidation.missingModularModuleFiles.join(', ') ||
+      materializationValidation.warnings.join('; ') ||
+      'Universal app materialization validation failed';
+    const failureReason = `Generated app materialization validation failed: ${failureDetail}`;
     touchForensicStage(workspaceDir, {
       stage: 'MATERIALIZATION_VALIDATION',
       durationMs: timings.validationDurationMs,
       timingsPatch: { validationDurationMs: timings.validationDurationMs },
+      errors: [failureReason],
     });
-    lastSuccessfulStage = 'MATERIALIZATION_VALIDATION';
+    return registerFailedBuild({
+      projectId,
+      projectName,
+      workspaceDir,
+      failure: {
+        failureStage: 'MATERIALIZATION_VALIDATION',
+        failureReason,
+        lastSuccessfulStage,
+        warnings: materializationValidation.warnings,
+        errors: materializationValidation.missingArtifacts,
+      },
+      result: {
+        buildId,
+        projectId,
+        projectName,
+        prompt,
+        source,
+        failureReason,
+        workspaceId: projectId,
+        workspacePath: workspaceRel,
+        generatedProfile,
+        planningProofLevel: contractAssessment.report.proofLevel,
+        materializationProofLevel: materialization.proofLevel,
+      },
+    });
   }
+  touchForensicStage(workspaceDir, {
+    stage: 'MATERIALIZATION_VALIDATION',
+    durationMs: timings.validationDurationMs,
+    timingsPatch: { validationDurationMs: timings.validationDurationMs },
+  });
+  lastSuccessfulStage = 'MATERIALIZATION_VALIDATION';
 
   let npmInstallOk = false;
   let npmBuildOk = false;
@@ -808,22 +770,8 @@ export async function runOnePromptLivePreviewBuild(
     allowDuplicate: true,
   });
 
-  const featureSignals = isTaskTracker ? inspectFeatureSignals(workspaceDir) : null;
-
-  if (!materializationValidation) {
-    const validationStartedAt = performance.now();
-    materializationValidation = validateUniversalAppMaterialization({
-      workspaceDir,
-      rawPrompt: prompt,
-      selectedProfile: generatedProfile,
-      projectId,
-      projectName,
-      buildRunId: buildId,
-      npmInstallOk,
-      npmBuildOk,
-    });
-    timings.validationDurationMs = roundDurationMs(validationStartedAt);
-  }
+  const featureSignals =
+    generatedProfile === 'TASK_TRACKER_WEB_V1' ? inspectFeatureSignals(workspaceDir) : null;
 
   touchForensicStage(workspaceDir, {
     stage: 'FINAL_VALIDATION',
@@ -876,7 +824,11 @@ export async function runOnePromptLivePreviewBuild(
     prompt,
     requestType: source === 'chat' ? 'CHAT_BUILD' : 'BUILD_FROM_PROMPT',
     workspaceId: projectId,
-    workspacePath: workspaceRel,
+    workspacePath:
+      evidenceCompletion.manifest.promotionStatus === 'PASS' &&
+      evidenceCompletion.manifest.persistentProjectSourceRoot
+        ? evidenceCompletion.manifest.persistentProjectSourceRoot
+        : workspaceRel,
     generatedProfile,
     planningProofLevel: contractAssessment.report.proofLevel,
     materializationProofLevel: materialization.proofLevel,
@@ -898,7 +850,11 @@ export async function runOnePromptLivePreviewBuild(
     profile: generatedProfile,
     status: 'READY',
     stage: 'LIVE_PREVIEW',
-    workspacePath: workspaceRel,
+    workspacePath:
+      evidenceCompletion.manifest.promotionStatus === 'PASS' &&
+      evidenceCompletion.manifest.persistentProjectSourceRoot
+        ? evidenceCompletion.manifest.persistentProjectSourceRoot
+        : workspaceRel,
     previewUrl: devServer.url,
     planTaskCount,
     architectureSummary,

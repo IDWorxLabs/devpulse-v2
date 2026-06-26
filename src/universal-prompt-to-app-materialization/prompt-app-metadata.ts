@@ -23,6 +23,19 @@ export function extractPromptAppTitle(rawPrompt: string): string {
   return 'Custom App';
 }
 
+export function deriveNeutralAppTagline(appName: string): string {
+  return `${appName} — modular application workspace`;
+}
+
+/** Prompt-derived metadata — domain language in app names is allowed here only. */
+export function buildPromptAppMetadataTs(appName: string, tagline?: string): string {
+  const resolvedTagline = tagline ?? deriveNeutralAppTagline(appName);
+  return `/** Prompt-derived app metadata — not part of the universal blueprint shell */
+export const APP_NAME = ${JSON.stringify(appName)};
+export const APP_TAGLINE = ${JSON.stringify(resolvedTagline)};
+`;
+}
+
 export function summarizePrompt(rawPrompt: string, maxLength = 160): string {
   const trimmed = rawPrompt.trim().replace(/\s+/g, ' ');
   if (trimmed.length <= maxLength) return trimmed;
@@ -65,6 +78,13 @@ export function derivePromptFeatureTerms(rawPrompt: string): string[] {
     'tasks',
     'projects',
     'due dates',
+    'notes',
+    'records',
+    'settings',
+    'labels',
+    'calendar',
+    'workspace',
+    'custom',
   ];
   return candidates.filter((term) => lower.includes(term));
 }

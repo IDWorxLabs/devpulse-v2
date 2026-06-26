@@ -113,12 +113,23 @@ if (contract) {
     /data-blueprint-router="universal-v1"/.test(appShellSource) || /LaunchScreen|AppShell/.test(appSource),
     'universal shell present',
   );
-  const featurePath = join(workspaceDir, 'src/features/task-tracker/TaskTrackerFeature.tsx');
-  const featureSource = existsSync(featurePath) ? readFileSync(featurePath, 'utf8') : '';
+  const legacyFeaturePath = join(workspaceDir, 'src/features/task-tracker/TaskTrackerFeature.tsx');
+  const tasksFeaturePath = join(workspaceDir, 'src/features/tasks/TasksFeature.tsx');
+  const featureRouterPath = join(workspaceDir, 'src/features/FeatureAppRouter.tsx');
+  const tasksFeatureSource = existsSync(tasksFeaturePath) ? readFileSync(tasksFeaturePath, 'utf8') : '';
+  const combinedFeatureSource = `${appShellSource}\n${tasksFeatureSource}\n${appSource}`;
   assert(
-    'TaskTrackerFeature has task features',
-    isTaskTrackerAppSource(featureSource) || isTaskTrackerAppSource(appSource),
-    'feature patterns present',
+    'Task Tracker uses universal modular path',
+    !existsSync(legacyFeaturePath) &&
+      existsSync(tasksFeaturePath) &&
+      existsSync(featureRouterPath) &&
+      appShellSource.includes('FeatureAppRouter'),
+    'modular tasks module + FeatureAppRouter',
+  );
+  assert(
+    'Task Tracker modular feature signals',
+    isTaskTrackerAppSource(combinedFeatureSource),
+    'modular task tracker patterns present',
   );
   assert('main.tsx mounts React root', isTaskTrackerMountEntry(mainSource), 'createRoot present');
   assert('index.html exists', existsSync(indexPath), indexPath);

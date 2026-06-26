@@ -8,7 +8,11 @@ export function classifyGeneratedFile(relativePath: string): GeneratedFileCatego
   const normalized = relativePath.replace(/\\/g, '/').toLowerCase();
   const ext = normalized.includes('.') ? normalized.slice(normalized.lastIndexOf('.')) : '';
 
-  if (normalized.includes('/verification/') || normalized.includes('validate')) return 'Validation';
+  if (normalized.includes('/verification/') || normalized.includes('/validate')) return 'Validation';
+  if (normalized.endsWith('.validation.ts')) return 'Validation';
+  if (normalized.endsWith('.types.ts')) return 'Model';
+  if (normalized.endsWith('.service.ts')) return 'Service';
+  if (normalized.endsWith('registry.ts') && normalized.includes('/features/')) return 'Route';
   if (normalized.includes('.test.') || normalized.includes('.spec.') || normalized.includes('/__tests__/')) {
     return 'Test';
   }
@@ -19,7 +23,7 @@ export function classifyGeneratedFile(relativePath: string): GeneratedFileCatego
   if (normalized.endsWith('routes.ts') || normalized.includes('/routes.')) return 'Route';
   if (normalized.includes('/pages/') || normalized.endsWith('page.tsx')) return 'Page';
   if (normalized.includes('/features/domain/') && ext === '.tsx') return 'Feature';
-  if (normalized.includes('/features/') && ext === '.tsx') return 'Feature';
+  if (normalized.includes('/features/') && ext === '.tsx' && normalized.includes('feature')) return 'Feature';
   if (ext === '.tsx' && (normalized.includes('/components/') || normalized.includes('/screens/'))) {
     return 'Component';
   }

@@ -9,7 +9,6 @@ import { UNIVERSAL_APP_BLUEPRINT_VERSION } from '../universal-app-blueprint/univ
 import {
   buildUniversalFeatureContract,
   buildUniversalFeatureContractJson,
-  getPrimaryEntity,
 } from '../universal-feature-contract-intelligence/universal-feature-contract-builder.js';
 import { buildSharedRuntimeFiles } from '../code-generation-engine/universal-crud-app-generator-shared.js';
 import {
@@ -22,14 +21,16 @@ import {
   resolveMaterializationProfile,
   type MaterializationProfile,
 } from './profile-feature-map.js';
-import { extractPromptAppTitle, summarizePrompt } from './prompt-app-metadata.js';
+import { extractPromptAppTitle, summarizePrompt, deriveNeutralAppTagline } from './prompt-app-metadata.js';
+import { buildDemoDataTs } from './profile-feature-ui-generator.js';
 import {
-  buildDemoDataTs,
-  buildDomainAppFeatureCss,
-  buildDomainAppFeatureTsx,
-  buildFeatureRegistryTs,
-  buildFeatureRoutesTs,
-} from './profile-feature-ui-generator.js';
+  buildAllModularFeatureModuleFiles,
+  buildFeatureAppRouterCss,
+  buildFeatureAppRouterTsx,
+  buildModularFeatureRegistryTs,
+  buildModularFeatureRoutesTs,
+  materializableFeatureModules,
+} from './modular-feature-module-generator.js';
 
 function profileSlug(profile: MaterializationProfile): string {
   return profile.toLowerCase().replace(/_/g, '-');
@@ -51,8 +52,12 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
     rawPrompt: input.rawPrompt,
     profile: materializationProfile as GeneratedAppProfile,
   });
-  const primary = getPrimaryEntity(contract);
   const displayName = appTitle !== 'Custom App' ? appTitle : contract.productName;
+
+  const modular = buildAllModularFeatureModuleFiles(displayName, definition);
+  const moduleIds = materializableFeatureModules(definition);
+  const featureModuleDirectories = moduleIds.map((moduleId) => `src/features/${moduleId}`);
+  const generatedFeatureModuleFiles = modular.files.map((file) => file.relativePath);
 
   const manifest = buildInitialGeneratedAppManifest({
     projectId: input.contractId,
@@ -63,10 +68,14 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
     expectedAppType: definition.expectedAppType,
     promptSummary: summarizePrompt(input.rawPrompt),
     confidence: 'MEDIUM',
-    featureModules: definition.featureModules,
+    featureModules: moduleIds,
     routes: definition.routes,
+    featureModuleDetails: modular.manifestEntries,
+    generatedFeatureModuleFiles,
+    featureModuleDirectories,
     fallbackUsed: false,
   });
+  manifest.generatedFeatureModulesCount = modular.manifestEntries.length;
 
   const sharedFiles: GeneratedWorkspaceFile[] = [
     ...buildSharedRuntimeFiles(input.contractId, displayName),
@@ -98,6 +107,7 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
             devpulseCodeGenerationEngine: 'v1',
             devpulseUniversalFeatureContract: 'v1',
             devpulseUniversalMaterialization: 'v1',
+            devpulseModularFeatureMaterialization: 'v1',
           },
           null,
           2,
@@ -116,10 +126,11 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
           contractId: input.contractId,
           ideaId: input.ideaId,
           generatedAt: new Date().toISOString(),
-          materializationSource: 'universal-prompt-to-app-materialization-v1',
+          materializationSource: 'modular-feature-materialization-v1',
           applicationProfile: materializationProfile,
           universalBlueprintVersion: UNIVERSAL_APP_BLUEPRINT_VERSION,
           universalBlueprintEnabled: true,
+          modularFeatureMaterialization: true,
           buildUnits: input.buildUnits,
           runtime: 'vite-react',
         },
@@ -149,19 +160,19 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
     },
     {
       relativePath: 'src/features/registry.ts',
-      content: buildFeatureRegistryTs(definition.featureModules),
+      content: buildModularFeatureRegistryTs(modular.manifestEntries),
     },
     {
       relativePath: 'src/features/routes.ts',
-      content: buildFeatureRoutesTs(definition.routes),
+      content: buildModularFeatureRoutesTs(),
     },
     {
-      relativePath: 'src/features/domain/DomainAppFeature.tsx',
-      content: buildDomainAppFeatureTsx(displayName, definition),
+      relativePath: 'src/features/FeatureAppRouter.tsx',
+      content: buildFeatureAppRouterTsx(definition),
     },
     {
-      relativePath: 'src/features/domain/domain-app-feature.css',
-      content: buildDomainAppFeatureCss(),
+      relativePath: 'src/features/feature-app-router.css',
+      content: buildFeatureAppRouterCss(),
     },
     {
       relativePath: 'src/data/demo-data.ts',
@@ -169,11 +180,11 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
     },
     {
       relativePath: 'src/screens/index.ts',
-      content: `export { default as DomainAppFeature } from '../features/domain/DomainAppFeature';\n`,
+      content: `export { default as FeatureAppRouter } from '../features/FeatureAppRouter';\n`,
     },
   ];
 
-  const featureFiles: GeneratedWorkspaceFile[] = [];
+  const featureFiles: GeneratedWorkspaceFile[] = [...modular.files];
 
   return composeGeneratedAppWorkspaceFiles({
     blueprint: {
@@ -181,10 +192,10 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
       ideaId: input.ideaId,
       buildUnits: input.buildUnits,
       appName: displayName,
-      tagline: `${primary.pluralLabel} for ${displayName} — powered by AiDevEngine`,
-      coreFeatureLabel: primary.navLabel,
-      coreFeatureImportPath: '../features/domain/DomainAppFeature',
-      coreFeatureComponentName: 'DomainAppFeature',
+      tagline: deriveNeutralAppTagline(displayName),
+      coreFeatureLabel: 'Features',
+      coreFeatureImportPath: '../features/FeatureAppRouter',
+      coreFeatureComponentName: 'FeatureAppRouter',
     },
     featureFiles,
     sharedFiles,

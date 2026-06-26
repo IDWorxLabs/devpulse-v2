@@ -5,6 +5,7 @@
 export {
   UNIVERSAL_PROMPT_TO_APP_MATERIALIZATION_V1_PASS_TOKEN,
   validateUniversalAppMaterialization,
+  validateModularFeatureModules,
   type MaterializationValidationResult,
 } from './materialization-validator.js';
 
@@ -31,5 +32,11 @@ export {
   derivePromptFeatureTerms,
   deriveGenericCustomFeatureModules,
 } from './prompt-app-metadata.js';
+
+export {
+  materializableFeatureModules,
+  moduleIdToPascalCase,
+  type GeneratedFeatureModuleManifestEntry,
+} from './modular-feature-module-generator.js';
 
 export { buildUniversalMaterializedWorkspaceFiles } from './universal-app-materialization-engine.js';

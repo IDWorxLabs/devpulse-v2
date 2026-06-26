@@ -1,15 +1,15 @@
 /**
  * Code Generation Engine V1 — writes generated app files into isolated workspaces.
+ * All supported profiles flow through Universal Prompt-to-App Materialization V1.
  */
 
 import { createRealFileOperation } from '../real-file-workspace-execution/real-file-operation-model.js';
 import { executeRealFileOperation } from '../real-file-workspace-execution/real-file-operation-executor.js';
 import { resolveSafeWorkspaceRoot } from '../real-file-workspace-execution/real-file-workspace-path-authority.js';
 import type { MaterializeGeneratedAppInput, CodeGenerationEngineResult, GeneratedAppProfile } from './code-generation-engine-types.js';
-import { detectTaskTrackerIdea } from './task-tracker-detector.js';
-import { buildTaskTrackerWorkspaceFiles } from './task-tracker-generator.js';
 import { buildUniversalCrudWorkspaceFiles } from './universal-crud-app-generator.js';
 import { detectUniversalAppProfile } from '../universal-feature-contract-intelligence/universal-feature-contract-builder.js';
+import { resolveGeneratedAppProfile } from './task-tracker-detector.js';
 
 function writeWorkspaceFile(input: {
   projectRootDir: string;
@@ -22,7 +22,7 @@ function writeWorkspaceFile(input: {
     relativePath: input.relativePath,
     operationType: 'CREATE_FILE',
     requestedBy: 'code-generation-engine-v1',
-    sourceActionId: 'task-tracker-app-generation',
+    sourceActionId: 'universal-modular-app-generation',
     payload: input.content,
   });
 
@@ -33,6 +33,18 @@ function writeWorkspaceFile(input: {
   });
 
   return Boolean(executed.result?.success);
+}
+
+function resolveMaterializationProfile(
+  rawPrompt: string,
+  profileOverride?: GeneratedAppProfile | null,
+): GeneratedAppProfile {
+  if (profileOverride) return profileOverride;
+  return (
+    detectUniversalAppProfile(rawPrompt) ??
+    resolveGeneratedAppProfile(rawPrompt) ??
+    'GENERIC_CUSTOM_APP_V1'
+  );
 }
 
 export function materializeGeneratedApplication(
@@ -51,47 +63,15 @@ export function materializeGeneratedApplication(
     };
   }
 
-  if (!detectTaskTrackerIdea(input.rawPrompt) || input.profileOverride) {
-    const universalProfile =
-      input.profileOverride ?? detectUniversalAppProfile(input.rawPrompt) ?? 'GENERIC_CUSTOM_APP_V1';
+  const universalProfile = resolveMaterializationProfile(input.rawPrompt, input.profileOverride);
 
-    if (universalProfile !== 'TASK_TRACKER_WEB_V1') {
-      const files = buildUniversalCrudWorkspaceFiles({
-        contractId: input.contract.contractId,
-        ideaId: input.contract.ideaId,
-        buildUnits: input.contract.buildUnits.map((unit) => unit.unitId),
-        rawPrompt: input.rawPrompt,
-        profile: universalProfile as GeneratedAppProfile,
-        buildRunId: input.contract.contractId,
-      });
-
-      const generatedFiles: string[] = [];
-      for (const file of files) {
-        const ok = writeWorkspaceFile({
-          projectRootDir: input.projectRootDir,
-          workspaceId,
-          relativePath: file.relativePath,
-          content: file.content,
-        });
-        if (ok) generatedFiles.push(file.relativePath);
-      }
-
-      return {
-        readOnly: true,
-        generated: generatedFiles.length > 0,
-        profile: universalProfile as GeneratedAppProfile,
-        workspaceId,
-        generatedFiles,
-        skippedReason: generatedFiles.length > 0 ? null : 'File writes failed',
-      };
-    }
-  }
-
-  const files = buildTaskTrackerWorkspaceFiles({
+  const files = buildUniversalCrudWorkspaceFiles({
     contractId: input.contract.contractId,
     ideaId: input.contract.ideaId,
     buildUnits: input.contract.buildUnits.map((unit) => unit.unitId),
     rawPrompt: input.rawPrompt,
+    profile: universalProfile,
+    buildRunId: input.contract.contractId,
   });
 
   const generatedFiles: string[] = [];
@@ -108,7 +88,7 @@ export function materializeGeneratedApplication(
   return {
     readOnly: true,
     generated: generatedFiles.length > 0,
-    profile: 'TASK_TRACKER_WEB_V1',
+    profile: universalProfile,
     workspaceId,
     generatedFiles,
     skippedReason: generatedFiles.length > 0 ? null : 'File writes failed',
@@ -123,17 +103,10 @@ export function usesViteReactRuntime(packageJsonSource: string): boolean {
       devpulseGeneratedApp?: string;
       devpulseUniversalBlueprint?: string;
       devpulseUniversalFeatureContract?: string;
+      devpulseModularFeatureMaterialization?: string;
     };
     return (
-      parsed.devpulseGeneratedApp === 'task-tracker-v1' ||
-      parsed.devpulseGeneratedApp === 'crm-v1' ||
-      parsed.devpulseGeneratedApp === 'inventory-v1' ||
-      parsed.devpulseGeneratedApp === 'booking-web-v1' ||
-      parsed.devpulseGeneratedApp === 'habit-tracker-web-v1' ||
-      parsed.devpulseGeneratedApp === 'generic-custom-app-v1' ||
-      parsed.devpulseGeneratedApp === 'expense-tracker-v1' ||
-      parsed.devpulseGeneratedApp === 'school-management-v1' ||
-      parsed.devpulseGeneratedApp === 'project-management-v1' ||
+      parsed.devpulseModularFeatureMaterialization === 'v1' ||
       parsed.devpulseUniversalFeatureContract === 'v1' ||
       parsed.devpulseUniversalBlueprint === 'v1' ||
       (typeof parsed.scripts?.dev === 'string' && parsed.scripts.dev.includes('vite')) ||

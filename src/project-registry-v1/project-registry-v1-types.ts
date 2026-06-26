@@ -4,6 +4,8 @@
 
 export type ProjectRegistryStatus = 'ACTIVE' | 'ARCHIVED';
 
+export type ProjectRealityStatus = 'PENDING' | 'PROMOTED' | 'FAILED' | 'READY';
+
 export interface ProjectRegistryRecord {
   projectId: string;
   name: string;
@@ -12,6 +14,22 @@ export interface ProjectRegistryRecord {
   updatedAt: string;
   lastActivityAt: string;
   summary: string;
+  persistentWorkspacePath?: string | null;
+  sourceRoot?: string | null;
+  aidevMetadataPath?: string | null;
+  activeBuildHistoryRunId?: string | null;
+  lastSuccessfulBuildRunId?: string | null;
+  exportReady?: boolean;
+  projectRealityStatus?: ProjectRealityStatus;
+  materializationQualityScorePath?: string | null;
+  materializationQualityScore?: number;
+  materializationQualityVerdict?: string | null;
+  featureContractRealityPath?: string | null;
+  featureContractRealityScore?: number;
+  featureContractRealityStatus?: string | null;
+  workspaceRealityAuditPath?: string | null;
+  workspaceRealityAuditScore?: number;
+  workspaceRealityAuditStatus?: string | null;
 }
 
 export interface ProjectRegistryFile {

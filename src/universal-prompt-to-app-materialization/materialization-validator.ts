@@ -9,9 +9,13 @@ import { GENERATED_APP_MANIFEST_FILENAME, type GeneratedAppManifest } from './ge
 import {
   getProfileFeatureDefinition,
   resolveMaterializationProfile,
-  type MaterializationProfile,
+  type ProfileFeatureDefinition,
 } from './profile-feature-map.js';
 import { extractPromptAppTitle } from './prompt-app-metadata.js';
+import {
+  materializableFeatureModules,
+  moduleIdToPascalCase,
+} from './modular-feature-module-generator.js';
 
 export const UNIVERSAL_PROMPT_TO_APP_MATERIALIZATION_V1_PASS_TOKEN =
   'UNIVERSAL_PROMPT_TO_APP_MATERIALIZATION_V1_PASS';
@@ -24,10 +28,12 @@ export interface MaterializationValidationResult {
   promptSpecificTermsPresent: boolean;
   genericFallbackRejected: boolean;
   manifestPresent: boolean;
+  modularFeaturesPresent: boolean;
   npmBuildAloneInsufficient: true;
   matchedUiTerms: string[];
   missingArtifacts: string[];
   missingFeatureModules: string[];
+  missingModularModuleFiles: string[];
   forbiddenTermsFound: string[];
   warnings: string[];
   manifest: GeneratedAppManifest | null;
@@ -42,10 +48,10 @@ const REQUIRED_SHELL_ARTIFACTS = [
   GENERATED_APP_MANIFEST_FILENAME,
 ];
 
-const REQUIRED_REGISTRY_ARTIFACTS = [
+const REQUIRED_MODULAR_ARTIFACTS = [
   'src/features/registry.ts',
   'src/features/routes.ts',
-  'src/features/domain/DomainAppFeature.tsx',
+  'src/features/FeatureAppRouter.tsx',
 ];
 
 function readIfExists(path: string): string {
@@ -55,13 +61,79 @@ function readIfExists(path: string): string {
 function collectSourceBundle(workspaceDir: string): string {
   const paths = [
     'src/App.tsx',
-    'src/features/domain/DomainAppFeature.tsx',
+    'src/features/FeatureAppRouter.tsx',
     'src/features/registry.ts',
+    'src/features/routes.ts',
     'src/blueprint/AppShell.tsx',
     'src/blueprint/pages/HomePage.tsx',
     'index.html',
   ];
   return paths.map((rel) => readIfExists(join(workspaceDir, rel))).join('\n');
+}
+
+function isMonolithicDomainFeaturePrimaryRenderer(workspaceDir: string): boolean {
+  const appShell = readIfExists(join(workspaceDir, 'src/blueprint/AppShell.tsx'));
+  const domainFeaturePath = join(workspaceDir, 'src/features/domain/DomainAppFeature.tsx');
+  if (!existsSync(domainFeaturePath)) return false;
+  return (
+    appShell.includes('DomainAppFeature') &&
+    !appShell.includes('FeatureAppRouter')
+  );
+}
+
+export function validateModularFeatureModules(
+  workspaceDir: string,
+  definition: ProfileFeatureDefinition,
+): { passed: boolean; missingModuleFiles: string[]; missingModules: string[] } {
+  const modules = materializableFeatureModules(definition);
+  const missingModules: string[] = [];
+  const missingModuleFiles: string[] = [];
+
+  for (const moduleId of modules) {
+    const folder = join(workspaceDir, 'src/features', moduleId);
+    if (!existsSync(folder)) {
+      missingModules.push(moduleId);
+      continue;
+    }
+
+    const pascal = moduleIdToPascalCase(moduleId);
+    const required = [
+      `${pascal}Feature.tsx`,
+      `${moduleId}.types.ts`,
+      `${moduleId}.service.ts`,
+      `${moduleId}.validation.ts`,
+      'index.ts',
+    ];
+    for (const fileName of required) {
+      const filePath = join(folder, fileName);
+      if (!existsSync(filePath)) {
+        missingModuleFiles.push(`src/features/${moduleId}/${fileName}`);
+      }
+    }
+  }
+
+  const registrySource = readIfExists(join(workspaceDir, 'src/features/registry.ts'));
+  for (const moduleId of modules) {
+    if (!registrySource.includes(`id: '${moduleId}'`)) {
+      missingModules.push(`registry:${moduleId}`);
+    }
+  }
+
+  const routesSource = readIfExists(join(workspaceDir, 'src/features/routes.ts'));
+  if (!routesSource.includes('FEATURE_REGISTRY')) {
+    missingModuleFiles.push('src/features/routes.ts:FEATURE_REGISTRY');
+  }
+
+  const routerSource = readIfExists(join(workspaceDir, 'src/features/FeatureAppRouter.tsx'));
+  if (!routerSource.includes('FEATURE_REGISTRY')) {
+    missingModuleFiles.push('src/features/FeatureAppRouter.tsx:FEATURE_REGISTRY');
+  }
+
+  return {
+    passed: missingModules.length === 0 && missingModuleFiles.length === 0,
+    missingModuleFiles,
+    missingModules: [...new Set(missingModules)],
+  };
 }
 
 export function validateUniversalAppMaterialization(input: {
@@ -84,11 +156,14 @@ export function validateUniversalAppMaterialization(input: {
     (rel) => !existsSync(join(input.workspaceDir, rel)),
   );
   missingArtifacts.push(
-    ...REQUIRED_REGISTRY_ARTIFACTS.filter((rel) => !existsSync(join(input.workspaceDir, rel))),
+    ...REQUIRED_MODULAR_ARTIFACTS.filter((rel) => !existsSync(join(input.workspaceDir, rel))),
   );
 
-  const missingFeatureModules = definition.featureModules.filter(
-    (module) => !readIfExists(join(input.workspaceDir, 'src/features/registry.ts')).includes(module),
+  const modularValidation = validateModularFeatureModules(input.workspaceDir, definition);
+
+  const modulesForRegistry = materializableFeatureModules(definition);
+  const missingFeatureModules = modulesForRegistry.filter(
+    (module) => !readIfExists(join(input.workspaceDir, 'src/features/registry.ts')).includes(`'${module}'`),
   );
 
   const matchedUiTerms = definition.requiredUiTerms.filter((term) => sourceBundle.includes(term.toLowerCase()));
@@ -106,9 +181,17 @@ export function validateUniversalAppMaterialization(input: {
     existsSync(join(input.workspaceDir, 'src/App.tsx')) &&
     readIfExists(join(input.workspaceDir, 'src/App.tsx')).includes('AppShell');
 
+  const appShellSource = readIfExists(join(input.workspaceDir, 'src/blueprint/AppShell.tsx'));
+  const shellUsesModularRouter =
+    appShellSource.includes('FeatureAppRouter') || sourceBundle.includes('feature-app-router');
+
   const featureModulesPresent =
     missingFeatureModules.length === 0 &&
-    existsSync(join(input.workspaceDir, 'src/features/domain/DomainAppFeature.tsx'));
+    modularValidation.passed &&
+    shellUsesModularRouter &&
+    !isMonolithicDomainFeaturePrimaryRenderer(input.workspaceDir);
+
+  const modularFeaturesPresent = modularValidation.passed && shellUsesModularRouter;
 
   const promptSpecificTermsPresent =
     matchedUiTerms.length >= Math.min(3, definition.requiredUiTerms.length) ||
@@ -131,18 +214,25 @@ export function validateUniversalAppMaterialization(input: {
     warnings.push('npm build succeeded but blueprint shell is missing — build PASS is insufficient.');
   }
   if (input.npmBuildOk && !featureModulesPresent) {
-    warnings.push('npm build succeeded but feature modules are missing.');
+    warnings.push('npm build succeeded but modular feature modules are missing.');
+  }
+  if (isMonolithicDomainFeaturePrimaryRenderer(input.workspaceDir)) {
+    warnings.push('DomainAppFeature.tsx is still the primary renderer — modular materialization required.');
   }
   if (matchedUiTerms.length < definition.requiredUiTerms.length) {
     warnings.push(
       `Only ${matchedUiTerms.length}/${definition.requiredUiTerms.length} required UI terms detected in generated source.`,
     );
   }
+  if (manifest && manifest.featureModuleDetails.length === 0 && modularValidation.passed) {
+    warnings.push('Manifest missing featureModuleDetails despite modular files on disk.');
+  }
 
   const passed =
     missingArtifacts.length === 0 &&
     blueprintShellPresent &&
     featureModulesPresent &&
+    modularFeaturesPresent &&
     promptSpecificTermsPresent &&
     genericFallbackRejected;
 
@@ -154,10 +244,12 @@ export function validateUniversalAppMaterialization(input: {
     promptSpecificTermsPresent,
     genericFallbackRejected,
     manifestPresent: manifest != null,
+    modularFeaturesPresent,
     npmBuildAloneInsufficient: true,
     matchedUiTerms: [...matchedUiTerms, ...titlePresent],
     missingArtifacts,
     missingFeatureModules,
+    missingModularModuleFiles: modularValidation.missingModuleFiles,
     forbiddenTermsFound,
     warnings,
     manifest,

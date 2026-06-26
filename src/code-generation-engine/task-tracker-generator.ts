@@ -8,6 +8,7 @@ import { composeGeneratedAppWorkspaceFiles } from '../universal-app-blueprint/un
 import { mergePackageJsonWithBlueprint } from '../universal-app-blueprint/universal-app-blueprint-generator.js';
 import { UNIVERSAL_APP_BLUEPRINT_VERSION } from '../universal-app-blueprint/universal-app-blueprint-types.js';
 import { buildTaskTrackerFeatureContractJson } from '../feature-reality-validation/feature-contract-builder.js';
+import { buildUniversalMaterializedWorkspaceFiles } from '../universal-prompt-to-app-materialization/universal-app-materialization-engine.js';
 
 export function buildTaskTrackerPackageJson(contractId: string): string {
   return mergePackageJsonWithBlueprint(
@@ -569,57 +570,20 @@ export function buildTaskTrackerBuildManifest(input: {
   );
 }
 
+/** @deprecated Legacy path removed — delegates to universal modular materialization. */
 export function buildTaskTrackerWorkspaceFiles(input: {
   contractId: string;
   ideaId: string;
   buildUnits: string[];
   rawPrompt: string;
 }): GeneratedWorkspaceFile[] {
-  const requirements = extractTaskTrackerRequirements(input.rawPrompt);
-  const sharedFiles: GeneratedWorkspaceFile[] = [
-    { relativePath: 'package.json', content: buildTaskTrackerPackageJson(input.contractId) },
-    { relativePath: 'index.html', content: buildTaskTrackerIndexHtml() },
-    { relativePath: 'vite.config.ts', content: buildTaskTrackerViteConfig() },
-    { relativePath: 'tsconfig.json', content: buildTaskTrackerTsConfig() },
-    { relativePath: 'tsconfig.node.json', content: buildTaskTrackerTsConfigNode() },
-    { relativePath: 'src/vite-env.d.ts', content: buildTaskTrackerViteEnvDts() },
-    { relativePath: 'src/main.tsx', content: buildTaskTrackerMainTsx() },
-    { relativePath: 'src/screens/index.ts', content: buildTaskTrackerScreensIndex() },
-    {
-      relativePath: 'build-manifest.json',
-      content: buildTaskTrackerBuildManifest(input),
-    },
-    {
-      relativePath: 'feature-contract.json',
-      content: buildTaskTrackerFeatureContractJson({
-        contractId: input.contractId,
-        requirements,
-      }),
-    },
-  ];
-
-  const featureFiles: GeneratedWorkspaceFile[] = [
-    {
-      relativePath: 'src/features/task-tracker/TaskTrackerFeature.tsx',
-      content: buildTaskTrackerFeatureTsx(),
-    },
-    {
-      relativePath: 'src/features/task-tracker/task-tracker.css',
-      content: buildTaskTrackerFeatureCss(),
-    },
-  ];
-
-  return composeGeneratedAppWorkspaceFiles({
-    blueprint: {
-      contractId: input.contractId,
-      ideaId: input.ideaId,
-      buildUnits: input.buildUnits,
-      appName: 'Task Tracker',
-      tagline: 'Add, complete, delete, and filter your tasks',
-      coreFeatureLabel: 'Tasks',
-    },
-    featureFiles,
-    sharedFiles,
+  return buildUniversalMaterializedWorkspaceFiles({
+    contractId: input.contractId,
+    ideaId: input.ideaId,
+    buildUnits: input.buildUnits,
+    rawPrompt: input.rawPrompt,
+    profile: 'TASK_TRACKER_WEB_V1',
+    buildRunId: input.contractId,
   });
 }
 
@@ -638,6 +602,13 @@ export function isTaskTrackerFeatureSource(source: string): boolean {
 
 export function isTaskTrackerAppSource(source: string): boolean {
   if (/data-blueprint-router="universal-v1"/.test(source)) return true;
+  if (
+    /FeatureAppRouter|features\/tasks\/TasksFeature|data-feature-module="tasks"|data-modular-feature-v1="true"/.test(
+      source,
+    )
+  ) {
+    return true;
+  }
   if (/TaskTrackerFeature|features\/task-tracker/.test(source)) {
     return isTaskTrackerFeatureSource(source);
   }
