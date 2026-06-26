@@ -59,6 +59,7 @@ const CUSTOM_PROMPT =
   'Build FarmCrop Planner — a niche crop rotation planner for small farms with fields module, crop-calendar module, soil-notes module, and harvest-forecast module. No generic project management.';
 
 const LISA_MODULES = [
+  'onboarding-calibration',
   'eye-tracking-board',
   'blink-input-engine',
   'gaze-keyboard',
@@ -88,12 +89,14 @@ function materializePrompt(prompt: string, workspaceId: string, rootDir: string)
   const contractAssessment = assessRequirementsToPlanExecutionContract({ rawPrompt: prompt });
   const contract = contractAssessment.report.buildReadyContract;
   if (!contract) throw new Error('No build-ready contract');
+  const buildPlan = resolvePromptFaithfulBuildPlan(prompt);
   const engine = materializeGeneratedApplication({
     projectRootDir: rootDir,
     workspaceId,
     contract: { ...contract, contractId: workspaceId },
     rawPrompt: prompt,
-    profileOverride: resolvePromptFaithfulBuildPlan(prompt).materializationProfile as never,
+    profileOverride: buildPlan.materializationProfile as never,
+    faithfulBuildPlan: buildPlan,
   });
   if (!engine.generated) throw new Error(engine.skippedReason ?? 'materialization failed');
   return workspaceDir;

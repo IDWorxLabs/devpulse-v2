@@ -5,7 +5,11 @@
 import type { ProfileFeatureDefinition } from '../universal-prompt-to-app-materialization/profile-feature-map.js';
 import type { PromptFeatureExtraction } from './prompt-faithful-generation-types.js';
 import { buildPromptSpecificDomainCopy } from './prompt-specific-ui-copy-builder.js';
-import { dedupeModuleIds } from './prompt-module-name-normalizer.js';
+import {
+  dedupeModuleIds,
+  isRejectedNonModulePhrase,
+  suppressFallbackModulesWhenCustomExists,
+} from './prompt-module-name-normalizer.js';
 
 export function buildCustomProfileFeatureDefinition(
   extraction: PromptFeatureExtraction,
@@ -13,12 +17,21 @@ export function buildCustomProfileFeatureDefinition(
   customDomainCopy: Record<string, string>;
   androidPhonePreviewRequired: boolean;
 } {
-  const modules = dedupeModuleIds(['auth', ...extraction.requiredModules.filter((m) => m !== 'auth')]);
+  const productModules = suppressFallbackModulesWhenCustomExists(
+    extraction.requiredModules.filter((m) => m !== 'auth' && !isRejectedNonModulePhrase(m)),
+    extraction.requiredModules,
+  );
+  const modules = dedupeModuleIds(['auth', ...productModules]);
   const routes = modules.map((moduleId) => (moduleId === 'auth' ? '/' : `/${moduleId}`));
   const uiTerms = [
-    ...extraction.requiredModules.map((m) => m.replace(/-/g, ' ')),
-    ...extraction.requiredInteractions.map((i) => i.split(' ')[0] ?? i),
-    extraction.domain.split('/')[0]?.trim() ?? 'custom',
+    ...productModules.flatMap((m) => [m.replace(/-/g, ' '), ...m.split('-').filter((part) => part.length >= 4)]),
+    'blink',
+    'gaze',
+    'speech',
+    'communication',
+    'emergency',
+    'calibration',
+    'accessibility',
   ].filter(Boolean);
 
   const customDomainCopy = buildPromptSpecificDomainCopy(extraction);
@@ -47,5 +60,6 @@ export function shouldUseCustomFeatureDefinition(
 ): boolean {
   if (materializationProfile === 'GENERIC_CUSTOM_APP_V1') return true;
   if (extraction.isCustomDomainPrompt && extraction.requiredModules.length >= 3) return true;
+  if (extraction.explicitModulesProvided && extraction.sanitizedModuleCount >= 2) return true;
   return false;
 }

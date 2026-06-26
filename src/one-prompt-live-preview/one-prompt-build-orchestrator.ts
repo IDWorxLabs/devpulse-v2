@@ -46,8 +46,14 @@ import {
   listWorkspaceFeatureModuleIds,
   resolvePromptFaithfulBuildPlan,
 } from '../prompt-faithful-generation/index.js';
+import {
+  runAutonomousSoftwareEngineeringPipeline,
+  toAutonomousSoftwareEngineeringApiResult,
+} from '../autonomous-software-engineering-engine/index.js';
+import { evaluateLivePreviewGateForOrchestrator } from '../live-preview-gate/index.js';
 import type { GeneratedAppProfile } from '../code-generation-engine/code-generation-engine-types.js';
 import { summarizePrompt } from '../universal-prompt-to-app-materialization/prompt-app-metadata.js';
+import type { ProfileFeatureDefinition } from '../universal-prompt-to-app-materialization/profile-feature-map.js';
 import type { GeneratedAppManifest } from '../universal-prompt-to-app-materialization/generated-app-manifest.js';
 import {
   completeMaterializationEvidence,
@@ -152,6 +158,7 @@ function composeFailureResult(input: {
     failureReason: input.failureReason,
     featureSignals: null,
     materializationManifest: input.materializationManifest ?? null,
+    livePreviewGate: null,
     updatedAt: new Date().toISOString(),
   };
 }
@@ -184,6 +191,7 @@ function inspectUniversalFeatureSignals(
   projectId: string,
   projectName: string,
   buildId: string,
+  definitionOverride: ProfileFeatureDefinition,
 ): MaterializationValidationResult {
   return validateUniversalAppMaterialization({
     workspaceDir,
@@ -192,6 +200,7 @@ function inspectUniversalFeatureSignals(
     projectId,
     projectName,
     buildRunId: buildId,
+    definitionOverride,
   });
 }
 
@@ -268,6 +277,7 @@ export async function runOnePromptLivePreviewBuild(
   const materializationProfile = buildPlan.materializationProfile;
   const definition = buildPlan.definition;
   const effectiveProfile = materializationProfile as GeneratedAppProfile;
+  const intentTraceEvents = buildIntentUnderstandingTraceEvents(buildPlan.productIntelligenceModel);
   const faithfulnessManifestFields = buildPromptFaithfulnessManifestFields({
     rawPrompt: prompt,
     selectedProfile: String(materializationProfile),
@@ -279,6 +289,7 @@ export async function runOnePromptLivePreviewBuild(
     guardResult: buildPlan.guardResult,
     manifestFields: faithfulnessManifestFields,
   });
+  void faithfulnessTraceEvents;
 
   const workspaceRel = `${GENERATED_BUILDER_WORKSPACES_DIR}/${projectId}`.replace(/\\/g, '/');
   assertWorkspacePathBelongsToProject(workspaceRel, projectId);
@@ -289,6 +300,54 @@ export async function runOnePromptLivePreviewBuild(
     Boolean(ranking.selectedProfile) ||
     buildPlan.extraction.isCustomDomainPrompt ||
     materializationProfile === 'GENERIC_CUSTOM_APP_V1';
+
+  if (!buildPlan.readyForGeneration) {
+    initializeForensicManifest({
+      workspaceDir,
+      workspacePath: workspaceRel,
+      projectId,
+      projectName,
+      buildRunId: buildId,
+      prompt,
+      selectedProfile: String(materializationProfile),
+      expectedAppType: definition.expectedAppType,
+      promptSummary: summarizePrompt(prompt),
+      confidence: ranking.confidence,
+      featureModules: definition.featureModules,
+      routes: definition.routes,
+      fallbackUsed: buildPlan.guardResult.guardApplied,
+    });
+    return registerFailedBuild({
+      projectId,
+      projectName,
+      workspaceDir,
+      failure: {
+        failureStage: 'CAPABILITY_PLANNING',
+        failureReason:
+          buildPlan.intentUnderstanding.blockedReason ??
+          buildPlan.promptFaithfulness.blockedReason ??
+          buildPlan.capabilityPlanning.blockedReason ??
+          buildPlan.incrementalBuild.blockedReason ??
+          buildPlan.behaviorSimulation.blockedReason ??
+          'Intent, Prompt Faithfulness, Capability Planning, Incremental Build, or Behavior Simulation blocked generation.',
+        status: 'ABORTED',
+        lastSuccessfulStage: 'STARTED',
+      },
+      result: {
+        buildId,
+        projectId,
+        projectName,
+        prompt,
+        source,
+        failureReason:
+          buildPlan.intentUnderstanding.blockedReason ??
+          buildPlan.promptFaithfulness.blockedReason ??
+          'Product Intelligence Model or Prompt Evidence Contract blocked generation.',
+        workspaceId: projectId,
+        workspacePath: workspaceRel,
+      },
+    });
+  }
 
   if (!isOnePromptBuildRequest(prompt) && !hasRecognizedBuildProfile) {
     initializeForensicManifest({
@@ -471,6 +530,55 @@ export async function runOnePromptLivePreviewBuild(
   touchForensicStage(workspaceDir, { stage: 'WORKSPACE_CREATED' });
   lastSuccessfulStage = 'WORKSPACE_CREATED';
 
+  const asePipeline = runAutonomousSoftwareEngineeringPipeline({
+    rawPrompt: prompt,
+    projectId,
+    productIntelligenceModel: buildPlan.productIntelligenceModel,
+    promptFaithfulness: buildPlan.promptFaithfulness,
+    capabilityPlanning: buildPlan.capabilityPlanning,
+    projectRootDir: input.projectRootDir ?? null,
+    workspaceDir,
+  });
+  const autonomousSoftwareEngineering = toAutonomousSoftwareEngineeringApiResult(asePipeline);
+
+  if (!asePipeline.readyForMaterialization) {
+    return registerFailedBuild({
+      projectId,
+      projectName,
+      workspaceDir,
+      failure: {
+        failureStage: 'CAPABILITY_PLANNING',
+        failureReason:
+          asePipeline.blockedReason ??
+          'Autonomous Software Engineering Engine blocked materialization.',
+        status: 'ABORTED',
+        lastSuccessfulStage,
+      },
+      result: {
+        buildId,
+        projectId,
+        projectName,
+        prompt,
+        source,
+        failureReason:
+          asePipeline.blockedReason ??
+          'Autonomous Software Engineering Engine blocked materialization.',
+        workspaceId: projectId,
+        workspacePath: workspaceRel,
+        generatedProfile: effectiveProfile,
+      },
+    });
+  }
+
+  const incrementalPipeline = asePipeline.artifacts.incrementalBuild;
+  const behaviorPipeline = asePipeline.artifacts.behaviorSimulation;
+  const virtualUserPipeline = asePipeline.artifacts.virtualUserSimulation;
+  const virtualDevicePipeline = asePipeline.artifacts.virtualDeviceLaboratory;
+  const interactionProofPipeline = asePipeline.artifacts.interactionProof;
+  const autonomousDebuggingPipeline = asePipeline.artifacts.autonomousDebugging;
+  const continuousImprovementPipeline = asePipeline.artifacts.continuousImprovement;
+  const launchReadinessResult = asePipeline.launchReadiness;
+
   const materializationRoot = input.projectRootDir;
 
   const materializationStartedAt = performance.now();
@@ -606,6 +714,7 @@ export async function runOnePromptLivePreviewBuild(
     projectId,
     projectName,
     buildId,
+    definition,
   );
   timings.validationDurationMs = roundDurationMs(validationStartedAt);
   if (!materializationValidation.passed) {
@@ -816,6 +925,60 @@ export async function runOnePromptLivePreviewBuild(
   });
   lastSuccessfulStage = 'PREVIEW';
 
+  const livePreviewGateBridge = evaluateLivePreviewGateForOrchestrator({
+    rawPrompt: prompt,
+    previewUrl: devServer.url ?? null,
+    generationComplete: true,
+    productIntelligenceModel: buildPlan.productIntelligenceModel,
+    promptFaithfulness: buildPlan.promptFaithfulness,
+    capabilityPlanning: buildPlan.capabilityPlanning,
+    incrementalBuild: incrementalPipeline,
+    behaviorSimulation: behaviorPipeline,
+    virtualUserSimulation: virtualUserPipeline,
+    virtualDeviceLaboratory: virtualDevicePipeline,
+    interactionProof: interactionProofPipeline,
+    autonomousDebugging: autonomousDebuggingPipeline,
+    continuousImprovement: continuousImprovementPipeline,
+    launchReadiness: launchReadinessResult,
+    projectRootDir: input.projectRootDir ?? null,
+    workspaceDir: workspaceDir,
+  });
+
+  if (!livePreviewGateBridge.livePreviewAvailable) {
+    return registerFailedBuild({
+      projectId,
+      projectName,
+      workspaceDir,
+      failure: {
+        failureStage: 'PREVIEW',
+        failureReason:
+          livePreviewGateBridge.failureReason ??
+          livePreviewGateBridge.gate.blockerExplanation.summary ??
+          'Live Preview Gate blocked preview unlock.',
+        status: 'PARTIAL',
+        lastSuccessfulStage,
+      },
+      result: {
+        buildId,
+        projectId,
+        projectName,
+        prompt,
+        source,
+        failureReason:
+          livePreviewGateBridge.gate.blockerExplanation.summary ??
+          'Live Preview Gate blocked preview unlock.',
+        workspaceId: projectId,
+        workspacePath: workspaceRel,
+        generatedProfile,
+        planningProofLevel: contractAssessment.report.proofLevel,
+        materializationProofLevel: materialization.proofLevel,
+        npmInstallOk: true,
+        npmBuildOk: true,
+        livePreviewAvailable: false,
+      },
+    });
+  }
+
   createPreviewSession({
     projectId,
     workspaceId: workspaceRel,
@@ -896,11 +1059,13 @@ export async function runOnePromptLivePreviewBuild(
     buildResult: 'PASS',
     npmInstallOk,
     npmBuildOk,
-    previewUrl: devServer.url,
-    livePreviewAvailable: true,
+    previewUrl: livePreviewGateBridge.previewUrl ?? devServer.url,
+    livePreviewAvailable: livePreviewGateBridge.livePreviewAvailable,
     failureReason: null,
     featureSignals,
     materializationManifest: evidenceCompletion.manifest,
+    livePreviewGate: livePreviewGateBridge.gate,
+    autonomousSoftwareEngineering,
     updatedAt: new Date().toISOString(),
   };
   persistBuildIntentRun({

@@ -15,6 +15,8 @@ import { resetCapabilityPlanningHistoryForTests } from './capability-planning-hi
 import { resetCapabilityPlanningReportCounterForTests } from './capability-planning-reporting.js';
 import { resetCapabilityPlanningEngineForTests } from './capability-planning-engine.js';
 import { resetCapabilityResearchEngineModuleForTests } from '../capability-research-engine/index.js';
+import { resetCapabilityAuthorityForTests } from './capability-authority.js';
+import { resetCapabilityPlanningRegistryForTests } from './capability-planning-registry.js';
 
 export {
   CAPABILITY_PLANNING_ENGINE_PASS_TOKEN,
@@ -42,6 +44,21 @@ export type {
   CapabilityPlanHistoryEntry,
   CapabilityPlanningRuntimeReport,
   CapabilityPlanResult,
+  CapabilityStatus,
+  CapabilityGapDecision,
+  GenerationPermissionVerdict,
+  CapabilityRecord,
+  RequiredCapability,
+  ExistingCapabilitySearchResult,
+  CapabilityGap,
+  ComposedCapabilityPlan,
+  CapabilityGenerationPlanEra3,
+  CapabilityValidationPlanEra3,
+  CapabilityInstallationPlanEra3,
+  CapabilityDependencyGraphResult,
+  CapabilityPlanningPipelineResult,
+  CapabilityPlanningPipelineInput,
+  LaunchCapabilityEvidence,
 } from './capability-planning-types.js';
 
 export {
@@ -94,6 +111,38 @@ export {
 
 export type { CapabilityPlanningEngineSystemSnapshot } from './capability-planning-engine.js';
 
+export {
+  discoverRequiredCapabilities,
+  resetCapabilityDiscoveryForTests,
+} from './capability-discovery.js';
+export { searchExistingCapabilities } from './existing-capability-search.js';
+export { analyzeCapabilityGaps, resetCapabilityGapAnalyzerForTests } from './capability-gap-analyzer.js';
+export { composeCapabilitiesFromGaps, resetCapabilityCompositionEngineForTests } from './capability-composition-engine.js';
+export { planCapabilityGeneration, resetCapabilityGenerationPlannerForTests } from './capability-generation-planner.js';
+export { planCapabilityValidations, resetCapabilityValidationPlannerEra3ForTests } from './capability-validation-planner.js';
+export { planCapabilityInstallations, resetCapabilityInstallationPlannerForTests } from './capability-installation-planner.js';
+export { analyzeCapabilityReuse } from './capability-reuse-analyzer.js';
+export type { CapabilityReuseSummary } from './capability-reuse-analyzer.js';
+export { buildCapabilityDependencyGraph, resetCapabilityDependencyGraphForTests } from './capability-dependency-graph.js';
+export { buildCapabilityPlanningPipelineReport } from './capability-planning-report-builder.js';
+export {
+  listCapabilityUniverse,
+  getCapabilityRecord,
+  registerCapabilityRecord,
+  searchCapabilityUniverse,
+  resetCapabilityPlanningRegistryForTests,
+} from './capability-planning-registry.js';
+export {
+  runCapabilityPlanningPipeline,
+  getLastCapabilityPlanningPipelineResult,
+  isCapabilityPlanningReadyForGeneration,
+  buildLaunchCapabilityEvidence,
+  registerCapabilityPlanningWithLaunchAuthority,
+  registerCapabilityPlanningWithIntentUnderstanding,
+  registerCapabilityPlanningWithPromptFaithfulness,
+  resetCapabilityAuthorityForTests,
+} from './capability-authority.js';
+
 export function resetCapabilityPlanningEngineModuleForTests(): void {
   resetCapabilityPlanRegistryForTests();
   resetCapabilityPlanningCacheForTests();
@@ -108,4 +157,6 @@ export function resetCapabilityPlanningEngineModuleForTests(): void {
   resetCapabilityPlanningReportCounterForTests();
   resetCapabilityPlanningEngineForTests();
   resetCapabilityResearchEngineModuleForTests();
+  resetCapabilityAuthorityForTests();
+  resetCapabilityPlanningRegistryForTests();
 }

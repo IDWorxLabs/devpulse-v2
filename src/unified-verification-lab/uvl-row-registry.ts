@@ -1561,6 +1561,24 @@ export const CAPABILITY_RESEARCH_ENGINE_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'CAPABILITY_RESEARCH_ENGINE', module: 'capability_research_engine', phase: 21.2, description: 'Capability research engine orchestration and read-only registration', extensionOnly: true },
 ];
 
+export const MISSING_CAPABILITY_EVOLUTION_UVL_ROWS: readonly UvlRow[] = [
+  { rowId: 'MISSING_CAPABILITY_EVOLUTION_TYPES', module: 'missing_capability_evolution_engine', phase: 10, description: 'Missing capability evolution types and models', extensionOnly: true },
+  { rowId: 'MISSING_CAPABILITY_INTAKE', module: 'missing_capability_evolution_engine', phase: 10, description: 'Missing capability intake from upstream gates', extensionOnly: true },
+  { rowId: 'EVOLUTION_SAFETY_ASSESSOR', module: 'missing_capability_evolution_engine', phase: 10, description: 'Evolution safety assessment before generation', extensionOnly: true },
+  { rowId: 'CAPABILITY_DESIGN_PLANNER', module: 'missing_capability_evolution_engine', phase: 10, description: 'Safe capability design planning', extensionOnly: true },
+  { rowId: 'CAPABILITY_INTERFACE_DESIGNER', module: 'missing_capability_evolution_engine', phase: 10, description: 'Stable capability interface design', extensionOnly: true },
+  { rowId: 'CAPABILITY_IMPLEMENTATION_PLANNER', module: 'missing_capability_evolution_engine', phase: 10, description: 'Bounded capability implementation planning', extensionOnly: true },
+  { rowId: 'CAPABILITY_VALIDATOR_DESIGNER', module: 'missing_capability_evolution_engine', phase: 10, description: 'Deterministic capability validator design', extensionOnly: true },
+  { rowId: 'CAPABILITY_TEST_FIXTURE_PLANNER', module: 'missing_capability_evolution_engine', phase: 10, description: 'Capability test fixture planning', extensionOnly: true },
+  { rowId: 'CAPABILITY_WORKSPACE_GENERATOR', module: 'missing_capability_evolution_engine', phase: 10, description: 'Isolated capability workspace generation', extensionOnly: true },
+  { rowId: 'CAPABILITY_VALIDATION_RUNNER', module: 'missing_capability_evolution_engine', phase: 10, description: 'Pre-install capability validation runner', extensionOnly: true },
+  { rowId: 'CAPABILITY_INSTALLATION_EXECUTOR', module: 'missing_capability_evolution_engine', phase: 10, description: 'Atomic capability installation with rollback', extensionOnly: true },
+  { rowId: 'CAPABILITY_REGISTRY_UPDATER', module: 'missing_capability_evolution_engine', phase: 10, description: 'Post-validation capability registry update', extensionOnly: true },
+  { rowId: 'CAPABILITY_REUSE_INDEXER', module: 'missing_capability_evolution_engine', phase: 10, description: 'Evolved capability reuse indexing', extensionOnly: true },
+  { rowId: 'CAPABILITY_EVOLUTION_LOOP_CONTROLLER', module: 'missing_capability_evolution_engine', phase: 10, description: 'Bounded evolution loop controller', extensionOnly: true },
+  { rowId: 'MISSING_CAPABILITY_EVOLUTION_ENGINE', module: 'missing_capability_evolution_engine', phase: 10, description: 'Missing capability evolution orchestration and read-only registration', extensionOnly: true },
+];
+
 export const MISSING_CAPABILITY_ESCALATION_UVL_ROWS: readonly UvlRow[] = [
   { rowId: 'MISSING_CAPABILITY_ESCALATION_TYPES', module: 'missing_capability_escalation', phase: 21.1, description: 'Missing capability escalation types and models', extensionOnly: true },
   { rowId: 'ESCALATION_REGISTRY', module: 'missing_capability_escalation', phase: 21.1, description: 'Escalation record registry', extensionOnly: true },
@@ -1928,6 +1946,7 @@ export const ALL_UVL_ROWS: readonly UvlRow[] = [
   ...MULTI_PROJECT_VERIFICATION_UVL_ROWS,
   ...MULTI_PROJECT_VERIFICATION_ORCHESTRATION_UVL_ROWS,
   ...MULTI_PROJECT_MONITORING_UVL_ROWS,
+  ...MISSING_CAPABILITY_EVOLUTION_UVL_ROWS,
   ...MISSING_CAPABILITY_ESCALATION_UVL_ROWS,
   ...CAPABILITY_RESEARCH_ENGINE_UVL_ROWS,
   ...CAPABILITY_PLANNING_ENGINE_UVL_ROWS,

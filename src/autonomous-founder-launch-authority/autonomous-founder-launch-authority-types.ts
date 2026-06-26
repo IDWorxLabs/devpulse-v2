@@ -47,6 +47,15 @@ export interface FounderEvidenceSnapshot {
   universalFeatureContract: FounderEvidenceSource;
   engineeringReality: FounderEvidenceSource;
   launchReadiness: FounderEvidenceSource;
+  promptFaithfulness: FounderEvidenceSource | null;
+  capabilityPlanning: FounderEvidenceSource | null;
+  incrementalBuild: FounderEvidenceSource | null;
+  behaviorSimulation: FounderEvidenceSource | null;
+  virtualUserSimulation: FounderEvidenceSource | null;
+  virtualDeviceLaboratory: FounderEvidenceSource | null;
+  interactionProof: FounderEvidenceSource | null;
+  autonomousDebugging: FounderEvidenceSource | null;
+  continuousProductImprovement: FounderEvidenceSource | null;
   requirementDiscovery: FounderRequirementDiscoveryEvidence | null;
   verificationHub: FounderVerificationHubEvidence | null;
   productArchitecture: FounderProductArchitectureEvidence | null;

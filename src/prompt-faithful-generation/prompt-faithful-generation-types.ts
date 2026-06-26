@@ -37,12 +37,18 @@ export interface PromptFeatureExtraction {
   primaryPlatform: string;
   corePurpose: string;
   requiredModules: string[];
+  rawExtractedModules: string[];
+  rejectedNonModulePhrases: string[];
   requiredInteractions: string[];
+  designRequirements: string[];
+  platformRequirements: string[];
   safetyNotes: string[];
   previewRequirements: string[];
   androidPhonePreviewRequired: boolean;
   isCustomDomainPrompt: boolean;
   explicitModulesProvided: boolean;
+  sanitizedModuleCount: number;
+  rawExtractedModuleCount: number;
 }
 
 export interface PromptProfileGuardResult {
@@ -64,6 +70,9 @@ export interface PromptFaithfulnessVerdict {
   promptDerivedInteractions: string[];
   rejectedFallbackProfiles: string[];
   bannedFallbackModulesDetected: string[];
+  overExtractedNonModulePhrases: string[];
+  fallbackModulesAppendedByGenerator: string[];
+  truePromptDerivedModules: string[];
   promptFaithfulnessFailureReasons: string[];
   androidPhonePreviewRequired: boolean;
   androidPhonePreviewStatus: 'PASS' | 'FAIL' | 'PENDING';
@@ -80,7 +89,12 @@ export interface PromptFaithfulnessManifestFields {
   promptDerivedInteractions: string[];
   rejectedFallbackProfiles: string[];
   bannedFallbackModulesDetected: string[];
+  overExtractedNonModulePhrases: string[];
+  fallbackModulesAppendedByGenerator: string[];
+  truePromptDerivedModules: string[];
   promptFaithfulnessFailureReasons: string[];
   androidPhonePreviewRequired: boolean;
   androidPhonePreviewStatus: 'PASS' | 'FAIL' | 'PENDING';
+  sanitizedModuleCount: number;
+  rawExtractedModuleCount: number;
 }

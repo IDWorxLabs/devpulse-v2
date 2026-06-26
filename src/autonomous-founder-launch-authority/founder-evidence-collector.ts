@@ -23,6 +23,52 @@ import {
   computeProductArchitectureAflaPenalty,
   getLastProductArchitectureAssessment,
 } from '../product-architect-intelligence-v1/index.js';
+import {
+  buildLaunchFaithfulnessEvidence,
+  getLastPromptFaithfulnessV2Result,
+  runPromptFaithfulnessEngineV2,
+} from '../prompt-faithfulness-engine-v2/index.js';
+import {
+  buildLaunchCapabilityEvidence,
+  getLastCapabilityPlanningPipelineResult,
+  runCapabilityPlanningPipeline,
+} from '../capability-planning-engine/index.js';
+import {
+  buildLaunchIncrementalBuildEvidence,
+  getLastIncrementalBuildPipelineResult,
+  runIncrementalBuildPipeline,
+} from '../incremental-autonomous-builder/index.js';
+import {
+  buildLaunchBehaviorSimulationEvidence,
+  getLastBehaviorSimulationPipelineResult,
+  runBehaviorSimulationPipeline,
+} from '../behavior-simulation-engine/index.js';
+import {
+  buildLaunchVirtualUserEvidence,
+  getLastVirtualUserPipelineResult,
+  runVirtualUserPipeline,
+} from '../virtual-user-engine/index.js';
+import {
+  buildLaunchVirtualDeviceEvidence,
+  getLastVirtualDevicePipelineResult,
+  runVirtualDevicePipeline,
+} from '../virtual-device-laboratory/index.js';
+import {
+  buildLaunchInteractionProofEvidence,
+  getLastInteractionProofPipelineResult,
+  runInteractionProofPipeline,
+} from '../interaction-proof-engine/index.js';
+import {
+  buildLaunchAutonomousDebuggingEvidence,
+  getLastAutonomousDebuggingPipelineResult,
+  runAutonomousDebuggingPipeline,
+} from '../autonomous-debugging-engine/index.js';
+import {
+  buildLaunchContinuousImprovementEvidence,
+  getLastContinuousImprovementPipelineResult,
+  runContinuousImprovementPipeline,
+} from '../continuous-product-improvement-engine/index.js';
+import { runIntentUnderstandingEngine } from '../intent-understanding-engine/index.js';
 import type {
   FounderEvidenceSnapshot,
   FounderEvidenceSource,
@@ -452,6 +498,719 @@ function buildVerificationHubEvidence(
   };
 }
 
+function buildCapabilityPlanningEvidence(productPrompt: string | null): FounderEvidenceSource {
+  if (!productPrompt?.trim()) {
+    return unavailable('capability-planning', 'Capability Planning');
+  }
+
+  const cached = getLastCapabilityPlanningPipelineResult();
+  const intent = runIntentUnderstandingEngine({ rawPrompt: productPrompt });
+  const faithfulness = getLastPromptFaithfulnessV2Result() ??
+    runPromptFaithfulnessEngineV2(productPrompt, { generatedModules: intent.productIntelligenceModel.architecture.moduleIds });
+  const pipeline =
+    cached?.rawPrompt === productPrompt
+      ? cached
+      : runCapabilityPlanningPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          promptFaithfulnessBlocked: !faithfulness.readyForGeneration,
+        });
+  const launchEvidence = buildLaunchCapabilityEvidence(pipeline);
+  const score = clamp(
+    pipeline.permissionVerdict === 'READY_FOR_GENERATION'
+      ? 95
+      : pipeline.permissionVerdict === 'NEEDS_CAPABILITY_EVOLUTION'
+        ? 75
+        : pipeline.permissionVerdict === 'NEEDS_HUMAN_REVIEW'
+          ? 40
+          : 15,
+  );
+  const passed =
+    pipeline.permissionVerdict === 'READY_FOR_GENERATION' ||
+    (pipeline.permissionVerdict === 'NEEDS_CAPABILITY_EVOLUTION' &&
+      pipeline.generationPlans.every((p) => p.riskLevel === 'LOW'));
+
+  return {
+    readOnly: true,
+    sourceId: 'capability-planning',
+    sourceName: 'Capability Planning',
+    available: true,
+    passed,
+    score,
+    blockers: launchEvidence.blockers,
+    warnings:
+      pipeline.permissionVerdict === 'NEEDS_CAPABILITY_EVOLUTION'
+        ? ['Capability evolution planned before generation']
+        : [],
+    findings: [
+      `Required capabilities: ${launchEvidence.requiredCount}`,
+      `Reused: ${launchEvidence.reusedCount}, composed: ${launchEvidence.composedCount}, generated: ${launchEvidence.generatedCount}`,
+      `Permission verdict: ${launchEvidence.permissionVerdict}`,
+      `Human review count: ${launchEvidence.humanReviewCount}`,
+    ],
+  };
+}
+
+function buildIncrementalBuildEvidence(productPrompt: string | null): FounderEvidenceSource {
+  if (!productPrompt?.trim()) {
+    return unavailable('incremental-build', 'Incremental Build');
+  }
+
+  const intent = runIntentUnderstandingEngine({ rawPrompt: productPrompt });
+  const faithfulness = getLastPromptFaithfulnessV2Result() ??
+    runPromptFaithfulnessEngineV2(productPrompt, { generatedModules: intent.productIntelligenceModel.architecture.moduleIds });
+  const capability =
+    getLastCapabilityPlanningPipelineResult()?.rawPrompt === productPrompt
+      ? getLastCapabilityPlanningPipelineResult()!
+      : runCapabilityPlanningPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          promptFaithfulnessBlocked: !faithfulness.readyForGeneration,
+        });
+  const cached = getLastIncrementalBuildPipelineResult();
+  const pipeline =
+    cached?.buildPlan.promptContractId === faithfulness.contract.id
+      ? cached
+      : runIncrementalBuildPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+        });
+  const launchEvidence = buildLaunchIncrementalBuildEvidence(pipeline);
+  const score = clamp(
+    pipeline.permissionVerdict === 'READY_FOR_ASSEMBLY'
+      ? 95
+      : pipeline.permissionVerdict === 'RESUMABLE'
+        ? 70
+        : pipeline.permissionVerdict === 'NEEDS_REPAIR'
+          ? 45
+          : 20,
+  );
+  const passed =
+    pipeline.permissionVerdict === 'READY_FOR_ASSEMBLY' &&
+    launchEvidence.wholeAppAssemblyPassed &&
+    launchEvidence.regressionGuardsPassed;
+
+  return {
+    readOnly: true,
+    sourceId: 'incremental-build',
+    sourceName: 'Incremental Build',
+    available: true,
+    passed,
+    score,
+    blockers: launchEvidence.blockers,
+    warnings: pipeline.repairPlans.length ? [`${pipeline.repairPlans.length} feature repair(s) applied`] : [],
+    findings: [
+      `Planned features: ${launchEvidence.plannedCount}`,
+      `Stabilized: ${launchEvidence.stabilizedCount}, repaired: ${launchEvidence.repairedCount}`,
+      `Whole-app assembly: ${launchEvidence.wholeAppAssemblyPassed ? 'pass' : 'fail'}`,
+      `Permission verdict: ${launchEvidence.permissionVerdict}`,
+    ],
+  };
+}
+
+function buildBehaviorSimulationEvidence(productPrompt: string | null): FounderEvidenceSource {
+  if (!productPrompt?.trim()) {
+    return unavailable('behavior-simulation', 'Behavior Simulation');
+  }
+
+  const intent = runIntentUnderstandingEngine({ rawPrompt: productPrompt });
+  const faithfulness = getLastPromptFaithfulnessV2Result() ??
+    runPromptFaithfulnessEngineV2(productPrompt, { generatedModules: intent.productIntelligenceModel.architecture.moduleIds });
+  const capability =
+    getLastCapabilityPlanningPipelineResult()?.rawPrompt === productPrompt
+      ? getLastCapabilityPlanningPipelineResult()!
+      : runCapabilityPlanningPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          promptFaithfulnessBlocked: !faithfulness.readyForGeneration,
+        });
+  const incremental =
+    getLastIncrementalBuildPipelineResult()?.buildPlan.promptContractId === faithfulness.contract.id
+      ? getLastIncrementalBuildPipelineResult()!
+      : runIncrementalBuildPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+        });
+  const cached = getLastBehaviorSimulationPipelineResult();
+  const pipeline =
+    cached?.scenarios.length && incremental.permissionVerdict === 'READY_FOR_ASSEMBLY'
+      ? cached
+      : runBehaviorSimulationPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+        });
+  const launchEvidence = buildLaunchBehaviorSimulationEvidence(pipeline);
+  const score = clamp(
+    pipeline.permissionVerdict === 'READY_FOR_PREVIEW' ? 95 :
+    pipeline.permissionVerdict === 'NEEDS_REPAIR' ? 50 : 20,
+  );
+  const passed = pipeline.permissionVerdict === 'READY_FOR_PREVIEW' && launchEvidence.wholeAppSweepPassed;
+
+  return {
+    readOnly: true,
+    sourceId: 'behavior-simulation',
+    sourceName: 'Behavior Simulation',
+    available: true,
+    passed,
+    score,
+    blockers: launchEvidence.blockers,
+    warnings: launchEvidence.failedCount ? [`${launchEvidence.failedCount} behavior scenario(s) failed`] : [],
+    findings: [
+      `Required scenarios: ${launchEvidence.requiredCount}`,
+      `Passed: ${launchEvidence.passedCount}, failed: ${launchEvidence.failedCount}`,
+      `Whole-app sweep: ${launchEvidence.wholeAppSweepPassed ? 'pass' : 'fail'}`,
+      `Verdict: ${launchEvidence.permissionVerdict}`,
+    ],
+  };
+}
+
+function buildVirtualUserSimulationEvidence(productPrompt: string | null): FounderEvidenceSource {
+  if (!productPrompt?.trim()) {
+    return unavailable('virtual-user-simulation', 'Virtual User Simulation');
+  }
+
+  const intent = runIntentUnderstandingEngine({ rawPrompt: productPrompt });
+  const faithfulness = getLastPromptFaithfulnessV2Result() ??
+    runPromptFaithfulnessEngineV2(productPrompt, {
+      generatedModules: intent.productIntelligenceModel.architecture.moduleIds,
+    });
+  const capability =
+    getLastCapabilityPlanningPipelineResult()?.rawPrompt === productPrompt
+      ? getLastCapabilityPlanningPipelineResult()!
+      : runCapabilityPlanningPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          promptFaithfulnessBlocked: !faithfulness.readyForGeneration,
+        });
+  const incremental =
+    getLastIncrementalBuildPipelineResult()?.buildPlan.promptContractId === faithfulness.contract.id
+      ? getLastIncrementalBuildPipelineResult()!
+      : runIncrementalBuildPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+        });
+  const behavior =
+    getLastBehaviorSimulationPipelineResult()?.scenarios.length &&
+    incremental.permissionVerdict === 'READY_FOR_ASSEMBLY'
+      ? getLastBehaviorSimulationPipelineResult()!
+      : runBehaviorSimulationPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+        });
+  const cached = getLastVirtualUserPipelineResult();
+  const pipeline =
+    cached?.profiles.length && behavior.permissionVerdict === 'READY_FOR_PREVIEW'
+      ? cached
+      : runVirtualUserPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+        });
+  const launchEvidence = buildLaunchVirtualUserEvidence(pipeline);
+  const score = clamp(
+    pipeline.permissionVerdict === 'READY_FOR_PREVIEW' ? 95 :
+    pipeline.permissionVerdict === 'NEEDS_REPAIR' ? 50 : 20,
+  );
+  const passed = pipeline.permissionVerdict === 'READY_FOR_PREVIEW' && launchEvidence.wholeAppSweepPassed;
+
+  return {
+    readOnly: true,
+    sourceId: 'virtual-user-simulation',
+    sourceName: 'Virtual User Simulation',
+    available: true,
+    passed,
+    score,
+    blockers: launchEvidence.blockers,
+    warnings: launchEvidence.frictionCount ? [`${launchEvidence.frictionCount} friction event(s) detected`] : [],
+    findings: [
+      `Virtual users: ${launchEvidence.userCount}`,
+      `Goals: ${launchEvidence.goalCount}, journeys: ${launchEvidence.journeyCount}`,
+      `Completed: ${launchEvidence.completedCount}, failed: ${launchEvidence.failedCount}`,
+      `Whole-app sweep: ${launchEvidence.wholeAppSweepPassed ? 'pass' : 'fail'}`,
+      `Verdict: ${launchEvidence.permissionVerdict}`,
+    ],
+  };
+}
+
+function buildVirtualDeviceLaboratoryEvidence(productPrompt: string | null): FounderEvidenceSource {
+  if (!productPrompt?.trim()) {
+    return unavailable('virtual-device-laboratory', 'Virtual Device Laboratory');
+  }
+
+  const intent = runIntentUnderstandingEngine({ rawPrompt: productPrompt });
+  const faithfulness = getLastPromptFaithfulnessV2Result() ??
+    runPromptFaithfulnessEngineV2(productPrompt, { generatedModules: intent.productIntelligenceModel.architecture.moduleIds });
+  const capability =
+    getLastCapabilityPlanningPipelineResult()?.rawPrompt === productPrompt
+      ? getLastCapabilityPlanningPipelineResult()!
+      : runCapabilityPlanningPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          promptFaithfulnessBlocked: !faithfulness.readyForGeneration,
+        });
+  const incremental =
+    getLastIncrementalBuildPipelineResult()?.buildPlan.promptContractId === faithfulness.contract.id
+      ? getLastIncrementalBuildPipelineResult()!
+      : runIncrementalBuildPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+        });
+  const behavior =
+    getLastBehaviorSimulationPipelineResult()?.scenarios.length &&
+    incremental.permissionVerdict === 'READY_FOR_ASSEMBLY'
+      ? getLastBehaviorSimulationPipelineResult()!
+      : runBehaviorSimulationPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+        });
+  const virtualUser =
+    getLastVirtualUserPipelineResult()?.profiles.length
+      ? getLastVirtualUserPipelineResult()!
+      : runVirtualUserPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+        });
+  const cached = getLastVirtualDevicePipelineResult();
+  const pipeline =
+    cached?.profiles.length && virtualUser.permissionVerdict !== 'BLOCKED'
+      ? cached
+      : runVirtualDevicePipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+          virtualUserSimulation: virtualUser,
+        });
+  const launchEvidence = buildLaunchVirtualDeviceEvidence(pipeline);
+  const score = clamp(
+    pipeline.permissionVerdict === 'READY_FOR_PREVIEW' ? 95 :
+    pipeline.permissionVerdict === 'NEEDS_REPAIR' ? 50 : 20,
+  );
+  const passed = pipeline.permissionVerdict === 'READY_FOR_PREVIEW' && launchEvidence.wholeAppSweepPassed;
+
+  return {
+    readOnly: true,
+    sourceId: 'virtual-device-laboratory',
+    sourceName: 'Virtual Device Laboratory',
+    available: true,
+    passed,
+    score,
+    blockers: launchEvidence.blockers,
+    warnings: launchEvidence.warnedCount ? [`${launchEvidence.warnedCount} device profile(s) performance warning`] : [],
+    findings: [
+      `Required profiles: ${launchEvidence.requiredProfileCount}`,
+      `Passed: ${launchEvidence.passedCount}, failed: ${launchEvidence.failedCount}`,
+      `Whole-app sweep: ${launchEvidence.wholeAppSweepPassed ? 'pass' : 'fail'}`,
+      `Verdict: ${launchEvidence.permissionVerdict}`,
+    ],
+  };
+}
+
+function buildInteractionProofEvidence(productPrompt: string | null): FounderEvidenceSource {
+  if (!productPrompt?.trim()) {
+    return unavailable('interaction-proof', 'Interaction Proof');
+  }
+
+  const intent = runIntentUnderstandingEngine({ rawPrompt: productPrompt });
+  const faithfulness = getLastPromptFaithfulnessV2Result() ??
+    runPromptFaithfulnessEngineV2(productPrompt, { generatedModules: intent.productIntelligenceModel.architecture.moduleIds });
+  const capability =
+    getLastCapabilityPlanningPipelineResult()?.rawPrompt === productPrompt
+      ? getLastCapabilityPlanningPipelineResult()!
+      : runCapabilityPlanningPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          promptFaithfulnessBlocked: !faithfulness.readyForGeneration,
+        });
+  const incremental =
+    getLastIncrementalBuildPipelineResult()?.buildPlan.promptContractId === faithfulness.contract.id
+      ? getLastIncrementalBuildPipelineResult()!
+      : runIncrementalBuildPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+        });
+  const behavior =
+    getLastBehaviorSimulationPipelineResult()?.scenarios.length &&
+    incremental.permissionVerdict === 'READY_FOR_ASSEMBLY'
+      ? getLastBehaviorSimulationPipelineResult()!
+      : runBehaviorSimulationPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+        });
+  const virtualUser =
+    getLastVirtualUserPipelineResult()?.profiles.length
+      ? getLastVirtualUserPipelineResult()!
+      : runVirtualUserPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+        });
+  const virtualDevice =
+    getLastVirtualDevicePipelineResult()?.profiles.length
+      ? getLastVirtualDevicePipelineResult()!
+      : runVirtualDevicePipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+          virtualUserSimulation: virtualUser,
+        });
+  const cached = getLastInteractionProofPipelineResult();
+  const pipeline =
+    cached?.inventory.length && virtualDevice.profiles.length
+      ? cached
+      : runInteractionProofPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+          virtualUserSimulation: virtualUser,
+          virtualDeviceLaboratory: virtualDevice,
+        });
+  const launchEvidence = buildLaunchInteractionProofEvidence(pipeline);
+  const score = clamp(
+    pipeline.permissionVerdict === 'READY_FOR_PREVIEW' ? 95 :
+    pipeline.permissionVerdict === 'NEEDS_REPAIR' ? 50 : 20,
+  );
+  const passed = pipeline.permissionVerdict === 'READY_FOR_PREVIEW' && launchEvidence.wholeAppSweepPassed;
+
+  return {
+    readOnly: true,
+    sourceId: 'interaction-proof',
+    sourceName: 'Interaction Proof',
+    available: true,
+    passed,
+    score,
+    blockers: launchEvidence.blockers,
+    warnings: launchEvidence.unknownCount ? [`${launchEvidence.unknownCount} unknown interaction(s)`] : [],
+    findings: [
+      `Total interactions: ${launchEvidence.totalInteractions}`,
+      `Required: ${launchEvidence.requiredCount}, passed: ${launchEvidence.passedCount}, failed: ${launchEvidence.failedCount}`,
+      `Whole-app sweep: ${launchEvidence.wholeAppSweepPassed ? 'pass' : 'fail'}`,
+      `Verdict: ${launchEvidence.permissionVerdict}`,
+    ],
+  };
+}
+
+function buildAutonomousDebuggingEvidence(productPrompt: string | null): FounderEvidenceSource {
+  if (!productPrompt?.trim()) {
+    return unavailable('autonomous-debugging', 'Autonomous Debugging');
+  }
+
+  const intent = runIntentUnderstandingEngine({ rawPrompt: productPrompt });
+  const faithfulness = getLastPromptFaithfulnessV2Result() ??
+    runPromptFaithfulnessEngineV2(productPrompt, { generatedModules: intent.productIntelligenceModel.architecture.moduleIds });
+  const capability =
+    getLastCapabilityPlanningPipelineResult()?.rawPrompt === productPrompt
+      ? getLastCapabilityPlanningPipelineResult()!
+      : runCapabilityPlanningPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          promptFaithfulnessBlocked: !faithfulness.readyForGeneration,
+        });
+  const incremental =
+    getLastIncrementalBuildPipelineResult()?.buildPlan.promptContractId === faithfulness.contract.id
+      ? getLastIncrementalBuildPipelineResult()!
+      : runIncrementalBuildPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+        });
+  const behavior =
+    getLastBehaviorSimulationPipelineResult()?.scenarios.length &&
+    incremental.permissionVerdict === 'READY_FOR_ASSEMBLY'
+      ? getLastBehaviorSimulationPipelineResult()!
+      : runBehaviorSimulationPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+        });
+  const virtualUser =
+    getLastVirtualUserPipelineResult()?.profiles.length
+      ? getLastVirtualUserPipelineResult()!
+      : runVirtualUserPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+        });
+  const virtualDevice =
+    getLastVirtualDevicePipelineResult()?.profiles.length
+      ? getLastVirtualDevicePipelineResult()!
+      : runVirtualDevicePipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+          virtualUserSimulation: virtualUser,
+        });
+  const interactionProof =
+    getLastInteractionProofPipelineResult()?.inventory.length
+      ? getLastInteractionProofPipelineResult()!
+      : runInteractionProofPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+          virtualUserSimulation: virtualUser,
+          virtualDeviceLaboratory: virtualDevice,
+        });
+  const cached = getLastAutonomousDebuggingPipelineResult();
+  const pipeline =
+    cached?.pipelineId && interactionProof.permissionVerdict !== 'BLOCKED'
+      ? cached
+      : runAutonomousDebuggingPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+          virtualUserSimulation: virtualUser,
+          virtualDeviceLaboratory: virtualDevice,
+          interactionProof,
+        });
+  const launchEvidence = buildLaunchAutonomousDebuggingEvidence(pipeline);
+  const score = clamp(
+    pipeline.permissionVerdict === 'READY_FOR_PREVIEW' ? 95 :
+    pipeline.permissionVerdict === 'HUMAN_REVIEW' ? 40 : 20,
+  );
+  const passed = pipeline.permissionVerdict === 'READY_FOR_PREVIEW';
+
+  return {
+    readOnly: true,
+    sourceId: 'autonomous-debugging',
+    sourceName: 'Autonomous Debugging',
+    available: true,
+    passed,
+    score,
+    blockers: launchEvidence.blockers,
+    warnings: launchEvidence.humanReviewRequired ? ['Human review required after autonomous repair'] : [],
+    findings: [
+      `Failures: ${launchEvidence.failureCount}, repaired: ${launchEvidence.repairedCount}, unresolved: ${launchEvidence.unresolvedCount}`,
+      `Repair attempts: ${launchEvidence.repairAttemptCount}, patches applied: ${launchEvidence.patchesApplied}`,
+      `Human review: ${launchEvidence.humanReviewRequired ? 'required' : 'not required'}`,
+      `Verdict: ${launchEvidence.permissionVerdict}`,
+    ],
+  };
+}
+
+function buildContinuousProductImprovementEvidence(productPrompt: string | null): FounderEvidenceSource {
+  if (!productPrompt?.trim()) {
+    return unavailable('continuous-product-improvement', 'Continuous Product Improvement');
+  }
+
+  const intent = runIntentUnderstandingEngine({ rawPrompt: productPrompt });
+  const faithfulness = getLastPromptFaithfulnessV2Result() ??
+    runPromptFaithfulnessEngineV2(productPrompt, { generatedModules: intent.productIntelligenceModel.architecture.moduleIds });
+  const capability =
+    getLastCapabilityPlanningPipelineResult()?.rawPrompt === productPrompt
+      ? getLastCapabilityPlanningPipelineResult()!
+      : runCapabilityPlanningPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          promptFaithfulnessBlocked: !faithfulness.readyForGeneration,
+        });
+  const incremental =
+    getLastIncrementalBuildPipelineResult()?.buildPlan.promptContractId === faithfulness.contract.id
+      ? getLastIncrementalBuildPipelineResult()!
+      : runIncrementalBuildPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+        });
+  const behavior =
+    getLastBehaviorSimulationPipelineResult()?.scenarios.length &&
+    incremental.permissionVerdict === 'READY_FOR_ASSEMBLY'
+      ? getLastBehaviorSimulationPipelineResult()!
+      : runBehaviorSimulationPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+        });
+  const virtualUser =
+    getLastVirtualUserPipelineResult()?.profiles.length
+      ? getLastVirtualUserPipelineResult()!
+      : runVirtualUserPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+        });
+  const virtualDevice =
+    getLastVirtualDevicePipelineResult()?.profiles.length
+      ? getLastVirtualDevicePipelineResult()!
+      : runVirtualDevicePipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+          virtualUserSimulation: virtualUser,
+        });
+  const interactionProof =
+    getLastInteractionProofPipelineResult()?.inventory.length
+      ? getLastInteractionProofPipelineResult()!
+      : runInteractionProofPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+          virtualUserSimulation: virtualUser,
+          virtualDeviceLaboratory: virtualDevice,
+        });
+  const autonomousDebugging =
+    getLastAutonomousDebuggingPipelineResult()?.pipelineId
+      ? getLastAutonomousDebuggingPipelineResult()!
+      : runAutonomousDebuggingPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+          virtualUserSimulation: virtualUser,
+          virtualDeviceLaboratory: virtualDevice,
+          interactionProof,
+        });
+  const cached = getLastContinuousImprovementPipelineResult();
+  const pipeline =
+    cached?.pipelineId
+      ? cached
+      : runContinuousImprovementPipeline({
+          rawPrompt: productPrompt,
+          productIntelligenceModel: intent.productIntelligenceModel,
+          promptFaithfulness: faithfulness,
+          capabilityPlanning: capability,
+          incrementalBuild: incremental,
+          behaviorSimulation: behavior,
+          virtualUserSimulation: virtualUser,
+          virtualDeviceLaboratory: virtualDevice,
+          interactionProof,
+          autonomousDebugging,
+        });
+  const launchEvidence = buildLaunchContinuousImprovementEvidence(pipeline);
+  const score = clamp(launchEvidence.qualityScore);
+  const passed =
+    pipeline.permissionVerdict === 'READY_FOR_PREVIEW' ||
+    pipeline.permissionVerdict === 'DEFERRED_ACCEPTABLE';
+
+  return {
+    readOnly: true,
+    sourceId: 'continuous-product-improvement',
+    sourceName: 'Continuous Product Improvement',
+    available: true,
+    passed,
+    score,
+    blockers: launchEvidence.blockers,
+    warnings: launchEvidence.deferredCount
+      ? [`${launchEvidence.deferredCount} improvement(s) deferred with evidence`]
+      : [],
+    findings: [
+      `Signals: ${launchEvidence.signalCount}, opportunities: ${launchEvidence.opportunityCount}`,
+      `Applied: ${launchEvidence.appliedCount}, deferred: ${launchEvidence.deferredCount}, blocked: ${launchEvidence.blockedCount}`,
+      `Quality score: ${launchEvidence.qualityScore}/100`,
+      `Verdict: ${launchEvidence.permissionVerdict}`,
+    ],
+  };
+}
+
+function buildPromptFaithfulnessEvidence(
+  productPrompt: string | null,
+  generatedModules: string[] = [],
+): FounderEvidenceSource {
+  if (!productPrompt?.trim()) {
+    return unavailable('prompt-faithfulness', 'Prompt Faithfulness');
+  }
+
+  const result = getLastPromptFaithfulnessV2Result() ??
+    runPromptFaithfulnessEngineV2(productPrompt, { generatedModules });
+  const launchEvidence = buildLaunchFaithfulnessEvidence(result, generatedModules);
+  const score = clamp(launchEvidence.overallFaithfulnessScore * 100);
+  const passed = !launchEvidence.blocksLaunchApproval && result.faithfulnessScore.meetsThreshold;
+
+  return {
+    readOnly: true,
+    sourceId: 'prompt-faithfulness',
+    sourceName: 'Prompt Faithfulness',
+    available: true,
+    passed,
+    score,
+    blockers: launchEvidence.blockers,
+    warnings: result.ambiguities.slice(0, 3).map((a) => a.clarificationQuestion),
+    findings: [
+      `Faithfulness score: ${(result.faithfulnessScore.overallScore * 100).toFixed(1)}%`,
+      `Requirements: ${result.requirements.length}`,
+      `Traceability links: ${launchEvidence.traceabilityLinkCount}`,
+      `Drift detected: ${launchEvidence.driftDetected ? 'yes' : 'no'}`,
+      `Contract ID: ${result.contract.id}`,
+    ],
+  };
+}
+
 export function collectFounderLaunchEvidence(input: {
   projectRootDir?: string | null;
   workspaceDir?: string | null;
@@ -502,6 +1261,15 @@ export function collectFounderLaunchEvidence(input: {
       input.profile ?? null,
       input.useRegisteredProductArchitecture,
     ),
+    promptFaithfulness: buildPromptFaithfulnessEvidence(input.productPrompt ?? null),
+    capabilityPlanning: buildCapabilityPlanningEvidence(input.productPrompt ?? null),
+    incrementalBuild: buildIncrementalBuildEvidence(input.productPrompt ?? null),
+    behaviorSimulation: buildBehaviorSimulationEvidence(input.productPrompt ?? null),
+    virtualUserSimulation: buildVirtualUserSimulationEvidence(input.productPrompt ?? null),
+    virtualDeviceLaboratory: buildVirtualDeviceLaboratoryEvidence(input.productPrompt ?? null),
+    interactionProof: buildInteractionProofEvidence(input.productPrompt ?? null),
+    autonomousDebugging: buildAutonomousDebuggingEvidence(input.productPrompt ?? null),
+    continuousProductImprovement: buildContinuousProductImprovementEvidence(input.productPrompt ?? null),
   };
 
   const launchReadiness = input.synthesizeLaunchReadiness

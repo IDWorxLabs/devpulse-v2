@@ -47,6 +47,7 @@ Required modules:
 Do not use generic project management fallback. Generate architecture, plan, tasks, and begin build execution now.`;
 
 const LISA_REQUIRED_MODULES = [
+  'onboarding-calibration',
   'eye-tracking-board',
   'blink-input-engine',
   'gaze-keyboard',
@@ -187,7 +188,7 @@ async function main(): Promise<void> {
   const traceTitles = traceEvents.map((event) => event.eventTitle);
   const requiredTrace = [
     'Prompt faithfulness analysis started',
-    'Prompt-derived modules extracted',
+    'Sanitized prompt-derived modules extracted',
     'Custom feature contract built',
     'Prompt-faithful modules generated',
     'Prompt faithfulness verdict issued',

@@ -485,6 +485,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:missing-capability-evolution-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 5,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:capability-research-engine",
       "tier": "STANDARD",
       "category": "OTHER",

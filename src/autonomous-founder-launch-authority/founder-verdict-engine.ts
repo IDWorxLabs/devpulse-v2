@@ -51,6 +51,82 @@ export function resolveFounderLaunchBlockingRules(evidence: FounderEvidenceSnaps
   if (evidence.requirementDiscovery?.poorlyUnderstood) {
     rules.push('Requirement Discovery poorly understood');
   }
+  if (evidence.promptFaithfulness?.available && !evidence.promptFaithfulness.passed) {
+    rules.push(
+      `Prompt Faithfulness compromised (score ${evidence.promptFaithfulness.score}, blockers: ${evidence.promptFaithfulness.blockers.slice(0, 2).join('; ') || 'see faithfulness report'})`,
+    );
+  }
+  if (evidence.promptFaithfulness?.blockers.some((b) => /drift/i.test(b))) {
+    rules.push('Prompt drift blocks launch approval');
+  }
+  if (evidence.capabilityPlanning?.available && !evidence.capabilityPlanning.passed) {
+    rules.push(
+      `Capability Planning unresolved (score ${evidence.capabilityPlanning.score}, blockers: ${evidence.capabilityPlanning.blockers.slice(0, 2).join('; ') || 'see capability plan'})`,
+    );
+  }
+  if (evidence.capabilityPlanning?.blockers.some((b) => /human review/i.test(b))) {
+    rules.push('Capability human review blocks launch approval');
+  }
+  if (evidence.incrementalBuild?.available && !evidence.incrementalBuild.passed) {
+    rules.push(
+      `Incremental Build incomplete (score ${evidence.incrementalBuild.score}, blockers: ${evidence.incrementalBuild.blockers.slice(0, 2).join('; ') || 'see incremental build report'})`,
+    );
+  }
+  if (evidence.incrementalBuild?.blockers.some((b) => /unstable|regression/i.test(b))) {
+    rules.push('Unstable feature slices block launch approval');
+  }
+  if (evidence.behaviorSimulation?.available && !evidence.behaviorSimulation.passed) {
+    rules.push(
+      `Behavior Simulation incomplete (score ${evidence.behaviorSimulation.score}, blockers: ${evidence.behaviorSimulation.blockers.slice(0, 2).join('; ') || 'see behavior report'})`,
+    );
+  }
+  if (evidence.behaviorSimulation?.blockers.some((b) => /handler|data not updated|failed/i.test(b))) {
+    rules.push('Required behavior workflows did not pass — launch blocked');
+  }
+  if (evidence.virtualUserSimulation?.available && !evidence.virtualUserSimulation.passed) {
+    rules.push(
+      `Virtual User Simulation incomplete (score ${evidence.virtualUserSimulation.score}, blockers: ${evidence.virtualUserSimulation.blockers.slice(0, 2).join('; ') || 'see virtual user report'})`,
+    );
+  }
+  if (evidence.virtualUserSimulation?.blockers.some((b) => /accessibility|friction|failed/i.test(b))) {
+    rules.push('Required virtual user journeys did not pass — launch blocked');
+  }
+  if (evidence.virtualDeviceLaboratory?.available && !evidence.virtualDeviceLaboratory.passed) {
+    rules.push(
+      `Virtual Device Laboratory incomplete (score ${evidence.virtualDeviceLaboratory.score}, blockers: ${evidence.virtualDeviceLaboratory.blockers.slice(0, 2).join('; ') || 'see device report'})`,
+    );
+  }
+  if (evidence.virtualDeviceLaboratory?.blockers.some((b) => /clipped|overflow|performance|failed/i.test(b))) {
+    rules.push('Required device profiles did not pass — launch blocked');
+  }
+  if (evidence.interactionProof?.available && !evidence.interactionProof.passed) {
+    rules.push(
+      `Interaction Proof incomplete (score ${evidence.interactionProof.score}, blockers: ${evidence.interactionProof.blockers.slice(0, 2).join('; ') || 'see interaction report'})`,
+    );
+  }
+  if (evidence.interactionProof?.blockers.some((b) => /handler|unknown|unmapped|failed/i.test(b))) {
+    rules.push('Required interactions did not pass — launch blocked');
+  }
+  if (evidence.autonomousDebugging?.available && !evidence.autonomousDebugging.passed) {
+    rules.push(
+      `Autonomous Debugging incomplete (score ${evidence.autonomousDebugging.score}, blockers: ${evidence.autonomousDebugging.blockers.slice(0, 2).join('; ') || 'see debugging report'})`,
+    );
+  }
+  if (evidence.autonomousDebugging?.blockers.some((b) => /human review|unresolved|exhausted|regression/i.test(b))) {
+    rules.push('Unresolved failures remain after autonomous repair — launch blocked');
+  }
+  if (evidence.continuousProductImprovement?.available && !evidence.continuousProductImprovement.passed) {
+    rules.push(
+      `Continuous Product Improvement incomplete (score ${evidence.continuousProductImprovement.score}, blockers: ${evidence.continuousProductImprovement.blockers.slice(0, 2).join('; ') || 'see improvement report'})`,
+    );
+  }
+  if (
+    evidence.continuousProductImprovement?.blockers.some((b) =>
+      /critical|regression|prompt faithfulness|unresolved/i.test(b),
+    )
+  ) {
+    rules.push('Critical safe improvements remain unresolved or improvement regression detected — launch blocked');
+  }
   for (const prereq of evidence.missingPrerequisites) {
     if (!rules.some((rule) => rule.includes(prereq))) {
       rules.push(`Founder prerequisite missing: ${prereq}`);

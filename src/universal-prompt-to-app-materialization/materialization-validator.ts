@@ -145,9 +145,11 @@ export function validateUniversalAppMaterialization(input: {
   buildRunId?: string;
   npmInstallOk?: boolean;
   npmBuildOk?: boolean;
+  definitionOverride?: ProfileFeatureDefinition;
 }): MaterializationValidationResult {
   const materializationProfile = resolveMaterializationProfile(input.selectedProfile, input.rawPrompt);
-  const definition = getProfileFeatureDefinition(materializationProfile, input.rawPrompt);
+  const definition =
+    input.definitionOverride ?? getProfileFeatureDefinition(materializationProfile, input.rawPrompt);
   const appTitle = input.projectName ?? extractPromptAppTitle(input.rawPrompt);
   const sourceBundle = collectSourceBundle(input.workspaceDir).toLowerCase();
   const titleLower = appTitle.toLowerCase();

@@ -42,6 +42,8 @@ export interface OnePromptLivePreviewBuildResult {
     reactMount: boolean;
   } | null;
   materializationManifest: import('../universal-prompt-to-app-materialization/generated-app-manifest.js').GeneratedAppManifest | null;
+  livePreviewGate: import('../live-preview-gate/live-preview-gate-types.js').LivePreviewGateResult | null;
+  autonomousSoftwareEngineering: import('../autonomous-software-engineering-engine/ase-types.js').AutonomousSoftwareEngineeringResult | null;
   updatedAt: string;
 }
 

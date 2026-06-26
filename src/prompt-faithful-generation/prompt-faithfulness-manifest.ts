@@ -15,6 +15,7 @@ export function buildPromptFaithfulnessManifestFields(input: {
   guardResult?: PromptProfileGuardResult;
   workspaceDir?: string;
 }): PromptFaithfulnessManifestFields {
+  const extraction = extractPromptFeatures(input.rawPrompt);
   const verdict = validatePromptFaithfulness({
     rawPrompt: input.rawPrompt,
     selectedProfile: input.selectedProfile,
@@ -36,12 +37,17 @@ export function buildPromptFaithfulnessManifestFields(input: {
     promptDerivedInteractions: verdict.promptDerivedInteractions,
     rejectedFallbackProfiles: [...new Set(rejected)],
     bannedFallbackModulesDetected: verdict.bannedFallbackModulesDetected,
+    overExtractedNonModulePhrases: verdict.overExtractedNonModulePhrases,
+    fallbackModulesAppendedByGenerator: verdict.fallbackModulesAppendedByGenerator,
+    truePromptDerivedModules: verdict.truePromptDerivedModules,
     promptFaithfulnessFailureReasons: [
       ...(input.guardResult?.rejectionReason ? [input.guardResult.rejectionReason] : []),
       ...verdict.promptFaithfulnessFailureReasons,
     ],
     androidPhonePreviewRequired: verdict.androidPhonePreviewRequired,
     androidPhonePreviewStatus: verdict.androidPhonePreviewStatus,
+    sanitizedModuleCount: extraction.sanitizedModuleCount,
+    rawExtractedModuleCount: extraction.rawExtractedModuleCount,
   };
 }
 
@@ -63,9 +69,14 @@ export function derivePendingFaithfulnessFields(rawPrompt: string): PromptFaithf
     promptDerivedInteractions: extraction.requiredInteractions,
     rejectedFallbackProfiles: [],
     bannedFallbackModulesDetected: [],
+    overExtractedNonModulePhrases: extraction.rejectedNonModulePhrases,
+    fallbackModulesAppendedByGenerator: [],
+    truePromptDerivedModules: extraction.requiredModules.filter((m) => m !== 'auth'),
     promptFaithfulnessFailureReasons: [],
     androidPhonePreviewRequired: extraction.androidPhonePreviewRequired,
     androidPhonePreviewStatus: extraction.androidPhonePreviewRequired ? 'PENDING' : 'PASS',
+    sanitizedModuleCount: extraction.sanitizedModuleCount,
+    rawExtractedModuleCount: extraction.rawExtractedModuleCount,
   };
 }
 

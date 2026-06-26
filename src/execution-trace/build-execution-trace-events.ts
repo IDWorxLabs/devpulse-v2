@@ -32,6 +32,7 @@ import {
   buildPromptFaithfulnessTraceEvents,
   resolvePromptFaithfulBuildPlan,
 } from '../prompt-faithful-generation/index.js';
+import { buildIntentUnderstandingTraceEvents } from '../intent-understanding-engine/index.js';
 
 type BuildTraceStage = {
   runtimeStage: string;
@@ -51,6 +52,15 @@ const BUILD_TRACE_STAGES: BuildTraceStage[] = [
     component: 'intent_router',
     eventTitle: 'Prompt received',
     technicalDetail: 'Build request recognized — routing to AiDevEngine build orchestration.',
+    severity: 'INFO',
+    when: () => true,
+    milestone: true,
+  },
+  {
+    runtimeStage: 'Planning',
+    component: 'intent_understanding_engine',
+    eventTitle: 'Product Intelligence Model built',
+    technicalDetail: 'Intent Understanding Engine produced authoritative Product Intelligence Model.',
     severity: 'INFO',
     when: () => true,
     milestone: true,
@@ -193,6 +203,23 @@ export function buildOnePromptExecutionTraceEvents(
   let failedAt: number | null = null;
 
   if (prompt) {
+    const faithfulnessPlan = resolvePromptFaithfulBuildPlan(prompt);
+    const intentTrace = buildIntentUnderstandingTraceEvents(faithfulnessPlan.productIntelligenceModel);
+    for (const intentEvent of intentTrace) {
+      step += 1;
+      events.push({
+        ...intentEvent,
+        eventId: `${result.buildId}-trace-intent-${step}`,
+        timestamp: ts + step,
+        informationalOnly: true,
+        section: 'Planning',
+        action: intentEvent.eventTitle,
+        detail: intentEvent.technicalDetail,
+        stepIndex: step,
+        stepTotal: total + intentTrace.length,
+      });
+    }
+
     const ranking = rankBuildProfiles(prompt);
     const classification = analyzeBuildProfileClassification(prompt, result.generatedProfile);
     const candidateLines = ranking.rankings
@@ -230,9 +257,8 @@ export function buildOnePromptExecutionTraceEvents(
       stepIndex: 1,
       stepTotal: total,
     });
-    step = 1;
+    step = 1 + intentTrace.length;
 
-    const faithfulnessPlan = resolvePromptFaithfulBuildPlan(prompt);
     const faithfulnessModules =
       result.materializationManifest?.featureModules ??
       faithfulnessPlan.definition.featureModules;

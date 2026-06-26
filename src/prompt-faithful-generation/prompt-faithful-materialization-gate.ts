@@ -12,6 +12,7 @@ import type {
 } from './prompt-faithful-generation-types.js';
 import { BANNED_FALLBACK_MODULES } from './prompt-faithful-generation-types.js';
 import { validatePromptFaithfulness } from './prompt-faithfulness-validator.js';
+import { isRejectedNonModulePhrase } from './prompt-module-name-normalizer.js';
 
 export function listWorkspaceFeatureModuleIds(workspaceDir: string): string[] {
   const featuresDir = join(workspaceDir, 'src/features');
@@ -29,6 +30,18 @@ export function detectBannedFallbackModulesInWorkspace(workspaceDir: string): st
   );
 }
 
+export function detectOverExtractedModulesInWorkspace(
+  workspaceDir: string,
+  extraction: PromptFeatureExtraction,
+): string[] {
+  const modules = listWorkspaceFeatureModuleIds(workspaceDir);
+  return modules.filter((moduleId) => {
+    if (moduleId === 'auth') return false;
+    if (extraction.requiredModules.includes(moduleId)) return false;
+    return extraction.rejectedNonModulePhrases.includes(moduleId) || isRejectedNonModulePhrase(moduleId);
+  });
+}
+
 export function enforcePromptFaithfulMaterialization(input: {
   rawPrompt: string;
   buildPlan: {
@@ -41,10 +54,15 @@ export function enforcePromptFaithfulMaterialization(input: {
   ok: boolean;
   verdict: PromptFaithfulnessVerdict;
   bannedModules: string[];
+  overExtractedModules: string[];
   failureReason: string | null;
 } {
   const generatedModules = listWorkspaceFeatureModuleIds(input.workspaceDir);
   const bannedModules = detectBannedFallbackModulesInWorkspace(input.workspaceDir);
+  const overExtractedModules = detectOverExtractedModulesInWorkspace(
+    input.workspaceDir,
+    input.buildPlan.extraction,
+  );
   const verdict = validatePromptFaithfulness({
     rawPrompt: input.rawPrompt,
     selectedProfile: String(input.buildPlan.materializationProfile),
@@ -56,6 +74,14 @@ export function enforcePromptFaithfulMaterialization(input: {
   const failureReasons: string[] = [...verdict.promptFaithfulnessFailureReasons];
   if (bannedModules.length > 0) {
     failureReasons.push(`Banned fallback modules present in workspace: ${bannedModules.join(', ')}`);
+  }
+  if (overExtractedModules.length > 0) {
+    failureReasons.push(`Over-extracted non-module phrases in workspace: ${overExtractedModules.join(', ')}`);
+  }
+  if (verdict.fallbackModulesAppendedByGenerator.length > 0 && input.buildPlan.extraction.explicitModulesProvided) {
+    failureReasons.push(
+      `Generator appended fallback modules: ${verdict.fallbackModulesAppendedByGenerator.join(', ')}`,
+    );
   }
   if (
     input.buildPlan.extraction.isCustomDomainPrompt &&
@@ -72,9 +98,11 @@ export function enforcePromptFaithfulMaterialization(input: {
       ...verdict,
       status: ok ? verdict.status : 'FAIL',
       bannedFallbackModulesDetected: [...new Set([...verdict.bannedFallbackModulesDetected, ...bannedModules])],
+      overExtractedNonModulePhrases: [...new Set([...verdict.overExtractedNonModulePhrases, ...overExtractedModules])],
       promptFaithfulnessFailureReasons: failureReasons,
     },
     bannedModules,
+    overExtractedModules,
     failureReason: ok ? null : failureReasons.join('; '),
   };
 }

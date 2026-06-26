@@ -3,12 +3,15 @@
  * All supported profiles flow through Universal Prompt-to-App Materialization V1.
  */
 
+import { existsSync, readdirSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
 import { createRealFileOperation } from '../real-file-workspace-execution/real-file-operation-model.js';
 import { executeRealFileOperation } from '../real-file-workspace-execution/real-file-operation-executor.js';
 import { resolveSafeWorkspaceRoot } from '../real-file-workspace-execution/real-file-workspace-path-authority.js';
 import type { MaterializeGeneratedAppInput, CodeGenerationEngineResult, GeneratedAppProfile } from './code-generation-engine-types.js';
 import { buildUniversalCrudWorkspaceFiles } from './universal-crud-app-generator.js';
 import { resolvePromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
+import { materializableFeatureModules } from '../universal-prompt-to-app-materialization/modular-feature-module-generator.js';
 
 function writeWorkspaceFile(input: {
   projectRootDir: string;
@@ -34,6 +37,24 @@ function writeWorkspaceFile(input: {
   return Boolean(executed.result?.success);
 }
 
+function pruneStaleFeatureModuleDirectories(input: {
+  projectRootDir: string;
+  workspaceId: string;
+  expectedModuleIds: string[];
+}): void {
+  const rootVerdict = resolveSafeWorkspaceRoot(input.projectRootDir, input.workspaceId);
+  if (rootVerdict.result !== 'REAL_FILE_WORKSPACE_PATH_PASS') return;
+
+  const featuresDir = join(rootVerdict.workspaceRoot, 'src', 'features');
+  if (!existsSync(featuresDir)) return;
+
+  const keep = new Set([...input.expectedModuleIds, 'registry', 'routes']);
+  for (const entry of readdirSync(featuresDir, { withFileTypes: true })) {
+    if (!entry.isDirectory() || keep.has(entry.name)) continue;
+    rmSync(join(featuresDir, entry.name), { recursive: true, force: true });
+  }
+}
+
 export function materializeGeneratedApplication(
   input: MaterializeGeneratedAppInput,
 ): CodeGenerationEngineResult {
@@ -54,6 +75,13 @@ export function materializeGeneratedApplication(
     input.faithfulBuildPlan ??
     resolvePromptFaithfulBuildPlan(input.rawPrompt, input.profileOverride ?? null);
   const universalProfile = buildPlan.materializationProfile as GeneratedAppProfile;
+  const expectedModuleIds = materializableFeatureModules(buildPlan.definition);
+
+  pruneStaleFeatureModuleDirectories({
+    projectRootDir: input.projectRootDir,
+    workspaceId,
+    expectedModuleIds,
+  });
 
   const files = buildUniversalCrudWorkspaceFiles({
     contractId: input.contract.contractId,

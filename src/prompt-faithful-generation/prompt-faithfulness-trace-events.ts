@@ -43,10 +43,47 @@ export function buildPromptFaithfulnessTraceEvents(input: {
     domain: input.extraction.domain,
     appName: input.extraction.appName,
   });
-  push('Prompt-derived modules extracted', input.extraction.requiredModules.join(', '), {
-    modules: input.extraction.requiredModules,
-    count: input.extraction.requiredModules.length,
-  });
+  push(
+    'Raw module candidates scanned',
+    input.extraction.rawExtractedModules.length
+      ? input.extraction.rawExtractedModules.join(', ')
+      : 'none',
+    {
+      rawCandidateCount: input.extraction.rawExtractedModuleCount,
+      rawCandidates: input.extraction.rawExtractedModules,
+    },
+  );
+  if (input.extraction.rejectedNonModulePhrases.length) {
+    push(
+      'Over-extracted non-module phrases rejected',
+      input.extraction.rejectedNonModulePhrases.join(', '),
+      { rejectedPhrases: input.extraction.rejectedNonModulePhrases },
+    );
+  }
+  push(
+    'Sanitized prompt-derived modules extracted',
+    input.extraction.requiredModules.join(', '),
+    {
+      modules: input.extraction.requiredModules,
+      sanitizedModuleCount: input.extraction.sanitizedModuleCount,
+      rawCandidateCount: input.extraction.rawExtractedModuleCount,
+    },
+  );
+  if (input.extraction.designRequirements.length) {
+    push('Design requirements recorded', input.extraction.designRequirements.join(', '), {
+      designRequirements: input.extraction.designRequirements,
+    });
+  }
+  if (input.extraction.platformRequirements.length) {
+    push('Platform requirements recorded', input.extraction.platformRequirements.join(', '), {
+      platformRequirements: input.extraction.platformRequirements,
+    });
+  }
+  if (input.extraction.safetyNotes.length) {
+    push('Safety notes recorded', input.extraction.safetyNotes.join(' '), {
+      safetyNotes: input.extraction.safetyNotes,
+    });
+  }
 
   if (input.guardResult.guardApplied) {
     push(
@@ -61,7 +98,14 @@ export function buildPromptFaithfulnessTraceEvents(input: {
   }
 
   push('Custom feature contract built', `Modules: ${input.manifestFields.promptDerivedModules.join(', ')}`);
-  push('Prompt-faithful modules generated', `${input.manifestFields.promptDerivedModules.length} modules from prompt.`);
+  push(
+    'Prompt-faithful modules generated',
+    `${input.extraction.sanitizedModuleCount} sanitized modules from prompt (${input.extraction.rawExtractedModuleCount} raw candidates).`,
+    {
+      sanitizedModuleCount: input.extraction.sanitizedModuleCount,
+      rawCandidateCount: input.extraction.rawExtractedModuleCount,
+    },
+  );
 
   const banned = input.manifestFields.bannedFallbackModulesDetected;
   push(
@@ -69,6 +113,14 @@ export function buildPromptFaithfulnessTraceEvents(input: {
     banned.length ? `Detected banned modules: ${banned.join(', ')}` : 'No banned fallback modules detected.',
     { bannedModules: banned },
   );
+
+  if (input.manifestFields.fallbackModulesAppendedByGenerator.length) {
+    push(
+      'Fallback modules appended by generator',
+      input.manifestFields.fallbackModulesAppendedByGenerator.join(', '),
+      { fallbackModules: input.manifestFields.fallbackModulesAppendedByGenerator },
+    );
+  }
 
   if (input.extraction.androidPhonePreviewRequired) {
     push('Android phone preview requirement detected', 'Mobile-first / Android-first preview mode required.', {

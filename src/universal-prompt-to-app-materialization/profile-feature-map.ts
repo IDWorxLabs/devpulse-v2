@@ -9,6 +9,7 @@ import {
   extractPromptFeatures,
   shouldUseCustomFeatureDefinition,
 } from '../prompt-faithful-generation/index.js';
+import { suppressFallbackModulesWhenCustomExists } from '../prompt-faithful-generation/prompt-module-name-normalizer.js';
 
 export type MaterializationProfile = GeneratedAppProfile | 'GENERIC_CUSTOM_APP_V1' | 'HABIT_TRACKER_WEB_V1';
 
@@ -153,7 +154,10 @@ export function getProfileFeatureDefinition(
   const modules =
     profile === 'HABIT_TRACKER_WEB_V1'
       ? PROFILE_FEATURE_MAP.HABIT_TRACKER_WEB_V1.featureModules
-      : deriveGenericCustomFeatureModules(rawPrompt);
+      : suppressFallbackModulesWhenCustomExists(
+          deriveGenericCustomFeatureModules(rawPrompt),
+          extraction.requiredModules,
+        );
   const terms = derivePromptFeatureTerms(rawPrompt);
   const moduleTerms = modules.filter((moduleId) => !['auth', 'persistence'].includes(moduleId));
   const requiredUiTerms =
@@ -167,7 +171,7 @@ export function getProfileFeatureDefinition(
   return {
     ...base,
     featureModules: modules,
-    routes: modules.map((m) => `/${m}`),
+    routes: modules.map((m) => (m === 'auth' ? '/' : `/${m}`)),
     requiredUiTerms,
   };
 }

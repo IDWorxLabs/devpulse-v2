@@ -6,11 +6,15 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { ProfileFeatureDefinition } from '../universal-prompt-to-app-materialization/profile-feature-map.js';
 import { extractPromptFeatures } from './prompt-feature-extractor.js';
+import { promptMentionsLisaOrAccessibility } from '../project-context-switching/project-context-classifier-guard.js';
 import {
   BANNED_FALLBACK_MODULES,
   type PromptFaithfulnessVerdict,
 } from './prompt-faithful-generation-types.js';
-import { moduleIdsInclude } from './prompt-module-name-normalizer.js';
+import {
+  isRejectedNonModulePhrase,
+  moduleIdsInclude,
+} from './prompt-module-name-normalizer.js';
 
 export function validatePromptFaithfulness(input: {
   rawPrompt: string;
@@ -25,9 +29,27 @@ export function validatePromptFaithfulness(input: {
     input.generatedModules.some((moduleId) => moduleId === banned || moduleId.includes(banned)),
   );
 
+  const overExtractedInWorkspace = extraction.rejectedNonModulePhrases.filter((phrase) => {
+    const isSanitizedModule = extraction.requiredModules.some(
+      (required) => required === phrase || moduleIdsInclude([required], phrase),
+    );
+    if (isSanitizedModule) return false;
+    return input.generatedModules.some((generated) => generated === phrase);
+  });
+
+  const adjectiveModulesInWorkspace = input.generatedModules.filter(
+    (moduleId) => moduleId !== 'auth' && isRejectedNonModulePhrase(moduleId),
+  );
+
   const expectedModules = extraction.requiredModules.filter((m) => m !== 'auth');
+  const truePromptDerivedModules = [...expectedModules];
   const missingModules = expectedModules.filter(
     (expected) => !input.generatedModules.some((generated) => moduleIdsInclude([generated], expected)),
+  );
+
+  const definitionModules = input.definition?.featureModules ?? input.generatedModules;
+  const fallbackModulesAppendedByGenerator = BANNED_FALLBACK_MODULES.filter((banned) =>
+    definitionModules.some((moduleId) => moduleId === banned),
   );
 
   if (
@@ -41,6 +63,20 @@ export function validatePromptFaithfulness(input: {
 
   if (bannedDetected.length && extraction.isCustomDomainPrompt) {
     failureReasons.push(`Banned fallback modules generated: ${bannedDetected.join(', ')}.`);
+  }
+
+  if (fallbackModulesAppendedByGenerator.length && extraction.explicitModulesProvided) {
+    failureReasons.push(
+      `Fallback modules appended to custom definition: ${fallbackModulesAppendedByGenerator.join(', ')}.`,
+    );
+  }
+
+  if (overExtractedInWorkspace.length) {
+    failureReasons.push(`Over-extracted non-module phrases materialized: ${overExtractedInWorkspace.join(', ')}.`);
+  }
+
+  if (adjectiveModulesInWorkspace.length) {
+    failureReasons.push(`Adjective-style modules materialized: ${adjectiveModulesInWorkspace.join(', ')}.`);
   }
 
   if (missingModules.length && extraction.explicitModulesProvided) {
@@ -78,7 +114,7 @@ export function validatePromptFaithfulness(input: {
       const source = readFileSync(routerPath, 'utf8').toLowerCase();
       const requiredTerms = ['communication', 'blink', 'gaze', 'speech', 'emergency', 'locked in'];
       const matched = requiredTerms.filter((term) => source.includes(term));
-      if (extraction.appName.toLowerCase().includes('lisa') && matched.length < 4) {
+      if (promptMentionsLisaOrAccessibility(input.rawPrompt) && matched.length < 4) {
         previewTermsOk = false;
         failureReasons.push(
           `LISA preview missing required terms (found ${matched.length}/6: ${matched.join(', ')}).`,
@@ -120,6 +156,9 @@ export function validatePromptFaithfulness(input: {
     promptDerivedInteractions: extraction.requiredInteractions,
     rejectedFallbackProfiles: [],
     bannedFallbackModulesDetected: bannedDetected,
+    overExtractedNonModulePhrases: [...new Set([...overExtractedInWorkspace, ...extraction.rejectedNonModulePhrases])],
+    fallbackModulesAppendedByGenerator: [...fallbackModulesAppendedByGenerator],
+    truePromptDerivedModules,
     promptFaithfulnessFailureReasons: failureReasons,
     androidPhonePreviewRequired: extraction.androidPhonePreviewRequired,
     androidPhonePreviewStatus,
@@ -128,7 +167,6 @@ export function validatePromptFaithfulness(input: {
   };
 }
 
-// Re-export verdict type from shared types.
 export type { PromptFaithfulnessVerdict } from './prompt-faithful-generation-types.js';
 
 export function promptFaithfulnessFailed(verdict: PromptFaithfulnessVerdict): boolean {

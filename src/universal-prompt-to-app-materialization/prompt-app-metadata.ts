@@ -2,6 +2,13 @@
  * Universal Prompt-to-App Materialization V1 — prompt-derived app metadata.
  */
 
+import { shouldUseCustomFeatureDefinition } from '../prompt-faithful-generation/custom-feature-contract-builder.js';
+import { extractPromptFeatures } from '../prompt-faithful-generation/prompt-feature-extractor.js';
+import {
+  dedupeModuleIds,
+  suppressFallbackModulesWhenCustomExists,
+} from '../prompt-faithful-generation/prompt-module-name-normalizer.js';
+
 export function extractPromptAppTitle(rawPrompt: string): string {
   const called = rawPrompt.match(/\bcalled\s+([A-Za-z][A-Za-z0-9]*)/i);
   if (called?.[1]) return called[1];
@@ -90,9 +97,16 @@ export function derivePromptFeatureTerms(rawPrompt: string): string[] {
 }
 
 export function deriveGenericCustomFeatureModules(rawPrompt: string): string[] {
+  const extraction = extractPromptFeatures(rawPrompt);
+  if (shouldUseCustomFeatureDefinition(extraction, 'GENERIC_CUSTOM_APP_V1')) {
+    return dedupeModuleIds(['auth', ...extraction.requiredModules.filter((m) => m !== 'auth')]);
+  }
+
   const terms = derivePromptFeatureTerms(rawPrompt);
   const modules = new Set<string>(['dashboard', 'auth']);
+  const bannedTerms = new Set(['tasks', 'projects', 'team', 'timeline', 'deals', 'leads', 'expenses', 'inventory']);
   for (const term of terms) {
+    if (bannedTerms.has(term)) continue;
     if (/habit|streak|routine/.test(term)) {
       modules.add('habits');
       modules.add('streaks');
@@ -106,5 +120,5 @@ export function deriveGenericCustomFeatureModules(rawPrompt: string): string[] {
     modules.add('records');
     modules.add('settings');
   }
-  return [...modules];
+  return suppressFallbackModulesWhenCustomExists([...modules], extraction.requiredModules);
 }

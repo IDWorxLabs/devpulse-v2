@@ -42,6 +42,10 @@ import {
 import { getDevPulseV2Owner } from '../src/foundation/ownership-registry.js';
 import { CAPABILITY_PLANNING_ENGINE_UVL_ROWS } from '../src/unified-verification-lab/uvl-row-registry.js';
 import type { CapabilityPlanningInput } from '../src/capability-planning-engine/capability-planning-types.js';
+import {
+  runCapabilityPlanningV3Validation,
+  printCapabilityPlanningValidationResults,
+} from './lib/capability-planning-v3-validation.js';
 
 const MIN_SCENARIOS = 110;
 const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
@@ -75,6 +79,18 @@ const REQUIRED_FILES = [
   'capability-planning-reporting.ts',
   'capability-planning-history.ts',
   'capability-planning-cache.ts',
+  'capability-planning-registry.ts',
+  'capability-discovery.ts',
+  'existing-capability-search.ts',
+  'capability-gap-analyzer.ts',
+  'capability-composition-engine.ts',
+  'capability-generation-planner.ts',
+  'capability-validation-planner.ts',
+  'capability-installation-planner.ts',
+  'capability-reuse-analyzer.ts',
+  'capability-dependency-graph.ts',
+  'capability-planning-report-builder.ts',
+  'capability-authority.ts',
   'index.ts',
 ];
 
@@ -466,6 +482,12 @@ function main(): void {
 
   if (results.length < MIN_SCENARIOS) {
     console.error(`\nInsufficient scenarios: ${results.length} < ${MIN_SCENARIOS}`);
+    process.exit(1);
+  }
+
+  const era3 = runCapabilityPlanningV3Validation(['all']);
+  if (!era3.allPassed) {
+    printCapabilityPlanningValidationResults(era3.checks, 'Capability Planning Engine Era 3');
     process.exit(1);
   }
 

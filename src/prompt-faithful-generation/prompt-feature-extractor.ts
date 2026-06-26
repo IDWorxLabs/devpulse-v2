@@ -4,31 +4,30 @@
 
 import { promptMentionsLisaOrAccessibility } from '../project-context-switching/project-context-classifier-guard.js';
 import type { PromptFeatureExtraction } from './prompt-faithful-generation-types.js';
-import { dedupeModuleIds, normalizeModuleId } from './prompt-module-name-normalizer.js';
-
-const EXPLICIT_MODULE_PATTERNS = [
-  /(?:^|\n|\*)\s*([a-z][a-z0-9-]{2,40})\s*(?:\n|$)/gim,
-  /\b([a-z]+(?:-[a-z]+){1,6})\b/g,
-];
+import {
+  classifyModulePhrase,
+  dedupeModuleIds,
+  isValidModuleId,
+  normalizeModuleId,
+  resolveModuleSynonym,
+  sanitizeModuleIds,
+} from './prompt-module-name-normalizer.js';
 
 const CAPABILITY_TO_MODULE: Array<{ pattern: RegExp; module: string }> = [
-  { pattern: /\beye[\s-]?track/i, module: 'eye-tracking-board' },
-  { pattern: /\bblink/i, module: 'blink-input-engine' },
-  { pattern: /\bgaze/i, module: 'gaze-keyboard' },
+  { pattern: /\beye[\s-]?track(?:ing)?(?:\s+board)?/i, module: 'eye-tracking-board' },
+  { pattern: /\bblink[\s-]?(?:input|engine)/i, module: 'blink-input-engine' },
+  { pattern: /\bgaze[\s-]?keyboard/i, module: 'gaze-keyboard' },
   { pattern: /\btext[\s-]?to[\s-]?speech|tts\b/i, module: 'text-to-speech' },
   { pattern: /\bquick[\s-]?phrase/i, module: 'quick-phrases' },
-  { pattern: /\bcaregiver/i, module: 'caregiver-dashboard' },
+  { pattern: /\bcaregiver[\s-]?dashboard/i, module: 'caregiver-dashboard' },
   { pattern: /\bcommunication[\s-]?history|message[\s-]?history/i, module: 'communication-history' },
-  { pattern: /\baccessibility[\s-]?setting/i, module: 'accessibility-settings' },
+  { pattern: /\baccessibility[\s-]?settings/i, module: 'accessibility-settings' },
   { pattern: /\bemergency[\s-]?speech/i, module: 'emergency-speech' },
-  { pattern: /\bcalibrat/i, module: 'onboarding-calibration' },
-  { pattern: /\bcommunication[\s-]?board/i, module: 'communication-board' },
-  { pattern: /\bspeech\b/i, module: 'text-to-speech' },
-  { pattern: /\bsettings\b/i, module: 'accessibility-settings' },
-  { pattern: /\bhistory\b/i, module: 'communication-history' },
+  { pattern: /\bonboarding[\s/-]?calibration|calibration[\s-]?flow/i, module: 'onboarding-calibration' },
+  { pattern: /\bcommunication[\s-]?board/i, module: 'eye-tracking-board' },
 ];
 
-const LISA_REQUIRED_MODULES = [
+export const LISA_REQUIRED_MODULES = [
   'onboarding-calibration',
   'eye-tracking-board',
   'blink-input-engine',
@@ -53,38 +52,108 @@ const LISA_INTERACTIONS = [
   'history filtering',
 ];
 
+const MODULE_PROSE_STOPWORDS = new Set(['history', 'output', 'own', 'speech', 'a', 'the', 'its']);
+
 function extractAppName(rawPrompt: string): string {
+  if (promptMentionsLisaOrAccessibility(rawPrompt)) {
+    const lisaNamed = rawPrompt.match(/\bBuild\s+(LISA\b[^.\n]*)/i);
+    if (lisaNamed?.[1]) return lisaNamed[1].trim();
+    return 'LISA — Locked In Syndrome App';
+  }
+  const buildNamed = rawPrompt.match(
+    /\bbuild\s+(?:a|an|the)?\s*([A-Z][^\n.]{2,80}?)(?:\s+(?:web|mobile)\s+(?:app|application)|\s+app|\s+application)/i,
+  );
+  if (buildNamed?.[1]) return buildNamed[1].trim();
   const emDash = rawPrompt.match(/\b([A-Z][A-Za-z0-9]*)\s*[—–-]\s*([^.\n]+)/);
   if (emDash) {
     return `${emDash[1]} — ${emDash[2].trim()}`;
   }
   const called = rawPrompt.match(/\bcalled\s+([^\n.]+)/i);
   if (called?.[1]) return called[1].trim();
-  const buildNamed = rawPrompt.match(
-    /\bbuild\s+(?:a|an|the)?\s*([A-Z][^\n.]{2,80}?)(?:\s+(?:web|mobile)\s+(?:app|application)|\s+app|\s+application)/i,
-  );
-  if (buildNamed?.[1]) return buildNamed[1].trim();
-  if (/\blisa\b/i.test(rawPrompt)) return 'LISA — Locked In Syndrome App';
   return 'Custom App';
 }
 
-function extractExplicitModules(rawPrompt: string): string[] {
+function parseModuleLines(section: string): string[] {
   const modules: string[] = [];
-  const bulletLines = rawPrompt.split(/\n/);
-  for (const line of bulletLines) {
+  for (const line of section.split('\n')) {
+    const bullet = line.match(/^\s*[*•-]?\s*([a-z][a-z0-9-]{2,40})\s*$/i);
+    if (bullet?.[1]) modules.push(normalizeModuleId(bullet[1]));
+  }
+  return modules;
+}
+
+function extractRequiredModulesSection(rawPrompt: string): string[] {
+  let best: string[] = [];
+  const sectionPattern =
+    /required\s+modules?\s*:?\s*([\s\S]*?)(?=\n\s*\n|\n(?:interaction|design|architecture|text-to-speech|camera|safety|live preview|final report)\b[^\n]*:|\nThe generated\b)/gi;
+  for (const match of rawPrompt.matchAll(sectionPattern)) {
+    const modules = parseModuleLines(match[1] ?? '');
+    if (modules.length > best.length) best = modules;
+  }
+  const inline = rawPrompt.match(
+    /required\s+modules?\s*:?\s*([a-z][a-z0-9-]+(?:\s+[a-z][a-z0-9-]+){1,24})/i,
+  );
+  if (inline?.[1]) {
+    const modules = inline[1]
+      .split(/\s+/)
+      .map((token) => normalizeModuleId(token))
+      .filter((token) => isValidModuleId(token));
+    if (modules.length > best.length) best = modules;
+  }
+  return dedupeModuleIds(best);
+}
+
+function extractExplicitBulletModules(rawPrompt: string): string[] {
+  const modules: string[] = [];
+  for (const line of rawPrompt.split('\n')) {
     const bullet = line.match(/^\s*[*•-]\s*([a-z][a-z0-9-]{2,40})\s*$/i);
     if (bullet?.[1]) modules.push(normalizeModuleId(bullet[1]));
   }
-  for (const match of rawPrompt.matchAll(/\b([a-z][a-z0-9-]*)\s+module\b/gi)) {
-    if (match[1]) modules.push(normalizeModuleId(match[1]));
-  }
-  for (const match of rawPrompt.matchAll(/\b([a-z]+(?:-[a-z]+){1,5})\b/g)) {
+  return dedupeModuleIds(modules);
+}
+
+function extractNamedModuleMentions(rawPrompt: string): string[] {
+  const modules: string[] = [];
+  for (const match of rawPrompt.matchAll(/\b([a-z][a-z0-9-]*(?:-[a-z0-9-]+)*)\s+module\b/gi)) {
     const candidate = normalizeModuleId(match[1] ?? '');
-    if (candidate.includes('-') && candidate.length >= 5) {
-      modules.push(candidate);
+    if (!candidate || MODULE_PROSE_STOPWORDS.has(candidate)) continue;
+    const canonical = resolveModuleSynonym(candidate);
+    if (canonical) {
+      modules.push(canonical);
+      continue;
     }
+    if (classifyModulePhrase(candidate) === 'module') modules.push(candidate);
   }
   return dedupeModuleIds(modules);
+}
+
+function isRawCandidateToken(moduleId: string): boolean {
+  const normalized = normalizeModuleId(moduleId);
+  if (!isValidModuleId(normalized)) return false;
+  if (MODULE_PROSE_STOPWORDS.has(normalized)) return false;
+  if (!normalized.includes('-') && !LISA_REQUIRED_MODULES.includes(normalized)) return false;
+  return true;
+}
+
+function collectRawModuleCandidates(rawPrompt: string): string[] {
+  const explicit = extractExplicitModules(rawPrompt);
+  const loose: string[] = [];
+  for (const match of rawPrompt.matchAll(/\b([a-z]+(?:-[a-z]+){1,5})\b/g)) {
+    const candidate = normalizeModuleId(match[1] ?? '');
+    if (isRawCandidateToken(candidate)) loose.push(candidate);
+  }
+  for (const match of rawPrompt.matchAll(/\b([a-z][a-z0-9-]*)\s+module\b/gi)) {
+    const candidate = normalizeModuleId(match[1] ?? '');
+    if (isRawCandidateToken(candidate)) loose.push(candidate);
+  }
+  return dedupeModuleIds([...explicit, ...loose]);
+}
+
+function extractExplicitModules(rawPrompt: string): string[] {
+  const sectionModules = extractRequiredModulesSection(rawPrompt);
+  const bulletModules = extractExplicitBulletModules(rawPrompt);
+  const namedModuleMentions = extractNamedModuleMentions(rawPrompt);
+  return dedupeModuleIds([...sectionModules, ...bulletModules, ...namedModuleMentions]);
 }
 
 function deriveModulesFromCapabilities(rawPrompt: string): string[] {
@@ -93,6 +162,90 @@ function deriveModulesFromCapabilities(rawPrompt: string): string[] {
     if (entry.pattern.test(rawPrompt)) modules.push(entry.module);
   }
   return dedupeModuleIds(modules);
+}
+
+function extractClassifiedPhrases(rawPrompt: string): {
+  interactions: string[];
+  designRequirements: string[];
+  platformRequirements: string[];
+  safetyNotes: string[];
+  rejectedPhrases: string[];
+} {
+  const interactions: string[] = [];
+  const designRequirements: string[] = [];
+  const platformRequirements: string[] = [];
+  const safetyNotes: string[] = [];
+  const rejectedPhrases: string[] = [];
+
+  const interactionPatterns = [
+    /\bblink simulation(?:\s+control)?\b/gi,
+    /\bgaze selection(?:\s+simulation)?\b/gi,
+    /\bphrase selection\b/gi,
+    /\bmessage composition\b/gi,
+    /\bspeak button\b/gi,
+    /\bemergency speech(?:\s+button)?\b/gi,
+    /\bcalibration controls?\b/gi,
+    /\bsettings controls?\b/gi,
+    /\bhistory filter(?:ing)?\b/gi,
+    /\bblink-to-select\b/gi,
+    /\bdwell-to-select\b/gi,
+    /\bgaze-selectable\b/gi,
+  ];
+  for (const pattern of interactionPatterns) {
+    for (const match of rawPrompt.matchAll(pattern)) {
+      interactions.push(match[0].toLowerCase());
+    }
+  }
+
+  const designPatterns = [
+    /\bmobile-first\b/gi,
+    /\baccessibility-first\b/gi,
+    /\bgaze-friendly\b/gi,
+    /\bcaregiver-friendly\b/gi,
+    /\bmedical-assistive\b/gi,
+    /\bhigh contrast\b/gi,
+    /\blarge (?:touch targets|accessible (?:ui )?elements)\b/gi,
+    /\bphone-sized(?:\s+preview)?\b/gi,
+  ];
+  for (const pattern of designPatterns) {
+    for (const match of rawPrompt.matchAll(pattern)) {
+      designRequirements.push(match[0].toLowerCase());
+    }
+  }
+
+  const platformPatterns = [
+    /\bandroid-first\b/gi,
+    /\bandroid phone(?:-sized)?\b/gi,
+    /\bmobile-first\b/gi,
+    /\bphone-sized preview\b/gi,
+  ];
+  for (const pattern of platformPatterns) {
+    for (const match of rawPrompt.matchAll(pattern)) {
+      platformRequirements.push(match[0].toLowerCase());
+    }
+  }
+
+  if (/not a certified medical device|not certified medical/i.test(rawPrompt)) {
+    safetyNotes.push(
+      'LISA is an assistive communication tool and not a certified medical device unless formally validated and approved.',
+    );
+  }
+
+  for (const match of rawPrompt.matchAll(/\b([a-z]+(?:-[a-z]+){1,5})\b/g)) {
+    const candidate = normalizeModuleId(match[1] ?? '');
+    const classification = classifyModulePhrase(candidate);
+    if (classification === 'rejected' || classification === 'interaction' || classification === 'design-requirement') {
+      rejectedPhrases.push(candidate);
+    }
+  }
+
+  return {
+    interactions: [...new Set(interactions)],
+    designRequirements: [...new Set(designRequirements)],
+    platformRequirements: [...new Set(platformRequirements)],
+    safetyNotes: [...new Set(safetyNotes)],
+    rejectedPhrases: dedupeModuleIds(rejectedPhrases),
+  };
 }
 
 function inferDomain(rawPrompt: string): string {
@@ -135,39 +288,11 @@ function inferCorePurpose(rawPrompt: string): string {
   return buildPurpose?.[0]?.replace(/^build\s+/i, '').replace(/\.$/, '') ?? 'deliver prompt-specific capabilities';
 }
 
-function extractInteractions(rawPrompt: string): string[] {
-  const interactions: string[] = [];
-  const patterns = [
-    /\bblink simulation\b/i,
-    /\bgaze selection\b/i,
-    /\bphrase selection\b/i,
-    /\bmessage composition\b/i,
-    /\bspeak button\b/i,
-    /\bemergency speech\b/i,
-    /\bcalibration control/i,
-    /\bsettings control/i,
-    /\bhistory filter/i,
-    /\bcommunication board\b/i,
-  ];
-  for (const pattern of patterns) {
-    const match = rawPrompt.match(pattern);
-    if (match) interactions.push(match[0].toLowerCase());
+function extractInteractions(rawPrompt: string, classified: string[]): string[] {
+  if (promptMentionsLisaOrAccessibility(rawPrompt)) {
+    return [...new Set([...LISA_INTERACTIONS, ...classified])];
   }
-  if (promptMentionsLisaOrAccessibility(rawPrompt) && interactions.length < 3) {
-    return [...LISA_INTERACTIONS];
-  }
-  return [...new Set(interactions)];
-}
-
-function extractSafetyNotes(rawPrompt: string): string[] {
-  const notes: string[] = [];
-  if (/safety|emergency|urgent/i.test(rawPrompt)) {
-    notes.push('Include visible safety and emergency affordances.');
-  }
-  if (/accessibility|assistive/i.test(rawPrompt)) {
-    notes.push('Large accessible controls and high-contrast UI required.');
-  }
-  return notes;
+  return classified.length > 0 ? classified : [];
 }
 
 function extractPreviewRequirements(rawPrompt: string): string[] {
@@ -189,18 +314,50 @@ function isCustomDomainPrompt(rawPrompt: string, explicitModules: string[]): boo
   return /custom app|unsupported|unique|specialized|niche/i.test(rawPrompt);
 }
 
+function resolveRequiredModules(
+  rawPrompt: string,
+  explicit: string[],
+  capability: string[],
+): { sanitized: string[]; raw: string[]; rejected: string[] } {
+  if (promptMentionsLisaOrAccessibility(rawPrompt)) {
+    const raw = collectRawModuleCandidates(rawPrompt);
+    return {
+      sanitized: [...LISA_REQUIRED_MODULES],
+      raw,
+      rejected: dedupeModuleIds([
+        ...raw.filter((m) => !LISA_REQUIRED_MODULES.includes(m)),
+        ...raw.filter((m) => classifyModulePhrase(m) === 'rejected'),
+      ]),
+    };
+  }
+
+  let candidateModules: string[];
+  if (explicit.length >= 2) {
+    candidateModules = explicit;
+  } else if (capability.length >= 2) {
+    candidateModules = capability;
+  } else {
+    candidateModules = dedupeModuleIds([...explicit, ...capability]);
+  }
+
+  const { sanitized, rejected } = sanitizeModuleIds(candidateModules);
+
+  if (sanitized.length < 2 && !isCustomDomainPrompt(rawPrompt, explicit)) {
+    return {
+      sanitized: dedupeModuleIds([...sanitized, 'dashboard', 'settings']),
+      raw: candidateModules,
+      rejected,
+    };
+  }
+
+  return { sanitized, raw: candidateModules, rejected };
+}
+
 export function extractPromptFeatures(rawPrompt: string): PromptFeatureExtraction {
   const explicit = extractExplicitModules(rawPrompt);
   const capability = deriveModulesFromCapabilities(rawPrompt);
-  let requiredModules = explicit.length >= 2 ? explicit : capability;
-
-  if (promptMentionsLisaOrAccessibility(rawPrompt)) {
-    requiredModules = dedupeModuleIds([...LISA_REQUIRED_MODULES, ...requiredModules]);
-  }
-
-  if (requiredModules.length < 2) {
-    requiredModules = dedupeModuleIds([...requiredModules, 'dashboard', 'settings']);
-  }
+  const classified = extractClassifiedPhrases(rawPrompt);
+  const { sanitized, raw, rejected } = resolveRequiredModules(rawPrompt, explicit, capability);
 
   const androidPhonePreviewRequired = /android[\s-]?first|android phone|mobile[\s-]?first/i.test(rawPrompt);
 
@@ -211,12 +368,21 @@ export function extractPromptFeatures(rawPrompt: string): PromptFeatureExtractio
     targetUsers: inferTargetUsers(rawPrompt),
     primaryPlatform: inferPlatform(rawPrompt),
     corePurpose: inferCorePurpose(rawPrompt),
-    requiredModules,
-    requiredInteractions: extractInteractions(rawPrompt),
-    safetyNotes: extractSafetyNotes(rawPrompt),
+    requiredModules: sanitized,
+    rawExtractedModules: raw,
+    rejectedNonModulePhrases: dedupeModuleIds([...rejected, ...classified.rejectedPhrases]),
+    requiredInteractions: extractInteractions(rawPrompt, classified.interactions),
+    designRequirements: classified.designRequirements,
+    platformRequirements: classified.platformRequirements,
+    safetyNotes: classified.safetyNotes,
     previewRequirements: extractPreviewRequirements(rawPrompt),
     androidPhonePreviewRequired,
     isCustomDomainPrompt: isCustomDomainPrompt(rawPrompt, explicit),
     explicitModulesProvided: explicit.length >= 2,
+    sanitizedModuleCount: sanitized.length,
+    rawExtractedModuleCount: raw.length,
   };
 }
+
+// Preserve stopword export for tests that may reference module prose filtering.
+export const MODULE_PROSE_STOPWORDS_FOR_TESTS = MODULE_PROSE_STOPWORDS;

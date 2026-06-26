@@ -4,6 +4,7 @@
 
 
 import { resolvePromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
+import { getActiveProductIntelligenceModel } from '../intent-understanding-engine/index.js';
 import { extractPromptAppTitle } from '../universal-prompt-to-app-materialization/prompt-app-metadata.js';
 import type {
   BuildUniversalFeatureContractInput,
@@ -29,6 +30,10 @@ function includesAny(text: string, terms: string[]): boolean {
 
 export function detectUniversalAppProfile(rawPrompt: string): UniversalAppProfile | null {
   const plan = resolvePromptFaithfulBuildPlan(rawPrompt);
+  const activeModel = getActiveProductIntelligenceModel();
+  if (activeModel?.architecture.suggestedProfile) {
+    return activeModel.architecture.suggestedProfile as UniversalAppProfile;
+  }
   return plan.materializationProfile as UniversalAppProfile;
 }
 
