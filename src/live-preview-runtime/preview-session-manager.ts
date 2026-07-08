@@ -75,3 +75,12 @@ export function closePreviewSession(sessionId: string): boolean {
   sessions.delete(sessionId);
   return true;
 }
+
+export function closePreviewSessionsForProject(projectId: string): number {
+  const toClose = [...sessions.values()].filter((s) => s.projectId === projectId);
+  let closed = 0;
+  for (const session of toClose) {
+    if (closePreviewSession(session.previewSessionId)) closed += 1;
+  }
+  return closed;
+}

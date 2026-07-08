@@ -1,0 +1,58 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1783444416336",
+  "createdAt": "2026-07-07T17:13:36.334Z",
+  "prompt": "Make it nicer.",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "appName": "My Existing App",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/my-existing-app-1783444416261-9",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/my-existing-app-1783444416261-9/.generated-app-manifest.json",
+  "manifestHash": "736e8d990e4cef513ee4ac78c6fb613dc1796d1347fc0f5dd8b64bb2794f4bd3",
+  "workspaceHash": "6adb6febf05c73c9e15797d7224a988e5291bcb8d30fcacbc59494febd4f5484",
+  "materializationHash": "f1c74ffcb10d60fbb020290f951d65879dd8887542e4288b8cfc37faac356ca7",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0,
+  "generatedFeatureModulesCount": 0,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/persistence"
+  ],
+  "generatedComponents": [],
+  "generatedServices": [],
+  "generatedModels": [],
+  "generatedStyles": [],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "Planning did not produce a build-ready contract",
+      "Planning did not produce a build-ready contract"
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/my-existing-app-1783444416261-9/.generated-app-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1783444416336"
+  ],
+  "failureReasons": [
+    "Planning did not produce a build-ready contract",
+    "Planning did not produce a build-ready contract",
+    "Planning did not produce a build-ready contract"
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1783444416336/replay-metadata.json",
+  "comparisonFingerprint": "1985263e53a8ee0b8d05e59dee77f37b1fdefc35f0e4a1d1f92a94b02147d260",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1783444416336/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "c0bd0479b63fa76689a389673d4270a29cd869a7eaa5125ba6d8facf9ca264af"
+}

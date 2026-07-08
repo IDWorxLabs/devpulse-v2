@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "aee-profile-continuation-internal-hr-admin-1782829297955",
+  "projectName": "Internal HR / Admin Tool",
+  "createdAt": "2026-06-30T14:21:51.416Z",
+  "updatedAt": "2026-06-30T14:21:51.689Z",
+  "selectedProfile": "CRM_WEB_V1",
+  "originalPrompt": "Build an HR admin tool with employee directory, onboarding checklist, time-off requests, and payroll summary.",
+  "currentSourcePath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782829297955/source",
+  "activeWorkspacePath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782829297955",
+  "lastBuildRunId": "one-prompt-build-4",
+  "lastSuccessfulBuildRunId": "one-prompt-build-4",
+  "manifestPath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782829297955/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782829297955/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-4-dup-1782829311113",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782829297955/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782829297955/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-4-dup-1782829311113"
+  ],
+  "featureContractRealityPath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782829297955/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782829297955/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782829297955/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782829297955/.aidev/materialization-quality-score.json"
+}

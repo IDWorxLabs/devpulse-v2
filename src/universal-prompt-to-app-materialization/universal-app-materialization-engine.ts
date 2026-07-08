@@ -32,9 +32,17 @@ import {
   materializableFeatureModules,
 } from './modular-feature-module-generator.js';
 import {
+  guardPromptBoundedMaterialization,
+  applyPromptBoundedPlanToBuildPlan,
+} from '../prompt-bounded-materialization/index.js';
+import {
   buildPromptFaithfulnessManifestFields,
   resolvePromptFaithfulBuildPlan,
 } from '../prompt-faithful-generation/index.js';
+import {
+  patchRegistryPrimaryRoute,
+  resolveDirectFeatureRootMount,
+} from '../simple-utility-app/direct-feature-root-mount.js';
 
 function profileSlug(profile: MaterializationProfile): string {
   return profile.toLowerCase().replace(/_/g, '-');
@@ -52,10 +60,22 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
   const buildPlan =
     input.faithfulBuildPlan ??
     resolvePromptFaithfulBuildPlan(input.rawPrompt, input.profile ?? null);
-  const materializationProfile = buildPlan.materializationProfile;
-  const definition = buildPlan.definition;
-  const appTitle = buildPlan.extraction.appName !== 'Custom App'
-    ? buildPlan.extraction.appName
+
+  const materializationGuard = guardPromptBoundedMaterialization({
+    rawPrompt: input.rawPrompt,
+    buildPlan,
+  });
+  if (!materializationGuard.allowed) {
+    throw new Error(
+      materializationGuard.blockedReason ??
+        'Prompt-Bounded Materialization Guard blocked file generation — no approved modules.',
+    );
+  }
+  const boundedBuildPlan = applyPromptBoundedPlanToBuildPlan(buildPlan, materializationGuard.plan);
+  const materializationProfile = boundedBuildPlan.materializationProfile;
+  const definition = boundedBuildPlan.definition;
+  const appTitle = boundedBuildPlan.extraction.appName !== 'Custom App'
+    ? boundedBuildPlan.extraction.appName
     : extractPromptAppTitle(input.rawPrompt);
   const contract = buildUniversalFeatureContract({
     contractId: input.contractId,
@@ -77,18 +97,18 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
     selectedProfile: materializationProfile,
     expectedAppType: definition.expectedAppType,
     promptSummary: summarizePrompt(input.rawPrompt),
-    confidence: buildPlan.ranking.confidence,
+    confidence: boundedBuildPlan.ranking.confidence,
     featureModules: moduleIds,
     routes: definition.routes,
     featureModuleDetails: modular.manifestEntries,
     generatedFeatureModuleFiles,
     featureModuleDirectories,
-    fallbackUsed: buildPlan.guardResult.guardApplied,
+    fallbackUsed: boundedBuildPlan.guardResult.guardApplied,
     promptFaithfulness: buildPromptFaithfulnessManifestFields({
       rawPrompt: input.rawPrompt,
       selectedProfile: String(materializationProfile),
       generatedModules: moduleIds,
-      guardResult: buildPlan.guardResult,
+      guardResult: boundedBuildPlan.guardResult,
     }),
   });
   manifest.generatedFeatureModulesCount = modular.manifestEntries.length;
@@ -202,7 +222,7 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
 
   const featureFiles: GeneratedWorkspaceFile[] = [...modular.files];
 
-  return composeGeneratedAppWorkspaceFiles({
+  const composed = composeGeneratedAppWorkspaceFiles({
     blueprint: {
       contractId: input.contractId,
       ideaId: input.ideaId,
@@ -215,5 +235,27 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
     },
     featureFiles,
     sharedFiles,
+  });
+
+  const directMount = resolveDirectFeatureRootMount({
+    rawPrompt: input.rawPrompt,
+    definition,
+    displayName,
+  });
+  if (!directMount) {
+    return composed;
+  }
+
+  return composed.map((file) => {
+    if (file.relativePath === 'src/App.tsx') {
+      return { ...file, content: directMount.appTsx };
+    }
+    if (directMount.primaryRoute === '/' && file.relativePath === 'src/features/registry.ts') {
+      return {
+        ...file,
+        content: patchRegistryPrimaryRoute(file.content, directMount.primaryModuleId),
+      };
+    }
+    return file;
   });
 }

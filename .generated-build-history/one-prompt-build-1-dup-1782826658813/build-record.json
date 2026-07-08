@@ -1,0 +1,56 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1782826658813",
+  "createdAt": "2026-06-30T13:37:38.811Z",
+  "prompt": "Build an e-commerce store with product catalog, shopping cart, checkout flow, and order history pages.",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "appName": "E-Commerce Store",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782826658797",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782826658797/.generated-app-manifest.json",
+  "manifestHash": "6029572bd921a7c1e1fd71c1ffd1f4d09d132628134d9515b6d58f738557102d",
+  "workspaceHash": "1ac5cf96d501867ef55b9309426dec4bb9beb31d975ee4b68b2d1e109e2ead58",
+  "materializationHash": "c9d52bf9c411032afa86c3a1b7b7342c18b4b3443179154083af85bb9eff2bba",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0,
+  "generatedFeatureModulesCount": 0,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/persistence"
+  ],
+  "generatedComponents": [],
+  "generatedServices": [],
+  "generatedModels": [],
+  "generatedStyles": [],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "Prompt faithfulness score below threshold."
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782826658797/.generated-app-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1782826658813"
+  ],
+  "failureReasons": [
+    "Prompt faithfulness score below threshold.",
+    "Prompt faithfulness score below threshold."
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1782826658813/replay-metadata.json",
+  "comparisonFingerprint": "d53aa1085e7df1aa5b018207a0045221f48feec2d96dce076b9a6b1c5606a9f9",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1782826658813/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "d1c5b44262fc48089ee350fd0d32f51913ef28ba6317d5c9f44ddacc556cec3c"
+}

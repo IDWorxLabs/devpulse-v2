@@ -2,6 +2,8 @@
  * Requirement Contract — extract structured requirements from user idea.
  */
 
+import { buildSimpleUtilityRequirementContract } from '../simple-utility-app/simple-utility-requirement-contract.js';
+import { isSimpleUtilityAppPrompt } from '../simple-utility-app/simple-utility-app-registry.js';
 import { MAX_REQUIREMENTS } from './requirements-to-plan-contract-registry.js';
 import type {
   RequirementContract,
@@ -276,6 +278,10 @@ function extractFromTaskTrackerPrompt(idea: UserIdeaContract): RequirementContra
 
 export function buildRequirementContract(idea: UserIdeaContract): RequirementContract | null {
   if (idea.status === 'INSUFFICIENT_INPUT') return null;
+
+  if (isSimpleUtilityAppPrompt(idea.rawPrompt)) {
+    return buildSimpleUtilityRequirementContract(idea);
+  }
 
   let requirements: RequirementContractEntry[] = [];
   const lower = idea.rawPrompt.toLowerCase();

@@ -1,0 +1,23 @@
+{
+  "readOnly": true,
+  "projectId": "general-application-1783398776345-6",
+  "projectName": "Custom App",
+  "createdAt": "2026-07-07T04:32:57.676Z",
+  "updatedAt": "2026-07-07T04:32:57.676Z",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "originalPrompt": "A simple app where I can keep a list of items, mark them done, and remove them.",
+  "currentSourcePath": "",
+  "activeWorkspacePath": ".aidev-projects/general-application-1783398776345-6",
+  "lastBuildRunId": "general-application-1783398776345-6",
+  "lastSuccessfulBuildRunId": null,
+  "manifestPath": "",
+  "featureContractPath": "",
+  "buildHistoryRecordPath": ".generated-build-history/general-application-1783398776345-6",
+  "productionValidationPath": null,
+  "exportMetadataPath": "",
+  "projectFileIndexPath": "",
+  "status": "FAILED",
+  "immutableBuildLinks": [],
+  "lastFailedBuildRunId": "general-application-1783398776345-6",
+  "lastFailedSnapshotPath": ".aidev-projects/general-application-1783398776345-6/.aidev/snapshots/failed-general-application-1783398776345-6"
+}

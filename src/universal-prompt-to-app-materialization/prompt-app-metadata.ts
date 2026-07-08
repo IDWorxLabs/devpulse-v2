@@ -5,9 +5,14 @@
 import { shouldUseCustomFeatureDefinition } from '../prompt-faithful-generation/custom-feature-contract-builder.js';
 import { extractPromptFeatures } from '../prompt-faithful-generation/prompt-feature-extractor.js';
 import {
+  detectSimpleUtilityAppKind,
+  simpleUtilityFeatureModules,
+} from '../simple-utility-app/simple-utility-app-registry.js';
+import {
   dedupeModuleIds,
   suppressFallbackModulesWhenCustomExists,
 } from '../prompt-faithful-generation/prompt-module-name-normalizer.js';
+import { promptExplicitlyRequiresAuth } from '../universal-build-pipeline-verification/build-profile-policy.js';
 
 export function extractPromptAppTitle(rawPrompt: string): string {
   const called = rawPrompt.match(/\bcalled\s+([A-Za-z][A-Za-z0-9]*)/i);
@@ -97,13 +102,24 @@ export function derivePromptFeatureTerms(rawPrompt: string): string[] {
 }
 
 export function deriveGenericCustomFeatureModules(rawPrompt: string): string[] {
+  const simpleUtilityKind = detectSimpleUtilityAppKind(rawPrompt);
+  if (simpleUtilityKind) {
+    return simpleUtilityFeatureModules(simpleUtilityKind);
+  }
+
   const extraction = extractPromptFeatures(rawPrompt);
   if (shouldUseCustomFeatureDefinition(extraction, 'GENERIC_CUSTOM_APP_V1')) {
-    return dedupeModuleIds(['auth', ...extraction.requiredModules.filter((m) => m !== 'auth')]);
+    const productModules = extraction.requiredModules.filter((m) => m !== 'auth');
+    return dedupeModuleIds(
+      promptExplicitlyRequiresAuth(rawPrompt) ? ['auth', ...productModules] : productModules,
+    );
   }
 
   const terms = derivePromptFeatureTerms(rawPrompt);
-  const modules = new Set<string>(['dashboard', 'auth']);
+  const modules = new Set<string>(['dashboard']);
+  if (promptExplicitlyRequiresAuth(rawPrompt)) {
+    modules.add('auth');
+  }
   const bannedTerms = new Set(['tasks', 'projects', 'team', 'timeline', 'deals', 'leads', 'expenses', 'inventory']);
   for (const term of terms) {
     if (bannedTerms.has(term)) continue;
@@ -112,7 +128,7 @@ export function deriveGenericCustomFeatureModules(rawPrompt: string): string[] {
       modules.add('streaks');
     }
     if (/dashboard|report|chart|analytics/.test(term)) modules.add('analytics');
-    if (/export|csv/.test(term)) modules.add('export');
+    if (/export|csv/.test(term) && /\bexport|csv\b/i.test(rawPrompt)) modules.add('export');
     if (/category|categories/.test(term)) modules.add('categories');
     if (term.length > 2) modules.add(term.replace(/\s+/g, '-'));
   }

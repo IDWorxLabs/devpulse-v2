@@ -5,7 +5,9 @@
 import { spawn, type ChildProcess } from 'node:child_process';
 import {
   killChildProcessTree,
+  killProcessesByPort,
   resolveViteDevSpawnTarget,
+  settleEventLoop,
 } from './child-process-teardown.js';
 import { getActiveProjectId } from './workspace-tab-registry.js';
 import { parseViteDevServerUrl, summarizeDevServerStartupFailure } from './vite-dev-server-output.js';
@@ -52,6 +54,15 @@ export async function stopActiveGeneratedDevServerAsync(): Promise<void> {
 export async function stopAllGeneratedDevServers(): Promise<void> {
   const keys = [...new Set([...devServers.keys(), ...pendingStartupByKey.keys()])];
   await Promise.all(keys.map((key) => stopGeneratedDevServerByKey(key)));
+  await settleEventLoop();
+}
+
+export async function stopGeneratedDevServersForProject(projectId: string): Promise<number> {
+  const keys = [...new Set([...devServers.keys(), ...pendingStartupByKey.keys()])].filter((key) =>
+    key.startsWith(`${projectId}|`),
+  );
+  await Promise.all(keys.map((key) => stopGeneratedDevServerByKey(key)));
+  return keys.length;
 }
 
 async function stopGeneratedDevServerByKey(key: string): Promise<void> {
@@ -69,6 +80,10 @@ async function stopGeneratedDevServerByKey(key: string): Promise<void> {
     const child = state?.child ?? pending;
     if (child) {
       await killChildProcessTree(child);
+      if (state?.port) {
+        await killProcessesByPort(state.port);
+      }
+      await settleEventLoop();
     }
   })().finally(() => {
     stopInFlightByKey.delete(key);
@@ -199,6 +214,7 @@ async function cleanupFailedStartup(key: string, child: ChildProcess): Promise<v
     devServers.delete(key);
   }
   await killChildProcessTree(child);
+  await settleEventLoop();
 }
 
 export function startGeneratedAppDevServer(input: {

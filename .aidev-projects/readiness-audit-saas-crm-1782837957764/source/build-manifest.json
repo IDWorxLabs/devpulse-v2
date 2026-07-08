@@ -1,0 +1,20 @@
+{
+  "manifestId": "readiness-audit-saas-crm-1782837957764-manifest",
+  "contractId": "readiness-audit-saas-crm-1782837957764",
+  "ideaId": "idea-1",
+  "generatedAt": "2026-06-30T16:45:58.078Z",
+  "materializationSource": "modular-feature-materialization-v1",
+  "applicationProfile": "CRM_WEB_V1",
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "modularFeatureMaterialization": true,
+  "buildUnits": [
+    "unit-001",
+    "unit-002",
+    "unit-003",
+    "unit-004",
+    "unit-005",
+    "unit-006"
+  ],
+  "runtime": "vite-react"
+}

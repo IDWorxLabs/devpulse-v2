@@ -473,6 +473,17 @@ export const CAPABILITY_INVENTORY: readonly CapabilityEntry[] = [
     summary: 'Repository typecheck truth; Launch Council member.',
   },
   {
+    name: 'Repository Typecheck Stabilization Authority V1',
+    category: 'ENGINEERING_REVIEW',
+    status: 'IMPLEMENTED',
+    maturity: 85,
+    duplicateRisk: 'LOW',
+    recommendation: 'KEEP',
+    ownerPath: 'src/repo-typecheck-stabilization-authority-v1/',
+    validateScript: 'validate:repo-typecheck-stabilization-authority-v1',
+    summary: 'Deterministic repo-wide TypeScript stabilization with bounded repair and rollback.',
+  },
+  {
     name: 'Execution Reality Validation',
     category: 'ENGINEERING_REVIEW',
     status: 'IMPLEMENTED',

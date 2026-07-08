@@ -11,13 +11,13 @@ export function getDevPulseV2BehaviorSimulationEngine(): {
   ownerModule: string;
   passToken: string;
   phase: number;
-  simulationOnly: true;
+  enforcementAuthority: true;
 } {
   return {
     ownerModule: BEHAVIOR_SIMULATION_ENGINE_OWNER_MODULE,
     passToken: BEHAVIOR_SIMULATION_ENGINE_PASS_TOKEN,
     phase: 5,
-    simulationOnly: true,
+    enforcementAuthority: true,
   };
 }
 

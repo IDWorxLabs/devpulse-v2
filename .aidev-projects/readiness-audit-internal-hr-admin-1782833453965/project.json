@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "readiness-audit-internal-hr-admin-1782833453965",
+  "projectName": "Internal HR / Admin Tool",
+  "createdAt": "2026-06-30T15:31:03.959Z",
+  "updatedAt": "2026-06-30T15:31:04.181Z",
+  "selectedProfile": "CRM_WEB_V1",
+  "originalPrompt": "Build an HR admin tool with employee directory, onboarding checklist, time-off requests, and payroll summary.",
+  "currentSourcePath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833453965/source",
+  "activeWorkspacePath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833453965",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": "one-prompt-build-1",
+  "manifestPath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833453965/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833453965/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782833463688",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833453965/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833453965/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-1-dup-1782833463688"
+  ],
+  "featureContractRealityPath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833453965/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833453965/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833453965/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833453965/.aidev/materialization-quality-score.json"
+}

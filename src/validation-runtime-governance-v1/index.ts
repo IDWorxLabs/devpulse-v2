@@ -116,3 +116,10 @@ export {
 export { buildValidationRuntimeGovernanceAssessment } from './validation-runtime-governance-assessor.js';
 
 export { buildValidationRuntimeGovernanceV1ReportMarkdown } from './validation-runtime-governance-report-builder.js';
+
+export {
+  runGovernedValidatorWithEvidenceReuse,
+  buildGovernedEvidenceReport,
+  renderGovernedEvidenceReport,
+} from './evidence-reuse-integration.js';
+export type { GovernedValidatorEvidencePolicy } from './evidence-reuse-integration.js';

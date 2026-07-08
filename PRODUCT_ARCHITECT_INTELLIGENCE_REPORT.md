@@ -1,6 +1,6 @@
 # Product Architect Intelligence Report
 
-**Generated:** 2026-06-25T06:29:49.027Z
+**Generated:** 2026-07-07T12:52:25.765Z
 **Product:** Learning Platform
 **Domain:** SCHOOL_MANAGEMENT
 **Profile:** LEARNING_PLATFORM_WEB_V1

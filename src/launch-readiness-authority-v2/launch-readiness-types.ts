@@ -30,7 +30,13 @@ export type LaunchReadinessVerdict =
   | 'NEEDS_HUMAN_REVIEW'
   | 'BLOCKED';
 
-export type LaunchEvidenceStatus = 'PASS' | 'FAIL' | 'WARNING' | 'UNAVAILABLE' | 'INCOMPLETE';
+export type LaunchEvidenceStatus =
+  | 'PASS'
+  | 'FAIL'
+  | 'WARNING'
+  | 'UNAVAILABLE'
+  | 'INCOMPLETE'
+  | 'DEGRADED_WITH_WORKSPACE_EVIDENCE';
 
 export type LaunchEvidenceSourceId =
   | 'INTENT_UNDERSTANDING'

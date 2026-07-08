@@ -1,0 +1,23 @@
+{
+  "readOnly": true,
+  "projectId": "readiness-audit-saas-crm-1782826754758",
+  "projectName": "SaaS CRM",
+  "createdAt": "2026-06-30T13:39:14.891Z",
+  "updatedAt": "2026-06-30T13:39:14.891Z",
+  "selectedProfile": "CRM_WEB_V1",
+  "originalPrompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "currentSourcePath": "",
+  "activeWorkspacePath": ".aidev-projects/readiness-audit-saas-crm-1782826754758",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": null,
+  "manifestPath": "",
+  "featureContractPath": "",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782826754875",
+  "productionValidationPath": null,
+  "exportMetadataPath": "",
+  "projectFileIndexPath": "",
+  "status": "FAILED",
+  "immutableBuildLinks": [],
+  "lastFailedBuildRunId": "one-prompt-build-1",
+  "lastFailedSnapshotPath": ".aidev-projects/readiness-audit-saas-crm-1782826754758/.aidev/snapshots/failed-one-prompt-build-1"
+}

@@ -1,0 +1,79 @@
+{
+  "readOnly": true,
+  "runId": "general-application-1783398776345-6",
+  "createdAt": "2026-07-07T04:32:57.528Z",
+  "prompt": "A simple app where I can keep a list of items, mark them done, and remove them.",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "appName": "Custom App",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/general-application-1783398776345-6",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/general-application-1783398776345-6/.generated-app-manifest.json",
+  "manifestHash": "32c7b8d9a34ecbab915f33c3c240439a7718f62bfeb9ca60be1b54e4cd76a2d6",
+  "workspaceHash": "bce996cd9e66b13dbc1b3ab458800a95c4dcbfd9f16a6cb0ba645fae1ef3cabc",
+  "materializationHash": "8e35da6cf8ff9200b9b2d8f1ff9937af1fb47ddc0b8a55845c44880f425f7b04",
+  "generatedFilesCount": 68,
+  "generatedDirectoriesCount": 18,
+  "generatedFeatureModulesCount": 3,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/persistence"
+  ],
+  "generatedComponents": [
+    "src/blueprint/components/EmptyState.tsx",
+    "src/blueprint/components/ErrorState.tsx",
+    "src/blueprint/components/LoadingState.tsx",
+    "src/blueprint/components/UniversalAiAssistant.tsx"
+  ],
+  "generatedServices": [
+    "src/features/dashboard/dashboard.service.ts",
+    "src/features/navigation-router/navigation-router.service.ts",
+    "src/features/settings/settings.service.ts"
+  ],
+  "generatedModels": [
+    "src/features/dashboard/dashboard.types.ts",
+    "src/features/navigation-router/navigation-router.types.ts",
+    "src/features/settings/settings.types.ts"
+  ],
+  "generatedStyles": [
+    "src/App.css",
+    "src/features/dashboard/dashboard.module.css",
+    "src/features/feature-app-router.css",
+    "src/features/navigation-router/navigation-router.module.css",
+    "src/features/settings/settings.module.css",
+    "src/styles/global.css"
+  ],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "Generated app materialization validation failed: Only 7/9 required UI terms detected in generated source.",
+      "Generated app materialization validation failed: Only 7/9 required UI terms detected in generated source."
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/general-application-1783398776345-6/.generated-app-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/general-application-1783398776345-6/build-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/general-application-1783398776345-6/universal-feature-contract.json",
+    "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/general-application-1783398776345-6/blueprint-manifest.json",
+    ".generated-build-history/general-application-1783398776345-6"
+  ],
+  "failureReasons": [
+    "Generated app materialization validation failed: Only 7/9 required UI terms detected in generated source.",
+    "Generated app materialization validation failed: Only 7/9 required UI terms detected in generated source.",
+    "Generated app materialization validation failed: Only 7/9 required UI terms detected in generated source."
+  ],
+  "replayMetadataPath": ".generated-build-history/general-application-1783398776345-6/replay-metadata.json",
+  "comparisonFingerprint": "4437994ae03ff227caac107b1c0cd3a30226a16c34d4ccb0366d5f7ea67ba88a",
+  "auditTimelinePath": ".generated-build-history/general-application-1783398776345-6/audit-timeline.json",
+  "immutable": true,
+  "buildHistoryRecordHash": "a1981e22a011768275c1773cee58ff80b94f0615a382de7e6777bc61cdc5d13d"
+}

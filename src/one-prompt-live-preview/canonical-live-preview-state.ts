@@ -1,5 +1,6 @@
 /**
  * Canonical Live Preview state — single merge path for preview runtime + one-prompt build.
+ * Preview unlock follows Live Preview Gate authority only (AEP Phase 1).
  */
 
 import {
@@ -98,6 +99,12 @@ export interface CanonicalLivePreviewBlock {
   connected: boolean;
   statusLabel: string;
   previewUrl: string | null;
+  diagnosticPreviewUrl: string | null;
+  limitedPreviewUrl: string | null;
+  devServerRunning: boolean;
+  livePreviewAvailable: boolean;
+  livePreviewGateState: string | null;
+  gateBlockerSummary: string | null;
   reality: LivePreviewRealityAssessment;
   activeSession: CanonicalLivePreviewRuntimeInput['activeSession'];
   sessions: CanonicalLivePreviewRuntimeInput['sessions'];
@@ -112,6 +119,10 @@ export interface CanonicalLivePreviewBlock {
     generatedProfile: string | null;
     buildResult: string | null;
     previewUrl: string | null;
+    diagnosticPreviewUrl: string | null;
+    limitedPreviewUrl: string | null;
+    devServerRunning: boolean;
+    livePreviewAvailable: boolean;
     failureReason: string | null;
     npmInstallOk: boolean;
     npmBuildOk: boolean;
@@ -150,6 +161,57 @@ function buildOnePromptSession(
   };
 }
 
+function buildLockedDevServerReality(
+  base: LivePreviewRealityAssessment,
+  gateState: string | null,
+  gateSummary: string | null,
+): LivePreviewRealityAssessment {
+  const lockLabel = gateState ?? 'PREVIEW_LOCKED';
+  return {
+    ...base,
+    state: lockLabel,
+    displayLabel: 'App server running — Live Preview locked',
+    summaryLines: [
+      'Dev server is running (BUILD_COMPILED, FILES_GENERATED).',
+      gateSummary ??
+        'Live Preview remains locked while AiDevEngine completes launch evidence.',
+    ],
+    problems: gateSummary ? [gateSummary] : base.problems,
+    recommendedActions: [
+      'Wait for AiDevEngine to complete autonomous validation and repair.',
+      'Do not treat the dev server URL as a launch-ready preview.',
+    ],
+    validationReady: false,
+    validationReadyReason: 'Live Preview Gate has not unlocked preview',
+    interactivity: {
+      passed: false,
+      reason: 'Preview is locked until gate unlocks',
+    },
+    availability: {
+      passed: false,
+      reason: 'Launch-ready preview is not available',
+    },
+    falsePositiveReadiness: true,
+  };
+}
+
+function buildLimitedPreviewReality(
+  base: LivePreviewRealityAssessment,
+): LivePreviewRealityAssessment {
+  return {
+    ...base,
+    state: 'LIMITED_PREVIEW_REVIEW_ONLY',
+    displayLabel: 'Limited preview — review only, not launch-ready',
+    summaryLines: [
+      'A limited review preview is available.',
+      'This is not launch-ready Live Preview — verification is still required.',
+    ],
+    validationReady: false,
+    validationReadyReason: 'Limited preview is for internal review only',
+    falsePositiveReadiness: true,
+  };
+}
+
 export function resolveCanonicalLivePreviewState(
   runtime: CanonicalLivePreviewRuntimeInput,
   context: CanonicalLivePreviewContext,
@@ -157,17 +219,20 @@ export function resolveCanonicalLivePreviewState(
   const resolvedActiveProjectId = context.activeProjectId ?? getActiveProjectId();
   const onePromptPublic = getOnePromptLivePreviewPublicState(resolvedActiveProjectId);
   const onePromptLast = getLastOnePromptLivePreviewBuildResult(resolvedActiveProjectId);
-  const onePromptReady = onePromptPublic.status === 'READY' && Boolean(onePromptPublic.previewUrl);
-  const mergedPreviewUrl = onePromptPublic.previewUrl ?? runtime.previewUrl;
-  const mergedConnected = onePromptPublic.connected || runtime.connected || onePromptReady;
+  const livePreviewUnlocked = onePromptPublic.livePreviewAvailable === true;
+  const devServerRunning = onePromptPublic.devServerRunning;
+  const mergedPreviewUrl = livePreviewUnlocked ? onePromptPublic.previewUrl : null;
+  const diagnosticPreviewUrl = onePromptPublic.diagnosticPreviewUrl;
+  const limitedPreviewUrl = onePromptPublic.limitedPreviewUrl;
+  const mergedConnected = livePreviewUnlocked || devServerRunning || runtime.connected;
   const normalizedSessions = normalizeSessions(runtime.sessions);
   const normalizedActiveSession = normalizeSession(runtime.activeSession);
   const mergedSessions =
-    onePromptReady && onePromptLast?.previewUrl
+    livePreviewUnlocked && onePromptLast?.previewUrl
       ? [buildOnePromptSession(onePromptLast), ...normalizedSessions]
       : normalizedSessions;
   const mergedActiveSession =
-    onePromptReady && onePromptLast?.previewUrl
+    livePreviewUnlocked && onePromptLast?.previewUrl
       ? buildOnePromptSession(onePromptLast)
       : normalizedActiveSession;
 
@@ -175,7 +240,7 @@ export function resolveCanonicalLivePreviewState(
   const reality = assessLivePreviewReality({
     uiSurfacePresent: true,
     connected: mergedConnected,
-    previewUrl: mergedPreviewUrl,
+    previewUrl: mergedPreviewUrl ?? limitedPreviewUrl,
     activeSession: mergedActiveSession,
     sessions: mergedSessions,
     diagnostics: runtime.diagnostics,
@@ -184,59 +249,74 @@ export function resolveCanonicalLivePreviewState(
     generatedAt,
   });
 
-  const blueprintVisualReady = resolveBlueprintVisualValidationReady();
-  const blueprintVisualAssessment = getLastBlueprintVisualAssessment();
-  const resolvedReality =
-    onePromptReady && mergedPreviewUrl
-      ? {
-          ...reality,
-          state: 'PREVIEW_READY' as const,
-          displayLabel: 'Preview ready for validation',
-          summaryLines: [
-            'Preview loaded successfully.',
-            'User interaction available.',
-            'Generated application is running in Live Preview.',
-          ],
-          problems:
-            blueprintVisualAssessment && !blueprintVisualReady.validationReady
-              ? [blueprintVisualReady.validationReadyReason]
-              : [],
-          recommendedActions:
-            blueprintVisualAssessment && !blueprintVisualReady.validationReady
-              ? ['Run Universal App Blueprint visual validation against Live Preview']
-              : ['Interact with the running app in Live Preview'],
-          validationReady: true,
-          validationReadyReason:
-            blueprintVisualAssessment && blueprintVisualReady.validationReady
-              ? blueprintVisualReady.validationReadyReason
-              : 'One-prompt build completed and Live Preview URL is active',
-          freshness: {
-            passed: true,
-            reason: 'Generated application matches the latest one-prompt build request',
-          },
-          loadReality: {
-            passed: true,
-            reason: 'Preview content is rendered',
-          },
-          interactivity: {
-            passed: true,
-            reason: 'Preview is usable for founder interaction',
-          },
-          availability: {
-            passed: true,
-            reason: 'Preview can be opened from the Live Preview surface',
-          },
-          falsePositiveReadiness: false,
-        }
-      : reality;
+  let resolvedReality = reality;
+  if (limitedPreviewUrl && !livePreviewUnlocked) {
+    resolvedReality = buildLimitedPreviewReality(reality);
+  } else if (devServerRunning && !livePreviewUnlocked) {
+    resolvedReality = buildLockedDevServerReality(
+      reality,
+      onePromptPublic.livePreviewGateState,
+      onePromptPublic.gateBlockerSummary,
+    );
+  } else if (livePreviewUnlocked && mergedPreviewUrl) {
+    const blueprintVisualReady = resolveBlueprintVisualValidationReady();
+    const blueprintVisualAssessment = getLastBlueprintVisualAssessment();
+    resolvedReality = {
+      ...reality,
+      state: 'PREVIEW_READY',
+      displayLabel: 'Live Preview unlocked (gate approved)',
+      summaryLines: [
+        'Live Preview Gate approved this preview.',
+        'Generated application is running and available for founder validation.',
+      ],
+      validationReady: true,
+      validationReadyReason:
+        blueprintVisualAssessment && blueprintVisualReady.validationReady
+          ? blueprintVisualReady.validationReadyReason
+          : 'Live Preview Gate unlocked preview with required evidence',
+      freshness: {
+        passed: true,
+        reason: 'Generated application matches the latest one-prompt build request',
+      },
+      loadReality: {
+        passed: true,
+        reason: 'Preview content is rendered',
+      },
+      interactivity: {
+        passed: true,
+        reason: 'Preview is usable for founder interaction',
+      },
+      availability: {
+        passed: true,
+        reason: 'Preview can be opened from the Live Preview surface',
+      },
+      falsePositiveReadiness: false,
+      problems:
+        blueprintVisualAssessment && !blueprintVisualReady.validationReady
+          ? [blueprintVisualReady.validationReadyReason]
+          : reality.problems,
+      recommendedActions:
+        blueprintVisualAssessment && !blueprintVisualReady.validationReady
+          ? ['Run Universal App Blueprint visual validation against Live Preview']
+          : ['Interact with the running app in Live Preview'],
+    };
+  }
 
   const buildStatus = onePromptPublic.buildStatusLabel;
   const livePreviewBlock: CanonicalLivePreviewBlock = {
     connected: mergedConnected,
-    statusLabel: onePromptReady
-      ? 'Generated app running in Live Preview'
-      : resolvedReality.displayLabel,
+    statusLabel: livePreviewUnlocked
+      ? 'Live Preview unlocked'
+      : devServerRunning
+        ? 'Dev server running — Live Preview locked'
+        : resolvedReality.displayLabel,
     previewUrl: mergedPreviewUrl,
+    diagnosticPreviewUrl,
+    limitedPreviewUrl,
+    devServerRunning,
+    livePreviewAvailable: livePreviewUnlocked,
+    livePreviewGateState: onePromptPublic.livePreviewGateState,
+    gateBlockerSummary: onePromptPublic.gateBlockerSummary,
     reality: resolvedReality,
     activeSession: mergedActiveSession,
     sessions: mergedSessions,
@@ -244,9 +324,11 @@ export function resolveCanonicalLivePreviewState(
     diagnostics: runtime.diagnostics,
     buildStatus,
     lastVerificationHint:
-      onePromptReady || runtime.diagnostics.readyPreviewCount > 0
-        ? 'Preview gates passed for ready sessions'
-        : null,
+      livePreviewUnlocked
+        ? 'Live Preview Gate unlocked — preview ready for founder validation'
+        : devServerRunning
+          ? 'Dev server running — preview locked until gate unlocks'
+          : null,
     onePromptBuild: onePromptLast
       ? {
           status: onePromptLast.status,
@@ -254,13 +336,17 @@ export function resolveCanonicalLivePreviewState(
           workspacePath: onePromptLast.workspacePath,
           generatedProfile: onePromptLast.generatedProfile,
           buildResult: onePromptLast.buildResult,
-          previewUrl: onePromptLast.previewUrl,
+          previewUrl: onePromptLast.livePreviewAvailable ? onePromptLast.previewUrl : null,
+          diagnosticPreviewUrl: onePromptLast.diagnosticPreviewUrl,
+          limitedPreviewUrl: onePromptLast.limitedPreviewUrl,
+          devServerRunning: onePromptLast.devServerRunning,
+          livePreviewAvailable: onePromptLast.livePreviewAvailable,
           failureReason: onePromptLast.failureReason,
-            npmInstallOk: onePromptLast.npmInstallOk ?? false,
-            npmBuildOk: onePromptLast.npmBuildOk ?? false,
+          npmInstallOk: onePromptLast.npmInstallOk ?? false,
+          npmBuildOk: onePromptLast.npmBuildOk ?? false,
         }
       : null,
-    onePromptReady,
+    onePromptReady: livePreviewUnlocked,
   };
 
   const runningApplication = assessRunningApplicationVisibility({
@@ -274,19 +360,19 @@ export function resolveCanonicalLivePreviewState(
       problems: livePreviewBlock.reality.problems,
     },
     activeSession: mergedActiveSession,
-    previewUrl: mergedPreviewUrl,
+    previewUrl: mergedPreviewUrl ?? limitedPreviewUrl,
     buildStatus: livePreviewBlock.buildStatus,
     latestProjectId: context.latestProjectId,
     projectCount: context.projectCount,
     projectName:
-      onePromptReady && onePromptLast
+      livePreviewUnlocked && onePromptLast
         ? onePromptLast.projectName
         : context.projectName,
     recentChangeSummary:
-      onePromptReady && onePromptLast
+      livePreviewUnlocked && onePromptLast
         ? `Generated ${onePromptLast.generatedProfile ?? 'application'} for ${onePromptLast.projectName} at ${onePromptLast.workspacePath ?? onePromptLast.workspaceId ?? 'workspace'}`
         : context.recentChangeSummary,
-    targetType: runtime.targets[0]?.targetType ?? (onePromptReady ? 'WEB_APP' : null),
+    targetType: runtime.targets[0]?.targetType ?? (livePreviewUnlocked ? 'WEB_APP' : null),
   });
 
   const cqiMaturity = getLastCqiMaturityAssessment();

@@ -1,0 +1,50 @@
+{
+  "readOnly": true,
+  "status": "PASS",
+  "overallScore": 100,
+  "plannedFeatureCount": 1,
+  "provenFeatureCount": 1,
+  "featureRealityRecords": [
+    {
+      "readOnly": true,
+      "featureId": "notes",
+      "featureName": "notes",
+      "contractId": "feature-notes",
+      "planned": true,
+      "generated": true,
+      "compiled": true,
+      "filesPresent": true,
+      "registryEntryPresent": true,
+      "routePresent": true,
+      "rendered": true,
+      "reachable": true,
+      "interactive": true,
+      "informationalOnly": false,
+      "validated": true,
+      "score": 100,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/notes/NotesFeature.tsx",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/notes/notes.types.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/notes/notes.service.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/notes/notes.validation.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/notes/index.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/FeatureAppRouter.tsx"
+      ],
+      "missingEvidence": [],
+      "failureReasons": []
+    }
+  ],
+  "failureReasons": [],
+  "informationalFeatureIds": [],
+  "interactiveFeatureIds": [
+    "notes"
+  ],
+  "recordedAt": "2026-07-07T22:50:56.058Z",
+  "buildRunId": "one-prompt-build-1",
+  "projectId": "modern-unit-converter-web-application-th-1",
+  "contractPath": ".generated-builder-workspaces/modern-unit-converter-web-application-th-1/universal-feature-contract.json",
+  "artifactPath": ".generated-builder-workspaces/modern-unit-converter-web-application-th-1/.feature-contract-reality.json",
+  "persistentArtifactPath": null
+}

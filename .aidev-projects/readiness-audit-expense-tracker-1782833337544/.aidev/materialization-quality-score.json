@@ -1,0 +1,297 @@
+{
+  "readOnly": true,
+  "overallScore": 40,
+  "verdict": "NEEDS_WORK",
+  "categories": [
+    {
+      "readOnly": true,
+      "id": "blueprint",
+      "label": "Blueprint",
+      "score": 25,
+      "weight": 0.08,
+      "weightedContribution": 2,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Blueprint purity failed",
+        "Shell purity verified"
+      ],
+      "missingEvidence": [
+        "domainLanguageBoundaryVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "promptAlignment",
+      "label": "Prompt Alignment",
+      "score": 60,
+      "weight": 0.08,
+      "weightedContribution": 5,
+      "status": "WARN",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Prompt faithfulness PASS (score 100)",
+        "Prompt-specific UI terms detected (expense, income, categories, reports, chart, csv, Expense Tracker)",
+        "Materialization validation incomplete"
+      ],
+      "missingEvidence": [
+        "profileSpecificUiVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "featureCoverage",
+      "label": "Feature Coverage",
+      "score": 88,
+      "weight": 0.12,
+      "weightedContribution": 11,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/universal-feature-contract.json",
+        "src/features/filter-ui/FilterUiFeature.tsx",
+        "src/features/navigation-router/NavigationRouterFeature.tsx",
+        "src/features/dashboard/DashboardFeature.tsx",
+        "src/features/settings/SettingsFeature.tsx",
+        "src/features/expenses/ExpensesFeature.tsx",
+        "src/features/income/IncomeFeature.tsx",
+        "src/features/categories/CategoriesFeature.tsx",
+        "src/features/reports/ReportsFeature.tsx",
+        "src/features/charts/ChartsFeature.tsx",
+        "src/features/csv-export/CsvExportFeature.tsx"
+      ],
+      "reasons": [
+        "7/8 expected modules present"
+      ],
+      "missingEvidence": [
+        "feature module missing: auth"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "modularArchitecture",
+      "label": "Modular Architecture",
+      "score": 80,
+      "weight": 0.1,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/src/features/FeatureAppRouter.tsx"
+      ],
+      "reasons": [
+        "11 modular feature modules generated",
+        "Modular registry/router architecture verified"
+      ],
+      "missingEvidence": [
+        "featureModuleDirectories incomplete"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "routeReachability",
+      "label": "Routes",
+      "score": 85,
+      "weight": 0.07,
+      "weightedContribution": 6,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/src/features/FeatureAppRouter.tsx"
+      ],
+      "reasons": [
+        "11/8 routes generated"
+      ],
+      "missingEvidence": [
+        "modularRoutesVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "serviceTypesValidation",
+      "label": "Services/Types/Validation",
+      "score": 100,
+      "weight": 0.07,
+      "weightedContribution": 7,
+      "status": "PASS",
+      "evidencePaths": [
+        "src/features/categories/categories.service.ts",
+        "src/features/charts/charts.service.ts",
+        "src/features/csv-export/csv-export.service.ts",
+        "src/features/dashboard/dashboard.service.ts",
+        "src/features/expenses/expenses.service.ts",
+        "src/features/filter-ui/filter-ui.service.ts",
+        "src/features/income/income.service.ts",
+        "src/features/navigation-router/navigation-router.service.ts"
+      ],
+      "reasons": [
+        "10 service files",
+        "10 types files",
+        "10 validation files"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "build",
+      "label": "Build",
+      "score": 100,
+      "weight": 0.08,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Validation status PASS",
+        "npm build completed in 2529ms",
+        "dist/index.html present"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "preview",
+      "label": "Preview",
+      "score": 15,
+      "weight": 0.08,
+      "weightedContribution": 1,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/.generated-app-manifest.json"
+      ],
+      "reasons": [],
+      "missingEvidence": [
+        "previewVerified",
+        "previewHtmlStatus pending",
+        "previewUrl"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "productionValidation",
+      "label": "Production Validation",
+      "score": 25,
+      "weight": 0.1,
+      "weightedContribution": 3,
+      "status": "FAIL",
+      "evidencePaths": [],
+      "reasons": [],
+      "missingEvidence": [
+        "productionValidationStatus pending",
+        "productionValidationStages"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "buildHistory",
+      "label": "Build History",
+      "score": 100,
+      "weight": 0.05,
+      "weightedContribution": 5,
+      "status": "PASS",
+      "evidencePaths": [
+        ".generated-build-history/one-prompt-build-1-dup-1782833347660",
+        ".generated-build-history/one-prompt-build-1-dup-1782833347660/replay-metadata.json",
+        ".generated-build-history/one-prompt-build-1-dup-1782833347660/audit-timeline.json"
+      ],
+      "reasons": [
+        "Build history recorded",
+        "Immutable build record hash present"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "persistentProjectReality",
+      "label": "Persistent Project Reality",
+      "score": 100,
+      "weight": 0.08,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        ".aidev-projects/readiness-audit-expense-tracker-1782833337544/source",
+        ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/project-file-index.json",
+        ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/export-metadata.json"
+      ],
+      "reasons": [
+        "Persistent project reality PASS",
+        "Export metadata reports exportReady",
+        "Workspace reality audit passed"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "genericityAvoidance",
+      "label": "Genericity Avoidance",
+      "score": 100,
+      "weight": 0.08,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Prompt-specific terms present in allowed areas",
+        "No generic Project Management fallback in shell"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "launchReadiness",
+      "label": "Launch Readiness",
+      "score": 52,
+      "weight": 0.11,
+      "weightedContribution": 6,
+      "status": "WARN",
+      "evidencePaths": [
+        ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/export-metadata.json",
+        ".aidev-projects/readiness-audit-expense-tracker-1782833337544/source"
+      ],
+      "reasons": [
+        "Launch readiness partially met"
+      ],
+      "missingEvidence": [
+        "preview not verified",
+        "production validation not PASS"
+      ]
+    }
+  ],
+  "strengths": [
+    "Services/Types/Validation",
+    "Build",
+    "Build History",
+    "Persistent Project Reality",
+    "Genericity Avoidance"
+  ],
+  "gaps": [
+    "Auth",
+    "Balance",
+    "Live preview verification incomplete"
+  ],
+  "criticalFailures": [
+    "registry missing modules: auth"
+  ],
+  "recommendedNextActions": [
+    "Verify preview HTML and dev server startup"
+  ],
+  "computedFromCategories": true,
+  "recordedAt": "2026-06-30T15:29:08.148Z",
+  "buildRunId": "one-prompt-build-1",
+  "projectId": "readiness-audit-expense-tracker-1782833337544",
+  "scoreArtifactPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833337544/.materialization-quality-score.json",
+  "persistentScoreArtifactPath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/materialization-quality-score.json",
+  "featureContractRealityPath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/feature-contract-reality.json",
+  "featureContractRealityScore": 90,
+  "featureContractRealityStatus": "FAIL",
+  "workspaceRealityAuditPath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/workspace-reality-audit.json",
+  "workspaceRealityAuditScore": 100,
+  "workspaceRealityAuditStatus": "PASS"
+}

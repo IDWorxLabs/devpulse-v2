@@ -1,0 +1,1495 @@
+{
+  "readOnly": true,
+  "projectId": "modern-unit-converter-web-application-th-1",
+  "projectName": "Modern Unit Converter Web Application. The Application Should Allow Users To Convert Between: - Length (meters, Kilometers, Miles, Feet) - Weight (grams, Kilograms, Pounds) - Temperature (celsius, Fahrenheit, Kelvin) Requirements: - Two Input Fields (value And Converted Value) - Dropdowns For Selecting Units - Swap Units Button - Real-time Conversion While Typing - Clear Button - Responsive Layout - Clean Modern Design The Application Should Be Fully Interactive And Run Entirely In The Browser Without A Backend-rebuild-1783464627948",
+  "buildRunId": "one-prompt-build-1",
+  "prompt": "Build a modern, production-quality Restaurant Management Platform for independent restaurants.\n\nThe application should be fully responsive and optimized for desktop, tablet, and mobile devices.\n\nThe goal is to produce a complete, coherent application with connected features, consistent navigation, reusable components, and a professional user experience.\n\nDo not generate placeholder pages or disconnected screens. Every feature should integrate naturally into the overall product.\n\nThe application must include the following functionality:\n\nDashboard:\n- Display today's revenue\n- Display today's orders\n- Display active tables\n- Display pending kitchen orders\n- Display today's reservations\n- Display staff currently on shift\n- Display popular menu items\n- Include useful business charts\n- Include quick action shortcuts\n\nTable Management:\n- View restaurant floor layout\n- Create new tables\n- Edit table information\n- Merge tables\n- Split tables\n- Mark tables as available, occupied, reserved, or cleaning\n- Move customers between tables\n\nMenu Management:\n- Create menu categories\n- Create menu items\n- Edit menu items\n- Delete menu items\n- Upload food images\n- Add descriptions\n- Configure prices\n- Configure availability\n- Mark featured dishes\n- Support seasonal menus\n\nOrder Management:\n- Create new customer orders\n- Add menu items\n- Remove menu items\n- Edit quantities\n- Add kitchen notes\n- Apply discounts\n- Split bills\n- Transfer orders between tables\n- Save draft orders\n- Complete orders\n- Cancel orders when necessary\n\nKitchen Display:\n- Show incoming orders\n- Show orders currently being prepared\n- Show orders ready for collection\n- Show completed orders\n- Allow kitchen staff to update order status\n\nReservation Management:\n- Create reservations\n- Edit reservations\n- Cancel reservations\n- Select reservation date and time\n- Assign tables\n- Specify party size\n- Prevent conflicting bookings\n\nCustomer Management:\n- Store customer profiles\n- Store contact information\n- Track visit history\n- Track favourite menu items\n- Manage loyalty points\n- Add customer notes\n\nInventory Management:\n- Track ingredients\n- Track stock quantities\n- Track suppliers\n- Record inventory adjustments\n- Record purchase history\n- Display low-stock warnings\n\nStaff Management:\n- Manage employees\n- Store staff details\n- Assign roles\n- Configure permissions\n- Manage work shifts\n- View staff schedules\n\nBilling:\n- Generate bills\n- Support multiple payment methods\n- Support split payments\n- Support partial payments\n- Calculate taxes\n- Generate printable receipts\n\nReports:\nGenerate reports for:\n- Revenue\n- Daily sales\n- Monthly sales\n- Best-selling menu items\n- Inventory usage\n- Staff performance\n- Reservation trends\n\nAllow reports to be filtered by date range.\n\nGlobal Search:\nProvide fast search across:\n- Customers\n- Orders\n- Reservations\n- Staff\n- Menu items\n- Inventory\n\nNotifications:\nDisplay notifications for:\n- New reservations\n- Kitchen updates\n- Low inventory\n- Staff reminders\n- Completed orders\n\nSettings:\nAllow configuration of:\n- Restaurant information\n- Business hours\n- Taxes\n- Currency\n- Notification preferences\n\nUser Interface Requirements:\n- Modern professional design\n- Clean layout\n- Consistent navigation\n- Responsive interface\n- Loading states\n- Empty states\n- Success notifications\n- Error handling\n- Confirmation dialogs\n- Reusable UI components\n- Consistent spacing, typography, and styling\n\nArchitecture Requirements:\n- Organize the application into well-structured feature modules\n- Build reusable components where appropriate\n- Maintain a consistent architecture throughout the application\n- Ensure navigation accurately reflects the product structure\n- Ensure all modules integrate correctly with one another\n- Generate a complete working application rather than isolated pages\n- Do not introduce unrelated features or concepts that are not supported by the requested product\n- Preserve the requested product identity from planning through implementation\n- Produce an application that accurately represents a Restaurant Management Platform suitable for real-world restaurant operations.",
+  "promptSummary": "Build a modern, production-quality Restaurant Management Platform for independent restaurants. The application should be fully responsive and optimized for desk…",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "expectedAppType": "notes-utility",
+  "confidence": "LOW",
+  "workspacePath": null,
+  "status": "PASS",
+  "currentStage": "COMPLETE",
+  "generatedFilesCount": 123,
+  "generatedDirectoriesCount": 27,
+  "generatedComponentsCount": 4,
+  "generatedPagesCount": 9,
+  "generatedRoutesCount": 13,
+  "generatedFeatureModulesCount": 13,
+  "generatedFeatureModuleFiles": [
+    "src/features/appointments/appointments.module.css",
+    "src/features/appointments/appointments.service.ts",
+    "src/features/appointments/appointments.types.ts",
+    "src/features/appointments/appointments.validation.ts",
+    "src/features/appointments/AppointmentsFeature.tsx",
+    "src/features/appointments/index.ts",
+    "src/features/availability/availability.module.css",
+    "src/features/availability/availability.service.ts",
+    "src/features/availability/availability.types.ts",
+    "src/features/availability/availability.validation.ts",
+    "src/features/availability/AvailabilityFeature.tsx",
+    "src/features/availability/index.ts",
+    "src/features/calendar/calendar.module.css",
+    "src/features/calendar/calendar.service.ts",
+    "src/features/calendar/calendar.types.ts",
+    "src/features/calendar/calendar.validation.ts",
+    "src/features/calendar/CalendarFeature.tsx",
+    "src/features/calendar/index.ts",
+    "src/features/currency/currency.module.css",
+    "src/features/currency/currency.service.ts",
+    "src/features/currency/currency.types.ts",
+    "src/features/currency/currency.validation.ts",
+    "src/features/currency/CurrencyFeature.tsx",
+    "src/features/currency/index.ts",
+    "src/features/customers/customers.module.css",
+    "src/features/customers/customers.service.ts",
+    "src/features/customers/customers.types.ts",
+    "src/features/customers/customers.validation.ts",
+    "src/features/customers/CustomersFeature.tsx",
+    "src/features/customers/index.ts",
+    "src/features/feature-app-router.css",
+    "src/features/inventory/index.ts",
+    "src/features/inventory/inventory.module.css",
+    "src/features/inventory/inventory.service.ts",
+    "src/features/inventory/inventory.types.ts",
+    "src/features/inventory/inventory.validation.ts",
+    "src/features/inventory/InventoryFeature.tsx",
+    "src/features/notes/index.ts",
+    "src/features/notes/notes.module.css",
+    "src/features/notes/notes.service.ts",
+    "src/features/notes/notes.types.ts",
+    "src/features/notes/notes.validation.ts",
+    "src/features/notes/NotesFeature.tsx",
+    "src/features/orders/index.ts",
+    "src/features/orders/orders.module.css",
+    "src/features/orders/orders.service.ts",
+    "src/features/orders/orders.types.ts",
+    "src/features/orders/orders.validation.ts",
+    "src/features/orders/OrdersFeature.tsx",
+    "src/features/reservations/index.ts",
+    "src/features/reservations/reservations.module.css",
+    "src/features/reservations/reservations.service.ts",
+    "src/features/reservations/reservations.types.ts",
+    "src/features/reservations/reservations.validation.ts",
+    "src/features/reservations/ReservationsFeature.tsx",
+    "src/features/revenue/index.ts",
+    "src/features/revenue/revenue.module.css",
+    "src/features/revenue/revenue.service.ts",
+    "src/features/revenue/revenue.types.ts",
+    "src/features/revenue/revenue.validation.ts",
+    "src/features/revenue/RevenueFeature.tsx",
+    "src/features/staff/index.ts",
+    "src/features/staff/staff.module.css",
+    "src/features/staff/staff.service.ts",
+    "src/features/staff/staff.types.ts",
+    "src/features/staff/staff.validation.ts",
+    "src/features/staff/StaffFeature.tsx",
+    "src/features/taxes/index.ts",
+    "src/features/taxes/taxes.module.css",
+    "src/features/taxes/taxes.service.ts",
+    "src/features/taxes/taxes.types.ts",
+    "src/features/taxes/taxes.validation.ts",
+    "src/features/taxes/TaxesFeature.tsx"
+  ],
+  "featureModuleDirectories": [
+    "src/features/appointments",
+    "src/features/availability",
+    "src/features/calendar",
+    "src/features/currency",
+    "src/features/customers",
+    "src/features/inventory",
+    "src/features/notes",
+    "src/features/orders",
+    "src/features/reservations",
+    "src/features/revenue",
+    "src/features/staff",
+    "src/features/taxes"
+  ],
+  "featureModuleDetails": [],
+  "generatedServicesCount": 12,
+  "generatedModelsCount": 12,
+  "generatedAssetsCount": 0,
+  "generatedStylesCount": 15,
+  "generatedTestsCount": 0,
+  "totalLinesGenerated": 6218,
+  "workspaceSizeBytes": 218124,
+  "generationDurationMs": 0,
+  "materializationDurationMs": 0,
+  "npmInstallDurationMs": 15518,
+  "npmBuildDurationMs": 4137,
+  "previewDurationMs": 614,
+  "validationDurationMs": 0,
+  "manifestWriteDurationMs": 86,
+  "planningDurationMs": 218,
+  "fileGenerationDurationMs": 0,
+  "blueprintShellPresent": true,
+  "featureModulesPresent": false,
+  "promptSpecificTermsPresent": false,
+  "generatedFiles": [
+    {
+      "path": ".generated-app-manifest.json",
+      "size": 60619,
+      "extension": ".json",
+      "lines": 1752,
+      "category": "Config",
+      "hash": "ac9d736b097deba2c3eb8e399a6ecb26ae4a3ee7919bff48f83dfa4eaffcc3de"
+    },
+    {
+      "path": "blueprint-manifest.json",
+      "size": 551,
+      "extension": ".json",
+      "lines": 28,
+      "category": "Config",
+      "hash": "c62724727e5cd9120a860c8ea6407f661c343101125621119fa6cdf67187f9eb"
+    },
+    {
+      "path": "build-manifest.json",
+      "size": 557,
+      "extension": ".json",
+      "lines": 19,
+      "category": "Config",
+      "hash": "a93844fc0d014e85bc52c3c5a2817d1265e2b3ec2481091fbaf1085b34fe39a2"
+    },
+    {
+      "path": "feature-contract.json",
+      "size": 6025,
+      "extension": ".json",
+      "lines": 85,
+      "category": "Config",
+      "hash": "adf5f2ecf2a2ef413c50084abe203b041cb580a21bb1fe7026f499f741ca2527"
+    },
+    {
+      "path": "index.html",
+      "size": 312,
+      "extension": ".html",
+      "lines": 13,
+      "category": "Utility",
+      "hash": "7398df0273054c266e023671c4ea202373ee0386101989464ee2042d43ceb252"
+    },
+    {
+      "path": "package-lock.json",
+      "size": 58137,
+      "extension": ".json",
+      "lines": 1733,
+      "category": "Config",
+      "hash": "b2d76accdb0e72058bf2b835bfd63ef7dac837b944d4ad7d595b68ae28f94b76"
+    },
+    {
+      "path": "package.json",
+      "size": 915,
+      "extension": ".json",
+      "lines": 32,
+      "category": "Config",
+      "hash": "35d99b7c7921ebccb7d643da7e113f9f4f5e8daa6f483fe09026a9d487b9f8ad"
+    },
+    {
+      "path": "runtime/dev-server.mjs",
+      "size": 4249,
+      "extension": ".mjs",
+      "lines": 146,
+      "category": "Utility",
+      "hash": "901dda803ba72c398b8f20d6332832d64c546ba48d48c7ce31981b15953eb0d1"
+    },
+    {
+      "path": "src/analytics/analytics-placeholders.ts",
+      "size": 527,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Utility",
+      "hash": "509dd32eaa03283a5566f131b63171c9d6571d320f03a295d0caeef55ec3fe0e"
+    },
+    {
+      "path": "src/App.css",
+      "size": 5452,
+      "extension": ".css",
+      "lines": 169,
+      "category": "Style",
+      "hash": "a2621cd8c21df9f8724779a0e190620b4f0b4740d243f0336679c45239914acb"
+    },
+    {
+      "path": "src/App.tsx",
+      "size": 1369,
+      "extension": ".tsx",
+      "lines": 46,
+      "category": "Utility",
+      "hash": "e61b5844d18ab861850f3bd8f46bbac2627baa6eb2c228a30d4c448d907fbe4f"
+    },
+    {
+      "path": "src/auth/auth-config.ts",
+      "size": 191,
+      "extension": ".ts",
+      "lines": 4,
+      "category": "Utility",
+      "hash": "61becdf74819851816e7289d7a6605a0d7b31621af9cdf6a47cb7217555c47e2"
+    },
+    {
+      "path": "src/blueprint/app-metadata.ts",
+      "size": 224,
+      "extension": ".ts",
+      "lines": 4,
+      "category": "Utility",
+      "hash": "0fa4ec24b5b109a9f66a0e1c4efcdd4aeea2fa5e69b7db59cee8746226626f3d"
+    },
+    {
+      "path": "src/blueprint/AppShell.tsx",
+      "size": 4191,
+      "extension": ".tsx",
+      "lines": 107,
+      "category": "Utility",
+      "hash": "ddff450104b8c19420f9fa1c6cfd367f785dc90a43e6dad805570eadf7bfeb10"
+    },
+    {
+      "path": "src/blueprint/AuthScreen.tsx",
+      "size": 1349,
+      "extension": ".tsx",
+      "lines": 34,
+      "category": "Utility",
+      "hash": "1a59ef64b200ea62ee271d98f277566f6c9a0fa0f6e40a3f3c861d67523b7f33"
+    },
+    {
+      "path": "src/blueprint/components/EmptyState.tsx",
+      "size": 472,
+      "extension": ".tsx",
+      "lines": 17,
+      "category": "Component",
+      "hash": "1ba79c5db82f77489aa45250df31c5ac3d982941a1c40109c6bee3ed44284ac7"
+    },
+    {
+      "path": "src/blueprint/components/ErrorState.tsx",
+      "size": 678,
+      "extension": ".tsx",
+      "lines": 20,
+      "category": "Component",
+      "hash": "61420a4b2110fd0f3a3ccfc4f0e2dc4671bedd0fb9ab937c443cfb574b3003e5"
+    },
+    {
+      "path": "src/blueprint/components/LoadingState.tsx",
+      "size": 479,
+      "extension": ".tsx",
+      "lines": 16,
+      "category": "Component",
+      "hash": "f38845ff18fe31df98493571e19641cd3c33c8a53a68b16269e680707db4ce82"
+    },
+    {
+      "path": "src/blueprint/components/UniversalAiAssistant.tsx",
+      "size": 842,
+      "extension": ".tsx",
+      "lines": 31,
+      "category": "Component",
+      "hash": "ada5bca426b7c0223ba5ea5c4ef69b11d1b1494859732a124fba71f21bc65c7a"
+    },
+    {
+      "path": "src/blueprint/LaunchScreen.tsx",
+      "size": 571,
+      "extension": ".tsx",
+      "lines": 18,
+      "category": "Utility",
+      "hash": "f48e767807dd3d7d501f02afb4323259c0bf1d161153e00d3679cce3e359c674"
+    },
+    {
+      "path": "src/blueprint/OnboardingScreen.tsx",
+      "size": 1334,
+      "extension": ".tsx",
+      "lines": 37,
+      "category": "Utility",
+      "hash": "4e822fb3586565e025056f8701dc9c98d9c03d21f8b1dec49f96b8624f1fcc5c"
+    },
+    {
+      "path": "src/blueprint/pages/AboutPage.tsx",
+      "size": 312,
+      "extension": ".tsx",
+      "lines": 13,
+      "category": "Page",
+      "hash": "e436c46d4dc1e91774926793e8cb762b10db487d1155df201414126cd7fcb426"
+    },
+    {
+      "path": "src/blueprint/pages/FeedbackPage.tsx",
+      "size": 575,
+      "extension": ".tsx",
+      "lines": 14,
+      "category": "Page",
+      "hash": "3bd312fffb2356efbd4945c394503b45af5df18ebc6a8f9ddf5b0066f5817084"
+    },
+    {
+      "path": "src/blueprint/pages/HelpCenterPage.tsx",
+      "size": 1096,
+      "extension": ".tsx",
+      "lines": 26,
+      "category": "Page",
+      "hash": "4b50ab812f8a1577ae02ed1698824d7d90a801627fcb24392d2ac457b935ba59"
+    },
+    {
+      "path": "src/blueprint/pages/HomePage.tsx",
+      "size": 1639,
+      "extension": ".tsx",
+      "lines": 49,
+      "category": "Page",
+      "hash": "97eba1cfef22bc496781e8e5ed42a11f8f50e18ad816a1a1373e1c40b10d61a6"
+    },
+    {
+      "path": "src/blueprint/pages/LegalPage.tsx",
+      "size": 611,
+      "extension": ".tsx",
+      "lines": 12,
+      "category": "Page",
+      "hash": "a0d1e0b0b43640828b4a7720a541c364d74b9b93e81c60d5e8e814ab38ac4dbe"
+    },
+    {
+      "path": "src/blueprint/pages/NotificationsPage.tsx",
+      "size": 2019,
+      "extension": ".tsx",
+      "lines": 47,
+      "category": "Page",
+      "hash": "f81f0c4fb0c36caef3f453c7155ba5b2e2eb84a8b971dcbe849afe1bda9aada2"
+    },
+    {
+      "path": "src/blueprint/pages/ProfilePage.tsx",
+      "size": 824,
+      "extension": ".tsx",
+      "lines": 25,
+      "category": "Page",
+      "hash": "b523b10a3419f32b83baf1ad30b072264219d3b182effba9ca8a415fc82e9415"
+    },
+    {
+      "path": "src/blueprint/pages/SearchPage.tsx",
+      "size": 722,
+      "extension": ".tsx",
+      "lines": 19,
+      "category": "Page",
+      "hash": "0d580956522cb5a7eb9a1f2fb7447d07ecf274c4e5ce129dd2093d7854c63d98"
+    },
+    {
+      "path": "src/blueprint/pages/SettingsPage.tsx",
+      "size": 1601,
+      "extension": ".tsx",
+      "lines": 40,
+      "category": "Page",
+      "hash": "0714d0d37477a318baa76b9fe2050ed516ea613d03e02766ba4649e3062538aa"
+    },
+    {
+      "path": "src/blueprint/WelcomeScreen.tsx",
+      "size": 541,
+      "extension": ".tsx",
+      "lines": 17,
+      "category": "Utility",
+      "hash": "c934b6a356e2b6494142322861baa9fad35ce7aa1fd059fccfc133a4e9e9c132"
+    },
+    {
+      "path": "src/data/data-management-placeholders.ts",
+      "size": 353,
+      "extension": ".ts",
+      "lines": 15,
+      "category": "Utility",
+      "hash": "ee9ad934ba34ea014cb129f37d7927cf7d72db3958e2208daf3ab888806fc04e"
+    },
+    {
+      "path": "src/data/demo-data.ts",
+      "size": 326,
+      "extension": ".ts",
+      "lines": 4,
+      "category": "Utility",
+      "hash": "d79d34dd0360c81ae04a02d3dcc27c969fe64df7a510040ee205fd9f5409f732"
+    },
+    {
+      "path": "src/features/appointments/appointments.module.css",
+      "size": 439,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "4d4cc6521663c0238bbcf21f4426780a62a1e88873ed9bc81311329ba6fa186b"
+    },
+    {
+      "path": "src/features/appointments/appointments.service.ts",
+      "size": 505,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "c0da73755a678f287914bdc4493299f6d689789baf0e487a87102a78fbb3643c"
+    },
+    {
+      "path": "src/features/appointments/appointments.types.ts",
+      "size": 228,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "68d4c96af2ea331f8ded72bd754c9a3aee1dcd4f9e041be0a74ec568689594ef"
+    },
+    {
+      "path": "src/features/appointments/appointments.validation.ts",
+      "size": 563,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "2f671c5c1c280399df1ab50ab681309873653374a865778b410cd135c2045714"
+    },
+    {
+      "path": "src/features/appointments/AppointmentsFeature.tsx",
+      "size": 1508,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "03915fec0b6b450e29ed58cd4dd6589a2a147e6f8b33f3fc1636e2208a87b069"
+    },
+    {
+      "path": "src/features/appointments/index.ts",
+      "size": 170,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "5e3cbec2256c964973bf503d06015ba12fa348521760b5886734ccaa4871743d"
+    },
+    {
+      "path": "src/features/availability/availability.module.css",
+      "size": 439,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "3c8fed40706620bcd96896d36584eee777b080b5dccefacd5dbc9eac26b7ad27"
+    },
+    {
+      "path": "src/features/availability/availability.service.ts",
+      "size": 505,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "e010e373aab4d0d6efd071256703147a46cb9aaff72f119e8c8ae35f34fa4fac"
+    },
+    {
+      "path": "src/features/availability/availability.types.ts",
+      "size": 228,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "99f8df5a73411a9a2bfa2f904f5a6a4a3c42d38ed22845cb2c5483198a292940"
+    },
+    {
+      "path": "src/features/availability/availability.validation.ts",
+      "size": 563,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "e0d5c41de07752a91e410b9180005633893abc706ceaff885d3969d00a1f3426"
+    },
+    {
+      "path": "src/features/availability/AvailabilityFeature.tsx",
+      "size": 1508,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "f5d039d50b70e64efd9e43d751101760944b939379694b6a6e14f158724c1d4f"
+    },
+    {
+      "path": "src/features/availability/index.ts",
+      "size": 170,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "c9e10bfdfcc7a76d38d27ef8620951829846d004ffc1078a3983978d60875c70"
+    },
+    {
+      "path": "src/features/calendar/calendar.module.css",
+      "size": 435,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "3b35b725e93bfbc51018ec7aac53528187e9e1688fef297d5825ace56905e46a"
+    },
+    {
+      "path": "src/features/calendar/calendar.service.ts",
+      "size": 457,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "0ebcb7e07fd33b6145f007d78f40b0097115a5a832354b30763fdcfb4be41adc"
+    },
+    {
+      "path": "src/features/calendar/calendar.types.ts",
+      "size": 216,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "184572805bceb031b60fe762ad212264883ee6f6705b007c5b7da6e13c9c92db"
+    },
+    {
+      "path": "src/features/calendar/calendar.validation.ts",
+      "size": 527,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "5fb976ec415d66b56060d44893c555ca0b6a4633ed7982cfdbfdd3d9bf19387a"
+    },
+    {
+      "path": "src/features/calendar/CalendarFeature.tsx",
+      "size": 1436,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "5d5f61033d470bb5f05771dc01bc5059617f61df994b069d980f01cfc0841ed2"
+    },
+    {
+      "path": "src/features/calendar/index.ts",
+      "size": 154,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "5e59cceca8ad06724e36728319876cf10ffcf414cad60b5f6dd178b3737aa28b"
+    },
+    {
+      "path": "src/features/currency/currency.module.css",
+      "size": 435,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "bb6dfcc730f644201f8de26b6f4bd61210f4cee96711d2b2e96b2c7c8354bd15"
+    },
+    {
+      "path": "src/features/currency/currency.service.ts",
+      "size": 457,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "585103c1310680c2f6fdc9304f9e1b089390591e8d9bda74c2e6aff3401821a6"
+    },
+    {
+      "path": "src/features/currency/currency.types.ts",
+      "size": 216,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "ff2ed42f1106957c8c37e7554492387f87d1d77e4b1e48cc2e081bf8c184d724"
+    },
+    {
+      "path": "src/features/currency/currency.validation.ts",
+      "size": 527,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "a3d56371c4c5b32341317de4e5d872a5829d49e5bc259540935a3cc12121f862"
+    },
+    {
+      "path": "src/features/currency/CurrencyFeature.tsx",
+      "size": 1436,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "eb1f20dd75187237048e38f3a1f387d83dd53e2ccb8906568fbf82fdb08a5f7d"
+    },
+    {
+      "path": "src/features/currency/index.ts",
+      "size": 154,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "d5eb17adb62d9fbd14d9da1d01ed1830991ff03e1dbbf8af235d4db97ffbc920"
+    },
+    {
+      "path": "src/features/customers/customers.module.css",
+      "size": 436,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "794957dec357f19bc28b492c4418ecd878f40febc0eaadacabb60e5e4e8227f5"
+    },
+    {
+      "path": "src/features/customers/customers.service.ts",
+      "size": 469,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "9719c923eba4f0c164dc4727d875e5ef2b68c41c9a5fd190fb9b7e0222e2e43b"
+    },
+    {
+      "path": "src/features/customers/customers.types.ts",
+      "size": 219,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "eb1c2c9f4a537e674ed293751412a3296b7e41bf68550a7e4bedf9c7e8acee5a"
+    },
+    {
+      "path": "src/features/customers/customers.validation.ts",
+      "size": 536,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "dcc6eb07cd5add28a75212c315c49e4ec0ecfd61f16651df4832e56ed412bfab"
+    },
+    {
+      "path": "src/features/customers/CustomersFeature.tsx",
+      "size": 1454,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "5abe50cee3fffcec439a02a9a16108fa94d04849403df0b9ad7fa543b6de07cc"
+    },
+    {
+      "path": "src/features/customers/index.ts",
+      "size": 158,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "2365f1df4e048fba46f0e4e9648f8189d663dc877a8ae8c72b1d23747bedcf98"
+    },
+    {
+      "path": "src/features/feature-app-router.css",
+      "size": 425,
+      "extension": ".css",
+      "lines": 6,
+      "category": "Style",
+      "hash": "d6eaae9e8a63c3e284eb0d2a31f1b582b1580e39b9fd1cdc7d31cff045b950e6"
+    },
+    {
+      "path": "src/features/FeatureAppRouter.tsx",
+      "size": 4628,
+      "extension": ".tsx",
+      "lines": 126,
+      "category": "Feature",
+      "hash": "de79c78d98f05162dc78ef25ecc331f4018e223be60716b03d5e3d940bd827db"
+    },
+    {
+      "path": "src/features/inventory/index.ts",
+      "size": 158,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "d8c9a08a71138954b4e3e8bc624ec205279b00f2581b738dba95d3863e9ae7db"
+    },
+    {
+      "path": "src/features/inventory/inventory.module.css",
+      "size": 436,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "11c8ae424ec5c20d75f38c9f6b24944922810259cf48f0ead4bc8b77cfe92f43"
+    },
+    {
+      "path": "src/features/inventory/inventory.service.ts",
+      "size": 469,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "ad3fc171507e2926f5c4c77ac3882c91a6525a1128c671250e69f72df72dff75"
+    },
+    {
+      "path": "src/features/inventory/inventory.types.ts",
+      "size": 219,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "259de461ff06edfbb6084044995ad760791de24f666ca4363f5b96935b2995bf"
+    },
+    {
+      "path": "src/features/inventory/inventory.validation.ts",
+      "size": 536,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "26f4b46409efc0587a13aa5d9571ff39a54293e7803c63e4c9f85a095589a58b"
+    },
+    {
+      "path": "src/features/inventory/InventoryFeature.tsx",
+      "size": 1454,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "4351dc3a4bc2500b31a4eb72562c5bc218d655ba2d0205ad0b8775293851f49b"
+    },
+    {
+      "path": "src/features/notes/index.ts",
+      "size": 142,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "f37988cb31e264f8ff9a9887ee4f4127bc215b4458e52407fb5016433531dcb4"
+    },
+    {
+      "path": "src/features/notes/notes.module.css",
+      "size": 432,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "b7399b00e3fee191ce6df5c2a50f8b57cdad813d37024641a0dbde9d1b148463"
+    },
+    {
+      "path": "src/features/notes/notes.service.ts",
+      "size": 421,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "f91dff3d02f5f4b3ddad4e962b94d6f1d41c649bd4ea9353fe2aeda2fd106cd3"
+    },
+    {
+      "path": "src/features/notes/notes.types.ts",
+      "size": 207,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "cbe85f0f5c4d7a0c0feef0d016f579b76053b34d3666ed94ed91560aa25a6e47"
+    },
+    {
+      "path": "src/features/notes/notes.validation.ts",
+      "size": 500,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "cb463b32ec260760eac4786c8b29752bebe5c30a9393d03d1a5047b3542c0e17"
+    },
+    {
+      "path": "src/features/notes/NotesFeature.tsx",
+      "size": 1467,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "0aad1816bbac39bffb9657f0c47195cc18899a85e287d1e84b4d4696636488e3"
+    },
+    {
+      "path": "src/features/orders/index.ts",
+      "size": 146,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "64556a0d0f2b8303530c28a7aae5ae602f769db6cf95ccda547c3da305dc7dd8"
+    },
+    {
+      "path": "src/features/orders/orders.module.css",
+      "size": 433,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "0c173bbc0b590c386891ffb3f22b558f1b2e84c29cd07273f39d0320bfc444d9"
+    },
+    {
+      "path": "src/features/orders/orders.service.ts",
+      "size": 433,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "89abb2430c717bf0674e6cc0b73c75ea5e7f6a02976f4391b21cc57b4ffbef42"
+    },
+    {
+      "path": "src/features/orders/orders.types.ts",
+      "size": 210,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "b16d4c90606c2c1840839b2a91cfd0ea65530912eed3904e3be11a1fa2db60ea"
+    },
+    {
+      "path": "src/features/orders/orders.validation.ts",
+      "size": 509,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "4924e7a012a25045d22f15122d9d74a05a47b4b8d0458ff83699cd3715ed8e48"
+    },
+    {
+      "path": "src/features/orders/OrdersFeature.tsx",
+      "size": 900,
+      "extension": ".tsx",
+      "lines": 21,
+      "category": "Feature",
+      "hash": "cdcd5f5c58b8d0f130c35ce466ab6450d96d4a670ae02989e5201db2e7960279"
+    },
+    {
+      "path": "src/features/registry.ts",
+      "size": 4075,
+      "extension": ".ts",
+      "lines": 142,
+      "category": "Route",
+      "hash": "7c0bcf307c0ca0ac5c9e020353bc8739d861ff18877558c563e6ee82764d8f6f"
+    },
+    {
+      "path": "src/features/reservations/index.ts",
+      "size": 170,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "66597c8924cd1f6aa933609f2348fc9192d48e10e8a9b85b944db288b82c6b8d"
+    },
+    {
+      "path": "src/features/reservations/reservations.module.css",
+      "size": 439,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "c2e1f4a2e7ff870891d7733c1cb70203c4dd34df8077dc17678b550b06dcd6cf"
+    },
+    {
+      "path": "src/features/reservations/reservations.service.ts",
+      "size": 505,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "9f6a6f9b98a70bdc7fc8312695cf52b3dc6af0e63d63517636fa8d898444a143"
+    },
+    {
+      "path": "src/features/reservations/reservations.types.ts",
+      "size": 228,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "c8494fa6615fec8a68f97ee88b34dfcd56577455f1a8461526cde76d5949b55a"
+    },
+    {
+      "path": "src/features/reservations/reservations.validation.ts",
+      "size": 563,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "1fb97bd316dae9a8ad8ab3eea5ab979ed0dc0641c3cdc6181a8eddd1156438bb"
+    },
+    {
+      "path": "src/features/reservations/ReservationsFeature.tsx",
+      "size": 1508,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "95c8c4a659de7b5dc257758dbe1e7e2392d14b0f96c8088486b6b72e3ae0da45"
+    },
+    {
+      "path": "src/features/revenue/index.ts",
+      "size": 150,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "347efd382762409059e02e4f71e72261427931a7f76370ebdc0393c3911518cd"
+    },
+    {
+      "path": "src/features/revenue/revenue.module.css",
+      "size": 434,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "a0c7b011a9d0f11fb2e344460e441e67a91c929e20246870759f517f65ac92d3"
+    },
+    {
+      "path": "src/features/revenue/revenue.service.ts",
+      "size": 445,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "5882dd394c8cb346ad5971ec10a409f54d72b66225c5049d3a2c1c6c78865e8b"
+    },
+    {
+      "path": "src/features/revenue/revenue.types.ts",
+      "size": 213,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "8a0ce8ddcdc32308a935f2af8acd4c413ef81f24e5803aedc9fca84b768f2850"
+    },
+    {
+      "path": "src/features/revenue/revenue.validation.ts",
+      "size": 518,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "836636dde4ec9143464f1d640547cb30c7c73c2b6095470efe46b220628d575d"
+    },
+    {
+      "path": "src/features/revenue/RevenueFeature.tsx",
+      "size": 1418,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "0ec1802196e8024c84d7fd2821981b89488eee3035f7b2b624d27f4acd944610"
+    },
+    {
+      "path": "src/features/routes.ts",
+      "size": 417,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Route",
+      "hash": "b9faa358162b58f2688051cf166e30a1d387c2ac1ce46241f1110ee84afce0b1"
+    },
+    {
+      "path": "src/features/staff/index.ts",
+      "size": 142,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "104fef37852fd0a8abc5f5c3123d4dfc545cceb7f396f64949a477790d141f15"
+    },
+    {
+      "path": "src/features/staff/staff.module.css",
+      "size": 432,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "bc8ae7cded3cceb60820400a64b31fa13a8022b4c7ba4610dd0f003be30bdcdb"
+    },
+    {
+      "path": "src/features/staff/staff.service.ts",
+      "size": 421,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "c9ab249a710bf79b1e7796a9bf348a1f7e1446316500f6b82a0ab272b696a7a6"
+    },
+    {
+      "path": "src/features/staff/staff.types.ts",
+      "size": 207,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "0ab10dad812508dd51c91f9808a905b8f2e456248bf891c177721a752526ccb6"
+    },
+    {
+      "path": "src/features/staff/staff.validation.ts",
+      "size": 500,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "b957979768c3a74f1835914949d6748b99bb3e9e3681cf63e93e6909eed9a322"
+    },
+    {
+      "path": "src/features/staff/StaffFeature.tsx",
+      "size": 1382,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "3a4fc37f1128fffa0b4f3dc9e143bf57af148412503cbc26840194d3c1c277de"
+    },
+    {
+      "path": "src/features/taxes/index.ts",
+      "size": 142,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "bb829427455a6fb89598d50fb754e3c42485113aa6f9e2c9f31024e7855b9fbb"
+    },
+    {
+      "path": "src/features/taxes/taxes.module.css",
+      "size": 432,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "ad2ac96103e6e4ad7da99b0ba216a8244f5064c932da9f102578bf0205c63aaf"
+    },
+    {
+      "path": "src/features/taxes/taxes.service.ts",
+      "size": 421,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "d671823a27691d39d7c6e1afe203470fb8f08e72591ddd84a567038d788d8251"
+    },
+    {
+      "path": "src/features/taxes/taxes.types.ts",
+      "size": 207,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "f5cfeddc510f6c428f109060676118ec4947e1994e7ab459eb2f488fb593b2fb"
+    },
+    {
+      "path": "src/features/taxes/taxes.validation.ts",
+      "size": 500,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "1566bafdb08f3584faffbadfc2c1ef1f3f969f35406d16bc342861a7cd37c479"
+    },
+    {
+      "path": "src/features/taxes/TaxesFeature.tsx",
+      "size": 1382,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "93dc9060f5d946fa9e50f8ac86836ad8e4b9d7830730653dbddfc1c9d76ab0b4"
+    },
+    {
+      "path": "src/main.tsx",
+      "size": 339,
+      "extension": ".tsx",
+      "lines": 14,
+      "category": "Utility",
+      "hash": "9a444897ca5a5b242409a82d4109b7229f2bff01ed0f4d26a39cd16f12e1d36a"
+    },
+    {
+      "path": "src/monetization/monetization-placeholders.ts",
+      "size": 517,
+      "extension": ".ts",
+      "lines": 17,
+      "category": "Utility",
+      "hash": "bde039683ff6cf486af5d02b2022daa0083717c68f8e109bb2b821797573401f"
+    },
+    {
+      "path": "src/screens/index.ts",
+      "size": 76,
+      "extension": ".ts",
+      "lines": 2,
+      "category": "Utility",
+      "hash": "79bcc71026f2e849b75a448da42ca0ed371b809893836d96f727a1b0ffc6f2d1"
+    },
+    {
+      "path": "src/security/security-placeholders.ts",
+      "size": 389,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Utility",
+      "hash": "908388d3dc8e6089eb69cd5f8e67ec5ecfbb9a3718949bee68d7cd9f0fd45ac2"
+    },
+    {
+      "path": "src/server/index.ts",
+      "size": 86,
+      "extension": ".ts",
+      "lines": 3,
+      "category": "Utility",
+      "hash": "1d8a1a9a7cde498d47da670ca2fb444ccc3a851e02aaf188d70880edf67213a7"
+    },
+    {
+      "path": "src/server/routes.ts",
+      "size": 86,
+      "extension": ".ts",
+      "lines": 3,
+      "category": "Route",
+      "hash": "1d8a1a9a7cde498d47da670ca2fb444ccc3a851e02aaf188d70880edf67213a7"
+    },
+    {
+      "path": "src/styles/global.css",
+      "size": 78,
+      "extension": ".css",
+      "lines": 3,
+      "category": "Style",
+      "hash": "cc35dd98ae20865a2c8c93b08c1fe75f1ad91a1ed0fde00c1311ee01122a4f09"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "size": 38,
+      "extension": ".ts",
+      "lines": 2,
+      "category": "Utility",
+      "hash": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "tsconfig.json",
+      "size": 441,
+      "extension": ".json",
+      "lines": 24,
+      "category": "Config",
+      "hash": "d1a721a991c9465c88007b98ef55de1cca1b1070456467575228e74a64a41d52"
+    },
+    {
+      "path": "tsconfig.node.json",
+      "size": 180,
+      "extension": ".json",
+      "lines": 12,
+      "category": "Config",
+      "hash": "17c275c4dd5c7f8b736f7a252d1324984cc4d473fa765adf6fba826605c6a413"
+    },
+    {
+      "path": "universal-feature-contract.json",
+      "size": 6025,
+      "extension": ".json",
+      "lines": 85,
+      "category": "Config",
+      "hash": "adf5f2ecf2a2ef413c50084abe203b041cb580a21bb1fe7026f499f741ca2527"
+    },
+    {
+      "path": "verification/build-verification.json",
+      "size": 121,
+      "extension": ".json",
+      "lines": 6,
+      "category": "Config",
+      "hash": "348dc98ab293683652aaea0fdc27bcaa251c8758a4f0bbb45c0a5d3a5e0e0ab5"
+    },
+    {
+      "path": "verification/run-verify.mjs",
+      "size": 1961,
+      "extension": ".mjs",
+      "lines": 60,
+      "category": "Utility",
+      "hash": "cd4d39f81ffa121f4cdb0fc7756b96d6886b816e400d8eef4bb6a1e700336c92"
+    },
+    {
+      "path": "vite.config.ts",
+      "size": 200,
+      "extension": ".ts",
+      "lines": 8,
+      "category": "Config",
+      "hash": "c5d511519db4810412b22e3afbfff272e486b68ec7a1883d306165f8a972ba89"
+    }
+  ],
+  "generatedDirectories": [
+    "runtime",
+    "src",
+    "src/analytics",
+    "src/auth",
+    "src/blueprint",
+    "src/blueprint/components",
+    "src/blueprint/pages",
+    "src/data",
+    "src/features",
+    "src/features/appointments",
+    "src/features/availability",
+    "src/features/calendar",
+    "src/features/currency",
+    "src/features/customers",
+    "src/features/inventory",
+    "src/features/notes",
+    "src/features/orders",
+    "src/features/reservations",
+    "src/features/revenue",
+    "src/features/staff",
+    "src/features/taxes",
+    "src/monetization",
+    "src/screens",
+    "src/security",
+    "src/server",
+    "src/styles",
+    "verification"
+  ],
+  "featureModules": [
+    "notes",
+    "appointments",
+    "calendar",
+    "availability",
+    "reservations",
+    "revenue",
+    "customers",
+    "orders",
+    "staff",
+    "inventory",
+    "taxes",
+    "currency",
+    "payments"
+  ],
+  "routes": [
+    "/notes",
+    "/appointments",
+    "/calendar",
+    "/availability",
+    "/reservations",
+    "/revenue",
+    "/customers",
+    "/orders",
+    "/staff",
+    "/inventory",
+    "/taxes",
+    "/currency",
+    "/payments"
+  ],
+  "services": [
+    "src/features/appointments/appointments.service.ts",
+    "src/features/availability/availability.service.ts",
+    "src/features/calendar/calendar.service.ts",
+    "src/features/currency/currency.service.ts",
+    "src/features/customers/customers.service.ts",
+    "src/features/inventory/inventory.service.ts",
+    "src/features/notes/notes.service.ts",
+    "src/features/orders/orders.service.ts",
+    "src/features/reservations/reservations.service.ts",
+    "src/features/revenue/revenue.service.ts",
+    "src/features/staff/staff.service.ts",
+    "src/features/taxes/taxes.service.ts"
+  ],
+  "models": [
+    "src/features/appointments/appointments.types.ts",
+    "src/features/availability/availability.types.ts",
+    "src/features/calendar/calendar.types.ts",
+    "src/features/currency/currency.types.ts",
+    "src/features/customers/customers.types.ts",
+    "src/features/inventory/inventory.types.ts",
+    "src/features/notes/notes.types.ts",
+    "src/features/orders/orders.types.ts",
+    "src/features/reservations/reservations.types.ts",
+    "src/features/revenue/revenue.types.ts",
+    "src/features/staff/staff.types.ts",
+    "src/features/taxes/taxes.types.ts"
+  ],
+  "assets": [],
+  "styles": [
+    "src/App.css",
+    "src/features/appointments/appointments.module.css",
+    "src/features/availability/availability.module.css",
+    "src/features/calendar/calendar.module.css",
+    "src/features/currency/currency.module.css",
+    "src/features/customers/customers.module.css",
+    "src/features/feature-app-router.css",
+    "src/features/inventory/inventory.module.css",
+    "src/features/notes/notes.module.css",
+    "src/features/orders/orders.module.css",
+    "src/features/reservations/reservations.module.css",
+    "src/features/revenue/revenue.module.css",
+    "src/features/staff/staff.module.css",
+    "src/features/taxes/taxes.module.css",
+    "src/styles/global.css"
+  ],
+  "previewEntry": "/src/main.tsx",
+  "validationStatus": "PARTIAL",
+  "warnings": [
+    "AEE_PREVIEW_RECOVERY_LOOP_V1: preview recovery exhausted after 3 attempt(s) — build completed with degraded preview.",
+    "AEE respected blocker: Live Preview is locked because Launch Readiness evidence not available. Run Autonomous Debugging after resolving upstream interaction and behavior reachability failures.",
+    "AEE evidence provider: AUTONOMOUS_DEBUGGING",
+    "AEE evidence provider: MISSING_CAPABILITY_EVOLUTION",
+    "AEE evidence provider: LIVE_PREVIEW_GATE",
+    "Only 1/3 required UI terms detected in generated source."
+  ],
+  "errors": [
+    "Missing feature module: payments"
+  ],
+  "fallbackUsed": false,
+  "workspaceHash": "1ab379c4b0baa85eb4bdd2d2187fd13992a92636baf51741fd483f0803e19135",
+  "manifestHash": "ecfff390150adecf02840458a6a2083ea8ad34601cd529ec452d7270f75ae0a6",
+  "materializationHash": "09fb7191f3345e35d03566d163ded41eaa38a2b5676f2b28a23f1a8b87c60e26",
+  "partialWorkspaceHash": "1ab379c4b0baa85eb4bdd2d2187fd13992a92636baf51741fd483f0803e19135",
+  "partialMaterializationHash": "09fb7191f3345e35d03566d163ded41eaa38a2b5676f2b28a23f1a8b87c60e26",
+  "lastSuccessfulStage": "COMPLETE",
+  "lastGeneratedFileCount": 123,
+  "lastGeneratedDirectoryCount": 27,
+  "failureStage": null,
+  "failureReason": null,
+  "failureMessage": null,
+  "errorCode": null,
+  "stackPreview": null,
+  "failedCommand": null,
+  "exitCode": null,
+  "stderrPreview": null,
+  "stdoutPreview": null,
+  "stageHistory": [
+    {
+      "stage": "WORKSPACE_STABILIZATION",
+      "status": "IN_PROGRESS",
+      "timestamp": "2026-07-07T22:50:29.897Z",
+      "durationMs": 0,
+      "warnings": [],
+      "errors": [],
+      "generatedFilesCount": 122,
+      "generatedDirectoriesCount": 27
+    },
+    {
+      "stage": "WORKSPACE_STABILIZATION",
+      "status": "IN_PROGRESS",
+      "timestamp": "2026-07-07T22:50:30.017Z",
+      "durationMs": 41,
+      "warnings": [],
+      "errors": [],
+      "generatedFilesCount": 122,
+      "generatedDirectoriesCount": 27
+    },
+    {
+      "stage": "NPM_INSTALL",
+      "status": "IN_PROGRESS",
+      "timestamp": "2026-07-07T22:50:30.098Z",
+      "durationMs": 0,
+      "warnings": [],
+      "errors": [],
+      "generatedFilesCount": 122,
+      "generatedDirectoriesCount": 27
+    },
+    {
+      "stage": "NPM_INSTALL",
+      "status": "IN_PROGRESS",
+      "timestamp": "2026-07-07T22:50:45.711Z",
+      "durationMs": 15518,
+      "warnings": [],
+      "errors": [],
+      "generatedFilesCount": 123,
+      "generatedDirectoriesCount": 27
+    },
+    {
+      "stage": "NPM_BUILD",
+      "status": "IN_PROGRESS",
+      "timestamp": "2026-07-07T22:50:45.809Z",
+      "durationMs": 0,
+      "warnings": [],
+      "errors": [],
+      "generatedFilesCount": 123,
+      "generatedDirectoriesCount": 27
+    },
+    {
+      "stage": "NPM_BUILD",
+      "status": "IN_PROGRESS",
+      "timestamp": "2026-07-07T22:50:50.040Z",
+      "durationMs": 4137,
+      "warnings": [],
+      "errors": [],
+      "generatedFilesCount": 123,
+      "generatedDirectoriesCount": 27
+    },
+    {
+      "stage": "PREVIEW",
+      "status": "IN_PROGRESS",
+      "timestamp": "2026-07-07T22:50:50.136Z",
+      "durationMs": 0,
+      "warnings": [],
+      "errors": [],
+      "generatedFilesCount": 123,
+      "generatedDirectoriesCount": 27
+    },
+    {
+      "stage": "PREVIEW",
+      "status": "IN_PROGRESS",
+      "timestamp": "2026-07-07T22:50:50.865Z",
+      "durationMs": 614,
+      "warnings": [],
+      "errors": [],
+      "generatedFilesCount": 123,
+      "generatedDirectoriesCount": 27
+    },
+    {
+      "stage": "AUTO_REPAIRING",
+      "status": "IN_PROGRESS",
+      "timestamp": "2026-07-07T22:50:51.358Z",
+      "durationMs": 0,
+      "warnings": [],
+      "errors": [],
+      "generatedFilesCount": 123,
+      "generatedDirectoriesCount": 27
+    },
+    {
+      "stage": "AEE_EXECUTIVE_COORDINATION",
+      "status": "IN_PROGRESS",
+      "timestamp": "2026-07-07T22:50:51.815Z",
+      "durationMs": 0,
+      "warnings": [
+        "AEE_PREVIEW_RECOVERY_LOOP_V1: preview recovery exhausted after 3 attempt(s) — build completed with degraded preview.",
+        "AEE respected blocker: Live Preview is locked because Launch Readiness evidence not available. Run Autonomous Debugging after resolving upstream interaction and behavior reachability failures.",
+        "AEE evidence provider: AUTONOMOUS_DEBUGGING",
+        "AEE evidence provider: MISSING_CAPABILITY_EVOLUTION",
+        "AEE evidence provider: LIVE_PREVIEW_GATE"
+      ],
+      "errors": [],
+      "generatedFilesCount": 123,
+      "generatedDirectoriesCount": 27
+    },
+    {
+      "stage": "FINAL_VALIDATION",
+      "status": "IN_PROGRESS",
+      "timestamp": "2026-07-07T22:50:55.137Z",
+      "durationMs": 0,
+      "warnings": [],
+      "errors": [],
+      "generatedFilesCount": 123,
+      "generatedDirectoriesCount": 27
+    },
+    {
+      "stage": "COMPLETE",
+      "status": "PASS",
+      "timestamp": "2026-07-07T22:50:55.552Z",
+      "durationMs": 0,
+      "warnings": [
+        "Only 1/3 required UI terms detected in generated source."
+      ],
+      "errors": [
+        "Missing feature module: payments"
+      ],
+      "generatedFilesCount": 123,
+      "generatedDirectoriesCount": 27
+    }
+  ],
+  "productionValidationStatus": "PENDING",
+  "productionValidationProfile": null,
+  "productionValidationStages": [],
+  "previewVerified": false,
+  "previewUrl": "http://127.0.0.1:5173/",
+  "previewHtmlStatus": "FAIL",
+  "visiblePreviewValidationStatus": "FAIL",
+  "visiblePreviewValidationFailureReasons": [
+    "E2E failing stage: WORKSPACE_REALITY_AUDIT",
+    "playwright=http://127.0.0.1:5173 iframe=none"
+  ],
+  "profileSpecificUiVerified": false,
+  "modularRoutesVerified": false,
+  "productionValidationDurationMs": 0,
+  "productionValidationFailureReasons": [],
+  "blueprintPurityStatus": "FAIL",
+  "blueprintPurityCheckedFiles": [
+    "src/universal-app-blueprint/universal-app-blueprint-generator.ts",
+    "src/universal-app-blueprint/universal-app-blueprint-authority.ts",
+    "src/universal-app-blueprint/universal-app-blueprint-inspector.ts",
+    "src/universal-app-blueprint/universal-app-blueprint-registry.ts",
+    "src/universal-app-blueprint/universal-app-blueprint-types.ts",
+    "src/universal-app-blueprint/universal-app-blueprint-planning-rule.ts"
+  ],
+  "blueprintPurityViolationCount": 0,
+  "blueprintPurityAllowedDomainSources": [
+    "src/features/",
+    "src/features/registry.ts",
+    "src/features/routes.ts",
+    "src/blueprint/app-metadata.ts",
+    "universal-feature-contract.json"
+  ],
+  "blueprintPurityFailureReasons": [
+    "prompt alignment failed without blueprint leakage: Only 1/3 required UI terms detected in generated source."
+  ],
+  "shellPurityVerified": true,
+  "domainLanguageBoundaryVerified": false,
+  "buildHistoryRecorded": false,
+  "buildHistoryRunId": null,
+  "buildHistoryRecordPath": null,
+  "buildHistoryRecordHash": null,
+  "buildHistoryImmutable": false,
+  "replayMetadataPath": null,
+  "auditTimelinePath": null,
+  "buildHistoryIntegrityStatus": "PENDING",
+  "buildHistoryFailureReasons": [],
+  "buildHistoryDeduplicatedRunId": false,
+  "buildHistoryRecordedAt": null,
+  "persistentProjectRealityStatus": "PENDING",
+  "persistentProjectId": null,
+  "persistentProjectWorkspacePath": null,
+  "persistentProjectSourceRoot": null,
+  "projectFileIndexPath": null,
+  "exportMetadataPath": null,
+  "promotedFromBuildWorkspace": null,
+  "promotionStatus": "PENDING",
+  "promotionFailureReasons": [],
+  "persistentProjectRecordedAt": null,
+  "activeWorkspacePath": null,
+  "materializationQualityScore": 0,
+  "materializationQualityVerdict": "PENDING",
+  "materializationQualityCategories": [],
+  "materializationQualityGaps": [],
+  "materializationQualityStrengths": [],
+  "materializationQualityCriticalFailures": [],
+  "materializationQualityScorePath": null,
+  "materializationQualityPersistentScorePath": null,
+  "materializationQualityRecordedAt": null,
+  "featureContractRealityStatus": "PENDING",
+  "featureContractRealityScore": 0,
+  "featureRealityRecords": [],
+  "featureRealityFailureReasons": [],
+  "featureContractRealityArtifactPath": null,
+  "featureContractRealityPersistentArtifactPath": null,
+  "featureContractRealityRecordedAt": null,
+  "workspaceRealityAuditStatus": "PENDING",
+  "workspaceRealityAuditScore": 0,
+  "workspaceRealityAuditArtifactPath": null,
+  "workspaceRealityReportPath": null,
+  "workspaceRealityFailureReasons": [],
+  "workspaceRealityRecordedAt": null,
+  "universalProductionProofRunId": null,
+  "universalProductionProofStatus": "PENDING",
+  "universalProductionProofProfileVerdict": null,
+  "universalProductionProofArtifactPath": null,
+  "universalProductionProofRecordedAt": null,
+  "promptFaithfulnessStatus": "FAIL",
+  "promptFaithfulnessScore": 90,
+  "promptDerivedAppName": "reusable components where",
+  "promptDerivedDomain": "utility / notes",
+  "promptDerivedModules": [
+    "notes"
+  ],
+  "promptDerivedInteractions": [],
+  "rejectedFallbackProfiles": [],
+  "bannedFallbackModulesDetected": [],
+  "overExtractedNonModulePhrases": [],
+  "fallbackModulesAppendedByGenerator": [
+    "inventory"
+  ],
+  "truePromptDerivedModules": [
+    "notes"
+  ],
+  "promptFaithfulnessFailureReasons": [
+    "Fallback modules appended to custom definition: inventory."
+  ],
+  "androidPhonePreviewRequired": false,
+  "androidPhonePreviewStatus": "PASS",
+  "sanitizedModuleCount": 1,
+  "rawExtractedModuleCount": 1,
+  "createdAt": "2026-07-07T22:50:29.599Z",
+  "completedAt": "2026-07-07T22:50:55.463Z"
+}

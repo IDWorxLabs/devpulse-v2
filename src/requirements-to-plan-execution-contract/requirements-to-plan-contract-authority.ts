@@ -26,6 +26,10 @@ import type {
 import { buildUserIdeaContract, resetUserIdeaContractCounterForTests } from './user-idea-contract-builder.js';
 import { resetRequirementContractCounterForTests } from './requirement-contract-builder.js';
 import { resetPlanContractCounterForTests } from './plan-contract-builder.js';
+import { resetSimpleUtilityPlanningRepairCounterForTests } from '../simple-utility-app/simple-utility-planning-repair.js';
+import { resetSimpleUtilityRequirementCounterForTests } from '../simple-utility-app/simple-utility-requirement-contract.js';
+import { isSimpleUtilityAppPrompt } from '../simple-utility-app/simple-utility-app-registry.js';
+import { repairSimpleUtilityPlanningAssessment } from '../simple-utility-app/simple-utility-planning-repair.js';
 
 let assessmentCounter = 0;
 let lastStoredContract: StoredBuildReadyContract | null = null;
@@ -91,6 +95,11 @@ function deriveProofLevel(input: {
 export function assessRequirementsToPlanExecutionContract(
   input: AssessRequirementsToPlanContractInput,
 ): RequirementsToPlanContractAssessment {
+  const repaired = repairSimpleUtilityPlanningAssessment(input.rawPrompt);
+  if (repaired?.report.buildReadyContract?.readinessState === 'BUILD_READY') {
+    return repaired;
+  }
+
   const userIdea = buildUserIdeaContract(input.rawPrompt, input.ideaId);
   const requirementContract = buildRequirementContract(userIdea);
   const clarifyingGaps = analyzeClarifyingGaps(userIdea, requirementContract);
@@ -170,6 +179,13 @@ export function assessRequirementsToPlanExecutionContract(
   };
 
   recordRequirementsToPlanContractAssessment(assessment);
+  if (
+    (!buildReadyContract || buildReadyContract.readinessState !== 'BUILD_READY') &&
+    isSimpleUtilityAppPrompt(input.rawPrompt)
+  ) {
+    const repaired = repairSimpleUtilityPlanningAssessment(input.rawPrompt);
+    if (repaired) return repaired;
+  }
   return assessment;
 }
 
@@ -190,5 +206,7 @@ export function resetRequirementsToPlanContractModuleForTests(): void {
   resetUserIdeaContractCounterForTests();
   resetRequirementContractCounterForTests();
   resetPlanContractCounterForTests();
+  resetSimpleUtilityPlanningRepairCounterForTests();
+  resetSimpleUtilityRequirementCounterForTests();
   resetStoredBuildReadyContractForTests();
 }

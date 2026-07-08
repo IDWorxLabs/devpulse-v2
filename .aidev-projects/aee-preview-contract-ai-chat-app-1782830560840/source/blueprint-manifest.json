@@ -1,0 +1,27 @@
+{
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "contractId": "aee-preview-contract-ai-chat-app-1782830560840",
+  "ideaId": "idea-9",
+  "appName": "n AI chat",
+  "generatedAt": "2026-06-30T14:42:41.091Z",
+  "defaultSections": [
+    "launch",
+    "welcome",
+    "auth",
+    "onboarding",
+    "shell",
+    "home",
+    "search",
+    "notifications",
+    "profile",
+    "settings",
+    "help",
+    "feedback",
+    "legal",
+    "analytics",
+    "security",
+    "monetization",
+    "universal-ai"
+  ]
+}

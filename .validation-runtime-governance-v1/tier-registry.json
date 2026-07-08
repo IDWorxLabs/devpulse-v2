@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-25T06:29:39.026Z",
+  "generatedAt": "2026-07-07T12:52:11.194Z",
   "tiers": [
     {
       "tier": "FAST",
@@ -157,6 +157,70 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:aee-all-profile-continuation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aee-build-autofix-loop",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aee-preview-contract",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aee-preview-recovery-loop",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aee-production-response-alignment",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aep-compliance-audit",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aep-phase3",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aep-preview-gate-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:afla-trust-calibration-v1",
       "tier": "LAUNCH",
       "category": "AFLA",
@@ -165,7 +229,55 @@
       "aflaBlockedInFastStandard": true
     },
     {
+      "validatorName": "validate:aidevengine-build-proof-v1-1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aidevengine-build-proof-v1-2",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aidevengine-build-proof-v1-3",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aidevengine-build-proof-v1-4",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:aidevengine-identity-correction",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aidevengine-multi-domain-build-proof-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:aidevengine-multi-domain-build-proof-v1-1",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -198,6 +310,14 @@
     },
     {
       "validatorName": "validate:architecture-drift-detection",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:ase-enforcement-engine",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -317,6 +437,30 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:autonomous-debugging-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-engineering-executive",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-engineering-loop",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:autonomous-fixing",
       "tier": "FULL",
       "category": "OTHER",
@@ -333,7 +477,23 @@
       "aflaBlockedInFastStandard": true
     },
     {
+      "validatorName": "validate:autonomous-recovery-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:autonomous-repair-loop",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:autonomous-software-engineering-engine",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -354,6 +514,22 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
       "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:behavior-simulation-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:blueprint-purity",
+      "tier": "FULL",
+      "category": "BLUEPRINT",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -378,6 +554,14 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
       "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:build-history-integrity",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -410,6 +594,30 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 138,
       "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:build-reality-autofix-engine-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 900,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:build-result-conversational-intelligence",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 38,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:build-spine-refinement-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -481,14 +689,6 @@
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
-      "budgetCategory": "LOW",
-      "aflaBlockedInFastStandard": false
-    },
-    {
-      "validatorName": "validate:missing-capability-evolution-engine",
-      "tier": "FAST",
-      "category": "OTHER",
-      "runtimeBudgetSeconds": 5,
       "budgetCategory": "LOW",
       "aflaBlockedInFastStandard": false
     },
@@ -570,6 +770,14 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 53,
       "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:chat-response-intelligence-audit-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -720,8 +928,8 @@
       "validatorName": "validate:code-generation-engine-v1",
       "tier": "FULL",
       "category": "OTHER",
-      "runtimeBudgetSeconds": 288,
-      "budgetCategory": "HIGH",
+      "runtimeBudgetSeconds": 312,
+      "budgetCategory": "CRITICAL",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -778,6 +986,14 @@
       "category": "OPERATOR",
       "runtimeBudgetSeconds": 27,
       "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:command-center-stale-project-purge",
+      "tier": "FAST",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -973,7 +1189,23 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:constitutional-architecture-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:continuous-deployment-pipeline-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:continuous-product-improvement-engine",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -1045,6 +1277,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:custom-module-extraction-sanitization",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:customer-journey-simulation",
       "tier": "FAST",
       "category": "OTHER",
@@ -1093,6 +1333,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:end-to-end-build-reality-engine-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:end-to-end-execution-proof-chain",
       "tier": "FAST",
       "category": "OTHER",
@@ -1106,6 +1354,22 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 103,
       "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:engineering-continuation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:engineering-intelligence-runtime",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -1197,6 +1461,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:execution-trace-architecture",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 128,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:experience-layer-foundation",
       "tier": "FAST",
       "category": "FOUNDATION",
@@ -1205,10 +1477,26 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:failed-build-forensic-manifest",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 428,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:failure-visibility-engine",
       "tier": "STANDARD",
       "category": "OTHER",
       "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:feature-contract-reality",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
       "budgetCategory": "MEDIUM",
       "aflaBlockedInFastStandard": false
     },
@@ -1709,6 +1997,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:frontend-project-registry-parsing",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:full-product-readiness-simulation",
       "tier": "FAST",
       "category": "OTHER",
@@ -1797,6 +2093,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:incremental-autonomous-builder",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:inline-operator-feed",
       "tier": "FAST",
       "category": "OPERATOR",
@@ -1814,6 +2118,22 @@
     },
     {
       "validatorName": "validate:intake-validation-stage-transition-repair",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:intent-understanding-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:interaction-proof-engine",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -1885,6 +2205,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:launch-project-hydration",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:launch-readiness-artifact-build-trace",
       "tier": "FAST",
       "category": "LAUNCH",
@@ -1917,6 +2245,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:launch-readiness-authority-v2",
+      "tier": "FAST",
+      "category": "LAUNCH",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:launch-verdict-governance",
       "tier": "FAST",
       "category": "LAUNCH",
@@ -1937,6 +2273,22 @@
       "tier": "STANDARD",
       "category": "OTHER",
       "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:lisa-feature-reality-fallback",
+      "tier": "FULL",
+      "category": "FEATURE_REALITY",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:lisa-real-builder-continuation",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 48,
       "budgetCategory": "MEDIUM",
       "aflaBlockedInFastStandard": false
     },
@@ -1966,6 +2318,14 @@
     },
     {
       "validatorName": "validate:live-idea-to-launch-execution-runner",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:live-preview-gate",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -2005,6 +2365,22 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:live-prompt-faithful-build-path",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:llm-connection-proof",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:llm-context-hydration",
       "tier": "FAST",
       "category": "OTHER",
@@ -2029,6 +2405,22 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:materialization-evidence-completion",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:materialization-quality-score",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:missing-capability-detector",
       "tier": "FAST",
       "category": "OTHER",
@@ -2038,6 +2430,14 @@
     },
     {
       "validatorName": "validate:missing-capability-escalation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:missing-capability-evolution-engine",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -2133,11 +2533,35 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:mobile-runtime-preview-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:mobile-runtime-preview-v2",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:mobile-runtime-validation-at-scale-v1",
       "tier": "FULL",
       "category": "OTHER",
       "runtimeBudgetSeconds": 630,
       "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:modular-feature-materialization",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -2197,6 +2621,30 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:one-prompt-build-response-composer-scope-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:one-prompt-calculator-build-ready-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:one-prompt-calculator-visible-preview-v1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:one-prompt-chat-build-proof",
       "tier": "STANDARD",
       "category": "OTHER",
@@ -2253,6 +2701,22 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:operator-feed-layout",
+      "tier": "STANDARD",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 83,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:operator-feed-stream-redesign",
+      "tier": "FAST",
+      "category": "OPERATOR",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:operator-feed-unified-layout-and-stage2-completion",
       "tier": "FAST",
       "category": "OPERATOR",
@@ -2281,6 +2745,14 @@
       "tier": "STANDARD",
       "category": "FOUNDATION",
       "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:persistent-project-reality",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
       "budgetCategory": "MEDIUM",
       "aflaBlockedInFastStandard": false
     },
@@ -2429,6 +2901,22 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:product-faithfulness-milestone-1",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-faithfulness-milestone-2",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:product-hardening-verification",
       "tier": "FAST",
       "category": "OTHER",
@@ -2493,6 +2981,46 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:product-stabilization-phase-1-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 252,
+      "budgetCategory": "HIGH",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-stabilization-phase-2-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 900,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-stabilization-phase-3-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 318,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-stabilization-phase-4-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 738,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:product-stabilization-phase-5-v1",
+      "tier": "FULL",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 579,
+      "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:production-observability-platform-v1",
       "tier": "FAST",
       "category": "OTHER",
@@ -2509,7 +3037,31 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:production-validation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:progress-intelligence",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-files-empty-state-navigation",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-files-render-navigation",
       "tier": "STANDARD",
       "category": "OTHER",
       "runtimeBudgetSeconds": 27,
@@ -2541,6 +3093,22 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:project-lifecycle",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-lifecycle-delete-route",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:project-registry-consistency-v1",
       "tier": "STANDARD",
       "category": "OTHER",
@@ -2549,7 +3117,39 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:project-registry-endpoints",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-registry-startup-resume",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-state-and-aee-recovery-real-path",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:project-summarization-engine",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:project-tab-context-switch",
       "tier": "STANDARD",
       "category": "OTHER",
       "runtimeBudgetSeconds": 27,
@@ -2573,6 +3173,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:project-workspace-explorer",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:promise-fulfillment-authority",
       "tier": "FAST",
       "category": "OTHER",
@@ -2582,6 +3190,142 @@
     },
     {
       "validatorName": "validate:promise-reality-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-ambiguity-detection",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-assumption-detection",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-bounded-materialization",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-capability-mapping",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-completeness",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-conflict-detection",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-contract",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-drift",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-evidence-extraction",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-faithful-generation",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-faithfulness-authority",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-faithfulness-score",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-knowledge-graph",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-launch-integration",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-parser",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-registry",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:prompt-traceability",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -2661,7 +3405,47 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:recovery-escalation",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:recovery-executor",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:recovery-hardening",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:recovery-memory",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:recovery-planner",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:recovery-strategy-engine",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -2678,6 +3462,14 @@
     },
     {
       "validatorName": "validate:remove-legacy-failed-to-fetch-copy-fallback",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:repo-typecheck-stabilization-authority-v1",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -2717,6 +3509,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:restart-resilience",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:result-fetch-failure-diagnostic-surface",
       "tier": "FAST",
       "category": "OTHER",
@@ -2733,7 +3533,23 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:root-cause-analysis",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:running-application-visibility",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:runtime-banner-truth-reconciliation",
       "tier": "FAST",
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
@@ -2802,6 +3618,14 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 48,
       "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:safe-payment-placeholder-policy",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -2909,6 +3733,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:simplified-builder-ui-v1",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 27,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:skeptical-founder-simulator",
       "tier": "FAST",
       "category": "OTHER",
@@ -3005,6 +3837,14 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:unified-build-conversation-layer",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:unified-decision-layer",
       "tier": "STANDARD",
       "category": "OTHER",
@@ -3077,11 +3917,43 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:universal-build-pipeline",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:universal-feature-contract-intelligence-v1",
       "tier": "FULL",
       "category": "FEATURE_REALITY",
       "runtimeBudgetSeconds": 900,
       "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:universal-generator-consolidation",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:universal-production-proof",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:universal-prompt-to-app-materialization",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -3141,6 +4013,22 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:validation-evidence-reuse-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:validation-replay",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:validation-runtime-audit-v1",
       "tier": "FAST",
       "category": "OTHER",
@@ -3154,6 +4042,14 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 900,
       "budgetCategory": "CRITICAL",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:vere-adoption-phase-1",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
       "aflaBlockedInFastStandard": false
     },
     {
@@ -3237,6 +4133,22 @@
       "aflaBlockedInFastStandard": false
     },
     {
+      "validatorName": "validate:virtual-device-laboratory",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:virtual-user-engine",
+      "tier": "FAST",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
       "validatorName": "validate:visual-qa-engine",
       "tier": "FAST",
       "category": "OTHER",
@@ -3298,6 +4210,14 @@
       "category": "OTHER",
       "runtimeBudgetSeconds": 3,
       "budgetCategory": "LOW",
+      "aflaBlockedInFastStandard": false
+    },
+    {
+      "validatorName": "validate:workspace-reality-audit",
+      "tier": "STANDARD",
+      "category": "OTHER",
+      "runtimeBudgetSeconds": 53,
+      "budgetCategory": "MEDIUM",
       "aflaBlockedInFastStandard": false
     },
     {

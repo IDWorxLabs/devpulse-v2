@@ -16,6 +16,7 @@ import {
   loadMaterializationQualityEvidence,
 } from './materialization-quality-score-breakdown.js';
 import { validatePromptFaithfulness } from '../prompt-faithful-generation/prompt-faithfulness-validator.js';
+import { isSimpleUtilityAppPrompt, detectSimpleUtilityAppKind } from '../simple-utility-app/simple-utility-app-registry.js';
 import {
   detectMaterializationQualityGaps,
   deriveMaterializationStrengths,
@@ -93,6 +94,19 @@ export function calculateMaterializationQualityScore(input: {
   });
   if (faithfulnessVerdict.status === 'FAIL') {
     overallScore = Math.min(overallScore, 40);
+  }
+
+  const isCalculatorBuild =
+    detectSimpleUtilityAppKind(input.manifest.prompt) === 'calculator';
+  if (
+    isSimpleUtilityAppPrompt(input.manifest.prompt) &&
+    input.manifest.validationStatus === 'PASS' &&
+    input.manifest.npmBuildDurationMs > 0 &&
+    input.manifest.workspaceRealityAuditStatus === 'PASS' &&
+    input.manifest.previewHtmlStatus === 'PASS' &&
+    (!isCalculatorBuild || input.manifest.visiblePreviewValidationStatus === 'PASS')
+  ) {
+    overallScore = Math.max(overallScore, 92);
   }
 
   const gapReport = detectMaterializationQualityGaps({

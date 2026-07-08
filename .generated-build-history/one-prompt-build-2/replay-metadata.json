@@ -1,63 +1,69 @@
 {
   "readOnly": true,
-  "originalPrompt": "Build a modern expense tracking web application with categories, receipts, monthly budgets, and spending reports. Generate architecture, plan, tasks, and begin build execution.",
-  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
+  "originalPrompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "selectedProfile": "CRM_WEB_V1",
   "generationInputs": {
-    "projectId": "expense-test-1",
+    "projectId": "aee-profile-continuation-saas-crm-1782828782610",
     "buildRunId": "one-prompt-build-2",
-    "expectedAppType": "expense-tracker",
+    "expectedAppType": "crm",
     "featureModules": [
-      "auth",
+      "navigation-router",
       "dashboard",
-      "income",
-      "expenses",
-      "categories",
-      "reports",
-      "charts",
-      "csv-export",
-      "persistence"
+      "settings",
+      "deals",
+      "persistence",
+      "customers",
+      "pipeline",
+      "contacts",
+      "follow-ups",
+      "reports"
     ],
     "routes": [
-      "/",
+      "/navigation-router",
       "/dashboard",
-      "/income",
-      "/expenses",
-      "/categories",
-      "/reports",
-      "/charts",
-      "/export"
+      "/settings",
+      "/deals",
+      "/persistence",
+      "/customers",
+      "/pipeline",
+      "/contacts",
+      "/follow-ups",
+      "/reports"
     ],
     "fallbackUsed": false
   },
   "featureContractSummary": {
-    "featureModuleCount": 9,
+    "featureModuleCount": 0,
     "featureModuleIds": [
-      "auth",
+      "navigation-router",
       "dashboard",
-      "income",
-      "expenses",
-      "categories",
-      "reports",
-      "charts",
-      "csv-export",
-      "persistence"
+      "settings",
+      "deals",
+      "persistence",
+      "customers",
+      "pipeline",
+      "contacts",
+      "follow-ups",
+      "reports"
     ],
     "routes": [
-      "/",
+      "/navigation-router",
       "/dashboard",
-      "/income",
-      "/expenses",
-      "/categories",
-      "/reports",
-      "/charts",
-      "/export"
+      "/settings",
+      "/deals",
+      "/persistence",
+      "/customers",
+      "/pipeline",
+      "/contacts",
+      "/follow-ups",
+      "/reports"
     ]
   },
   "profileFeatureMapVersion": "materialization-v1",
   "blueprintVersion": "1.0",
   "generatorVersion": "universal-prompt-to-app-materialization-v1",
   "dependencySnapshot": {
-    "runtime": "vite-react:expense-tracker-web-v1",
+    "runtime": "vite-react",
     "packageManager": "npm",
     "note": "Captured from generated workspace package.json when present"
   },
@@ -73,8 +79,7 @@
     "src/features/registry.ts",
     "src/features/routes.ts",
     "src/features/FeatureAppRouter.tsx",
-    "src/blueprint/AppShell.tsx",
-    "universal-feature-contract.json"
+    "src/blueprint/AppShell.tsx"
   ],
   "replayInstructions": [
     "Use originalPrompt and selectedProfile with Universal Prompt-to-App Materialization engine.",

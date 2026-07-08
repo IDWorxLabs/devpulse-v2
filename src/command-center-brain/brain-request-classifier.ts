@@ -1,7 +1,10 @@
 /**
  * Brain request classifier — deterministic local classification only.
+ * Build-intent recovery runs before general conversational patterns.
  */
 
+import { classifyBuildIntentWithRecovery } from '../build-intent-classification-recovery-v1/index.js';
+import { isBuildIntentRequest } from '../build-intent-routing/build-intent-detector.js';
 import type { BrainClassification, BrainRequestCategory, BrainRequestInput } from './brain-types.js';
 import { BRAIN_REQUEST_CATEGORIES } from './brain-types.js';
 
@@ -25,6 +28,26 @@ export function classificationKey(classification: BrainClassification): string {
 
 export function classifyBrainRequest(input: BrainRequestInput): BrainClassification {
   const lower = input.message.toLowerCase().trim();
+
+  const recovery = classifyBuildIntentWithRecovery(input.message);
+  if (recovery.buildIntentDetected) {
+    return {
+      category: 'BUILD',
+      confidence: recovery.confidence,
+      matchedSignals: recovery.matchedBuildSignals,
+      reason: recovery.routingReason,
+    };
+  }
+
+  if (isBuildIntentRequest(input.message)) {
+    return {
+      category: 'BUILD',
+      confidence: 'HIGH',
+      matchedSignals: ['legacy:build-intent-heuristic'],
+      reason: 'Build intent routing detected — autonomous engineering path required',
+    };
+  }
+
   const matchedSignals: string[] = [];
 
   for (const mapping of CATEGORY_PATTERNS) {

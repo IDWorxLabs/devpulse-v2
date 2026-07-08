@@ -1,0 +1,103 @@
+{
+  "readOnly": true,
+  "runId": "aee-profile-continuation-saas-crm-1782828961990",
+  "createdAt": "2026-06-30T14:16:02.769Z",
+  "prompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "selectedProfile": "CRM_WEB_V1",
+  "appName": "CRM",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828961990",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828961990/.generated-app-manifest.json",
+  "manifestHash": "69dd53f01fd0e37fa73398095cdf69e3018a9bb7acf233081062003474debb79",
+  "workspaceHash": "9f48f207eae6cb1e18e33de51590d60059ded29eba3730c972012a93be1e3854",
+  "materializationHash": "e1f4c6a604a8fce499bd5b7cb1362bf22ffd4d74fc2bc82d7d01d4dc85170d81",
+  "generatedFilesCount": 106,
+  "generatedDirectoriesCount": 25,
+  "generatedFeatureModulesCount": 9,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/deals",
+    "/persistence",
+    "/customers",
+    "/pipeline",
+    "/contacts",
+    "/follow-ups",
+    "/reports"
+  ],
+  "generatedComponents": [
+    "src/blueprint/components/EmptyState.tsx",
+    "src/blueprint/components/ErrorState.tsx",
+    "src/blueprint/components/LoadingState.tsx",
+    "src/blueprint/components/UniversalAiAssistant.tsx"
+  ],
+  "generatedServices": [
+    "src/features/contacts/contacts.service.ts",
+    "src/features/customers/customers.service.ts",
+    "src/features/dashboard/dashboard.service.ts",
+    "src/features/deals/deals.service.ts",
+    "src/features/follow-ups/follow-ups.service.ts",
+    "src/features/navigation-router/navigation-router.service.ts",
+    "src/features/pipeline/pipeline.service.ts",
+    "src/features/reports/reports.service.ts",
+    "src/features/settings/settings.service.ts"
+  ],
+  "generatedModels": [
+    "src/features/contacts/contacts.types.ts",
+    "src/features/customers/customers.types.ts",
+    "src/features/dashboard/dashboard.types.ts",
+    "src/features/deals/deals.types.ts",
+    "src/features/follow-ups/follow-ups.types.ts",
+    "src/features/navigation-router/navigation-router.types.ts",
+    "src/features/pipeline/pipeline.types.ts",
+    "src/features/reports/reports.types.ts",
+    "src/features/settings/settings.types.ts"
+  ],
+  "generatedStyles": [
+    "src/App.css",
+    "src/features/contacts/contacts.module.css",
+    "src/features/customers/customers.module.css",
+    "src/features/dashboard/dashboard.module.css",
+    "src/features/deals/deals.module.css",
+    "src/features/feature-app-router.css",
+    "src/features/follow-ups/follow-ups.module.css",
+    "src/features/navigation-router/navigation-router.module.css",
+    "src/features/pipeline/pipeline.module.css",
+    "src/features/reports/reports.module.css",
+    "src/features/settings/settings.module.css",
+    "src/styles/global.css"
+  ],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "Banned fallback modules present in workspace: deals",
+      "Banned fallback modules present in workspace: deals"
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828961990/.generated-app-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828961990/build-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828961990/universal-feature-contract.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828961990/blueprint-manifest.json",
+    ".generated-build-history/aee-profile-continuation-saas-crm-1782828961990"
+  ],
+  "failureReasons": [
+    "Banned fallback modules present in workspace: deals",
+    "Banned fallback modules present in workspace: deals",
+    "Banned fallback modules present in workspace: deals"
+  ],
+  "replayMetadataPath": ".generated-build-history/aee-profile-continuation-saas-crm-1782828961990/replay-metadata.json",
+  "comparisonFingerprint": "2ab0f68d9f9a0d0c54ba975565ea2b570ae7fd332af0f2d931649758fcf946c7",
+  "auditTimelinePath": ".generated-build-history/aee-profile-continuation-saas-crm-1782828961990/audit-timeline.json",
+  "immutable": true,
+  "buildHistoryRecordHash": "8b655c28e3ea433d76f554c75ef58a9dd24f89fd5ba96e34aba3e773201f8fd9"
+}

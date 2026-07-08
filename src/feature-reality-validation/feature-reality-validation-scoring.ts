@@ -108,6 +108,8 @@ export function buildFeatureRealityAssessment(input: {
     failedChecks,
     blocksLaunchReadiness: launchBlock.blocks,
     blocksLaunchReadinessReason: launchBlock.reason,
+    evidenceMode: 'LIVE_RUNTIME',
+    degradedWithWorkspaceEvidence: false,
     previewUrl: input.previewUrl,
     contractId: input.contractId,
     generatedAt: new Date().toISOString(),

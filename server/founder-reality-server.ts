@@ -17,11 +17,33 @@ import {
   FOUNDER_REALITY_PORT,
   FOUNDER_REALITY_URL,
 } from './founder-reality-manifest.js';
-import { handleBrainRespondRequest, sendBrainHealth, sendBrainOperationalTruth } from './brain-api-handler.js';
 import {
-  handleBuildFromPromptRequest,
-  handleBuildLivePreviewStatusRequest,
-} from './build-from-prompt-handler.js';
+  handleBrainRespondRequest,
+  handleClassifyBuildIntentRequest,
+  sendBrainHealth,
+  sendBrainOperationalTruth,
+} from './brain-api-handler.js';
+import {
+  handleChatExecutionAuditEventRequest,
+  handleChatExecutionAuditLatestRequest,
+} from './command-center-chat-execution-audit-handler.js';
+import {
+  handleHttpRoutingForensicLatestRequest,
+  handleHttpRoutingForensicRegistrationRequest,
+  handleHttpRoutingForensicEventRequest,
+} from './command-center-http-routing-forensic-handler.js';
+import * as buildFromPromptHandler from './build-from-prompt-handler.js';
+import {
+  attachHttpForensicResponseTracing,
+  forensicRouteMatch,
+} from './http-routing-forensic-middleware.js';
+import {
+  beginHttpRoutingForensic,
+  isCommandCenterHttpPathForbidden,
+  forbiddenReasonForPath,
+} from '../src/command-center-http-routing-forensic-audit-v1/index.js';
+import { FAST_PROJECT_CREATE_POST_PATH } from './fast-project-create-handler.js';
+import { handleProjectSessionRequest, isProjectSessionApiPath } from './project-session-handler.js';
 import {
   handleFounderTestRunRequest,
   handleFounderTestRunV2Request,
@@ -65,25 +87,29 @@ import { sendUvlVerificationExecutionV1Json } from './uvl-verification-execution
 import { buildPortfolioInsightsDemo } from './portfolio-demo-data.js';
 import { buildProductWorkspaceSnapshot } from './product-workspace-snapshot.js';
 import {
-  handleProjectRegistryMutation,
-  handleProjectRegistryGetRequest,
-  isProjectRegistryGetPath,
-} from './project-registry-handler.js';
-import {
   handleProjectWorkspaceExplorerRequest,
   parseProjectWorkspaceApiPath,
 } from './project-workspace-explorer-handler.js';
+import { tryHandleProjectApiRequest } from './project-api-router.js';
 import {
-  bootstrapProjectRegistryV1,
   resolveProjectRegistryRootDir,
   setDefaultProjectRegistryRootDir,
 } from '../src/project-registry-v1/index.js';
+import { runProjectRegistryStartupHydration } from '../src/project-registry-startup-hydration/index.js';
 import {
   configureLocalRuntimeMetadata,
   markLocalRuntimeRegistryFailed,
   markLocalRuntimeRegistryReady,
 } from '../src/local-runtime-launcher/index.js';
 import { probePortOwner } from './port-probe.js';
+import { sendRuntimeTruthJson } from './runtime-truth-handler.js';
+import { sendRuntimeAuthorityJson } from './runtime-authority-handler.js';
+import {
+  bootRuntimeTruthAuthority,
+  buildGlobal405Diagnostics,
+  logRuntimeTruthStartupSummary,
+} from '../src/runtime-truth-authority/index.js';
+import { resolveManagedRuntimePort } from '../src/autonomous-runtime-authority-v1/index.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT_DIR = join(__dirname, '..');
@@ -130,7 +156,7 @@ function resolveGitCommitShort(): string | null {
 function bootstrapLocalRuntimeRegistry(): void {
   const registryRoot = getRegistryRootDir();
   try {
-    const registryState = bootstrapProjectRegistryV1(registryRoot);
+    const registryState = runProjectRegistryStartupHydration(registryRoot);
     markLocalRuntimeRegistryReady({ rootDir: registryRoot, state: registryState });
   } catch (err) {
     markLocalRuntimeRegistryFailed(err);
@@ -163,14 +189,22 @@ function buildManifestSafely(): { manifest: ReturnType<typeof buildFounderRealit
 }
 
 const { manifest: MANIFEST, json: MANIFEST_JSON } = buildManifestSafely();
+const ACTIVE_RUNTIME_PORT = resolveManagedRuntimePort(FOUNDER_REALITY_PORT);
 setDefaultProjectRegistryRootDir(ROOT_DIR);
 configureLocalRuntimeMetadata({
-  port: FOUNDER_REALITY_PORT,
+  port: ACTIVE_RUNTIME_PORT,
   version: PACKAGE_JSON.version ?? '0.0.0',
   commit: resolveGitCommitShort(),
   serverStartedAt: FOUNDER_TEST_SERVER_STARTED_AT,
 });
 bootstrapLocalRuntimeRegistry();
+bootRuntimeTruthAuthority({
+  rootDir: ROOT_DIR,
+  port: ACTIVE_RUNTIME_PORT,
+  packageVersion: PACKAGE_JSON.version ?? '0.0.0',
+  gitCommit: resolveGitCommitShort(),
+  startedAt: FOUNDER_TEST_SERVER_STARTED_AT,
+});
 
 function buildProductWorkspaceJson(projectId?: string | null): string {
   return JSON.stringify(
@@ -255,6 +289,17 @@ async function runFounderDashboardSafeAsync(
 }
 
 function resolvePublicPath(urlPath: string): string | null {
+  if (urlPath === '/builder-test' || urlPath === '/builder-test/') {
+    return join(PUBLIC_DIR, 'builder-test.html');
+  }
+  if (
+    urlPath === '/command-center' ||
+    urlPath === '/command-center/' ||
+    urlPath === '/advanced' ||
+    urlPath === '/advanced/'
+  ) {
+    return join(PUBLIC_DIR, 'command-center.html');
+  }
   const safePath = urlPath === '/' ? '/index.html' : urlPath;
   const normalized = normalize(safePath).replace(/^(\.\.[/\\])+/, '');
   if (normalized.includes('..')) return null;
@@ -276,10 +321,52 @@ export function createFounderRealityServer() {
     try {
     const requestUrl = parseRequestUrl(req);
     const urlPath = requestUrl.pathname;
+    const forensic = beginHttpRoutingForensic(req, urlPath);
+    attachHttpForensicResponseTracing(res, forensic);
+    res.setHeader('X-Command-Center-Request-Id', forensic.requestId);
 
     const forbiddenPaths = ['/api/exec', '/api/run-command', '/api/write', '/api/deploy', '/api/auto-fix'];
+    forensic.recordMiddlewareEnter(
+      'top_forbidden_prefix_guard',
+      'server/founder-reality-server.ts',
+      'createFounderRealityServer',
+    );
     if (forbiddenPaths.some((p) => urlPath.startsWith(p))) {
+      forensic.recordMiddlewareBlocked(
+        'top_forbidden_prefix_guard',
+        'Path matches forbidden API prefix — no command or write access',
+        'server/founder-reality-server.ts',
+        'createFounderRealityServer',
+        312,
+      );
+      forensic.recordRouteForbidden(
+        'Endpoint whitelist — forbidden API prefix',
+        'server/founder-reality-server.ts',
+        'createFounderRealityServer',
+        312,
+      );
       sendJson(res, 403, JSON.stringify({ error: 'Forbidden endpoint — no command or write access' }));
+      return;
+    }
+    forensic.recordMiddlewareContinue('top_forbidden_prefix_guard');
+
+    if (urlPath === '/api/runtime/truth' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendRuntimeTruthJson(res, ROOT_DIR);
+      return;
+    }
+
+    if (urlPath === '/api/runtime/authority' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      sendRuntimeAuthorityJson(res);
       return;
     }
 
@@ -302,43 +389,62 @@ export function createFounderRealityServer() {
       return;
     }
 
+    if (urlPath === '/api/brain/classify-build-intent' && req.method === 'POST') {
+      await handleClassifyBuildIntentRequest(req, res);
+      return;
+    }
+
     if (urlPath === '/api/brain/respond' && req.method === 'POST') {
-      await handleBrainRespondRequest(req, res);
+      forensicRouteMatch(forensic, 'handleBrainRespondRequest', 352);
+      await handleBrainRespondRequest(req, res, forensic.requestId);
+      return;
+    }
+
+    if (urlPath === '/api/command-center/chat-execution-audit/latest' && req.method === 'GET') {
+      forensicRouteMatch(forensic, 'handleChatExecutionAuditLatestRequest', 357);
+      handleChatExecutionAuditLatestRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/command-center/chat-execution-audit/event' && req.method === 'POST') {
+      forensicRouteMatch(forensic, 'handleChatExecutionAuditEventRequest', 362);
+      await handleChatExecutionAuditEventRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/command-center/http-routing-forensic/latest' && req.method === 'GET') {
+      forensicRouteMatch(forensic, 'handleHttpRoutingForensicLatestRequest', 367);
+      handleHttpRoutingForensicLatestRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/command-center/http-routing-forensic/route-registration' && req.method === 'GET') {
+      forensicRouteMatch(forensic, 'handleHttpRoutingForensicRegistrationRequest', 372);
+      handleHttpRoutingForensicRegistrationRequest(req, res);
+      return;
+    }
+
+    if (urlPath === '/api/command-center/http-routing-forensic/event' && req.method === 'POST') {
+      forensicRouteMatch(forensic, 'handleHttpRoutingForensicEventRequest', 377);
+      await handleHttpRoutingForensicEventRequest(req, res);
       return;
     }
 
     if (urlPath === '/api/build/from-prompt' && req.method === 'POST') {
-      await handleBuildFromPromptRequest(req, res);
+      await buildFromPromptHandler.handleBuildFromPromptRequest(req, res);
       return;
     }
 
-    if (isProjectRegistryGetPath(urlPath) && (req.method === 'GET' || req.method === 'HEAD')) {
-      handleProjectRegistryGetRequest(req, res, getRegistryRootDir());
-      return;
+    if (isProjectSessionApiPath(urlPath)) {
+      const handled = await handleProjectSessionRequest(req, res, urlPath);
+      if (handled) return;
     }
 
-    if (urlPath === '/api/projects/create' && req.method === 'POST') {
-      await handleProjectRegistryMutation(req, res, 'create', getRegistryRootDir());
-      return;
+    if (urlPath === FAST_PROJECT_CREATE_POST_PATH && req.method === 'POST') {
+      forensicRouteMatch(forensic, 'handleFastProjectCreateRequest', 388);
     }
 
-    if (urlPath === '/api/projects/rename' && req.method === 'POST') {
-      await handleProjectRegistryMutation(req, res, 'rename', getRegistryRootDir());
-      return;
-    }
-
-    if (urlPath === '/api/projects/archive' && req.method === 'POST') {
-      await handleProjectRegistryMutation(req, res, 'archive', getRegistryRootDir());
-      return;
-    }
-
-    if (urlPath === '/api/projects/set-active' && req.method === 'POST') {
-      await handleProjectRegistryMutation(req, res, 'set-active', getRegistryRootDir());
-      return;
-    }
-
-    if (urlPath === '/api/projects/context-switch' && req.method === 'POST') {
-      await handleProjectRegistryMutation(req, res, 'context-switch', getRegistryRootDir());
+    if (await tryHandleProjectApiRequest(req, res, urlPath, getRegistryRootDir(), requestUrl.searchParams)) {
       return;
     }
 
@@ -360,7 +466,7 @@ export function createFounderRealityServer() {
         res.end();
         return;
       }
-      handleBuildLivePreviewStatusRequest(req, res);
+      buildFromPromptHandler.handleBuildLivePreviewStatusRequest(req, res);
       return;
     }
 
@@ -761,17 +867,36 @@ export function createFounderRealityServer() {
     }
 
     if (req.method !== 'GET' && req.method !== 'HEAD') {
-      sendJson(res, 405, JSON.stringify({
-        error: 'Method not allowed — only GET /api/founder/execution-proof, GET /api/founder/founder-review, GET /api/founder/requirement-discovery, GET /api/founder/verification-hub, GET /api/founder/uvl-verification-execution-v1, GET /api/founder/production-readiness-gate-v1, GET /api/founder/cloud-execution-path-v1, GET /api/founder/trust-calibration, GET /api/founder/production-readiness-gate, GET /api/founder/product-architect-intelligence, GET /api/founder/large-scale-validation, GET /api/founder/real-build-execution-pipeline, GET /api/founder/real-build-execution-pipeline-v11, GET /api/brain/*, GET /api/build/live-preview, GET /api/projects/registry, GET /api/projects/registry.json, GET /api/projects, POST /api/projects/create, POST /api/projects/rename, POST /api/projects/archive, POST /api/projects/set-active, POST /api/projects/context-switch, POST /api/build/from-prompt, and POST /api/founder-test/* are supported',
-        hint: 'Restart DevPulse with npm run dev if Brain POST returns read-only errors',
-      }));
+      forensic.recordRouteNotFound('server/founder-reality-server.ts', 'createFounderRealityServer');
+      const diagnostics = buildGlobal405Diagnostics(urlPath, req.method ?? 'UNKNOWN');
+      sendJson(res, 405, JSON.stringify(diagnostics));
       return;
     }
 
-    if (urlPath.includes('exec') || urlPath.includes('/write') || urlPath.includes('deploy')) {
+    forensic.recordMiddlewareEnter(
+      'static_get_forbidden_prefix_guard',
+      'server/founder-reality-server.ts',
+      'createFounderRealityServer',
+    );
+    if (isCommandCenterHttpPathForbidden(urlPath)) {
+      const reason = forbiddenReasonForPath(urlPath);
+      forensic.recordMiddlewareBlocked(
+        'static_get_forbidden_prefix_guard',
+        reason,
+        'server/founder-reality-server.ts',
+        'createFounderRealityServer',
+        815,
+      );
+      forensic.recordRouteForbidden(
+        reason,
+        'server/founder-reality-server.ts',
+        'createFounderRealityServer',
+        815,
+      );
       sendJson(res, 403, JSON.stringify({ error: 'Forbidden endpoint' }));
       return;
     }
+    forensic.recordMiddlewareContinue('static_get_forbidden_prefix_guard');
 
     if (urlPath === '/api/founder-reality.json') {
       if (req.method === 'HEAD') {
@@ -819,6 +944,11 @@ export function createFounderRealityServer() {
 
     const filePath = resolvePublicPath(urlPath);
     if (!filePath) {
+      forensic.recordRouteForbidden(
+        'Static path resolver rejected path',
+        'server/founder-reality-server.ts',
+        'resolvePublicPath',
+      );
       sendJson(res, 403, JSON.stringify({ error: 'Forbidden path' }));
       return;
     }
@@ -832,6 +962,7 @@ export function createFounderRealityServer() {
       }
       await serveStaticFile(res, filePath);
     } catch {
+      forensic.recordRouteNotFound('server/founder-reality-server.ts', 'serveStaticFile');
       sendJson(res, 404, JSON.stringify({ error: 'File not found' }));
     }
     } catch (err) {
@@ -877,6 +1008,7 @@ export function startFounderRealityServer(port = FOUNDER_REALITY_PORT, host = FO
     console.error('[founder-reality-server] server error:', err);
   });
   server.listen(port, host, () => {
+    const openUrl = `http://localhost:${port}`;
     configureLocalRuntimeMetadata({
       port,
       version: PACKAGE_JSON.version ?? '0.0.0',
@@ -888,10 +1020,11 @@ export function startFounderRealityServer(port = FOUNDER_REALITY_PORT, host = FO
     console.log('DevPulse V2 — Command Center + Unified Brain');
     console.log('============================================');
     console.log('');
-    console.log(`Open: ${FOUNDER_REALITY_URL}`);
+    console.log(`Open: ${openUrl}`);
     console.log('');
     console.log(`Listening: ${host}:${port} (pid ${String(ping.processId)}, started ${FOUNDER_TEST_SERVER_STARTED_AT})`);
     console.log('');
+    console.log('Autonomous Runtime Authority: GET /api/runtime/authority');
     console.log('Founder Test API routes registered:');
     console.log('  GET  /api/founder-test/ping');
     console.log('  GET  /api/founder-test/result');
@@ -903,15 +1036,16 @@ export function startFounderRealityServer(port = FOUNDER_REALITY_PORT, host = FO
     console.log('');
     console.log('Phase 11.1A Brain Runtime — POST /api/brain/respond + GET /api/brain/health');
     console.log('Phase 27.2 One-Prompt Live Preview — POST /api/build/from-prompt + GET /api/build/live-preview');
-    console.log('Phase 27.3 Local Runtime Launcher — use Start-AiDevEngine.bat for desktop startup');
-    console.log('If APIs fail, restart with Start-AiDevEngine (do not leave stale servers on port 4321).');
+    console.log('Phase 27.3 Local Runtime Launcher — Runtime Authority manages dev lifecycle on npm run dev');
+    logRuntimeTruthStartupSummary(ROOT_DIR);
+    console.log('Runtime Authority consolidates duplicate servers and resolves occupied ports automatically.');
     console.log('');
   });
   return server;
 }
 
 if (process.argv[1]?.includes('founder-reality-server')) {
-  startFounderRealityServer();
+  startFounderRealityServer(resolveManagedRuntimePort());
 }
 
 export { FOUNDER_REALITY_URL, FOUNDER_REALITY_PORT, FOUNDER_REALITY_HOST };

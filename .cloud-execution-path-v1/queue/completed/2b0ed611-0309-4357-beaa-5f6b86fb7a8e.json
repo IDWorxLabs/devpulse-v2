@@ -1,0 +1,36 @@
+{
+  "readOnly": true,
+  "jobId": "2b0ed611-0309-4357-beaa-5f6b86fb7a8e",
+  "projectId": "proj-crm_web_v1",
+  "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+  "requirementsSnapshot": {
+    "readOnly": true,
+    "profile": "CRM_WEB_V1",
+    "productName": "CRM",
+    "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+    "requirementConfidence": 36
+  },
+  "buildPlan": {
+    "readOnly": true,
+    "contractId": "build-ready-idea-33",
+    "planningSummary": "Contract build-ready-idea-33",
+    "codegenProfile": "CRM_WEB_V1"
+  },
+  "workspaceSpec": {
+    "readOnly": true,
+    "workspaceId": "cep-2b0ed611-0309-4357-beaa-5f6b86fb7a8e",
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\cep-2b0ed611-0309-4357-beaa-5f6b86fb7a8e",
+    "isolationToken": "2b0ed611-0309-4357-beaa-5f6b86fb7a8e",
+    "boundedLogsMaxLines": 500,
+    "boundedArtifactsMaxBytes": 5000000,
+    "runtimeTimeoutMs": 300000
+  },
+  "executionMode": "CLOUD_SIMULATED",
+  "requestedAt": "2026-07-01T10:54:15.877Z",
+  "status": "COMPLETED",
+  "claimedAt": "2026-07-02T05:30:16.780Z",
+  "completedAt": "2026-07-02T05:30:52.732Z",
+  "workerId": "worker-95e52aeb",
+  "currentStage": "COMPLETED",
+  "runtimeDurationMs": 35937
+}

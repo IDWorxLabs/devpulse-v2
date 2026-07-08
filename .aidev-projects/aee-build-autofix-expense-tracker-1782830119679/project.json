@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "aee-build-autofix-expense-tracker-1782830119679",
+  "projectName": "Expense Tracker",
+  "createdAt": "2026-06-30T14:35:37.407Z",
+  "updatedAt": "2026-06-30T14:35:37.767Z",
+  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
+  "originalPrompt": "Build an expense tracker where users add expenses, categorize spending, view monthly totals, and filter by date range.",
+  "currentSourcePath": ".aidev-projects/aee-build-autofix-expense-tracker-1782830119679/source",
+  "activeWorkspacePath": ".aidev-projects/aee-build-autofix-expense-tracker-1782830119679",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": "one-prompt-build-1",
+  "manifestPath": ".aidev-projects/aee-build-autofix-expense-tracker-1782830119679/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/aee-build-autofix-expense-tracker-1782830119679/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782830137011",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/aee-build-autofix-expense-tracker-1782830119679/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/aee-build-autofix-expense-tracker-1782830119679/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-1-dup-1782830137011"
+  ],
+  "featureContractRealityPath": ".aidev-projects/aee-build-autofix-expense-tracker-1782830119679/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/aee-build-autofix-expense-tracker-1782830119679/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/aee-build-autofix-expense-tracker-1782830119679/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/aee-build-autofix-expense-tracker-1782830119679/.aidev/materialization-quality-score.json"
+}

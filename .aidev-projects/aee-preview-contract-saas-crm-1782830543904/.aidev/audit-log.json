@@ -1,0 +1,11 @@
+{
+  "readOnly": true,
+  "entries": [
+    {
+      "timestamp": "2026-06-30T14:42:40.450Z",
+      "event": "source_promoted",
+      "buildRunId": "one-prompt-build-2",
+      "sourcePath": ".aidev-projects/aee-preview-contract-saas-crm-1782830543904/source"
+    }
+  ]
+}

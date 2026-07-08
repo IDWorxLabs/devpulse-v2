@@ -1,0 +1,27 @@
+{
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "contractId": "readiness-audit-saas-crm-1782835244894",
+  "ideaId": "idea-1",
+  "appName": "CRM",
+  "generatedAt": "2026-06-30T16:00:45.090Z",
+  "defaultSections": [
+    "launch",
+    "welcome",
+    "auth",
+    "onboarding",
+    "shell",
+    "home",
+    "search",
+    "notifications",
+    "profile",
+    "settings",
+    "help",
+    "feedback",
+    "legal",
+    "analytics",
+    "security",
+    "monetization",
+    "universal-ai"
+  ]
+}

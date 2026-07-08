@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "simple-notes-app-where-i-can-create-edit-1783372803979-5",
+  "projectName": "Simple Notes App Where I Can Create, Edit, And Delete Text Notes, Attempt Two",
+  "createdAt": "2026-07-06T21:20:52.099Z",
+  "updatedAt": "2026-07-06T21:20:52.481Z",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "originalPrompt": "Build a simple notes app where I can create, edit, and delete text notes, attempt two.",
+  "currentSourcePath": ".aidev-projects/simple-notes-app-where-i-can-create-edit-1783372803979-5/source",
+  "activeWorkspacePath": ".aidev-projects/simple-notes-app-where-i-can-create-edit-1783372803979-5",
+  "lastBuildRunId": "one-prompt-build-3",
+  "lastSuccessfulBuildRunId": "one-prompt-build-3",
+  "manifestPath": ".aidev-projects/simple-notes-app-where-i-can-create-edit-1783372803979-5/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/simple-notes-app-where-i-can-create-edit-1783372803979-5/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-3-dup-1783372851630",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/simple-notes-app-where-i-can-create-edit-1783372803979-5/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/simple-notes-app-where-i-can-create-edit-1783372803979-5/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-3-dup-1783372851630"
+  ],
+  "featureContractRealityPath": ".aidev-projects/simple-notes-app-where-i-can-create-edit-1783372803979-5/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/simple-notes-app-where-i-can-create-edit-1783372803979-5/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/simple-notes-app-where-i-can-create-edit-1783372803979-5/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/simple-notes-app-where-i-can-create-edit-1783372803979-5/.aidev/materialization-quality-score.json"
+}

@@ -1,93 +1,60 @@
 {
   "readOnly": true,
   "runId": "one-prompt-build-2",
-  "createdAt": "2026-06-26T05:13:44.939Z",
-  "prompt": "Build a modern expense tracking web application with categories, receipts, monthly budgets, and spending reports. Generate architecture, plan, tasks, and begin build execution.",
-  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
-  "appName": "ExpenseTracker",
-  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1",
-  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/.generated-app-manifest.json",
-  "manifestHash": "5c1a8aa55642d280889ecf97511a22bb8d1bc21230078b9af40eeb14b7da30e9",
-  "workspaceHash": "4e658f0ec6e8c6680ac4170f6b2a33658041685d9fcde4d3a3dbd93ae7daacb1",
-  "materializationHash": "21cc7b8cc35dcd78c0ec54a4f0d68d9351c50f599bb9a90d42f24f72a777c3ea",
-  "generatedFilesCount": 99,
-  "generatedDirectoriesCount": 23,
-  "generatedFeatureModulesCount": 9,
+  "createdAt": "2026-06-30T14:13:02.759Z",
+  "prompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "selectedProfile": "CRM_WEB_V1",
+  "appName": "SaaS CRM",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828782610",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828782610/.generated-app-manifest.json",
+  "manifestHash": "cd71657d915a6ed27c1e216d3031582870e0c48cda82440099e455fb967aa480",
+  "workspaceHash": "e8a8556216cc00d0da3cdcbecbefda68e0fdbe387593885fb51d18b1d581a718",
+  "materializationHash": "42d033cac712c3332f960459bc435088193c777b5805fc90fc3f428aa588e651",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0,
+  "generatedFeatureModulesCount": 0,
   "generatedRoutes": [
-    "/",
+    "/navigation-router",
     "/dashboard",
-    "/income",
-    "/expenses",
-    "/categories",
-    "/reports",
-    "/charts",
-    "/export"
+    "/settings",
+    "/deals",
+    "/persistence",
+    "/customers",
+    "/pipeline",
+    "/contacts",
+    "/follow-ups",
+    "/reports"
   ],
-  "generatedComponents": [
-    "src/blueprint/components/EmptyState.tsx",
-    "src/blueprint/components/ErrorState.tsx",
-    "src/blueprint/components/LoadingState.tsx",
-    "src/blueprint/components/UniversalAiAssistant.tsx"
-  ],
-  "generatedServices": [
-    "src/features/auth/auth.service.ts",
-    "src/features/categories/categories.service.ts",
-    "src/features/charts/charts.service.ts",
-    "src/features/csv-export/csv-export.service.ts",
-    "src/features/dashboard/dashboard.service.ts",
-    "src/features/expenses/expenses.service.ts",
-    "src/features/income/income.service.ts",
-    "src/features/reports/reports.service.ts"
-  ],
-  "generatedModels": [
-    "src/features/auth/auth.types.ts",
-    "src/features/categories/categories.types.ts",
-    "src/features/charts/charts.types.ts",
-    "src/features/csv-export/csv-export.types.ts",
-    "src/features/dashboard/dashboard.types.ts",
-    "src/features/expenses/expenses.types.ts",
-    "src/features/income/income.types.ts",
-    "src/features/reports/reports.types.ts"
-  ],
-  "generatedStyles": [
-    "src/App.css",
-    "src/features/auth/auth.module.css",
-    "src/features/categories/categories.module.css",
-    "src/features/charts/charts.module.css",
-    "src/features/csv-export/csv-export.module.css",
-    "src/features/dashboard/dashboard.module.css",
-    "src/features/expenses/expenses.module.css",
-    "src/features/feature-app-router.css",
-    "src/features/income/income.module.css",
-    "src/features/reports/reports.module.css",
-    "src/styles/global.css"
-  ],
+  "generatedComponents": [],
+  "generatedServices": [],
+  "generatedModels": [],
+  "generatedStyles": [],
   "validationResults": {
     "readOnly": true,
-    "validationStatus": "PASS",
-    "blueprintPurityStatus": "PASS",
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
     "productionValidationStatus": "PENDING",
     "previewVerified": false,
-    "promptSpecificTermsPresent": true,
-    "warnings": [
-      "Only 6/7 required UI terms detected in generated source."
-    ],
-    "errors": []
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker. AEE forbids PLANNING_FAILED after workspace evidence exists."
+    ]
   },
   "productionValidationStatus": "PENDING",
   "previewVerified": false,
   "previewUrl": null,
   "artifactPaths": [
-    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/.generated-app-manifest.json",
-    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/build-manifest.json",
-    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/universal-feature-contract.json",
-    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/expense-test-1/blueprint-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828782610/.generated-app-manifest.json",
     ".generated-build-history/one-prompt-build-2"
   ],
-  "failureReasons": [],
+  "failureReasons": [
+    "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker. AEE forbids PLANNING_FAILED after workspace evidence exists.",
+    "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker. AEE forbids PLANNING_FAILED after workspace evidence exists."
+  ],
   "replayMetadataPath": ".generated-build-history/one-prompt-build-2/replay-metadata.json",
-  "comparisonFingerprint": "c6593364c57584471d502e19bb3a0bfc630316c032451630267d768de3af162a",
+  "comparisonFingerprint": "03d2d7372f61db9ee315856f2a89ac9f9847b893a25750ff55f4076bedac7222",
   "auditTimelinePath": ".generated-build-history/one-prompt-build-2/audit-timeline.json",
   "immutable": true,
-  "buildHistoryRecordHash": "107b38856a7e4c7c38a0a731f86e98b03129bab95630da03c474da908df1a204"
+  "buildHistoryRecordHash": "66022bcb22e72c9c4110e792d85a3e592dff0a7b97d2799cf490fff782830d3f"
 }

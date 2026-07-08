@@ -7,6 +7,10 @@ import { assessConnectedBuildExecution } from '../connected-build-execution/inde
 import { inspectUniversalAppBlueprint } from '../universal-app-blueprint/index.js';
 import { getLastBlueprintVisualAssessment } from '../universal-app-blueprint-visual/index.js';
 import { getLastFeatureRealityAssessment } from '../feature-reality-validation/index.js';
+import {
+  collectWorkspaceFeatureRealityFallback,
+  workspaceHasGeneratedFeatureModules,
+} from '../feature-contract-reality/feature-reality-workspace-fallback-collector.js';
 import { getLastUniversalFeatureContractAssessment } from '../universal-feature-contract-intelligence/index.js';
 import { getLastEngineeringRealityAssessment } from '../engineering-reality-authority/index.js';
 import { getLatestLaunchReadinessAssessment } from '../launch-readiness-authority/index.js';
@@ -195,7 +199,11 @@ function fromBlueprintVisual(): FounderEvidenceSource {
   };
 }
 
-function fromFeatureReality(): FounderEvidenceSource {
+function fromFeatureReality(input?: {
+  workspaceDir?: string | null;
+  requiredModuleIds?: string[];
+  contractId?: string;
+}): FounderEvidenceSource {
   const universal = getLastUniversalFeatureContractAssessment();
   const assessment = getLastFeatureRealityAssessment();
 
@@ -208,11 +216,15 @@ function fromFeatureReality(): FounderEvidenceSource {
       passed: true,
       score: assessment.scores.overallFeatureScore,
       blockers: [],
-      warnings: assessment.failedChecks
-        .filter((check) => !check.critical)
-        .slice(0, 4)
-        .map((check) => `${check.label}: ${check.detail}`),
-      findings: assessment.failedChecks.slice(0, 4).map((check) => `${check.label}: ${check.detail}`),
+      warnings: assessment.degradedWithWorkspaceEvidence
+        ? ['Feature Reality derived from workspace source — live runtime evidence deferred']
+        : assessment.failedChecks
+            .filter((check) => !check.critical)
+            .slice(0, 4)
+            .map((check) => `${check.label}: ${check.detail}`),
+      findings: assessment.degradedWithWorkspaceEvidence
+        ? [`Workspace-derived feature reality (${assessment.evidenceMode})`]
+        : assessment.failedChecks.slice(0, 4).map((check) => `${check.label}: ${check.detail}`),
     };
   }
 
@@ -228,6 +240,44 @@ function fromFeatureReality(): FounderEvidenceSource {
       warnings: [],
       findings: [`Feature reality satisfied via Universal Feature Contract (${universal.verdict})`],
     };
+  }
+
+  if (
+    input?.workspaceDir &&
+    workspaceHasGeneratedFeatureModules(input.workspaceDir)
+  ) {
+    const fallback = collectWorkspaceFeatureRealityFallback({
+      workspaceDir: input.workspaceDir,
+      requiredModuleIds: input.requiredModuleIds,
+      contractId: input.contractId,
+      registerAssessment: true,
+    });
+    if (fallback.status === 'DEGRADED_WITH_WORKSPACE_EVIDENCE' || fallback.status === 'PASS') {
+      return {
+        readOnly: true,
+        sourceId: 'feature-reality',
+        sourceName: 'Feature Reality',
+        available: true,
+        passed: true,
+        score: fallback.score,
+        blockers: [],
+        warnings: fallback.warnings,
+        findings: fallback.findings,
+      };
+    }
+    if (fallback.status === 'FAIL') {
+      return {
+        readOnly: true,
+        sourceId: 'feature-reality',
+        sourceName: 'Feature Reality',
+        available: true,
+        passed: false,
+        score: fallback.score,
+        blockers: fallback.blockers,
+        warnings: fallback.warnings,
+        findings: fallback.findings,
+      };
+    }
   }
 
   if (assessment) {
@@ -1222,6 +1272,8 @@ export function collectFounderLaunchEvidence(input: {
   useRegisteredProductArchitecture?: boolean;
   useRegisteredVerificationHub?: boolean;
   useRegisteredRequirementDiscovery?: boolean;
+  requiredModuleIds?: string[];
+  contractId?: string;
 }): FounderEvidenceSnapshot {
   const buildReality = buildBuildRealityEvidence({
     projectRootDir: input.projectRootDir ?? null,
@@ -1232,7 +1284,11 @@ export function collectFounderLaunchEvidence(input: {
     override: input.blueprintStructure,
   });
   const blueprintVisual = fromBlueprintVisual();
-  const featureReality = fromFeatureReality();
+  const featureReality = fromFeatureReality({
+    workspaceDir: input.workspaceDir ?? null,
+    requiredModuleIds: input.requiredModuleIds,
+    contractId: input.contractId,
+  });
   const universalFeatureContract = fromUniversalFeatureContract();
   const engineeringReality = fromEngineeringReality();
 

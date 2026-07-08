@@ -4,6 +4,7 @@
  */
 
 import { spawn } from 'node:child_process';
+import { killChildProcessTree } from '../windows-process-cleanup/kill-child-process-tree.mjs';
 import { existsSync, readFileSync } from 'node:fs';
 import { get as httpGet } from 'node:http';
 import { join } from 'node:path';
@@ -201,7 +202,7 @@ async function main() {
     probe.healthResponded;
 
   try {
-    child.kill();
+    await killChildProcessTree(child);
   } catch {
     // process may already be terminated
   }

@@ -81,6 +81,20 @@ export function profileDomainCopy(profile: ProfileFeatureDefinition['profile'], 
         settings: 'Configure task defaults, labels, and notifications.',
         filters: 'Filter active, completed, and overdue tasks.',
       };
+    case 'ASSISTIVE_COMMUNICATION_APP_V1':
+      return {
+        headline: `${appTitle} — assistive communication with gaze, blink, and speech output`,
+        'onboarding-calibration': 'Calibrate gaze and blink input sensitivity.',
+        'eye-tracking-board': 'Eye-tracking communication board with large accessible tiles.',
+        'blink-input-engine': 'Blink detection and simulation controls.',
+        'gaze-keyboard': 'Gaze-based keyboard for message composition.',
+        'text-to-speech': 'Convert composed messages to speech output.',
+        'quick-phrases': 'Save and select quick phrases.',
+        'caregiver-dashboard': 'Caregiver monitoring and assistance dashboard.',
+        'communication-history': 'Review and filter past messages.',
+        'accessibility-settings': 'Adjust contrast, dwell time, and accessibility preferences.',
+        'emergency-speech': 'One-tap emergency speech phrase.',
+      };
     case 'HABIT_TRACKER_WEB_V1':
     case 'GENERIC_CUSTOM_APP_V1':
       return {

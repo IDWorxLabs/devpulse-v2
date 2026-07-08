@@ -1,53 +1,53 @@
 {
-  "generatedAt": "2026-06-25T06:29:40.793Z",
+  "generatedAt": "2026-07-07T12:52:14.000Z",
   "bottlenecks": [
     {
       "bottleneck": "Repeated Playwright suites",
-      "impactScore": 185,
-      "affectedValidatorCount": 13,
-      "estimatedAggregateMinutes": 159,
+      "impactScore": 265,
+      "affectedValidatorCount": 17,
+      "estimatedAggregateMinutes": 231,
       "rank": 1
     },
     {
       "bottleneck": "Repeated preview server startup",
-      "impactScore": 184,
-      "affectedValidatorCount": 76,
-      "estimatedAggregateMinutes": 31.8,
+      "impactScore": 239,
+      "affectedValidatorCount": 99,
+      "estimatedAggregateMinutes": 41.2,
       "rank": 2
     },
     {
       "bottleneck": "Repeated npm builds",
-      "impactScore": 148,
-      "affectedValidatorCount": 51,
-      "estimatedAggregateMinutes": 46.1,
+      "impactScore": 190,
+      "affectedValidatorCount": 64,
+      "estimatedAggregateMinutes": 61.8,
       "rank": 3
+    },
+    {
+      "bottleneck": "Repeated workspace materialization",
+      "impactScore": 92,
+      "affectedValidatorCount": 31,
+      "estimatedAggregateMinutes": 30.4,
+      "rank": 4
+    },
+    {
+      "bottleneck": "Repeated npm installs",
+      "impactScore": 82,
+      "affectedValidatorCount": 19,
+      "estimatedAggregateMinutes": 43.5,
+      "rank": 5
     },
     {
       "bottleneck": "Repeated AFLA execution",
       "impactScore": 68,
       "affectedValidatorCount": 5,
       "estimatedAggregateMinutes": 58,
-      "rank": 4
-    },
-    {
-      "bottleneck": "Repeated workspace materialization",
-      "impactScore": 53,
-      "affectedValidatorCount": 17,
-      "estimatedAggregateMinutes": 18.8,
-      "rank": 5
+      "rank": 6
     },
     {
       "bottleneck": "Nested validator chains",
       "impactScore": 53,
       "affectedValidatorCount": 21,
       "estimatedAggregateMinutes": 10.5,
-      "rank": 6
-    },
-    {
-      "bottleneck": "Repeated npm installs",
-      "impactScore": 44,
-      "affectedValidatorCount": 12,
-      "estimatedAggregateMinutes": 19.5,
       "rank": 7
     },
     {

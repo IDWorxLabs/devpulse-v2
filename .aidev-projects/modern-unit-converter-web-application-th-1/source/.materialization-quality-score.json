@@ -1,0 +1,297 @@
+{
+  "readOnly": true,
+  "overallScore": 40,
+  "verdict": "NOT_MATERIALIZED",
+  "categories": [
+    {
+      "readOnly": true,
+      "id": "blueprint",
+      "label": "Blueprint",
+      "score": 25,
+      "weight": 0.08,
+      "weightedContribution": 2,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/.generated-app-manifest.json"
+      ],
+      "reasons": [],
+      "missingEvidence": [
+        "blueprintPurityStatus pending",
+        "shellPurityVerified",
+        "domainLanguageBoundaryVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "promptAlignment",
+      "label": "Prompt Alignment",
+      "score": 20,
+      "weight": 0.08,
+      "weightedContribution": 2,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Prompt faithfulness FAIL: Banned fallback modules generated: inventory.; Fallback modules appended to custom definition: inventory.; Adjective-style modules materialized: notes, revenue, orders, staff, inventory, taxes.",
+        "Universal materialization validation passed"
+      ],
+      "missingEvidence": [
+        "promptSpecificTermsPresent",
+        "profileSpecificUiVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "featureCoverage",
+      "label": "Feature Coverage",
+      "score": 100,
+      "weight": 0.12,
+      "weightedContribution": 12,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/universal-feature-contract.json",
+        "src/features/notes/NotesFeature.tsx",
+        "src/features/appointments/AppointmentsFeature.tsx",
+        "src/features/calendar/CalendarFeature.tsx",
+        "src/features/availability/AvailabilityFeature.tsx",
+        "src/features/reservations/ReservationsFeature.tsx",
+        "src/features/revenue/RevenueFeature.tsx",
+        "src/features/customers/CustomersFeature.tsx",
+        "src/features/orders/OrdersFeature.tsx",
+        "src/features/staff/StaffFeature.tsx",
+        "src/features/inventory/InventoryFeature.tsx",
+        "src/features/taxes/TaxesFeature.tsx",
+        "src/features/currency/CurrencyFeature.tsx"
+      ],
+      "reasons": [
+        "All 1 expected feature modules present"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "modularArchitecture",
+      "label": "Modular Architecture",
+      "score": 100,
+      "weight": 0.1,
+      "weightedContribution": 10,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/FeatureAppRouter.tsx"
+      ],
+      "reasons": [
+        "12 modular feature modules generated",
+        "Separate module directories present",
+        "Modular registry/router architecture verified"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "routeReachability",
+      "label": "Routes",
+      "score": 85,
+      "weight": 0.07,
+      "weightedContribution": 6,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/src/features/FeatureAppRouter.tsx"
+      ],
+      "reasons": [
+        "12/1 routes generated"
+      ],
+      "missingEvidence": [
+        "modularRoutesVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "serviceTypesValidation",
+      "label": "Services/Types/Validation",
+      "score": 100,
+      "weight": 0.07,
+      "weightedContribution": 7,
+      "status": "PASS",
+      "evidencePaths": [
+        "src/features/appointments/appointments.service.ts",
+        "src/features/availability/availability.service.ts",
+        "src/features/calendar/calendar.service.ts",
+        "src/features/currency/currency.service.ts",
+        "src/features/customers/customers.service.ts",
+        "src/features/inventory/inventory.service.ts",
+        "src/features/notes/notes.service.ts",
+        "src/features/orders/orders.service.ts"
+      ],
+      "reasons": [
+        "12 service files",
+        "12 types files",
+        "12 validation files"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "build",
+      "label": "Build",
+      "score": 0,
+      "weight": 0.08,
+      "weightedContribution": 0,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/.generated-app-manifest.json"
+      ],
+      "reasons": [],
+      "missingEvidence": [
+        "validationStatus",
+        "npmBuildDurationMs",
+        "dist/index.html"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "preview",
+      "label": "Preview",
+      "score": 15,
+      "weight": 0.08,
+      "weightedContribution": 1,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/.generated-app-manifest.json"
+      ],
+      "reasons": [],
+      "missingEvidence": [
+        "previewVerified",
+        "previewHtmlStatus pending",
+        "previewUrl"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "productionValidation",
+      "label": "Production Validation",
+      "score": 25,
+      "weight": 0.1,
+      "weightedContribution": 3,
+      "status": "FAIL",
+      "evidencePaths": [],
+      "reasons": [],
+      "missingEvidence": [
+        "productionValidationStatus pending",
+        "productionValidationStages"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "buildHistory",
+      "label": "Build History",
+      "score": 100,
+      "weight": 0.05,
+      "weightedContribution": 5,
+      "status": "PASS",
+      "evidencePaths": [
+        ".generated-build-history/modern-unit-converter-web-application-th-1",
+        ".generated-build-history/modern-unit-converter-web-application-th-1/replay-metadata.json",
+        ".generated-build-history/modern-unit-converter-web-application-th-1/audit-timeline.json"
+      ],
+      "reasons": [
+        "Build history recorded",
+        "Immutable build record hash present"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "persistentProjectReality",
+      "label": "Persistent Project Reality",
+      "score": 10,
+      "weight": 0.08,
+      "weightedContribution": 1,
+      "status": "FAIL",
+      "evidencePaths": [],
+      "reasons": [],
+      "missingEvidence": [
+        "persistent project promotion skipped",
+        "persistentProjectSourceRoot",
+        "projectFileIndexPath",
+        "exportMetadataPath",
+        "exportReady"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "genericityAvoidance",
+      "label": "Genericity Avoidance",
+      "score": 70,
+      "weight": 0.08,
+      "weightedContribution": 6,
+      "status": "WARN",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "No generic Project Management fallback in shell"
+      ],
+      "missingEvidence": [
+        "promptSpecificTermsPresent"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "launchReadiness",
+      "label": "Launch Readiness",
+      "score": 0,
+      "weight": 0.11,
+      "weightedContribution": 0,
+      "status": "FAIL",
+      "evidencePaths": [],
+      "reasons": [
+        "Fallback modules appended to custom definition: inventory.; Generator appended fallback modules: inventory",
+        "Launch readiness blocked by critical gaps"
+      ],
+      "missingEvidence": [
+        "manifest.status not PASS",
+        "preview not verified",
+        "production validation not PASS",
+        "exportReady false",
+        "validationStatus not PASS"
+      ]
+    }
+  ],
+  "strengths": [
+    "Feature Coverage",
+    "Modular Architecture",
+    "Services/Types/Validation",
+    "Build History"
+  ],
+  "gaps": [
+    "Edit",
+    "Delete",
+    "Live preview verification incomplete",
+    "Persistent project workspace not promoted"
+  ],
+  "criticalFailures": [
+    "Fallback modules appended to custom definition: inventory.; Generator appended fallback modules: inventory"
+  ],
+  "recommendedNextActions": [
+    "Fix the build failure and re-run materialization",
+    "Verify preview HTML and dev server startup",
+    "Promote successful build into persistent project source"
+  ],
+  "computedFromCategories": true,
+  "recordedAt": "2026-07-07T19:45:59.645Z",
+  "buildRunId": "modern-unit-converter-web-application-th-1",
+  "projectId": "modern-unit-converter-web-application-th-1",
+  "scoreArtifactPath": "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/modern-unit-converter-web-application-th-1/.materialization-quality-score.json",
+  "persistentScoreArtifactPath": ".aidev-projects/modern-unit-converter-web-application-th-1/.aidev/materialization-quality-score.json",
+  "featureContractRealityPath": null,
+  "featureContractRealityScore": 0,
+  "featureContractRealityStatus": "PENDING",
+  "workspaceRealityAuditPath": null,
+  "workspaceRealityAuditScore": 0,
+  "workspaceRealityAuditStatus": "PENDING"
+}

@@ -44,6 +44,11 @@ export interface FeatureRealityScores {
   overallFeatureScore: number;
 }
 
+export type FeatureRealityEvidenceMode =
+  | 'LIVE_RUNTIME'
+  | 'WORKSPACE_DERIVED'
+  | 'PLANNING_DERIVED';
+
 export interface FeatureRealityAssessment {
   readOnly: true;
   passed: boolean;
@@ -54,6 +59,8 @@ export interface FeatureRealityAssessment {
   failedChecks: FeatureRealityCheck[];
   blocksLaunchReadiness: boolean;
   blocksLaunchReadinessReason: string | null;
+  evidenceMode: FeatureRealityEvidenceMode;
+  degradedWithWorkspaceEvidence: boolean;
   previewUrl: string;
   contractId: string;
   generatedAt: string;

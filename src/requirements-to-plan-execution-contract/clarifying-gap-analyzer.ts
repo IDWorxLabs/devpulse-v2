@@ -2,6 +2,7 @@
  * Clarifying Gap Analyzer — detect missing critical information before build-ready state.
  */
 
+import { isSimpleUtilityAppPrompt } from '../simple-utility-app/simple-utility-app-registry.js';
 import { CRITICAL_GAP_CATEGORIES, MAX_CLARIFYING_GAPS } from './requirements-to-plan-contract-registry.js';
 import type {
   ClarifyingGap,
@@ -149,6 +150,17 @@ export function analyzeClarifyingGaps(
   const missing: string[] = [];
 
   if (isSimpleBrowserTaskTracker(idea, lower)) {
+    return {
+      readOnly: true,
+      contractReadiness: 'BUILD_READY',
+      criticalGaps: [],
+      clarifyingQuestions: [],
+      resolvedCategories: [...CRITICAL_GAP_CATEGORIES],
+      missingCategories: [],
+    };
+  }
+
+  if (isSimpleUtilityAppPrompt(idea.rawPrompt)) {
     return {
       readOnly: true,
       contractReadiness: 'BUILD_READY',

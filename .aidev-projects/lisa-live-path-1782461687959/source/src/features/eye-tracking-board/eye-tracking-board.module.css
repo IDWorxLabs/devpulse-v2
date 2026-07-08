@@ -1,0 +1,6 @@
+.modular-feature[data-feature-module="eye-tracking-board"] { width: 100%; }
+.modular-feature-header h2 { margin: 0 0 0.35rem; text-transform: capitalize; }
+.modular-feature-header p { margin: 0 0 1rem; color: #64748b; }
+.modular-feature-body { display: grid; gap: 0.75rem; }
+.modular-feature-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; background: #fff; }
+.modular-feature-records { margin: 0; padding-left: 1.25rem; }

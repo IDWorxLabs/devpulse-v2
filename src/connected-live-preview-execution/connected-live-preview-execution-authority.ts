@@ -468,5 +468,5 @@ export function resetConnectedLivePreviewExecutionModuleForTests(): void {
   resetConnectedLivePreviewModuleForTests();
   resetConnectedRuntimeExecutionModuleForTests();
   resetConnectedBuildExecutionModuleForTests();
-  cleanupActiveRuntime();
+  void cleanupActiveRuntime();
 }

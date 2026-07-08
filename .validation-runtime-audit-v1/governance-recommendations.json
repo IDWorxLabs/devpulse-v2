@@ -1,39 +1,39 @@
 {
-  "generatedAt": "2026-06-25T06:29:40.793Z",
+  "generatedAt": "2026-07-07T12:52:14.000Z",
   "readOnly": true,
   "notImplemented": true,
   "recommendations": [
     {
       "action": "CACHE",
       "target": "build outputs across validators",
-      "rationale": "23 validators trigger npm build or real-build pipeline work; measured RBEP runs 65s+ per invocation.",
+      "rationale": "30 validators trigger npm build or real-build pipeline work; measured RBEP runs 65s+ per invocation.",
       "evidenceValidators": [
         "validate:autonomous-build-execution-proof",
         "validate:autonomous-fixing",
+        "validate:build-intent-classification-recovery-v1",
+        "validate:build-intent-routing-v1",
+        "validate:chat-to-build-execution-bridge-v1",
         "validate:cloud-monitoring-foundation",
         "validate:cloud-recovery-foundation",
-        "validate:cloud-verification-foundation",
-        "validate:code-generation-engine-v1",
-        "validate:connected-launch-final-blocker",
-        "validate:consistency-audit-authoritative-evidence-repoint"
+        "validate:cloud-verification-foundation"
       ],
-      "estimatedSavingsMinutes": 19
+      "estimatedSavingsMinutes": 31
     },
     {
       "action": "REUSE",
       "target": "preview servers across validators",
-      "rationale": "76 validators start preview servers independently.",
+      "rationale": "99 validators start preview servers independently.",
       "evidenceValidators": [
         "validate:action-visibility-engine",
         "validate:auto-fix-runtime-foundation",
         "validate:autonomous-founder-launch-authority-v1",
         "validate:brain-memory-visibility-stack",
+        "validate:build-intent-routing-v1",
         "validate:build-task-runtime-foundation",
-        "validate:cloud-recovery-foundation",
-        "validate:cloud-runtime-foundation",
-        "validate:cloud-verification-foundation"
+        "validate:chat-to-build-execution-bridge-v1",
+        "validate:cloud-recovery-foundation"
       ],
-      "estimatedSavingsMinutes": 61
+      "estimatedSavingsMinutes": 79
     },
     {
       "action": "MERGE",
@@ -63,7 +63,7 @@
     {
       "action": "MERGE",
       "target": "high-duplicate regression validators",
-      "rationale": "130 validators show ≥50% duplicate work overlap within their category.",
+      "rationale": "176 validators show ≥50% duplicate work overlap within their category.",
       "evidenceValidators": [
         "validate:action-visibility-engine",
         "validate:afla-trust-calibration-v1",
@@ -71,17 +71,17 @@
         "validate:autonomous-build-execution-proof",
         "validate:autonomous-builder-reality",
         "validate:autonomous-fixing",
+        "validate:blueprint-purity",
         "validate:brain-memory-visibility-stack",
-        "validate:build-materialization-reality",
-        "validate:build-materialization-truth-bridge",
-        "validate:build-proof-gap-materialization"
+        "validate:build-history-integrity",
+        "validate:build-intent-classification-recovery-v1"
       ],
       "estimatedSavingsMinutes": 1
     },
     {
       "action": "REUSE",
       "target": "nested validator results",
-      "rationale": "25 validators trigger multiple child validators; results could be shared.",
+      "rationale": "26 validators trigger multiple child validators; results could be shared.",
       "evidenceValidators": [
         "validate:brain-memory-visibility-stack",
         "validate:canonical-ownership-v2",
@@ -92,7 +92,7 @@
         "validate:customer-operations-platform-v1",
         "validate:evidence-revalidation-cycle-v1"
       ],
-      "estimatedSavingsMinutes": 50
+      "estimatedSavingsMinutes": 52
     },
     {
       "action": "REMOVE",
@@ -116,32 +116,32 @@
         "validate:founder-test-launch-readiness",
         "validate:launch-council"
       ],
-      "estimatedSavingsMinutes": 6
+      "estimatedSavingsMinutes": 7
     },
     {
       "action": "CACHE",
       "target": "Playwright browser sessions",
-      "rationale": "13 validators launch Playwright; session reuse would reduce cold-start cost.",
+      "rationale": "17 validators launch Playwright; session reuse would reduce cold-start cost.",
       "evidenceValidators": [
         "validate:autonomous-founder-launch-authority-v1",
+        "validate:build-reality-autofix-engine-v1",
         "validate:engineering-reality-v1",
         "validate:execution-proof-evolution",
         "validate:feature-reality-v1",
-        "validate:interaction-testing-engine",
-        "validate:live-preview-runtime"
+        "validate:interaction-testing-engine"
       ],
-      "estimatedSavingsMinutes": 20
+      "estimatedSavingsMinutes": 26
     },
     {
       "action": "KEEP",
       "target": "fast validators as always-on regression",
-      "rationale": "270 registered validators are LOW tier (<30s estimated); safe for continuous regression.",
+      "rationale": "351 registered validators are LOW tier (<30s estimated); safe for continuous regression.",
       "evidenceValidators": [
         "validate:adaptive-autofix-intelligence",
         "validate:adoption-prediction-authority",
         "validate:adoption-prediction-engine",
         "validate:adoption-reality-authority",
-        "validate:aidevengine-identity-correction"
+        "validate:aee-all-profile-continuation"
       ],
       "estimatedSavingsMinutes": 0
     }

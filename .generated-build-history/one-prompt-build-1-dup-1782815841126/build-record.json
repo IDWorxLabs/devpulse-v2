@@ -1,0 +1,67 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1782815841126",
+  "createdAt": "2026-06-30T10:37:21.125Z",
+  "prompt": "Build LISA — Locked In Syndrome App.\n\nAn assistive communication app for locked-in syndrome users that converts eye movement, gaze, and blinks into speech.\n\nMobile-first Android phone preview required.\n\nRequired modules:\n* onboarding-calibration\n* eye-tracking-board\n* blink-input-engine\n* gaze-keyboard\n* text-to-speech\n* quick-phrases\n* caregiver-dashboard\n* communication-history\n* accessibility-settings\n* emergency-speech\n\nDo not use generic project management fallback.\n\nGenerate architecture, plan, tasks, and begin build execution now.",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "appName": "LISA Continuation",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/lisa-continuation-1782815840506",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/lisa-continuation-1782815840506/.generated-app-manifest.json",
+  "manifestHash": "6b10d6e889c18c08b2c019bec1f66ceb8d34dd8760f3040801f2368ac24d91a7",
+  "workspaceHash": "e47031f42b9267a51c372db33a7be58db6c26d828f90103bb9038a96bbbec997",
+  "materializationHash": "57630649972b5270cb1019befc400f873ea1590a35ef8169f7d483234dbc9460",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0,
+  "generatedFeatureModulesCount": 0,
+  "generatedRoutes": [
+    "/onboarding-calibration",
+    "/eye-tracking-board",
+    "/blink-input-engine",
+    "/gaze-keyboard",
+    "/text-to-speech",
+    "/quick-phrases",
+    "/caregiver-dashboard",
+    "/communication-history",
+    "/accessibility-settings",
+    "/emergency-speech",
+    "/navigation-router",
+    "/accessibility-layer",
+    "/filter-ui",
+    "/",
+    "/persistence"
+  ],
+  "generatedComponents": [],
+  "generatedServices": [],
+  "generatedModels": [],
+  "generatedStyles": [],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "ASE denied materialization authorization."
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/lisa-continuation-1782815840506/.generated-app-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1782815841126"
+  ],
+  "failureReasons": [
+    "ASE denied materialization authorization.",
+    "ASE denied materialization authorization."
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1782815841126/replay-metadata.json",
+  "comparisonFingerprint": "46688981d491acf3c03960fdd76820a97505af8e35893d61ed1f3dabff67abb7",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1782815841126/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "18198fa95d724e5ca55bc790068924b082b1c46341a7ce0fcd7719813d75df85"
+}

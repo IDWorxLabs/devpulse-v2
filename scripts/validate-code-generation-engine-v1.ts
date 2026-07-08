@@ -4,7 +4,11 @@
 
 import { existsSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { spawnSync } from 'node:child_process';
+import {
+  resetGeneratedDevServerManagerForTests,
+  startGeneratedAppDevServer,
+} from '../src/one-prompt-live-preview/generated-dev-server-manager.js';
+import { runNpmCommandSync, runNpmRunScriptSync } from '../src/one-prompt-live-preview/child-process-teardown.js';
 import { fileURLToPath } from 'node:url';
 import {
   CODE_GENERATION_ENGINE_V1_PASS_TOKEN,
@@ -83,6 +87,7 @@ assert(
   contract?.readinessState ?? 'none',
 );
 
+async function runContractValidation(): Promise<void> {
 if (contract) {
   cleanupWorkspace(contract.contractId);
   const materialization = materializeBuildProofGapArtifacts({
@@ -152,19 +157,17 @@ if (contract) {
     'wired',
   );
 
-  const npmInstall = spawnSync('npm', ['install', '--ignore-scripts'], {
+  const npmInstall = runNpmCommandSync({
     cwd: workspaceDir,
-    encoding: 'utf8',
-    shell: true,
-    timeout: 180_000,
+    args: ['install', '--ignore-scripts'],
+    timeoutMs: 180_000,
   });
   assert('npm install succeeds', npmInstall.status === 0, npmInstall.status === 0 ? 'exit 0' : 'failed');
 
-  const npmBuild = spawnSync('npm', ['run', 'build'], {
+  const npmBuild = runNpmRunScriptSync({
     cwd: workspaceDir,
-    encoding: 'utf8',
-    shell: true,
-    timeout: 180_000,
+    script: 'build',
+    timeoutMs: 180_000,
   });
   assert('npm run build succeeds', npmBuild.status === 0, npmBuild.status === 0 ? 'exit 0' : (npmBuild.stderr ?? '').slice(0, 200));
 
@@ -175,16 +178,21 @@ if (contract) {
     assert('build output non-empty', distStat.size > 100, `${distStat.size} bytes`);
   }
 
-  const devServer = spawnSync('npm', ['run', 'dev'], {
-    cwd: workspaceDir,
-    encoding: 'utf8',
-    shell: true,
-    timeout: 20_000,
-    env: { ...process.env, BROWSER: 'none' },
-  });
-  const devStdout = devServer.stdout ?? '';
-  const portMatch = devStdout.match(/Local:\s+http:\/\/127\.0\.0\.1:(\d+)/i);
-  assert('vite dev server starts', portMatch != null, portMatch ? `port ${portMatch[1]}` : devStdout.slice(0, 200));
+  await resetGeneratedDevServerManagerForTests();
+  try {
+    const devResult = await startGeneratedAppDevServer({
+      workspaceDir,
+      workspaceId: contract.contractId,
+      timeoutMs: 20_000,
+    });
+    assert(
+      'vite dev server starts',
+      devResult.ok && devResult.port != null,
+      devResult.port ? `port ${devResult.port}` : devResult.error ?? 'failed',
+    );
+  } finally {
+    await resetGeneratedDevServerManagerForTests();
+  }
 
   const engineResult = materializeGeneratedApplication({
     projectRootDir: ROOT,
@@ -194,7 +202,9 @@ if (contract) {
   });
   assert('engine reports generated profile', engineResult.generated, engineResult.profile ?? 'none');
 }
+}
 
+void runContractValidation().then(() => {
 const failed = results.filter((r) => !r.passed);
 const passToken =
   failed.length === 0 ? CODE_GENERATION_ENGINE_V1_PASS_TOKEN : 'CODE_GENERATION_ENGINE_V1_FAIL';
@@ -206,3 +216,7 @@ for (const result of results) {
 }
 
 process.exit(failed.length === 0 ? 0 : 1);
+}).catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

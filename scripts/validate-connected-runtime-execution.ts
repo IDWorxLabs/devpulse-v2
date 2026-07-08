@@ -656,7 +656,7 @@ async function main(): Promise<void> {
     'runtime activation engine exported',
     engineSource.includes('export async function executeRuntimeActivation') &&
       engineSource.includes('export function prepareBuildExecutionInWorkspace') &&
-      engineSource.includes('export function cleanupActiveRuntime'),
+      engineSource.includes('export async function cleanupActiveRuntime'),
     'runtime-activation-engine',
   );
 
@@ -759,7 +759,7 @@ async function main(): Promise<void> {
     `score=${activated.report.runtimeScore}`,
   );
 
-  cleanupActiveRuntime();
+  await cleanupActiveRuntime();
   await new Promise((resolve) => setTimeout(resolve, 300));
   if (workspaceId) {
     cleanupDisposableWorkspace(ROOT, workspaceId);
@@ -777,7 +777,7 @@ async function main(): Promise<void> {
     buildFounderTest('FOUNDER_READY', true, 85),
     true,
   );
-  cleanupActiveRuntime();
+  await cleanupActiveRuntime();
   await new Promise((resolve) => setTimeout(resolve, 300));
   if (warnings.report.activationContract?.workspaceId) {
     cleanupDisposableWorkspace(ROOT, warnings.report.activationContract.workspaceId);
@@ -852,7 +852,7 @@ async function main(): Promise<void> {
     founderAcceptanceAssessment: buildAcceptance('ACCEPTED'),
     performRealActivation: true,
   });
-  cleanupActiveRuntime();
+  await cleanupActiveRuntime();
   await new Promise((resolve) => setTimeout(resolve, 300));
   if (artifacts.connectedRuntimeExecutionAssessment.report.activationContract?.workspaceId) {
     cleanupDisposableWorkspace(

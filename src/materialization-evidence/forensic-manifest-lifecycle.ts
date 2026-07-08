@@ -13,6 +13,7 @@ import {
 } from '../universal-prompt-to-app-materialization/generated-app-manifest.js';
 import { discoverWorkspaceFiles } from './workspace-file-discovery-engine.js';
 import { attachManifestHashes } from './materialization-hash-engine.js';
+import { stampPreviewWorkspaceIdentity } from '../end-to-end-build-reality-engine-v1/preview-workspace-identity.js';
 import type { GeneratedFileCategory } from './materialization-evidence-types.js';
 import type {
   ForensicBuildStage,
@@ -45,6 +46,7 @@ import {
 } from '../materialization-quality-score/index.js';
 import {
   applyFeatureContractRealityToManifest,
+  hasSufficientWorkspaceFeatureEvidence,
   recordFeatureContractReality,
 } from '../feature-contract-reality/index.js';
 import {
@@ -309,6 +311,48 @@ export function updateForensicManifestStage(
   return writeManifest(workspaceDir, manifest);
 }
 
+export function recordForensicManifestAseContinuationOverride(
+  workspaceDir: string,
+  input: {
+    aseBlockers: readonly string[];
+    warning: string;
+  },
+): GeneratedAppManifest {
+  return updateForensicManifestStage(workspaceDir, {
+    stage: 'ASE_AUTHORIZATION',
+    status: 'IN_PROGRESS',
+    warnings: [
+      input.warning,
+      ...input.aseBlockers.map((blocker) => `ASE blocker overridden: ${blocker}`),
+    ],
+  });
+}
+
+export function recordForensicManifestAeeExecutiveDecision(
+  workspaceDir: string,
+  input: {
+    decision: string;
+    reasoning: string;
+    overrideEvent: string | null;
+    overriddenBlockers: readonly string[];
+    respectedBlockers: readonly string[];
+    evidenceProviders: readonly string[];
+  },
+): GeneratedAppManifest {
+  const warnings = [
+    input.reasoning,
+    ...(input.overrideEvent ? [`AEE event: ${input.overrideEvent}`] : []),
+    ...input.overriddenBlockers.map((blocker) => `AEE overridden blocker: ${blocker}`),
+    ...input.respectedBlockers.map((blocker) => `AEE respected blocker: ${blocker}`),
+    ...input.evidenceProviders.map((provider) => `AEE evidence provider: ${provider}`),
+  ];
+  return updateForensicManifestStage(workspaceDir, {
+    stage: 'AEE_EXECUTIVE_COORDINATION',
+    status: 'IN_PROGRESS',
+    warnings,
+  });
+}
+
 export function finalizeForensicManifestFailure(
   workspaceDir: string,
   input: ForensicManifestFailureInput,
@@ -461,11 +505,11 @@ export function finalizeForensicManifestSuccess(
       file.path.startsWith('src/features/') &&
       file.path.endsWith('Feature.tsx'),
   ).length;
-  const featureModuleCount = Math.max(
-    existing?.featureModuleDetails.length ?? 0,
-    input.featureModules.length,
-    featureComponentCount,
-  );
+  // Product Faithfulness Glossary Precision V1 — featureModuleCount must reflect only what THIS
+  // build actually produced (input.featureModules / discovered components), never a previous
+  // build's on-disk featureModuleDetails.length, so a build that generates fewer/different modules
+  // than a prior build at the same workspace path is never inflated by stale counts.
+  const featureModuleCount = Math.max(input.featureModules.length, featureComponentCount);
   const featureModuleFiles = discovery.files
     .filter((file) => file.path.startsWith('src/features/'))
     .filter((file) => !file.path.endsWith('registry.ts') && !file.path.endsWith('routes.ts'))
@@ -512,7 +556,13 @@ export function finalizeForensicManifestSuccess(
     generatedFeatureModulesCount: featureModuleCount,
     generatedFeatureModuleFiles: featureModuleFiles,
     featureModuleDirectories,
-    featureModuleDetails: existing?.featureModuleDetails ?? [],
+    // Product Faithfulness Glossary Precision V1 — featureModuleDetails must always originate
+    // from the CURRENT generation. MaterializationEvidenceCompletionInput carries no per-module
+    // detail records of its own, so there is no current-build source to rebuild from here; the
+    // field previously fell back to whatever a prior manifest already on disk for this workspace
+    // path happened to contain (a different build's data). That fallback is removed — an empty
+    // array is the only evidence-honest value when this input has no current-build detail to give.
+    featureModuleDetails: [],
     generatedServicesCount: discovery.generatedServicesCount,
     generatedModelsCount: discovery.generatedModelsCount,
     generatedAssetsCount: discovery.generatedAssetsCount,
@@ -560,6 +610,17 @@ export function finalizeForensicManifestSuccess(
     completedAt: new Date().toISOString(),
     stageHistory: existing?.stageHistory ?? [],
     ...(input.promptFaithfulness ?? {}),
+    ...(input.previewEvidence?.previewUrl
+      ? {
+          previewUrl: input.previewEvidence.previewUrl,
+          previewVerified: input.previewEvidence.previewVerified === true,
+          previewHtmlStatus: input.previewEvidence.previewHtmlStatus ?? 'PENDING',
+          visiblePreviewValidationStatus:
+            input.previewEvidence.visiblePreviewValidationStatus ?? 'PENDING',
+          visiblePreviewValidationFailureReasons:
+            input.previewEvidence.visiblePreviewValidationFailureReasons ?? [],
+        }
+      : {}),
   };
 
   const withHashes = attachPartialAndFullHashes(baseManifest, input.workspaceDir);
@@ -618,7 +679,14 @@ export function finalizeForensicManifestSuccess(
       manifest: withHistory,
       projectId: input.projectId,
       projectName: input.projectName,
-      promoteSource: input.validation.passed && withHistory.status === 'PASS',
+      promoteSource:
+        (input.buildSpinePassed === true ||
+          (input.validation.passed &&
+            (withHistory.status === 'PASS' ||
+              hasSufficientWorkspaceFeatureEvidence(input.workspaceDir, input.featureModules)))) &&
+        (withHistory.status === 'PASS' ||
+          input.buildSpinePassed === true ||
+          hasSufficientWorkspaceFeatureEvidence(input.workspaceDir, input.featureModules)),
     });
     withReality = applyPersistentProjectRealityToManifest(withHistory, promotion.evidence);
   } catch (error) {
@@ -694,6 +762,13 @@ export function finalizeForensicManifestSuccess(
     serializeGeneratedAppManifest(withScore),
     'utf8',
   );
+  if (withScore.workspaceHash) {
+    stampPreviewWorkspaceIdentity({
+      workspaceDir: input.workspaceDir,
+      workspaceHash: withScore.workspaceHash,
+      projectId: input.projectId,
+    });
+  }
   return withScore;
 }
 

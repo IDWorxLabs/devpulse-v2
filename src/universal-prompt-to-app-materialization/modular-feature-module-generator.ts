@@ -5,6 +5,13 @@
 import type { GeneratedWorkspaceFile } from '../code-generation-engine/code-generation-engine-types.js';
 import type { ProfileFeatureDefinition } from './profile-feature-map.js';
 import { resolveDomainCopy } from './profile-feature-ui-generator.js';
+import {
+  buildSafePaymentPlaceholderComponentTsx,
+} from '../safe-payment-placeholder-policy/safe-payment-module-generator.js';
+import {
+  buildCalculatorFeatureComponentTsx,
+  buildCalculatorFeatureModuleCss,
+} from '../simple-utility-app/calculator-feature-generator.js';
 
 export interface GeneratedFeatureModuleManifestEntry {
   readOnly: true;
@@ -85,6 +92,23 @@ function buildFeatureComponentTsx(
   const copy = resolveDomainCopy(definition, appTitle);
   const description = copy[moduleId] ?? `${displayName} module for ${appTitle}.`;
   const terms = modulePromptTerms(moduleId, definition);
+  if (moduleId === 'calculator') {
+    return buildCalculatorFeatureComponentTsx(appTitle);
+  }
+
+  const safePaymentComponent =
+    definition.safePaymentPlaceholderActive === true
+      ? buildSafePaymentPlaceholderComponentTsx(moduleId, appTitle, pascal, displayName)
+      : null;
+
+  if (safePaymentComponent) {
+    return safePaymentComponent;
+  }
+
+  if (moduleId === 'calculator') {
+    return buildCalculatorFeatureComponentTsx(appTitle);
+  }
+
   const interactionControl = isInformationalFeatureModule(moduleId)
     ? ''
     : `
@@ -190,6 +214,9 @@ function isInformationalFeatureModule(moduleId: string): boolean {
 }
 
 function buildFeatureModuleCss(moduleId: string): string {
+  if (moduleId === 'calculator') {
+    return buildCalculatorFeatureModuleCss();
+  }
   return `.modular-feature[data-feature-module="${moduleId}"] { width: 100%; }
 .modular-feature-header h2 { margin: 0 0 0.35rem; text-transform: capitalize; }
 .modular-feature-header p { margin: 0 0 1rem; color: #64748b; }
@@ -223,12 +250,14 @@ export function buildModularFeatureModuleFiles(
   const indexPath = `${folder}/index.ts`;
 
   const componentContent = buildFeatureComponentTsx(moduleId, appTitle, definition);
+  const cssContent =
+    moduleId === 'calculator' ? buildCalculatorFeatureModuleCss() : buildFeatureModuleCss(moduleId);
   const files: GeneratedWorkspaceFile[] = [
     { relativePath: componentPath, content: componentContent },
     { relativePath: typesPath, content: buildFeatureTypesTs(moduleId, appTitle) },
     { relativePath: servicePath, content: buildFeatureServiceTs(moduleId, appTitle) },
     { relativePath: validationPath, content: buildFeatureValidationTs(moduleId, appTitle) },
-    { relativePath: cssPath, content: buildFeatureModuleCss(moduleId) },
+    { relativePath: cssPath, content: cssContent },
     { relativePath: indexPath, content: buildFeatureIndexTs(moduleId) },
   ];
 
@@ -332,7 +361,9 @@ export function buildFeatureAppRouterTsx(definition: ProfileFeatureDefinition): 
   const copy = definition.customDomainCopy ?? {};
   const appTitle = copy.headline?.split(' — ')[0] ?? 'Custom App';
   const androidPreview = definition.androidPhonePreviewRequired === true;
-  const isAssistiveApp = definition.profile === 'GENERIC_CUSTOM_APP_V1' && Boolean(definition.customDomainCopy);
+  const isAssistiveApp =
+    definition.profile === 'ASSISTIVE_COMMUNICATION_APP_V1' ||
+    (definition.profile === 'GENERIC_CUSTOM_APP_V1' && Boolean(definition.customDomainCopy));
 
   const navButtons = navModules
     .map(
@@ -351,7 +382,7 @@ export function buildFeatureAppRouterTsx(definition: ProfileFeatureDefinition): 
     ? `
       <header className="assistive-app-header" data-communication-board="true">
         <h1>${esc(appTitle)}</h1>
-        <p className="assistive-subtitle">Locked In Syndrome App — communication board</p>
+        <p className="assistive-subtitle">Assistive communication board</p>
         <div className="assistive-status-row">
           <span data-blink-status="ready">Blink: ready</span>
           <span data-gaze-status="tracking">Gaze: tracking</span>

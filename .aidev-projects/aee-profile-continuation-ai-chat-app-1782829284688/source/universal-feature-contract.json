@@ -1,0 +1,84 @@
+{
+  "contractVersion": "1.0",
+  "contractId": "aee-profile-continuation-ai-chat-app-1782829284688",
+  "productProfile": "GENERIC_CUSTOM_APP_V1",
+  "productName": "N Ai Chat",
+  "generatedAt": "2026-06-30T14:21:24.920Z",
+  "sourcePrompt": "Build an AI chat app with conversation threads, prompt input, model responses, and chat history sidebar.",
+  "entities": [
+    {
+      "id": "habit",
+      "label": "Habit",
+      "pluralLabel": "Habits",
+      "navLabel": "Habits",
+      "slug": "habit",
+      "storageKey": "habit-records-v1",
+      "primary": true
+    }
+  ],
+  "actions": [
+    {
+      "id": "create-habit",
+      "entityId": "habit",
+      "verb": "create",
+      "label": "Create Habit",
+      "required": true
+    },
+    {
+      "id": "update-habit",
+      "entityId": "habit",
+      "verb": "update",
+      "label": "Edit Habit",
+      "required": true
+    },
+    {
+      "id": "delete-habit",
+      "entityId": "habit",
+      "verb": "delete",
+      "label": "Delete Habit",
+      "required": true
+    },
+    {
+      "id": "search-habit",
+      "entityId": "habit",
+      "verb": "search",
+      "label": "Search Habit",
+      "required": true
+    },
+    {
+      "id": "track-streak",
+      "entityId": "habit",
+      "verb": "complete",
+      "label": "Track Streak",
+      "required": false
+    }
+  ],
+  "rules": [
+    {
+      "id": "habit-name-required",
+      "entityId": "habit",
+      "label": "Habit must have a name",
+      "required": true
+    }
+  ],
+  "workflows": [
+    {
+      "id": "daily-routine",
+      "entityId": "habit",
+      "label": "Check-in → Streak",
+      "stages": [
+        "pending",
+        "completed"
+      ],
+      "required": true
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "habit-tracked",
+      "entityId": "habit",
+      "label": "Habit check-in recorded",
+      "required": true
+    }
+  ]
+}

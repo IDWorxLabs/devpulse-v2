@@ -1,59 +1,45 @@
 {
   "readOnly": true,
-  "originalPrompt": "Build a modern QR code scanning web application with camera scan, URL redirect, and scan history. Generate architecture, plan, tasks, and begin build execution.",
-  "selectedProfile": "QR_APP",
+  "originalPrompt": "Build an AI chat app with conversation threads, prompt input, model responses, and chat history sidebar.",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
   "generationInputs": {
-    "projectId": "smartqr-test-1",
+    "projectId": "aee-profile-continuation-ai-chat-app-1782828782809",
     "buildRunId": "one-prompt-build-3",
-    "expectedAppType": "qr-app",
+    "expectedAppType": "custom-application-domain",
     "featureModules": [
-      "auth",
+      "navigation-router",
       "dashboard",
-      "generator",
-      "scanner",
-      "code-history",
-      "analytics",
       "settings",
       "persistence"
     ],
     "routes": [
-      "/",
+      "/navigation-router",
       "/dashboard",
-      "/generator",
-      "/scanner",
-      "/code-history",
-      "/analytics",
-      "/settings"
+      "/settings",
+      "/persistence"
     ],
     "fallbackUsed": false
   },
   "featureContractSummary": {
-    "featureModuleCount": 13,
+    "featureModuleCount": 4,
     "featureModuleIds": [
-      "auth",
+      "navigation-router",
       "dashboard",
-      "generator",
-      "scanner",
-      "code-history",
-      "analytics",
       "settings",
       "persistence"
     ],
     "routes": [
-      "/",
+      "/navigation-router",
       "/dashboard",
-      "/generator",
-      "/scanner",
-      "/code-history",
-      "/analytics",
-      "/settings"
+      "/settings",
+      "/persistence"
     ]
   },
   "profileFeatureMapVersion": "materialization-v1",
   "blueprintVersion": "1.0",
   "generatorVersion": "universal-prompt-to-app-materialization-v1",
   "dependencySnapshot": {
-    "runtime": "vite-react:qr-app",
+    "runtime": "vite-react:generic-custom-app-v1",
     "packageManager": "npm",
     "note": "Captured from generated workspace package.json when present"
   },

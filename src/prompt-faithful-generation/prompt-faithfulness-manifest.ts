@@ -14,6 +14,7 @@ export function buildPromptFaithfulnessManifestFields(input: {
   generatedModules: string[];
   guardResult?: PromptProfileGuardResult;
   workspaceDir?: string;
+  approvedModuleIds?: readonly string[];
 }): PromptFaithfulnessManifestFields {
   const extraction = extractPromptFeatures(input.rawPrompt);
   const verdict = validatePromptFaithfulness({
@@ -21,6 +22,7 @@ export function buildPromptFaithfulnessManifestFields(input: {
     selectedProfile: input.selectedProfile,
     generatedModules: input.generatedModules,
     workspaceDir: input.workspaceDir,
+    approvedModuleIds: input.approvedModuleIds,
   });
 
   const rejected = [

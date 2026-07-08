@@ -3,588 +3,335 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AiDevEngine — Autonomous Software Development</title>
+  <title>AiDevEngine V4 — Build an app from a prompt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/builder-home.css" />
 </head>
 <body>
-  <div id="local-runtime-banner" class="local-runtime-banner hidden" role="alert" aria-live="assertive">
-    AiDevEngine local runtime is stale or unavailable. Restart using Start-AiDevEngine.
-  </div>
-  <div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div>
-  <div class="feed-backdrop" id="feed-backdrop" hidden></div>
+  <div class="builder-shell" id="builder-shell" data-component="BuilderHome">
 
-  <div class="app-shell" id="app-shell">
-    <aside class="sidebar" id="sidebar" aria-label="Navigation">
-      <div class="sidebar-brand">
-        <span class="brand-mark">AE</span>
+    <header class="builder-header">
+      <div class="builder-header-brand">
+        <span class="builder-brand-mark">AE</span>
         <div>
-          <h1 id="page-title">AiDevEngine</h1>
-          <p class="brand-sub" id="page-subtitle">Autonomous Development Engine</p>
+          <h1>AiDevEngine V4</h1>
+          <p class="builder-header-tagline">Describe the app you want. AiDevEngine builds it.</p>
         </div>
       </div>
-      <nav class="sidebar-nav" id="sidebar-nav">
-        <button type="button" class="nav-item active" data-view="command-center" title="Ask AiDevEngine questions, guide your project, and start building.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
-          <span class="nav-label">Command Center</span>
-          <span class="nav-help">Ask questions, guide your project, and start building.</span>
+      <div class="builder-header-actions">
+        <span class="builder-runtime-pill" id="builder-runtime-pill">Checking runtime…</span>
+        <button type="button" class="builder-advanced-btn" id="builder-advanced-toggle" aria-expanded="false" aria-controls="builder-diagnostics-drawer">
+          Advanced / Diagnostics
         </button>
-        <button type="button" class="nav-item" data-view="founder-action-center" title="What to do next, blockers, and execution priorities.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></span>
-          <span class="nav-label">Action Center</span>
-          <span class="nav-help">What to do next, blockers, and execution priorities.</span>
-        </button>
-        <button type="button" class="nav-item" data-view="product-coherence" title="What does not make sense, contradictions, and trust risks.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="1"/></svg></span>
-          <span class="nav-label">Product Coherence</span>
-          <span class="nav-help">Confusion, contradictions, and what to fix for trust.</span>
-        </button>
-        <button type="button" class="nav-item" data-view="projects" title="Active workspaces and applications you are building now — not stored vault knowledge.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h5l2 2h11v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
-          <span class="nav-label">Projects</span>
-          <span class="nav-help">Active workspaces and applications being built — not stored vault knowledge.</span>
-        </button>
-        <button type="button" class="nav-item" data-view="autonomous-builder" title="Turn product ideas into builds with guided autonomous development.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span>
-          <span class="nav-label">Autonomous Builder</span>
-          <span class="nav-help">Turn ideas into builds with guided development.</span>
-        </button>
-        <button type="button" class="nav-item" data-view="live-preview" title="See and interact with the running app — not readiness proof.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M10 9l5 3-5 3V9z"/></svg></span>
-          <span class="nav-label">Live Preview</span>
-          <span class="nav-help">Interact with the running app — not readiness proof. Use Verification for pass/fail evidence.</span>
-        </button>
-        <button type="button" class="nav-item" data-view="project-memory" title="Project vault: stored knowledge, history, requirements, and decisions — not active workspaces.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/><circle cx="12" cy="14" r="1.5"/></svg></span>
-          <span class="nav-label">Project Memory</span>
-          <span class="nav-help">Project vault: stored knowledge, history, requirements, and intelligence — not active workspaces.</span>
-        </button>
-        <button type="button" class="nav-item" data-view="verification" title="Prove readiness with pass/fail evidence and launch confidence — not health summaries.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg></span>
-          <span class="nav-label">Verification</span>
-          <span class="nav-help">Pass/fail proof, validation evidence, and launch confidence — not Project Insights summaries.</span>
-        </button>
-        <button type="button" class="nav-item" data-view="founder-review" title="See what AiDevEngine reviewed, found, and why launch was approved or blocked.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg></span>
-          <span class="nav-label">Founder Review</span>
-          <span class="nav-help">Internal launch review transparency — informational only.</span>
-        </button>
-        <button type="button" class="nav-item" data-view="notifications" title="Founder alerts, test results, and important product updates.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 16H6l-1-2v-5a7 7 0 0 1 14 0v5l-1 2z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span>
-          <span class="nav-label">Notifications</span>
-          <span class="nav-help">Founder alerts, test results, and product updates.</span>
-        </button>
-        <button type="button" class="nav-item" data-view="project-insights" title="Understand project health, patterns, risks, and recommendations — not pass/fail proof.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
-          <span class="nav-label">Project Insights</span>
-          <span class="nav-help">Health, patterns, risks, and recommendations — not Verification pass/fail proof.</span>
-        </button>
-        <button type="button" class="nav-item" data-view="system-diagnostics" title="Advanced health checks when troubleshooting is needed.">
-          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg></span>
-          <span class="nav-label">System Diagnostics</span>
-          <span class="nav-help">Advanced health checks when troubleshooting is needed.</span>
-        </button>
-      </nav>
-      <div class="first-time-nav-guidance" id="first-time-nav-guidance">
-        <p class="sidebar-guidance-label">New here? Know the difference</p>
-        <ul class="sidebar-guidance-list">
-          <li><strong>Verification</strong> — pass/fail proof and launch confidence.</li>
-          <li><strong>Project Insights</strong> — health, patterns, risks, and recommendations.</li>
-          <li><strong>Projects</strong> — active workspaces you are building.</li>
-          <li><strong>Project Memory</strong> — project vault for stored knowledge and history.</li>
-          <li><strong>Live Preview</strong> — interact with the running app; use Verification to prove readiness.</li>
-        </ul>
       </div>
-      <div class="first-time-founder-path" id="first-time-founder-path">
-        <p class="sidebar-guidance-label">First-Time Founder Path</p>
-        <ol class="founder-path-steps">
-          <li class="founder-path-step" data-path-step="1" data-view-target="projects">
-            <span class="founder-path-step-title">Create/Open Project</span>
-            <span class="founder-path-step-copy">Start by creating a project or opening an existing one.</span>
-          </li>
-          <li class="founder-path-step" data-path-step="2" data-view-target="command-center">
-            <span class="founder-path-step-title">Describe Your Vision</span>
-            <span class="founder-path-step-copy">Describe what you want to build. The more detail you provide, the better AiDevEngine can understand your vision.</span>
-          </li>
-          <li class="founder-path-step" data-path-step="3" data-view-target="project-insights">
-            <span class="founder-path-step-title">Review Project Insights</span>
-            <span class="founder-path-step-copy">Review Project Insights to confirm AiDevEngine understands your project correctly.</span>
-          </li>
-          <li class="founder-path-step" data-path-step="4" data-view-target="live-preview">
-            <span class="founder-path-step-title">Test in Live Preview</span>
-            <span class="founder-path-step-copy">Use Live Preview to interact with and test the current version of your application.</span>
-          </li>
-          <li class="founder-path-step" data-path-step="5" data-view-target="verification">
-            <span class="founder-path-step-title">Run Verification</span>
-            <span class="founder-path-step-copy">Run Verification to determine whether your application is ready for launch.</span>
-          </li>
-          <li class="founder-path-step" data-path-step="6" data-view-target="verification">
-            <span class="founder-path-step-title">Launch with Confidence</span>
-            <span class="founder-path-step-copy" id="founder-path-step-six-copy">Review Verification results, then prepare for launch.</span>
-          </li>
-        </ol>
-        <p class="founder-path-outcome" id="founder-path-outcome" hidden>Verification passed. Review any recommendations and prepare for launch.</p>
-        <p class="founder-path-outcome founder-path-outcome-fail" id="founder-path-outcome-fail" hidden>Verification found issues that should be addressed before launch. Review the findings and re-run Verification after fixes.</p>
-      </div>
-      <div class="sidebar-status" id="sidebar-status">
-        <p class="sidebar-status-label">System status</p>
-        <p class="sidebar-status-text" id="sidebar-status-text">Checking runtime…</p>
-      </div>
-    </aside>
+    </header>
 
-    <main class="center-area" id="center-area">
-      <header class="center-header">
-        <div class="center-header-left">
-          <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-          </button>
-          <div class="workspace-nav-controls" id="workspace-nav-controls" aria-label="Workspace navigation">
-            <button type="button" class="workspace-nav-btn" id="workspace-nav-back" disabled title="Back">← Back</button>
-            <button type="button" class="workspace-nav-btn" id="workspace-nav-forward" disabled title="Forward">Forward →</button>
-            <span class="workspace-nav-breadcrumb" id="workspace-nav-breadcrumb">Command Center</span>
-          </div>
-          <h2 id="center-title">AiDevEngine Command Center</h2>
-        </div>
-        <div class="center-header-actions">
-          <div class="founder-test-runtime-wrap">
-          <button type="button" class="founder-test-btn" id="run-founder-test" title="Run a complete founder simulation and launch-readiness evaluation.">
-            <span class="founder-test-btn-label" id="founder-test-btn-label">Run Founder Test</span>
-            <span class="founder-test-btn-hint" id="founder-test-btn-hint">Complete founder validation — one report, one verdict.</span>
-          </button>
-          </div>
-          <button type="button" class="mobile-feed-toggle" id="mobile-feed-toggle" aria-label="Open execution trace" aria-expanded="false" aria-controls="operator-feed">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h14"/></svg>
-          </button>
-          <button type="button" class="notif-btn" id="notif-toggle" aria-expanded="false" aria-controls="notification-drawer">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16H6l-1-2v-5a7 7 0 0 1 14 0v5l-1 2z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
-            <span class="notif-unread-badge" id="notif-unread-badge" hidden aria-label="Unread notifications">0</span>
-            <span class="notif-btn-label">Notifications</span>
-          </button>
-        </div>
-      </header>
+    <main class="builder-main" id="builder-main">
 
-      <div class="notification-drawer" id="notification-drawer" hidden>
-        <h3>Notifications</h3>
-        <ul id="notification-list" class="notification-list"></ul>
-      </div>
+      <div class="builder-col builder-col-left" id="builder-col-left">
 
-      <div class="founder-test-report-modal" id="founder-test-report-modal" hidden aria-hidden="true" role="dialog" aria-labelledby="founder-test-report-modal-title">
-        <div class="founder-test-report-modal-backdrop" id="founder-test-report-modal-backdrop"></div>
-        <div class="founder-test-report-modal-panel">
-          <div class="founder-test-report-modal-header">
-            <h3 id="founder-test-report-modal-title">Founder Test Report</h3>
-            <button type="button" class="founder-test-report-modal-close" id="founder-test-report-modal-close" aria-label="Close report">×</button>
-          </div>
-          <pre class="founder-test-report-modal-body" id="founder-test-report-modal-body"></pre>
-        </div>
-      </div>
+        <section class="builder-panel builder-prompt-panel" id="builder-prompt-panel" data-component="PromptBuilderPanel" aria-label="Prompt builder">
+          <h2 class="builder-panel-title">What do you want to build?</h2>
+          <p class="builder-panel-sub">Describe your app in plain language. AiDevEngine plans, generates, builds, and previews it for you.</p>
 
-      <div class="project-name-dialog" id="project-name-dialog" hidden aria-hidden="true" role="dialog" aria-labelledby="project-name-dialog-title">
-        <div class="project-name-dialog-backdrop" id="project-name-dialog-backdrop"></div>
-        <div class="project-name-dialog-panel">
-          <div class="project-name-dialog-header">
-            <h3 id="project-name-dialog-title">Create New Project</h3>
-            <button type="button" class="project-name-dialog-close" id="project-name-dialog-close" aria-label="Close dialog">×</button>
+          <textarea
+            id="builder-prompt-input"
+            class="builder-prompt-textarea"
+            placeholder="e.g. A simple app where I can keep a list of items, mark them done, and remove them."
+            rows="5"
+          ></textarea>
+
+          <div class="builder-prompt-actions">
+            <button type="button" class="builder-build-btn" id="builder-build-btn">Build</button>
+            <button type="button" class="builder-reset-btn" id="builder-reset-btn" disabled title="Clear the result and preview, keep this prompt">Reset test</button>
+            <button type="button" class="builder-new-btn" id="builder-new-btn" title="Clear everything and start a different test">New prompt</button>
           </div>
-          <form id="project-name-form" class="project-name-form">
-            <label for="project-name-input">Project name</label>
-            <input type="text" id="project-name-input" name="projectName" maxlength="120" placeholder="LISA, Asgard Dynamics Website, CRM Platform…" autocomplete="off" required />
-            <p class="hint">Give your project a clear name. You can rename it later from Projects.</p>
-            <p class="project-name-error hidden" id="project-name-error" role="alert" aria-live="assertive"></p>
-            <div class="project-name-dialog-actions">
-              <button type="button" class="btn-secondary" id="project-name-skip">Use default name</button>
-              <button type="submit" class="btn-primary" id="project-name-submit">Create Project</button>
+          <p class="builder-prompt-hint" id="builder-prompt-hint"></p>
+        </section>
+
+        <section class="builder-panel builder-progress-panel" id="builder-progress-panel" data-component="BuildProgressPanel" aria-label="Build progress">
+          <div class="builder-progress-header">
+            <h2 class="builder-panel-title">Build status</h2>
+            <span class="builder-status-badge" id="builder-status-badge">Idle</span>
+          </div>
+          <p class="builder-progress-empty" id="builder-progress-empty">
+            Paste a prompt on the left and click Build. Real progress from AiDevEngine will appear here.
+          </p>
+          <ol class="builder-worklog" id="builder-worklog" hidden></ol>
+        </section>
+
+        <section class="builder-panel builder-result-panel hidden" id="builder-result-panel" data-component="BuildFailurePanel" aria-label="Build result" hidden>
+          <div class="builder-result-head">
+            <h2 class="builder-result-title" id="builder-result-title">Build result</h2>
+          </div>
+          <p class="builder-result-detail-line" id="builder-result-detail-line"></p>
+
+          <details class="builder-result-more" id="builder-result-more">
+            <summary>Show full details</summary>
+
+            <p class="builder-result-headline" id="builder-result-headline"></p>
+
+            <div class="builder-result-section" id="builder-result-worked-wrap" hidden>
+              <h3>What worked</h3>
+              <ul id="builder-result-worked-list"></ul>
             </div>
-          </form>
-        </div>
-      </div>
 
-      <div class="founder-test-panel" id="founder-test-panel" hidden>
-        <div class="founder-test-panel-header">
-          <h3>Founder Test Results</h3>
-          <button type="button" class="founder-test-close" id="founder-test-close" aria-label="Close founder test results">×</button>
-        </div>
-        <div class="founder-test-panel-body" id="founder-test-panel-body">
-          <p class="founder-test-status" id="founder-test-status">Ready to run.</p>
-        </div>
-        <div class="founder-test-panel-actions">
-          <button type="button" class="btn-secondary founder-test-copy-btn" id="copy-founder-test-report" disabled aria-disabled="true">Copy Report</button>
-          <button type="button" class="btn-secondary founder-test-open-btn" id="open-founder-test-report" disabled aria-disabled="true">Open Report</button>
-        </div>
-      </div>
-
-      <div class="center-view" id="view-command-center">
-        <div class="chat-surface" id="chat-surface">
-          <div class="workspace-tabs-shell">
-            <div class="workspace-tabs-header">
-              <span class="workspace-tabs-label">Projects</span>
-              <div class="workspace-tabs" id="workspace-tabs" role="tablist" aria-label="Project workspaces"></div>
-              <button type="button" class="btn-secondary workspace-tab-add" id="workspace-tab-add">+ New project</button>
+            <div class="builder-result-section" id="builder-result-failed-wrap" hidden>
+              <h3>What didn't work</h3>
+              <ul id="builder-result-failed-list"></ul>
             </div>
-            <p class="workspace-linked-indicator hidden" id="workspace-linked-indicator">
-              Command Center and Live Preview are linked to the active project.
-            </p>
+
+            <div class="builder-result-section" id="builder-repair-attempts" hidden>
+              <h3>What AiDevEngine tried</h3>
+              <ul id="builder-repair-attempts-list"></ul>
+            </div>
+
+            <div class="builder-workspace-section" id="builder-workspace-section" hidden>
+              <h3 class="builder-workspace-title">Workspace</h3>
+              <p class="builder-workspace-badge" id="builder-workspace-badge"></p>
+              <p class="builder-workspace-headline" id="builder-workspace-headline"></p>
+              <ul class="builder-workspace-list" id="builder-workspace-repaired-list" hidden></ul>
+              <ul class="builder-workspace-list" id="builder-workspace-missing-list" hidden></ul>
+            </div>
+
+            <div class="builder-execution-section" id="builder-execution-section" hidden>
+              <h3 class="builder-execution-title">Execution status</h3>
+              <p class="builder-execution-badge" id="builder-execution-badge"></p>
+              <p class="builder-execution-headline" id="builder-execution-headline"></p>
+              <dl class="builder-execution-meta">
+                <dt>Current stage</dt><dd id="builder-execution-stage">—</dd>
+                <dt>Elapsed</dt><dd id="builder-execution-elapsed">—</dd>
+                <dt>Heartbeat</dt><dd id="builder-execution-heartbeat">—</dd>
+                <dt>Next step</dt><dd id="builder-execution-next">—</dd>
+              </dl>
+              <p class="builder-execution-recovery" id="builder-execution-recovery" hidden></p>
+            </div>
+
+            <p class="builder-result-next" id="builder-result-next"></p>
+          </details>
+
+          <div class="builder-failure-actions" id="builder-failure-actions">
+            <button type="button" class="builder-retry-btn" id="builder-retry-btn">Retry build</button>
+            <button type="button" class="builder-fresh-retry-btn" id="builder-fresh-retry-btn">Start fresh &amp; retry</button>
           </div>
-          <div class="chat-messages-panel" id="chat-messages-panel">
-            <div class="chat-welcome-state" id="chat-welcome-state">
-              <div class="welcome-content">
-                <div class="welcome-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="M9 3a6 6 0 0 0-4 10.5V17a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-3.5A6 6 0 0 0 15 3"/><path d="M9 17h6M10 21h4"/></svg>
-                </div>
-                <h3 class="welcome-title">AiDevEngine</h3>
-                <p class="welcome-subtitle">Turn detailed product ideas into working applications</p>
-                <p class="welcome-product-purpose">AiDevEngine helps founders plan, build, test, verify, and launch applications from one workspace.</p>
-                <p class="welcome-vision-guidance">Describe what you want to build. The more detail you provide, the better AiDevEngine can understand your vision.</p>
-                <p class="welcome-hint">Ask AiDevEngine about your project, roadmap, features, workflows, verification, or what to build next.</p>
+        </section>
+
+      </div>
+
+      <div class="builder-col builder-col-right" id="builder-col-right">
+
+        <aside class="builder-panel builder-preview-panel" id="builder-preview-panel" data-component="LivePreviewPanel" aria-label="Live preview">
+          <div class="builder-progress-header">
+            <h2 class="builder-panel-title">Live preview</h2>
+            <div class="builder-preview-controls">
+              <button type="button" class="builder-preview-icon-btn" id="builder-preview-refresh-btn" title="Reload the preview iframe">⟳ Refresh</button>
+              <button type="button" class="builder-preview-icon-btn" id="builder-preview-clear-btn" title="Clear the preview iframe only">✕ Clear</button>
+              <a class="builder-preview-open-link hidden" id="builder-preview-open-link" href="#" target="_blank" rel="noopener">Open in new tab ↗</a>
+            </div>
+          </div>
+          <div class="builder-preview-frame-wrap" id="builder-preview-frame-wrap">
+            <iframe
+              id="builder-preview-frame"
+              class="builder-preview-frame hidden"
+              title="Live preview of the generated app"
+              hidden
+            ></iframe>
+            <div class="builder-preview-empty" id="builder-preview-empty">
+              <p>No live preview yet.</p>
+              <p class="builder-preview-empty-sub" id="builder-preview-empty-sub">Build an app to see it running here.</p>
+            </div>
+          </div>
+
+          <div class="builder-proof-section" id="builder-proof-section" hidden>
+            <div class="builder-proof-head">
+              <h3 class="builder-proof-title">Live Preview Proof</h3>
+              <span class="builder-proof-badge" id="builder-proof-badge"></span>
+            </div>
+            <p class="builder-proof-headline" id="builder-proof-headline"></p>
+            <details class="builder-proof-details" id="builder-proof-details">
+              <summary>Show details</summary>
+              <ul class="builder-proof-list" id="builder-proof-worked-list" hidden></ul>
+              <ul class="builder-proof-list" id="builder-proof-failed-list" hidden></ul>
+              <ul class="builder-proof-list" id="builder-proof-repair-list" hidden></ul>
+            </details>
+          </div>
+
+          <div class="builder-faithfulness-section" id="builder-faithfulness-section" hidden>
+            <div class="builder-faithfulness-head">
+              <h3 class="builder-faithfulness-title">Product Faithfulness</h3>
+              <span class="builder-faithfulness-score" id="builder-faithfulness-score"></span>
+              <span class="builder-faithfulness-badge" id="builder-faithfulness-badge"></span>
+            </div>
+            <p class="builder-faithfulness-headline" id="builder-faithfulness-headline"></p>
+            <p class="builder-faithfulness-reason" id="builder-faithfulness-reason"></p>
+            <details class="builder-faithfulness-details" id="builder-faithfulness-details">
+              <summary>Show matched / missing / unexpected concepts</summary>
+              <div class="builder-faithfulness-concepts" id="builder-faithfulness-matched-wrap" hidden>
+                <h4>Matched</h4>
+                <ul class="builder-faithfulness-list builder-faithfulness-list-matched" id="builder-faithfulness-matched-list"></ul>
               </div>
+              <div class="builder-faithfulness-concepts" id="builder-faithfulness-missing-wrap" hidden>
+                <h4>Missing</h4>
+                <ul class="builder-faithfulness-list builder-faithfulness-list-missing" id="builder-faithfulness-missing-list"></ul>
+              </div>
+              <div class="builder-faithfulness-concepts" id="builder-faithfulness-unexpected-wrap" hidden>
+                <h4>Unexpected</h4>
+                <ul class="builder-faithfulness-list builder-faithfulness-list-unexpected" id="builder-faithfulness-unexpected-list"></ul>
+              </div>
+            </details>
+
+            <div class="builder-generation-faithfulness" id="builder-generation-faithfulness" hidden>
+              <div class="builder-generation-faithfulness-head">
+                <span class="builder-generation-faithfulness-identity" id="builder-generation-faithfulness-identity"></span>
+                <span class="builder-generation-faithfulness-badge" id="builder-generation-faithfulness-badge"></span>
+              </div>
+              <div class="builder-generation-faithfulness-meters">
+                <span id="builder-generation-faithfulness-retention">Concept retention: —</span>
+                <span id="builder-generation-faithfulness-drift">Concept drift: —</span>
+              </div>
+              <details class="builder-faithfulness-details" id="builder-generation-faithfulness-details">
+                <summary>Show generation repair details</summary>
+                <div class="builder-faithfulness-concepts" id="builder-generation-faithfulness-recovered-wrap" hidden>
+                  <h4>Concepts recovered during generation</h4>
+                  <ul class="builder-faithfulness-list builder-faithfulness-list-matched" id="builder-generation-faithfulness-recovered-list"></ul>
+                </div>
+                <div class="builder-faithfulness-concepts" id="builder-generation-faithfulness-missing-wrap" hidden>
+                  <h4>Still missing</h4>
+                  <ul class="builder-faithfulness-list builder-faithfulness-list-missing" id="builder-generation-faithfulness-missing-list"></ul>
+                </div>
+                <div class="builder-faithfulness-concepts" id="builder-generation-faithfulness-repairs-wrap" hidden>
+                  <h4>Repairs performed</h4>
+                  <ul class="builder-faithfulness-list" id="builder-generation-faithfulness-repairs-list"></ul>
+                </div>
+              </details>
             </div>
-            <div class="chat-history" id="chat-history" aria-live="polite"></div>
           </div>
-          <form class="chat-input-row" id="chat-form">
-            <button type="button" class="chat-action-btn chat-upload-btn" id="chat-upload-btn" aria-label="Upload file">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-            </button>
-            <input type="file" id="chat-upload-input" hidden accept="*/*" />
-            <input
-              type="text"
-              id="chat-input"
-              class="chat-input"
-              placeholder="Message AiDevEngine…"
-              autocomplete="off"
-            />
-            <button type="button" class="chat-action-btn chat-voice-btn" id="chat-voice-btn" aria-label="Record voice note">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/></svg>
-            </button>
-            <button type="submit" class="send-btn" id="chat-send" aria-label="Send message">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-              <span class="send-btn-label">Send</span>
-            </button>
-          </form>
-        </div>
+        </aside>
+
       </div>
 
-      <div class="center-view hidden" id="view-founder-action-center">
-        <div class="product-surface-scroll" id="founder-action-center-surface"></div>
-      </div>
-
-      <div class="center-view hidden" id="view-product-coherence">
-        <div class="product-surface-scroll" id="product-coherence-surface"></div>
-      </div>
-
-      <div class="center-view hidden" id="view-projects">
-        <div class="product-surface-scroll" id="projects-surface"></div>
-      </div>
-
-      <div class="center-view hidden" id="view-autonomous-builder">
-        <div class="product-surface-scroll" id="autonomous-builder-surface"></div>
-      </div>
-
-      <div class="center-view hidden" id="view-live-preview">
-        <div class="product-surface-scroll" id="live-preview-surface"></div>
-      </div>
-
-      <div class="center-view hidden" id="view-project-files">
-        <div class="product-surface-scroll pwe-surface-scroll" id="project-files-surface"></div>
-      </div>
-
-      <div class="center-view hidden" id="view-project-memory">
-        <div class="product-surface-scroll" id="project-memory-surface"></div>
-      </div>
-
-      <div class="center-view hidden" id="view-verification">
-        <div class="product-surface-scroll" id="verification-surface"></div>
-      </div>
-
-      <div class="center-view hidden" id="view-founder-review">
-        <div class="product-surface-scroll" id="founder-review-surface"></div>
-      </div>
-
-      <div class="center-view hidden" id="view-notifications">
-        <div class="product-surface-scroll" id="notifications-surface"></div>
-      </div>
-
-      <div class="center-view hidden" id="view-project-insights">
-        <div class="product-surface-scroll portfolio-insights-scroll" id="project-insights-surface"></div>
-      </div>
-
-      <div class="center-view hidden" id="view-system-diagnostics">
-        <div class="founder-reality-scroll system-diagnostics-scroll">
-          <section class="card product-hero" id="section-system-diagnostics-hero">
-            <h2>System Diagnostics</h2>
-            <p class="product-lead">How AiDevEngine&apos;s internal platform architecture is doing — advanced visibility only.</p>
-          </section>
-
-          <section class="card" id="section-status">
-            <h2>Current Status</h2>
-            <p id="current-status">Loading…</p>
-          </section>
-
-          <section class="card" id="section-stacks">
-            <h2>Foundation Stacks</h2>
-            <ul id="completed-stacks" class="stack-list"></ul>
-          </section>
-
-          <section class="card" id="section-validators">
-            <h2>Verification Scripts</h2>
-            <p class="hint">Run manually via npm — Verification surface does not auto-run checks.</p>
-            <ul id="validator-list" class="validator-list"></ul>
-          </section>
-
-          <section class="card two-col" id="section-exists">
-            <h2>What Exists vs Not Yet</h2>
-            <div class="col">
-              <h3>What Exists</h3>
-              <ul id="exists-list"></ul>
-            </div>
-            <div class="col">
-              <h3>Not Yet</h3>
-              <ul id="not-yet-list"></ul>
-            </div>
-          </section>
-
-          <section class="card" id="section-warnings">
-            <h2>Reality Warnings</h2>
-            <ul id="reality-warnings" class="warning-list"></ul>
-          </section>
-
-          <section class="card" id="section-placeholders">
-            <h2>Experience &amp; Trust Placeholders</h2>
-            <p id="experience-placeholder"></p>
-            <p id="trust-placeholder"></p>
-          </section>
-
-          <section class="card" id="section-checklist">
-            <h2>Product Readiness Checklist</h2>
-            <ul id="founder-checklist" class="checklist"></ul>
-          </section>
-
-          <section class="card highlight" id="section-next">
-            <h2>Recommended Next Actions</h2>
-            <p id="next-step"></p>
-          </section>
-
-          <section class="card advanced-panel" id="section-llm-chat-diagnostics">
-            <h2>Advanced — LLM Chat Brain (Founder Debug)</h2>
-            <p class="diag-line"><strong>LLM Connected:</strong> <span id="llm-connected">UNKNOWN</span></p>
-            <p class="diag-line"><strong>Fallback Used:</strong> <span id="llm-fallback-used">UNKNOWN</span></p>
-            <p class="diag-line"><strong>Provider / Model:</strong> <span id="llm-provider-model">None</span></p>
-            <p class="diag-line"><strong>Context Included:</strong> <span id="llm-context-included">NO</span></p>
-            <p class="diag-line"><strong>Context Sources Used:</strong> <span id="llm-context-sources">None</span></p>
-            <p class="diag-line"><strong>Last Context Hydration:</strong> <span id="llm-context-hydration">—</span></p>
-            <p class="diag-line"><strong>Hydrated Fact Count:</strong> <span id="llm-hydrated-facts">0</span></p>
-            <p class="diag-line"><strong>Context Confidence:</strong> <span id="llm-context-confidence">—</span></p>
-            <p class="diag-line"><strong>Identity Loaded:</strong> <span id="llm-identity-loaded">NO</span> <span id="llm-identity-version" class="diag-muted"></span></p>
-            <p class="diag-line"><strong>Founder Loaded:</strong> <span id="llm-founder-loaded">NO</span> <span id="llm-founder-version" class="diag-muted"></span></p>
-            <p class="diag-line"><strong>Product Loaded:</strong> <span id="llm-product-loaded">NO</span> <span id="llm-product-version" class="diag-muted"></span></p>
-            <p class="diag-line"><strong>History Loaded:</strong> <span id="llm-history-loaded">NO</span></p>
-            <p class="diag-line"><strong>Self-Evolution Loaded:</strong> <span id="llm-self-evolution-loaded">NO</span></p>
-            <p class="diag-line"><strong>Current Product Identity:</strong> <span id="llm-current-product-identity">—</span></p>
-            <p class="diag-line"><strong>Founder Identity:</strong> <span id="llm-founder-identity">—</span></p>
-            <p class="diag-line"><strong>Company Identity:</strong> <span id="llm-company-identity">—</span></p>
-            <p class="diag-line"><strong>Legacy Identity:</strong> <span id="llm-legacy-identity">—</span></p>
-            <p class="diag-line"><strong>Judge Score:</strong> <span id="llm-judge-score">—</span></p>
-            <p class="diag-line"><strong>Warnings:</strong> <span id="llm-warnings">None</span></p>
-          </section>
-
-          <section class="card advanced-panel" id="section-runtime-diagnostics">
-            <h2>Advanced — Runtime Diagnostics</h2>
-            <ul id="runtime-diagnostics-list" class="diagnostics-list"></ul>
-            <p class="diag-line"><strong>Last Request Status:</strong> <span id="last-request-status">Not started</span></p>
-            <p class="diag-line"><strong>Last Error:</strong> <span id="last-error">None</span></p>
-          </section>
-
-          <section class="card" id="section-cross-system-diagnostics">
-            <h2>Cross-System Awareness Diagnostics (Temporary)</h2>
-            <ul id="cross-system-diagnostics-list" class="diagnostics-list"></ul>
-            <p class="diag-line"><strong>Last Query Type:</strong> <span id="last-query-type">None</span></p>
-            <p class="diag-line"><strong>Last Analyzer Used:</strong> <span id="last-analyzer-used">None</span></p>
-            <p class="diag-line"><strong>Last Routing Result:</strong> <span id="last-routing-result">None</span></p>
-            <p class="diag-line"><strong>Last Relationship Query:</strong> <span id="last-relationship-query">None</span></p>
-            <p class="diag-line"><strong>Last Dependency Query:</strong> <span id="last-dependency-query">None</span></p>
-            <p class="diag-line"><strong>Last Impact Query:</strong> <span id="last-impact-query">None</span></p>
-          </section>
-
-          <section class="card" id="section-project-understanding-diagnostics">
-            <h2>Project Understanding Diagnostics (Temporary)</h2>
-            <p class="diag-line"><strong>Project Understanding Active:</strong> <span id="project-understanding-active">NO</span></p>
-            <p class="diag-line"><strong>Current Project:</strong> <span id="current-project-name">None</span></p>
-            <p class="diag-line"><strong>Project Status:</strong> <span id="project-status-value">None</span></p>
-            <p class="diag-line"><strong>Missing Capability Count:</strong> <span id="missing-capability-count">0</span></p>
-            <p class="diag-line"><strong>Risk Count:</strong> <span id="project-risk-count">0</span></p>
-            <p class="diag-line"><strong>Last Project Query:</strong> <span id="last-project-query">None</span></p>
-            <p class="diag-line"><strong>Project Vault Intelligence Active:</strong> <span id="vault-intelligence-active">NO</span></p>
-            <p class="diag-line"><strong>Vault Records Read:</strong> <span id="vault-records-read">0</span></p>
-            <p class="diag-line"><strong>Vault Facts Added:</strong> <span id="vault-facts-added">0</span></p>
-            <p class="diag-line"><strong>Last Vault-Aware Question:</strong> <span id="last-vault-aware-question">None</span></p>
-            <p class="diag-line"><strong>Last Vault Fact Count:</strong> <span id="last-vault-fact-count">0</span></p>
-            <p class="diag-line"><strong>Bridge Target:</strong> <span id="vault-bridge-target">None</span></p>
-            <p class="diag-line"><strong>Duplicate Risk:</strong> <span id="vault-duplicate-risk">clear</span></p>
-            <p class="diag-line"><strong>Dependency Intelligence Active:</strong> <span id="dependency-intelligence-active">NO</span></p>
-            <p class="diag-line"><strong>Dependency Count:</strong> <span id="dependency-count">0</span></p>
-            <p class="diag-line"><strong>Blocked Dependency Count:</strong> <span id="blocked-dependency-count">0</span></p>
-            <p class="diag-line"><strong>Highest Risk Dependency:</strong> <span id="highest-risk-dependency">None</span></p>
-            <p class="diag-line"><strong>Last Dependency Query:</strong> <span id="last-dependency-query">None</span></p>
-            <p class="diag-line"><strong>Duplicate Dependency Risk:</strong> <span id="duplicate-dependency-risk">clear</span></p>
-            <p class="diag-line"><strong>Dependency Graph Health:</strong> <span id="dependency-graph-health">healthy</span></p>
-            <p class="diag-line"><strong>Workspace Intelligence Active:</strong> <span id="workspace-intelligence-active">NO</span></p>
-            <p class="diag-line"><strong>Workspace Count:</strong> <span id="workspace-count">0</span></p>
-            <p class="diag-line"><strong>Active Workspace:</strong> <span id="active-workspace-name">None</span></p>
-            <p class="diag-line"><strong>Active Project:</strong> <span id="active-project-name">None</span></p>
-            <p class="diag-line"><strong>Workspace Ownership Confidence:</strong> <span id="workspace-ownership-confidence">LOW</span></p>
-            <p class="diag-line"><strong>Workspace Risk Count:</strong> <span id="workspace-risk-count">0</span></p>
-            <p class="diag-line"><strong>Context Leakage Risk:</strong> <span id="context-leakage-risk">clear</span></p>
-            <p class="diag-line"><strong>Last Workspace Query:</strong> <span id="last-workspace-query">None</span></p>
-            <p class="diag-line"><strong>Duplicate Workspace Risk:</strong> <span id="duplicate-workspace-risk">clear</span></p>
-            <p class="diag-line"><strong>Project History Intelligence Active:</strong> <span id="project-history-intelligence-active">NO</span></p>
-            <p class="diag-line"><strong>History Event Count:</strong> <span id="history-event-count">0</span></p>
-            <p class="diag-line"><strong>Checkpoint Count:</strong> <span id="history-checkpoint-count">0</span></p>
-            <p class="diag-line"><strong>Rollback Count:</strong> <span id="history-rollback-count">0</span></p>
-            <p class="diag-line"><strong>Last History Query:</strong> <span id="last-history-query">None</span></p>
-            <p class="diag-line"><strong>History Confidence:</strong> <span id="history-confidence">LOW</span></p>
-            <p class="diag-line"><strong>Phase Transition Count:</strong> <span id="phase-transition-count">0</span></p>
-            <p class="diag-line"><strong>Project Summarization Active:</strong> <span id="project-summarization-active">NO</span></p>
-            <p class="diag-line"><strong>Summary Count:</strong> <span id="summary-count">0</span></p>
-            <p class="diag-line"><strong>Last Summary Type:</strong> <span id="last-summary-type">None</span></p>
-            <p class="diag-line"><strong>Last Summary Confidence:</strong> <span id="last-summary-confidence">LOW</span></p>
-            <p class="diag-line"><strong>Summary Source Count:</strong> <span id="summary-source-count">0</span></p>
-            <p class="diag-line"><strong>Portfolio Intelligence Active:</strong> <span id="portfolio-intelligence-active">NO</span></p>
-            <p class="diag-line"><strong>Portfolio Project Count:</strong> <span id="portfolio-project-count">0</span></p>
-            <p class="diag-line"><strong>Active Project Count:</strong> <span id="portfolio-active-project-count">0</span></p>
-            <p class="diag-line"><strong>Portfolio Health:</strong> <span id="portfolio-health-level">FAIR</span></p>
-            <p class="diag-line"><strong>Highest Risk Project:</strong> <span id="highest-risk-project">None</span></p>
-            <p class="diag-line"><strong>Highest Priority Project:</strong> <span id="highest-priority-project">None</span></p>
-            <p class="diag-line"><strong>Last Portfolio Query:</strong> <span id="last-portfolio-query">None</span></p>
-            <p class="diag-line"><strong>Execution Trace Active:</strong> <span id="operator-feed-active">NO</span></p>
-            <p class="diag-line"><strong>Feed Event Count:</strong> <span id="feed-event-count">0</span></p>
-            <p class="diag-line"><strong>Feed Stage Count:</strong> <span id="feed-stage-count">0</span></p>
-            <p class="diag-line"><strong>Response Ready Emitted:</strong> <span id="feed-response-ready">NO</span></p>
-            <p class="diag-line"><strong>Last Feed Capability:</strong> <span id="last-feed-capability">None</span></p>
-            <p class="diag-line"><strong>Action Visibility Active:</strong> <span id="action-visibility-active">NO</span></p>
-            <p class="diag-line"><strong>Action Count:</strong> <span id="action-count">0</span></p>
-            <p class="diag-line"><strong>Recommended Count:</strong> <span id="recommended-action-count">0</span></p>
-            <p class="diag-line"><strong>Blocked Action Count:</strong> <span id="blocked-action-count">0</span></p>
-            <p class="diag-line"><strong>Deferred Action Count:</strong> <span id="deferred-action-count">0</span></p>
-            <p class="diag-line"><strong>Last Action:</strong> <span id="last-action-title">None</span></p>
-            <p class="diag-line"><strong>Last Action Source:</strong> <span id="last-action-source">None</span></p>
-            <p class="diag-line"><strong>Reasoning Visibility Active:</strong> <span id="reasoning-visibility-active">NO</span></p>
-            <p class="diag-line"><strong>Reasoning Count:</strong> <span id="reasoning-count">0</span></p>
-            <p class="diag-line"><strong>Evidence Count:</strong> <span id="evidence-count">0</span></p>
-            <p class="diag-line"><strong>Reasoning Blocker Count:</strong> <span id="reasoning-blocker-count">0</span></p>
-            <p class="diag-line"><strong>Reasoning Risk Count:</strong> <span id="reasoning-risk-count">0</span></p>
-            <p class="diag-line"><strong>Last Reasoning Source:</strong> <span id="last-reasoning-source">None</span></p>
-            <p class="diag-line"><strong>Progress Intelligence Active:</strong> <span id="progress-intelligence-active">NO</span></p>
-            <p class="diag-line"><strong>Project Progress Count:</strong> <span id="project-progress-count">0</span></p>
-            <p class="diag-line"><strong>Average Completion:</strong> <span id="average-completion">0</span></p>
-            <p class="diag-line"><strong>Highest Completion:</strong> <span id="highest-completion">0</span></p>
-            <p class="diag-line"><strong>Lowest Completion:</strong> <span id="lowest-completion">0</span></p>
-            <p class="diag-line"><strong>Last Progress Query:</strong> <span id="last-progress-query">None</span></p>
-            <p class="diag-line"><strong>Failure Visibility Active:</strong> <span id="failure-visibility-active">NO</span></p>
-            <p class="diag-line"><strong>Failure Count:</strong> <span id="failure-count">0</span></p>
-            <p class="diag-line"><strong>Critical Failure Count:</strong> <span id="critical-failure-count">0</span></p>
-            <p class="diag-line"><strong>Blocked Capability Count:</strong> <span id="blocked-capability-count">0</span></p>
-            <p class="diag-line"><strong>Most Severe Failure:</strong> <span id="most-severe-failure">None</span></p>
-            <p class="diag-line"><strong>Last Failure Query:</strong> <span id="last-failure-query">None</span></p>
-            <p class="diag-line"><strong>Learning Visibility Active:</strong> <span id="learning-visibility-active">NO</span></p>
-            <p class="diag-line"><strong>Learning Count:</strong> <span id="learning-count">0</span></p>
-            <p class="diag-line"><strong>Pattern Count:</strong> <span id="pattern-count">0</span></p>
-            <p class="diag-line"><strong>Recurring Failure Count:</strong> <span id="recurring-failure-count">0</span></p>
-            <p class="diag-line"><strong>Recurring Blocker Count:</strong> <span id="recurring-blocker-count">0</span></p>
-            <p class="diag-line"><strong>Last Learning Query:</strong> <span id="last-learning-query">None</span></p>
-          </section>
-
-          <section class="card" id="section-general-question-diagnostics">
-            <h2>General Question Understanding Diagnostics (Temporary)</h2>
-            <p class="diag-line"><strong>Last Question Dimensions:</strong> <span id="last-question-dimensions">None</span></p>
-            <p class="diag-line"><strong>Last Context Needs:</strong> <span id="last-context-needs">None</span></p>
-            <p class="diag-line"><strong>Last Reasoning Modes:</strong> <span id="last-reasoning-modes">None</span></p>
-            <p class="diag-line"><strong>Last Capabilities Selected:</strong> <span id="last-capabilities-selected">None</span></p>
-            <p class="diag-line"><strong>Unavailable Capabilities:</strong> <span id="unavailable-capabilities">None</span></p>
-            <p class="diag-line"><strong>Routing Confidence:</strong> <span id="routing-confidence">None</span></p>
-            <p class="diag-line"><strong>Routing Reason:</strong> <span id="routing-reason">None</span></p>
-          </section>
-
-          <section class="card" id="section-timeline-intelligence-diagnostics">
-            <h2>Timeline Intelligence Diagnostics (Temporary)</h2>
-            <p class="diag-line"><strong>Current Timeline Phase:</strong> <span id="current-timeline-phase">None</span></p>
-            <p class="diag-line"><strong>Completed Phase Count:</strong> <span id="completed-phase-count">0</span></p>
-            <p class="diag-line"><strong>Milestone Count:</strong> <span id="milestone-count">0</span></p>
-            <p class="diag-line"><strong>Blocker Count:</strong> <span id="timeline-blocker-count">0</span></p>
-            <p class="diag-line"><strong>Last Timeline Query:</strong> <span id="last-timeline-query">None</span></p>
-          </section>
-
-          <section class="card" id="section-decision-layer-diagnostics">
-            <h2>Decision Layer Diagnostics (Temporary)</h2>
-            <p class="diag-line"><strong>Decision Layer Active:</strong> <span id="decision-layer-active">NO</span></p>
-            <p class="diag-line"><strong>Last Decision Question:</strong> <span id="last-decision-question">None</span></p>
-            <p class="diag-line"><strong>Last Recommendation:</strong> <span id="last-recommendation">None</span></p>
-            <p class="diag-line"><strong>Last Risk Level:</strong> <span id="last-decision-risk-level">None</span></p>
-            <p class="diag-line"><strong>Last Confidence:</strong> <span id="last-decision-confidence">None</span></p>
-            <p class="diag-line"><strong>Last Blocker Count:</strong> <span id="last-decision-blocker-count">0</span></p>
-          </section>
-
-          <p class="founder-footer" id="confirmation-text">System Diagnostics — internal platform visibility. Not founder project intelligence.</p>
-        </div>
-      </div>
     </main>
 
-    <aside class="operator-feed execution-trace" id="operator-feed" data-panel="execution-trace" aria-label="Execution Trace">
-      <div class="operator-feed-header execution-trace-header">
-        <h2 class="feed-title">Execution Trace</h2>
-        <p class="feed-subtitle">Chronological runtime evidence • Timestamped • Searchable</p>
-        <div class="operator-feed-toolbar execution-trace-toolbar" role="toolbar" aria-label="Execution Trace controls">
-          <button type="button" class="operator-feed-tool-btn execution-trace-mode-btn active" id="execution-trace-mode-stream" data-trace-mode="stream" aria-pressed="true">Stream</button>
-          <button type="button" class="operator-feed-tool-btn execution-trace-mode-btn" id="execution-trace-mode-compact" data-trace-mode="compact" aria-pressed="false">Compact</button>
-          <button type="button" class="operator-feed-tool-btn execution-trace-mode-btn" id="execution-trace-mode-errors" data-trace-mode="errors" aria-pressed="false">Errors</button>
-          <button type="button" class="operator-feed-tool-btn execution-trace-mode-btn" id="execution-trace-mode-artifacts" data-trace-mode="artifacts" aria-pressed="false">Artifacts</button>
-          <label class="operator-feed-toggle" title="Live Stream mode">
-            <input type="checkbox" id="operator-feed-stream-mode" checked />
-            <span>Live Stream</span>
-          </label>
-          <input type="search" class="operator-feed-search" id="operator-feed-search" placeholder="Search trace…" aria-label="Search execution trace" />
-          <label class="operator-feed-toggle" title="Auto-scroll">
-            <input type="checkbox" id="operator-feed-autoscroll" checked />
-            <span>Auto-scroll</span>
-          </label>
-          <button type="button" class="operator-feed-tool-btn" id="operator-feed-copy-btn">Copy log</button>
-          <button type="button" class="operator-feed-tool-btn" id="operator-feed-export-btn">Export</button>
-          <button type="button" class="operator-feed-tool-btn" id="operator-feed-clear-btn">Clear</button>
-        </div>
+    <div class="builder-diagnostics-backdrop hidden" id="builder-diagnostics-backdrop" hidden></div>
+    <aside
+      class="builder-diagnostics-drawer hidden"
+      id="builder-diagnostics-drawer"
+      data-component="DiagnosticsDrawer"
+      aria-label="Advanced diagnostics"
+      aria-hidden="true"
+      hidden
+    >
+      <div class="builder-diagnostics-header">
+        <h2>Advanced / Diagnostics</h2>
+        <button type="button" class="builder-diagnostics-close" id="builder-diagnostics-close" aria-label="Close diagnostics">×</button>
       </div>
-      <div class="operator-feed-body" id="operator-feed-body">
-        <div class="founder-test-operator-trace" id="founder-test-operator-trace" hidden aria-live="polite"></div>
-        <div class="operator-feed-empty" id="operator-feed-empty">
-          <p>No active run. Runtime events will stream here when AiDevEngine starts planning, building, validating, or previewing.</p>
-        </div>
-        <div class="operator-stream-viewport feed-stream-log feed-stream-terminal" id="feed-stream-log" role="log" aria-live="polite" aria-relevant="additions">
-          <div class="operator-stream-log" id="operator-stream-log"></div>
-        </div>
-        <div class="feed-sections feed-sections-legacy" id="feed-sections" hidden aria-hidden="true"></div>
-      </div>
-      <div class="operator-feed-footer" role="group" aria-label="Log level filters">
-        <button type="button" class="operator-feed-filter-btn active" data-level-filter="ALL">All <span class="operator-feed-level-count" data-count-level="ALL">(0)</span></button>
-        <button type="button" class="operator-feed-filter-btn" data-level-filter="INFO">INFO <span class="operator-feed-level-count" data-count-level="INFO">(0)</span></button>
-        <button type="button" class="operator-feed-filter-btn" data-level-filter="WARN">WARN <span class="operator-feed-level-count" data-count-level="WARN">(0)</span></button>
-        <button type="button" class="operator-feed-filter-btn" data-level-filter="ERROR">ERROR <span class="operator-feed-level-count" data-count-level="ERROR">(0)</span></button>
-        <button type="button" class="operator-feed-filter-btn" data-level-filter="DEBUG">DEBUG <span class="operator-feed-level-count" data-count-level="DEBUG">(0)</span></button>
-      </div>
+      <p class="builder-diagnostics-sub">
+        For engineering visibility only. Founders do not need this to build an app.
+      </p>
+      <a class="builder-diagnostics-link" href="/command-center">Open full Command Center (Advanced) →</a>
+      <a class="builder-diagnostics-link" href="/builder-test">Open Minimal Builder Test Console →</a>
+
+      <h3>Current session</h3>
+      <dl class="builder-diagnostics-meta" id="builder-diagnostics-meta">
+        <dt>Project ID</dt><dd id="diag-project-id">—</dd>
+        <dt>Build ID</dt><dd id="diag-build-id">—</dd>
+        <dt>Status</dt><dd id="diag-status">—</dd>
+        <dt>Normalized result</dt><dd id="diag-normalized-result">—</dd>
+        <dt>npm install</dt><dd id="diag-npm-install">—</dd>
+        <dt>npm build</dt><dd id="diag-npm-build">—</dd>
+        <dt>Preview status</dt><dd id="diag-preview-status">—</dd>
+      </dl>
+
+      <h3>End-to-end build reality</h3>
+      <dl class="builder-diagnostics-meta" id="builder-diagnostics-reality">
+        <dt>WORKSPACE_READY</dt><dd id="diag-workspace-ready">—</dd>
+        <dt>DEPENDENCIES_READY</dt><dd id="diag-dependencies-ready">—</dd>
+        <dt>BUILD_READY</dt><dd id="diag-build-ready">—</dd>
+        <dt>BUILD_OUTPUT_READY</dt><dd id="diag-build-output-ready">—</dd>
+        <dt>PREVIEW_READY</dt><dd id="diag-preview-ready">—</dd>
+        <dt>VALIDATION_NEEDS_WORK</dt><dd id="diag-validation-needs-work">—</dd>
+        <dt>LAUNCH_NOT_READY</dt><dd id="diag-launch-not-ready">—</dd>
+      </dl>
+      <p class="builder-diagnostics-sub">
+        Launch readiness is a later launch gate — it does not block building or previewing your app locally.
+      </p>
+
+      <h3>Workspace materialization stabilizer</h3>
+      <dl class="builder-diagnostics-meta" id="builder-diagnostics-workspace-meta">
+        <dt>Status</dt><dd id="diag-workspace-status">—</dd>
+        <dt>Files checked</dt><dd id="diag-workspace-files-checked">—</dd>
+        <dt>Findings</dt><dd id="diag-workspace-findings-count">—</dd>
+        <dt>Repairs applied</dt><dd id="diag-workspace-repairs-applied">—</dd>
+      </dl>
+
+      <h3>Raw workspace audit evidence</h3>
+      <pre class="builder-diagnostics-raw" id="builder-diagnostics-workspace-raw">No workspace audit run yet.</pre>
+
+      <h3>Build execution stabilizer</h3>
+      <dl class="builder-diagnostics-meta" id="builder-diagnostics-execution-meta">
+        <dt>Overall state</dt><dd id="diag-execution-state">—</dd>
+        <dt>Total duration (ms)</dt><dd id="diag-execution-duration">—</dd>
+        <dt>Recovery attempts</dt><dd id="diag-execution-recovery-count">—</dd>
+        <dt>Stages recorded</dt><dd id="diag-execution-stage-count">—</dd>
+      </dl>
+
+      <h3>Raw execution timeline (process logs — advanced only)</h3>
+      <pre class="builder-diagnostics-raw" id="builder-diagnostics-execution-raw">No build execution recorded yet.</pre>
+
+      <h3>Live preview interaction proof</h3>
+      <dl class="builder-diagnostics-meta" id="builder-diagnostics-proof-meta">
+        <dt>Result</dt><dd id="diag-proof-result">—</dd>
+        <dt>Page loaded</dt><dd id="diag-proof-page-loaded">—</dd>
+        <dt>Root UI found</dt><dd id="diag-proof-root-ui">—</dd>
+        <dt>Primary feature text</dt><dd id="diag-proof-primary-text">—</dd>
+        <dt>Fatal console error</dt><dd id="diag-proof-fatal-error">—</dd>
+        <dt>Duration (ms)</dt><dd id="diag-proof-duration">—</dd>
+      </dl>
+
+      <h3>Raw interaction proof evidence</h3>
+      <pre class="builder-diagnostics-raw" id="builder-diagnostics-proof-raw">No proof run yet.</pre>
+
+      <h3>Product faithfulness</h3>
+      <dl class="builder-diagnostics-meta" id="builder-diagnostics-faithfulness-meta">
+        <dt>Score</dt><dd id="diag-faithfulness-score">—</dd>
+        <dt>Verdict</dt><dd id="diag-faithfulness-verdict">—</dd>
+        <dt>Requested domain</dt><dd id="diag-faithfulness-domain">—</dd>
+        <dt>Matched / Missing / Unexpected</dt><dd id="diag-faithfulness-counts">—</dd>
+      </dl>
+
+      <h3>Raw product faithfulness evidence</h3>
+      <pre class="builder-diagnostics-raw" id="builder-diagnostics-faithfulness-raw">No faithfulness evaluation run yet.</pre>
+
+      <h3>Generation faithfulness (Milestone 2)</h3>
+      <dl class="builder-diagnostics-meta" id="builder-diagnostics-generation-faithfulness-meta">
+        <dt>Canonical product identity</dt><dd id="diag-generation-faithfulness-identity">—</dd>
+        <dt>Verdict</dt><dd id="diag-generation-faithfulness-verdict">—</dd>
+        <dt>Concept retention</dt><dd id="diag-generation-faithfulness-retention">—</dd>
+        <dt>Concept drift</dt><dd id="diag-generation-faithfulness-drift">—</dd>
+        <dt>Repairs applied</dt><dd id="diag-generation-faithfulness-repairs">—</dd>
+        <dt>Unexpected dominant concepts</dt><dd id="diag-generation-faithfulness-dominant">—</dd>
+      </dl>
+
+      <h3>Raw generation faithfulness evidence (contract, concept graph, per-stage audit)</h3>
+      <pre class="builder-diagnostics-raw" id="builder-diagnostics-generation-faithfulness-raw">No generation faithfulness audit run yet.</pre>
+
+      <h3>Raw execution trace</h3>
+      <pre class="builder-diagnostics-raw" id="builder-diagnostics-trace">No build yet.</pre>
+
+      <h3>Raw last response</h3>
+      <pre class="builder-diagnostics-raw" id="builder-diagnostics-raw">No build yet.</pre>
     </aside>
 
-    <footer class="status-bar" id="status-bar">
-      <ul id="status-items" class="status-items"></ul>
-    </footer>
   </div>
 
   <noscript>
     <div class="noscript">
       <p>AiDevEngine requires JavaScript.</p>
-      <p>Autonomous development engine — foundation architecture exists.</p>
     </div>
   </noscript>
 
-  <script src="/workspace-navigation.js"></script>
-  <script src="/workspace-explorer.js"></script>
-  <script src="/app.js"></script>
+  <script src="/builder-home.js"></script>
 </body>
 </html>

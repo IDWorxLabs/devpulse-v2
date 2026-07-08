@@ -51,6 +51,7 @@ import {
   listMultiProjectWorkspacesForProject,
   type MultiProjectWorkspaceSession,
 } from '../src/one-prompt-live-preview/workspace-tab-registry.js';
+import { resolveActiveProjectSessionContext } from '../src/project-session-continuity-v1/index.js';
 import {
   filterLivePreviewsByProject,
 } from '../src/project-isolation-guard-v1/index.js';
@@ -459,6 +460,8 @@ export function buildProductWorkspaceSnapshot(
     runtime: runningApplicationDraft.runtime,
     portfolioInsights: runningApplicationDraft.portfolioInsights,
     activeProjectId,
+    activeSessionId: resolveActiveProjectSessionContext(rootDir)?.sessionId ?? null,
+    projectSession: resolveActiveProjectSessionContext(rootDir),
     multiProjectWorkspaces,
   };
 

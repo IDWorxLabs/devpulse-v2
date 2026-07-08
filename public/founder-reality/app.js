@@ -15,10 +15,22 @@
   var workspaceLoadPromise = null;
   var projectRegistryHydrationState = 'pending';
   var projectRegistryHydrationError = null;
-  var REGISTRY_LOAD_TIMEOUT_MS = 15000;
-  var REGISTRY_HYDRATION_RETRY_ATTEMPTS = 3;
+  var REGISTRY_LOAD_TIMEOUT_MS = 30000;
+  var REGISTRY_HYDRATION_RETRY_ATTEMPTS = 5;
   var REGISTRY_HYDRATION_RETRY_BASE_MS = 400;
+  var REGISTRY_HYDRATION_POLL_MS = 500;
+  var REGISTRY_STARTUP_TARGET_MS = 2000;
   var REGISTRY_CACHE_STORAGE_KEY = 'aidevengine.project-registry-cache.v1';
+  var COMMAND_CENTER_STALE_PROJECT_PURGE_TRACE = 'COMMAND_CENTER_STALE_PROJECT_PURGED';
+  var ACTIVE_PROJECT_LOCAL_STORAGE_KEYS = [
+    'aidevengine.project-registry-cache.v1',
+    'aidevengine.project-workspace-explorer-state.v1',
+  ];
+  var ACTIVE_PROJECT_SESSION_STORAGE_KEYS = [
+    'aidevengine.active-project-id.v1',
+    'aidevengine.active-project-name.v1',
+    'aidevengine.active-project-status.v1',
+  ];
   var projectRegistryHydrationStartedAt = 0;
   var projectRegistryHydrationDurationMs = 0;
   var projectRegistryUsedCachedFallback = false;
@@ -26,6 +38,7 @@
   var projectRegistryLoadTimeoutId = null;
   var projectRegistryClient = {
     hydrationState: 'pending',
+    serverHydrationStatus: 'LOADING',
     error: null,
     endpoint: '/api/projects/registry',
     projects: null,
@@ -35,6 +48,8 @@
     activeCount: 0,
     registryPath: null,
     updatedAt: null,
+    projectBuildStates: null,
+    archivedProjectList: null,
   };
   var executionProofData = null;
   var executionProofLoadPromise = null;
@@ -388,25 +403,187 @@
     lastError: 'None',
   };
   var localRuntimeHealthy = false;
+  var RestartResilience = window.CommandCenterRestartResilience || {};
+  var RuntimeTruthAuthority = window.RuntimeTruthAuthority || {};
+  var RuntimeBannerTruthReconciliation = window.RuntimeBannerTruthReconciliation || {};
+  var CommandCenterCleanStartup = window.CommandCenterCleanStartup || {};
+  var ProjectSessionContinuity = window.ProjectSessionContinuity || {};
+  var PROJECT_SESSION_CONTINUITY_TRACE =
+    ProjectSessionContinuity.HYDRATED_TRACE || 'PROJECT_SESSION_CONTINUITY_HYDRATED';
+  var projectSessionClient = {
+    activeProjectId: null,
+    activeSessionId: null,
+    context: null,
+    hydrationState: 'idle',
+  };
+  var runtimeTruthReady = false;
+  var lastRuntimeBannerReconciliation = null;
+  var runtimeTruthClassifyAllowed = false;
+  var runtimeBannerSource = 'startup';
+  var lastRuntimeTruthResult = null;
+  var lastRuntimeHealthPayload = null;
+  var lastRuntimeAuthorityPayload = null;
+  var runtimeTruthStaleMessage =
+    RuntimeTruthAuthority.STALE_MESSAGE || 'AiDevEngine runtime is stale. Restart required.';
+  var runtimeReadinessLifecycle = 'STARTING';
+  var runtimeHealthPollStartedAt = 0;
+  var runtimeHealthPollPromise = null;
   var LOCAL_RUNTIME_BANNER_TEXT =
-    'AiDevEngine local runtime is stale or unavailable. Restart using Start-AiDevEngine.';
+    RuntimeBannerTruthReconciliation.RUNTIME_UNAVAILABLE_BANNER ||
+    'AiDevEngine runtime unavailable. Check Runtime Authority status and restart with npm run dev if needed.';
   var OPERATOR_LOG_EMPTY_TEXT =
     'No active run. Runtime events will stream here when AiDevEngine starts planning, building, validating, or previewing.';
   var previewClientReality = { loaded: false, error: false };
   var activeProjectId = null;
+  var activeProjectName = null;
+  var activeProjectStatus = null;
   var multiProjectWorkspaces = [];
   var projectChatThreads = {};
   var linkedProjectSwitch = true;
   var projectTabCounter = 0;
+  var DEVELOPER_MODE_STORAGE_KEY = 'aidevengine.developerMode';
+  var SHOW_SYSTEM_PROJECTS_STORAGE_KEY = 'aidevengine.showSystemProjects';
+  var developerModeEnabled = false;
+  var showSystemProjects = false;
+
+  function readDeveloperModePreference() {
+    try {
+      developerModeEnabled =
+        localStorage.getItem(DEVELOPER_MODE_STORAGE_KEY) === 'true' ||
+        /[?&]dev=1(?:&|$)/.test(window.location.search || '');
+      showSystemProjects =
+        developerModeEnabled && localStorage.getItem(SHOW_SYSTEM_PROJECTS_STORAGE_KEY) === 'true';
+    } catch (storageErr) {
+      developerModeEnabled = false;
+      showSystemProjects = false;
+    }
+  }
+
+  function resolveProjectKindFromRecord(record) {
+    if (!record) return 'USER';
+    if (record.projectKind) return record.projectKind;
+    var projectId = String(record.projectId || '').toLowerCase();
+    if (/^readiness-audit-/.test(projectId) || /^build-readiness-audit-/.test(projectId)) return 'AUDIT';
+    if (/^(validation|system-test|ael-live)-/.test(projectId) || /^devpulse-.*-test-/.test(projectId)) {
+      return 'SYSTEM_TEST';
+    }
+    return 'USER';
+  }
+
+  function isUserFacingProjectRecord(record) {
+    return resolveProjectKindFromRecord(record) === 'USER';
+  }
+
+  function appendRegistryVisibilityQuery(endpoint) {
+    if (!showSystemProjects) return endpoint;
+    return endpoint + (endpoint.indexOf('?') >= 0 ? '&' : '?') + 'includeSystemProjects=true';
+  }
+
+  readDeveloperModePreference();
+
+  function readCleanStartupSessionFlags() {
+    if (CommandCenterCleanStartup.readSessionFlags) {
+      return CommandCenterCleanStartup.readSessionFlags();
+    }
+    return {
+      userExplicitlySelectedProjectId: null,
+      resumeSessionRequested: false,
+      freshLoadSession: true,
+    };
+  }
+
+  function resolveStartupActiveProjectFromRegistry(normalized) {
+    if (!normalized || !normalized.projects || !normalized.projects.length) return null;
+    var registryProjectIds = normalized.projects.map(function (project) {
+      return project.projectId;
+    });
+    var flags = readCleanStartupSessionFlags();
+    if (CommandCenterCleanStartup.resolveStartupActiveProjectId) {
+      return CommandCenterCleanStartup.resolveStartupActiveProjectId({
+        registryActiveProjectId: normalized.activeProjectId || null,
+        registryProjectIds: registryProjectIds,
+        userExplicitlySelectedProjectId: flags.userExplicitlySelectedProjectId,
+        resumeSessionRequested: flags.resumeSessionRequested,
+      });
+    }
+    var active = normalized.activeProjectId;
+    if (active && registryProjectIds.indexOf(active) >= 0 && flags.resumeSessionRequested) {
+      return active;
+    }
+    if (active && registryProjectIds.indexOf(active) >= 0 && flags.userExplicitlySelectedProjectId === active) {
+      return active;
+    }
+    return null;
+  }
+
+  function shouldAutoHydrateChatForActiveProject(activeId) {
+    var flags = readCleanStartupSessionFlags();
+    if (CommandCenterCleanStartup.shouldAutoHydrateProjectChat) {
+      return CommandCenterCleanStartup.shouldAutoHydrateProjectChat({
+        activeProjectId: activeId,
+        userExplicitlySelectedProjectId: flags.userExplicitlySelectedProjectId,
+        resumeSessionRequested: flags.resumeSessionRequested,
+      });
+    }
+    return Boolean(activeId && flags.resumeSessionRequested);
+  }
+
+  function renderResumePreviousSessionPrompt() {
+    var panel = el('welcome-resume-session');
+    if (!panel) return;
+    var flags = readCleanStartupSessionFlags();
+    var registryIds = getRegistryProjectIds();
+    var hasHints =
+      CommandCenterCleanStartup.hasPersistedSessionStorageHints &&
+      CommandCenterCleanStartup.hasPersistedSessionStorageHints({
+        activeProjectId: readCleanStartupSessionFlags().userExplicitlySelectedProjectId,
+        activeProjectName: null,
+        registryCachePresent: Boolean(loadCachedProjectRegistry()),
+      });
+    var show =
+      CommandCenterCleanStartup.shouldShowResumePreviousSession &&
+      CommandCenterCleanStartup.shouldShowResumePreviousSession({
+        registryProjectIds: registryIds,
+        hasPersistedSessionHints: hasHints,
+        resumeSessionRequested: flags.resumeSessionRequested,
+        activeProjectId: activeProjectId,
+      });
+    if (show) panel.classList.remove('hidden');
+    else panel.classList.add('hidden');
+  }
+
+  function resumePreviousCommandCenterSession() {
+    if (CommandCenterCleanStartup.markResumeSessionRequested) {
+      CommandCenterCleanStartup.markResumeSessionRequested();
+    }
+    var registryIds = getRegistryProjectIds();
+    var targetId =
+      projectRegistryClient.activeProjectId ||
+      (registryIds.length ? registryIds[0] : null);
+    if (!targetId) {
+      pushNotification('No previous session available to resume.');
+      renderResumePreviousSessionPrompt();
+      return;
+    }
+    switchActiveProject(targetId, {
+      skipChatSave: true,
+      skipChatRestore: false,
+      skipViewSwitch: true,
+      force: true,
+      userInitiated: true,
+    });
+    hydrateProjectSessionFromStore(targetId, { forceChatRestore: true });
+    renderResumePreviousSessionPrompt();
+  }
 
   function getActiveProjectWorkspace() {
-    if (!multiProjectWorkspaces.length) return null;
+    if (!activeProjectId || !multiProjectWorkspaces.length) return null;
     for (var i = 0; i < multiProjectWorkspaces.length; i += 1) {
       if (multiProjectWorkspaces[i].projectId === activeProjectId) {
         return multiProjectWorkspaces[i];
       }
     }
-    return multiProjectWorkspaces[0];
+    return null;
   }
 
   function getActiveProjectName() {
@@ -419,12 +596,97 @@
     var history = el('chat-history');
     if (!history) return;
     projectChatThreads[activeProjectId] = history.innerHTML;
+    if (
+      ProjectSessionContinuity.persistSessionMessage &&
+      projectSessionClient.activeSessionId &&
+      projectSessionClient.activeProjectId === activeProjectId
+    ) {
+      ProjectSessionContinuity.persistSessionMessage({
+        projectId: activeProjectId,
+        sessionId: projectSessionClient.activeSessionId,
+        role: 'system',
+        text: '[chat-history-sync]',
+        chatHistoryHtml: history.innerHTML,
+      }).catch(function () {
+        /* session store best-effort */
+      });
+    }
+  }
+
+  function applyProjectSessionContextToClient(context, options) {
+    options = options || {};
+    if (!context || !context.projectId) return;
+    projectSessionClient.context = context;
+    projectSessionClient.activeProjectId = context.projectId;
+    projectSessionClient.activeSessionId = context.sessionId;
+    projectSessionClient.hydrationState = 'ready';
+    var merged = ProjectSessionContinuity.applySessionContextToWorkspace
+      ? ProjectSessionContinuity.applySessionContextToWorkspace(
+          context,
+          workspaceData,
+          multiProjectWorkspaces,
+        )
+      : { workspaceData: workspaceData, multiProjectWorkspaces: multiProjectWorkspaces };
+    workspaceData = merged.workspaceData || workspaceData;
+    multiProjectWorkspaces = merged.multiProjectWorkspaces || multiProjectWorkspaces;
+    projectChatThreads[context.projectId] =
+      ProjectSessionContinuity.chatHtmlFromSessionContext
+        ? ProjectSessionContinuity.chatHtmlFromSessionContext(context)
+        : projectChatThreads[context.projectId] || '';
+    if (!options.skipChatRestore && (currentViewId === 'command-center' || options.forceChatRestore)) {
+      restoreProjectChat(context.projectId);
+    }
+    console.info(
+      PROJECT_SESSION_CONTINUITY_TRACE +
+        ' projectId=' +
+        context.projectId +
+        ' sessionId=' +
+        context.sessionId,
+    );
+  }
+
+  function hydrateProjectSessionFromStore(projectId, options) {
+    options = options || {};
+    if (!ProjectSessionContinuity.fetchActiveSession) {
+      return Promise.resolve(null);
+    }
+    projectSessionClient.hydrationState = 'loading';
+    return ProjectSessionContinuity.fetchActiveSession(
+      projectId || activeProjectId,
+      projectSessionClient.activeSessionId,
+    )
+      .then(function (payload) {
+        if (payload && payload.activeSession) {
+          applyProjectSessionContextToClient(payload.activeSession, options);
+        } else {
+          projectSessionClient.hydrationState = 'empty';
+        }
+        return payload;
+      })
+      .catch(function () {
+        projectSessionClient.hydrationState = 'error';
+        return null;
+      });
   }
 
   function restoreProjectChat(projectId) {
     var history = el('chat-history');
     if (!history) return;
     history.innerHTML = projectChatThreads[projectId] || '';
+    if (!history.innerHTML.trim() && ProjectSessionContinuity.fetchActiveSession) {
+      hydrateProjectSessionFromStore(projectId, { skipChatRestore: true }).then(function (payload) {
+        if (!payload || !payload.activeSession) return;
+        var html = ProjectSessionContinuity.chatHtmlFromSessionContext
+          ? ProjectSessionContinuity.chatHtmlFromSessionContext(payload.activeSession)
+          : '';
+        if (html.trim()) {
+          history.innerHTML = html;
+          projectChatThreads[projectId] = html;
+          hideWelcomeState();
+          scrollChatToBottom();
+        }
+      });
+    }
     if (history.innerHTML.trim()) {
       hideWelcomeState();
     } else if (activeProjectId) {
@@ -438,44 +700,85 @@
 
   function renderWorkspaceTabs(containerId) {
     var container = el(containerId || 'workspace-tabs');
-    if (!container) return;
-    if (!multiProjectWorkspaces.length) {
-      container.innerHTML =
-        '<button type="button" class="workspace-tab active" data-project-id="__default__">Default Project</button>';
-      return;
+    var switcher = el('active-project-switcher');
+    var activeLabel = el('active-project-name');
+    var devToggleWrap = el('developer-mode-toggle-wrap');
+    var devToggle = el('show-system-projects-toggle');
+    var userProjects = (multiProjectWorkspaces || []).filter(function (project) {
+      return isUserFacingProjectRecord({ projectId: project.projectId, projectKind: project.projectKind });
+    });
+    if (container) {
+      container.innerHTML = '';
+      container.classList.add('hidden');
     }
-    container.innerHTML = multiProjectWorkspaces
-      .map(function (project) {
-        var status =
-          project.buildStatus === 'READY'
-            ? ' · Ready'
-            : project.buildStatus === 'BUILDING'
-              ? ' · Building'
-              : project.buildStatus === 'FAILED'
-                ? ' · Failed'
-                : '';
-        return (
-          '<button type="button" class="workspace-tab' +
-          (project.projectId === activeProjectId ? ' active' : '') +
-          '" data-project-id="' +
-          escapeHtml(project.projectId) +
-          '" role="tab" aria-selected="' +
-          (project.projectId === activeProjectId ? 'true' : 'false') +
-          '">' +
-          escapeHtml(project.projectName + status) +
-          '</button>'
-        );
-      })
-      .join('');
-    var tabs = container.querySelectorAll('.workspace-tab');
-    for (var i = 0; i < tabs.length; i += 1) {
-      tabs[i].addEventListener('click', function () {
-        var projectId = this.getAttribute('data-project-id');
-        if (projectId && projectId !== '__default__') {
-          openProjectFromTab(projectId);
+    if (activeLabel) {
+      var activeProject = null;
+      for (var a = 0; a < userProjects.length; a += 1) {
+        if (userProjects[a].projectId === activeProjectId) activeProject = userProjects[a];
+      }
+      activeLabel.textContent = activeProject
+        ? activeProject.projectName
+        : userProjects.length
+          ? 'Select a project'
+          : 'No projects — create one from Projects';
+    }
+    if (switcher) {
+      switcher.innerHTML = '';
+      if (!userProjects.length) {
+        var emptyOption = document.createElement('option');
+        emptyOption.value = '';
+        emptyOption.textContent = 'No user projects';
+        switcher.appendChild(emptyOption);
+        switcher.disabled = true;
+      } else {
+        switcher.disabled = false;
+        for (var i = 0; i < userProjects.length; i += 1) {
+          var project = userProjects[i];
+          var option = document.createElement('option');
+          option.value = project.projectId;
+          option.textContent = project.projectName;
+          if (project.projectId === activeProjectId) option.selected = true;
+          switcher.appendChild(option);
         }
-      });
+        if (!switcher.dataset.bound) {
+          switcher.dataset.bound = 'true';
+          switcher.addEventListener('change', function () {
+            if (switcher.value) openProjectFromTab(switcher.value);
+          });
+        }
+      }
     }
+    if (devToggleWrap && devToggle) {
+      if (developerModeEnabled) {
+        devToggleWrap.classList.remove('hidden');
+        devToggle.checked = showSystemProjects;
+        if (!devToggle.dataset.bound) {
+          devToggle.dataset.bound = 'true';
+          devToggle.addEventListener('change', function () {
+            showSystemProjects = devToggle.checked === true;
+            try {
+              localStorage.setItem(
+                SHOW_SYSTEM_PROJECTS_STORAGE_KEY,
+                showSystemProjects ? 'true' : 'false',
+              );
+            } catch (storageErr) {
+              /* ignore */
+            }
+            loadProjectRegistryState();
+          });
+        }
+      } else {
+        devToggleWrap.classList.add('hidden');
+      }
+    }
+    renderWorkspaceTabsLegacyPreview(containerId);
+  }
+
+  function renderWorkspaceTabsLegacyPreview(containerId) {
+    if (containerId !== 'preview-workspace-tabs') return;
+    var previewContainer = el('preview-workspace-tabs');
+    if (!previewContainer) return;
+    previewContainer.innerHTML = '';
   }
 
   function updateWorkspaceLinkedIndicator() {
@@ -496,6 +799,20 @@
   function buildWorkspaceViewForActiveProject(base) {
     base = base || workspaceData || {};
     var project = getActiveProjectWorkspace();
+    if (projectSessionClient.context && projectSessionClient.context.projectId === activeProjectId) {
+      var sessionCtx = projectSessionClient.context;
+      if (sessionCtx.previewUrl) {
+        project = Object.assign({}, project || {}, {
+          projectId: sessionCtx.projectId,
+          projectName: sessionCtx.projectName,
+          previewUrl: sessionCtx.previewUrl,
+          buildStatus: sessionCtx.buildStatus || (project && project.buildStatus) || 'IDLE',
+          workspacePath: sessionCtx.workspacePath || (project && project.workspacePath) || null,
+          buildProfile: sessionCtx.buildProfile || (project && project.buildProfile) || null,
+          livePreviewAvailable: Boolean(sessionCtx.previewUrl),
+        });
+      }
+    }
     if (!project) return base;
     var livePreview = Object.assign({}, base.livePreview || {}, {
       previewUrl: project.previewUrl || (base.livePreview && base.livePreview.previewUrl) || null,
@@ -527,9 +844,10 @@
   function switchActiveProject(projectId, options) {
     options = options || {};
     if (!projectId) {
-      renderWorkspaceTabs('workspace-tabs');
-      renderWorkspaceTabs('preview-workspace-tabs');
-      updateWorkspaceLinkedIndicator();
+      clearActiveProjectClientState({
+        skipChatSave: Boolean(options.skipChatSave),
+        skipChatClear: Boolean(options.skipChatClear),
+      });
       return;
     }
     if (projectId === activeProjectId && !options.force) {
@@ -544,13 +862,31 @@
     }
     activeProjectId = projectId;
     projectRegistryClient.activeProjectId = projectId;
+    if (options.userInitiated !== false && CommandCenterCleanStartup.markUserSelectedProject) {
+      CommandCenterCleanStartup.markUserSelectedProject(projectId);
+    }
     workspaceData = workspaceData || {};
     workspaceData.activeProjectId = projectId;
+    syncActiveProjectPresentationFromWorkspace(getActiveProjectWorkspace());
+    workspaceData.activeProjectName = activeProjectName;
+    workspaceData.activeProjectStatus = activeProjectStatus;
+    persistActiveProjectStorageKeys();
     for (var i = 0; i < multiProjectWorkspaces.length; i += 1) {
       multiProjectWorkspaces[i].active = multiProjectWorkspaces[i].projectId === projectId;
     }
     if (!options.skipChatRestore) {
       restoreProjectChat(projectId);
+    }
+    if (ProjectSessionContinuity.activateProjectSession) {
+      ProjectSessionContinuity.activateProjectSession(projectId, projectSessionClient.activeSessionId)
+        .then(function (payload) {
+          if (payload && payload.activeSession) {
+            applyProjectSessionContextToClient(payload.activeSession, { skipChatRestore: true });
+          }
+        })
+        .catch(function () {
+          hydrateProjectSessionFromStore(projectId, { skipChatRestore: true });
+        });
     }
     renderWorkspaceTabs('workspace-tabs');
     renderWorkspaceTabs('preview-workspace-tabs');
@@ -565,7 +901,9 @@
     }
     renderCommandCenterWorkspaceState();
     refreshNotificationSurfaces();
-    renderProductSurfaces();
+    if (!options.skipHeavyRefresh) {
+      renderProductSurfaces();
+    }
   }
 
   function applyServerProjectContext(context) {
@@ -602,17 +940,42 @@
   }
 
   function applyMultiProjectWorkspaceState(data) {
+    if (isProjectRegistryHydrated()) {
+      if (!projectRegistryClient.projectList || !projectRegistryClient.projectList.length) {
+        purgeStaleCommandCenterProjectState('registry-empty-workspace-state');
+        return;
+      }
+      var resolvedActive = resolveActiveProjectIdFromRegistry({
+        projects: projectRegistryClient.projectList,
+        activeProjectId: projectRegistryClient.activeProjectId || (data && data.activeProjectId) || null,
+      });
+      rebuildMultiProjectWorkspacesFromRegistry(resolvedActive);
+      if (resolvedActive) {
+        switchActiveProject(resolvedActive, {
+          skipChatSave: true,
+          skipChatRestore: shouldAutoHydrateChatForActiveProject(resolvedActive),
+          skipViewSwitch: true,
+          force: true,
+          userInitiated: false,
+        });
+      } else {
+        clearActiveProjectClientState({ skipChatSave: true, skipChatClear: false });
+        showWelcomeState();
+      }
+      renderResumePreviousSessionPrompt();
+      purgeStaleCommandCenterProjectState('registry-authority-workspace-state');
+      return;
+    }
     if (data && Array.isArray(data.multiProjectWorkspaces) && data.multiProjectWorkspaces.length) {
       multiProjectWorkspaces = data.multiProjectWorkspaces.slice();
     }
     if (data && data.activeProjectId) {
       switchActiveProject(data.activeProjectId, { skipChatSave: true, skipChatRestore: false, skipViewSwitch: true });
     } else if (!activeProjectId && multiProjectWorkspaces.length) {
-      switchActiveProject(multiProjectWorkspaces[0].projectId, {
-        skipChatSave: true,
-        skipChatRestore: false,
-        skipViewSwitch: true,
-      });
+      renderWorkspaceTabs('workspace-tabs');
+      renderWorkspaceTabs('preview-workspace-tabs');
+      updateWorkspaceLinkedIndicator();
+      renderResumePreviousSessionPrompt();
     } else {
       renderWorkspaceTabs('workspace-tabs');
       renderWorkspaceTabs('preview-workspace-tabs');
@@ -744,8 +1107,21 @@
   }
 
   function applyCachedProjectRegistryFallback() {
+    var flags = readCleanStartupSessionFlags();
+    if (
+      CommandCenterCleanStartup.shouldUseCachedRegistryFallback &&
+      !CommandCenterCleanStartup.shouldUseCachedRegistryFallback(flags)
+    ) {
+      clearCachedProjectRegistry();
+      return false;
+    }
     var cached = loadCachedProjectRegistry();
     if (!cached || !cached.payload) return false;
+    var normalized = normalizeRegistryPayload(cached.payload);
+    if (!normalized || !normalized.projects.length) {
+      clearCachedProjectRegistry();
+      return false;
+    }
     projectRegistryUsedCachedFallback = true;
     projectRegistryClient.hydrationState = 'ready';
     projectRegistryClient.error = null;
@@ -771,11 +1147,22 @@
   function formatRegistryCountForUi(count) {
     if (
       projectRegistryClient.hydrationState === 'pending' ||
-      projectRegistryClient.hydrationState === 'loading'
+      projectRegistryClient.hydrationState === 'loading' ||
+      projectRegistryClient.hydrationState === 'restoring'
     ) {
       return '—';
     }
     return String(count || 0);
+  }
+
+  function registryHydrationLoadingMessage() {
+    if (
+      projectRegistryClient.serverHydrationStatus === 'RESTORING' ||
+      projectRegistryClient.hydrationState === 'restoring'
+    ) {
+      return 'Restoring project registry…';
+    }
+    return 'Loading projects…';
   }
 
   function emptyProjectRegistrySummary() {
@@ -797,9 +1184,27 @@
   function scheduleProjectRegistryLoadTimeout() {
     clearProjectRegistryLoadTimeout();
     projectRegistryLoadTimeoutId = setTimeout(function () {
-      if (projectRegistryClient.hydrationState !== 'loading') return;
+      if (
+        projectRegistryClient.hydrationState !== 'loading' &&
+        projectRegistryClient.hydrationState !== 'restoring'
+      ) {
+        return;
+      }
       if (projectRegistryClient.projectList && projectRegistryClient.projectList.length) {
         projectRegistryClient.hydrationState = 'ready';
+        projectRegistryClient.error = null;
+        syncProjectRegistryHydrationAliases();
+        renderProductSurfaces();
+        return;
+      }
+      if (
+        projectRegistryClient.serverHydrationStatus === 'RESTORING' ||
+        projectRegistryClient.serverHydrationStatus === 'LOADING'
+      ) {
+        return;
+      }
+      if (projectRegistryClient.serverHydrationStatus === 'EMPTY') {
+        projectRegistryClient.hydrationState = 'empty';
         projectRegistryClient.error = null;
         syncProjectRegistryHydrationAliases();
         renderProductSurfaces();
@@ -836,16 +1241,24 @@
 
   function mapRegistryRecordToItem(record, activeProjectId) {
     if (!record || !record.projectId || !record.name) return null;
+    if (!showSystemProjects && !isUserFacingProjectRecord(record)) return null;
     var status = record.status || 'ACTIVE';
     if (status !== 'ACTIVE') return null;
     return {
       projectId: record.projectId,
       name: record.name,
+      projectKind: resolveProjectKindFromRecord(record),
       status: status,
       summary: record.summary || '',
       createdAt: record.createdAt || '',
       lastActivityAt: record.lastActivityAt || record.createdAt || '',
       isActive: record.projectId === activeProjectId,
+      buildState: record.buildState || null,
+      resumable: record.resumable === true,
+      repairable: record.repairable === true,
+      bannerMessage: record.bannerMessage || null,
+      primaryActions: record.primaryActions || [],
+      hasOriginalPrompt: record.hasOriginalPrompt === true,
     };
   }
 
@@ -892,7 +1305,21 @@
       }
     }
 
-    if (!projectList.length) return null;
+    if (!projectList.length) {
+      return {
+        ok: true,
+        projects: [],
+        activeProjectId: activeProjectId,
+        total: 0,
+        active: 0,
+        registryPath: payload.registryPath || null,
+        updatedAt: payload.updatedAt || null,
+        multiProjectWorkspaces: payload.multiProjectWorkspaces,
+        hydrationStatus: payload.hydrationStatus || payload.hydration?.phase || null,
+        hydrationReady: payload.hydrationReady === true,
+        projectBuildStates: payload.projectBuildStates || [],
+      };
+    }
 
     var total =
       payload.total != null
@@ -921,33 +1348,250 @@
       registryPath: payload.registryPath || null,
       updatedAt: payload.updatedAt || null,
       multiProjectWorkspaces: payload.multiProjectWorkspaces,
+      hydrationStatus: payload.hydrationStatus || payload.hydration?.phase || null,
+      hydrationReady: payload.hydrationReady === true,
+      projectBuildStates: payload.projectBuildStates || [],
     };
   }
 
-  function syncRegistryChipsFromProjects(activeProjectIdValue) {
-    var sourceList =
-      projectRegistryClient.projectList ||
-      (projectRegistryClient.projects && projectRegistryClient.projects.items) ||
-      [];
-    if (!sourceList.length) return;
-    if (multiProjectWorkspaces.length >= sourceList.length) return;
+  function getRegistryProjectIds() {
+    var list = projectRegistryClient.projectList || [];
+    var ids = [];
+    for (var i = 0; i < list.length; i += 1) {
+      ids.push(list[i].projectId);
+    }
+    return ids;
+  }
+
+  function clearActiveProjectStorageKeys() {
+    var key;
+    try {
+      for (var i = 0; i < ACTIVE_PROJECT_LOCAL_STORAGE_KEYS.length; i += 1) {
+        key = ACTIVE_PROJECT_LOCAL_STORAGE_KEYS[i];
+        window.localStorage.removeItem(key);
+      }
+      for (var s = 0; s < ACTIVE_PROJECT_SESSION_STORAGE_KEYS.length; s += 1) {
+        key = ACTIVE_PROJECT_SESSION_STORAGE_KEYS[s];
+        window.sessionStorage.removeItem(key);
+      }
+    } catch (storageErr) {
+      /* ignore quota / privacy errors */
+    }
+  }
+
+  function persistActiveProjectStorageKeys() {
+    if (!activeProjectId) {
+      clearActiveProjectStorageKeys();
+      return;
+    }
+    try {
+      window.sessionStorage.setItem(ACTIVE_PROJECT_SESSION_STORAGE_KEYS[0], activeProjectId);
+      if (activeProjectName) {
+        window.sessionStorage.setItem(ACTIVE_PROJECT_SESSION_STORAGE_KEYS[1], activeProjectName);
+      } else {
+        window.sessionStorage.removeItem(ACTIVE_PROJECT_SESSION_STORAGE_KEYS[1]);
+      }
+      if (activeProjectStatus) {
+        window.sessionStorage.setItem(ACTIVE_PROJECT_SESSION_STORAGE_KEYS[2], activeProjectStatus);
+      } else {
+        window.sessionStorage.removeItem(ACTIVE_PROJECT_SESSION_STORAGE_KEYS[2]);
+      }
+    } catch (storageErr) {
+      /* ignore */
+    }
+  }
+
+  function clearCachedProjectRegistry() {
+    try {
+      window.localStorage.removeItem(REGISTRY_CACHE_STORAGE_KEY);
+    } catch (cacheErr) {
+      /* ignore */
+    }
+  }
+
+  function syncActiveProjectPresentationFromWorkspace(project) {
+    if (!project) {
+      activeProjectName = null;
+      activeProjectStatus = null;
+      return;
+    }
+    activeProjectName = project.projectName || null;
+    activeProjectStatus = project.buildStatus || null;
+  }
+
+  function purgeStaleCommandCenterProjectState(reason) {
+    var registryIds = getRegistryProjectIds();
+    var registryEmpty = registryIds.length === 0;
+    var staleChips = [];
+    for (var i = 0; i < multiProjectWorkspaces.length; i += 1) {
+      if (registryIds.indexOf(multiProjectWorkspaces[i].projectId) < 0) {
+        staleChips.push(multiProjectWorkspaces[i].projectId);
+      }
+    }
+    var activeNotInRegistry = Boolean(activeProjectId && registryIds.indexOf(activeProjectId) < 0);
+    if (!registryEmpty && !staleChips.length && !activeNotInRegistry) {
+      return false;
+    }
+
+    var clearedActive = activeProjectId;
+    if (registryEmpty) {
+      multiProjectWorkspaces = [];
+      activeProjectId = null;
+      activeProjectName = null;
+      activeProjectStatus = null;
+      projectRegistryClient.activeProjectId = null;
+      projectChatThreads = {};
+      clearCachedProjectRegistry();
+      clearActiveProjectStorageKeys();
+    } else {
+      var resolvedActive = resolveActiveProjectIdFromRegistry({
+        projects: projectRegistryClient.projectList || [],
+        activeProjectId: projectRegistryClient.activeProjectId,
+      });
+      rebuildMultiProjectWorkspacesFromRegistry(resolvedActive);
+      activeProjectId = resolvedActive;
+      projectRegistryClient.activeProjectId = resolvedActive;
+      syncActiveProjectPresentationFromWorkspace(getActiveProjectWorkspace());
+    }
+
+    workspaceData = workspaceData || {};
+    workspaceData.activeProjectId = activeProjectId;
+    workspaceData.activeProjectName = activeProjectName;
+    workspaceData.activeProjectStatus = activeProjectStatus;
+    workspaceData.multiProjectWorkspaces = multiProjectWorkspaces.slice();
+    delete workspaceData.projectContext;
+    workspaceData.livePreview = null;
+
+    if (window.WorkspaceNavigation && typeof window.WorkspaceNavigation.reset === 'function') {
+      window.WorkspaceNavigation.reset();
+    }
+    if (window.ProjectWorkspaceExplorer && typeof window.ProjectWorkspaceExplorer.clearActiveProject === 'function') {
+      window.ProjectWorkspaceExplorer.clearActiveProject();
+    }
+
+    console.info(
+      COMMAND_CENTER_STALE_PROJECT_PURGE_TRACE +
+        ' reason=' +
+        String(reason || 'registry-authority') +
+        ' registryCount=' +
+        String(registryIds.length) +
+        ' staleChips=' +
+        staleChips.join(',') +
+        (clearedActive ? ' clearedActive=' + clearedActive : ''),
+    );
+
+    renderWorkspaceTabs('workspace-tabs');
+    renderWorkspaceTabs('preview-workspace-tabs');
+    updateWorkspaceLinkedIndicator();
+    updateWorkspaceNavControls();
+    renderCommandCenterWorkspaceState();
+    renderLivePreviewSurface(buildWorkspaceViewForActiveProject(workspaceData));
+    renderProjectMemorySurface(workspaceData);
+    refreshNotificationSurfaces();
+    return true;
+  }
+
+  function resolveActiveProjectIdFromRegistry(normalized) {
+    return resolveStartupActiveProjectFromRegistry(normalized);
+  }
+
+  function rebuildMultiProjectWorkspacesFromRegistry(activeProjectIdValue) {
+    var sourceList = projectRegistryClient.projectList || [];
+    if (!sourceList.length) {
+      multiProjectWorkspaces = [];
+      workspaceData = workspaceData || {};
+      workspaceData.multiProjectWorkspaces = [];
+      return;
+    }
     multiProjectWorkspaces = sourceList.map(function (project) {
       return {
         projectId: project.projectId,
         projectName: project.name,
+        projectKind: project.projectKind || resolveProjectKindFromRecord(project),
         active: project.projectId === activeProjectIdValue,
-        buildStatus: 'IDLE',
-        workspacePath: null,
-        previewUrl: null,
+        buildStatus:
+          (project.buildState && project.buildState.status) || project.buildStatus || 'IDLE',
+        workspacePath: project.workspacePath || null,
+        previewUrl: project.previewUrl || null,
+        buildProfile: project.buildProfile || null,
       };
     });
+    workspaceData = workspaceData || {};
+    workspaceData.multiProjectWorkspaces = multiProjectWorkspaces.slice();
+  }
+
+  function clearActiveProjectClientState(options) {
+    options = options || {};
+    if (activeProjectId && !options.skipChatSave) {
+      saveActiveProjectChat();
+    }
+    activeProjectId = null;
+    activeProjectName = null;
+    activeProjectStatus = null;
+    projectRegistryClient.activeProjectId = null;
+    workspaceData = workspaceData || {};
+    workspaceData.activeProjectId = null;
+    workspaceData.activeProjectName = null;
+    workspaceData.activeProjectStatus = null;
+    delete workspaceData.projectContext;
+    workspaceData.livePreview = null;
+    multiProjectWorkspaces = [];
+    workspaceData.multiProjectWorkspaces = [];
+    clearActiveProjectStorageKeys();
+    if (!options.skipChatClear) {
+      var history = el('chat-history');
+      if (history) history.innerHTML = '';
+      conversationStarted = false;
+      projectChatThreads = {};
+    }
+    for (var c = 0; c < multiProjectWorkspaces.length; c += 1) {
+      multiProjectWorkspaces[c].active = false;
+    }
+    workspaceData.multiProjectWorkspaces = multiProjectWorkspaces.slice();
+    if (window.WorkspaceNavigation && typeof window.WorkspaceNavigation.reset === 'function') {
+      window.WorkspaceNavigation.reset();
+    }
+    renderWorkspaceTabs('workspace-tabs');
+    renderWorkspaceTabs('preview-workspace-tabs');
+    updateWorkspaceLinkedIndicator();
+    updateWorkspaceNavControls();
+    renderCommandCenterWorkspaceState();
+    if (currentViewId === 'command-center' || currentViewId === 'live-preview') {
+      renderLivePreviewSurface(buildWorkspaceViewForActiveProject(workspaceData));
+    }
+    renderProjectMemorySurface(workspaceData);
+    refreshNotificationSurfaces();
+  }
+
+  function syncRegistryChipsFromProjects(activeProjectIdValue) {
+    rebuildMultiProjectWorkspacesFromRegistry(activeProjectIdValue);
   }
 
   function applyProjectRegistryPayload(payload) {
     var normalized = normalizeRegistryPayload(payload);
-    if (!normalized || !normalized.projects || !normalized.projects.length) {
+    if (payload && (payload.hydrationStatus || (payload.hydration && payload.hydration.phase))) {
+      projectRegistryClient.serverHydrationStatus =
+        payload.hydrationStatus || payload.hydration.phase;
+    }
+    if (payload && payload.projectBuildStates) {
+      projectRegistryClient.projectBuildStates = payload.projectBuildStates;
+    }
+    if (payload && Array.isArray(payload.archivedProjects)) {
+      projectRegistryClient.archivedProjectList = payload.archivedProjects;
+    }
+    if (!normalized) {
       if (projectRegistryClient.projectList && projectRegistryClient.projectList.length) {
         projectRegistryClient.hydrationState = 'ready';
+        projectRegistryClient.error = null;
+        syncProjectRegistryHydrationAliases();
+        renderProductSurfaces();
+        return;
+      }
+      if (
+        projectRegistryClient.serverHydrationStatus === 'RESTORING' ||
+        projectRegistryClient.serverHydrationStatus === 'LOADING'
+      ) {
+        projectRegistryClient.hydrationState = 'restoring';
         projectRegistryClient.error = null;
         syncProjectRegistryHydrationAliases();
         renderProductSurfaces();
@@ -969,7 +1613,8 @@
     projectRegistryClient.activeCount = normalized.active;
     projectRegistryClient.registryPath = normalized.registryPath;
     projectRegistryClient.updatedAt = normalized.updatedAt;
-    projectRegistryClient.hydrationState = 'ready';
+    projectRegistryClient.hydrationState =
+      normalized.projects.length === 0 ? 'empty' : 'ready';
     projectRegistryClient.error = null;
     if (projectRegistryHydrationStartedAt) {
       projectRegistryHydrationDurationMs = Math.max(
@@ -981,14 +1626,38 @@
     syncProjectRegistryHydrationAliases();
     workspaceData = workspaceData || {};
     workspaceData.projects = summary;
-    workspaceData.activeProjectId = normalized.activeProjectId;
-    if (Array.isArray(normalized.multiProjectWorkspaces) && normalized.multiProjectWorkspaces.length) {
-      multiProjectWorkspaces = normalized.multiProjectWorkspaces.slice();
+    var resolvedActiveProjectId = resolveActiveProjectIdFromRegistry(normalized);
+    workspaceData.activeProjectId = resolvedActiveProjectId;
+    syncRegistryChipsFromProjects(resolvedActiveProjectId);
+    projectRegistryClient.activeProjectId = resolvedActiveProjectId;
+    if (resolvedActiveProjectId) {
+      activeProjectId = resolvedActiveProjectId;
+      syncActiveProjectPresentationFromWorkspace(getActiveProjectWorkspace());
+      persistActiveProjectStorageKeys();
     } else {
-      syncRegistryChipsFromProjects(normalized.activeProjectId);
+      clearActiveProjectClientState({ skipChatSave: true, skipChatClear: true });
+      if (normalized.projects.length === 0) {
+        clearCachedProjectRegistry();
+      }
     }
-    if (normalized.activeProjectId) {
-      activeProjectId = normalized.activeProjectId;
+    purgeStaleCommandCenterProjectState(
+      normalized.projects.length === 0 ? 'registry-empty-hydration' : 'registry-authority-sync',
+    );
+    if (resolvedActiveProjectId) {
+      if (shouldAutoHydrateChatForActiveProject(resolvedActiveProjectId)) {
+        hydrateProjectSessionFromStore(resolvedActiveProjectId, {
+          skipChatRestore: currentViewId !== 'command-center',
+        });
+      }
+    } else {
+      clearActiveProjectClientState({ skipChatSave: true, skipChatClear: false });
+      showWelcomeState();
+    }
+    renderResumePreviousSessionPrompt();
+    if (!localRuntimeHealthy && projectRegistryClient.hydrationState === 'ready') {
+      checkBrainHealth({ fromRegistryHydration: true }).catch(function () {
+        /* registry hydration health retry best-effort */
+      });
     }
     logProjectRegistryClientLoaded();
     logProjectRegistryHydrationEvidence();
@@ -1004,13 +1673,16 @@
 
   function isProjectRegistryHydrated() {
     return (
-      projectRegistryClient.hydrationState === 'ready' &&
-      Array.isArray(projectRegistryClient.projectList) &&
-      projectRegistryClient.projectList.length > 0
+      (projectRegistryClient.hydrationState === 'ready' ||
+        projectRegistryClient.hydrationState === 'empty') &&
+      Array.isArray(projectRegistryClient.projectList)
     );
   }
 
   function hasVisibleProjectChips() {
+    if (isProjectRegistryHydrated()) {
+      return Array.isArray(projectRegistryClient.projectList) && projectRegistryClient.projectList.length > 0;
+    }
     return Array.isArray(multiProjectWorkspaces) && multiProjectWorkspaces.length > 0;
   }
 
@@ -1043,7 +1715,7 @@
     if (projectRegistryClient.projects && Array.isArray(projectRegistryClient.projects.items)) {
       return projectRegistryClient.projects;
     }
-    if (Array.isArray(projectRegistryClient.projectList) && projectRegistryClient.projectList.length) {
+    if (Array.isArray(projectRegistryClient.projectList)) {
       return buildProjectRegistrySummaryFromNormalized({
         ok: true,
         projects: projectRegistryClient.projectList,
@@ -1053,13 +1725,6 @@
         registryPath: projectRegistryClient.registryPath,
         updatedAt: projectRegistryClient.updatedAt,
       });
-    }
-    var registryView = getWorkspaceViewForProjects();
-    if (registryView.projects && Array.isArray(registryView.projects.items) && registryView.projects.items.length) {
-      return registryView.projects;
-    }
-    if (hasVisibleProjectChips()) {
-      return buildProjectSummaryFromChips();
     }
     return emptyProjectRegistrySummary();
   }
@@ -1081,7 +1746,7 @@
 
   function getActiveProjectRegistryItems() {
     if (isProjectRegistryHydrated()) {
-      return projectRegistryClient.projectList || projectRegistryClient.projects.items;
+      return projectRegistryClient.projectList || projectRegistryClient.projects.items || [];
     }
     if (hasVisibleProjectChips()) {
       var fallbackItems = [];
@@ -1097,6 +1762,183 @@
     return [];
   }
 
+  function getArchivedProjectRegistryItems() {
+    if (projectRegistryClient.archivedProjectList && projectRegistryClient.archivedProjectList.length) {
+      return projectRegistryClient.archivedProjectList;
+    }
+    return [];
+  }
+
+  function showProjectDeleteDialog(projectId, projectName) {
+    var dialog = el('project-delete-dialog');
+    var nameEl = el('project-delete-dialog-name');
+    var auditEl = el('project-delete-audit');
+    var errorEl = el('project-delete-error');
+    if (!dialog) return;
+    dialog.setAttribute('data-project-id', projectId);
+    if (nameEl) nameEl.textContent = projectName || projectId;
+    if (auditEl) {
+      auditEl.textContent = '';
+      auditEl.classList.add('hidden');
+    }
+    if (errorEl) {
+      errorEl.textContent = '';
+      errorEl.classList.add('hidden');
+    }
+    dialog.hidden = false;
+    dialog.setAttribute('aria-hidden', 'false');
+  }
+
+  function showProjectDeleteError(message) {
+    var errorEl = el('project-delete-error');
+    if (!errorEl) return;
+    errorEl.textContent = message || 'Could not delete project.';
+    errorEl.classList.remove('hidden');
+  }
+
+  function clearProjectDeleteError() {
+    var errorEl = el('project-delete-error');
+    if (!errorEl) return;
+    errorEl.textContent = '';
+    errorEl.classList.add('hidden');
+  }
+
+  function formatProjectDeleteAuditLines(payload) {
+    var lines = [];
+    if (!payload) return lines;
+    if (payload.deleted) {
+      lines.push('Deleting project...');
+    }
+    if (payload.auditSteps && payload.auditSteps.length) {
+      for (var i = 0; i < payload.auditSteps.length; i += 1) {
+        var step = payload.auditSteps[i];
+        var statusLabel =
+          step.status === 'REMOVED'
+            ? 'removed'
+            : step.status === 'SKIPPED'
+              ? 'pending'
+              : String(step.status || '').toLowerCase();
+        lines.push((step.label || 'Artifact') + ' — ' + statusLabel);
+      }
+    }
+    if (payload.noOrphanedFilesDetected) {
+      lines.push('No orphaned files detected');
+    } else if (typeof payload.orphanCount === 'number' && payload.orphanCount > 0) {
+      lines.push('Orphaned files detected: ' + payload.orphanCount);
+    }
+    if (payload.message) lines.push(payload.message);
+    return lines;
+  }
+
+  function renderProjectDeleteAudit(payload) {
+    var auditEl = el('project-delete-audit');
+    if (!auditEl) return;
+    var lines = formatProjectDeleteAuditLines(payload);
+    if (!lines.length) return;
+    auditEl.textContent = lines.join('\n');
+    auditEl.classList.remove('hidden');
+  }
+
+  function deleteProjectViaLifecycle(body) {
+    return fetch('/api/projects/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body || {}),
+    }).then(function (res) {
+      return res.text().then(function (text) {
+        var json = null;
+        if (text) {
+          try {
+            json = JSON.parse(text);
+          } catch (parseErr) {
+            throw new Error(formatProjectRegistryError(res, null, 'Invalid delete response'));
+          }
+        }
+        if (!res.ok) {
+          throw new Error(formatProjectRegistryError(res, json, 'Project delete failed'));
+        }
+        if (json && json.deleted === true) {
+          applyProjectRegistryResponse(json);
+        }
+        return json || {};
+      });
+    });
+  }
+
+  function hideProjectDeleteDialog() {
+    var dialog = el('project-delete-dialog');
+    if (!dialog) return;
+    dialog.hidden = true;
+    dialog.setAttribute('aria-hidden', 'true');
+    dialog.removeAttribute('data-project-id');
+  }
+
+  function wireProjectDeleteDialog() {
+    var dialog = el('project-delete-dialog');
+    if (!dialog || dialog.getAttribute('data-bound') === 'true') return;
+    dialog.setAttribute('data-bound', 'true');
+    var backdrop = el('project-delete-dialog-backdrop');
+    var closeBtn = el('project-delete-dialog-close');
+    var cancelBtn = el('project-delete-cancel');
+    var confirmBtn = el('project-delete-confirm');
+    function close() {
+      hideProjectDeleteDialog();
+    }
+    if (backdrop) backdrop.addEventListener('click', close);
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (cancelBtn) cancelBtn.addEventListener('click', close);
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', function () {
+        var projectId = dialog.getAttribute('data-project-id');
+        if (!projectId) return;
+        clearProjectDeleteError();
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'Deleting…';
+        deleteProjectViaLifecycle({ projectId: projectId, confirmed: true })
+          .then(function (payload) {
+            if (!payload || payload.deleted !== true) {
+              throw new Error((payload && payload.message) || 'Project was not deleted');
+            }
+            renderProjectDeleteAudit(payload);
+            pushNotification(
+              payload.message === 'PROJECT_DELETED_SUCCESSFULLY'
+                ? 'Project deleted successfully'
+                : 'Project deletion completed with warnings',
+            );
+            hideProjectDeleteDialog();
+            return loadProductWorkspace(true);
+          })
+          .catch(function (err) {
+            showProjectDeleteError(err.message || 'Could not delete project');
+            pushNotification('Could not delete project — ' + err.message);
+          })
+          .finally(function () {
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Delete Project';
+          });
+      });
+    }
+  }
+
+  function wireProjectDuplicateDialog() {
+    var dialog = el('project-duplicate-dialog');
+    if (!dialog || dialog.getAttribute('data-bound') === 'true') return;
+    dialog.setAttribute('data-bound', 'true');
+    var backdrop = el('project-duplicate-dialog-backdrop');
+    var closeBtn = el('project-duplicate-dialog-close');
+    var cancelBtn = el('project-duplicate-cancel');
+    var resumeBtn = el('project-duplicate-resume');
+    var freshCopyBtn = el('project-duplicate-fresh-copy');
+    function close() {
+      hideProjectDuplicateNameDialog();
+    }
+    if (backdrop) backdrop.addEventListener('click', close);
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (cancelBtn) cancelBtn.addEventListener('click', close);
+    if (resumeBtn) resumeBtn.addEventListener('click', resumeDuplicateExistingProject);
+    if (freshCopyBtn) freshCopyBtn.addEventListener('click', createFreshCopyFromDuplicate);
+  }
+
   function submitProjectCreateForm() {
     var input = el('project-name-input');
     var name = input ? input.value : '';
@@ -1105,15 +1947,18 @@
       return Promise.resolve();
     }
     setProjectCreateBusy(true);
-    return createProjectViaRegistry(guard.name, { skipClientDuplicateCheck: true })
+    return createProjectViaFastApi(guard.name, { forceFreshProject: true })
       .catch(function (err) {
+        if (err && err.duplicate) return;
         var message = err && err.message ? err.message : 'Could not create project';
         showProjectCreateError(message);
         pushNotification('Could not create project — ' + message);
         throw err;
       })
       .finally(function () {
-        setProjectCreateBusy(false);
+        if (!projectCreateInFlight) {
+          setProjectCreateBusy(false);
+        }
       });
   }
 
@@ -1122,12 +1967,24 @@
     if (payload.executionTraceEvents && payload.executionTraceEvents.length) {
       streamOperatorFeedEvents(payload.executionTraceEvents);
     }
+    var priorActiveProjectId = activeProjectId;
     if (payload.projectContext) {
       applyServerProjectContext(payload.projectContext);
     }
     applyProjectRegistryPayload(payload);
-    if (payload.activeProjectId) {
-      switchActiveProject(payload.activeProjectId, {
+    var nextActiveProjectId = projectRegistryClient.activeProjectId;
+    if (!nextActiveProjectId) {
+      clearActiveProjectClientState({ skipChatSave: true });
+      showWelcomeState();
+    } else if (nextActiveProjectId !== priorActiveProjectId || payload.deleted === true) {
+      switchActiveProject(nextActiveProjectId, {
+        skipChatSave: true,
+        skipChatRestore: false,
+        skipViewSwitch: false,
+        force: true,
+      });
+    } else {
+      switchActiveProject(nextActiveProjectId, {
         skipChatSave: true,
         skipChatRestore: false,
         skipViewSwitch: true,
@@ -1195,38 +2052,263 @@
 
   function guardProjectCreateSubmit(name) {
     clearProjectCreateError();
-    var registryLoading =
-      projectRegistryClient.hydrationState === 'pending' || projectRegistryClient.hydrationState === 'loading';
-    var canUseFallback = canUseProjectRegistryForCreate();
-    if (registryLoading && !canUseFallback) {
-      showProjectCreateError('Loading projects...');
-      return { ok: false };
-    }
-    if (projectRegistryClient.hydrationState === 'error' && !canUseFallback) {
-      showProjectCreateError(
-        projectRegistryClient.error || 'Could not load project registry. Try refreshing the page.',
-      );
-      return { ok: false };
-    }
-    if (!canUseFallback) {
-      showProjectCreateError('Loading projects...');
-      return { ok: false };
-    }
     var trimmed = String(name || '').trim();
-    if (trimmed) {
-      var normalized = trimmed.toLowerCase();
-      var duplicate = findActiveProjectByName(normalized);
-      if (duplicate) {
-        showProjectCreateError(buildDuplicateProjectNameError(trimmed));
-        return { ok: false };
+    if (!trimmed) {
+      showProjectCreateError('Project name is required');
+      return { ok: false };
+    }
+    return { ok: true, name: trimmed };
+  }
+
+  var FastCreateClient = window.CommandCenterFastCreateClient || null;
+  var FAST_PROJECT_CREATE_API = FastCreateClient
+    ? FastCreateClient.FAST_PROJECT_CREATE_API
+    : '/api/projects/fast-create';
+  var FAST_PROJECT_CREATE_TIMEOUT_MS = FastCreateClient
+    ? FastCreateClient.FAST_PROJECT_CREATE_TIMEOUT_MS
+    : 2000;
+  var FAST_PROJECT_CREATE_TRACE = 'FAST_PROJECT_CREATE_V1_COMPLETE';
+  var COMMAND_CENTER_FAST_CREATE_SUCCESS =
+    (FastCreateClient && FastCreateClient.COMMAND_CENTER_FAST_CREATE_SUCCESS) ||
+    'COMMAND_CENTER_FAST_CREATE_SUCCESS';
+  var pendingFastProjectCreateName = null;
+  var pendingDuplicateProjectPayload = null;
+
+  function applyInstantFastCreateClientState(payload) {
+    if (!payload || !payload.projectId) return;
+    var snap = payload.registrySnapshot;
+    var project = payload.project;
+    var items = [];
+    if (snap && Array.isArray(snap.items)) {
+      items = snap.items.slice();
+    } else if (Array.isArray(projectRegistryClient.projectList)) {
+      items = projectRegistryClient.projectList.slice();
+    }
+    if (project && project.projectId) {
+      var found = false;
+      for (var i = 0; i < items.length; i += 1) {
+        if (items[i].projectId === project.projectId) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        items.unshift({
+          projectId: project.projectId,
+          name: project.name,
+          status: 'ACTIVE',
+          projectKind: project.projectKind || 'USER',
+          isActive: true,
+        });
       }
     }
-    return { ok: true, name: name };
+    var activeProjectIdValue = payload.projectId || (snap && snap.activeProjectId) || null;
+    projectRegistryClient.projectList = items;
+    projectRegistryClient.activeProjectId = activeProjectIdValue;
+    projectRegistryClient.projects = buildProjectRegistrySummaryFromNormalized({
+      ok: true,
+      projects: items,
+      activeProjectId: activeProjectIdValue,
+      total: snap && typeof snap.count === 'number' ? snap.count : items.length,
+      active: activeProjectIdValue ? 1 : 0,
+      registryPath: snap && snap.registryPath ? snap.registryPath : projectRegistryClient.registryPath,
+      updatedAt: snap && snap.updatedAt ? snap.updatedAt : new Date().toISOString(),
+    });
+    projectRegistryClient.total = projectRegistryClient.projects.count;
+    projectRegistryClient.activeCount = projectRegistryClient.projects.activeCount;
+    projectRegistryClient.hydrationState = 'ready';
+    projectRegistryClient.serverHydrationStatus = 'READY';
+    projectRegistryClient.error = null;
+    syncProjectRegistryHydrationAliases();
+    workspaceData = workspaceData || {};
+    workspaceData.projects = projectRegistryClient.projects;
+    workspaceData.activeProjectId = activeProjectIdValue;
+    workspaceData.activeProjectName = payload.projectName || null;
+    var workspaceEntry = {
+      projectId: payload.projectId,
+      projectName: payload.projectName || payload.projectId,
+      projectKind: (project && project.projectKind) || 'USER',
+      active: true,
+      buildStatus: 'IDLE',
+      workspacePath: null,
+      previewUrl: null,
+      buildProfile: null,
+    };
+    var mergedWorkspaces = [];
+    var replaced = false;
+    for (var w = 0; w < multiProjectWorkspaces.length; w += 1) {
+      var existing = multiProjectWorkspaces[w];
+      if (existing.projectId === payload.projectId) {
+        mergedWorkspaces.push(Object.assign({}, existing, workspaceEntry, { active: true }));
+        replaced = true;
+      } else {
+        mergedWorkspaces.push(Object.assign({}, existing, { active: false }));
+      }
+    }
+    if (!replaced) {
+      mergedWorkspaces.unshift(workspaceEntry);
+    }
+    multiProjectWorkspaces = mergedWorkspaces;
+    workspaceData.multiProjectWorkspaces = multiProjectWorkspaces.slice();
+    activeProjectId = payload.projectId;
+    activeProjectName = payload.projectName || payload.projectId;
+    activeProjectStatus = 'ACTIVE';
+    if (payload.activeSessionId) {
+      projectSessionClient.activeProjectId = payload.projectId;
+      projectSessionClient.activeSessionId = payload.activeSessionId;
+      projectSessionClient.hydrationState = 'ready';
+    }
+    persistActiveProjectStorageKeys();
+  }
+
+  function enableCommandCenterChatInput() {
+    var input = el('chat-input');
+    var form = el('chat-form');
+    var submitBtn = form ? form.querySelector('button[type="submit"]') : null;
+    if (input) {
+      input.disabled = false;
+      input.readOnly = false;
+      setTimeout(function () {
+        try {
+          input.focus();
+        } catch (focusErr) {
+          /* focus may fail if panel not visible yet */
+        }
+      }, 0);
+    }
+    if (submitBtn) submitBtn.disabled = false;
+  }
+
+  function scheduleBackgroundRegistryRefreshAfterFastCreate() {
+    setTimeout(function () {
+      loadProjectRegistryState().catch(function () {
+        /* background registry refresh is best-effort */
+      });
+    }, 0);
+  }
+
+  function applyMinimalRegistryFromFastCreate(payload) {
+    applyInstantFastCreateClientState(payload);
+  }
+
+  function finalizeFastProjectCreateSuccess(payload, meta) {
+    meta = meta || {};
+    if (!payload || !payload.projectId) return;
+    setProjectCreateBusy(false);
+    hideProjectNameDialog();
+    hideProjectDuplicateNameDialog();
+    pendingFastProjectCreateName = null;
+    pendingDuplicateProjectPayload = null;
+    applyInstantFastCreateClientState(payload);
+    if (payload.projectSession) {
+      applyProjectSessionContextToClient(payload.projectSession, {
+        skipChatRestore: false,
+        forceChatRestore: true,
+      });
+    } else if (payload.activeSessionId) {
+      projectSessionClient.activeProjectId = payload.projectId;
+      projectSessionClient.activeSessionId = payload.activeSessionId;
+      projectSessionClient.hydrationState = 'ready';
+    }
+    switchActiveProject(payload.projectId, {
+      skipChatSave: true,
+      skipChatRestore: Boolean(payload.projectSession),
+      skipViewSwitch: false,
+      skipHeavyRefresh: true,
+      force: true,
+    });
+    switchView('command-center');
+    renderWorkspaceTabs('workspace-tabs');
+    renderWorkspaceTabs('preview-workspace-tabs');
+    updateWorkspaceLinkedIndicator();
+    renderCommandCenterWorkspaceState();
+    enableCommandCenterChatInput();
+    pushNotification('Created project — ' + (payload.projectName || payload.projectId));
+    console.info(
+      COMMAND_CENTER_FAST_CREATE_SUCCESS +
+        ' projectId=' +
+        payload.projectId +
+        ' projectName=' +
+        (payload.projectName || '') +
+        ' sessionId=' +
+        (payload.activeSessionId || '') +
+        ' elapsedMs=' +
+        String(meta.elapsedMs != null ? meta.elapsedMs : ''),
+    );
+    console.info(
+      FAST_PROJECT_CREATE_TRACE +
+        ' projectId=' +
+        payload.projectId +
+        ' sessionId=' +
+        (payload.activeSessionId || ''),
+    );
+    scheduleBackgroundRegistryRefreshAfterFastCreate();
+  }
+
+  function showProjectDuplicateNameDialog(payload, requestedName) {
+    pendingDuplicateProjectPayload = payload || null;
+    pendingFastProjectCreateName = requestedName || pendingFastProjectCreateName;
+    setProjectCreateBusy(false);
+    var dialog = el('project-duplicate-dialog');
+    var messageEl = el('project-duplicate-dialog-message');
+    if (messageEl) {
+      var displayName =
+        (payload && payload.existingProjectName) ||
+        pendingFastProjectCreateName ||
+        'this project';
+      messageEl.textContent =
+        'A project named "' + displayName + '" already exists. Resume it, create a fresh copy, or cancel.';
+    }
+    if (dialog) {
+      dialog.removeAttribute('hidden');
+      dialog.setAttribute('aria-hidden', 'false');
+    }
+  }
+
+  function hideProjectDuplicateNameDialog() {
+    var dialog = el('project-duplicate-dialog');
+    if (!dialog) return;
+    dialog.setAttribute('hidden', '');
+    dialog.setAttribute('aria-hidden', 'true');
+    pendingDuplicateProjectPayload = null;
+  }
+
+  function resumeDuplicateExistingProject() {
+    var payload = pendingDuplicateProjectPayload;
+    if (!payload || !payload.existingProjectId) return;
+    var projectId = payload.existingProjectId;
+    hideProjectDuplicateNameDialog();
+    hideProjectNameDialog();
+    setProjectCreateBusy(false);
+    pendingFastProjectCreateName = null;
+    switchActiveProject(projectId, {
+      skipChatSave: true,
+      skipChatRestore: false,
+      skipViewSwitch: false,
+      force: true,
+    });
+    switchView('command-center');
+    mutateProjectRegistry('set-active', { projectId: projectId }).catch(function () {
+      /* best-effort registry sync after resume */
+    });
+    pushNotification('Opened project — ' + (payload.existingProjectName || projectId));
+  }
+
+  function createFreshCopyFromDuplicate() {
+    var name = pendingFastProjectCreateName;
+    if (!name) return;
+    hideProjectDuplicateNameDialog();
+    setProjectCreateBusy(true);
+    createProjectViaFastApi(name, { confirmFreshCopy: true, forceFreshProject: true }).catch(function (err) {
+      var message = err && err.message ? err.message : 'Could not create project';
+      showProjectCreateError(message);
+      pushNotification('Could not create project — ' + message);
+    });
   }
 
   var projectCreateInFlight = null;
 
-  function createProjectViaRegistry(name, options) {
+  function createProjectViaFastApi(name, options) {
     options = options || {};
     if (!localRuntimeHealthy) {
       renderLocalRuntimeBanner(true);
@@ -1240,38 +2322,49 @@
       projectTabCounter += 1;
       trimmed = 'Project ' + projectTabCounter;
     }
-    if (!options.skipClientDuplicateCheck) {
-      var duplicate = findActiveProjectByName(trimmed);
-      if (duplicate) {
-        return Promise.reject(new Error(buildDuplicateProjectNameError(trimmed)));
-      }
+    pendingFastProjectCreateName = trimmed;
+    var client = window.CommandCenterFastCreateClient;
+    if (!client || typeof client.postFastProjectCreate !== 'function') {
+      return Promise.reject(new Error('Command Center fast-create client is unavailable'));
     }
-    projectCreateInFlight = mutateProjectRegistry('create', { name: trimmed })
-      .then(function (json) {
-        var createdName = json.project && json.project.name ? json.project.name : trimmed;
-        var createdProjectId =
-          json.project && json.project.projectId ? json.project.projectId : json.activeProjectId;
-        setProjectCreateBusy(false);
-        hideProjectNameDialog();
-        if (createdProjectId) {
-          switchActiveProject(createdProjectId, {
-            skipChatSave: true,
-            skipChatRestore: false,
-            skipViewSwitch: false,
-          });
+    projectCreateInFlight = client
+      .postFastProjectCreate({
+        projectName: trimmed,
+        forceFreshProject: options.forceFreshProject !== false,
+        confirmFreshCopy: options.confirmFreshCopy === true,
+      })
+      .then(function (result) {
+        var res = result.response;
+        var json = result.payload;
+        var elapsedMs = result.elapsedMs;
+        if (res.status === 409 && json && json.code) {
+          showProjectDuplicateNameDialog(json, trimmed);
+          var duplicateErr = new Error(json.error || 'Project name already exists');
+          duplicateErr.code = json.code;
+          duplicateErr.duplicate = true;
+          throw duplicateErr;
         }
-        switchView('command-center');
-        pushNotification('Created project — ' + createdName);
-        return json;
+        if (!res.ok || (json && json.ok === false)) {
+          throw new Error(formatProjectRegistryError(res, json, 'Fast project create failed'));
+        }
+        finalizeFastProjectCreateSuccess(json || {}, { elapsedMs: elapsedMs });
+        return json || {};
       })
       .catch(function (err) {
-        setProjectCreateBusy(false);
+        if (err && err.duplicate) {
+          throw err;
+        }
         throw err;
       })
       .finally(function () {
         projectCreateInFlight = null;
+        setProjectCreateBusy(false);
       });
     return projectCreateInFlight;
+  }
+
+  function createProjectViaRegistry(name, options) {
+    return createProjectViaFastApi(name, options);
   }
 
   function loadProjectRegistryState() {
@@ -1280,6 +2373,7 @@
     projectRegistryUsedCachedFallback = false;
     projectRegistryHydrationRetryCount = 0;
     projectRegistryClient.hydrationState = 'loading';
+    projectRegistryClient.serverHydrationStatus = 'LOADING';
     projectRegistryClient.error = null;
     syncProjectRegistryHydrationAliases();
     scheduleProjectRegistryLoadTimeout();
@@ -1293,7 +2387,7 @@
       if (index >= registryEndpoints.length) {
         throw new Error('registry HTTP 404 from all registry endpoints');
       }
-      var endpoint = registryEndpoints[index];
+      var endpoint = appendRegistryVisibilityQuery(registryEndpoints[index]);
       return fetch(endpoint, { method: 'GET', cache: 'no-store' }).then(function (res) {
         if (!res.ok) {
           if (res.status === 404 && index + 1 < registryEndpoints.length) {
@@ -1319,7 +2413,28 @@
         });
       });
     }
-    return attemptRegistryFetch(1)
+    function fetchUntilHydrated(attempt) {
+      return attemptRegistryFetch(attempt).then(function (payload) {
+        var hydrationStatus =
+          payload && (payload.hydrationStatus || (payload.hydration && payload.hydration.phase));
+        if (
+          (hydrationStatus === 'RESTORING' || hydrationStatus === 'LOADING') &&
+          attempt < REGISTRY_HYDRATION_RETRY_ATTEMPTS + 6
+        ) {
+          projectRegistryClient.hydrationState = 'restoring';
+          projectRegistryClient.serverHydrationStatus = hydrationStatus;
+          syncProjectRegistryHydrationAliases();
+          renderProductSurfaces();
+          return new Promise(function (resolve) {
+            setTimeout(resolve, REGISTRY_HYDRATION_POLL_MS);
+          }).then(function () {
+            return fetchUntilHydrated(attempt + 1);
+          });
+        }
+        return payload;
+      });
+    }
+    return fetchUntilHydrated(1)
       .then(function (payload) {
         clearProjectRegistryLoadTimeout();
         applyProjectRegistryResponse(payload);
@@ -1331,7 +2446,10 @@
           renderProductSurfaces();
           return null;
         }
-        if (projectRegistryClient.hydrationState === 'loading') {
+        if (
+          projectRegistryClient.hydrationState === 'loading' ||
+          projectRegistryClient.hydrationState === 'restoring'
+        ) {
           projectRegistryClient.hydrationState = 'error';
           projectRegistryClient.error =
             (err && err.message ? err.message : 'Registry load failed') +
@@ -1567,8 +2685,95 @@
           .catch(function (err) {
             pushNotification('Could not archive project — ' + err.message);
           });
+        return;
+      }
+      if (action === 'duplicate') {
+        mutateProjectRegistry('duplicate', { projectId: projectId })
+          .then(function () {
+            pushNotification('Project duplicated');
+            return loadProductWorkspace(true);
+          })
+          .catch(function (err) {
+            pushNotification('Could not duplicate project — ' + err.message);
+          });
+        return;
+      }
+      if (action === 'restore') {
+        mutateProjectRegistry('restore', { projectId: projectId })
+          .then(function () {
+            pushNotification('Project restored');
+            return loadProductWorkspace(true);
+          })
+          .catch(function (err) {
+            pushNotification('Could not restore project — ' + err.message);
+          });
+        return;
+      }
+      if (action === 'delete') {
+        showProjectDeleteDialog(projectId, btn.getAttribute('data-project-name') || btnProjectNameFromId(projectId));
+        return;
+      }
+      if (
+        action === 'resume-build' ||
+        action === 'repair-build' ||
+        action === 'continue-prompt'
+      ) {
+        resumeProjectBuild(projectId, btn.getAttribute('data-project-name'), action);
+        return;
+      }
+      if (action === 'start-fresh-copy') {
+        resumeProjectBuild(projectId, btn.getAttribute('data-project-name'), 'start-fresh-copy');
       }
     });
+  }
+
+  function resumeProjectBuild(projectId, projectName, action) {
+    var resumeAction =
+      action === 'repair-build'
+        ? 'REPAIR_BUILD'
+        : action === 'continue-prompt'
+          ? 'CONTINUE_FROM_PROMPT'
+          : 'RESUME_BUILD';
+    switchActiveProject(projectId, { skipViewSwitch: true, force: true });
+    switchView('command-center');
+    pushNotification('Resuming project — ' + (projectName || projectId));
+    fetch('/api/build/from-prompt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      body: JSON.stringify({
+        projectId: projectId,
+        projectName: projectName,
+        prompt: '',
+        confirmProjectResume: action !== 'start-fresh-copy',
+        confirmFreshCopy: action === 'start-fresh-copy',
+        resumeAction: resumeAction,
+      }),
+    })
+      .then(function (res) {
+        return res.json();
+      })
+      .then(function (payload) {
+        if (payload.resumeRequired && !payload.ok) {
+          pushNotification(payload.message || 'Existing project requires resume confirmation.');
+          appendChatMessage(
+            payload.message ||
+              'Existing incomplete project found. Choose Resume Build to continue.',
+            'system',
+          );
+          return;
+        }
+        if (payload.build) {
+          applyOnePromptLivePreview(payload.build, payload.livePreview, null, {
+            activeProjectId: payload.activeProjectId || projectId,
+            multiProjectWorkspaces: payload.multiProjectWorkspaces,
+          });
+        }
+        loadProjectRegistryState();
+      })
+      .catch(function (err) {
+        pushNotification('Resume failed — ' + err.message);
+      });
   }
 
   function createNewProjectTab(name) {
@@ -1581,6 +2786,11 @@
 
   function mergeMultiProjectWorkspacesFromResponse(nextSessions) {
     if (!Array.isArray(nextSessions) || !nextSessions.length) return;
+    if (isProjectRegistryHydrated()) {
+      rebuildMultiProjectWorkspacesFromRegistry(projectRegistryClient.activeProjectId);
+      purgeStaleCommandCenterProjectState('registry-authority-merge');
+      return;
+    }
     var merged = multiProjectWorkspaces.slice();
     for (var i = 0; i < nextSessions.length; i += 1) {
       var incoming = nextSessions[i];
@@ -1873,6 +3083,11 @@
 
   function resolveExecutionTraceEventsFromPayload(payload) {
     if (!payload) return [];
+    var Bridge = window.ChatToBuildExecutionBridge || {};
+    if (Bridge.resolveBridgeTraceEvents) {
+      var bridgeEvents = Bridge.resolveBridgeTraceEvents(payload);
+      if (bridgeEvents && bridgeEvents.length) return bridgeEvents;
+    }
     if (payload.executionTraceEvents && payload.executionTraceEvents.length) {
       return payload.executionTraceEvents;
     }
@@ -2133,6 +3348,7 @@
     if (activeProjectId) {
       hideWelcomeState();
       renderCommandCenterWorkspaceState();
+      renderResumePreviousSessionPrompt();
       return;
     }
     var welcome = el('chat-welcome-state');
@@ -2142,6 +3358,10 @@
       panel.classList.remove('has-conversation');
       panel.classList.remove('has-active-project');
     }
+    var history = el('chat-history');
+    if (history) history.innerHTML = '';
+    conversationStarted = false;
+    renderResumePreviousSessionPrompt();
   }
 
   function hideWelcomeState() {
@@ -3981,7 +5201,7 @@
     var div = document.createElement('div');
     div.className = 'chat-message thinking';
     div.id = 'brain-thinking';
-    div.textContent = 'Brain is analyzing…';
+    div.textContent = 'Brain analyzing…';
     history.appendChild(div);
     scrollChatToBottom();
   }
@@ -4135,19 +5355,77 @@
     return html;
   }
 
+  function renderProjectBuildStateBadge(buildState) {
+    if (!buildState) return '';
+    var badgeClass = 'badge';
+    if (buildState === 'LAUNCH_READY' || buildState === 'COMPLETE') badgeClass += ' badge-complete';
+    if (
+      buildState === 'NEEDS_WORK' ||
+      buildState === 'PARTIAL' ||
+      buildState === 'REPAIRABLE' ||
+      buildState === 'RESUMABLE'
+    ) {
+      badgeClass += ' badge-warning';
+    }
+    if (buildState === 'FAILED') badgeClass += ' badge-failed';
+    return '<span class="' + badgeClass + '">' + escapeHtml(buildState) + '</span>';
+  }
+
+  function renderIncompleteProjectBanner(project) {
+    if (!project || !project.buildState) return '';
+    var incompleteStates = [
+      'NEEDS_WORK',
+      'FAILED',
+      'PARTIAL',
+      'REPAIRABLE',
+      'RESUMABLE',
+      'STALE',
+    ];
+    if (incompleteStates.indexOf(project.buildState) === -1) return '';
+    return (
+      '<div class="project-incomplete-banner card">' +
+      '<p><strong>' +
+      escapeHtml(project.bannerMessage || 'This project is incomplete.') +
+      '</strong></p>' +
+      '<div class="project-registry-actions">' +
+      '<button type="button" class="btn-primary" data-project-action="resume-build" data-project-id="' +
+      escapeHtml(project.projectId) +
+      '" data-project-name="' +
+      escapeHtml(project.name) +
+      '">Resume Build</button>' +
+      '<button type="button" class="btn-secondary" data-project-action="repair-build" data-project-id="' +
+      escapeHtml(project.projectId) +
+      '" data-project-name="' +
+      escapeHtml(project.name) +
+      '">Repair Build</button>' +
+      '<button type="button" class="btn-secondary" data-project-action="continue-prompt" data-project-id="' +
+      escapeHtml(project.projectId) +
+      '" data-project-name="' +
+      escapeHtml(project.name) +
+      '">Continue From Prompt</button>' +
+      '<button type="button" class="btn-secondary" data-project-action="start-fresh-copy" data-project-id="' +
+      escapeHtml(project.projectId) +
+      '" data-project-name="' +
+      escapeHtml(project.name) +
+      '">Start Fresh Copy</button>' +
+      '</div></div>'
+    );
+  }
+
   function renderProjectsSurface(ws) {
     var container = el('projects-surface');
     if (!container) return;
     var projectSummary = getProjectRegistrySummaryForUi();
     var registryLoading =
       projectRegistryClient.hydrationState === 'pending' ||
-      projectRegistryClient.hydrationState === 'loading';
+      projectRegistryClient.hydrationState === 'loading' ||
+      projectRegistryClient.hydrationState === 'restoring';
     var html = renderProductCard(
       'Your Projects',
         '<p class="founder-path-guidance">Start by creating a project or opening an existing one.</p>' +
         '<p class="product-lead">Active workspaces and applications you are building now — synced with Command Center.</p>' +
         (registryLoading
-          ? '<p class="hint"><strong>Loading projects…</strong></p>'
+          ? '<p class="hint"><strong>' + escapeHtml(registryHydrationLoadingMessage()) + '</strong></p>'
           : '') +
         (projectRegistryUsedCachedFallback
           ? '<p class="hint"><span class="badge">Stale registry cache</span> Showing last known projects while live registry reloads.</p>'
@@ -4159,7 +5437,7 @@
         '</p>',
     );
     if (registryLoading && !projectSummary.items.length) {
-      html += renderProductCard('Projects', '<p class="hint">Loading projects...</p>');
+      html += renderProductCard('Projects', '<p class="hint">' + escapeHtml(registryHydrationLoadingMessage()) + '</p>');
       container.innerHTML = html;
       wireProjectRegistryActions(container);
       return;
@@ -4176,7 +5454,15 @@
       return;
     }
     var projects = projectSummary.items || [];
-    if (!projects.length) {
+    if (!projects.length && projectRegistryClient.hydrationState === 'empty') {
+      html +=
+        renderProductCard(
+          'Get Started',
+          '<p class="empty-state">No projects in the registry yet.</p>' +
+            '<p>Click <strong>+ New project</strong> in Command Center to name and create your first project.</p>' +
+            '<p><button type="button" class="btn-primary" id="projects-create-first">Create Project</button></p>',
+        );
+    } else if (!projects.length) {
       html +=
         renderProductCard(
           'Get Started',
@@ -4200,7 +5486,10 @@
           activeBadge +
           ' <span class="badge">' +
           escapeHtml(p.status || 'ACTIVE') +
-          '</span></p>' +
+          '</span> ' +
+          renderProjectBuildStateBadge(p.buildState) +
+          '</p>' +
+          renderIncompleteProjectBanner(p) +
           '<p class="project-registry-meta"><strong>Created:</strong> ' +
           escapeHtml(formatProjectTimestamp(p.createdAt)) +
           '<br><strong>Last activity:</strong> ' +
@@ -4252,10 +5541,44 @@
           '" data-project-name="' +
           escapeHtml(p.name) +
           '">Archive</button>' +
+          '<button type="button" class="btn-secondary" data-project-action="duplicate" data-project-id="' +
+          escapeHtml(p.projectId) +
+          '" data-project-name="' +
+          escapeHtml(p.name) +
+          '">Duplicate</button>' +
+          '<button type="button" class="btn-danger" data-project-action="delete" data-project-id="' +
+          escapeHtml(p.projectId) +
+          '" data-project-name="' +
+          escapeHtml(p.name) +
+          '">Delete Project</button>' +
           '</div>' +
           '</section>';
       }
       html += '</div>';
+      var archived = getArchivedProjectRegistryItems();
+      if (archived.length) {
+        html += '<div class="project-archived-section"><h3>Archived Projects</h3><div class="project-grid">';
+        for (var a = 0; a < archived.length; a += 1) {
+          var ap = archived[a];
+          html +=
+            '<section class="card project-card-item project-card-archived">' +
+            '<h3>' +
+            escapeHtml(ap.name) +
+            '</h3>' +
+            '<p class="project-meta"><span class="badge">ARCHIVED</span></p>' +
+            '<div class="project-registry-actions">' +
+            '<button type="button" class="btn-secondary" data-project-action="restore" data-project-id="' +
+            escapeHtml(ap.projectId) +
+            '">Restore</button>' +
+            '<button type="button" class="btn-danger" data-project-action="delete" data-project-id="' +
+            escapeHtml(ap.projectId) +
+            '" data-project-name="' +
+            escapeHtml(ap.name) +
+            '">Delete Permanently</button>' +
+            '</div></section>';
+        }
+        html += '</div></div>';
+      }
     }
     container.innerHTML = html;
     wireProjectRegistryActions(container);
@@ -4301,9 +5624,24 @@
 
   function isOnePromptLivePreviewReady(lp) {
     if (!lp) return false;
-    if (lp.onePromptReady === true) return true;
-    if (lp.onePromptBuild && lp.onePromptBuild.status === 'READY' && lp.onePromptBuild.previewUrl) return true;
-    if (lp.previewUrl && lp.connected === true && lp.buildStatus && /^READY/i.test(lp.buildStatus)) return true;
+    if (lp.livePreviewAvailable === true && lp.previewUrl) return true;
+    if (lp.onePromptReady === true && lp.livePreviewAvailable !== false && lp.previewUrl) return true;
+  if (
+      lp.onePromptBuild &&
+      lp.onePromptBuild.livePreviewAvailable === true &&
+      lp.onePromptBuild.previewUrl
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  function isDevServerReachable(lp) {
+    if (!lp) return false;
+    if (lp.devServerRunning === true) return true;
+    if (lp.diagnosticPreviewUrl) return true;
+    if (lp.onePromptBuild && lp.onePromptBuild.devServerRunning === true) return true;
+    if (lp.onePromptBuild && lp.onePromptBuild.diagnosticPreviewUrl) return true;
     return false;
   }
 
@@ -4319,20 +5657,8 @@
         'Generated Application';
       resolvedLp = Object.assign({}, lp, {
         connected: true,
-        statusLabel: lp.statusLabel || 'Generated app running in Live Preview',
-        reality: lp.reality && lp.reality.state === 'PREVIEW_READY'
-          ? lp.reality
-          : {
-              state: 'PREVIEW_READY',
-              displayLabel: 'Preview ready for validation',
-              summaryLines: [
-                'Preview loaded successfully.',
-                'User interaction available.',
-                'Generated application is running in Live Preview.',
-              ],
-              problems: [],
-              recommendedActions: ['Interact with the running app in Live Preview'],
-            },
+        statusLabel: lp.statusLabel || 'Live Preview unlocked',
+        reality: lp.reality,
       });
       if (!resolvedRa || resolvedRa.outputState === 'NO_RUNNING_APP' || resolvedRa.testReadiness === 'NOT_TESTABLE') {
         var profileAligned =
@@ -4356,12 +5682,12 @@
               'Build profile may not match the founder request.',
           recommendedAction: 'Interact with the running app in Live Preview',
           buildOutput: Object.assign({}, (resolvedRa && resolvedRa.buildOutput) || {}, {
-            buildState: 'PREVIEW_READY',
+            buildState: 'UNLOCKED_PREVIEW_READY',
             outputType: 'preview_app',
             changeSummary:
               (lp.onePromptBuild && lp.onePromptBuild.workspacePath
                 ? 'Generated ' + (lp.onePromptBuild.generatedProfile || 'application') + ' at ' + lp.onePromptBuild.workspacePath
-                : null) || 'Generated application is running in Live Preview.',
+                : null) || 'Live Preview unlocked by gate authority.',
           }),
         });
       }
@@ -4373,15 +5699,30 @@
     if (!reality) {
       if (lp && isOnePromptLivePreviewReady(lp) && lp.previewUrl) {
         return {
-          state: 'PREVIEW_READY',
-          displayLabel: 'Preview ready for validation',
+          state: 'UNLOCKED_PREVIEW_READY',
+          displayLabel: 'Live Preview unlocked',
           summaryLines: [
-            'Preview loaded successfully.',
-            'User interaction available.',
+            'Live Preview Gate approved this preview.',
             'Generated application is running in Live Preview.',
           ],
           problems: [],
           recommendedActions: ['Interact with the running app in Live Preview'],
+        };
+      }
+      if (lp && isDevServerReachable(lp) && !isOnePromptLivePreviewReady(lp)) {
+        return {
+          state: lp.livePreviewGateState || 'PREVIEW_LOCKED',
+          displayLabel: 'App server running — Live Preview locked',
+          summaryLines: [
+            'Dev server is running (BUILD_COMPILED).',
+            lp.gateBlockerSummary ||
+              'Live Preview is locked while AiDevEngine completes launch evidence.',
+          ],
+          problems: lp.gateBlockerSummary ? [lp.gateBlockerSummary] : [],
+          recommendedActions: [
+            'Wait for AiDevEngine to finish validation — do not treat the dev server as launch-ready.',
+          ],
+          devServerReachable: true,
         };
       }
       return null;
@@ -4393,7 +5734,7 @@
       problems: (reality.problems || []).slice(),
       recommendedActions: (reality.recommendedActions || []).slice(),
     };
-    if (previewClientReality.error && merged.state !== 'NO_PREVIEW') {
+    if (previewClientReality.error && merged.state !== 'NO_PREVIEW' && merged.state !== 'UNLOCKED_PREVIEW_READY') {
       merged.state = 'PREVIEW_DEGRADED';
       merged.displayLabel = 'Preview degraded';
       if (merged.problems.indexOf('Preview frame failed to load content.') === -1) {
@@ -4406,16 +5747,24 @@
       merged.state = 'PREVIEW_VISIBLE';
       merged.displayLabel = 'Preview visible';
       merged.summaryLines = ['Preview loaded successfully.', 'Content is visible in the preview surface.'];
-    } else if (lp && isOnePromptLivePreviewReady(lp) && lp.previewUrl && merged.state === 'NO_PREVIEW') {
-      merged.state = 'PREVIEW_READY';
-      merged.displayLabel = 'Preview ready for validation';
-      merged.summaryLines = [
-        'Preview loaded successfully.',
-        'User interaction available.',
-        'Generated application is running in Live Preview.',
-      ];
-      merged.problems = [];
-      merged.recommendedActions = ['Interact with the running app in Live Preview'];
+    } else if (isDevServerReachable(lp) && !isOnePromptLivePreviewReady(lp)) {
+      merged.devServerReachable = true;
+      if (
+        merged.state === 'NO_PREVIEW' ||
+        merged.state === 'PREVIEW_LOCKED' ||
+        /^LOCKED/i.test(String(merged.state))
+      ) {
+        merged.displayLabel =
+          merged.displayLabel || 'App server running — Live Preview locked';
+        if (merged.summaryLines.length === 0) {
+          merged.summaryLines = [
+            'Dev server is running (BUILD_COMPILED).',
+            lp && lp.gateBlockerSummary
+              ? lp.gateBlockerSummary
+              : 'Live Preview remains locked until gate evidence is complete.',
+          ];
+        }
+      }
     }
     return merged;
   }
@@ -4575,6 +5924,24 @@
     ws = buildWorkspaceViewForActiveProject(ws);
     var canonical = resolveCanonicalLivePreviewPanels((ws && ws.livePreview) || {}, (ws && ws.runningApplication) || null);
     var lp = canonical.livePreview;
+    if (
+      !lp.previewUrl &&
+      projectSessionClient.context &&
+      projectSessionClient.context.projectId === activeProjectId &&
+      projectSessionClient.context.previewUrl
+    ) {
+      lp = Object.assign({}, lp, {
+        previewUrl: projectSessionClient.context.previewUrl,
+        livePreviewAvailable: true,
+        onePromptReady: true,
+        previewBindingReason: projectSessionClient.context.previewBindingReason,
+        previewRepairAction: projectSessionClient.context.previewRepairAction,
+        onePromptBuild: Object.assign({}, lp.onePromptBuild || {}, {
+          previewUrl: projectSessionClient.context.previewUrl,
+          livePreviewAvailable: true,
+        }),
+      });
+    }
     var ra = canonical.runningApplication;
     var activeProject = getActiveProjectWorkspace();
     var html =
@@ -4600,8 +5967,17 @@
               escapeHtml(activeProject.buildStatus || 'IDLE') +
               '</p>' +
               '<p><strong>Preview URL:</strong> ' +
-              escapeHtml(activeProject.previewUrl || 'No preview yet') +
+              escapeHtml(
+                activeProject.livePreviewAvailable && activeProject.previewUrl
+                  ? activeProject.previewUrl
+                  : 'Locked — gate has not unlocked preview',
+              ) +
               '</p>' +
+              (activeProject.devServerRunning && activeProject.diagnosticPreviewUrl
+                ? '<p><strong>Dev server (diagnostic):</strong> ' +
+                  escapeHtml(activeProject.diagnosticPreviewUrl) +
+                  ' — not launch-ready</p>'
+                : '') +
               '</div>'
             : '<p class="hint">Select or create a project tab to manage isolated Live Preview sessions.</p>'),
       ) +
@@ -4658,7 +6034,11 @@
                 : '') +
               (lp.onePromptBuild.previewUrl
                 ? '<p><strong>Live Preview URL:</strong> ' + escapeHtml(lp.onePromptBuild.previewUrl) + '</p>'
-                : '')
+                : lp.onePromptBuild.diagnosticPreviewUrl
+                  ? '<p><strong>Dev server running (diagnostic):</strong> ' +
+                    escapeHtml(lp.onePromptBuild.diagnosticPreviewUrl) +
+                    ' — Live Preview locked</p>'
+                  : '')
             : '') +
           (lp.lastVerificationHint
             ? '<p><strong>Last verification:</strong> ' + escapeHtml(lp.lastVerificationHint) + '</p>'
@@ -4681,11 +6061,38 @@
             escapeHtml(lp.previewUrl) +
             '"></iframe>',
         );
+    } else if (lp.limitedPreviewUrl) {
+      html += renderProductCard(
+        'Limited Preview — Review Only',
+        '<p class="hint"><strong>Not launch-ready.</strong> This limited preview is for internal review only — Live Preview Gate has not unlocked.</p>' +
+          '<p><strong>Review URL:</strong> ' + escapeHtml(lp.limitedPreviewUrl) + '</p>',
+      );
+    } else if (lp.diagnosticPreviewUrl && lp.devServerRunning) {
+      html += renderProductCard(
+        'Dev Server Running',
+        '<p><strong>App server is running, but Live Preview is locked</strong> while AiDevEngine completes launch evidence.</p>' +
+          '<p><strong>Diagnostic URL (not launch-ready):</strong> ' +
+          escapeHtml(lp.diagnosticPreviewUrl) +
+          '</p>' +
+          (lp.gateBlockerSummary
+            ? '<p><strong>Gate blocker:</strong> ' + escapeHtml(lp.gateBlockerSummary) + '</p>'
+            : '') +
+          '<p class="hint">Dev server reachability does not mean preview is unlocked. Wait for autonomous validation to complete.</p>',
+      );
     } else {
+      var bindingReason =
+        lp.previewBindingReason ||
+        (projectSessionClient.context && projectSessionClient.context.previewBindingReason) ||
+        'No preview URL is bound to the active project session.';
+      var repairAction =
+        lp.previewRepairAction ||
+        (projectSessionClient.context && projectSessionClient.context.previewRepairAction) ||
+        'Start a preview or open a project with a running preview.';
       html += renderProductCard(
         'No Live Preview Running',
         '<p class="empty-state">No live preview is running yet.</p>' +
-          '<p><strong>Next action:</strong> Start a preview or open a project with a running preview.</p>' +
+          '<p><strong>Reason:</strong> ' + escapeHtml(bindingReason) + '</p>' +
+          '<p><strong>Repair action:</strong> ' + escapeHtml(repairAction) + '</p>' +
           '<p class="hint">Live Preview reports actual load, interaction, and freshness — not just container existence.</p>',
       );
     }
@@ -8542,6 +9949,18 @@
   function renderSidebarStatus(ws) {
     var statusEl = el('sidebar-status-text');
     if (!statusEl) return;
+    if (localRuntimeHealthy && runtimeReadinessLifecycle === 'READY') {
+      updateRuntimeReadinessUi();
+      return;
+    }
+    if (
+      runtimeReadinessLifecycle === 'CHECKING_HEALTH' ||
+      runtimeReadinessLifecycle === 'DEGRADED' ||
+      runtimeReadinessLifecycle === 'UNAVAILABLE'
+    ) {
+      updateRuntimeReadinessUi();
+      return;
+    }
     if (!ws || !ws.runtime) {
       statusEl.textContent = 'Checking runtime…';
       return;
@@ -8760,6 +10179,12 @@
       }
     }
     currentViewId = viewId;
+    if (viewId === 'command-center') {
+      saveActiveProjectChat();
+      if (activeProjectId && shouldAutoHydrateChatForActiveProject(activeProjectId)) {
+        hydrateProjectSessionFromStore(activeProjectId, { forceChatRestore: true });
+      }
+    }
     renderFirstTimeFounderPath(viewId, workspaceData);
     updateWorkspaceNavControls();
   }
@@ -9089,6 +10514,9 @@
   }
 
   function isLocalRuntimeHealthPayloadOk(payload) {
+    if (RestartResilience.isLocalRuntimeHealthPayloadOk) {
+      return RestartResilience.isLocalRuntimeHealthPayloadOk(payload);
+    }
     return (
       payload &&
       payload.postAllowed === true &&
@@ -9099,25 +10527,412 @@
     );
   }
 
-  function renderLocalRuntimeBanner(show) {
+  function setRuntimeReadinessLifecycle(nextLifecycle) {
+    runtimeReadinessLifecycle = nextLifecycle;
+    updateRuntimeReadinessUi();
+  }
+
+  function updateRuntimeReadinessUi() {
+    var statusEl = el('sidebar-status-text');
+    var labels = RestartResilience.SIDEBAR_STATUS_BY_LIFECYCLE || {};
+    if (statusEl) {
+      statusEl.textContent =
+        labels[runtimeReadinessLifecycle] ||
+        (runtimeReadinessLifecycle === 'READY'
+          ? 'AiDevEngine local runtime connected'
+          : 'Checking runtime…');
+    }
+    syncCommandCenterSendButtonState(lastRuntimeBannerReconciliation);
+  }
+
+  function syncCommandCenterSendButtonState(reconciliation) {
+    var sendBtn = el('chat-send');
+    var form = el('chat-form');
+    if (!sendBtn) return;
+    var projectCreateBusy = form && form.classList.contains('is-creating');
+    sendBtn.disabled = Boolean(projectCreateBusy);
+    sendBtn.setAttribute('aria-disabled', projectCreateBusy ? 'true' : 'false');
+    var lifecycle = reconciliation ? reconciliation.lifecycle : runtimeReadinessLifecycle;
+    var awaitingRuntime =
+      lifecycle === 'CHECKING_HEALTH' || lifecycle === 'STARTING' || lifecycle === 'DEGRADED';
+    sendBtn.setAttribute('aria-busy', awaitingRuntime ? 'true' : 'false');
+    if (awaitingRuntime) {
+      sendBtn.setAttribute('data-runtime-waiting', 'true');
+    } else {
+      sendBtn.removeAttribute('data-runtime-waiting');
+    }
+  }
+
+  function isStaleRuntimeChatText(text) {
+    if (RestartResilience.isStaleRuntimeChatText) {
+      return RestartResilience.isStaleRuntimeChatText(text);
+    }
+    return /local runtime is stale or unavailable|local runtime not ready|brain could not respond/i.test(
+      String(text || ''),
+    );
+  }
+
+  function isStaleRuntimeErrorText(text) {
+    if (RestartResilience.isStaleRuntimeErrorText) {
+      return RestartResilience.isStaleRuntimeErrorText(text);
+    }
+    return /local runtime|start-aidevengine|brain health endpoint unreachable/i.test(String(text || ''));
+  }
+
+  function clearStaleRuntimeChatMessages() {
+    var history = el('chat-history');
+    if (history) {
+      var nodes = history.querySelectorAll('.chat-message.system, .chat-message.brain');
+      for (var i = 0; i < nodes.length; i += 1) {
+        var node = nodes[i];
+        if (isStaleRuntimeChatText(node.textContent)) {
+          node.parentNode.removeChild(node);
+        }
+      }
+    }
+    for (var projectId in projectChatThreads) {
+      if (!Object.prototype.hasOwnProperty.call(projectChatThreads, projectId)) continue;
+      var html = projectChatThreads[projectId];
+      if (!html || !isStaleRuntimeChatText(html)) continue;
+      projectChatThreads[projectId] = html.replace(
+        /<div class="chat-message (?:system|brain)">[\s\S]*?<\/div>/gi,
+        function (block) {
+          return isStaleRuntimeChatText(block) ? '' : block;
+        },
+      );
+    }
+    try {
+      if (RestartResilience.STALE_RUNTIME_ERROR_SESSION_KEY) {
+        window.sessionStorage.removeItem(RestartResilience.STALE_RUNTIME_ERROR_SESSION_KEY);
+      }
+    } catch (storageErr) {
+      /* ignore */
+    }
+    var filteredOperatorLog = [];
+    for (var j = 0; j < operatorLogBuffer.length; j += 1) {
+      var logEntry = operatorLogBuffer[j];
+      var logText = [logEntry.detail, logEntry.action, logEntry.eventType].join(' ');
+      if (!isStaleRuntimeErrorText(logText) && !isStaleRuntimeChatText(logText)) {
+        filteredOperatorLog.push(logEntry);
+      }
+    }
+    operatorLogBuffer = filteredOperatorLog;
+  }
+
+  function clearPersistedStaleRuntimeState() {
+    if (RuntimeBannerTruthReconciliation.clearPersistedStaleRuntimeState) {
+      RuntimeBannerTruthReconciliation.clearPersistedStaleRuntimeState();
+    }
+    try {
+      if (RestartResilience.STALE_RUNTIME_ERROR_SESSION_KEY) {
+        window.sessionStorage.removeItem(RestartResilience.STALE_RUNTIME_ERROR_SESSION_KEY);
+      }
+    } catch (storageErr) {
+      /* ignore */
+    }
+  }
+
+  function applyRuntimeBannerReconciliation(options) {
+    options = options || {};
+    var truth = lastRuntimeTruthResult;
+    if (options.truth !== undefined) {
+      truth = options.truth;
+    }
+    var healthPayload = lastRuntimeHealthPayload;
+    if (options.healthPayload !== undefined) {
+      healthPayload = options.healthPayload;
+    }
+    if (options.runtimeAuthorityPayload !== undefined) {
+      lastRuntimeAuthorityPayload = options.runtimeAuthorityPayload;
+    }
+    if (!RuntimeBannerTruthReconciliation.reconcileRuntimeBannerState) {
+      return null;
+    }
+    var normalizedTruth = truth
+      ? RuntimeBannerTruthReconciliation.normalizeTruthResult
+        ? RuntimeBannerTruthReconciliation.normalizeTruthResult(truth)
+        : truth
+      : null;
+    var reconciliation = RuntimeBannerTruthReconciliation.reconcileRuntimeBannerState({
+      truth: normalizedTruth,
+      healthPayload: healthPayload,
+      runtimeAuthority: lastRuntimeAuthorityPayload
+        ? RuntimeBannerTruthReconciliation.normalizeRuntimeAuthorityPayload
+          ? RuntimeBannerTruthReconciliation.normalizeRuntimeAuthorityPayload(lastRuntimeAuthorityPayload)
+          : lastRuntimeAuthorityPayload
+        : null,
+      previousLifecycle: runtimeReadinessLifecycle,
+      bannerSourceHint: runtimeBannerSource,
+    });
+    runtimeBannerSource = reconciliation.bannerSource;
+    lastRuntimeBannerReconciliation = reconciliation;
+    runtimeTruthReady = reconciliation.runtimeTruthReady;
+    runtimeTruthClassifyAllowed = reconciliation.runtimeTruthClassifyAllowed;
+    localRuntimeHealthy = reconciliation.localRuntimeHealthy;
+    runtimeReadinessLifecycle = reconciliation.lifecycle;
+    renderLocalRuntimeBanner(reconciliation.shouldShowBanner, reconciliation.bannerMessage);
+    var statusEl = el('sidebar-status-text');
+    if (statusEl) {
+      statusEl.textContent = reconciliation.footerStatus;
+    }
+    syncCommandCenterSendButtonState(reconciliation);
+    if (RuntimeBannerTruthReconciliation.logRuntimeBannerDiagnostic) {
+      RuntimeBannerTruthReconciliation.logRuntimeBannerDiagnostic(reconciliation);
+    } else if (typeof console !== 'undefined' && console.log) {
+      console.log('RUNTIME_BANNER_TRUTH_DIAGNOSTIC', reconciliation);
+    }
+    return reconciliation;
+  }
+
+  function applyHealthyRuntimeState(payload) {
+    lastRuntimeHealthPayload = payload || null;
+    clearPersistedStaleRuntimeState();
+    clearStaleRuntimeChatMessages();
+    runtimeDiagnostics.brainEndpointReachable = true;
+    runtimeDiagnostics.brainConnected = true;
+    runtimeBannerSource = 'brain-health-ready';
+    applyRuntimeBannerReconciliation({ healthPayload: payload });
+    if (isStaleRuntimeErrorText(runtimeDiagnostics.lastError)) {
+      setLastError('None');
+    }
+    setLastRequestStatus('Ready');
+    if (typeof console !== 'undefined' && console.log) {
+      console.log(
+        RestartResilience.COMMAND_CENTER_STALE_ERROR_CLEARED_TRACE ||
+          'COMMAND_CENTER_STALE_ERROR_CLEARED',
+      );
+      console.log(
+        RestartResilience.COMMAND_CENTER_HEALTH_READY_TRACE || 'COMMAND_CENTER_HEALTH_READY',
+      );
+    }
+    if (payload && typeof payload.llmConnected === 'boolean') {
+      renderLlmChatBrainDiagnostics({
+        llmConnected: payload.llmConnected,
+        fallbackUsed: !payload.llmConnected,
+        provider: payload.llmProvider || null,
+        model: payload.llmModel || null,
+        contextIncluded: payload.contextIncluded === true,
+        contextSourcesUsed: payload.contextSourcesUsed || [],
+        contextSourcesLabel: payload.contextSourcesLabel || null,
+        lastContextHydration: payload.lastContextHydration || null,
+        hydratedFactCount: payload.hydratedFactCount || 0,
+        contextConfidence: payload.contextConfidence || null,
+        identityLoaded: payload.identityLoaded === true,
+        founderLoaded: payload.founderLoaded === true,
+        productLoaded: payload.productLoaded === true,
+        historyLoaded: payload.historyLoaded === true,
+        selfEvolutionLoaded: payload.selfEvolutionLoaded === true,
+        identityVersion: payload.identityVersion || null,
+        founderVersion: payload.founderVersion || null,
+        productVersion: payload.productVersion || null,
+        currentProductIdentity: payload.currentProductIdentity || null,
+        founderIdentity: payload.founderIdentity || null,
+        companyIdentity: payload.companyIdentity || null,
+        legacyIdentity: payload.legacyIdentity || null,
+        judgeScore: null,
+        warnings: payload.llmApiKeyConfigured ? [] : ['LLM_API_KEY not configured in process.env'],
+      });
+    }
+    renderRuntimeDiagnostics();
+    updateRuntimeReadinessUi();
+  }
+
+  function applyRuntimeTruthResult(result) {
+    lastRuntimeTruthResult = RuntimeBannerTruthReconciliation.normalizeTruthResult
+      ? RuntimeBannerTruthReconciliation.normalizeTruthResult(result)
+      : result;
+    runtimeTruthReady = lastRuntimeTruthResult && lastRuntimeTruthResult.ok === true;
+    runtimeTruthClassifyAllowed =
+      runtimeTruthReady && lastRuntimeTruthResult.classifyRouteAvailable === true;
+    if (result && result.runtimeIdChanged) {
+      clearPersistedStaleRuntimeState();
+      clearStaleRuntimeChatMessages();
+      if (typeof loadProjectRegistry === 'function') {
+        loadProjectRegistry({ force: true });
+      }
+      setLastError('None');
+    }
+    if (
+      lastRuntimeTruthResult &&
+      lastRuntimeTruthResult.freshnessStatus === 'FRESH' &&
+      lastRuntimeTruthResult.classifyRouteAvailable
+    ) {
+      clearPersistedStaleRuntimeState();
+      clearStaleRuntimeChatMessages();
+      runtimeBannerSource = 'runtime-truth-fresh';
+      if (typeof console !== 'undefined' && console.log) {
+        console.log(
+          RuntimeBannerTruthReconciliation.TRUTH_READY_TRACE ||
+            RuntimeTruthAuthority.READY_TRACE ||
+            'COMMAND_CENTER_RUNTIME_TRUTH_READY',
+          lastRuntimeTruthResult.runtimeId,
+        );
+      }
+      applyRuntimeBannerReconciliation({ truth: lastRuntimeTruthResult });
+      setLastError('None');
+      return true;
+    }
+    if (!runtimeTruthReady) {
+      runtimeTruthStaleMessage =
+        (result && result.message) ||
+        RuntimeTruthAuthority.STALE_MESSAGE ||
+        'AiDevEngine runtime is stale. Restart required.';
+      runtimeBannerSource = 'runtime-truth-stale';
+      applyRuntimeBannerReconciliation({ truth: lastRuntimeTruthResult });
+      if (isStaleRuntimeErrorText(runtimeDiagnostics.lastError)) {
+        setLastError(runtimeTruthStaleMessage);
+      }
+      return false;
+    }
+    setLastError('None');
+    applyRuntimeBannerReconciliation({ truth: lastRuntimeTruthResult });
+    return true;
+  }
+
+  function verifyCommandCenterRuntimeTruth() {
+    if (!RuntimeTruthAuthority.verifyRuntimeTruth) {
+      runtimeTruthReady = false;
+      runtimeTruthClassifyAllowed = false;
+      return Promise.resolve(false);
+    }
+    return RuntimeTruthAuthority.verifyRuntimeTruth()
+      .then(function (result) {
+        return applyRuntimeTruthResult(result);
+      })
+      .catch(function () {
+        return applyRuntimeTruthResult({
+          ok: false,
+          stale: true,
+          classifyRouteAvailable: false,
+          message: runtimeTruthStaleMessage,
+          runtimeId: null,
+        });
+      });
+  }
+
+  function pollBrainHealthStartup() {
+    if (runtimeHealthPollPromise) return runtimeHealthPollPromise;
+    runtimeHealthPollStartedAt = Date.now();
+    setRuntimeReadinessLifecycle('CHECKING_HEALTH');
+    var attempt = 0;
+
+    function attemptHealthPoll() {
+      return checkBrainHealth({ fromStartupPoll: true }).then(function (ok) {
+        var elapsedMs = Date.now() - runtimeHealthPollStartedAt;
+        if (ok) {
+          return true;
+        }
+        var plan = RestartResilience.planHealthPoll
+          ? RestartResilience.planHealthPoll({ healthOk: false, attempt: attempt, elapsedMs: elapsedMs })
+          : { shouldContinue: elapsedMs < 10000, nextDelayMs: 500 };
+        attempt += 1;
+        setRuntimeReadinessLifecycle(
+          RestartResilience.resolveLifecycleFromHealth
+            ? RestartResilience.resolveLifecycleFromHealth({
+                healthOk: false,
+                payload: null,
+                elapsedMs: elapsedMs,
+              })
+            : elapsedMs >= 10000
+              ? 'UNAVAILABLE'
+              : 'CHECKING_HEALTH',
+        );
+        if (!plan.shouldContinue) {
+          setRuntimeReadinessLifecycle('UNAVAILABLE');
+          applyRuntimeBannerReconciliation();
+          return false;
+        }
+        return new Promise(function (resolve) {
+          setTimeout(resolve, plan.nextDelayMs);
+        }).then(attemptHealthPoll);
+      });
+    }
+
+    runtimeHealthPollPromise = attemptHealthPoll().finally(function () {
+      runtimeHealthPollPromise = null;
+    });
+    return runtimeHealthPollPromise;
+  }
+
+  function mergeRuntimeStatusBarItems(items) {
+    var list = items || [];
+    var filtered = [];
+    for (var i = 0; i < list.length; i += 1) {
+      if (
+        !/local runtime connected|runtime unavailable|runtime degraded|health check in progress|checking runtime/i.test(
+          list[i],
+        )
+      ) {
+        filtered.push(list[i]);
+      }
+    }
+    if (localRuntimeHealthy && runtimeReadinessLifecycle === 'READY') {
+      return ['AiDevEngine local runtime connected'].concat(filtered);
+    }
+    if (runtimeReadinessLifecycle === 'UNAVAILABLE') {
+      return ['AiDevEngine runtime unavailable'].concat(filtered);
+    }
+    if (runtimeReadinessLifecycle === 'DEGRADED' || runtimeReadinessLifecycle === 'CHECKING_HEALTH') {
+      return ['AiDevEngine runtime health check in progress'].concat(filtered);
+    }
+    if (runtimeReadinessLifecycle === 'STARTING') {
+      return ['Starting AiDevEngine runtime'].concat(filtered);
+    }
+    return list;
+  }
+
+  function renderLocalRuntimeBanner(show, message) {
+    var shouldShow;
+    var bannerText = message || LOCAL_RUNTIME_BANNER_TEXT;
+    if (typeof show === 'boolean') {
+      shouldShow = show;
+    } else if (
+      RuntimeBannerTruthReconciliation.reconcileRuntimeBannerState &&
+      (lastRuntimeTruthResult || lastRuntimeHealthPayload || lastRuntimeAuthorityPayload)
+    ) {
+      var live = RuntimeBannerTruthReconciliation.reconcileRuntimeBannerState({
+        truth: lastRuntimeTruthResult,
+        healthPayload: lastRuntimeHealthPayload,
+        runtimeAuthority: lastRuntimeAuthorityPayload
+          ? RuntimeBannerTruthReconciliation.normalizeRuntimeAuthorityPayload
+            ? RuntimeBannerTruthReconciliation.normalizeRuntimeAuthorityPayload(lastRuntimeAuthorityPayload)
+            : lastRuntimeAuthorityPayload
+          : null,
+        previousLifecycle: runtimeReadinessLifecycle,
+        bannerSourceHint: runtimeBannerSource,
+      });
+      shouldShow = live.shouldShowBanner;
+      bannerText = live.bannerMessage || LOCAL_RUNTIME_BANNER_TEXT;
+      runtimeBannerSource = live.bannerSource;
+    } else {
+      shouldShow = RestartResilience.shouldShowRuntimeBanner
+        ? RestartResilience.shouldShowRuntimeBanner(runtimeReadinessLifecycle)
+        : runtimeReadinessLifecycle === 'UNAVAILABLE';
+    }
     var banner = el('local-runtime-banner');
     if (banner) {
-      banner.textContent = LOCAL_RUNTIME_BANNER_TEXT;
-      if (show) {
+      banner.textContent = bannerText;
+      if (shouldShow) {
         banner.classList.remove('hidden');
       } else {
         banner.classList.add('hidden');
       }
     }
-    if (show) {
+    if (shouldShow) {
       document.body.classList.add('local-runtime-blocked');
-      setLastError('Local runtime unavailable — restart using Start-AiDevEngine');
     } else {
       document.body.classList.remove('local-runtime-blocked');
     }
   }
 
-  function checkBrainHealth() {
+  function applyRuntimeAuthorityBannerPayload(payload) {
+    applyRuntimeBannerReconciliation({ runtimeAuthorityPayload: payload || null });
+  }
+
+  window.__applyRuntimeAuthorityBanner = applyRuntimeAuthorityBannerPayload;
+
+  function checkBrainHealth(options) {
+    options = options || {};
     return fetch('/api/brain/health', { method: 'GET', cache: 'no-store' })
       .then(function (res) {
         return res.text().then(function (bodyText) {
@@ -9129,30 +10944,65 @@
           }
           if (!res.ok) {
             localRuntimeHealthy = false;
-            renderLocalRuntimeBanner(true);
+            var elapsedFailMs = runtimeHealthPollStartedAt
+              ? Date.now() - runtimeHealthPollStartedAt
+              : RestartResilience.HEALTH_POLL_WINDOW_MS || 10000;
+            setRuntimeReadinessLifecycle(
+              RestartResilience.resolveLifecycleFromHealth
+                ? RestartResilience.resolveLifecycleFromHealth({
+                    healthOk: false,
+                    payload: payload,
+                    elapsedMs: elapsedFailMs,
+                  })
+                : 'UNAVAILABLE',
+            );
+            renderLocalRuntimeBanner();
             throw new Error('Health check HTTP ' + res.status);
           }
           return payload;
         });
       })
       .then(function (payload) {
+        lastRuntimeHealthPayload = payload;
         var ok = isLocalRuntimeHealthPayloadOk(payload);
-        localRuntimeHealthy = ok;
-        runtimeDiagnostics.brainEndpointReachable = ok;
-        runtimeDiagnostics.brainConnected = ok;
-        renderLocalRuntimeBanner(!ok);
         if (ok) {
-          pushNotification('AiDevEngine Command Center brain active');
-          setLastError('None');
-        } else if (payload && payload.postAllowed === true && payload.buildIntentRouting !== true) {
+          applyHealthyRuntimeState(payload);
+          if (!options.fromStartupPoll && !options.fromRegistryHydration) {
+            pushNotification('AiDevEngine Command Center brain active');
+          }
+          return true;
+        }
+        localRuntimeHealthy = false;
+        runtimeDiagnostics.brainEndpointReachable = Boolean(payload);
+        runtimeDiagnostics.brainConnected = false;
+        var elapsedMs = runtimeHealthPollStartedAt
+          ? Date.now() - runtimeHealthPollStartedAt
+          : RestartResilience.HEALTH_POLL_WINDOW_MS || 10000;
+        runtimeBannerSource = 'brain-health-not-ready';
+        applyRuntimeBannerReconciliation({ healthPayload: payload });
+        setRuntimeReadinessLifecycle(
+          RestartResilience.resolveLifecycleFromHealth
+            ? RestartResilience.resolveLifecycleFromHealth({
+                healthOk: false,
+                payload: payload,
+                elapsedMs: elapsedMs,
+              })
+            : 'UNAVAILABLE',
+        );
+        renderLocalRuntimeBanner();
+        if (payload && payload.postAllowed === true && payload.buildIntentRouting !== true) {
           setLastError(
             'Stale AiDevEngine server — restart using Start-AiDevEngine (build intent routing missing)',
           );
-          pushNotification('Stale server detected — use Start-AiDevEngine');
+          if (!options.fromStartupPoll) {
+            pushNotification('Stale server detected — use Start-AiDevEngine');
+          }
         } else if (payload && payload.registryLoaded !== true) {
           setLastError('Project registry not loaded — restart using Start-AiDevEngine');
-          pushNotification('Registry not ready — use Start-AiDevEngine');
-        } else {
+          if (!options.fromStartupPoll) {
+            pushNotification('Registry not ready — use Start-AiDevEngine');
+          }
+        } else if (runtimeReadinessLifecycle === 'UNAVAILABLE') {
           setLastError('Brain health payload missing expected local runtime markers');
         }
         renderRuntimeDiagnostics();
@@ -9184,14 +11034,28 @@
             warnings: payload.llmApiKeyConfigured ? [] : ['LLM_API_KEY not configured in process.env'],
           });
         }
-        return ok;
+        return false;
       })
       .catch(function () {
         localRuntimeHealthy = false;
         runtimeDiagnostics.brainEndpointReachable = false;
         runtimeDiagnostics.brainConnected = false;
-        renderLocalRuntimeBanner(true);
-        setLastError('Brain health endpoint unreachable — restart using Start-AiDevEngine');
+        var elapsedCatchMs = runtimeHealthPollStartedAt
+          ? Date.now() - runtimeHealthPollStartedAt
+          : RestartResilience.HEALTH_POLL_WINDOW_MS || 10000;
+        setRuntimeReadinessLifecycle(
+          RestartResilience.resolveLifecycleFromHealth
+            ? RestartResilience.resolveLifecycleFromHealth({
+                healthOk: false,
+                payload: null,
+                elapsedMs: elapsedCatchMs,
+              })
+            : 'UNAVAILABLE',
+        );
+        renderLocalRuntimeBanner();
+        if (runtimeReadinessLifecycle === 'UNAVAILABLE') {
+          setLastError('Brain health endpoint unreachable — restart using Start-AiDevEngine');
+        }
         renderRuntimeDiagnostics();
         return false;
       });
@@ -9376,38 +11240,21 @@
       if (data.autonomousBuilder && !data.autonomousBuilder.executionConnected) {
         statusItems.push('Autonomous Builder workspace not connected');
       }
-      if (statusItems.length) renderStatusBar(statusItems);
+      if (statusItems.length) renderStatusBar(mergeRuntimeStatusBarItems(statusItems));
     }
     renderProductSurfaces();
   }
 
-  function isOnePromptBuildPrompt(message) {
-    var text = String(message || '').trim();
-    if (text.length < 20) return false;
-    if (
-      /expense track|expense tracker|task tracker|todo app|todo list/i.test(text) &&
-      /build|begin build execution|create.*application/i.test(text)
-    ) {
-      return true;
-    }
-    if (
-      /begin build execution|build execution now|generate architecture/i.test(text) &&
-      /\b(build|create|develop|implement|scaffold)\b/i.test(text)
-    ) {
-      return true;
-    }
-    return (
-      /task tracker|todo app|todo list/i.test(text) &&
-      /add tasks?|mark them complete|filter by all\/active\/completed/i.test(text)
-    );
-  }
 
   function startBuildProgressFeedTicker() {
-    var stages = [
+    var Bridge = window.ChatToBuildExecutionBridge || {};
+    var stages = Bridge.interimProgressStages
+      ? Bridge.interimProgressStages()
+      : [
       {
         eventType: 'Classifying Request',
         action: 'Detecting build prompt',
-        detail: 'Recognized Task Tracker build request.',
+        detail: 'Recognized build-intent request via shared classifier.',
         section: 'Build',
         status: 'Active',
         stepIndex: 1,
@@ -9425,7 +11272,7 @@
       {
         eventType: 'Gathering Facts',
         action: 'Materializing workspace',
-        detail: 'Generating Task Tracker source files.',
+        detail: 'Materializing workspace from build plan.',
         section: 'Build',
         status: 'Active',
         stepIndex: 3,
@@ -9490,6 +11337,9 @@
 
     if (responseMeta.multiProjectWorkspaces) {
       mergeMultiProjectWorkspacesFromResponse(responseMeta.multiProjectWorkspaces);
+    }
+    if (responseMeta.projectSession) {
+      applyProjectSessionContextToClient(responseMeta.projectSession, { skipChatRestore: true });
     }
     if (build.projectId) {
       switchActiveProject(build.projectId, { skipChatSave: true, skipViewSwitch: true });
@@ -9556,6 +11406,23 @@
     div.textContent = text;
     history.appendChild(div);
     scrollChatToBottom();
+    if (
+      activeProjectId &&
+      ProjectSessionContinuity.persistSessionMessage &&
+      projectSessionClient.activeSessionId &&
+      projectSessionClient.activeProjectId === activeProjectId &&
+      role !== 'thinking'
+    ) {
+      ProjectSessionContinuity.persistSessionMessage({
+        projectId: activeProjectId,
+        sessionId: projectSessionClient.activeSessionId,
+        role: role === 'brain' ? 'brain' : role === 'system' ? 'system' : 'user',
+        text: text,
+        html: div.outerHTML,
+      }).catch(function () {
+        /* best-effort */
+      });
+    }
     return div;
   }
 
@@ -9595,182 +11462,801 @@
     scrollChatToBottom();
   }
 
-  function askBrain(message, options) {
-    options = options || {};
-    if (!localRuntimeHealthy) {
-      renderLocalRuntimeBanner(true);
-      pushNotification('Brain request blocked — local runtime unavailable');
-      appendChatMessage(LOCAL_RUNTIME_BANNER_TEXT, 'system');
-      setLastRequestStatus('Blocked');
-      setLastError('Local runtime unavailable');
-      return;
+  function appendChatResumeActions(projectResume, pendingMessage) {
+    if (!projectResume || !projectResume.actions || !projectResume.actions.length) return;
+    var history = el('chat-history');
+    if (!history) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'chat-alignment-actions chat-resume-actions';
+    for (var i = 0; i < projectResume.actions.length; i += 1) {
+      (function (action) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className =
+          action.type === 'cancel_build' || action.type === 'start_fresh_copy'
+            ? 'btn-secondary'
+            : 'btn-primary';
+        btn.textContent = action.label;
+        btn.addEventListener('click', function () {
+          if (action.type === 'cancel_build') {
+            pushNotification('Build cancelled');
+            setLastRequestStatus('Cancelled');
+            return;
+          }
+          if (action.type === 'resume_existing') {
+            askBrain(pendingMessage, { confirmProjectResume: true, resumeProjectId: action.projectId });
+            return;
+          }
+          if (action.type === 'start_fresh_copy') {
+            askBrain(pendingMessage, { confirmFreshCopy: true });
+          }
+        });
+        wrap.appendChild(btn);
+      })(projectResume.actions[i]);
     }
-    showThinking();
-    setLastRequestStatus('In progress');
-    pushNotification('Brain Request Started');
-    var stopBuildTicker = null;
-    if (isOnePromptBuildPrompt(message)) {
-      stopBuildTicker = startBuildProgressFeedTicker();
-    } else {
-      appendOperatorLogFromEvent(
-        {
-          eventType: 'Classifying Request',
-          action: 'Request received',
-          detail: 'AiDevEngine received your message and started routing.',
-          section: 'Planning',
-          status: 'Active',
-          stepIndex: 1,
-          stepTotal: 7,
-        },
-        { active: true, finalizePrevious: true },
+    history.appendChild(wrap);
+    scrollChatToBottom();
+  }
+
+  function chatAuditEvents() {
+    var Audit = window.CommandCenterChatExecutionAudit || {};
+    return Audit.EVENTS || {};
+  }
+
+  function chatAuditRecord(auditId, name, detail, metadata) {
+    var Audit = window.CommandCenterChatExecutionAudit;
+    if (Audit && auditId && name) Audit.record(auditId, 'browser', name, detail, metadata);
+  }
+
+  function chatAuditNoOp(auditId, blockingEvent, reason, metadata) {
+    var Audit = window.CommandCenterChatExecutionAudit;
+    if (Audit && auditId) Audit.recordNoOp(auditId, blockingEvent, reason, metadata);
+  }
+
+  function chatAuditFinalize(auditId, outcome, noOpReason) {
+    var Audit = window.CommandCenterChatExecutionAudit;
+    if (Audit && auditId) Audit.finalizeAudit(auditId, outcome, noOpReason);
+    var Repair = window.CommandCenterChatResponseExecutionRepair;
+    if (Repair && Repair.clearFetchWatchdog && auditId) Repair.clearFetchWatchdog(auditId);
+  }
+
+  function showVisibleChatBlockingError(auditId, reason, gate, blockingEvent) {
+    removeThinkingMessage();
+    appendChatMessage('Chat execution blocked — ' + reason, 'system');
+    setLastRequestStatus('Blocked');
+    setLastError(reason);
+    pushNotification(reason);
+    chatAuditRecord(
+      auditId,
+      chatAuditEvents().VISIBLE_BLOCKING_ERROR_SHOWN || 'COMMAND_CENTER_CHAT_AUDIT_VISIBLE_BLOCKING_ERROR_SHOWN',
+      reason,
+      {
+        blockingLayer: gate && gate.blockingLayer ? gate.blockingLayer : null,
+        suggestedAction: gate && gate.suggestedAction ? gate.suggestedAction : null,
+      },
+    );
+    chatAuditNoOp(auditId, blockingEvent, reason, {
+      blockingLayer: gate && gate.blockingLayer ? gate.blockingLayer : null,
+    });
+    if (
+      window.CommandCenterChatExecutionAudit &&
+      window.CommandCenterChatExecutionAudit.renderDiagnosticCard
+    ) {
+      window.CommandCenterChatExecutionAudit.renderDiagnosticCard({
+        auditId: auditId,
+        reason: reason,
+        blockingEvent: blockingEvent,
+      });
+    }
+  }
+
+  function buildChatExecutionGateInput() {
+    var reconciliation = lastRuntimeBannerReconciliation || applyRuntimeBannerReconciliation() || {};
+    return {
+      localRuntimeHealthy: localRuntimeHealthy,
+      healthReady: reconciliation.healthReady === true,
+      truthFresh: reconciliation.truthFresh === true,
+      runtimeTruthReady: runtimeTruthReady,
+      runtimeTruthClassifyAllowed: runtimeTruthClassifyAllowed,
+      runtimeReadinessLifecycle: runtimeReadinessLifecycle,
+    };
+  }
+
+  function rehydrateRuntimeTruthForChat(auditId) {
+    chatAuditRecord(
+      auditId,
+      chatAuditEvents().RUNTIME_TRUTH_REHYDRATE_START ||
+        'COMMAND_CENTER_CHAT_AUDIT_RUNTIME_TRUTH_REHYDRATE_START',
+      'Re-hydrating runtime truth while continuing degraded chat execution.',
+    );
+    return verifyCommandCenterRuntimeTruth()
+      .then(function (ok) {
+        chatAuditRecord(
+          auditId,
+          chatAuditEvents().RUNTIME_TRUTH_REHYDRATE_COMPLETE ||
+            'COMMAND_CENTER_CHAT_AUDIT_RUNTIME_TRUTH_REHYDRATE_COMPLETE',
+          ok ? 'Runtime truth re-hydration succeeded.' : 'Runtime truth still stale — continuing degraded.',
+          { ok: ok === true },
+        );
+        return ok;
+      })
+      .catch(function () {
+        chatAuditRecord(
+          auditId,
+          chatAuditEvents().RUNTIME_TRUTH_REHYDRATE_COMPLETE ||
+            'COMMAND_CENTER_CHAT_AUDIT_RUNTIME_TRUTH_REHYDRATE_COMPLETE',
+          'Runtime truth re-hydration failed — continuing degraded.',
+          { ok: false },
+        );
+        return false;
+      });
+  }
+
+  function ensureSessionContinuityForChat(auditId, options) {
+    options = options || {};
+    var Repair = window.CommandCenterChatResponseExecutionRepair;
+    var RepairEvents = (Repair && Repair.EVENTS) || {};
+    var Dispatch = window.CommandCenterSendDispatch || {};
+    var isLikelyBuildPrompt =
+      options.isLikelyBuildPrompt === true ||
+      (Dispatch.isLikelyBuildPromptMessage && Dispatch.isLikelyBuildPromptMessage(options.message || ''));
+    var sessionRepair = Repair
+      ? Repair.evaluateSessionRepair({
+          activeProjectId: activeProjectId,
+          activeSessionId: projectSessionClient.activeSessionId || null,
+          hydrationState: projectSessionClient.hydrationState || 'idle',
+          hasSessionContinuityApi: Boolean(ProjectSessionContinuity && ProjectSessionContinuity.fetchActiveSession),
+          isLikelyBuildPrompt: isLikelyBuildPrompt,
+        })
+      : { needsRepair: false, canContinue: true };
+
+    if (!sessionRepair.needsRepair) {
+      chatAuditRecord(
+        auditId,
+        RepairEvents.SESSION_REPAIR_SKIPPED || 'COMMAND_CENTER_CHAT_AUDIT_SESSION_REPAIR_SKIPPED',
+        sessionRepair.reason || 'Session continuity OK or server will bootstrap.',
       );
+      return Promise.resolve(true);
     }
 
-    fetch('/api/brain/respond', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      cache: 'no-store',
-      body: JSON.stringify({
-        message: message,
-        timestamp: Date.now(),
-        activeProjectId: activeProjectId,
-        projectName: getActiveProjectName(),
-        confirmProjectContextAlignment: options.confirmProjectContextAlignment === true,
-      }),
-    })
-      .then(function (res) {
-        return res.text().then(function (bodyText) {
-          if (!res.ok) throw new Error(interpretBrainFailure(res.status, bodyText));
-          var result;
-          try {
-            result = JSON.parse(bodyText);
-          } catch (parseErr) {
-            throw new Error('Brain response malformed — invalid JSON from server');
-          }
-          if (!result.brainResponse) {
-            throw new Error('Brain response malformed — brainResponse field missing');
-          }
-          return result;
-        });
-      })
-      .then(function (result) {
-        if (stopBuildTicker) stopBuildTicker();
-        if (
-          isOnePromptBuildPrompt(message) &&
-          result.category !== 'BUILD' &&
-          !result.projectContextAlignment
-        ) {
-          setLastError(
-            'Build prompt fell through to chat — stale server likely. Stop port 4321 process and run npm run dev.',
-          );
-          pushNotification('Build routing missed — restart npm run dev');
-        }
-        streamOperatorFeedEvents(
-          resolveExecutionTraceEventsFromPayload(result),
-          function () {
-          removeThinkingMessage();
-          appendChatMessage(result.brainResponse, 'brain');
-          if (result.projectContextAlignment) {
-            appendChatAlignmentActions(result.projectContextAlignment, message);
-            setLastRequestStatus('Alignment guard');
-            pushNotification('Project context alignment — build not started');
-          }
-          if (result.category === 'BUILD') {
-            applyOnePromptLivePreview(
-              result.onePromptLivePreview,
-              result.buildLivePreview,
-              result.livePreviewWorkspaceSync,
-              {
-                activeProjectId: result.activeProjectId,
-                multiProjectWorkspaces: result.multiProjectWorkspaces,
-                profileAlignment: result.profileAlignment,
-                classification: result.classification,
-              },
-            );
-            if (result.onePromptLivePreview && result.onePromptLivePreview.status === 'FAILED') {
-              setLastRequestStatus('Build failed');
-              pushNotification('Build Failed');
-              setLastError(result.onePromptLivePreview.failureReason || 'Build failed');
-            } else {
-              setLastRequestStatus('Completed');
-              pushNotification('Brain Request Completed');
-              setLastError('None');
-            }
-          } else if (!result.projectContextAlignment) {
-            setLastRequestStatus('Completed');
-            pushNotification('Brain Request Completed');
-            setLastError('None');
-          }
-          if (result.projectContextAlignment) {
-            renderProductSurfaces();
-          }
-          renderRuntimeDiagnostics();
-          if (result.llmChatBrainDiagnostics) {
-            renderLlmChatBrainDiagnostics(result.llmChatBrainDiagnostics);
-          }
-          if (result.crossSystemDiagnostics) {
-            renderCrossSystemDiagnostics(result.crossSystemDiagnostics);
-          }
-          if (result.projectUnderstandingDiagnostics) {
-            renderProjectUnderstandingDiagnostics(result.projectUnderstandingDiagnostics);
-          }
-          if (result.projectVaultIntelligenceDiagnostics) {
-            renderVaultIntelligenceDiagnostics(result.projectVaultIntelligenceDiagnostics);
-          }
-          if (result.dependencyIntelligenceDiagnostics) {
-            renderDependencyIntelligenceDiagnostics(result.dependencyIntelligenceDiagnostics);
-          }
-          if (result.workspaceIntelligenceDiagnostics) {
-            renderWorkspaceIntelligenceDiagnostics(result.workspaceIntelligenceDiagnostics);
-          }
-          if (result.projectHistoryIntelligenceDiagnostics) {
-            renderProjectHistoryIntelligenceDiagnostics(result.projectHistoryIntelligenceDiagnostics);
-          }
-          if (result.projectSummarizationDiagnostics) {
-            renderProjectSummarizationDiagnostics(result.projectSummarizationDiagnostics);
-          }
-          if (result.portfolioIntelligenceDiagnostics) {
-            renderPortfolioIntelligenceDiagnostics(result.portfolioIntelligenceDiagnostics);
-          }
-          if (result.operatorFeedFoundationDiagnostics) {
-            renderOperatorFeedDiagnostics(result.operatorFeedFoundationDiagnostics);
-          }
-          if (result.actionVisibilityDiagnostics) {
-            renderActionVisibilityDiagnostics(result.actionVisibilityDiagnostics);
-          }
-          if (result.reasoningVisibilityDiagnostics) {
-            renderReasoningVisibilityDiagnostics(result.reasoningVisibilityDiagnostics);
-          }
-          if (result.progressIntelligenceDiagnostics) {
-            renderProgressIntelligenceDiagnostics(result.progressIntelligenceDiagnostics);
-          }
-          if (result.failureVisibilityDiagnostics) {
-            renderFailureVisibilityDiagnostics(result.failureVisibilityDiagnostics);
-          }
-          if (result.learningVisibilityDiagnostics) {
-            renderLearningVisibilityDiagnostics(result.learningVisibilityDiagnostics);
-          }
-          if (result.generalQuestionDiagnostics) {
-            renderGeneralQuestionDiagnostics(result.generalQuestionDiagnostics);
-          }
-          if (result.timelineIntelligenceDiagnostics) {
-            renderTimelineIntelligenceDiagnostics(result.timelineIntelligenceDiagnostics);
-          }
-          if (result.unifiedDecisionLayerDiagnostics) {
-            renderDecisionLayerDiagnostics(result.unifiedDecisionLayerDiagnostics);
-          }
-        },
-          result,
+    chatAuditRecord(
+      auditId,
+      RepairEvents.SESSION_REPAIR_START || 'COMMAND_CENTER_CHAT_AUDIT_SESSION_REPAIR_START',
+      sessionRepair.reason || 'Repairing project session continuity.',
+    );
+
+    if (!sessionRepair.canContinue) {
+      return Promise.resolve(false);
+    }
+
+    return hydrateProjectSessionFromStore(activeProjectId, { skipChatRestore: true })
+      .then(function () {
+        chatAuditRecord(
+          auditId,
+          RepairEvents.SESSION_REPAIR_COMPLETE || 'COMMAND_CENTER_CHAT_AUDIT_SESSION_REPAIR_COMPLETE',
+          'Session continuity repair attempt finished.',
+          {
+            activeSessionId: projectSessionClient.activeSessionId || null,
+            hydrationState: projectSessionClient.hydrationState || null,
+          },
         );
+        return true;
+      })
+      .catch(function () {
+        chatAuditRecord(
+          auditId,
+          RepairEvents.SESSION_REPAIR_COMPLETE || 'COMMAND_CENTER_CHAT_AUDIT_SESSION_REPAIR_COMPLETE',
+          'Session repair failed — server will bootstrap session.',
+          { ok: false },
+        );
+        return true;
+      });
+  }
+
+  function executeBrainRespondFetch(message, options, auditId) {
+    var AuditEvents = chatAuditEvents();
+    var Repair = window.CommandCenterChatResponseExecutionRepair;
+    if (Repair && Repair.markFetchStarted) Repair.markFetchStarted(auditId);
+
+    setLastRequestStatus('In progress');
+    pushNotification('Brain Request Started');
+
+    var RouteParity = window.BuildIntentRouteParity || {};
+    var classifyPromise = RouteParity.classifyBuildIntentRequest
+      ? RouteParity.classifyBuildIntentRequest(message)
+      : Promise.resolve({ isBuildIntent: false, contractVersion: 'BUILD_INTENT_ROUTE_PARITY_V1' });
+    var stopBuildTickerRef = null;
+
+    return classifyPromise
+      .then(function (classification) {
+        var stopBuildTicker = null;
+        var uiBuildIntent = RouteParity.isBuildIntentClassification
+          ? RouteParity.isBuildIntentClassification(classification)
+          : classification && classification.isBuildIntent === true;
+
+        chatAuditRecord(auditId, AuditEvents.CLASSIFY_START, 'Build intent pre-classification started.');
+        chatAuditRecord(
+          auditId,
+          AuditEvents.CLASSIFY_COMPLETE,
+          'Build intent pre-classification complete.',
+          { isBuildIntent: uiBuildIntent === true },
+        );
+
+        if (uiBuildIntent) {
+          stopBuildTicker = startBuildProgressFeedTicker();
+          stopBuildTickerRef = stopBuildTicker;
+        } else {
+          appendOperatorLogFromEvent(
+            {
+              eventType: 'Classifying Request',
+              action: 'Request received',
+              detail: 'AiDevEngine received your message and started routing.',
+              section: 'Planning',
+              status: 'Active',
+              stepIndex: 1,
+              stepTotal: 7,
+            },
+            { active: true, finalizePrevious: true },
+          );
+        }
+
+        var fetchPayload = {
+          message: message,
+          timestamp: Date.now(),
+          activeProjectId: options.confirmFreshCopy ? null : activeProjectId,
+          projectName: getActiveProjectName(),
+          confirmProjectContextAlignment: options.confirmProjectContextAlignment === true,
+          confirmProjectResume: options.confirmProjectResume === true,
+          confirmFreshCopy: options.confirmFreshCopy === true,
+          chatExecutionAuditId: auditId,
+        };
+        chatAuditRecord(
+          auditId,
+          AuditEvents.FETCH_PAYLOAD_CREATED,
+          'POST /api/brain/respond payload created.',
+          {
+            activeProjectId: fetchPayload.activeProjectId,
+            projectName: fetchPayload.projectName,
+          },
+        );
+        chatAuditRecord(auditId, AuditEvents.FETCH_START, 'POST /api/brain/respond fetch started.');
+
+        var Dispatch = window.CommandCenterSendDispatch || {};
+        if (Dispatch.logDiagnostic) {
+          Dispatch.logDiagnostic(
+            (Dispatch.TOKENS && Dispatch.TOKENS.BRAIN_POST_SENT) || 'COMMAND_CENTER_BRAIN_POST_SENT',
+            { messageLength: String(message || '').length, auditId: auditId || null },
+          );
+        }
+
+        var HttpForensic = window.CommandCenterHttpRoutingForensic;
+        var brainFetch = HttpForensic
+          ? HttpForensic.wrapFetch('/api/brain/respond', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              cache: 'no-store',
+              body: JSON.stringify(fetchPayload),
+            })
+          : fetch('/api/brain/respond', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              cache: 'no-store',
+              body: JSON.stringify(fetchPayload),
+            });
+
+        return brainFetch
+          .then(function (res) {
+            return res.text().then(function (bodyText) {
+              chatAuditRecord(
+                auditId,
+                AuditEvents.FETCH_RESPONSE,
+                'POST /api/brain/respond response received.',
+                {
+                  status: res.status,
+                  bridgeHeaderPresent: Boolean(res.headers.get('x-devpulse-chat-to-build-bridge')),
+                  bodyLength: bodyText.length,
+                },
+              );
+              if (Dispatch.logDiagnostic) {
+                Dispatch.logDiagnostic(
+                  (Dispatch.TOKENS && Dispatch.TOKENS.BRAIN_RESPONSE_RECEIVED) ||
+                    'COMMAND_CENTER_BRAIN_RESPONSE_RECEIVED',
+                  { status: res.status, auditId: auditId || null },
+                );
+              }
+              if (!res.ok) throw new Error(interpretBrainFailure(res.status, bodyText));
+              var result;
+              try {
+                result = JSON.parse(bodyText);
+              } catch (parseErr) {
+                throw new Error('Brain response malformed — invalid JSON from server');
+              }
+              if (!result.brainResponse) {
+                var bridgeKind =
+                  result.chatToBuildExecutionBridge && result.chatToBuildExecutionBridge.kind;
+                var allowsMissingBrainResponse =
+                  result.category === 'BUILD' ||
+                  result.projectContextAlignment ||
+                  result.projectResume ||
+                  bridgeKind === 'BUILD_COMPLETE' ||
+                  bridgeKind === 'BUILD_FAILED' ||
+                  bridgeKind === 'ALIGNMENT_REQUIRED' ||
+                  bridgeKind === 'RESUME_REQUIRED';
+                if (!allowsMissingBrainResponse) {
+                  throw new Error('Brain response malformed — brainResponse field missing');
+                }
+                result.brainResponse =
+                  result.brainResponse ||
+                  (result.projectResume && result.projectResume.message) ||
+                  (typeof result.error === 'string' ? result.error : null) ||
+                  'Autonomous engineering pipeline completed.';
+              }
+              return { result: result, stopBuildTicker: stopBuildTicker, uiBuildIntent: uiBuildIntent, auditId: auditId };
+            });
+          });
+      })
+      .then(function (ctx) {
+        return processBrainRespondResult(ctx, message);
       })
       .catch(function (err) {
-        if (stopBuildTicker) stopBuildTicker();
+        if (stopBuildTickerRef) stopBuildTickerRef();
         removeThinkingMessage();
         var reason = err && err.message ? err.message : 'Brain API unavailable';
+        chatAuditRecord(auditId, AuditEvents.FETCH_ERROR, reason);
+        chatAuditFinalize(auditId, 'FAILED', reason);
         publishFeedFailure(reason);
         appendChatMessage('Brain could not respond — ' + reason, 'system');
         setLastRequestStatus('Failed');
       });
+  }
+
+  function processBrainRespondResult(ctx, message) {
+    var AuditEvents = chatAuditEvents();
+    var result = ctx.result;
+    var traceEvents = resolveExecutionTraceEventsFromPayload(result);
+    chatAuditRecord(
+      ctx.auditId,
+      AuditEvents.TRACE_RENDER_START,
+      'Execution trace render started.',
+      { eventCount: traceEvents.length },
+    );
+    if (!traceEvents.length) {
+      chatAuditRecord(
+        ctx.auditId,
+        AuditEvents.TRACE_RENDER_EMPTY,
+        'Execution trace render skipped — no trace events in response payload.',
+      );
+    }
+    if (ctx.stopBuildTicker) ctx.stopBuildTicker();
+    var serverBuildIntent =
+      result.buildIntentClassification && result.buildIntentClassification.isBuildIntent === true;
+    if (
+      (ctx.uiBuildIntent || serverBuildIntent) &&
+      result.category !== 'BUILD' &&
+      !result.projectContextAlignment &&
+      !result.projectResume &&
+      !(result.chatToBuildExecutionBridge && result.chatToBuildExecutionBridge.kind)
+    ) {
+      setLastError(
+        'Build prompt fell through to chat — stale server likely. Stop port 4321 process and run npm run dev.',
+      );
+      pushNotification('Build routing missed — restart npm run dev');
+    }
+    streamOperatorFeedEvents(
+      resolveExecutionTraceEventsFromPayload(result),
+      function () {
+        removeThinkingMessage();
+        var BridgeClient = window.ChatToBuildExecutionBridge || {};
+        if (BridgeClient.renderBridgeProgressToFeed && BridgeClient.isBridgePayload && BridgeClient.isBridgePayload(result)) {
+          BridgeClient.renderBridgeProgressToFeed(result, appendOperatorLogFromEvent);
+        }
+        chatAuditRecord(ctx.auditId, AuditEvents.RESPONSE_RENDERED, 'Brain response rendered in chat.');
+        if (traceEvents.length) {
+          chatAuditRecord(ctx.auditId, AuditEvents.TRACE_RENDER_COMPLETE, 'Execution trace render completed.');
+        }
+        chatAuditFinalize(
+          ctx.auditId,
+          result.category === 'BUILD' ? 'BUILD_STARTED' : 'COMPLETE',
+          null,
+        );
+        appendChatMessage(result.brainResponse, 'brain');
+        if (result.projectContextAlignment) {
+          appendChatAlignmentActions(result.projectContextAlignment, message);
+          setLastRequestStatus('Alignment guard');
+          pushNotification('Project context alignment — build not started');
+        }
+        if (result.projectResume) {
+          appendChatResumeActions(result.projectResume, message);
+          setLastRequestStatus('Resume choice required');
+          pushNotification('Choose resume, fresh copy, or cancel');
+        }
+        if (result.category === 'BUILD') {
+          applyOnePromptLivePreview(
+            result.onePromptLivePreview,
+            result.buildLivePreview,
+            result.livePreviewWorkspaceSync,
+            {
+              activeProjectId: result.activeProjectId,
+              multiProjectWorkspaces: result.multiProjectWorkspaces,
+              profileAlignment: result.profileAlignment,
+              classification: result.classification,
+            },
+          );
+          if (result.onePromptLivePreview && result.onePromptLivePreview.status === 'FAILED') {
+            setLastRequestStatus('Build failed');
+            pushNotification('Build Failed');
+            setLastError(result.onePromptLivePreview.failureReason || 'Build failed');
+          } else {
+            setLastRequestStatus('Completed');
+            pushNotification('Brain Request Completed');
+            setLastError('None');
+          }
+        } else if (!result.projectContextAlignment) {
+          setLastRequestStatus('Completed');
+          pushNotification('Brain Request Completed');
+          setLastError('None');
+        }
+        if (result.projectContextAlignment) {
+          renderProductSurfaces();
+        }
+        renderRuntimeDiagnostics();
+        if (result.llmChatBrainDiagnostics) {
+          renderLlmChatBrainDiagnostics(result.llmChatBrainDiagnostics);
+        }
+        if (result.crossSystemDiagnostics) {
+          renderCrossSystemDiagnostics(result.crossSystemDiagnostics);
+        }
+        if (result.projectUnderstandingDiagnostics) {
+          renderProjectUnderstandingDiagnostics(result.projectUnderstandingDiagnostics);
+        }
+        if (result.projectVaultIntelligenceDiagnostics) {
+          renderVaultIntelligenceDiagnostics(result.projectVaultIntelligenceDiagnostics);
+        }
+        if (result.dependencyIntelligenceDiagnostics) {
+          renderDependencyIntelligenceDiagnostics(result.dependencyIntelligenceDiagnostics);
+        }
+        if (result.workspaceIntelligenceDiagnostics) {
+          renderWorkspaceIntelligenceDiagnostics(result.workspaceIntelligenceDiagnostics);
+        }
+        if (result.projectHistoryIntelligenceDiagnostics) {
+          renderProjectHistoryIntelligenceDiagnostics(result.projectHistoryIntelligenceDiagnostics);
+        }
+        if (result.projectSummarizationDiagnostics) {
+          renderProjectSummarizationDiagnostics(result.projectSummarizationDiagnostics);
+        }
+        if (result.portfolioIntelligenceDiagnostics) {
+          renderPortfolioIntelligenceDiagnostics(result.portfolioIntelligenceDiagnostics);
+        }
+        if (result.operatorFeedFoundationDiagnostics) {
+          renderOperatorFeedDiagnostics(result.operatorFeedFoundationDiagnostics);
+        }
+        if (result.actionVisibilityDiagnostics) {
+          renderActionVisibilityDiagnostics(result.actionVisibilityDiagnostics);
+        }
+        if (result.reasoningVisibilityDiagnostics) {
+          renderReasoningVisibilityDiagnostics(result.reasoningVisibilityDiagnostics);
+        }
+        if (result.progressIntelligenceDiagnostics) {
+          renderProgressIntelligenceDiagnostics(result.progressIntelligenceDiagnostics);
+        }
+        if (result.failureVisibilityDiagnostics) {
+          renderFailureVisibilityDiagnostics(result.failureVisibilityDiagnostics);
+        }
+        if (result.learningVisibilityDiagnostics) {
+          renderLearningVisibilityDiagnostics(result.learningVisibilityDiagnostics);
+        }
+        if (result.generalQuestionDiagnostics) {
+          renderGeneralQuestionDiagnostics(result.generalQuestionDiagnostics);
+        }
+        if (result.timelineIntelligenceDiagnostics) {
+          renderTimelineIntelligenceDiagnostics(result.timelineIntelligenceDiagnostics);
+        }
+        if (result.unifiedDecisionLayerDiagnostics) {
+          renderDecisionLayerDiagnostics(result.unifiedDecisionLayerDiagnostics);
+        }
+      },
+      result,
+    );
+  }
+
+  function submitCommandCenterMessage(source) {
+    source = source || 'submit';
+    var Dispatch = window.CommandCenterSendDispatch || {};
+    var logDiag = Dispatch.logDiagnostic || function (token, detail) {
+      if (typeof console !== 'undefined' && console.info) {
+        console.info(token, detail === undefined ? '' : detail);
+      }
+    };
+    var tokens = Dispatch.TOKENS || {};
+    if (source === 'click') {
+      logDiag(tokens.SEND_CLICKED || 'COMMAND_CENTER_SEND_CLICKED', { source: source });
+    }
+    logDiag(tokens.SUBMIT_STARTED || 'COMMAND_CENTER_SUBMIT_STARTED', { source: source });
+
+    var Audit = window.CommandCenterChatExecutionAudit || {};
+    var AuditEvents = Audit.EVENTS || {};
+    var input = el('chat-input');
+    var sendBtn = el('chat-send');
+    var form = el('chat-form');
+    if (!input) {
+      logDiag(tokens.SUBMIT_BLOCKED || 'COMMAND_CENTER_SUBMIT_BLOCKED', {
+        reason: 'missing #chat-input element',
+        source: source,
+      });
+      if (Audit.record) {
+        var missingInputAuditId = Audit.startAudit ? Audit.startAudit({ messagePreview: '' }) : null;
+        Audit.record(
+          missingInputAuditId,
+          'browser',
+          AuditEvents.FORM_SUBMIT_NO_INPUT || 'COMMAND_CENTER_CHAT_AUDIT_FORM_SUBMIT_NO_INPUT',
+          '#chat-input element missing — submit handler cannot read message.',
+        );
+        if (Audit.recordNoOp) {
+          Audit.recordNoOp(
+            missingInputAuditId,
+            AuditEvents.FORM_SUBMIT_NO_INPUT || 'COMMAND_CENTER_CHAT_AUDIT_FORM_SUBMIT_NO_INPUT',
+            '#chat-input element missing.',
+          );
+        }
+      }
+      return;
+    }
+    var text = input.value.trim();
+    var isLikelyBuildPrompt =
+      Dispatch.isLikelyBuildPromptMessage && Dispatch.isLikelyBuildPromptMessage(text);
+    if (form && form.classList.contains('is-creating')) {
+      logDiag(tokens.SUBMIT_BLOCKED || 'COMMAND_CENTER_SUBMIT_BLOCKED', {
+        reason: 'project create dialog busy',
+        source: source,
+      });
+      return;
+    }
+    var auditId = Audit.startAudit
+      ? Audit.startAudit({
+          messagePreview: text,
+          activeProjectId: activeProjectId,
+          activeSessionId: projectSessionClient.activeSessionId || null,
+          projectName: getActiveProjectName(),
+          sendButtonDisabled: Boolean(sendBtn && sendBtn.disabled),
+          runtimeTruthReady: runtimeTruthReady,
+          localRuntimeHealthy: localRuntimeHealthy,
+        })
+      : null;
+    if (Audit.record) {
+      Audit.record(
+        auditId,
+        'browser',
+        AuditEvents.FORM_SUBMIT_ENTER || 'COMMAND_CENTER_CHAT_AUDIT_FORM_SUBMIT_ENTER',
+        'Command Center submitCommandCenterMessage entered.',
+        {
+          source: source,
+          sendButtonDisabled: Boolean(sendBtn && sendBtn.disabled),
+          inputDisabled: Boolean(input.disabled),
+          isLikelyBuildPrompt: isLikelyBuildPrompt === true,
+        },
+      );
+    }
+    if (!text) {
+      logDiag(tokens.SUBMIT_BLOCKED || 'COMMAND_CENTER_SUBMIT_BLOCKED', {
+        reason: 'empty message after trim',
+        source: source,
+      });
+      if (Audit.recordNoOp) {
+        Audit.recordNoOp(
+          auditId,
+          AuditEvents.FORM_SUBMIT_EMPTY_MESSAGE || 'COMMAND_CENTER_CHAT_AUDIT_FORM_SUBMIT_EMPTY_MESSAGE',
+          'Submit ignored — message empty after trim.',
+        );
+      }
+      return;
+    }
+    if (Audit.record) {
+      Audit.record(
+        auditId,
+        'browser',
+        AuditEvents.FORM_SUBMIT_DISPATCHED || 'COMMAND_CENTER_CHAT_AUDIT_FORM_SUBMIT_DISPATCHED',
+        'Submit dispatching askBrain.',
+        { source: source },
+      );
+    }
+    if (!conversationStarted) hideWelcomeState();
+    appendChatMessage(text, 'user');
+    input.value = '';
+    var Repair = window.CommandCenterChatResponseExecutionRepair;
+    var RepairEvents = (Repair && Repair.EVENTS) || {};
+    if (Audit.record) {
+      Audit.record(
+        auditId,
+        'browser',
+        RepairEvents.AFTER_USER_MESSAGE_RENDERED ||
+          AuditEvents.AFTER_USER_MESSAGE_RENDERED ||
+          'COMMAND_CENTER_CHAT_AUDIT_AFTER_USER_MESSAGE_RENDERED',
+        'User message rendered in chat history.',
+        { messageLength: String(text.length) },
+      );
+    }
+    if (Repair && Repair.setLastStage) {
+      Repair.setLastStage(auditId, 'User message rendered');
+    }
+    appendOperatorLogFromEvent(
+      {
+        eventType: 'Command Center Submit',
+        action: 'Message sent',
+        detail: 'User message dispatched to brain API.',
+        section: isLikelyBuildPrompt ? 'Build' : 'Command Center',
+        status: 'Active',
+        stepIndex: 1,
+        stepTotal: 7,
+      },
+      { active: true, finalizePrevious: true },
+    );
+    showThinking();
+    if (Audit.record) {
+      Audit.record(
+        auditId,
+        'browser',
+        AuditEvents.SHOW_THINKING || 'COMMAND_CENTER_CHAT_AUDIT_SHOW_THINKING',
+        'Brain analyzing indicator displayed immediately after user message render.',
+      );
+    }
+    if (Repair && Repair.armFetchWatchdog) {
+      Repair.armFetchWatchdog(auditId, function () {
+        removeThinkingMessage();
+      });
+    }
+    askBrain(text, {
+      auditId: auditId,
+      userMessageRendered: true,
+      isLikelyBuildPrompt: isLikelyBuildPrompt === true,
+    });
+  }
+
+  function askBrain(message, options) {
+    options = options || {};
+    var AuditEvents = chatAuditEvents();
+    var auditId = options.auditId || null;
+    if (!auditId && window.CommandCenterChatExecutionAudit) {
+      auditId = window.CommandCenterChatExecutionAudit.startAudit({
+        messagePreview: message,
+        activeProjectId: activeProjectId,
+        activeSessionId: projectSessionClient.activeSessionId || null,
+        projectName: getActiveProjectName(),
+        sendButtonDisabled: Boolean(el('chat-send') && el('chat-send').disabled),
+        runtimeTruthReady: runtimeTruthReady,
+        localRuntimeHealthy: localRuntimeHealthy,
+      });
+    }
+    chatAuditRecord(
+      auditId,
+      AuditEvents.ASK_BRAIN_ENTER,
+      'askBrain invoked for Command Center message.',
+      {
+        messageLength: String((message || '').length),
+        activeProjectId: activeProjectId || null,
+        activeSessionId: projectSessionClient.activeSessionId || null,
+      },
+    );
+    var Repair = window.CommandCenterChatResponseExecutionRepair;
+    var RepairEvents = (Repair && Repair.EVENTS) || {};
+    if (Repair && Repair.setLastStage) Repair.setLastStage(auditId, 'askBrain entered');
+
+    if (!options.userMessageRendered) {
+      showThinking();
+      if (!el('chat-history')) {
+        chatAuditRecord(
+          auditId,
+          AuditEvents.SHOW_THINKING_SKIPPED_NO_HISTORY,
+          'showThinking skipped — #chat-history element missing.',
+        );
+      } else {
+        chatAuditRecord(auditId, AuditEvents.SHOW_THINKING, 'Brain analyzing indicator displayed.');
+      }
+    }
+
+    var gateInput = buildChatExecutionGateInput();
+    var gate = Repair
+      ? Repair.evaluateChatExecutionGate(gateInput)
+      : {
+          allowed: runtimeTruthReady && runtimeTruthClassifyAllowed && localRuntimeHealthy,
+          degraded: false,
+          blocked: !runtimeTruthReady || !runtimeTruthClassifyAllowed || !localRuntimeHealthy,
+          awaitingHealthPoll: false,
+          blockReason: 'Repair module unavailable',
+          blockingLayer: 'browser.repair_module',
+          suggestedAction: 'Reload Command Center',
+          auditEvent: null,
+        };
+
+    if (gate.awaitingHealthPoll) {
+      showThinking();
+      chatAuditRecord(auditId, AuditEvents.SHOW_THINKING, 'Brain analyzing — awaiting runtime health poll.');
+      return pollBrainHealthStartup().then(function (ok) {
+        if (ok) return askBrain(message, { auditId: auditId, userMessageRendered: options.userMessageRendered });
+        applyRuntimeBannerReconciliation();
+        showVisibleChatBlockingError(
+          auditId,
+          'Local runtime unavailable after health poll',
+          gate,
+          AuditEvents.ASK_BRAIN_BLOCKED_RUNTIME_POLL_FAILED,
+        );
+      });
+    }
+
+    if (gate.blocked) {
+      var DispatchBlocked = window.CommandCenterSendDispatch || {};
+      if (DispatchBlocked.logDiagnostic) {
+        DispatchBlocked.logDiagnostic(
+          (DispatchBlocked.TOKENS && DispatchBlocked.TOKENS.SUBMIT_BLOCKED) ||
+            'COMMAND_CENTER_SUBMIT_BLOCKED',
+          {
+            reason: gate.blockReason || 'Chat execution blocked',
+            blockingLayer: gate.blockingLayer || null,
+          },
+        );
+      }
+      applyRuntimeBannerReconciliation();
+      showVisibleChatBlockingError(
+        auditId,
+        gate.blockReason || 'Chat execution blocked',
+        gate,
+        !localRuntimeHealthy
+          ? AuditEvents.ASK_BRAIN_BLOCKED_RUNTIME_HEALTH
+          : AuditEvents.ASK_BRAIN_BLOCKED_RUNTIME_TRUTH,
+      );
+      return Promise.resolve();
+    }
+
+    if (gate.degraded) {
+      chatAuditRecord(
+        auditId,
+        RepairEvents.DEGRADED_RUNTIME_TRUTH_CONTINUE || AuditEvents.DEGRADED_RUNTIME_TRUTH_CONTINUE,
+        'Continuing chat execution with health-ready degraded runtime truth.',
+        {
+          truthFresh: gateInput.truthFresh,
+          healthReady: gateInput.healthReady,
+          staleReasons: lastRuntimeBannerReconciliation
+            ? lastRuntimeBannerReconciliation.staleReasons
+            : [],
+        },
+      );
+      rehydrateRuntimeTruthForChat(auditId);
+    }
+
+    if (!activeProjectId && !options.confirmFreshCopy) {
+      chatAuditRecord(
+        auditId,
+        RepairEvents.PROJECT_CONTEXT_WARNING || AuditEvents.PROJECT_CONTEXT_WARNING,
+        'No active project selected — server will bootstrap project context for build prompts.',
+        { activeProjectId: null },
+      );
+    }
+
+    return ensureSessionContinuityForChat(auditId, {
+      message: message,
+      isLikelyBuildPrompt: options.isLikelyBuildPrompt === true,
+    }).then(function (sessionOk) {
+      if (!sessionOk) {
+        var DispatchSession = window.CommandCenterSendDispatch || {};
+        if (DispatchSession.logDiagnostic) {
+          DispatchSession.logDiagnostic(
+            (DispatchSession.TOKENS && DispatchSession.TOKENS.SUBMIT_BLOCKED) ||
+              'COMMAND_CENTER_SUBMIT_BLOCKED',
+            { reason: 'Session hydration still in progress' },
+          );
+        }
+        showVisibleChatBlockingError(
+          auditId,
+          'Session hydration still in progress — retry Send in a moment',
+          {
+            blockingLayer: 'browser.session_hydration',
+            suggestedAction: 'Wait for session hydration to finish',
+          },
+          RepairEvents.SESSION_REPAIR_START || AuditEvents.SESSION_REPAIR_START,
+        );
+        return;
+      }
+      return executeBrainRespondFetch(message, options, auditId);
+    });
   }
 
   var FOUNDER_TEST_MAX_SCREEN_MS = 5000;
@@ -13211,6 +15697,12 @@
     }
 
     var form = el('chat-form');
+    var resumeBtn = el('welcome-resume-btn');
+    if (resumeBtn) {
+      resumeBtn.addEventListener('click', function () {
+        resumePreviousCommandCenterSession();
+      });
+    }
     var workspaceTabAdd = el('workspace-tab-add');
     if (workspaceTabAdd) {
       workspaceTabAdd.addEventListener('click', function () {
@@ -13222,6 +15714,7 @@
     var projectNameSkip = el('project-name-skip');
     var projectNameClose = el('project-name-dialog-close');
     var projectNameBackdrop = el('project-name-dialog-backdrop');
+    wireProjectDeleteDialog();
     if (projectNameForm) {
       projectNameForm.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -13230,35 +15723,19 @@
     }
     if (projectNameSkip) {
       projectNameSkip.addEventListener('click', function () {
-        var registryLoading =
-          projectRegistryClient.hydrationState === 'pending' ||
-          projectRegistryClient.hydrationState === 'loading';
-        if (registryLoading && !canUseProjectRegistryForCreate()) {
-          clearProjectCreateError();
-          showProjectCreateError('Loading projects...');
-          return;
-        }
-        if (projectRegistryClient.hydrationState === 'error' && !canUseProjectRegistryForCreate()) {
-          clearProjectCreateError();
-          showProjectCreateError(
-            projectRegistryClient.error || 'Could not load project registry. Try refreshing the page.',
-          );
-          return;
-        }
-        projectTabCounter += 1;
         clearProjectCreateError();
         setProjectCreateBusy(true);
-        createProjectViaRegistry('Project ' + projectTabCounter, { skipClientDuplicateCheck: true })
+        projectTabCounter += 1;
+        createProjectViaFastApi('Project ' + projectTabCounter, { forceFreshProject: true })
           .catch(function (err) {
+            if (err && err.duplicate) return;
             var message = err && err.message ? err.message : 'Could not create project';
             showProjectCreateError(message);
             pushNotification('Could not create project — ' + message);
-          })
-          .finally(function () {
-            setProjectCreateBusy(false);
           });
       });
     }
+    wireProjectDuplicateDialog();
     if (projectNameClose) {
       projectNameClose.addEventListener('click', hideProjectNameDialog);
     }
@@ -13317,16 +15794,33 @@
     };
 
     if (form) {
+      var chatInput = el('chat-input');
+      var sendButton = el('chat-send');
+      if (sendButton) {
+        sendButton.addEventListener('click', function () {
+          var Dispatch = window.CommandCenterSendDispatch || {};
+          var logDiag = Dispatch.logDiagnostic || function (token, detail) {
+            if (typeof console !== 'undefined' && console.info) {
+              console.info(token, detail === undefined ? '' : detail);
+            }
+          };
+          logDiag(
+            (Dispatch.TOKENS && Dispatch.TOKENS.SEND_CLICKED) || 'COMMAND_CENTER_SEND_CLICKED',
+            { source: 'click' },
+          );
+        });
+      }
+      if (chatInput) {
+        chatInput.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+            e.preventDefault();
+            submitCommandCenterMessage('enter');
+          }
+        });
+      }
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        var input = el('chat-input');
-        if (!input) return;
-        var text = input.value.trim();
-        if (!text) return;
-        if (!conversationStarted) hideWelcomeState();
-        appendChatMessage(text, 'user');
-        input.value = '';
-        askBrain(text);
+        submitCommandCenterMessage('submit');
       });
     }
 
@@ -13421,6 +15915,9 @@
   }
 
   bindEvents();
+  if (CommandCenterCleanStartup.markFreshLoadSession) {
+    CommandCenterCleanStartup.markFreshLoadSession();
+  }
   switchView('command-center');
   showWelcomeState();
   renderRuntimeDiagnostics();
@@ -13434,6 +15931,12 @@
     lastRelationshipQuery: null,
     lastDependencyQuery: null,
     lastImpactQuery: null,
+  });
+
+  setRuntimeReadinessLifecycle('STARTING');
+  clearPersistedStaleRuntimeState();
+  verifyCommandCenterRuntimeTruth().then(function () {
+    pollBrainHealthStartup();
   });
 
   loadExecutionProof(false)
@@ -13721,11 +16224,8 @@
     .then(function () {
       return loadProductWorkspace(false);
     })
-    .then(function () {
-      return checkBrainHealth();
-    })
     .catch(function () {
-      setLastError('Brain health check failed');
+      /* workspace load errors handled in loadProductWorkspace */
     });
 
   initOperatorFeedControls();

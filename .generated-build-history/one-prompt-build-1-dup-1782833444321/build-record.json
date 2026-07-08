@@ -1,0 +1,61 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1782833444321",
+  "createdAt": "2026-06-30T15:30:44.320Z",
+  "prompt": "Build an e-commerce store with product catalog, shopping cart, checkout flow, and order history pages.",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "appName": "E-Commerce Store",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782833444311",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782833444311/.generated-app-manifest.json",
+  "manifestHash": "8dc1d0566a4921be6e6d5b003689631151e4d1d43b31ab0311b528c81f124d0a",
+  "workspaceHash": "59d6ebb779cd3d4941672af4c8cbefbde733a587bb5387a5da14b53febf5815f",
+  "materializationHash": "3f28265f1642912a7513117600e4d2a734900104df939304755f3ef11d836b5b",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0,
+  "generatedFeatureModulesCount": 0,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/persistence",
+    "/products",
+    "/cart",
+    "/checkout",
+    "/orders",
+    "/payments"
+  ],
+  "generatedComponents": [],
+  "generatedServices": [],
+  "generatedModels": [],
+  "generatedStyles": [],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "Prompt faithfulness score below threshold."
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782833444311/.generated-app-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1782833444321"
+  ],
+  "failureReasons": [
+    "Prompt faithfulness score below threshold.",
+    "Prompt faithfulness score below threshold."
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1782833444321/replay-metadata.json",
+  "comparisonFingerprint": "9c40841f854b6bfbb4bcfc2b0a7e07ab66c72db33ef8895e9126d6b7ac9407bc",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1782833444321/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "a02ec521fa94eb0d243690a984b700a49d1da7aa049525446d343acb04516c78"
+}

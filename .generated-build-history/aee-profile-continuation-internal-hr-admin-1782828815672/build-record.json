@@ -1,0 +1,99 @@
+{
+  "readOnly": true,
+  "runId": "aee-profile-continuation-internal-hr-admin-1782828815672",
+  "createdAt": "2026-06-30T14:13:36.476Z",
+  "prompt": "Build an HR admin tool with employee directory, onboarding checklist, time-off requests, and payroll summary.",
+  "selectedProfile": "CRM_WEB_V1",
+  "appName": "CRM",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828815672",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828815672/.generated-app-manifest.json",
+  "manifestHash": "346500665315d74792ca42df06889db8f05afdb6665fd157aa23fcb6a7c9b916",
+  "workspaceHash": "5e477c4585c141566ad373ea7422e1fcab639ad5666b1f945952e6c9bded7634",
+  "materializationHash": "3771267dc181fcab2d1b4a455bd38788632b330b1245e2baab585890bd70d60e",
+  "generatedFilesCount": 98,
+  "generatedDirectoriesCount": 23,
+  "generatedFeatureModulesCount": 8,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/persistence",
+    "/customers",
+    "/pipeline",
+    "/contacts",
+    "/follow-ups",
+    "/reports"
+  ],
+  "generatedComponents": [
+    "src/blueprint/components/EmptyState.tsx",
+    "src/blueprint/components/ErrorState.tsx",
+    "src/blueprint/components/LoadingState.tsx",
+    "src/blueprint/components/UniversalAiAssistant.tsx"
+  ],
+  "generatedServices": [
+    "src/features/contacts/contacts.service.ts",
+    "src/features/customers/customers.service.ts",
+    "src/features/dashboard/dashboard.service.ts",
+    "src/features/follow-ups/follow-ups.service.ts",
+    "src/features/navigation-router/navigation-router.service.ts",
+    "src/features/pipeline/pipeline.service.ts",
+    "src/features/reports/reports.service.ts",
+    "src/features/settings/settings.service.ts"
+  ],
+  "generatedModels": [
+    "src/features/contacts/contacts.types.ts",
+    "src/features/customers/customers.types.ts",
+    "src/features/dashboard/dashboard.types.ts",
+    "src/features/follow-ups/follow-ups.types.ts",
+    "src/features/navigation-router/navigation-router.types.ts",
+    "src/features/pipeline/pipeline.types.ts",
+    "src/features/reports/reports.types.ts",
+    "src/features/settings/settings.types.ts"
+  ],
+  "generatedStyles": [
+    "src/App.css",
+    "src/features/contacts/contacts.module.css",
+    "src/features/customers/customers.module.css",
+    "src/features/dashboard/dashboard.module.css",
+    "src/features/feature-app-router.css",
+    "src/features/follow-ups/follow-ups.module.css",
+    "src/features/navigation-router/navigation-router.module.css",
+    "src/features/pipeline/pipeline.module.css",
+    "src/features/reports/reports.module.css",
+    "src/features/settings/settings.module.css",
+    "src/styles/global.css"
+  ],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "Adjective-style modules materialized: reports.; Over-extracted non-module phrases in workspace: reports",
+      "Adjective-style modules materialized: reports.; Over-extracted non-module phrases in workspace: reports"
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828815672/.generated-app-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828815672/build-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828815672/universal-feature-contract.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828815672/blueprint-manifest.json",
+    ".generated-build-history/aee-profile-continuation-internal-hr-admin-1782828815672"
+  ],
+  "failureReasons": [
+    "Adjective-style modules materialized: reports.; Over-extracted non-module phrases in workspace: reports",
+    "Adjective-style modules materialized: reports.; Over-extracted non-module phrases in workspace: reports",
+    "Adjective-style modules materialized: reports.; Over-extracted non-module phrases in workspace: reports"
+  ],
+  "replayMetadataPath": ".generated-build-history/aee-profile-continuation-internal-hr-admin-1782828815672/replay-metadata.json",
+  "comparisonFingerprint": "03de7747de1358e7bddf340949f99135a3c9fba249287e930f5509f776609da2",
+  "auditTimelinePath": ".generated-build-history/aee-profile-continuation-internal-hr-admin-1782828815672/audit-timeline.json",
+  "immutable": true,
+  "buildHistoryRecordHash": "5978c8794d07176a06f3df64e91af90266178312fe22b18d337388b82c2b6fbd"
+}

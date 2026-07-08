@@ -1,0 +1,300 @@
+{
+  "readOnly": true,
+  "overallScore": 40,
+  "verdict": "NEEDS_WORK",
+  "categories": [
+    {
+      "readOnly": true,
+      "id": "blueprint",
+      "label": "Blueprint",
+      "score": 25,
+      "weight": 0.08,
+      "weightedContribution": 2,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Blueprint purity failed",
+        "Shell purity verified"
+      ],
+      "missingEvidence": [
+        "domainLanguageBoundaryVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "promptAlignment",
+      "label": "Prompt Alignment",
+      "score": 25,
+      "weight": 0.08,
+      "weightedContribution": 2,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Prompt faithfulness FAIL: Adjective-style modules materialized: reports.",
+        "Prompt-specific UI terms detected (customer, pipeline, contact, follow-up)",
+        "Materialization validation incomplete"
+      ],
+      "missingEvidence": [
+        "profileSpecificUiVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "featureCoverage",
+      "label": "Feature Coverage",
+      "score": 67,
+      "weight": 0.12,
+      "weightedContribution": 8,
+      "status": "WARN",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/universal-feature-contract.json",
+        "src/features/navigation-router/NavigationRouterFeature.tsx",
+        "src/features/dashboard/DashboardFeature.tsx",
+        "src/features/settings/SettingsFeature.tsx",
+        "src/features/customers/CustomersFeature.tsx",
+        "src/features/pipeline/PipelineFeature.tsx",
+        "src/features/contacts/ContactsFeature.tsx",
+        "src/features/follow-ups/FollowUpsFeature.tsx",
+        "src/features/reports/ReportsFeature.tsx"
+      ],
+      "reasons": [
+        "6/9 expected modules present"
+      ],
+      "missingEvidence": [
+        "feature module missing: auth",
+        "feature module missing: leads",
+        "feature module missing: deals"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "modularArchitecture",
+      "label": "Modular Architecture",
+      "score": 80,
+      "weight": 0.1,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/src/features/FeatureAppRouter.tsx"
+      ],
+      "reasons": [
+        "9 modular feature modules generated",
+        "Modular registry/router architecture verified"
+      ],
+      "missingEvidence": [
+        "featureModuleDirectories incomplete"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "routeReachability",
+      "label": "Routes",
+      "score": 85,
+      "weight": 0.07,
+      "weightedContribution": 6,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/src/features/FeatureAppRouter.tsx"
+      ],
+      "reasons": [
+        "9/9 routes generated"
+      ],
+      "missingEvidence": [
+        "modularRoutesVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "serviceTypesValidation",
+      "label": "Services/Types/Validation",
+      "score": 100,
+      "weight": 0.07,
+      "weightedContribution": 7,
+      "status": "PASS",
+      "evidencePaths": [
+        "src/features/contacts/contacts.service.ts",
+        "src/features/customers/customers.service.ts",
+        "src/features/dashboard/dashboard.service.ts",
+        "src/features/follow-ups/follow-ups.service.ts",
+        "src/features/navigation-router/navigation-router.service.ts",
+        "src/features/pipeline/pipeline.service.ts",
+        "src/features/reports/reports.service.ts",
+        "src/features/settings/settings.service.ts"
+      ],
+      "reasons": [
+        "8 service files",
+        "8 types files",
+        "8 validation files"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "build",
+      "label": "Build",
+      "score": 100,
+      "weight": 0.08,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Validation status PASS",
+        "npm build completed in 3911ms",
+        "dist/index.html present"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "preview",
+      "label": "Preview",
+      "score": 15,
+      "weight": 0.08,
+      "weightedContribution": 1,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/.generated-app-manifest.json"
+      ],
+      "reasons": [],
+      "missingEvidence": [
+        "previewVerified",
+        "previewHtmlStatus pending",
+        "previewUrl"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "productionValidation",
+      "label": "Production Validation",
+      "score": 25,
+      "weight": 0.1,
+      "weightedContribution": 3,
+      "status": "FAIL",
+      "evidencePaths": [],
+      "reasons": [],
+      "missingEvidence": [
+        "productionValidationStatus pending",
+        "productionValidationStages"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "buildHistory",
+      "label": "Build History",
+      "score": 100,
+      "weight": 0.05,
+      "weightedContribution": 5,
+      "status": "PASS",
+      "evidencePaths": [
+        ".generated-build-history/one-prompt-build-4-dup-1782828995461",
+        ".generated-build-history/one-prompt-build-4-dup-1782828995461/replay-metadata.json",
+        ".generated-build-history/one-prompt-build-4-dup-1782828995461/audit-timeline.json"
+      ],
+      "reasons": [
+        "Build history recorded",
+        "Immutable build record hash present"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "persistentProjectReality",
+      "label": "Persistent Project Reality",
+      "score": 100,
+      "weight": 0.08,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782828979239/source",
+        ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782828979239/.aidev/project-file-index.json",
+        ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782828979239/.aidev/export-metadata.json"
+      ],
+      "reasons": [
+        "Persistent project reality PASS",
+        "Export metadata reports exportReady",
+        "Workspace reality audit passed"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "genericityAvoidance",
+      "label": "Genericity Avoidance",
+      "score": 100,
+      "weight": 0.08,
+      "weightedContribution": 8,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Prompt-specific terms present in allowed areas",
+        "No generic Project Management fallback in shell"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "launchReadiness",
+      "label": "Launch Readiness",
+      "score": 36,
+      "weight": 0.11,
+      "weightedContribution": 4,
+      "status": "FAIL",
+      "evidencePaths": [
+        ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782828979239/.aidev/export-metadata.json",
+        ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782828979239/source"
+      ],
+      "reasons": [
+        "Launch readiness blocked by critical gaps"
+      ],
+      "missingEvidence": [
+        "preview not verified",
+        "production validation not PASS"
+      ]
+    }
+  ],
+  "strengths": [
+    "Services/Types/Validation",
+    "Build",
+    "Build History",
+    "Persistent Project Reality",
+    "Genericity Avoidance"
+  ],
+  "gaps": [
+    "Auth",
+    "Leads",
+    "Deals",
+    "Lead",
+    "Deal",
+    "Live preview verification incomplete"
+  ],
+  "criticalFailures": [
+    "registry missing modules: auth, leads, deals"
+  ],
+  "recommendedNextActions": [
+    "Verify preview HTML and dev server startup"
+  ],
+  "computedFromCategories": true,
+  "recordedAt": "2026-06-30T14:16:36.162Z",
+  "buildRunId": "one-prompt-build-4",
+  "projectId": "aee-profile-continuation-internal-hr-admin-1782828979239",
+  "scoreArtifactPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-internal-hr-admin-1782828979239/.materialization-quality-score.json",
+  "persistentScoreArtifactPath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782828979239/.aidev/materialization-quality-score.json",
+  "featureContractRealityPath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782828979239/.aidev/feature-contract-reality.json",
+  "featureContractRealityScore": 73,
+  "featureContractRealityStatus": "FAIL",
+  "workspaceRealityAuditPath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782828979239/.aidev/workspace-reality-audit.json",
+  "workspaceRealityAuditScore": 100,
+  "workspaceRealityAuditStatus": "PASS"
+}

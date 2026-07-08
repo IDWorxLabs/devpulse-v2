@@ -1,0 +1,71 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-3-dup-1783372851630",
+  "createdAt": "2026-07-06T21:20:51.482Z",
+  "prompt": "Build a simple notes app where I can create, edit, and delete text notes, attempt two.",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "appName": "Simple Notes App Where I Can Create, Edit, And Delete Text Notes, Attempt Two",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372803979-5",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372803979-5/.generated-app-manifest.json",
+  "manifestHash": "05b6f5f8c4c860c1605a4835c6f9b55a6cea9f9a808aefe188bd2ba16423736d",
+  "workspaceHash": "23a1e3473e7b9dd08d731a6004bbef83ddd53e9dcf184479dcf6c41aadde1a0e",
+  "materializationHash": "0cf96dd4f70ca6345ae449a2563cc0e153e35266e8020f08e4e96f01c4a88cf0",
+  "generatedFilesCount": 57,
+  "generatedDirectoriesCount": 16,
+  "generatedFeatureModulesCount": 1,
+  "generatedRoutes": [
+    "/"
+  ],
+  "generatedComponents": [
+    "src/blueprint/components/EmptyState.tsx",
+    "src/blueprint/components/ErrorState.tsx",
+    "src/blueprint/components/LoadingState.tsx",
+    "src/blueprint/components/UniversalAiAssistant.tsx"
+  ],
+  "generatedServices": [
+    "src/features/notes/notes.service.ts"
+  ],
+  "generatedModels": [
+    "src/features/notes/notes.types.ts"
+  ],
+  "generatedStyles": [
+    "src/App.css",
+    "src/features/feature-app-router.css",
+    "src/features/notes/notes.module.css",
+    "src/styles/global.css"
+  ],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "PASS",
+    "blueprintPurityStatus": "PASS",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": true,
+    "warnings": [
+      "AEE_PREVIEW_RECOVERY_LOOP_V1: preview recovery exhausted after 3 attempt(s) — build completed with degraded preview.",
+      "AEE respected blocker: Live Preview is locked because Launch Readiness evidence not available. Run Autonomous Debugging after resolving upstream interaction and behavior reachability failures.",
+      "AEE evidence provider: AUTONOMOUS_DEBUGGING",
+      "AEE evidence provider: MISSING_CAPABILITY_EVOLUTION",
+      "AEE evidence provider: LIVE_PREVIEW_GATE"
+    ],
+    "errors": []
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": "http://127.0.0.1:5174/",
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372803979-5/.generated-app-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372803979-5/build-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372803979-5/universal-feature-contract.json",
+    "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372803979-5/blueprint-manifest.json",
+    ".generated-build-history/one-prompt-build-3-dup-1783372851630"
+  ],
+  "failureReasons": [],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-3-dup-1783372851630/replay-metadata.json",
+  "comparisonFingerprint": "36521ec8c903dda3936292148debae84b279168dd3a55c20afb3135f2f8fe41d",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-3-dup-1783372851630/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-3",
+  "buildHistoryRecordHash": "3b0ab01972ff01ad7bc88898c307902fe857d4024da8051daa377fbf2212216c"
+}

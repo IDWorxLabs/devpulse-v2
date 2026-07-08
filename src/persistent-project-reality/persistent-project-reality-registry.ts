@@ -8,6 +8,8 @@ import {
   writeProjectRegistryV1ForTests,
 } from '../project-registry-v1/project-registry-v1-store.js';
 import type { ProjectRegistryRecord } from '../project-registry-v1/project-registry-v1-types.js';
+import type { ProjectKind } from '../project-registry-v1/project-kind.js';
+import { inferProjectKindFromProjectId } from '../project-registry-v1/project-kind.js';
 import type {
   PersistentProjectRealityEvidence,
   PersistentProjectRecord,
@@ -21,15 +23,23 @@ export function ensureRegistryProjectRecord(input: {
   rootDir: string;
   projectId: string;
   projectName: string;
+  projectKind?: ProjectKind;
 }): ProjectRegistryRecord {
   const state = readProjectRegistryState(input.rootDir);
   const existing = state.projects.find((project) => project.projectId === input.projectId);
-  if (existing) return existing;
+  if (existing) {
+    if (input.projectKind && !existing.projectKind) {
+      existing.projectKind = input.projectKind;
+      writeProjectRegistryV1ForTests(state, input.rootDir);
+    }
+    return existing;
+  }
 
   const stamp = nowIso();
   const record: ProjectRegistryRecord = {
     projectId: input.projectId,
     name: input.projectName,
+    projectKind: input.projectKind ?? inferProjectKindFromProjectId(input.projectId),
     status: 'ACTIVE',
     createdAt: stamp,
     updatedAt: stamp,

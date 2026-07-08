@@ -11,13 +11,13 @@ export function getDevPulseV2ContinuousProductImprovementEngine(): {
   ownerModule: string;
   passToken: string;
   phase: number;
-  simulationOnly: true;
+  enforcementAuthority: true;
 } {
   return {
     ownerModule: CONTINUOUS_PRODUCT_IMPROVEMENT_ENGINE_OWNER_MODULE,
     passToken: CONTINUOUS_PRODUCT_IMPROVEMENT_ENGINE_PASS_TOKEN,
     phase: 11,
-    simulationOnly: true,
+    enforcementAuthority: true,
   };
 }
 

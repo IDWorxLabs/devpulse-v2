@@ -10,6 +10,7 @@ import {
   shouldUseCustomFeatureDefinition,
 } from '../prompt-faithful-generation/custom-feature-contract-builder.js';
 import { extractPromptFeatures } from '../prompt-faithful-generation/prompt-feature-extractor.js';
+import { resolveAssistiveCommunicationProfile } from '../prompt-faithful-generation/assistive-communication-profile.js';
 import {
   getProfileFeatureDefinition,
   resolveMaterializationProfile,
@@ -231,15 +232,16 @@ function buildArchitectureHints(rawPrompt: string): ArchitectureHintUnderstandin
   const ranking = rankBuildProfiles(rawPrompt);
   const guardResult = applyPromptProfileSelectionGuard(rawPrompt, ranking);
   const extraction = extractPromptFeatures(rawPrompt);
+  const assistiveProfile = resolveAssistiveCommunicationProfile(rawPrompt);
 
-  let materializationProfile = guardResult.guardApplied
-    ? 'GENERIC_CUSTOM_APP_V1' as const
-    : resolveMaterializationProfile(
-        guardResult.selectedProfile,
-        rawPrompt,
-      );
+  let materializationProfile =
+    assistiveProfile ??
+    (guardResult.guardApplied
+      ? guardResult.selectedProfile
+      : resolveMaterializationProfile(guardResult.selectedProfile, rawPrompt));
 
   if (
+    !assistiveProfile &&
     extraction.explicitModulesProvided &&
     shouldUseCustomFeatureDefinition(extraction, 'GENERIC_CUSTOM_APP_V1')
   ) {
@@ -248,7 +250,7 @@ function buildArchitectureHints(rawPrompt: string): ArchitectureHintUnderstandin
 
   let definition;
   if (shouldUseCustomFeatureDefinition(extraction, materializationProfile)) {
-    definition = buildCustomProfileFeatureDefinition(extraction);
+    definition = buildCustomProfileFeatureDefinition(extraction, rawPrompt);
   } else {
     definition = getProfileFeatureDefinition(materializationProfile, rawPrompt);
   }

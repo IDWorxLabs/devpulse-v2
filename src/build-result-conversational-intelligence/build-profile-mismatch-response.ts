@@ -3,6 +3,8 @@
  */
 
 import type { BuildResultConversationalContext } from './build-result-conversational-types.js';
+import type { OnePromptLivePreviewBuildResult } from '../one-prompt-live-preview/one-prompt-live-preview-types.js';
+import { shouldSuppressProfileMismatchForBuild } from '../autonomous-engineering-executive/index.js';
 
 const EXPENSE_PROFILES = new Set(['EXPENSE_TRACKER_WEB_V1', 'FINANCE_TRACKER_WEB_V1']);
 
@@ -69,7 +71,16 @@ export function composeProfileMismatchChatResponse(context: BuildResultConversat
 }
 
 /** True when profile mismatch evidence exists (passed to LLM; fallback only when LLM unavailable). */
-export function hasProfileMismatchEvidence(context: BuildResultConversationalContext): boolean {
+export function hasProfileMismatchEvidence(
+  context: BuildResultConversationalContext,
+  buildResult?: OnePromptLivePreviewBuildResult | null,
+): boolean {
+  if (
+    buildResult &&
+    shouldSuppressProfileMismatchForBuild(buildResult, context.classification)
+  ) {
+    return false;
+  }
   return (
     context.classification.alignmentVerdict === 'PROFILE_MISMATCH' ||
     context.classification.profileMismatchWarnings.length > 0

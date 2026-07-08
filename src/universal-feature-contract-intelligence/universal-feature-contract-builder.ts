@@ -476,6 +476,70 @@ function buildProfileContract(input: {
       };
     }
 
+    case 'ASSISTIVE_COMMUNICATION_APP_V1': {
+      const message = entity('message', 'Message', 'Messages', 'Messages', true);
+      return {
+        contractVersion: '1.0',
+        contractId: input.contractId,
+        productProfile: input.profile,
+        productName: extractPromptAppTitle(input.rawPrompt),
+        generatedAt,
+        sourcePrompt: input.rawPrompt,
+        entities: [message],
+        actions: crudActions(message, [
+          {
+            id: 'speak-message',
+            entityId: message.id,
+            verb: 'complete',
+            label: 'Speak Message',
+            required: includesAny(lower, ['speech', 'speak', 'tts', 'text-to-speech']),
+          },
+          {
+            id: 'emergency-speak',
+            entityId: message.id,
+            verb: 'complete',
+            label: 'Emergency Speech',
+            required: includesAny(lower, ['emergency']),
+          },
+          {
+            id: 'calibrate-input',
+            entityId: message.id,
+            verb: 'update',
+            label: 'Calibrate Input',
+            required: includesAny(lower, ['calibrat', 'gaze', 'blink']),
+          },
+        ]),
+        rules: [
+          {
+            id: 'message-content-required',
+            entityId: message.id,
+            label: 'Message must have content before speak',
+            required: true,
+          },
+        ],
+        workflows: [
+          {
+            id: 'compose-and-speak',
+            entityId: message.id,
+            label: 'Select → Compose → Speak',
+            stages: ['selected', 'composed', 'spoken'],
+            required: true,
+          },
+          {
+            id: 'emergency-speech-flow',
+            entityId: message.id,
+            label: 'Emergency phrase activation',
+            stages: ['idle', 'triggered', 'spoken'],
+            required: includesAny(lower, ['emergency']),
+          },
+        ],
+        outcomes: [
+          { id: 'message-spoken', entityId: message.id, label: 'Text-to-speech output triggered', required: true },
+          { id: 'history-recorded', entityId: message.id, label: 'Communication history updated', required: true },
+        ],
+      };
+    }
+
     case 'HABIT_TRACKER_WEB_V1':
     case 'GENERIC_CUSTOM_APP_V1': {
       const habit = entity('habit', 'Habit', 'Habits', 'Habits', true);

@@ -1,0 +1,63 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1782826754681",
+  "createdAt": "2026-06-30T13:39:14.679Z",
+  "prompt": "Build an expense tracker where users add expenses, categorize spending, view monthly totals, and filter by date range.",
+  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
+  "appName": "Expense Tracker",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782826754557",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782826754557/.generated-app-manifest.json",
+  "manifestHash": "662a51931fa45fd34e70982e78c2353b4c08e74fe813bbb190b4f5bede553a10",
+  "workspaceHash": "bcba9d632fce2d1138260930eccc32ace8acad9a9880d940d60b1e2d77b567f4",
+  "materializationHash": "454764e741d0c88858a7bf8a926a209ef5df2f115a2492d89754eae453a25ef4",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0,
+  "generatedFeatureModulesCount": 0,
+  "generatedRoutes": [
+    "/filter-ui",
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/expenses",
+    "/persistence",
+    "/income",
+    "/categories",
+    "/reports",
+    "/charts",
+    "/csv-export"
+  ],
+  "generatedComponents": [],
+  "generatedServices": [],
+  "generatedModels": [],
+  "generatedStyles": [],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "ASE-authorized materialization did not complete."
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782826754557/.generated-app-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1782826754681"
+  ],
+  "failureReasons": [
+    "ASE-authorized materialization did not complete.",
+    "ASE-authorized materialization did not complete."
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1782826754681/replay-metadata.json",
+  "comparisonFingerprint": "c938e6170125c7c4f59244448188e33e101cf0f466a6ff205ecf160a300bec1b",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1782826754681/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "5f464237c1da776d7007782610ff30d77bbd8a4e5bd3b609b38eaff24650d737"
+}

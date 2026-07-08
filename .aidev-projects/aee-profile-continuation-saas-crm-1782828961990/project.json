@@ -1,0 +1,23 @@
+{
+  "readOnly": true,
+  "projectId": "aee-profile-continuation-saas-crm-1782828961990",
+  "projectName": "CRM",
+  "createdAt": "2026-06-30T14:16:02.871Z",
+  "updatedAt": "2026-06-30T14:16:02.871Z",
+  "selectedProfile": "CRM_WEB_V1",
+  "originalPrompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "currentSourcePath": "",
+  "activeWorkspacePath": ".aidev-projects/aee-profile-continuation-saas-crm-1782828961990",
+  "lastBuildRunId": "aee-profile-continuation-saas-crm-1782828961990",
+  "lastSuccessfulBuildRunId": null,
+  "manifestPath": "",
+  "featureContractPath": "",
+  "buildHistoryRecordPath": ".generated-build-history/aee-profile-continuation-saas-crm-1782828961990",
+  "productionValidationPath": null,
+  "exportMetadataPath": "",
+  "projectFileIndexPath": "",
+  "status": "FAILED",
+  "immutableBuildLinks": [],
+  "lastFailedBuildRunId": "aee-profile-continuation-saas-crm-1782828961990",
+  "lastFailedSnapshotPath": ".aidev-projects/aee-profile-continuation-saas-crm-1782828961990/.aidev/snapshots/failed-aee-profile-continuation-saas-crm-1782828961990"
+}

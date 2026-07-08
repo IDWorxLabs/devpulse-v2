@@ -11,13 +11,13 @@ export function getDevPulseV2AutonomousDebuggingEngine(): {
   ownerModule: string;
   passToken: string;
   phase: number;
-  simulationOnly: true;
+  enforcementAuthority: true;
 } {
   return {
     ownerModule: AUTONOMOUS_DEBUGGING_ENGINE_OWNER_MODULE,
     passToken: AUTONOMOUS_DEBUGGING_ENGINE_PASS_TOKEN,
     phase: 9,
-    simulationOnly: true,
+    enforcementAuthority: true,
   };
 }
 

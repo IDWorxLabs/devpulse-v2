@@ -459,5 +459,5 @@ export function resetConnectedRuntimeExecutionModuleForTests(): void {
   resetRuntimeActivationEngineForTests();
   resetConnectedRuntimeActivationModuleForTests();
   resetConnectedBuildExecutionModuleForTests();
-  cleanupActiveRuntime();
+  void cleanupActiveRuntime();
 }

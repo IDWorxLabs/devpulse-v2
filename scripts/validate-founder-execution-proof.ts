@@ -1488,7 +1488,7 @@ async function cleanupVerificationWorkspace(
 
       ?.workspaceRoot ?? '';
 
-  cleanupActiveRuntime();
+  await cleanupActiveRuntime();
 
   await new Promise((resolve) => setTimeout(resolve, 300));
 

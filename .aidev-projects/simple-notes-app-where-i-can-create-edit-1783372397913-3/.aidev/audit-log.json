@@ -1,0 +1,11 @@
+{
+  "readOnly": true,
+  "entries": [
+    {
+      "timestamp": "2026-07-06T21:13:41.913Z",
+      "event": "source_promoted",
+      "buildRunId": "one-prompt-build-1",
+      "sourcePath": ".aidev-projects/simple-notes-app-where-i-can-create-edit-1783372397913-3/source"
+    }
+  ]
+}

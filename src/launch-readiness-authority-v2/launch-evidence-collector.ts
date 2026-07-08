@@ -5,6 +5,12 @@
 
 import { collectFounderLaunchEvidence } from '../autonomous-founder-launch-authority/founder-evidence-collector.js';
 import {
+  collectWorkspaceFeatureRealityFallback,
+  listProvenWorkspaceModuleIds,
+  workspaceHasGeneratedFeatureModules,
+} from '../feature-contract-reality/feature-reality-workspace-fallback-collector.js';
+import { listWorkspaceFeatureModuleIds } from '../prompt-faithful-generation/prompt-faithful-materialization-gate.js';
+import {
   buildLaunchAutonomousDebuggingEvidence,
   runAutonomousDebuggingPipeline,
 } from '../autonomous-debugging-engine/index.js';
@@ -217,10 +223,38 @@ export function collectLaunchEvidence(input: LaunchReadinessPipelineInput): Laun
 
   const simulationOnly = !input.projectRootDir && !input.workspaceDir;
 
+  const workspaceModuleIds = (() => {
+    const slices = incrementalBuild.orderedSliceIds;
+    const slicesAreModuleIds =
+      slices.length > 0 && slices.every((id) => !/^slice-\d+$/i.test(id));
+    if (slicesAreModuleIds) {
+      return slices;
+    }
+    if (input.workspaceDir && workspaceHasGeneratedFeatureModules(input.workspaceDir)) {
+      const proven = listProvenWorkspaceModuleIds(input.workspaceDir);
+      const planned = moduleIds.filter((id) => proven.includes(id));
+      return planned.length > 0 ? planned : proven;
+    }
+    return moduleIds;
+  })();
+  const workspaceHasFeatures =
+    Boolean(input.workspaceDir) && workspaceHasGeneratedFeatureModules(input.workspaceDir!);
+  const workspaceFeatureReality =
+    workspaceHasFeatures && input.workspaceDir
+      ? collectWorkspaceFeatureRealityFallback({
+          workspaceDir: input.workspaceDir,
+          requiredModuleIds: workspaceModuleIds,
+          contractId: faithfulness.contract.id,
+          previewUrl: input.previewUrl ?? 'workspace://source-derived',
+          registerAssessment: true,
+        })
+      : null;
+
   const founder = collectFounderLaunchEvidence({
     productPrompt: input.rawPrompt,
     projectRootDir: input.projectRootDir ?? null,
     workspaceDir: input.workspaceDir ?? null,
+    requiredModuleIds: workspaceModuleIds,
   });
 
   const faithEvidence = buildLaunchFaithfulnessEvidence(faithfulness, moduleIds);
@@ -611,30 +645,67 @@ export function collectLaunchEvidence(input: LaunchReadinessPipelineInput): Laun
     }),
   );
 
+  const featureRealityStatus = (): LaunchEvidenceStatus => {
+    if (workspaceFeatureReality?.status === 'DEGRADED_WITH_WORKSPACE_EVIDENCE') {
+      return 'DEGRADED_WITH_WORKSPACE_EVIDENCE';
+    }
+    if (workspaceFeatureReality?.status === 'PASS') {
+      return 'PASS';
+    }
+    if (workspaceFeatureReality?.status === 'FAIL') {
+      return 'FAIL';
+    }
+    if (simulationOnly || !workspaceHasFeatures) {
+      return incrementalBuild.permissionVerdict === 'READY_FOR_ASSEMBLY' ? 'PASS' : 'WARNING';
+    }
+    return statusFromPassed(
+      founder.featureReality?.passed ?? false,
+      founder.featureReality?.available ?? false,
+    );
+  };
+
+  const featureRealityConfidence = (): number => {
+    if (workspaceFeatureReality?.available) {
+      return clamp(workspaceFeatureReality.score);
+    }
+    if (simulationOnly || !workspaceHasFeatures) {
+      return clamp(incEvidence.stabilizedCount > 0 ? 80 : 50);
+    }
+    return clamp(founder.featureReality?.score ?? 0);
+  };
+
   sources.push(
     buildRecord({
       sourceId: 'FEATURE_REALITY',
       sourceName: 'Feature Reality',
-      status: simulationOnly
-        ? incrementalBuild.permissionVerdict === 'READY_FOR_ASSEMBLY'
-          ? 'PASS'
-          : 'WARNING'
-        : statusFromPassed(
-            founder.featureReality?.passed ?? false,
-            founder.featureReality?.available ?? false,
-          ),
+      status: featureRealityStatus(),
       evidenceId: nextEvidenceId('FEATURE_REALITY'),
-      confidence: simulationOnly ? clamp(incEvidence.stabilizedCount > 0 ? 80 : 50) : clamp(founder.featureReality?.score ?? 0),
+      confidence: featureRealityConfidence(),
       validationTimestamp: collectedAt,
       affectedRequirements: [],
       affectedFeatures: incrementalBuild.orderedSliceIds,
-      warnings: simulationOnly ? [] : (founder.featureReality?.warnings ?? []),
-      blockers: simulationOnly ? [] : (founder.featureReality?.blockers ?? []),
-      residualRisk: [],
+      warnings:
+        workspaceFeatureReality?.status === 'DEGRADED_WITH_WORKSPACE_EVIDENCE'
+          ? workspaceFeatureReality.warnings
+          : simulationOnly || !workspaceHasFeatures
+            ? ['Planning-stage feature stability — workspace runtime evidence deferred until materialization']
+            : (founder.featureReality?.warnings ?? []),
+      blockers:
+        workspaceFeatureReality?.status === 'FAIL'
+          ? workspaceFeatureReality.blockers
+          : simulationOnly || !workspaceHasFeatures
+            ? []
+            : (founder.featureReality?.blockers ?? []),
+      residualRisk:
+        workspaceFeatureReality?.status === 'DEGRADED_WITH_WORKSPACE_EVIDENCE'
+          ? ['Live runtime feature validation deferred']
+          : [],
       supportingArtifacts: [
-        simulationOnly
-          ? `featureStability:${incEvidence.stabilizedCount}`
-          : `featureReality:${founder.featureReality?.score ?? 0}`,
+        workspaceFeatureReality?.available
+          ? `featureReality:${workspaceFeatureReality.status}`
+          : simulationOnly || !workspaceHasFeatures
+            ? `featureStability:${incEvidence.stabilizedCount}`
+            : `featureReality:${founder.featureReality?.score ?? 0}`,
       ],
     }),
   );

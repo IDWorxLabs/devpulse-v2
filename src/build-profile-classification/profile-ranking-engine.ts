@@ -15,6 +15,7 @@ import {
   promptMentionsLisaOrAccessibility,
 } from '../project-context-switching/project-context-classifier-guard.js';
 import { promptContainsNegatedProjectManagement } from '../prompt-faithful-generation/prompt-profile-selection-guard.js';
+import { promptDescribesAssistiveCommunication } from '../prompt-faithful-generation/assistive-communication-profile.js';
 
 interface ProfileRuleSet {
   profile: GeneratedAppProfile;
@@ -89,6 +90,38 @@ const CRM_STRICT_KEYWORDS = [
   'pipeline',
 ];
 
+const EXPENSE_DISQUALIFIERS = [
+  ...CRM_STRICT_KEYWORDS.filter((k) => k !== 'accounts'),
+  'marketplace',
+  'e-commerce',
+  'ecommerce',
+  'shopping cart',
+  'product catalog',
+  'buyers and sellers',
+  'buyer',
+  'seller',
+  'listings',
+  'api dashboard',
+  'api keys',
+  'request logs',
+  'endpoint documentation',
+  'puzzle game',
+  'patient portal',
+  'ai chat',
+  'community app',
+  'social app',
+  'posts feed',
+  'learning platform',
+  'lms',
+  'courses',
+  'hr admin',
+  'employee directory',
+  'payroll',
+  'locked-in syndrome',
+  'assistive communication',
+  'lisa',
+];
+
 const PROFILE_RULES: ProfileRuleSet[] = [
   {
     profile: 'EXPENSE_TRACKER_WEB_V1',
@@ -97,7 +130,7 @@ const PROFILE_RULES: ProfileRuleSet[] = [
       ...EXPENSE_STRONG_KEYWORDS.map((term) => ({ term, weight: 12 })),
       ...EXPENSE_KEYWORDS.map((term) => ({ term, weight: term === 'expense' || term === 'expenses' ? 8 : 6 })),
     ],
-    disqualifiers: CRM_STRICT_KEYWORDS.filter((k) => k !== 'accounts'),
+    disqualifiers: EXPENSE_DISQUALIFIERS,
   },
   {
     profile: 'FINANCE_TRACKER_WEB_V1',
@@ -111,15 +144,26 @@ const PROFILE_RULES: ProfileRuleSet[] = [
         (term) => ({ term, weight: 7 }),
       ),
     ],
-    disqualifiers: CRM_STRICT_KEYWORDS.filter((k) => k !== 'accounts'),
+    disqualifiers: EXPENSE_DISQUALIFIERS,
   },
   {
     profile: 'CRM_WEB_V1',
     intentLabel: 'customer relationship management',
-    keywords: CRM_STRICT_KEYWORDS.map((term, index) => ({
-      term,
-      weight: term === 'crm' ? 12 : 10 - Math.min(index, 4),
-    })),
+    keywords: [
+      { term: 'crm', weight: 12 },
+      { term: 'hr admin', weight: 11 },
+      { term: 'hr platform', weight: 11 },
+      { term: 'employee directory', weight: 11 },
+      { term: 'employee records', weight: 10 },
+      { term: 'onboarding', weight: 9 },
+      { term: 'payroll', weight: 9 },
+      { term: 'time-off', weight: 8 },
+      { term: 'time off', weight: 8 },
+      ...CRM_STRICT_KEYWORDS.filter((k) => k !== 'crm').map((term, index) => ({
+        term,
+        weight: 10 - Math.min(index, 4),
+      })),
+    ],
     disqualifiers: [
       ...EXPENSE_STRONG_KEYWORDS,
       'expense tracker',
@@ -144,6 +188,13 @@ const PROFILE_RULES: ProfileRuleSet[] = [
       { term: 'complete tasks', weight: 8 },
     ],
     disqualifiers: [
+      'onboarding checklist',
+      'employee directory',
+      'hr admin',
+      'hr platform',
+      'payroll',
+      'time-off',
+      'time off',
       'locked in syndrome',
       'locked-in syndrome',
       'lisa',
@@ -210,6 +261,37 @@ const PROFILE_RULES: ProfileRuleSet[] = [
       { term: 'streaks', weight: 10 },
       { term: 'habit', weight: 9 },
       { term: 'habits', weight: 9 },
+    ],
+  },
+  {
+    profile: 'ASSISTIVE_COMMUNICATION_APP_V1',
+    intentLabel: 'assistive communication',
+    keywords: [
+      { term: 'assistive communication', weight: 14 },
+      { term: 'locked-in syndrome', weight: 13 },
+      { term: 'locked in syndrome', weight: 13 },
+      { term: 'eye tracking', weight: 12 },
+      { term: 'eye movement', weight: 12 },
+      { term: 'gaze keyboard', weight: 12 },
+      { term: 'gaze selection', weight: 11 },
+      { term: 'blink input', weight: 11 },
+      { term: 'text-to-speech', weight: 11 },
+      { term: 'text to speech', weight: 11 },
+      { term: 'communication board', weight: 10 },
+      { term: 'caregiver dashboard', weight: 10 },
+      { term: 'emergency speech', weight: 10 },
+      { term: 'accessibility settings', weight: 9 },
+      { term: 'onboarding calibration', weight: 9 },
+      { term: 'severe motor impairment', weight: 12 },
+      { term: 'accessibility-first', weight: 11 },
+    ],
+    disqualifiers: [
+      'expense tracker',
+      'crm',
+      'e-commerce',
+      'shopping cart',
+      'task tracker',
+      'todo app',
     ],
   },
   {
@@ -339,6 +421,7 @@ function inferProductIntent(text: string, selected: GeneratedAppProfile | null):
     return 'qr code application';
   }
   if (matchProfileKeyword(text, 'task tracker') || matchProfileKeyword(text, 'todo')) return 'task tracking';
+  if (promptDescribesAssistiveCommunication(text)) return 'assistive communication';
   if (promptMentionsLisaOrAccessibility(text)) return 'assistive communication';
   if (matchProfileKeyword(text, 'inventory')) return 'inventory management';
   if (matchProfileKeyword(text, 'school')) return 'school management';

@@ -1,0 +1,71 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1782970285007",
+  "createdAt": "2026-07-02T05:31:24.938Z",
+  "prompt": "build a calculator app",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "appName": "New Project",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782897096576-2",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782897096576-2/.generated-app-manifest.json",
+  "manifestHash": "341866cde30084c5d579bc90b6b46f901d2c2ff4cfaa98e613adffda70458327",
+  "workspaceHash": "9559d54b4eef9cf7b71eb204ce9951144b1b5f4bef4abb418a7f57ebb51c17cf",
+  "materializationHash": "a14f3ecfbc2d085715a6faa027557964241a81669133d0b3c5f9e4891ab2aa7d",
+  "generatedFilesCount": 57,
+  "generatedDirectoriesCount": 16,
+  "generatedFeatureModulesCount": 1,
+  "generatedRoutes": [
+    "/calculator"
+  ],
+  "generatedComponents": [
+    "src/blueprint/components/EmptyState.tsx",
+    "src/blueprint/components/ErrorState.tsx",
+    "src/blueprint/components/LoadingState.tsx",
+    "src/blueprint/components/UniversalAiAssistant.tsx"
+  ],
+  "generatedServices": [
+    "src/features/calculator/calculator.service.ts"
+  ],
+  "generatedModels": [
+    "src/features/calculator/calculator.types.ts"
+  ],
+  "generatedStyles": [
+    "src/App.css",
+    "src/features/calculator/calculator.module.css",
+    "src/features/feature-app-router.css",
+    "src/styles/global.css"
+  ],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "PASS",
+    "blueprintPurityStatus": "PASS",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": true,
+    "promptSpecificTermsPresent": true,
+    "warnings": [
+      "AEE_PREVIEW_RECOVERY_LOOP_V1: preview recovery exhausted after 3 attempt(s) — build completed with degraded preview.",
+      "AEE respected blocker: Live Preview is locked because Launch Readiness evidence not available. Run Autonomous Debugging after resolving upstream interaction and behavior reachability failures.",
+      "AEE evidence provider: AUTONOMOUS_DEBUGGING",
+      "AEE evidence provider: MISSING_CAPABILITY_EVOLUTION",
+      "AEE evidence provider: LIVE_PREVIEW_GATE"
+    ],
+    "errors": []
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": true,
+  "previewUrl": "http://127.0.0.1:5181/",
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782897096576-2/.generated-app-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782897096576-2/build-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782897096576-2/universal-feature-contract.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782897096576-2/blueprint-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1782970285007"
+  ],
+  "failureReasons": [],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1782970285007/replay-metadata.json",
+  "comparisonFingerprint": "c52bd7e25ebb6677f30fbb28601ff0e241aeb83926444dce9b05b208f8a734f5",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1782970285007/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "3310631b1cd844b2c0f508ed3ee7e0315612e6b83af3e8eb0a786743c8778e92"
+}

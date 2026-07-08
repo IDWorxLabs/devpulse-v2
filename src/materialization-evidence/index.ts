@@ -53,6 +53,8 @@ export {
 
 export {
   finalizeForensicManifestFailure,
+  recordForensicManifestAseContinuationOverride,
+  recordForensicManifestAeeExecutiveDecision,
   finalizeForensicManifestSuccess,
   initializeForensicManifest,
   updateForensicManifestStage,

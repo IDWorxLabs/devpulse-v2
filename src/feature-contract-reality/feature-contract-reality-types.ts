@@ -8,7 +8,12 @@ export const FEATURE_CONTRACT_REALITY_FILENAME = 'feature-contract-reality.json'
 
 export const WORKSPACE_FEATURE_CONTRACT_REALITY_FILENAME = '.feature-contract-reality.json';
 
-export type FeatureContractRealityStatus = 'PASS' | 'FAIL' | 'PARTIAL' | 'PENDING';
+export type FeatureContractRealityStatus =
+  | 'PASS'
+  | 'FAIL'
+  | 'PARTIAL'
+  | 'PENDING'
+  | 'DEGRADED_WITH_WORKSPACE_EVIDENCE';
 
 export interface FeatureRealityRecord {
   readOnly: true;

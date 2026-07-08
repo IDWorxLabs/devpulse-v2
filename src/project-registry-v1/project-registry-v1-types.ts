@@ -6,9 +6,12 @@ export type ProjectRegistryStatus = 'ACTIVE' | 'ARCHIVED';
 
 export type ProjectRealityStatus = 'PENDING' | 'PROMOTED' | 'FAILED' | 'READY';
 
+export type ProjectKind = 'USER' | 'AUDIT' | 'SYSTEM_TEST';
+
 export interface ProjectRegistryRecord {
   projectId: string;
   name: string;
+  projectKind?: ProjectKind;
   status: ProjectRegistryStatus;
   createdAt: string;
   updatedAt: string;
@@ -41,12 +44,16 @@ export interface ProjectRegistryFile {
 export interface ProjectRegistrySummaryItem {
   projectId: string;
   name: string;
+  projectKind?: ProjectKind;
   status: ProjectRegistryStatus;
   summary: string;
   createdAt: string;
   lastActivityAt: string;
   isActive: boolean;
 }
+
+export const AUDIT_PROJECT_ISOLATION_AND_CLEANUP_V1_PASS_TOKEN =
+  'AUDIT_PROJECT_ISOLATION_AND_CLEANUP_V1_PASS' as const;
 
 export interface ProjectRegistrySummary {
   count: number;

@@ -1,0 +1,14 @@
+{
+  "routes": [
+    "/"
+  ],
+  "featureModules": [
+    {
+      "readOnly": true,
+      "id": "todo-list",
+      "route": "/",
+      "componentPath": "src/features/todo-list/TodoListFeature.tsx",
+      "navLabel": "Todo List"
+    }
+  ]
+}

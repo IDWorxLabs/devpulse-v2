@@ -1,0 +1,56 @@
+{
+  "readOnly": true,
+  "contractVersion": "V1",
+  "jobId": "d382d6fc-4706-4843-85c1-64e786fadae0",
+  "projectId": "proj-crm_web_v1",
+  "executionMode": "CLOUD_SIMULATED",
+  "jobMetadata": {
+    "profile": "CRM_WEB_V1",
+    "productName": "CRM",
+    "requestedAt": "2026-06-30T11:46:54.409Z",
+    "workerId": "worker-5975a3ff"
+  },
+  "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+  "requirementsSnapshot": {
+    "readOnly": true,
+    "profile": "CRM_WEB_V1",
+    "productName": "CRM",
+    "prompt": "Build a CRM to manage customers with create, edit, delete, and search customer records.",
+    "requirementConfidence": 36
+  },
+  "buildPlan": {
+    "readOnly": true,
+    "contractId": "build-ready-idea-33",
+    "planningSummary": "Contract build-ready-idea-33",
+    "codegenProfile": "CRM_WEB_V1"
+  },
+  "workspaceSpec": {
+    "readOnly": true,
+    "workspaceId": "cep-d382d6fc-4706-4843-85c1-64e786fadae0",
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\cep-d382d6fc-4706-4843-85c1-64e786fadae0",
+    "isolationToken": "d382d6fc-4706-4843-85c1-64e786fadae0",
+    "boundedLogsMaxLines": 500,
+    "boundedArtifactsMaxBytes": 5000000,
+    "runtimeTimeoutMs": 300000
+  },
+  "expectedArtifactOutputs": [
+    "generated-source-manifest.json",
+    "build-logs.txt",
+    "preview-proof.json",
+    "uvl-verification-proof.json",
+    "product-architect-proof.json",
+    "afla-verdict.json",
+    "production-readiness-result.json",
+    "execution-summary.json",
+    "cloud-job-package.json"
+  ],
+  "validationRequirements": [
+    "Build proof required",
+    "Preview proof required",
+    "UVL verification proof required",
+    "AFLA verdict required",
+    "Production readiness gate required",
+    "Unique isolated workspace required"
+  ],
+  "generatedAt": "2026-06-30T12:04:14.858Z"
+}

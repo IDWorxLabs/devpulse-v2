@@ -21,9 +21,11 @@ import type { MaterializationProfile } from '../universal-prompt-to-app-material
 import { inspectUniversalAppBlueprint } from '../universal-app-blueprint/index.js';
 import {
   killChildProcessTree,
+  killProcessesByPort,
   resolveViteDevSpawnTarget,
   runNpmCommandSync,
   runNpmRunScriptSync,
+  settleEventLoop,
 } from '../one-prompt-live-preview/child-process-teardown.js';
 import { parseViteDevServerUrl } from '../one-prompt-live-preview/vite-dev-server-output.js';
 import { applyProductionValidationToManifest } from './production-validation-manifest.js';
@@ -467,7 +469,18 @@ export async function runProductionValidation(
   if (previewChild) {
     try {
       await killChildProcessTree(previewChild);
-      cleanupStatus = previewChild.exitCode !== null || previewChild.killed ? 'PASS' : 'PASS';
+      if (previewUrl) {
+        try {
+          const previewPort = Number(new URL(previewUrl).port);
+          if (Number.isFinite(previewPort) && previewPort > 0) {
+            await killProcessesByPort(previewPort);
+          }
+        } catch {
+          /* ignore malformed preview URL */
+        }
+      }
+      await settleEventLoop();
+      cleanupStatus = 'PASS';
     } catch (error) {
       cleanupStatus = 'FAIL';
       failureReasons.push(`Preview cleanup failed: ${String(error)}`);

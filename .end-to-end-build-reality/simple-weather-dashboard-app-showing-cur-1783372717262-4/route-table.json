@@ -1,0 +1,158 @@
+{
+  "routes": [
+    "/",
+    "/appointments",
+    "/calendar",
+    "/availability",
+    "/reservations",
+    "/dashboard",
+    "/customers",
+    "/services",
+    "/settings",
+    "/haircut",
+    "/wash",
+    "/styling",
+    "/customer",
+    "/service",
+    "/date",
+    "/time",
+    "/modern",
+    "/clean",
+    "/responsive"
+  ],
+  "featureModules": [
+    {
+      "readOnly": true,
+      "id": "notes",
+      "route": "/",
+      "componentPath": "src/features/notes/NotesFeature.tsx",
+      "navLabel": "Notes"
+    },
+    {
+      "readOnly": true,
+      "id": "appointments",
+      "route": "/appointments",
+      "componentPath": "src/features/appointments/AppointmentsFeature.tsx",
+      "navLabel": "Appointments"
+    },
+    {
+      "readOnly": true,
+      "id": "calendar",
+      "route": "/calendar",
+      "componentPath": "src/features/calendar/CalendarFeature.tsx",
+      "navLabel": "Calendar"
+    },
+    {
+      "readOnly": true,
+      "id": "availability",
+      "route": "/availability",
+      "componentPath": "src/features/availability/AvailabilityFeature.tsx",
+      "navLabel": "Availability"
+    },
+    {
+      "readOnly": true,
+      "id": "reservations",
+      "route": "/reservations",
+      "componentPath": "src/features/reservations/ReservationsFeature.tsx",
+      "navLabel": "Reservations"
+    },
+    {
+      "readOnly": true,
+      "id": "dashboard",
+      "route": "/dashboard",
+      "componentPath": "src/features/dashboard/DashboardFeature.tsx",
+      "navLabel": "Dashboard"
+    },
+    {
+      "readOnly": true,
+      "id": "customers",
+      "route": "/customers",
+      "componentPath": "src/features/customers/CustomersFeature.tsx",
+      "navLabel": "Customers"
+    },
+    {
+      "readOnly": true,
+      "id": "services",
+      "route": "/services",
+      "componentPath": "src/features/services/ServicesFeature.tsx",
+      "navLabel": "Services"
+    },
+    {
+      "readOnly": true,
+      "id": "settings",
+      "route": "/settings",
+      "componentPath": "src/features/settings/SettingsFeature.tsx",
+      "navLabel": "Settings"
+    },
+    {
+      "readOnly": true,
+      "id": "haircut",
+      "route": "/haircut",
+      "componentPath": "src/features/haircut/HaircutFeature.tsx",
+      "navLabel": "Haircut"
+    },
+    {
+      "readOnly": true,
+      "id": "wash",
+      "route": "/wash",
+      "componentPath": "src/features/wash/WashFeature.tsx",
+      "navLabel": "Wash"
+    },
+    {
+      "readOnly": true,
+      "id": "styling",
+      "route": "/styling",
+      "componentPath": "src/features/styling/StylingFeature.tsx",
+      "navLabel": "Styling"
+    },
+    {
+      "readOnly": true,
+      "id": "customer",
+      "route": "/customer",
+      "componentPath": "src/features/customer/CustomerFeature.tsx",
+      "navLabel": "Customer"
+    },
+    {
+      "readOnly": true,
+      "id": "service",
+      "route": "/service",
+      "componentPath": "src/features/service/ServiceFeature.tsx",
+      "navLabel": "Service"
+    },
+    {
+      "readOnly": true,
+      "id": "date",
+      "route": "/date",
+      "componentPath": "src/features/date/DateFeature.tsx",
+      "navLabel": "Date"
+    },
+    {
+      "readOnly": true,
+      "id": "time",
+      "route": "/time",
+      "componentPath": "src/features/time/TimeFeature.tsx",
+      "navLabel": "Time"
+    },
+    {
+      "readOnly": true,
+      "id": "modern",
+      "route": "/modern",
+      "componentPath": "src/features/modern/ModernFeature.tsx",
+      "navLabel": "Modern"
+    },
+    {
+      "readOnly": true,
+      "id": "clean",
+      "route": "/clean",
+      "componentPath": "src/features/clean/CleanFeature.tsx",
+      "navLabel": "Clean"
+    },
+    {
+      "readOnly": true,
+      "id": "responsive",
+      "route": "/responsive",
+      "componentPath": "src/features/responsive/ResponsiveFeature.tsx",
+      "navLabel": "Responsive"
+    }
+  ]
+}

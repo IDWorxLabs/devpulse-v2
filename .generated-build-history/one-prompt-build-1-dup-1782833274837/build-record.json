@@ -1,0 +1,65 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1782833274837",
+  "createdAt": "2026-06-30T15:27:54.837Z",
+  "prompt": "Build an expense tracker where users add expenses, categorize spending, view monthly totals, and filter by date range.",
+  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
+  "appName": "Expense Tracker",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833274738",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833274738/.generated-app-manifest.json",
+  "manifestHash": "288940299d1a3ff6f739b0a11ecebe52fd6077b74741d387f3ed1d0a9ef02703",
+  "workspaceHash": "c897b3914910c18f59ce06b3ecfda79f5ecf9ca4b65f8bc528dae12dbb03a886",
+  "materializationHash": "7f86f51a93da902cd9009bd294dbbc0b4641ad7aec7d40b12f449d33fa9926bb",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0,
+  "generatedFeatureModulesCount": 0,
+  "generatedRoutes": [
+    "/filter-ui",
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/expenses",
+    "/persistence",
+    "/income",
+    "/categories",
+    "/reports",
+    "/charts",
+    "/csv-export"
+  ],
+  "generatedComponents": [],
+  "generatedServices": [],
+  "generatedModels": [],
+  "generatedStyles": [],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "resolveOutcome is not defined",
+      "Unexpected build error: resolveOutcome is not defined"
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-expense-tracker-1782833274738/.generated-app-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1782833274837"
+  ],
+  "failureReasons": [
+    "Unexpected build error: resolveOutcome is not defined",
+    "resolveOutcome is not defined",
+    "Unexpected build error: resolveOutcome is not defined"
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1782833274837/replay-metadata.json",
+  "comparisonFingerprint": "1a74a15ce11adeba5c6ed1ed8f81c2fc3511ac5d9ef466d2e7fde37572afb195",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1782833274837/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "e8416a05a655d9105dbd9a98260a520e6adc17cd1ea32356bc8c2ea16a28af10"
+}

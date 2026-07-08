@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "expense-tracker-ui-1",
+  "projectName": "ExpenseTracker",
+  "createdAt": "2026-06-30T14:51:38.761Z",
+  "updatedAt": "2026-06-30T14:52:09.461Z",
+  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
+  "originalPrompt": "Build a modern expense tracking web application called ExpenseTracker with categories, receipts, monthly budgets, and spending reports. Begin build execution now.",
+  "currentSourcePath": ".aidev-projects/expense-tracker-ui-1/source",
+  "activeWorkspacePath": ".aidev-projects/expense-tracker-ui-1",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": "one-prompt-build-1",
+  "manifestPath": ".aidev-projects/expense-tracker-ui-1/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/expense-tracker-ui-1/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782831128701",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/expense-tracker-ui-1/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/expense-tracker-ui-1/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-1-dup-1782831128701"
+  ],
+  "featureContractRealityPath": ".aidev-projects/expense-tracker-ui-1/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/expense-tracker-ui-1/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/expense-tracker-ui-1/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/expense-tracker-ui-1/.aidev/materialization-quality-score.json"
+}

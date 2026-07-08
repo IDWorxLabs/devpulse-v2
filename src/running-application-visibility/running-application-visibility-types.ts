@@ -78,6 +78,8 @@ export interface RunningApplicationVisibilityInput {
   projectName: string | null;
   recentChangeSummary: string | null;
   targetType: string | null;
+  /** When false, do not claim the visible app is current/interactive for founder testing. */
+  visibleFeatureDomValidated?: boolean | null;
 }
 
 export interface RunningApplicationFeedEvent {

@@ -112,7 +112,7 @@ async function main(): Promise<void> {
       resolveBuildIntentProfile(EXPENSE_TRACKER_PROMPT) === 'FINANCE_TRACKER_WEB_V1',
     String(resolveBuildIntentProfile(EXPENSE_TRACKER_PROMPT)),
   );
-  assert('04. brain handler routes build intent', brainHandler.includes('isBuildIntentRequest'), 'handler');
+  assert('04. brain handler routes build intent', brainHandler.includes('classifyBuildIntentRequest'), 'handler');
   assert(
     '05. build path uses conversational intelligence layer',
     brainHandler.includes('applyBuildResultConversationalIntelligence') &&

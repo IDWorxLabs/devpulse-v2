@@ -1,0 +1,101 @@
+[
+  {
+    "readOnly": true,
+    "eventId": "audit-1",
+    "timestamp": "2026-06-30T14:13:36.101Z",
+    "stage": "Build requested",
+    "status": "INFO",
+    "evidencePath": null,
+    "evidenceSummary": "prompt length=109"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-2",
+    "timestamp": "2026-06-30T14:13:36.101Z",
+    "stage": "Profile selected",
+    "status": "INFO",
+    "evidencePath": null,
+    "evidenceSummary": "CRM_WEB_V1"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-3",
+    "timestamp": "2026-06-30T14:13:36.476Z",
+    "stage": "Workspace generated",
+    "status": "PASS",
+    "evidencePath": null,
+    "evidenceSummary": "98 files, 23 directories"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-4",
+    "timestamp": "2026-06-30T14:13:36.476Z",
+    "stage": "Manifest written",
+    "status": "PASS",
+    "evidencePath": "/.generated-app-manifest.json",
+    "evidenceSummary": "manifestHash=346500665315…"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-5",
+    "timestamp": "2026-06-30T14:13:36.476Z",
+    "stage": "Feature modules generated",
+    "status": "FAIL",
+    "evidencePath": null,
+    "evidenceSummary": "8 modules"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-6",
+    "timestamp": "2026-06-30T14:13:36.476Z",
+    "stage": "Build executed",
+    "status": "FAIL",
+    "evidencePath": null,
+    "evidenceSummary": "npmBuildDurationMs=0"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-7",
+    "timestamp": "2026-06-30T14:13:36.476Z",
+    "stage": "Preview verified",
+    "status": "PENDING",
+    "evidencePath": null,
+    "evidenceSummary": "no preview URL recorded"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-8",
+    "timestamp": "2026-06-30T14:13:36.476Z",
+    "stage": "Production validation completed",
+    "status": "PENDING",
+    "evidencePath": null,
+    "evidenceSummary": "PENDING"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-9",
+    "timestamp": "2026-06-30T14:13:36.476Z",
+    "stage": "Blueprint purity checked",
+    "status": "PENDING",
+    "evidencePath": ".generated-build-history/aee-profile-continuation-internal-hr-admin-1782828815672/manifest.snapshot.json",
+    "evidenceSummary": "PENDING — 0 violations"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-10",
+    "timestamp": "2026-06-30T14:13:36.476Z",
+    "stage": "Build history record persisted",
+    "status": "PASS",
+    "evidencePath": ".generated-build-history/aee-profile-continuation-internal-hr-admin-1782828815672",
+    "evidenceSummary": "Immutable build history artifacts written"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-11",
+    "timestamp": "2026-06-30T14:13:36.476Z",
+    "stage": "Build finalized",
+    "status": "PASS",
+    "evidencePath": ".generated-build-history/aee-profile-continuation-internal-hr-admin-1782828815672/manifest.snapshot.json",
+    "evidenceSummary": "status=FAIL validation=FAIL"
+  }
+]

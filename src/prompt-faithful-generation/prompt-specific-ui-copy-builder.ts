@@ -17,6 +17,7 @@ export function buildPromptSpecificDomainCopy(
   };
 
   const moduleDescriptions: Record<string, string> = {
+    calculator: 'Calculator with number pad, + − × ÷ operators, clear, delete, and equals result.',
     'onboarding-calibration': 'Calibrate eye tracking, gaze zones, and blink sensitivity for accurate input.',
     'eye-tracking-board': 'Eye movement and gaze tracking board with live status indicators.',
     'blink-input-engine': 'Blink detection engine with simulation controls for assistive input.',

@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "readiness-audit-expense-tracker-1782833337544",
+  "projectName": "Expense Tracker",
+  "createdAt": "2026-06-30T15:29:07.913Z",
+  "updatedAt": "2026-06-30T15:29:08.148Z",
+  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
+  "originalPrompt": "Build an expense tracker where users add expenses, categorize spending, view monthly totals, and filter by date range.",
+  "currentSourcePath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/source",
+  "activeWorkspacePath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": "one-prompt-build-1",
+  "manifestPath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782833347660",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-1-dup-1782833347660"
+  ],
+  "featureContractRealityPath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/readiness-audit-expense-tracker-1782833337544/.aidev/materialization-quality-score.json"
+}

@@ -3,6 +3,7 @@
  */
 
 import { spawn, type ChildProcess } from 'node:child_process';
+import { killChildProcessTree, settleEventLoop } from '../one-prompt-live-preview/child-process-teardown.js';
 import { existsSync, writeFileSync } from 'node:fs';
 import { get as httpGet } from 'node:http';
 import { join, resolve, sep } from 'node:path';
@@ -32,7 +33,7 @@ let runtimeCounter = 0;
 let activeRuntimeProcess: ChildProcess | null = null;
 
 export function resetRuntimeActivationEngineForTests(): void {
-  cleanupActiveRuntime();
+  void cleanupActiveRuntime();
   evidenceCounter = 0;
   runtimeCounter = 0;
 }
@@ -62,17 +63,20 @@ function buildEvidence(
   };
 }
 
-export function cleanupActiveRuntime(): boolean {
-  if (activeRuntimeProcess) {
-    const child = activeRuntimeProcess;
-    activeRuntimeProcess = null;
-    try {
-      child.kill();
-    } catch {
-      // Process may already be terminated.
-    }
+export async function cleanupActiveRuntime(): Promise<boolean> {
+  if (!activeRuntimeProcess) {
+    return true;
   }
-  return activeRuntimeProcess === null;
+
+  const child = activeRuntimeProcess;
+  activeRuntimeProcess = null;
+  try {
+    await killChildProcessTree(child);
+    await settleEventLoop();
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function isWorkspaceRootSafe(projectRootDir: string, workspaceRoot: string): boolean {
@@ -291,7 +295,7 @@ export async function executeRuntimeActivation(
     };
   }
 
-  cleanupActiveRuntime();
+  await cleanupActiveRuntime();
 
   const startupArtifacts = detectStartupArtifacts(input.workspaceRoot);
   const startupArtifactsPresent = startupArtifacts.includes('dist/server.js');

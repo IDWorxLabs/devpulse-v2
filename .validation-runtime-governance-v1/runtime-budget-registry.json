@@ -1,6 +1,14 @@
 {
-  "generatedAt": "2026-06-25T06:29:39.026Z",
+  "generatedAt": "2026-07-07T12:52:11.194Z",
   "entries": [
+    {
+      "validatorName": "validate:build-reality-autofix-engine-v1",
+      "budgetSeconds": 4866,
+      "budgetCategory": "CRITICAL",
+      "measuredSeconds": null,
+      "estimatedSeconds": 2433,
+      "breachBecomesAuditFinding": true
+    },
     {
       "validatorName": "validate:universal-app-blueprint-visual-v1",
       "budgetSeconds": 3404,
@@ -26,6 +34,14 @@
       "breachBecomesAuditFinding": true
     },
     {
+      "validatorName": "validate:product-stabilization-phase-2-v1",
+      "budgetSeconds": 2346,
+      "budgetCategory": "CRITICAL",
+      "measuredSeconds": null,
+      "estimatedSeconds": 1173,
+      "breachBecomesAuditFinding": true
+    },
+    {
       "validatorName": "validate:general-purpose-code-generation-v1",
       "budgetSeconds": 1680,
       "budgetCategory": "CRITICAL",
@@ -39,6 +55,14 @@
       "budgetCategory": "CRITICAL",
       "measuredSeconds": null,
       "estimatedSeconds": 840,
+      "breachBecomesAuditFinding": true
+    },
+    {
+      "validatorName": "validate:product-stabilization-phase-4-v1",
+      "budgetSeconds": 1476,
+      "budgetCategory": "CRITICAL",
+      "measuredSeconds": null,
+      "estimatedSeconds": 738,
       "breachBecomesAuditFinding": true
     },
     {
@@ -74,6 +98,22 @@
       "breachBecomesAuditFinding": true
     },
     {
+      "validatorName": "validate:product-stabilization-phase-5-v1",
+      "budgetSeconds": 1158,
+      "budgetCategory": "CRITICAL",
+      "measuredSeconds": null,
+      "estimatedSeconds": 579,
+      "breachBecomesAuditFinding": true
+    },
+    {
+      "validatorName": "validate:failed-build-forensic-manifest",
+      "budgetSeconds": 856,
+      "budgetCategory": "CRITICAL",
+      "measuredSeconds": null,
+      "estimatedSeconds": 428,
+      "breachBecomesAuditFinding": true
+    },
+    {
       "validatorName": "validate:autonomous-founder-launch-authority-v1",
       "budgetSeconds": 852,
       "budgetCategory": "CRITICAL",
@@ -90,11 +130,19 @@
       "breachBecomesAuditFinding": true
     },
     {
-      "validatorName": "validate:code-generation-engine-v1",
-      "budgetSeconds": 432,
-      "budgetCategory": "HIGH",
+      "validatorName": "validate:product-stabilization-phase-3-v1",
+      "budgetSeconds": 636,
+      "budgetCategory": "CRITICAL",
       "measuredSeconds": null,
-      "estimatedSeconds": 288,
+      "estimatedSeconds": 318,
+      "breachBecomesAuditFinding": true
+    },
+    {
+      "validatorName": "validate:code-generation-engine-v1",
+      "budgetSeconds": 624,
+      "budgetCategory": "CRITICAL",
+      "measuredSeconds": null,
+      "estimatedSeconds": 312,
       "breachBecomesAuditFinding": true
     },
     {
@@ -103,6 +151,14 @@
       "budgetCategory": "HIGH",
       "measuredSeconds": null,
       "estimatedSeconds": 263,
+      "breachBecomesAuditFinding": true
+    },
+    {
+      "validatorName": "validate:product-stabilization-phase-1-v1",
+      "budgetSeconds": 378,
+      "budgetCategory": "HIGH",
+      "measuredSeconds": null,
+      "estimatedSeconds": 252,
       "breachBecomesAuditFinding": true
     },
     {
@@ -199,6 +255,14 @@
       "budgetCategory": "HIGH",
       "measuredSeconds": null,
       "estimatedSeconds": 138,
+      "breachBecomesAuditFinding": true
+    },
+    {
+      "validatorName": "validate:execution-trace-architecture",
+      "budgetSeconds": 192,
+      "budgetCategory": "HIGH",
+      "measuredSeconds": null,
+      "estimatedSeconds": 128,
       "breachBecomesAuditFinding": true
     },
     {
@@ -322,6 +386,14 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:operator-feed-layout",
+      "budgetSeconds": 103.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 83,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:autonomous-build-execution-proof",
       "budgetSeconds": 91.3,
       "budgetCategory": "MEDIUM",
@@ -434,6 +506,22 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:blueprint-purity",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:build-history-integrity",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:build-materialization-reality",
       "budgetSeconds": 66.3,
       "budgetCategory": "MEDIUM",
@@ -466,7 +554,95 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:custom-module-extraction-sanitization",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:feature-contract-reality",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:lisa-feature-reality-fallback",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:live-chat-operational-path",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:materialization-evidence-completion",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:materialization-quality-score",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:modular-feature-materialization",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:persistent-project-reality",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-faithful-generation",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:universal-generator-consolidation",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:universal-prompt-to-app-materialization",
+      "budgetSeconds": 66.3,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 53,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:workspace-reality-audit",
       "budgetSeconds": 66.3,
       "budgetCategory": "MEDIUM",
       "measuredSeconds": null,
@@ -491,6 +667,14 @@
     },
     {
       "validatorName": "validate:generated-workspace-dependency-materialization",
+      "budgetSeconds": 60,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 48,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:lisa-real-builder-continuation",
       "budgetSeconds": 60,
       "budgetCategory": "MEDIUM",
       "measuredSeconds": null,
@@ -527,6 +711,14 @@
       "budgetCategory": "MEDIUM",
       "measuredSeconds": null,
       "estimatedSeconds": 43,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:build-result-conversational-intelligence",
+      "budgetSeconds": 47.5,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 38,
       "breachBecomesAuditFinding": false
     },
     {
@@ -1034,7 +1226,39 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:product-faithfulness-milestone-1",
+      "budgetSeconds": 33.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 27,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:product-faithfulness-milestone-2",
+      "budgetSeconds": 33.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 27,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:progress-intelligence",
+      "budgetSeconds": 33.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 27,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:project-files-empty-state-navigation",
+      "budgetSeconds": 33.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 27,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:project-files-render-navigation",
       "budgetSeconds": 33.8,
       "budgetCategory": "MEDIUM",
       "measuredSeconds": null,
@@ -1050,6 +1274,22 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:project-lifecycle",
+      "budgetSeconds": 33.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 27,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:project-lifecycle-delete-route",
+      "budgetSeconds": 33.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 27,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:project-registry-consistency-v1",
       "budgetSeconds": 33.8,
       "budgetCategory": "MEDIUM",
@@ -1058,7 +1298,31 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:project-registry-endpoints",
+      "budgetSeconds": 33.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 27,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:project-registry-startup-resume",
+      "budgetSeconds": 33.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 27,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:project-summarization-engine",
+      "budgetSeconds": 33.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 27,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:project-tab-context-switch",
       "budgetSeconds": 33.8,
       "budgetCategory": "MEDIUM",
       "measuredSeconds": null,
@@ -1075,6 +1339,14 @@
     },
     {
       "validatorName": "validate:project-vault-intelligence",
+      "budgetSeconds": 33.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 27,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:project-workspace-explorer",
       "budgetSeconds": 33.8,
       "budgetCategory": "MEDIUM",
       "measuredSeconds": null,
@@ -1099,6 +1371,14 @@
     },
     {
       "validatorName": "validate:shared-memory-layer",
+      "budgetSeconds": 33.8,
+      "budgetCategory": "MEDIUM",
+      "measuredSeconds": null,
+      "estimatedSeconds": 27,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:simplified-builder-ui-v1",
       "budgetSeconds": 33.8,
       "budgetCategory": "MEDIUM",
       "measuredSeconds": null,
@@ -1314,7 +1594,119 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:aee-all-profile-continuation",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aee-build-autofix-loop",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aee-preview-contract",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aee-preview-recovery-loop",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aee-production-response-alignment",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aep-compliance-audit",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aep-phase3",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aep-preview-gate-authority",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aidevengine-build-proof-v1-1",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aidevengine-build-proof-v1-2",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aidevengine-build-proof-v1-3",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aidevengine-build-proof-v1-4",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:aidevengine-identity-correction",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aidevengine-multi-domain-build-proof-v1",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:aidevengine-multi-domain-build-proof-v1-1",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -1347,6 +1739,14 @@
     },
     {
       "validatorName": "validate:architecture-drift-detection",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:ase-enforcement-engine",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -1442,7 +1842,47 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:autonomous-debugging-engine",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:autonomous-engineering-executive",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:autonomous-engineering-loop",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:autonomous-recovery-authority",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:autonomous-repair-loop",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:autonomous-software-engineering-engine",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -1459,6 +1899,14 @@
     },
     {
       "validatorName": "validate:autonomous-verification",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:behavior-simulation-engine",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -1483,6 +1931,14 @@
     },
     {
       "validatorName": "validate:build-plan-generator",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:build-spine-refinement-v1",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -1586,6 +2042,14 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:chat-response-intelligence-audit-v1",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:chat-stress-deadline-runtime-trace-audit",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
@@ -1627,6 +2091,14 @@
     },
     {
       "validatorName": "validate:command-center-runtime-health",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:command-center-stale-project-purge",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -1738,7 +2210,23 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:constitutional-architecture-v1",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:continuous-deployment-pipeline-v1",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:continuous-product-improvement-engine",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -1810,7 +2298,31 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:end-to-end-build-reality-engine-v1",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:end-to-end-execution-proof-chain",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:engineering-continuation",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:engineering-intelligence-runtime",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -2210,6 +2722,14 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:frontend-project-registry-parsing",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:full-product-readiness-simulation",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
@@ -2266,6 +2786,14 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:incremental-autonomous-builder",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:inline-operator-feed",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
@@ -2283,6 +2811,22 @@
     },
     {
       "validatorName": "validate:intake-validation-stage-transition-repair",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:intent-understanding-engine",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:interaction-proof-engine",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -2346,6 +2890,14 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:launch-project-hydration",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:launch-readiness-artifact-build-trace",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
@@ -2378,6 +2930,14 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:launch-readiness-authority-v2",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:launch-verdict-governance",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
@@ -2402,7 +2962,31 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:live-preview-gate",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:live-preview-gatekeeper",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:live-prompt-faithful-build-path",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:llm-connection-proof",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -2443,6 +3027,14 @@
     },
     {
       "validatorName": "validate:missing-capability-escalation",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:missing-capability-evolution-engine",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -2498,6 +3090,22 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:mobile-runtime-preview-v1",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:mobile-runtime-preview-v2",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:multi-project-foundation",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
@@ -2515,6 +3123,30 @@
     },
     {
       "validatorName": "validate:multi-project-verification-orchestration",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:one-prompt-build-response-composer-scope-v1",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:one-prompt-calculator-build-ready-v1",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:one-prompt-calculator-visible-preview-v1",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -2547,6 +3179,14 @@
     },
     {
       "validatorName": "validate:operator-feed-final-report-button-state-sync",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:operator-feed-stream-redesign",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -2738,7 +3378,23 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:production-validation",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:project-intelligence-clarity",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:project-state-and-aee-recovery-real-path",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -2755,6 +3411,134 @@
     },
     {
       "validatorName": "validate:promise-reality-engine",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-ambiguity-detection",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-assumption-detection",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-bounded-materialization",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-capability-mapping",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-completeness",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-conflict-detection",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-contract",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-drift",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-evidence-extraction",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-faithfulness-authority",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-faithfulness-score",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-knowledge-graph",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-launch-integration",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-parser",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-registry",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:prompt-traceability",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -2802,7 +3586,47 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:recovery-escalation",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:recovery-executor",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:recovery-hardening",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:recovery-memory",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:recovery-planner",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:recovery-strategy-engine",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -2819,6 +3643,14 @@
     },
     {
       "validatorName": "validate:remove-legacy-failed-to-fetch-copy-fallback",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:repo-typecheck-stabilization-authority-v1",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -2858,6 +3690,14 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:restart-resilience",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:result-fetch-failure-diagnostic-surface",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
@@ -2874,7 +3714,23 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:root-cause-analysis",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:running-application-visibility",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:runtime-banner-truth-reconciliation",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -2915,6 +3771,14 @@
     },
     {
       "validatorName": "validate:runtime-ui-render-proof",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:safe-payment-placeholder-policy",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -3050,6 +3914,14 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:unified-build-conversation-layer",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:unified-failure-escalation-authority-v1",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
@@ -3075,6 +3947,22 @@
     },
     {
       "validatorName": "validate:unified-trust-score",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:universal-build-pipeline",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:universal-production-proof",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -3130,7 +4018,31 @@
       "breachBecomesAuditFinding": false
     },
     {
+      "validatorName": "validate:validation-evidence-reuse-engine",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:validation-replay",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
       "validatorName": "validate:validation-runtime-audit-v1",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:vere-adoption-phase-1",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,
@@ -3171,6 +4083,22 @@
     },
     {
       "validatorName": "validate:verification-strategy-core",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:virtual-device-laboratory",
+      "budgetSeconds": 3,
+      "budgetCategory": "LOW",
+      "measuredSeconds": null,
+      "estimatedSeconds": 3,
+      "breachBecomesAuditFinding": false
+    },
+    {
+      "validatorName": "validate:virtual-user-engine",
       "budgetSeconds": 3,
       "budgetCategory": "LOW",
       "measuredSeconds": null,

@@ -1,0 +1,101 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1782836522595",
+  "createdAt": "2026-06-30T16:22:02.499Z",
+  "prompt": "Build an e-commerce store with product catalog, shopping cart, checkout flow, and order history pages.",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "appName": "E-Commerce Store",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782836510362",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782836510362/.generated-app-manifest.json",
+  "manifestHash": "9dc6cc6a66100652c61ec9c6e6bed4afc530970760b72c14642cf2f61744e2c7",
+  "workspaceHash": "79d38750dacbb8ef780e6849043cdba79a3ad292010948d70f70dac0881481a1",
+  "materializationHash": "7850f5f17e1a237a8c0bde54bad0ec24c9d667d460659dd5d0bd0bf0b6674e06",
+  "generatedFilesCount": 99,
+  "generatedDirectoriesCount": 23,
+  "generatedFeatureModulesCount": 9,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/persistence",
+    "/products",
+    "/cart",
+    "/checkout",
+    "/orders",
+    "/payments"
+  ],
+  "generatedComponents": [
+    "src/blueprint/components/EmptyState.tsx",
+    "src/blueprint/components/ErrorState.tsx",
+    "src/blueprint/components/LoadingState.tsx",
+    "src/blueprint/components/UniversalAiAssistant.tsx"
+  ],
+  "generatedServices": [
+    "src/features/cart/cart.service.ts",
+    "src/features/checkout/checkout.service.ts",
+    "src/features/dashboard/dashboard.service.ts",
+    "src/features/navigation-router/navigation-router.service.ts",
+    "src/features/orders/orders.service.ts",
+    "src/features/payments/payments.service.ts",
+    "src/features/products/products.service.ts",
+    "src/features/settings/settings.service.ts"
+  ],
+  "generatedModels": [
+    "src/features/cart/cart.types.ts",
+    "src/features/checkout/checkout.types.ts",
+    "src/features/dashboard/dashboard.types.ts",
+    "src/features/navigation-router/navigation-router.types.ts",
+    "src/features/orders/orders.types.ts",
+    "src/features/payments/payments.types.ts",
+    "src/features/products/products.types.ts",
+    "src/features/settings/settings.types.ts"
+  ],
+  "generatedStyles": [
+    "src/App.css",
+    "src/features/cart/cart.module.css",
+    "src/features/checkout/checkout.module.css",
+    "src/features/dashboard/dashboard.module.css",
+    "src/features/feature-app-router.css",
+    "src/features/navigation-router/navigation-router.module.css",
+    "src/features/orders/orders.module.css",
+    "src/features/payments/payments.module.css",
+    "src/features/products/products.module.css",
+    "src/features/settings/settings.module.css",
+    "src/styles/global.css"
+  ],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "PASS",
+    "blueprintPurityStatus": "PASS",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": true,
+    "warnings": [
+      "AEE_PREVIEW_RECOVERY_LOOP_V1: preview recovery exhausted after 3 attempt(s) — build completed with degraded preview.",
+      "AEE respected blocker: Live Preview is locked because Launch Readiness evidence not available. Run Autonomous Debugging after resolving upstream interaction and behavior reachability failures.",
+      "AEE evidence provider: AUTONOMOUS_DEBUGGING",
+      "AEE evidence provider: MISSING_CAPABILITY_EVOLUTION",
+      "AEE evidence provider: LIVE_PREVIEW_GATE",
+      "Only 7/9 required UI terms detected in generated source."
+    ],
+    "errors": []
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782836510362/.generated-app-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782836510362/build-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782836510362/universal-feature-contract.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-e-commerce-store-1782836510362/blueprint-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1782836522595"
+  ],
+  "failureReasons": [],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1782836522595/replay-metadata.json",
+  "comparisonFingerprint": "f873a5b5cecc6d4e2e6d8e3102bdfd94d116bcc9a259a1646ca262d12597c11e",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1782836522595/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "5d3dcd319b1c9149357c45381336ba140c6238e5b1563f6c4d074159705cc7cc"
+}

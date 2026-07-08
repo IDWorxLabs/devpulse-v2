@@ -1,0 +1,123 @@
+{
+  "passed": false,
+  "findings": [
+    {
+      "readOnly": true,
+      "id": "workspace-generated-present",
+      "label": "Generated workspace exists",
+      "passed": true,
+      "detail": "C:\\Users\\Richa\\Desktop\\DevPulse-V4\\.generated-builder-workspaces\\simple-notes-app-where-i-can-create-edit-1783372397913-3",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "workspace-built-aligned",
+      "label": "Built workspace matches generated workspace",
+      "passed": true,
+      "detail": "c:/users/richa/desktop/devpulse-v4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372397913-3 vs c:/users/richa/desktop/devpulse-v4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372397913-3",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "workspace-vite-aligned",
+      "label": "Vite serving workspace matches preview-serving workspace",
+      "passed": true,
+      "detail": "c:/users/richa/desktop/devpulse-v4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372397913-3 vs c:/users/richa/desktop/devpulse-v4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372397913-3",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "gate-unlocked-preview-present",
+      "label": "Gate-unlocked preview URL present",
+      "passed": true,
+      "detail": "http://127.0.0.1:5174/",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "playwright-not-diagnostic-only",
+      "label": "Playwright does not inspect diagnostic-only URL",
+      "passed": true,
+      "detail": "playwright=http://127.0.0.1:5174 gate=http://127.0.0.1:5174",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "playwright-matches-gate",
+      "label": "Playwright URL matches gate-unlocked preview URL",
+      "passed": true,
+      "detail": "playwright=http://127.0.0.1:5174 gate=http://127.0.0.1:5174",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "playwright-matches-iframe",
+      "label": "Playwright URL matches iframe preview URL",
+      "passed": false,
+      "detail": "playwright=http://127.0.0.1:5174 iframe=none",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "registered-matches-gate",
+      "label": "Registered preview URL matches gate-unlocked preview URL",
+      "passed": true,
+      "detail": "registered=none gate=http://127.0.0.1:5174",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "session-registry-matches-iframe",
+      "label": "Preview session registry matches iframe target",
+      "passed": true,
+      "detail": "session=none iframe=none",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "active-project-matches-preview-serving",
+      "label": "Active project workspace matches preview-serving workspace",
+      "passed": true,
+      "detail": "c:/users/richa/desktop/devpulse-v4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372397913-3 vs c:/users/richa/desktop/devpulse-v4/.generated-builder-workspaces/simple-notes-app-where-i-can-create-edit-1783372397913-3",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "workspace-hash-aligned",
+      "label": "Served preview workspace hash matches expected workspace hash",
+      "passed": true,
+      "detail": "expected= served=missing meta",
+      "critical": false
+    },
+    {
+      "readOnly": true,
+      "id": "app-tsx-checksum-aligned",
+      "label": "Served App.tsx checksum matches workspace source",
+      "passed": true,
+      "detail": "expected=a91e9024bb56af30 served=missing meta",
+      "critical": true
+    },
+    {
+      "readOnly": true,
+      "id": "initial-visible-dom-contract",
+      "label": "Initial visible DOM matches contract before navigation",
+      "passed": true,
+      "detail": "Initial DOM contains contract-derived feature surface",
+      "critical": true
+    }
+  ],
+  "answers": {
+    "whichWorkspaceGenerated": "C:\\Users\\Richa\\Desktop\\DevPulse-V4\\.generated-builder-workspaces\\simple-notes-app-where-i-can-create-edit-1783372397913-3",
+    "whichWorkspaceBuilt": "C:\\Users\\Richa\\Desktop\\DevPulse-V4\\.generated-builder-workspaces\\simple-notes-app-where-i-can-create-edit-1783372397913-3",
+    "whichWorkspaceViteServes": "C:\\Users\\Richa\\Desktop\\DevPulse-V4\\.generated-builder-workspaces\\simple-notes-app-where-i-can-create-edit-1783372397913-3",
+    "whichPreviewUrlRegistered": "none",
+    "whichPreviewUrlIframe": "none",
+    "whichDomPlaywrightInspected": "http://127.0.0.1:5174/",
+    "playwrightMatchesLivePreview": "no — playwright=http://127.0.0.1:5174 iframe=none",
+    "sessionRegistryMatchesIframe": "yes",
+    "stalePreviewRegistration": "no",
+    "appTsxChecksumMatchesBundle": "unverified — checksum meta missing from served HTML"
+  },
+  "gateUnlockedPreviewUrl": "http://127.0.0.1:5174/",
+  "diagnosticPreviewUrl": "http://127.0.0.1:5174/"
+}

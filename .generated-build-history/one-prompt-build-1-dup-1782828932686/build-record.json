@@ -1,0 +1,63 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1782828932686",
+  "createdAt": "2026-06-30T14:15:32.684Z",
+  "prompt": "Build an expense tracker where users add expenses, categorize spending, view monthly totals, and filter by date range.",
+  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
+  "appName": "Expense Tracker",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-expense-tracker-1782828932429",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-expense-tracker-1782828932429/.generated-app-manifest.json",
+  "manifestHash": "4194300faf39434fc52c0a21630b30746e05f7199584c1bac400a0580eeb04c2",
+  "workspaceHash": "c08a2b0318071b55e612a25186b342a4fe699f4223a8c3739b557e7c3ac673be",
+  "materializationHash": "33585ceaf3544d1df85a50708ffc4f4e8fa7fe0401801d4be8c35d9782f14bd5",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0,
+  "generatedFeatureModulesCount": 0,
+  "generatedRoutes": [
+    "/csv-export",
+    "/filter-ui",
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/expenses",
+    "/persistence",
+    "/income",
+    "/categories",
+    "/reports",
+    "/charts"
+  ],
+  "generatedComponents": [],
+  "generatedServices": [],
+  "generatedModels": [],
+  "generatedStyles": [],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker."
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-expense-tracker-1782828932429/.generated-app-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1782828932686"
+  ],
+  "failureReasons": [
+    "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker.",
+    "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker."
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1782828932686/replay-metadata.json",
+  "comparisonFingerprint": "dd86341d0239afac90cadb36633a6c227a8c48e7c55e8bb748aea60ab0fa7788",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1782828932686/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "ced47192f36fc67efcfb04ba4681ed5669ed244004de1c6c6198e63795d2caad"
+}

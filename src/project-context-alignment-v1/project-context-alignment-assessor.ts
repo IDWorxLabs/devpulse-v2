@@ -14,8 +14,8 @@ import {
   domainOverlapScore,
   extractProjectNameDomainSignals,
   extractPromptDomainSignals,
-  normalizeProjectDisplayName,
 } from './prompt-domain-analyzer.js';
+import { normalizeProjectRegistryName } from '../project-registry-sovereignty/registry-classifier.js';
 import { getProjectContextMetadata } from './project-context-metadata-store.js';
 import {
   isLisaProjectName,
@@ -139,7 +139,7 @@ function scoreProjectAgainstPrompt(
     const summarySignals = extractPromptDomainSignals(metadata.lastBuildIntentSummary);
     domainIds = [...new Set([...domainIds, ...summarySignals.domainIds])];
   }
-  const nameNormalized = normalizeProjectDisplayName(projectName).toLowerCase();
+  const nameNormalized = normalizeProjectRegistryName(projectName);
   let score = domainOverlapScore(promptDomainIds, domainIds);
   for (const domainId of promptDomainIds) {
     if (nameNormalized.includes(domainId)) score = Math.max(score, 0.85);
@@ -199,7 +199,7 @@ export function assessProjectContextAlignment(
     ) ??
     null;
 
-  const resolvedActiveId = activeRecord?.projectId ?? activeProjectId;
+  const resolvedActiveId = activeRecord?.projectId ?? (activeProjectId?.trim() || null);
   const resolvedActiveName = activeRecord?.name ?? activeProjectName ?? 'current project';
   const activeMetadata = resolvedActiveId
     ? getProjectContextMetadata(resolvedActiveId, rootDir)
@@ -224,6 +224,18 @@ export function assessProjectContextAlignment(
     (activeMetadata?.domain && activeMetadata.domain !== 'general application'
       ? activeMetadata.domain
       : activeNameSignals.domainLabel);
+
+  if (!activeRecord?.projectId) {
+    return alignedResult({
+      activeProjectId: null,
+      activeProjectName: null,
+      promptDomain: promptSignals.domainLabel,
+      activeProjectDomain: 'none',
+      reason:
+        'No active project selected — build prompt proceeds to new project creation and build orchestration.',
+      alignmentScore: 1,
+    });
+  }
 
   const activeScore = resolvedActiveId
     ? scoreProjectAgainstPrompt(resolvedActiveName, resolvedActiveId, promptSignals.domainIds, rootDir)

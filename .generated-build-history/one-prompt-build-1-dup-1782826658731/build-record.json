@@ -1,0 +1,62 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1782826658731",
+  "createdAt": "2026-06-30T13:37:38.729Z",
+  "prompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "selectedProfile": "CRM_WEB_V1",
+  "appName": "SaaS CRM",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-saas-crm-1782826658600",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-saas-crm-1782826658600/.generated-app-manifest.json",
+  "manifestHash": "b27b2eeff1677dbbccba23d16e566e7f11414df5c09aa2345f8c8232a28102df",
+  "workspaceHash": "5df745ce9d2eb45edb8f9c5b9879edf337151e747dc5fed8589093ca51afd812",
+  "materializationHash": "a07ef675bbcbf5880d3d3941bd7746d22185a44e38d2189789f43e5026168cb5",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0,
+  "generatedFeatureModulesCount": 0,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/deals",
+    "/persistence",
+    "/customers",
+    "/pipeline",
+    "/contacts",
+    "/follow-ups",
+    "/reports"
+  ],
+  "generatedComponents": [],
+  "generatedServices": [],
+  "generatedModels": [],
+  "generatedStyles": [],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "ASE-authorized materialization did not complete."
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-saas-crm-1782826658600/.generated-app-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1782826658731"
+  ],
+  "failureReasons": [
+    "ASE-authorized materialization did not complete.",
+    "ASE-authorized materialization did not complete."
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1782826658731/replay-metadata.json",
+  "comparisonFingerprint": "8cc3542a2ca8716b7b6f2b2d2dbf1cd69f4995e95f93e933a6f68a6e584ff392",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1782826658731/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "7449d159ba78b7bd163652abb722fdb85a46d24dffe37f9899aa9134beb399d6"
+}

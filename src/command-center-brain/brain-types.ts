@@ -81,6 +81,7 @@ export type { ActionVisibilityDiagnostics, ActionVisibilityRecord };
 export type { ReasoningVisibilityDiagnostics, ReasoningVisibilityRecord };
 
 export type BrainRequestCategory =
+  | 'BUILD'
   | 'ROADMAP'
   | 'SYSTEM'
   | 'PROJECT'
@@ -333,6 +334,7 @@ export const COMMAND_CENTER_BRAIN_OWNER_MODULE = 'devpulse_v2_command_center_bra
 export const COMMAND_CENTER_BRAIN_PASS_TOKEN = 'DEVPULSE_V2_UNIFIED_COMMAND_CENTER_BRAIN_FOUNDATION_V1_PASS';
 
 export const BRAIN_REQUEST_CATEGORIES: readonly BrainRequestCategory[] = [
+  'BUILD',
   'ROADMAP',
   'SYSTEM',
   'PROJECT',

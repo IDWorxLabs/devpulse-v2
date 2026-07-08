@@ -22,23 +22,30 @@ export function validatePromptFaithfulness(input: {
   generatedModules: string[];
   workspaceDir?: string;
   definition?: ProfileFeatureDefinition;
+  approvedModuleIds?: readonly string[];
 }): PromptFaithfulnessVerdict {
   const extraction = extractPromptFeatures(input.rawPrompt);
   const failureReasons: string[] = [];
-  const bannedDetected = BANNED_FALLBACK_MODULES.filter((banned) =>
-    input.generatedModules.some((moduleId) => moduleId === banned || moduleId.includes(banned)),
+  const approvedModules = new Set(input.approvedModuleIds ?? []);
+  const bannedDetected = BANNED_FALLBACK_MODULES.filter(
+    (banned) =>
+      !approvedModules.has(banned) &&
+      input.generatedModules.some((moduleId) => moduleId === banned || moduleId.includes(banned)),
   );
 
   const overExtractedInWorkspace = extraction.rejectedNonModulePhrases.filter((phrase) => {
     const isSanitizedModule = extraction.requiredModules.some(
       (required) => required === phrase || moduleIdsInclude([required], phrase),
     );
-    if (isSanitizedModule) return false;
+    if (isSanitizedModule || approvedModules.has(phrase)) return false;
     return input.generatedModules.some((generated) => generated === phrase);
   });
 
   const adjectiveModulesInWorkspace = input.generatedModules.filter(
-    (moduleId) => moduleId !== 'auth' && isRejectedNonModulePhrase(moduleId),
+    (moduleId) =>
+      moduleId !== 'auth' &&
+      !approvedModules.has(moduleId) &&
+      isRejectedNonModulePhrase(moduleId),
   );
 
   const expectedModules = extraction.requiredModules.filter((m) => m !== 'auth');

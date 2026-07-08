@@ -3,6 +3,7 @@
  */
 
 import type { CapabilityGap, CapabilityGenerationPlanEra3 } from './capability-planning-types.js';
+import { isSafePaymentPlaceholderCapabilityName } from '../safe-payment-placeholder-policy/index.js';
 
 let genCounter = 0;
 
@@ -28,6 +29,7 @@ export function planCapabilityGeneration(
 
   for (const gap of gaps) {
     if (gap.decision !== 'GENERATE_MISSING') continue;
+    if (isSafePaymentPlaceholderCapabilityName(gap.requiredCapability.name)) continue;
     if (HIGH_RISK_PATTERNS.some((p) => p.test(gap.requiredCapability.name))) continue;
 
     genCounter += 1;

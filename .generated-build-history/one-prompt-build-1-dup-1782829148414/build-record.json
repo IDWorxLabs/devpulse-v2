@@ -1,0 +1,111 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1782829148414",
+  "createdAt": "2026-06-30T14:19:08.291Z",
+  "prompt": "Build an expense tracker where users add expenses, categorize spending, view monthly totals, and filter by date range.",
+  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
+  "appName": "Expense Tracker",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-expense-tracker-1782829129934",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-expense-tracker-1782829129934/.generated-app-manifest.json",
+  "manifestHash": "267cf0f0bd58c72bf31c25a98181012b76e4fad3345ac5b78d1b32489cf560e8",
+  "workspaceHash": "1a10f27c96dedadd133439064ce42d168e0e385ce297ca50c64b75c4326e28fb",
+  "materializationHash": "416d194016800332b92c4bdf2fa69ad1efcf2f8de1a957d8aae57418838af459",
+  "generatedFilesCount": 111,
+  "generatedDirectoriesCount": 25,
+  "generatedFeatureModulesCount": 11,
+  "generatedRoutes": [
+    "/csv-export",
+    "/filter-ui",
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/expenses",
+    "/persistence",
+    "/income",
+    "/categories",
+    "/reports",
+    "/charts"
+  ],
+  "generatedComponents": [
+    "src/blueprint/components/EmptyState.tsx",
+    "src/blueprint/components/ErrorState.tsx",
+    "src/blueprint/components/LoadingState.tsx",
+    "src/blueprint/components/UniversalAiAssistant.tsx"
+  ],
+  "generatedServices": [
+    "src/features/categories/categories.service.ts",
+    "src/features/charts/charts.service.ts",
+    "src/features/csv-export/csv-export.service.ts",
+    "src/features/dashboard/dashboard.service.ts",
+    "src/features/expenses/expenses.service.ts",
+    "src/features/filter-ui/filter-ui.service.ts",
+    "src/features/income/income.service.ts",
+    "src/features/navigation-router/navigation-router.service.ts",
+    "src/features/reports/reports.service.ts",
+    "src/features/settings/settings.service.ts"
+  ],
+  "generatedModels": [
+    "src/features/categories/categories.types.ts",
+    "src/features/charts/charts.types.ts",
+    "src/features/csv-export/csv-export.types.ts",
+    "src/features/dashboard/dashboard.types.ts",
+    "src/features/expenses/expenses.types.ts",
+    "src/features/filter-ui/filter-ui.types.ts",
+    "src/features/income/income.types.ts",
+    "src/features/navigation-router/navigation-router.types.ts",
+    "src/features/reports/reports.types.ts",
+    "src/features/settings/settings.types.ts"
+  ],
+  "generatedStyles": [
+    "src/App.css",
+    "src/features/categories/categories.module.css",
+    "src/features/charts/charts.module.css",
+    "src/features/csv-export/csv-export.module.css",
+    "src/features/dashboard/dashboard.module.css",
+    "src/features/expenses/expenses.module.css",
+    "src/features/feature-app-router.css",
+    "src/features/filter-ui/filter-ui.module.css",
+    "src/features/income/income.module.css",
+    "src/features/navigation-router/navigation-router.module.css",
+    "src/features/reports/reports.module.css",
+    "src/features/settings/settings.module.css",
+    "src/styles/global.css"
+  ],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "PASS",
+    "blueprintPurityStatus": "FAIL",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": true,
+    "warnings": [
+      "AEE_PREVIEW_RECOVERY_LOOP_V1: preview recovery exhausted after 3 attempt(s) — build completed with degraded preview.",
+      "AEE respected blocker: Live Preview is locked because Launch Readiness evidence not available. Run Autonomous Debugging after resolving upstream interaction and behavior reachability failures.",
+      "AEE evidence provider: AUTONOMOUS_DEBUGGING",
+      "AEE evidence provider: MISSING_CAPABILITY_EVOLUTION",
+      "AEE evidence provider: LIVE_PREVIEW_GATE",
+      "Only 6/7 required UI terms detected in generated source."
+    ],
+    "errors": []
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-expense-tracker-1782829129934/.generated-app-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-expense-tracker-1782829129934/build-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-expense-tracker-1782829129934/universal-feature-contract.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-expense-tracker-1782829129934/blueprint-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1782829148414"
+  ],
+  "failureReasons": [
+    "registry missing modules: auth"
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1782829148414/replay-metadata.json",
+  "comparisonFingerprint": "539476fdbbe3bf3afb2c05e9e42731e11c5a7a78a60388e627dc00fe25a77b3f",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1782829148414/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "5dc3dee3c901c8ea8b321718093886c933dad462185b3f11951b8fb6f097041a"
+}

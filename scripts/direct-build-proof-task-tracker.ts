@@ -6,6 +6,17 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import {
+  killProcessesByPort,
+  runNpmCommandSync,
+  runNpmRunScriptSync,
+  settleEventLoop,
+  spawnManagedProcess,
+} from '../src/one-prompt-live-preview/child-process-teardown.js';
+import {
+  resetGeneratedDevServerManagerForTests,
+  startGeneratedAppDevServer,
+} from '../src/one-prompt-live-preview/generated-dev-server-manager.js';
 import { fileURLToPath } from 'node:url';
 import { getDevPulseV2AiDevEngineAuthority, resetDevPulseV2AiDevEngineAuthorityForTests } from '../src/aidev-engine/aidev-engine-authority.js';
 import {
@@ -226,11 +237,10 @@ if (existsSync(packageJsonPath)) {
   const viteRuntime = usesViteReactRuntime(packageJsonSource);
   record('Vite React runtime configured', viteRuntime, viteRuntime ? 'package.json uses Vite dev/build' : 'legacy runtime/dev-server only');
 
-  const npmInstall = spawnSync('npm', ['install', '--ignore-scripts'], {
+  const npmInstall = runNpmCommandSync({
     cwd: workspaceDir,
-    encoding: 'utf8',
-    shell: true,
-    timeout: 180_000,
+    args: ['install', '--ignore-scripts'],
+    timeoutMs: 180_000,
   });
   record(
     'npm install',
@@ -239,11 +249,10 @@ if (existsSync(packageJsonPath)) {
   );
 
   if (viteRuntime) {
-    const npmBuild = spawnSync('npm', ['run', 'build'], {
+    const npmBuild = runNpmRunScriptSync({
       cwd: workspaceDir,
-      encoding: 'utf8',
-      shell: true,
-      timeout: 180_000,
+      script: 'build',
+      timeoutMs: 180_000,
     });
     record(
       'npm run build',
@@ -254,73 +263,105 @@ if (existsSync(packageJsonPath)) {
     writeFileSync(join(OUT_DIR, 'npm-build-stderr.txt'), npmBuild.stderr ?? '');
   }
 
-  const devArgs = viteRuntime ? ['run', 'dev'] : ['runtime/dev-server.mjs'];
-  const devServer = spawnSync(viteRuntime ? 'npm' : 'node', devArgs, {
-    cwd: workspaceDir,
-    encoding: 'utf8',
-    shell: true,
-    timeout: 20_000,
-    env: viteRuntime
-      ? { ...process.env, BROWSER: 'none' }
-      : { ...process.env, WORKSPACE_ID: contract.contractId, RUNTIME_PORT: '0' },
-  });
-  const stdout = devServer.stdout ?? '';
-  const stderr = devServer.stderr ?? '';
-  writeFileSync(join(OUT_DIR, 'dev-server-stdout.txt'), stdout);
-  writeFileSync(join(OUT_DIR, 'dev-server-stderr.txt'), stderr);
-
   let port: number | null = null;
-  if (viteRuntime) {
-    const localMatch = stdout.match(/Local:\s+http:\/\/127\.0\.0\.1:(\d+)/i);
-    if (localMatch) port = Number(localMatch[1]);
-  } else {
-    for (const line of stdout.split('\n')) {
-      try {
-        const parsed = JSON.parse(line.trim()) as { ready?: boolean; port?: number };
-        if (parsed.ready && typeof parsed.port === 'number') port = parsed.port;
-      } catch {
-        /* skip */
+  let stdout = '';
+  let stderr = '';
+  let managedHandle: Awaited<ReturnType<typeof spawnManagedProcess>> | null = null;
+
+  try {
+    if (viteRuntime) {
+      await resetGeneratedDevServerManagerForTests();
+      const devResult = await startGeneratedAppDevServer({
+        workspaceDir,
+        workspaceId: contract.contractId,
+        timeoutMs: 20_000,
+      });
+      port = devResult.port ?? null;
+      stdout = devResult.ok ? `Local: http://127.0.0.1:${port ?? ''}/` : '';
+      stderr = devResult.error ?? '';
+    } else {
+      managedHandle = spawnManagedProcess({
+        label: 'legacy-runtime-dev-server',
+        executable: process.execPath,
+        args: ['runtime/dev-server.mjs'],
+        cwd: workspaceDir,
+        env: {
+          ...process.env,
+          WORKSPACE_ID: contract.contractId,
+          RUNTIME_PORT: '0',
+        },
+      });
+      const deadline = Date.now() + 20_000;
+      while (Date.now() < deadline) {
+        stdout = managedHandle.stdout;
+        stderr = managedHandle.stderr;
+        for (const line of stdout.split('\n')) {
+          try {
+            const parsed = JSON.parse(line.trim()) as { ready?: boolean; port?: number };
+            if (parsed.ready && typeof parsed.port === 'number') {
+              port = parsed.port;
+              break;
+            }
+          } catch {
+            /* skip */
+          }
+        }
+        if (port) break;
+        await new Promise((resolve) => setTimeout(resolve, 100));
       }
     }
-  }
 
-  if (port) {
-    runtimeUrl = `http://127.0.0.1:${port}/`;
-    const healthPath = viteRuntime ? '/' : '/runtime/status';
-    const curlHealth = spawnSync('curl.exe', ['-s', `http://127.0.0.1:${port}${healthPath}`], {
-      encoding: 'utf8',
-      shell: true,
-      timeout: 10_000,
-    });
-    runtimeStatus = (curlHealth.stdout ?? '').slice(0, 500);
-    record(
-      'Runtime health endpoint',
-      curlHealth.status === 0 && (viteRuntime ? /Task Tracker|id="root"/i.test(curlHealth.stdout ?? '') : /"status"\s*:\s*"ok"/.test(curlHealth.stdout ?? '')),
-      runtimeStatus || 'no response',
-    );
+    writeFileSync(join(OUT_DIR, 'dev-server-stdout.txt'), stdout);
+    writeFileSync(join(OUT_DIR, 'dev-server-stderr.txt'), stderr);
 
-    const curlRoot = spawnSync('curl.exe', ['-s', `http://127.0.0.1:${port}/`], {
-      encoding: 'utf8',
-      shell: true,
-      timeout: 10_000,
-    });
-    previewBodySnippet = (curlRoot.stdout ?? '').slice(0, 800);
-    writeFileSync(join(OUT_DIR, 'preview-root.html'), previewBodySnippet);
-    const hasTaskUi = viteRuntime
-      ? /src\/main\.tsx/.test(previewBodySnippet) && /id="root"/.test(previewBodySnippet)
-      : /Task Tracker|task-input|add-task-button|active-count|task-list/i.test(previewBodySnippet) &&
-        !/GeneratedApp\(\)\s*\{\s*return null/.test(previewBodySnippet);
-    record(
-      'Browser preview shows Task Tracker UI',
-      hasTaskUi,
-      hasTaskUi
-        ? viteRuntime
-          ? 'Vite serves index.html with React mount entry (client-rendered UI)'
-          : 'task-related markup detected'
-        : 'no task UI in served HTML (stub or JSON only)',
-    );
-  } else {
-    record('Dev server started', false, (stderr || stdout || 'no ready line').slice(0, 400));
+    if (port) {
+      runtimeUrl = `http://127.0.0.1:${port}/`;
+      const healthPath = viteRuntime ? '/' : '/runtime/status';
+      const curlHealth = spawnSync('curl.exe', ['-s', `http://127.0.0.1:${port}${healthPath}`], {
+        encoding: 'utf8',
+        shell: true,
+        timeout: 10_000,
+      });
+      runtimeStatus = (curlHealth.stdout ?? '').slice(0, 500);
+      record(
+        'Runtime health endpoint',
+        curlHealth.status === 0 && (viteRuntime ? /Task Tracker|id="root"/i.test(curlHealth.stdout ?? '') : /"status"\s*:\s*"ok"/.test(curlHealth.stdout ?? '')),
+        runtimeStatus || 'no response',
+      );
+
+      const curlRoot = spawnSync('curl.exe', ['-s', `http://127.0.0.1:${port}/`], {
+        encoding: 'utf8',
+        shell: true,
+        timeout: 10_000,
+      });
+      previewBodySnippet = (curlRoot.stdout ?? '').slice(0, 800);
+      writeFileSync(join(OUT_DIR, 'preview-root.html'), previewBodySnippet);
+      const hasTaskUi = viteRuntime
+        ? /src\/main\.tsx/.test(previewBodySnippet) && /id="root"/.test(previewBodySnippet)
+        : /Task Tracker|task-input|add-task-button|active-count|task-list/i.test(previewBodySnippet) &&
+          !/GeneratedApp\(\)\s*\{\s*return null/.test(previewBodySnippet);
+      record(
+        'Browser preview shows Task Tracker UI',
+        hasTaskUi,
+        hasTaskUi
+          ? viteRuntime
+            ? 'Vite serves index.html with React mount entry (client-rendered UI)'
+            : 'task-related markup detected'
+          : 'no task UI in served HTML (stub or JSON only)',
+      );
+    } else {
+      record('Dev server started', false, (stderr || stdout || 'no ready line').slice(0, 400));
+    }
+  } finally {
+    if (viteRuntime) {
+      await resetGeneratedDevServerManagerForTests();
+    } else if (managedHandle) {
+      await managedHandle.stop();
+    }
+    if (port) {
+      await killProcessesByPort(port);
+    }
+    await settleEventLoop();
   }
 } else {
   record('package.json present', false, 'missing — cannot install or run');

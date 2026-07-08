@@ -430,14 +430,14 @@ export function runAutonomousSoftwareEngineeringEngineValidation(sections?: stri
     const orchestrator = readFileSync(join(ROOT, 'src/one-prompt-live-preview/one-prompt-build-orchestrator.ts'), 'utf8');
     assert(
       'ase-orchestrator-integration',
-      'delegates to ASE',
-      orchestrator.includes('runAutonomousSoftwareEngineeringPipeline'),
-      'ASE integration',
+      'delegates to ASE enforcement',
+      orchestrator.includes('runAutonomousEngineering'),
+      'ASE enforcement integration',
     );
     assert(
       'ase-orchestrator-integration',
-      'uses materialization gate',
-      orchestrator.includes('readyForMaterialization'),
+      'uses materialization authorization gate',
+      orchestrator.includes('materializationAuthorized'),
       'materialization gate',
     );
   }

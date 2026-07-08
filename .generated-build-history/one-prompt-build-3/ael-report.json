@@ -1,0 +1,29 @@
+{
+  "readOnly": true,
+  "enabled": true,
+  "initialPrompt": "Build a simple notes app where I can create, edit, and delete text notes, attempt two.",
+  "domain": "custom-general",
+  "cyclesExecuted": 1,
+  "aeeFurthestStage": "FINAL_REPORT",
+  "productRealityScore": 100,
+  "founderLoopResult": "NEEDS_REPAIR",
+  "capabilitiesEvolved": [],
+  "autofixAttempts": 0,
+  "previewRecoveryAttempts": 3,
+  "capabilityEvolutionAttempts": 0,
+  "finalOutcome": "ENGINEERING_LIMIT_REACHED",
+  "remainingGaps": [],
+  "humanReviewRequired": false,
+  "cycleHistory": [
+    {
+      "readOnly": true,
+      "cycle": 1,
+      "state": "AEL_CAPABILITY_GAP_ANALYSIS",
+      "productRealityScore": 100,
+      "founderVerdict": "NEEDS_REPAIR",
+      "decision": "STOP_AT_ENGINEERING_LIMIT",
+      "repairAction": null
+    }
+  ],
+  "recordedAt": "2026-07-06T21:20:50.592Z"
+}

@@ -112,6 +112,39 @@ function proposedNameFromTags(tags: DomainTag[]): string | null {
   return tags[0]!.proposedName;
 }
 
+const BUILD_TARGET_VERB =
+  /^(?:please\s+)?(?:build|create|make|generate|implement|develop|design|finish|rebuild|scaffold)\b/i;
+
+/**
+ * Derive a human-readable project name from imperative build prompts without domain-tag hardcoding.
+ * e.g. "Build a calculator app." -> "Calculator App"
+ */
+export function extractGenericBuildTargetName(prompt: string): string | null {
+  const normalized = prompt.trim().replace(/\s+/g, ' ');
+  if (!normalized || !BUILD_TARGET_VERB.test(normalized)) return null;
+
+  const match = normalized.match(
+    /^(?:please\s+)?(?:build|create|make|generate|implement|develop|design|finish|rebuild|scaffold)\s+(?:a|an|the|this|my|our|new)?\s+(.+?)(?:[.!?]+)?$/i,
+  );
+  if (!match?.[1]) return null;
+
+  let target = match[1]
+    .trim()
+    .replace(/\s*(?:with|including|that includes|featuring)\s+.+$/i, '')
+    .replace(/[.!?]+$/g, '')
+    .trim();
+  if (!target || /^new\s+project$/i.test(target)) return null;
+
+  const titled = target
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+    .trim();
+
+  return titled || null;
+}
+
 export function extractPromptDomainSignals(
   prompt: string,
   options?: { activeProjectName?: string | null },
@@ -140,6 +173,9 @@ export function extractPromptDomainSignals(
   let proposedProjectName = proposedNameFromTags(filteredTags);
   if (proposedNameShouldNotBeTaskTracker(normalized, proposedProjectName)) {
     proposedProjectName = promptMentionsLisaOrAccessibility(normalized) ? 'LISA' : null;
+  }
+  if (!proposedProjectName) {
+    proposedProjectName = extractGenericBuildTargetName(normalized);
   }
 
   let keywords = [
@@ -218,3 +254,5 @@ export function domainOverlapScore(left: string[], right: string[]): number {
 export function normalizeProjectDisplayName(name: string): string {
   return name.trim().replace(/\s+/g, '');
 }
+
+export { normalizeProjectRegistryName } from '../project-registry-sovereignty/registry-classifier.js';

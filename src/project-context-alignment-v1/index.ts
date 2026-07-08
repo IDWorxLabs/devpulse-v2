@@ -17,6 +17,7 @@ export {
 export {
   extractPromptDomainSignals,
   extractProjectNameDomainSignals,
+  extractGenericBuildTargetName,
   domainOverlapScore,
   normalizeProjectDisplayName,
 } from './prompt-domain-analyzer.js';

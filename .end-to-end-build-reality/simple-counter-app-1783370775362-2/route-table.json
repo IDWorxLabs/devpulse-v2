@@ -1,0 +1,14 @@
+{
+  "routes": [
+    "/"
+  ],
+  "featureModules": [
+    {
+      "readOnly": true,
+      "id": "counter",
+      "route": "/",
+      "componentPath": "src/features/counter/CounterFeature.tsx",
+      "navLabel": "Counter"
+    }
+  ]
+}

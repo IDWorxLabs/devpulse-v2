@@ -384,6 +384,85 @@ const OWNERSHIP_REGISTRY: Readonly<Record<OwnershipDomain, OwnerRecord>> = {
     ] as const,
     downstreamConsumers: ['one_prompt_live_preview'] as const,
   },
+  autonomous_recovery_authority: {
+    domain: 'autonomous_recovery_authority',
+    ownerModule: 'devpulse_v2_autonomous_recovery_authority',
+    ownerFunction: 'getDevPulseV2AutonomousRecoveryAuthority',
+    phase: 16,
+    description:
+      'Era 4 Phase 3 Autonomous Recovery Authority — self-healing engineering recovery orchestration',
+    upstreamDependencies: [
+      'autonomous_software_engineering_engine',
+      'recovery_planner',
+      'recovery_root_cause_engine',
+      'recovery_strategy_engine',
+      'recovery_executor',
+      'validation_replay_engine',
+      'engineering_continuation',
+      'recovery_memory',
+      'recovery_escalation_authority',
+    ] as const,
+    downstreamConsumers: ['one_prompt_live_preview', 'autonomous_software_engineering_engine'] as const,
+  },
+  prompt_bounded_materialization: {
+    domain: 'prompt_bounded_materialization',
+    ownerModule: 'devpulse_v2_prompt_bounded_materialization',
+    ownerFunction: 'getDevPulseV2PromptBoundedMaterialization',
+    phase: 15,
+    description:
+      'Prompt-Bounded Materialization Guard — blocks unjustified fallback modules before file generation',
+    upstreamDependencies: [
+      'prompt_faithful_generation',
+      'intent_understanding_engine',
+      'capability_planning_engine',
+      'universal_prompt_to_app_materialization',
+    ] as const,
+    downstreamConsumers: [
+      'one_prompt_live_preview',
+      'autonomous_software_engineering_engine',
+      'launch_readiness_authority_v2',
+      'live_preview_gate',
+    ] as const,
+  },
+  engineering_intelligence_runtime: {
+    domain: 'engineering_intelligence_runtime',
+    ownerModule: 'devpulse_v2_engineering_intelligence_runtime',
+    ownerFunction: 'getDevPulseV2EngineeringIntelligenceRuntime',
+    phase: 13,
+    description:
+      'Engineering Intelligence Runtime V1 — product domain classification, capability extraction, module contract synthesis, fidelity checking, and missing capability repair',
+    upstreamDependencies: [
+      'prompt_faithful_generation',
+      'prompt_bounded_materialization',
+      'capability_planning_engine',
+      'missing_capability_evolution_engine',
+      'intent_understanding_engine',
+    ] as const,
+    downstreamConsumers: [
+      'one_prompt_live_preview',
+      'autonomous_engineering_executive',
+      'launch_readiness_authority_v2',
+    ] as const,
+  },
+  safe_payment_placeholder_policy: {
+    domain: 'safe_payment_placeholder_policy',
+    ownerModule: 'devpulse_v2_safe_payment_placeholder_policy',
+    ownerFunction: 'getDevPulseV2SafePaymentPlaceholderPolicy',
+    phase: 13,
+    description:
+      'Safe Payment Placeholder Policy V1 — allows UI-only checkout placeholders while blocking real financial transaction execution',
+    upstreamDependencies: [
+      'capability_planning_engine',
+      'missing_capability_evolution_engine',
+      'engineering_intelligence_runtime',
+      'prompt_faithful_generation',
+    ] as const,
+    downstreamConsumers: [
+      'one_prompt_live_preview',
+      'autonomous_engineering_executive',
+      'universal_prompt_to_app_materialization',
+    ] as const,
+  },
   context_arbitration: {
     domain: 'context_arbitration',
     ownerModule: 'devpulse_v2_context_arbitration_authority',

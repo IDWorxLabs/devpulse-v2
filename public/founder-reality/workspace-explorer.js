@@ -820,8 +820,20 @@
       });
   }
 
+  function clearActiveProject() {
+    explorer.activeProjectId = null;
+    explorer.activeProjectName = null;
+    resetExplorerData();
+    try {
+      global.localStorage.removeItem(STATE_KEY);
+    } catch (storageErr) {
+      /* ignore */
+    }
+  }
+
   global.ProjectWorkspaceExplorer = {
     open: openProjectWorkspace,
+    clearActiveProject: clearActiveProject,
     getActiveProjectId: function () {
       return explorer.activeProjectId;
     },

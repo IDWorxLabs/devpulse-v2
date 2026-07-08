@@ -1,0 +1,23 @@
+{
+  "readOnly": true,
+  "projectId": "aee-profile-continuation-internal-hr-admin-1782828799228",
+  "projectName": "CRM",
+  "createdAt": "2026-06-30T14:13:20.201Z",
+  "updatedAt": "2026-06-30T14:13:20.201Z",
+  "selectedProfile": "CRM_WEB_V1",
+  "originalPrompt": "Build an HR admin tool with employee directory, onboarding checklist, time-off requests, and payroll summary.",
+  "currentSourcePath": "",
+  "activeWorkspacePath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782828799228",
+  "lastBuildRunId": "aee-profile-continuation-internal-hr-admin-1782828799228",
+  "lastSuccessfulBuildRunId": null,
+  "manifestPath": "",
+  "featureContractPath": "",
+  "buildHistoryRecordPath": ".generated-build-history/aee-profile-continuation-internal-hr-admin-1782828799228",
+  "productionValidationPath": null,
+  "exportMetadataPath": "",
+  "projectFileIndexPath": "",
+  "status": "FAILED",
+  "immutableBuildLinks": [],
+  "lastFailedBuildRunId": "aee-profile-continuation-internal-hr-admin-1782828799228",
+  "lastFailedSnapshotPath": ".aidev-projects/aee-profile-continuation-internal-hr-admin-1782828799228/.aidev/snapshots/failed-aee-profile-continuation-internal-hr-admin-1782828799228"
+}

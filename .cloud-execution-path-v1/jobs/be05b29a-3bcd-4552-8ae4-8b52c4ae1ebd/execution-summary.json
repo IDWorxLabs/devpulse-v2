@@ -1,0 +1,12 @@
+{
+  "readOnly": true,
+  "jobId": "be05b29a-3bcd-4552-8ae4-8b52c4ae1ebd",
+  "profile": "TASK_TRACKER_WEB_V1",
+  "executionMode": "CLOUD_SIMULATED",
+  "buildProof": true,
+  "previewProof": true,
+  "verificationProof": true,
+  "aflaVerdict": "NEEDS_AUTOFIX",
+  "productionReadinessScore": 88,
+  "runtimeDurationMs": 7388
+}

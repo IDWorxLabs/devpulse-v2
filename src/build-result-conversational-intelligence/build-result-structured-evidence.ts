@@ -8,6 +8,15 @@ import { resolveExpectedProfileLabel } from './build-profile-mismatch-response.j
 import type { ExecutionTraceEvidenceBundle } from '../execution-trace/execution-trace-types.js';
 import { executionTraceEvidenceForLlm } from '../execution-trace/index.js';
 import { materializationEvidenceSummaryForChat } from '../materialization-evidence/index.js';
+import {
+  buildAeeControlledResponseEnvelope,
+  buildSpineReachedInstallOrBeyond,
+  isStaleAseFailureReason,
+  previewStageWasAttempted,
+  refineProfileClassificationForAeeBuild,
+  resolveAeeControlledBuildStatus,
+  resolveAeeControlledFailureReason,
+} from '../autonomous-engineering-executive/index.js';
 
 export interface BuildResultStructuredEvidence {
   readOnly: true;
@@ -47,7 +56,12 @@ export interface BuildResultStructuredEvidence {
     | 'PARTIAL'
     | 'PROFILE_MISMATCH'
     | 'PREVIEW_UNAVAILABLE'
-    | 'IN_PROGRESS';
+    | 'IN_PROGRESS'
+    | 'AEE_SPINE_PARTIAL';
+  buildResponseSource: string;
+  aeeControlledResponse: Record<string, unknown>;
+  aeeFinalReport: Record<string, unknown> | null;
+  aeeExecutiveDecision: Record<string, unknown> | null;
   executionTraceEvidence: Record<string, unknown> | null;
   materializationEvidence: Record<string, unknown> | null;
 }
@@ -67,6 +81,11 @@ function inferOutcomeCategory(
   context: BuildResultConversationalContext,
   buildResult: OnePromptLivePreviewBuildResult,
 ): BuildResultStructuredEvidence['outcomeCategory'] {
+  const aeeStatus = resolveAeeControlledBuildStatus(buildResult);
+  if (aeeStatus.outcomeCategory !== 'FAILED') {
+    return aeeStatus.outcomeCategory;
+  }
+
   const mismatch =
     context.classification.alignmentVerdict === 'PROFILE_MISMATCH' ||
     context.classification.profileMismatchWarnings.length > 0;
@@ -111,8 +130,20 @@ function collectBlueprintWarnings(
   if (context.classification.fallbackReason) {
     warnings.push(`Profile fallback used: ${context.classification.fallbackReason}`);
   }
-  if (buildResult.failureReason) {
+  const controlledFailure = resolveAeeControlledFailureReason(buildResult);
+  if (controlledFailure && !isStaleAseFailureReason(controlledFailure)) {
+    warnings.push(`Remaining gap: ${controlledFailure}`);
+  } else if (buildResult.failureReason && !isStaleAseFailureReason(buildResult.failureReason)) {
     warnings.push(`Failure: ${buildResult.failureReason}`);
+  }
+
+  if (buildSpineReachedInstallOrBeyond(buildResult)) {
+    warnings.push(
+      `Build spine reached npm install/build under AEE control (install=${buildResult.npmInstallOk ? 'PASS' : 'FAIL'}, build=${buildResult.npmBuildOk ? 'PASS' : 'FAIL'}).`,
+    );
+  }
+  if (!previewStageWasAttempted(buildResult) && buildResult.status === 'FAILED') {
+    warnings.push('Preview stage was not attempted — do not claim live preview could not be generated.');
   }
 
   return warnings;
@@ -123,6 +154,13 @@ export function buildBuildResultStructuredEvidence(
   buildResult: OnePromptLivePreviewBuildResult,
   executionTraceBundle?: ExecutionTraceEvidenceBundle | null,
 ): BuildResultStructuredEvidence {
+  const refinedClassification = refineProfileClassificationForAeeBuild(
+    buildResult,
+    context.classification,
+  );
+  const aeeControlledResponse = buildAeeControlledResponseEnvelope(buildResult);
+  const controlledFailure = resolveAeeControlledFailureReason(buildResult);
+
   return {
     readOnly: true,
     originalUserPrompt: context.userPrompt,
@@ -131,22 +169,22 @@ export function buildBuildResultStructuredEvidence(
     buildRunId: context.buildRunId,
     selectedProfile: context.selectedProfile,
     expectedProfile: resolveExpectedProfileLabel(context),
-    profileAlignmentVerdict: context.classification.alignmentVerdict,
-    profileAlignmentReason: context.classification.alignmentReason,
-    confidence: context.classification.confidence,
-    matchedKeywords: [...context.classification.matchedKeywords],
-    rejectedProfiles: [...context.classification.rejectedProfiles],
-    rejectionReasons: [...context.classification.rejectionReasons],
-    fallbackReason: context.classification.fallbackReason,
-    inferredProductIntent: context.classification.inferredProductIntent,
-    profileMismatchWarnings: [...context.classification.profileMismatchWarnings],
+    profileAlignmentVerdict: refinedClassification.alignmentVerdict,
+    profileAlignmentReason: refinedClassification.alignmentReason,
+    confidence: refinedClassification.confidence,
+    matchedKeywords: [...refinedClassification.matchedKeywords],
+    rejectedProfiles: [...refinedClassification.rejectedProfiles],
+    rejectionReasons: [...refinedClassification.rejectionReasons],
+    fallbackReason: refinedClassification.fallbackReason,
+    inferredProductIntent: refinedClassification.inferredProductIntent,
+    profileMismatchWarnings: [...refinedClassification.profileMismatchWarnings],
     workspacePath: context.workspacePath,
     buildStatus: context.buildStatus,
     buildStage: inferBuildStage(buildResult, context.buildStage),
     buildResult: context.buildResult,
     previewUrl: context.previewUrl,
     livePreviewAvailable: buildResult.livePreviewAvailable,
-    failureReason: context.failureReason,
+    failureReason: controlledFailure,
     planningProofLevel: buildResult.planningProofLevel,
     materializationProofLevel: buildResult.materializationProofLevel,
     architectureSummary: context.architectureSummary,
@@ -154,8 +192,18 @@ export function buildBuildResultStructuredEvidence(
     generatedFilesCount: context.generatedFilesCount,
     npmInstallOk: buildResult.npmInstallOk,
     npmBuildOk: buildResult.npmBuildOk,
-    blueprintWarnings: collectBlueprintWarnings(context, buildResult),
-    outcomeCategory: inferOutcomeCategory(context, buildResult),
+    blueprintWarnings: collectBlueprintWarnings(
+      { ...context, classification: refinedClassification },
+      buildResult,
+    ),
+    outcomeCategory: inferOutcomeCategory(
+      { ...context, classification: refinedClassification },
+      buildResult,
+    ),
+    buildResponseSource: String(aeeControlledResponse.buildResponseSource ?? 'AEE_CONTROLLED_RESULT'),
+    aeeControlledResponse,
+    aeeFinalReport: (buildResult.aeeFinalReport as unknown as Record<string, unknown>) ?? null,
+    aeeExecutiveDecision: (buildResult.aeeExecutiveDecision as unknown as Record<string, unknown>) ?? null,
     executionTraceEvidence: executionTraceBundle
       ? executionTraceEvidenceForLlm(executionTraceBundle)
       : null,

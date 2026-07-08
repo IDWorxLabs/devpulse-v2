@@ -16,6 +16,7 @@ export type GeneratedAppProfile =
   | 'QR_APP'
   | 'BOOKING_WEB_V1'
   | 'HABIT_TRACKER_WEB_V1'
+  | 'ASSISTIVE_COMMUNICATION_APP_V1'
   | 'GENERIC_CUSTOM_APP_V1';
 
 export interface TaskTrackerRequirements {

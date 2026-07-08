@@ -91,6 +91,25 @@ assert(
   booking.report.clarifyingGaps.contractReadiness,
 );
 
+const calculator = assessRequirementsToPlanExecutionContract({ rawPrompt: 'build a calculator app' });
+assert(
+  'G calculator prompt: BUILD_READY contract',
+  calculator.report.buildReadyContract?.readinessState === 'BUILD_READY',
+  calculator.report.buildReadyContract?.readinessState ?? 'missing',
+);
+assert(
+  'G calculator prompt: no dashboard/settings requirements',
+  !(calculator.report.requirementContract?.requirements ?? []).some((req) =>
+    /dashboard|settings panel/i.test(req.description),
+  ),
+  'forbidden requirements present',
+);
+assert(
+  'G calculator prompt: calculator requirements extracted',
+  (calculator.report.requirementContract?.requirements.length ?? 0) >= 6,
+  String(calculator.report.requirementContract?.requirements.length),
+);
+
 const tasks = crm.report.planContract?.tasks ?? [];
 assert(
   'D traceability: every plan task links to requirements',

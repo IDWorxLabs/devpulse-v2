@@ -1,0 +1,27 @@
+{
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "contractId": "readiness-audit-expense-tracker-1782832015781",
+  "ideaId": "idea-1",
+  "appName": "Expense Tracker",
+  "generatedAt": "2026-06-30T15:06:55.999Z",
+  "defaultSections": [
+    "launch",
+    "welcome",
+    "auth",
+    "onboarding",
+    "shell",
+    "home",
+    "search",
+    "notifications",
+    "profile",
+    "settings",
+    "help",
+    "feedback",
+    "legal",
+    "analytics",
+    "security",
+    "monetization",
+    "universal-ai"
+  ]
+}

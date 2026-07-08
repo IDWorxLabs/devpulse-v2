@@ -1,0 +1,78 @@
+{
+  "routes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/expenses",
+    "/income",
+    "/categories",
+    "/reports",
+    "/charts",
+    "/csv-export"
+  ],
+  "featureModules": [
+    {
+      "readOnly": true,
+      "id": "navigation-router",
+      "route": "/navigation-router",
+      "componentPath": "src/features/navigation-router/NavigationRouterFeature.tsx",
+      "navLabel": "Navigation Router"
+    },
+    {
+      "readOnly": true,
+      "id": "dashboard",
+      "route": "/dashboard",
+      "componentPath": "src/features/dashboard/DashboardFeature.tsx",
+      "navLabel": "Dashboard"
+    },
+    {
+      "readOnly": true,
+      "id": "settings",
+      "route": "/settings",
+      "componentPath": "src/features/settings/SettingsFeature.tsx",
+      "navLabel": "Settings"
+    },
+    {
+      "readOnly": true,
+      "id": "expenses",
+      "route": "/expenses",
+      "componentPath": "src/features/expenses/ExpensesFeature.tsx",
+      "navLabel": "Expenses"
+    },
+    {
+      "readOnly": true,
+      "id": "income",
+      "route": "/income",
+      "componentPath": "src/features/income/IncomeFeature.tsx",
+      "navLabel": "Income"
+    },
+    {
+      "readOnly": true,
+      "id": "categories",
+      "route": "/categories",
+      "componentPath": "src/features/categories/CategoriesFeature.tsx",
+      "navLabel": "Categories"
+    },
+    {
+      "readOnly": true,
+      "id": "reports",
+      "route": "/reports",
+      "componentPath": "src/features/reports/ReportsFeature.tsx",
+      "navLabel": "Reports"
+    },
+    {
+      "readOnly": true,
+      "id": "charts",
+      "route": "/charts",
+      "componentPath": "src/features/charts/ChartsFeature.tsx",
+      "navLabel": "Charts"
+    },
+    {
+      "readOnly": true,
+      "id": "csv-export",
+      "route": "/csv-export",
+      "componentPath": "src/features/csv-export/CsvExportFeature.tsx",
+      "navLabel": "Csv Export"
+    }
+  ]
+}

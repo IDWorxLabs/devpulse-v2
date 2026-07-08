@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-25T06:29:45.142Z",
+  "generatedAt": "2026-07-07T12:52:20.277Z",
   "entries": [
     {
       "capabilityName": "Chat Authority",
@@ -222,6 +222,12 @@
       "category": "ENGINEERING_REVIEW",
       "maturityScore": 90,
       "status": "MATURE"
+    },
+    {
+      "capabilityName": "Repository Typecheck Stabilization Authority V1",
+      "category": "ENGINEERING_REVIEW",
+      "maturityScore": 85,
+      "status": "PARTIAL"
     },
     {
       "capabilityName": "Execution Reality Validation",

@@ -39,7 +39,10 @@ export {
   runNpmCommandSync,
   runNpmRunScriptSync,
   killChildProcessTree,
+  killProcessesByPort,
   settleEventLoop,
+  awaitManagedProcessCleanup,
+  safeProcessExit,
 } from './child-process-teardown.js';
 
 export {
@@ -48,6 +51,7 @@ export {
   runOnePromptLivePreviewBuild,
   getOnePromptLivePreviewPublicState,
   composeOnePromptBuildChatResponse,
+  getActiveBuildExecutionMonitor,
 } from './one-prompt-build-orchestrator.js';
 
 export {

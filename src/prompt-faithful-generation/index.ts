@@ -13,6 +13,7 @@ export type {
 } from './prompt-faithful-generation-types.js';
 export type { PromptFaithfulnessVerdict } from './prompt-faithful-generation-types.js';
 
+export type { PromptBoundedModulePlan } from '../prompt-bounded-materialization/index.js';
 export { PROMPT_FAITHFUL_GENERATION_PASS_TOKEN as PASS_TOKEN } from './prompt-faithfulness-trace-events.js';
 
 export { extractPromptFeatures } from './prompt-feature-extractor.js';
@@ -53,6 +54,10 @@ export {
 export {
   enforcePromptFaithfulMaterialization,
   detectBannedFallbackModulesInWorkspace,
+  detectStaleWorkspaceModules,
+  removeWorkspaceFeatureModules,
+  sanitizeWorkspaceForBuildPlan,
+  evaluateBannedFallbackScan,
   listWorkspaceFeatureModuleIds,
 } from './prompt-faithful-materialization-gate.js';
 export { buildPromptFaithfulnessTraceEvents } from './prompt-faithfulness-trace-events.js';
@@ -64,7 +69,11 @@ import {
   buildCustomProfileFeatureDefinition,
   shouldUseCustomFeatureDefinition,
 } from './custom-feature-contract-builder.js';
-import type { ProfileFeatureDefinition } from '../universal-prompt-to-app-materialization/profile-feature-map.js';
+import {
+  resolvePromptBoundedModulePlan,
+  buildDefinitionFromModulePlan,
+  type PromptBoundedModulePlan,
+} from '../prompt-bounded-materialization/index.js';
 import {
   getProfileFeatureDefinition,
   type MaterializationProfile,
@@ -118,6 +127,9 @@ import {
   assessContinuousImprovementReadiness,
   type ContinuousImprovementReadinessResult,
 } from '../continuous-product-improvement-engine/index.js';
+import { applyEngineeringIntelligenceToBuildPlan } from '../engineering-intelligence-runtime/index.js';
+import { applySafePaymentPlaceholderPolicyToDefinition } from '../safe-payment-placeholder-policy/index.js';
+import { resolveAssistiveCommunicationProfile } from './assistive-communication-profile.js';
 
 export interface ResolvedPromptFaithfulBuildPlan {
   readOnly: true;
@@ -138,6 +150,9 @@ export interface ResolvedPromptFaithfulBuildPlan {
   interactionProof: InteractionProofReadinessResult;
   autonomousDebugging: AutonomousDebuggingReadinessResult;
   continuousProductImprovement: ContinuousImprovementReadinessResult;
+  modulePlan: PromptBoundedModulePlan;
+  promptBoundedMaterializationPassed: boolean;
+  engineeringIntelligence: import('../engineering-intelligence-runtime/index.js').EngineeringIntelligencePlanningResult | null;
   readyForGeneration: boolean;
 }
 
@@ -246,9 +261,11 @@ export function resolvePromptFaithfulBuildPlan(
   const ranking = rankBuildProfiles(rawPrompt);
   const guardResult = applyPromptProfileSelectionGuard(rawPrompt, ranking);
 
+  const assistiveProfile = resolveAssistiveCommunicationProfile(rawPrompt);
   const materializationProfile: MaterializationProfile =
+    assistiveProfile ??
     productIntelligenceModel.architecture.suggestedProfile ??
-    (guardResult.guardApplied ? 'GENERIC_CUSTOM_APP_V1' : guardResult.selectedProfile);
+    (guardResult.guardApplied ? guardResult.selectedProfile : guardResult.selectedProfile);
 
   const extraction = extractPromptFeatures(rawPrompt);
 
@@ -258,18 +275,31 @@ export function resolvePromptFaithfulBuildPlan(
   };
 
   if (shouldUseCustomFeatureDefinition(extraction, materializationProfile)) {
-    definition = buildCustomProfileFeatureDefinition(extraction);
+    definition = buildCustomProfileFeatureDefinition(extraction, rawPrompt);
   } else {
     definition = getProfileFeatureDefinition(materializationProfile, rawPrompt);
   }
 
-  if (productIntelligenceModel.architecture.moduleIds.length) {
-    definition = {
-      ...definition,
-      featureModules: [...productIntelligenceModel.architecture.moduleIds],
-      routes: [...productIntelligenceModel.architecture.routes],
-    };
-  }
+  const modulePlanInitial = resolvePromptBoundedModulePlan({
+    rawPrompt,
+    materializationProfile,
+    extraction,
+    profileDefinition: definition,
+    productIntelligenceModel,
+    capabilityPlanning,
+    guardApplied: guardResult.guardApplied,
+  });
+
+  const engineeringApplied = applyEngineeringIntelligenceToBuildPlan({
+    rawPrompt,
+    selectedProfile: String(materializationProfile),
+    modulePlan: modulePlanInitial,
+    profileDefinition: definition,
+    extractionRequiredModules: extraction.requiredModules,
+  });
+
+  const modulePlan = engineeringApplied.modulePlan;
+  definition = applySafePaymentPlaceholderPolicyToDefinition(engineeringApplied.definition, rawPrompt);
 
   if (productIntelligenceModel.platform.primaryTarget === 'PHONE_FIRST') {
     definition = { ...definition, androidPhonePreviewRequired: true };
@@ -277,7 +307,13 @@ export function resolvePromptFaithfulBuildPlan(
 
   const readyForGeneration =
     intentUnderstanding.readyForGeneration &&
-    promptFaithfulness.readyForGeneration &&
+    (promptFaithfulness.readyForGeneration ||
+      (engineeringApplied.planning.planningPassed &&
+        engineeringApplied.modulePlan.passedPreGenerationGuard &&
+        engineeringApplied.modulePlan.approvedModuleIds.some((id) =>
+          engineeringApplied.planning.contract.requiredModules.includes(id),
+        ))) &&
+    modulePlan.passedPreGenerationGuard &&
     missingCapabilityEvolution.ready &&
     isCapabilityPlanningReadyForGeneration(capabilityPlanning) &&
     incrementalBuild.ready &&
@@ -309,6 +345,9 @@ export function resolvePromptFaithfulBuildPlan(
     interactionProof,
     autonomousDebugging,
     continuousProductImprovement,
+    modulePlan,
+    promptBoundedMaterializationPassed: modulePlan.passedPreGenerationGuard,
+    engineeringIntelligence: engineeringApplied.planning,
     readyForGeneration,
   };
 }

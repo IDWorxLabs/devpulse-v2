@@ -116,6 +116,29 @@ export function upsertProjectContextMetadata(
   return record;
 }
 
+/**
+ * Writes fresh metadata for a project id, discarding any prior record under that id first so the
+ * new record cannot merge/accumulate keywords or concepts from a previous build. Intended for
+ * NEW_BUILD decisions (see src/project-context-isolation-v4/), where inheriting prior metadata
+ * would be stale-context contamination. Does not affect other projects' records.
+ */
+export function replaceProjectContextMetadata(
+  input: {
+    projectId: string;
+    name: string;
+    prompt?: string;
+    profile?: string | null;
+    summary?: string | null;
+    profileConfidence?: ProjectContextProfileConfidence;
+  },
+  rootDir?: string,
+): ProjectContextMetadata {
+  const state = loadFile(rootDir);
+  delete state.projects[input.projectId];
+  saveFile(state, rootDir);
+  return upsertProjectContextMetadata(input, rootDir);
+}
+
 export function resetProjectContextMetadataForTests(rootDir: string): void {
   const path = storePath(rootDir);
   if (existsSync(path)) {

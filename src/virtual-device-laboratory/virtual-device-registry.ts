@@ -11,13 +11,13 @@ export function getDevPulseV2VirtualDeviceLaboratory(): {
   ownerModule: string;
   passToken: string;
   phase: number;
-  simulationOnly: true;
+  enforcementAuthority: true;
 } {
   return {
     ownerModule: VIRTUAL_DEVICE_LABORATORY_OWNER_MODULE,
     passToken: VIRTUAL_DEVICE_LABORATORY_PASS_TOKEN,
     phase: 7,
-    simulationOnly: true,
+    enforcementAuthority: true,
   };
 }
 

@@ -94,6 +94,15 @@ export interface MaterializationEvidenceCompletionInput {
   };
   timings: MaterializationRuntimeTimings;
   promptFaithfulness?: import('../prompt-faithful-generation/prompt-faithful-generation-types.js').PromptFaithfulnessManifestFields;
+  /** When true, promote persistent project even if materialization validation or preview gate did not fully pass. */
+  buildSpinePassed?: boolean;
+  previewEvidence?: {
+    previewUrl?: string | null;
+    previewVerified?: boolean;
+    previewHtmlStatus?: 'PASS' | 'FAIL' | 'PENDING';
+    visiblePreviewValidationStatus?: 'PASS' | 'FAIL' | 'PENDING' | 'SKIPPED';
+    visiblePreviewValidationFailureReasons?: string[];
+  };
 }
 
 export interface MaterializationEvidenceCompletionResult {

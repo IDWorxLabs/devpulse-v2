@@ -6,11 +6,6 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } fr
 import { dirname, join } from 'node:path';
 import { getDevPulseV2ProjectVaultAuthority } from '../project-vault/index.js';
 import {
-  resolveProjectContext,
-  setActiveProjectId,
-  type MultiProjectWorkspaceSession,
-} from '../one-prompt-live-preview/workspace-tab-registry.js';
-import {
   ProjectRegistryDuplicateNameError,
   PROJECT_REGISTRY_DUPLICATES_REPAIRED,
   PROJECT_REGISTRY_LOADED,
@@ -22,6 +17,16 @@ import {
   type ProjectRegistrySummary,
   type ProjectRegistrySummaryItem,
 } from './project-registry-v1-types.js';
+import {
+  resolveProjectContext,
+  setActiveProjectId,
+  type MultiProjectWorkspaceSession,
+} from '../one-prompt-live-preview/workspace-tab-registry.js';
+import {
+  isFlatTierRegistryRoot,
+  runRegistrySovereigntyOnMutation,
+} from '../project-registry-sovereignty/index.js';
+import { normalizeProjectRegistryName } from '../project-registry-sovereignty/registry-classifier.js';
 
 const REGISTRY_DIR = '.aidevengine';
 const REGISTRY_FILE = 'project-registry-v1.json';
@@ -30,12 +35,19 @@ const OPERATOR_LOG_FILE = 'project-registry-operator-log.jsonl';
 let cachedRootDir: string | null = null;
 let cachedState: ProjectRegistryFile | null = null;
 let projectCounter = 0;
+let sovereigntyRepairInProgress = false;
 
 function registryPath(rootDir: string): string {
+  if (isFlatTierRegistryRoot(rootDir)) {
+    return join(rootDir, REGISTRY_FILE);
+  }
   return join(rootDir, REGISTRY_DIR, REGISTRY_FILE);
 }
 
 function operatorLogPath(rootDir: string): string {
+  if (isFlatTierRegistryRoot(rootDir)) {
+    return join(rootDir, OPERATOR_LOG_FILE);
+  }
   return join(rootDir, REGISTRY_DIR, OPERATOR_LOG_FILE);
 }
 
@@ -105,13 +117,29 @@ function logProjectRegistryProjectPersisted(record: ProjectRegistryRecord, rootD
   );
 }
 
-function persistState(state: ProjectRegistryFile, rootDir?: string): void {
+function persistState(
+  state: ProjectRegistryFile,
+  rootDir?: string,
+  options?: { skipSovereignty?: boolean },
+): void {
   const resolvedRoot = resolveRootDir(rootDir);
   const path = registryPath(resolvedRoot);
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, JSON.stringify(state, null, 2), 'utf8');
   cachedRootDir = resolvedRoot;
   cachedState = state;
+  if (
+    !options?.skipSovereignty &&
+    !isFlatTierRegistryRoot(resolvedRoot) &&
+    !sovereigntyRepairInProgress
+  ) {
+    sovereigntyRepairInProgress = true;
+    try {
+      runRegistrySovereigntyOnMutation(resolvedRoot);
+    } finally {
+      sovereigntyRepairInProgress = false;
+    }
+  }
 }
 
 function loadState(rootDir?: string): ProjectRegistryFile {
@@ -135,7 +163,7 @@ function loadState(rootDir?: string): ProjectRegistryFile {
     projectCounter = cachedState.projects.length;
     const repair = repairDuplicateActiveProjects(cachedState);
     if (repair.mutated) {
-      persistState(cachedState, resolvedRoot);
+      persistState(cachedState, resolvedRoot, { skipSovereignty: true });
     }
     if (repair.repairedCount > 0) {
       logProjectRegistryDuplicatesRepaired(repair, resolvedRoot);
@@ -186,7 +214,7 @@ function touchRecord(record: ProjectRegistryRecord): void {
 }
 
 function normalizeProjectName(name: string): string {
-  return name.trim().toLowerCase();
+  return normalizeProjectRegistryName(name);
 }
 
 function pickPrimaryActiveProject(group: ProjectRegistryRecord[]): ProjectRegistryRecord {
@@ -323,6 +351,7 @@ function toSummaryItem(record: ProjectRegistryRecord, activeProjectId: string | 
   return {
     projectId: record.projectId,
     name: record.name,
+    projectKind: record.projectKind,
     status: record.status,
     summary: record.summary,
     createdAt: record.createdAt,
@@ -366,7 +395,7 @@ export function invalidateProjectRegistryV1Cache(): void {
 
 export function writeProjectRegistryV1ForTests(state: ProjectRegistryFile, rootDir?: string): void {
   invalidateProjectRegistryV1Cache();
-  persistState(state, rootDir);
+  persistState(state, rootDir, { skipSovereignty: true });
 }
 
 export function getProjectRegistryOperatorLogPath(rootDir?: string): string {
@@ -434,6 +463,7 @@ export function createRegistryProject(input: {
   name: string;
   summary?: string;
   rootDir?: string;
+  projectKind?: ProjectRegistryRecord['projectKind'];
 }): ProjectRegistryRecord {
   const trimmed = validateCreateRegistryProjectName(input.name, input.rootDir);
 
@@ -442,6 +472,7 @@ export function createRegistryProject(input: {
   const record: ProjectRegistryRecord = {
     projectId: generateProjectId(trimmed),
     name: trimmed,
+    projectKind: input.projectKind ?? 'USER',
     status: 'ACTIVE',
     createdAt: stamp,
     updatedAt: stamp,

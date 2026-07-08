@@ -1,0 +1,85 @@
+{
+  "readOnly": true,
+  "originalPrompt": "Build a simple habit tracker app where I can add habits and mark them done each day.",
+  "selectedProfile": "HABIT_TRACKER_WEB_V1",
+  "generationInputs": {
+    "projectId": "simple-habit-tracker-app-where-i-can-add-1783372638025-3",
+    "buildRunId": "simple-habit-tracker-app-where-i-can-add-1783372638025-3",
+    "expectedAppType": "habit-tracker",
+    "featureModules": [
+      "navigation-router",
+      "dashboard",
+      "settings",
+      "habits",
+      "streaks",
+      "routines",
+      "goals",
+      "analytics"
+    ],
+    "routes": [
+      "/navigation-router",
+      "/dashboard",
+      "/settings",
+      "/persistence",
+      "/habits",
+      "/streaks",
+      "/routines",
+      "/goals",
+      "/analytics"
+    ],
+    "fallbackUsed": false
+  },
+  "featureContractSummary": {
+    "featureModuleCount": 8,
+    "featureModuleIds": [
+      "navigation-router",
+      "dashboard",
+      "settings",
+      "habits",
+      "streaks",
+      "routines",
+      "goals",
+      "analytics"
+    ],
+    "routes": [
+      "/navigation-router",
+      "/dashboard",
+      "/settings",
+      "/persistence",
+      "/habits",
+      "/streaks",
+      "/routines",
+      "/goals",
+      "/analytics"
+    ]
+  },
+  "profileFeatureMapVersion": "materialization-v1",
+  "blueprintVersion": "1.0",
+  "generatorVersion": "universal-prompt-to-app-materialization-v1",
+  "dependencySnapshot": {
+    "runtime": "vite-react:habit-tracker-web-v1",
+    "packageManager": "npm",
+    "note": "Captured from generated workspace package.json when present"
+  },
+  "validationCommands": [
+    "npm install",
+    "npm run build",
+    "npm run preview",
+    "npm run validate:blueprint-purity",
+    "npm run validate:production-validation"
+  ],
+  "expectedArtifacts": [
+    ".generated-app-manifest.json",
+    "src/features/registry.ts",
+    "src/features/routes.ts",
+    "src/features/FeatureAppRouter.tsx",
+    "src/blueprint/AppShell.tsx",
+    "universal-feature-contract.json"
+  ],
+  "replayInstructions": [
+    "Use originalPrompt and selectedProfile with Universal Prompt-to-App Materialization engine.",
+    "Regenerate workspace with the same contractId/projectId when possible.",
+    "Run validationCommands in the generated workspace to reproduce validation evidence.",
+    "Compare manifestHash and workspaceHash against build-record.json for regression tracking."
+  ]
+}

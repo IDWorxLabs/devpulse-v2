@@ -1,0 +1,11 @@
+{
+  "readOnly": true,
+  "entries": [
+    {
+      "timestamp": "2026-06-30T14:20:10.497Z",
+      "event": "source_promoted",
+      "buildRunId": "one-prompt-build-3",
+      "sourcePath": ".aidev-projects/aee-profile-continuation-ai-chat-app-1782829193435/source"
+    }
+  ]
+}

@@ -1,0 +1,606 @@
+{
+  "readOnly": true,
+  "generatedFiles": [
+    {
+      "path": ".generated-app-manifest.json",
+      "size": 30922,
+      "extension": ".json",
+      "lines": 980,
+      "category": "Config",
+      "hash": "5cb02f61dad859bf25b2eb99a6bdc475e02e4fbe144c438ed46ea5e69790fd42"
+    },
+    {
+      "path": "blueprint-manifest.json",
+      "size": 532,
+      "extension": ".json",
+      "lines": 28,
+      "category": "Config",
+      "hash": "c9e93b327abe45a0f391fa8406ec260d6b8700601299a07aca6ca4a07ddf7c92"
+    },
+    {
+      "path": "build-manifest.json",
+      "size": 546,
+      "extension": ".json",
+      "lines": 18,
+      "category": "Config",
+      "hash": "a9e40b5eefaefa3d257ed9e575363499c7c2740706640254918743b93f18dc52"
+    },
+    {
+      "path": "feature-contract.json",
+      "size": 1846,
+      "extension": ".json",
+      "lines": 85,
+      "category": "Config",
+      "hash": "fffaa608f6e43ec029ec4cf9db787880565349798778c558111ce59e35c0b607"
+    },
+    {
+      "path": "index.html",
+      "size": 296,
+      "extension": ".html",
+      "lines": 13,
+      "category": "Utility",
+      "hash": "f5f2cd12a84da0ed0f0eda2a4b30799b72da3f53979555c56ee78243e839c63c"
+    },
+    {
+      "path": "package-lock.json",
+      "size": 58153,
+      "extension": ".json",
+      "lines": 1733,
+      "category": "Config",
+      "hash": "91f8bbed48c82640e8677422ea9d4b2e83e447f24c4631900001e10b29b71fbc"
+    },
+    {
+      "path": "package.json",
+      "size": 907,
+      "extension": ".json",
+      "lines": 32,
+      "category": "Config",
+      "hash": "942bc95d27fc443589cf90420da585cd14674f65f2c71c9e42800c1c41a877c6"
+    },
+    {
+      "path": "runtime/dev-server.mjs",
+      "size": 4249,
+      "extension": ".mjs",
+      "lines": 146,
+      "category": "Utility",
+      "hash": "901dda803ba72c398b8f20d6332832d64c546ba48d48c7ce31981b15953eb0d1"
+    },
+    {
+      "path": "src/analytics/analytics-placeholders.ts",
+      "size": 527,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Utility",
+      "hash": "509dd32eaa03283a5566f131b63171c9d6571d320f03a295d0caeef55ec3fe0e"
+    },
+    {
+      "path": "src/App.css",
+      "size": 5452,
+      "extension": ".css",
+      "lines": 169,
+      "category": "Style",
+      "hash": "a2621cd8c21df9f8724779a0e190620b4f0b4740d243f0336679c45239914acb"
+    },
+    {
+      "path": "src/App.tsx",
+      "size": 1369,
+      "extension": ".tsx",
+      "lines": 46,
+      "category": "Utility",
+      "hash": "e61b5844d18ab861850f3bd8f46bbac2627baa6eb2c228a30d4c448d907fbe4f"
+    },
+    {
+      "path": "src/auth/auth-config.ts",
+      "size": 191,
+      "extension": ".ts",
+      "lines": 4,
+      "category": "Utility",
+      "hash": "61becdf74819851816e7289d7a6605a0d7b31621af9cdf6a47cb7217555c47e2"
+    },
+    {
+      "path": "src/blueprint/app-metadata.ts",
+      "size": 192,
+      "extension": ".ts",
+      "lines": 4,
+      "category": "Utility",
+      "hash": "8d2162cf660df04ed16bceee620002707b113d089696631fe397bd1bf08f2031"
+    },
+    {
+      "path": "src/blueprint/AppShell.tsx",
+      "size": 4191,
+      "extension": ".tsx",
+      "lines": 107,
+      "category": "Utility",
+      "hash": "ddff450104b8c19420f9fa1c6cfd367f785dc90a43e6dad805570eadf7bfeb10"
+    },
+    {
+      "path": "src/blueprint/AuthScreen.tsx",
+      "size": 1349,
+      "extension": ".tsx",
+      "lines": 34,
+      "category": "Utility",
+      "hash": "1a59ef64b200ea62ee271d98f277566f6c9a0fa0f6e40a3f3c861d67523b7f33"
+    },
+    {
+      "path": "src/blueprint/components/EmptyState.tsx",
+      "size": 472,
+      "extension": ".tsx",
+      "lines": 17,
+      "category": "Component",
+      "hash": "1ba79c5db82f77489aa45250df31c5ac3d982941a1c40109c6bee3ed44284ac7"
+    },
+    {
+      "path": "src/blueprint/components/ErrorState.tsx",
+      "size": 678,
+      "extension": ".tsx",
+      "lines": 20,
+      "category": "Component",
+      "hash": "61420a4b2110fd0f3a3ccfc4f0e2dc4671bedd0fb9ab937c443cfb574b3003e5"
+    },
+    {
+      "path": "src/blueprint/components/LoadingState.tsx",
+      "size": 479,
+      "extension": ".tsx",
+      "lines": 16,
+      "category": "Component",
+      "hash": "f38845ff18fe31df98493571e19641cd3c33c8a53a68b16269e680707db4ce82"
+    },
+    {
+      "path": "src/blueprint/components/UniversalAiAssistant.tsx",
+      "size": 842,
+      "extension": ".tsx",
+      "lines": 31,
+      "category": "Component",
+      "hash": "ada5bca426b7c0223ba5ea5c4ef69b11d1b1494859732a124fba71f21bc65c7a"
+    },
+    {
+      "path": "src/blueprint/LaunchScreen.tsx",
+      "size": 571,
+      "extension": ".tsx",
+      "lines": 18,
+      "category": "Utility",
+      "hash": "f48e767807dd3d7d501f02afb4323259c0bf1d161153e00d3679cce3e359c674"
+    },
+    {
+      "path": "src/blueprint/OnboardingScreen.tsx",
+      "size": 1334,
+      "extension": ".tsx",
+      "lines": 37,
+      "category": "Utility",
+      "hash": "4e822fb3586565e025056f8701dc9c98d9c03d21f8b1dec49f96b8624f1fcc5c"
+    },
+    {
+      "path": "src/blueprint/pages/AboutPage.tsx",
+      "size": 312,
+      "extension": ".tsx",
+      "lines": 13,
+      "category": "Page",
+      "hash": "e436c46d4dc1e91774926793e8cb762b10db487d1155df201414126cd7fcb426"
+    },
+    {
+      "path": "src/blueprint/pages/FeedbackPage.tsx",
+      "size": 575,
+      "extension": ".tsx",
+      "lines": 14,
+      "category": "Page",
+      "hash": "3bd312fffb2356efbd4945c394503b45af5df18ebc6a8f9ddf5b0066f5817084"
+    },
+    {
+      "path": "src/blueprint/pages/HelpCenterPage.tsx",
+      "size": 1096,
+      "extension": ".tsx",
+      "lines": 26,
+      "category": "Page",
+      "hash": "4b50ab812f8a1577ae02ed1698824d7d90a801627fcb24392d2ac457b935ba59"
+    },
+    {
+      "path": "src/blueprint/pages/HomePage.tsx",
+      "size": 1639,
+      "extension": ".tsx",
+      "lines": 49,
+      "category": "Page",
+      "hash": "97eba1cfef22bc496781e8e5ed42a11f8f50e18ad816a1a1373e1c40b10d61a6"
+    },
+    {
+      "path": "src/blueprint/pages/LegalPage.tsx",
+      "size": 611,
+      "extension": ".tsx",
+      "lines": 12,
+      "category": "Page",
+      "hash": "a0d1e0b0b43640828b4a7720a541c364d74b9b93e81c60d5e8e814ab38ac4dbe"
+    },
+    {
+      "path": "src/blueprint/pages/NotificationsPage.tsx",
+      "size": 2019,
+      "extension": ".tsx",
+      "lines": 47,
+      "category": "Page",
+      "hash": "f81f0c4fb0c36caef3f453c7155ba5b2e2eb84a8b971dcbe849afe1bda9aada2"
+    },
+    {
+      "path": "src/blueprint/pages/ProfilePage.tsx",
+      "size": 824,
+      "extension": ".tsx",
+      "lines": 25,
+      "category": "Page",
+      "hash": "b523b10a3419f32b83baf1ad30b072264219d3b182effba9ca8a415fc82e9415"
+    },
+    {
+      "path": "src/blueprint/pages/SearchPage.tsx",
+      "size": 722,
+      "extension": ".tsx",
+      "lines": 19,
+      "category": "Page",
+      "hash": "0d580956522cb5a7eb9a1f2fb7447d07ecf274c4e5ce129dd2093d7854c63d98"
+    },
+    {
+      "path": "src/blueprint/pages/SettingsPage.tsx",
+      "size": 1601,
+      "extension": ".tsx",
+      "lines": 40,
+      "category": "Page",
+      "hash": "0714d0d37477a318baa76b9fe2050ed516ea613d03e02766ba4649e3062538aa"
+    },
+    {
+      "path": "src/blueprint/WelcomeScreen.tsx",
+      "size": 541,
+      "extension": ".tsx",
+      "lines": 17,
+      "category": "Utility",
+      "hash": "c934b6a356e2b6494142322861baa9fad35ce7aa1fd059fccfc133a4e9e9c132"
+    },
+    {
+      "path": "src/data/data-management-placeholders.ts",
+      "size": 353,
+      "extension": ".ts",
+      "lines": 15,
+      "category": "Utility",
+      "hash": "ee9ad934ba34ea014cb129f37d7927cf7d72db3958e2208daf3ab888806fc04e"
+    },
+    {
+      "path": "src/data/demo-data.ts",
+      "size": 217,
+      "extension": ".ts",
+      "lines": 4,
+      "category": "Utility",
+      "hash": "b5db131a3df183c18e45176e6002fef4abc76b5c0ee1374f09d618d7c7e0be8d"
+    },
+    {
+      "path": "src/features/dashboard/dashboard.module.css",
+      "size": 436,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "9848e4cb15a92cee6cb1ccb82d27df3f2c61e8d1fe893da8bba9c30a5b74a5f0"
+    },
+    {
+      "path": "src/features/dashboard/dashboard.service.ts",
+      "size": 453,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "608eec35fe87aa047343257d182a884d9ae991381c3bd7440277e03ea3d0b271"
+    },
+    {
+      "path": "src/features/dashboard/dashboard.types.ts",
+      "size": 203,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "3af0d6cc2e93ad1ee814599ee42a30ad47cbe8332d7b19b62622c128ddfd7047"
+    },
+    {
+      "path": "src/features/dashboard/dashboard.validation.ts",
+      "size": 522,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "150a11c88742f3cb0a2a9dadf34e0a5b70e2eb3fcff03af1c8092b343b90a7e2"
+    },
+    {
+      "path": "src/features/dashboard/DashboardFeature.tsx",
+      "size": 1374,
+      "extension": ".tsx",
+      "lines": 39,
+      "category": "Feature",
+      "hash": "c8f05363beb3b9e147e138ef052dd8c9019c64323d987fe7ac021221f5ae3e91"
+    },
+    {
+      "path": "src/features/dashboard/index.ts",
+      "size": 158,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "c6d1837912d799c51af4f7289e75c7b7854d7ab516ecc889482193b0404435e4"
+    },
+    {
+      "path": "src/features/feature-app-router.css",
+      "size": 425,
+      "extension": ".css",
+      "lines": 6,
+      "category": "Style",
+      "hash": "d6eaae9e8a63c3e284eb0d2a31f1b582b1580e39b9fd1cdc7d31cff045b950e6"
+    },
+    {
+      "path": "src/features/FeatureAppRouter.tsx",
+      "size": 2541,
+      "extension": ".tsx",
+      "lines": 63,
+      "category": "Feature",
+      "hash": "d90909754b8ec49e06dde83491d30b32fea6a838652762002a5207e498d21908"
+    },
+    {
+      "path": "src/features/navigation-router/index.ts",
+      "size": 189,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "bcb0fdb947901a447511ab7d495782208d6d492e07f11b23885e70fd1db15c71"
+    },
+    {
+      "path": "src/features/navigation-router/navigation-router.module.css",
+      "size": 444,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "f17eb3d8f24fbe2c10d0b1e937bc5e4a1516d79d1a40bb66a2e660bbe61b5012"
+    },
+    {
+      "path": "src/features/navigation-router/navigation-router.service.ts",
+      "size": 545,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "a18528d8f802307de258f10834032d0bd836219143c65d14f91c30d04359a50c"
+    },
+    {
+      "path": "src/features/navigation-router/navigation-router.types.ts",
+      "size": 225,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "5b3374dd18bec439c3c89337da568c6b58f19f8dccaad22c47346fcae29ce47a"
+    },
+    {
+      "path": "src/features/navigation-router/navigation-router.validation.ts",
+      "size": 591,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "821bbbd2f743ffc361338e407c9eefcccef7d0b76f1c7bac24d545306b3533ff"
+    },
+    {
+      "path": "src/features/navigation-router/NavigationRouterFeature.tsx",
+      "size": 1561,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "db1e10de8c3b635cfb65254c123c59d21659bca16cc8a791cb5239c45611442c"
+    },
+    {
+      "path": "src/features/registry.ts",
+      "size": 1353,
+      "extension": ".ts",
+      "lines": 43,
+      "category": "Route",
+      "hash": "bf6b3b0aacc5ad09d8d69db7eff9da4c9b0c5a11cc6b2c47a1d1451448b809d2"
+    },
+    {
+      "path": "src/features/routes.ts",
+      "size": 417,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Route",
+      "hash": "b9faa358162b58f2688051cf166e30a1d387c2ac1ce46241f1110ee84afce0b1"
+    },
+    {
+      "path": "src/features/settings/index.ts",
+      "size": 154,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "edf25da821aa46c3fe8433aa5773e1e9f6f38c17ad5dfd84f068d83bba78043b"
+    },
+    {
+      "path": "src/features/settings/settings.module.css",
+      "size": 435,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "94faefeb95e72beaa4227c18860ce6c26961b0c12348b19f5b75876edcf045ca"
+    },
+    {
+      "path": "src/features/settings/settings.service.ts",
+      "size": 441,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "09a98d64f7aba2a01c9a996e03e2007fe9d381cb41423d597e6faf657c10aaeb"
+    },
+    {
+      "path": "src/features/settings/settings.types.ts",
+      "size": 200,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "506c3439d940b3a3f09be9f2fd5a57d8e924e27cf33cf1baff9b4a8623ec9789"
+    },
+    {
+      "path": "src/features/settings/settings.validation.ts",
+      "size": 511,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "3cfb30cd07abd3216d6ce78659027ce82b39a179525747851c3148da3a05eb88"
+    },
+    {
+      "path": "src/features/settings/SettingsFeature.tsx",
+      "size": 1499,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "606bb33b92cb99cd65a1a760ed1c8181f15e6bd4bde17c016412bc0211e56fa3"
+    },
+    {
+      "path": "src/main.tsx",
+      "size": 339,
+      "extension": ".tsx",
+      "lines": 14,
+      "category": "Utility",
+      "hash": "9a444897ca5a5b242409a82d4109b7229f2bff01ed0f4d26a39cd16f12e1d36a"
+    },
+    {
+      "path": "src/monetization/monetization-placeholders.ts",
+      "size": 517,
+      "extension": ".ts",
+      "lines": 17,
+      "category": "Utility",
+      "hash": "bde039683ff6cf486af5d02b2022daa0083717c68f8e109bb2b821797573401f"
+    },
+    {
+      "path": "src/screens/index.ts",
+      "size": 76,
+      "extension": ".ts",
+      "lines": 2,
+      "category": "Utility",
+      "hash": "79bcc71026f2e849b75a448da42ca0ed371b809893836d96f727a1b0ffc6f2d1"
+    },
+    {
+      "path": "src/security/security-placeholders.ts",
+      "size": 389,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Utility",
+      "hash": "908388d3dc8e6089eb69cd5f8e67ec5ecfbb9a3718949bee68d7cd9f0fd45ac2"
+    },
+    {
+      "path": "src/server/index.ts",
+      "size": 94,
+      "extension": ".ts",
+      "lines": 3,
+      "category": "Utility",
+      "hash": "95c2977279a1730c3453e36b1d4e05231d8a2004aaa7ff7469d3b81a12118d13"
+    },
+    {
+      "path": "src/server/routes.ts",
+      "size": 94,
+      "extension": ".ts",
+      "lines": 3,
+      "category": "Route",
+      "hash": "95c2977279a1730c3453e36b1d4e05231d8a2004aaa7ff7469d3b81a12118d13"
+    },
+    {
+      "path": "src/styles/global.css",
+      "size": 78,
+      "extension": ".css",
+      "lines": 3,
+      "category": "Style",
+      "hash": "cc35dd98ae20865a2c8c93b08c1fe75f1ad91a1ed0fde00c1311ee01122a4f09"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "size": 38,
+      "extension": ".ts",
+      "lines": 2,
+      "category": "Utility",
+      "hash": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "tsconfig.json",
+      "size": 441,
+      "extension": ".json",
+      "lines": 24,
+      "category": "Config",
+      "hash": "d1a721a991c9465c88007b98ef55de1cca1b1070456467575228e74a64a41d52"
+    },
+    {
+      "path": "tsconfig.node.json",
+      "size": 180,
+      "extension": ".json",
+      "lines": 12,
+      "category": "Config",
+      "hash": "17c275c4dd5c7f8b736f7a252d1324984cc4d473fa765adf6fba826605c6a413"
+    },
+    {
+      "path": "universal-feature-contract.json",
+      "size": 1846,
+      "extension": ".json",
+      "lines": 85,
+      "category": "Config",
+      "hash": "fffaa608f6e43ec029ec4cf9db787880565349798778c558111ce59e35c0b607"
+    },
+    {
+      "path": "verification/build-verification.json",
+      "size": 129,
+      "extension": ".json",
+      "lines": 6,
+      "category": "Config",
+      "hash": "507b4cffc5cdd8de5a1eec3083cfab6efa9ca59740a0cdf84a6bacfcc55f6241"
+    },
+    {
+      "path": "verification/run-verify.mjs",
+      "size": 1961,
+      "extension": ".mjs",
+      "lines": 60,
+      "category": "Utility",
+      "hash": "cd4d39f81ffa121f4cdb0fc7756b96d6886b816e400d8eef4bb6a1e700336c92"
+    },
+    {
+      "path": "vite.config.ts",
+      "size": 200,
+      "extension": ".ts",
+      "lines": 8,
+      "category": "Config",
+      "hash": "c5d511519db4810412b22e3afbfff272e486b68ec7a1883d306165f8a972ba89"
+    }
+  ],
+  "generatedDirectories": [
+    "runtime",
+    "src",
+    "src/analytics",
+    "src/auth",
+    "src/blueprint",
+    "src/blueprint/components",
+    "src/blueprint/pages",
+    "src/data",
+    "src/features",
+    "src/features/dashboard",
+    "src/features/navigation-router",
+    "src/features/settings",
+    "src/monetization",
+    "src/screens",
+    "src/security",
+    "src/server",
+    "src/styles",
+    "verification"
+  ],
+  "generatedFeatureModuleFiles": [
+    "src/features/dashboard/dashboard.module.css",
+    "src/features/dashboard/dashboard.service.ts",
+    "src/features/dashboard/dashboard.types.ts",
+    "src/features/dashboard/dashboard.validation.ts",
+    "src/features/dashboard/DashboardFeature.tsx",
+    "src/features/dashboard/index.ts",
+    "src/features/feature-app-router.css",
+    "src/features/navigation-router/index.ts",
+    "src/features/navigation-router/navigation-router.module.css",
+    "src/features/navigation-router/navigation-router.service.ts",
+    "src/features/navigation-router/navigation-router.types.ts",
+    "src/features/navigation-router/navigation-router.validation.ts",
+    "src/features/navigation-router/NavigationRouterFeature.tsx",
+    "src/features/settings/index.ts",
+    "src/features/settings/settings.module.css",
+    "src/features/settings/settings.service.ts",
+    "src/features/settings/settings.types.ts",
+    "src/features/settings/settings.validation.ts",
+    "src/features/settings/SettingsFeature.tsx"
+  ],
+  "featureModuleDirectories": [
+    "src/features/dashboard",
+    "src/features/navigation-router",
+    "src/features/settings"
+  ],
+  "workspaceHash": "3454cac9f963b3311886262a59af67878f2f628d3f83441980b72925880d6ec9",
+  "generatedFilesCount": 69,
+  "generatedDirectoriesCount": 18
+}

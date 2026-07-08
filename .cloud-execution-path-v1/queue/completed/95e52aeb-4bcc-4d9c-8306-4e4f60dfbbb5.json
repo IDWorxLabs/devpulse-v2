@@ -1,0 +1,36 @@
+{
+  "readOnly": true,
+  "jobId": "95e52aeb-4bcc-4d9c-8306-4e4f60dfbbb5",
+  "projectId": "proj-task_tracker_web_v1",
+  "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+  "requirementsSnapshot": {
+    "readOnly": true,
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+    "requirementConfidence": 25
+  },
+  "buildPlan": {
+    "readOnly": true,
+    "contractId": "build-ready-idea-64",
+    "planningSummary": "Contract build-ready-idea-64",
+    "codegenProfile": "TASK_TRACKER_WEB_V1"
+  },
+  "workspaceSpec": {
+    "readOnly": true,
+    "workspaceId": "cep-95e52aeb-4bcc-4d9c-8306-4e4f60dfbbb5",
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\cep-95e52aeb-4bcc-4d9c-8306-4e4f60dfbbb5",
+    "isolationToken": "95e52aeb-4bcc-4d9c-8306-4e4f60dfbbb5",
+    "boundedLogsMaxLines": 500,
+    "boundedArtifactsMaxBytes": 5000000,
+    "runtimeTimeoutMs": 300000
+  },
+  "executionMode": "CLOUD_SIMULATED",
+  "requestedAt": "2026-07-02T05:30:16.752Z",
+  "status": "COMPLETED",
+  "claimedAt": "2026-07-02T05:31:02.664Z",
+  "completedAt": "2026-07-02T05:31:12.410Z",
+  "workerId": "worker-8643fcb8",
+  "currentStage": "COMPLETED",
+  "runtimeDurationMs": 9744
+}

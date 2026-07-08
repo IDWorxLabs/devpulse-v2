@@ -11,13 +11,13 @@ export function getDevPulseV2InteractionProofEngine(): {
   ownerModule: string;
   passToken: string;
   phase: number;
-  simulationOnly: true;
+  enforcementAuthority: true;
 } {
   return {
     ownerModule: INTERACTION_PROOF_ENGINE_OWNER_MODULE,
     passToken: INTERACTION_PROOF_ENGINE_PASS_TOKEN,
     phase: 8,
-    simulationOnly: true,
+    enforcementAuthority: true,
   };
 }
 

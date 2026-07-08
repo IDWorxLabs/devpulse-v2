@@ -1,0 +1,23 @@
+{
+  "readOnly": true,
+  "projectId": "simple-habit-tracker-app-where-i-can-add-1783372638025-3",
+  "projectName": "simple habit tracker",
+  "createdAt": "2026-07-06T21:17:19.794Z",
+  "updatedAt": "2026-07-06T21:17:19.794Z",
+  "selectedProfile": "HABIT_TRACKER_WEB_V1",
+  "originalPrompt": "Build a simple habit tracker app where I can add habits and mark them done each day.",
+  "currentSourcePath": "",
+  "activeWorkspacePath": ".aidev-projects/simple-habit-tracker-app-where-i-can-add-1783372638025-3",
+  "lastBuildRunId": "simple-habit-tracker-app-where-i-can-add-1783372638025-3",
+  "lastSuccessfulBuildRunId": null,
+  "manifestPath": "",
+  "featureContractPath": "",
+  "buildHistoryRecordPath": ".generated-build-history/simple-habit-tracker-app-where-i-can-add-1783372638025-3",
+  "productionValidationPath": null,
+  "exportMetadataPath": "",
+  "projectFileIndexPath": "",
+  "status": "FAILED",
+  "immutableBuildLinks": [],
+  "lastFailedBuildRunId": "simple-habit-tracker-app-where-i-can-add-1783372638025-3",
+  "lastFailedSnapshotPath": ".aidev-projects/simple-habit-tracker-app-where-i-can-add-1783372638025-3/.aidev/snapshots/failed-simple-habit-tracker-app-where-i-can-add-1783372638025-3"
+}

@@ -16,6 +16,7 @@ export type {
   FeatureRealityCheck,
   FeatureRealityScores,
   FeatureRealityAssessment,
+  FeatureRealityEvidenceMode,
   RunFeatureRealityValidationInput,
 } from './feature-reality-validation-types.js';
 
@@ -36,6 +37,8 @@ export {
   runFeatureRealityValidation,
   getLastFeatureRealityAssessment,
   resetFeatureRealityAssessmentForTests,
+  registerSourceDerivedFeatureRealityAssessment,
+  registerWorkspaceDerivedFeatureRealityAssessment,
 } from './feature-reality-validation-authority.js';
 
 export { formatFeatureRealityReportMarkdown } from './feature-reality-validation-report.js';

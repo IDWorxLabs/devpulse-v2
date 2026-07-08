@@ -1,0 +1,62 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-2-dup-1782828932856",
+  "createdAt": "2026-06-30T14:15:32.855Z",
+  "prompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "selectedProfile": "CRM_WEB_V1",
+  "appName": "SaaS CRM",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828932735",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828932735/.generated-app-manifest.json",
+  "manifestHash": "33b1a27cffa25393851979d4c15319dcc8c2ebbb83986c4270806622da2ca8d1",
+  "workspaceHash": "06fa8afb984a0ce1c2c3f03301536bd068a45e61f2e59e54ff89530726f93d89",
+  "materializationHash": "155dc5950d7eb7f609e315ebd112b588cecad8a28b79b99829b774259f9904a0",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0,
+  "generatedFeatureModulesCount": 0,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/deals",
+    "/persistence",
+    "/customers",
+    "/pipeline",
+    "/contacts",
+    "/follow-ups",
+    "/reports"
+  ],
+  "generatedComponents": [],
+  "generatedServices": [],
+  "generatedModels": [],
+  "generatedStyles": [],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker."
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828932735/.generated-app-manifest.json",
+    ".generated-build-history/one-prompt-build-2-dup-1782828932856"
+  ],
+  "failureReasons": [
+    "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker.",
+    "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker."
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-2-dup-1782828932856/replay-metadata.json",
+  "comparisonFingerprint": "013c20c70bf8da53bda30975bb69c8f0072567744c2d8e68cc988f117369c3fd",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-2-dup-1782828932856/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-2",
+  "buildHistoryRecordHash": "544fad11fd6bca7dea9545afdf8167446438c37b86ee4ceef062ad43c8498f79"
+}

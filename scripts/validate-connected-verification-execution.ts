@@ -843,7 +843,7 @@ async function main(): Promise<void> {
     `score=${executed.report.verificationScore}`,
   );
 
-  cleanupActiveRuntime();
+  await cleanupActiveRuntime();
   await new Promise((resolve) => setTimeout(resolve, 300));
   if (workspaceId) {
     cleanupDisposableWorkspace(ROOT, workspaceId);
@@ -861,7 +861,7 @@ async function main(): Promise<void> {
     buildFounderTest('FOUNDER_READY', true, 85),
     true,
   );
-  cleanupActiveRuntime();
+  await cleanupActiveRuntime();
   await new Promise((resolve) => setTimeout(resolve, 300));
   if (warnings.report.executionContract?.workspaceId) {
     cleanupDisposableWorkspace(ROOT, warnings.report.executionContract.workspaceId);
@@ -940,7 +940,7 @@ async function main(): Promise<void> {
     founderAcceptanceAssessment: buildAcceptance('ACCEPTED'),
     performRealVerification: true,
   });
-  cleanupActiveRuntime();
+  await cleanupActiveRuntime();
   await new Promise((resolve) => setTimeout(resolve, 300));
   if (artifacts.connectedVerificationExecutionAssessment.report.executionContract?.workspaceId) {
     cleanupDisposableWorkspace(

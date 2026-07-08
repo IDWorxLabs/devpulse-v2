@@ -1,0 +1,18 @@
+{
+  "manifestId": "simple-counter-app-1783370775362-2-manifest",
+  "contractId": "simple-counter-app-1783370775362-2",
+  "ideaId": "idea-simple-counter",
+  "generatedAt": "2026-07-06T20:46:16.514Z",
+  "materializationSource": "modular-feature-materialization-v1",
+  "applicationProfile": "GENERIC_CUSTOM_APP_V1",
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "modularFeatureMaterialization": true,
+  "buildUnits": [
+    "unit-001",
+    "unit-002",
+    "unit-003",
+    "unit-004"
+  ],
+  "runtime": "vite-react"
+}

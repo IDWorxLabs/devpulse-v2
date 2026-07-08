@@ -1,12 +1,23 @@
 /**
  * Windows-safe child process spawn and teardown helpers.
+ * Delegates lifecycle management to windows-process-cleanup V1.
  */
 
 import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { spawn, spawnSync, type ChildProcess, type SpawnSyncReturns } from 'node:child_process';
+import { spawnSync, type SpawnSyncReturns } from 'node:child_process';
 
-const DEFAULT_KILL_TIMEOUT_MS = 8_000;
+export {
+  killChildProcessTree,
+  settleEventLoop,
+  spawnManagedProcess,
+  killProcessesByPort,
+  isPortListening,
+  awaitManagedProcessCleanup,
+  safeProcessExit,
+  stopAllTrackedManagedProcesses,
+  detachChildStreams,
+} from '../windows-process-cleanup/index.js';
 
 function bundledNpmCliPath(): string | null {
   const cliPath = join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js');
@@ -57,63 +68,4 @@ export function resolveViteDevSpawnTarget(workspaceDir: string): { executable: s
   const viteBin = join(workspaceDir, 'node_modules', 'vite', 'bin', 'vite.js');
   if (!existsSync(viteBin)) return null;
   return { executable: process.execPath, args: [viteBin] };
-}
-
-export function detachChildStreams(child: ChildProcess): void {
-  child.stdout?.removeAllListeners();
-  child.stderr?.removeAllListeners();
-  child.stdin?.removeAllListeners();
-  child.removeAllListeners();
-  child.stdout?.destroy();
-  child.stderr?.destroy();
-  child.stdin?.destroy();
-}
-
-export async function killChildProcessTree(
-  child: ChildProcess,
-  options?: { timeoutMs?: number },
-): Promise<void> {
-  const timeoutMs = options?.timeoutMs ?? DEFAULT_KILL_TIMEOUT_MS;
-  if (child.exitCode !== null || child.signalCode !== null) {
-    detachChildStreams(child);
-    return;
-  }
-  if (!child.pid) {
-    detachChildStreams(child);
-    return;
-  }
-
-  await new Promise<void>((resolve) => {
-    let settled = false;
-    const finish = () => {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timer);
-      resolve();
-    };
-
-    const timer = setTimeout(finish, timeoutMs);
-    child.once('exit', finish);
-
-    try {
-      if (process.platform === 'win32') {
-        const killer = spawn('taskkill', ['/PID', String(child.pid), '/T', '/F'], {
-          stdio: 'ignore',
-          windowsHide: true,
-        });
-        killer.once('exit', finish);
-        killer.once('error', finish);
-      } else {
-        child.kill('SIGTERM');
-      }
-    } catch {
-      finish();
-    }
-  });
-
-  detachChildStreams(child);
-}
-
-export async function settleEventLoop(): Promise<void> {
-  await new Promise<void>((resolve) => setImmediate(resolve));
 }

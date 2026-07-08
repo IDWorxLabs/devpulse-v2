@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "new-project-1",
+  "projectName": "New Project",
+  "createdAt": "2026-06-30T18:14:49.103Z",
+  "updatedAt": "2026-06-30T18:14:49.279Z",
+  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
+  "originalPrompt": "Build a mobile-first personal budget tracker with income, expenses, categories, charts, monthly summaries, CSV export, and a live preview.",
+  "currentSourcePath": ".aidev-projects/new-project-1/source",
+  "activeWorkspacePath": ".aidev-projects/new-project-1",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": "one-prompt-build-1",
+  "manifestPath": ".aidev-projects/new-project-1/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/new-project-1/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782843288904",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/new-project-1/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/new-project-1/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-1-dup-1782843288904"
+  ],
+  "featureContractRealityPath": ".aidev-projects/new-project-1/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/new-project-1/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/new-project-1/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/new-project-1/.aidev/materialization-quality-score.json"
+}

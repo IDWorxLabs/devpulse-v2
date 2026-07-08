@@ -15,6 +15,18 @@ export {
 } from './project-registry-v1-types.js';
 
 export {
+  inferProjectKindFromProjectId,
+  isTestOrAuditRegistryProject,
+  isUserFacingRegistryProject,
+  PROJECT_KIND_AUDIT,
+  PROJECT_KIND_SYSTEM_TEST,
+  PROJECT_KIND_USER,
+  resolveProjectKind,
+  shouldHideProjectFromCommandCenter,
+  type ProjectKind,
+} from './project-kind.js';
+
+export {
   archiveRegistryProject,
   bootstrapProjectRegistryV1,
   buildProjectRegistrySummary,

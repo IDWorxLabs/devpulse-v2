@@ -33,6 +33,7 @@ import type { BuildResultLlmResponseSource } from '../llm-connection-proof-v1/in
 import { buildUnifiedBuildConversationDiagnostics } from './unified-build-conversation-diagnostics.js';
 import { chatContainsMechanicalRuntimeDump } from '../execution-trace/index.js';
 import type { ExecutionTraceEvidenceBundle } from '../execution-trace/execution-trace-types.js';
+import { refineProfileClassificationForAeeBuild, resolveAeeControlledFailureReason } from '../autonomous-engineering-executive/index.js';
 
 const BUILD_RESULT_LLM_CALL_FUNCTION = 'createLlmProvider(config).chat';
 
@@ -118,6 +119,10 @@ export function buildBuildResultConversationalContext(input: {
     input.message,
     input.buildResult.generatedProfile,
   );
+  const refinedClassification = refineProfileClassificationForAeeBuild(
+    input.buildResult,
+    classification,
+  );
 
   return {
     readOnly: true,
@@ -130,7 +135,7 @@ export function buildBuildResultConversationalContext(input: {
     buildStatus: input.buildResult.status,
     buildResult: input.buildResult.buildResult,
     previewUrl: input.buildResult.previewUrl,
-    failureReason: input.buildResult.failureReason,
+    failureReason: resolveAeeControlledFailureReason(input.buildResult),
     architectureSummary: buildRun?.architectureSummary ?? null,
     planTaskCount: buildRun?.planTaskCount ?? null,
     buildStage: buildRun?.stage ?? null,
@@ -138,7 +143,7 @@ export function buildBuildResultConversationalContext(input: {
       input.buildResult.materializationManifest?.generatedFilesCount ??
       input.buildResult.materializationManifest?.generatedFiles.length ??
       null,
-    classification,
+    classification: refinedClassification,
     templateFallback: input.templateFallback,
   };
 }
@@ -153,7 +158,7 @@ export async function applyBuildResultConversationalIntelligence(
     buildResult: input.buildResult,
     templateFallback,
   });
-  const profileMismatchEvidence = hasProfileMismatchEvidence(context);
+  const profileMismatchEvidence = hasProfileMismatchEvidence(context, input.buildResult);
   const executionTraceEvidence = input.payload.executionTraceEvidence as
     | ExecutionTraceEvidenceBundle
     | undefined;
@@ -172,6 +177,8 @@ export async function applyBuildResultConversationalIntelligence(
       matchedKeywords: context.classification.matchedKeywords,
       profileMismatchWarnings: context.classification.profileMismatchWarnings,
     },
+    aeeControlledResponse: input.payload.aeeControlledResponse ?? null,
+    buildResponseSource: input.payload.buildResponseSource ?? null,
   };
 
   const systemInstruction = buildBuildResultConversationalSystemInstructions(context, rootDir);

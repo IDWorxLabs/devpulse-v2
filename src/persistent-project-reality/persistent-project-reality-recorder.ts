@@ -7,6 +7,7 @@ import {
   promotePersistentProjectReality,
   recordPersistentProjectFailureEvidence,
 } from './persistent-project-reality-promoter.js';
+import { resolveRegistryRootForPersistentProject } from '../audit-project-isolation/audit-registry-root.js';
 import {
   ensureRegistryProjectRecord,
   updateProjectRegistryPersistentReality,
@@ -23,6 +24,7 @@ export function recordPersistentProjectReality(input: {
   projectId: string;
   projectName: string;
   promoteSource: boolean;
+  projectKind?: 'USER' | 'AUDIT' | 'SYSTEM_TEST';
 }): PersistentProjectPromotionResult {
   if (!input.promoteSource) {
     recordPersistentProjectFailureEvidence({
@@ -50,13 +52,18 @@ export function recordPersistentProjectReality(input: {
     projectName: input.projectName,
     promoteSource: input.promoteSource,
   });
+  const { registryRoot, projectKind, artifactRoot } = resolveRegistryRootForPersistentProject({
+    projectRootDir: input.projectRootDir,
+    explicitProjectKind: input.projectKind,
+  });
   ensureRegistryProjectRecord({
-    rootDir: input.projectRootDir,
+    rootDir: registryRoot,
     projectId: input.projectId,
     projectName: input.projectName,
+    projectKind,
   });
   updateProjectRegistryPersistentReality({
-    rootDir: input.projectRootDir,
+    rootDir: registryRoot,
     projectId: input.projectId,
     evidence: result.evidence,
     projectRecord: result.projectRecord,

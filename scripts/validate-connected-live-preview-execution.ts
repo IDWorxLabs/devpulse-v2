@@ -804,7 +804,7 @@ async function main(): Promise<void> {
     `score=${activated.report.previewScore}`,
   );
 
-  cleanupActiveRuntime();
+  await cleanupActiveRuntime();
   await new Promise((resolve) => setTimeout(resolve, 300));
   if (workspaceId) {
     cleanupDisposableWorkspace(ROOT, workspaceId);
@@ -822,7 +822,7 @@ async function main(): Promise<void> {
     buildFounderTest('FOUNDER_READY', true, 85),
     true,
   );
-  cleanupActiveRuntime();
+  await cleanupActiveRuntime();
   await new Promise((resolve) => setTimeout(resolve, 300));
   if (warnings.report.activationContract?.workspaceId) {
     cleanupDisposableWorkspace(ROOT, warnings.report.activationContract.workspaceId);
@@ -899,7 +899,7 @@ async function main(): Promise<void> {
     founderAcceptanceAssessment: buildAcceptance('ACCEPTED'),
     performRealPreview: true,
   });
-  cleanupActiveRuntime();
+  await cleanupActiveRuntime();
   await new Promise((resolve) => setTimeout(resolve, 300));
   if (artifacts.connectedLivePreviewExecutionAssessment.report.activationContract?.workspaceId) {
     cleanupDisposableWorkspace(

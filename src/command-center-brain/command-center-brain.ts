@@ -654,6 +654,7 @@ function shouldUseGeneralRouter(
   plan: QuestionRoutingPlan | undefined,
 ): boolean {
   if (blocked || !plan) return false;
+  if (classification.category === 'BUILD') return false;
   if (classification.category === 'MEMORY') return false;
   if (classification.category === 'PROJECT_UNDERSTANDING' && isLegacyProjectUnderstandingQuery(message)) {
     return false;
@@ -682,6 +683,7 @@ function feedSequenceForCategory(
   if (decisionRouterOwns) return UNIFIED_DECISION_LAYER_FEED;
   if (timelineRouterOwns) return TIMELINE_INTELLIGENCE_FEED;
   if (generalRouterOwns) return GENERAL_QUESTION_UNDERSTANDING_FEED;
+  if (category === 'BUILD') return OPERATOR_FEED_EVENT_SEQUENCE;
   if (category === 'DEPENDENCY') return CROSS_SYSTEM_FEED_DEPENDENCY;
   if (category === 'IMPACT') return CROSS_SYSTEM_FEED_IMPACT;
   if (category === 'RELATIONSHIP') return CROSS_SYSTEM_FEED_RELATIONSHIP;

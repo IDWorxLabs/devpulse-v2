@@ -1,0 +1,12 @@
+{
+  "readOnly": true,
+  "jobId": "523f534f-d0ef-4b3b-ba04-0b9516ca21c2",
+  "profile": "CRM_WEB_V1",
+  "executionMode": "CLOUD_SIMULATED",
+  "buildProof": true,
+  "previewProof": true,
+  "verificationProof": true,
+  "aflaVerdict": "NEEDS_AUTOFIX",
+  "productionReadinessScore": 88,
+  "runtimeDurationMs": 12043
+}

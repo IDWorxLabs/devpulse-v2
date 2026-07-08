@@ -3,16 +3,21 @@
  */
 
 import type { GeneratedAppProfile } from '../code-generation-engine/code-generation-engine-types.js';
+import { classifyBuildIntentWithRecovery } from '../build-intent-classification-recovery-v1/index.js';
 import { resolvePromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
 import { classifyIntent } from '../intent-architecture/intent-extractor.js';
 
 const BUILD_EXECUTION_CUES =
   /\b(begin build execution(?:\s+now)?|begin build|build execution|start (the )?build|generate architecture|generate plan|generate tasks|begin materialization|begin execution)\b/i;
 
-const BUILD_VERBS = /\b(build|create|make|develop|generate|implement|scaffold|ship|materialize)\b/i;
+const BUILD_VERBS =
+  /\b(build|create|make|develop|generate|implement|scaffold|ship|materialize|continue|improve|repair|rebuild|finish)\b/i;
 
 const APP_TARGETS =
-  /\b(web app|mobile app|application|software|product|platform|system|website|saas|portal|dashboard|tracker)\b/i;
+  /\b(web app|mobile app|application|app|software|product|platform|system|website|saas|portal|dashboard|tracker|calculator|todo|project|feature)\b/i;
+
+const PROJECT_CONTINUATION_CUES =
+  /\b(continue project|improve project|repair project|rebuild project|finish project|implement feature|generate project|create app|create website|create mobile app|build app|build application)\b/i;
 
 export function resolveBuildIntentProfile(message: string): GeneratedAppProfile | null {
   const normalized = message.trim();
@@ -21,19 +26,27 @@ export function resolveBuildIntentProfile(message: string): GeneratedAppProfile 
   return plan.materializationProfile as GeneratedAppProfile;
 }
 
-export function isBuildIntentRequest(message: string): boolean {
+/** Legacy heuristic detector — used after recovery imperative classifier. */
+export function legacyDetectBuildIntent(message: string): boolean {
   const normalized = message.trim();
-  if (normalized.length < 20) return false;
-
-  if (resolveBuildIntentProfile(normalized)) return true;
+  if (!normalized) return false;
 
   const lower = normalized.toLowerCase();
   const hasBuildVerb = BUILD_VERBS.test(lower);
   const hasAppTarget = APP_TARGETS.test(lower);
   const hasExecutionCue = BUILD_EXECUTION_CUES.test(lower);
+  const profile = resolveBuildIntentProfile(normalized);
+
+  if (profile) {
+    const genericFallbackProfile =
+      profile === 'GENERIC_CUSTOM_APP_V1' || profile === 'PROJECT_MANAGEMENT_WEB_V1';
+    if (!genericFallbackProfile) return true;
+    if (hasBuildVerb || hasExecutionCue) return true;
+  }
 
   if (hasExecutionCue && hasBuildVerb) return true;
   if (hasBuildVerb && hasAppTarget) return true;
+  if (PROJECT_CONTINUATION_CUES.test(lower)) return true;
 
   const intent = classifyIntent(normalized);
   if (intent.intentType === 'BUILD_REQUEST' && intent.confidence !== 'LOW' && hasBuildVerb) {
@@ -41,6 +54,12 @@ export function isBuildIntentRequest(message: string): boolean {
   }
 
   return false;
+}
+
+export function isBuildIntentRequest(message: string): boolean {
+  const recovery = classifyBuildIntentWithRecovery(message);
+  if (recovery.buildIntentDetected) return true;
+  return legacyDetectBuildIntent(message);
 }
 
 export function classifyBuildIntentRoute(message: string): 'BUILD_ORCHESTRATION' | 'CHAT_ONLY' {

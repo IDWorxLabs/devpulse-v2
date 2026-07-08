@@ -1,0 +1,33 @@
+.feature-app-router { width: 100%; max-width: 960px; margin: 0 auto; }
+.modular-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.modular-nav-item { border: 1px solid #cbd5e1; background: #fff; border-radius: 999px; padding: 0.4rem 0.85rem; cursor: pointer; }
+.modular-nav-item.is-active { background: #2563eb; color: #fff; border-color: transparent; }
+.modular-active-feature { min-height: 240px; }
+
+.android-phone-preview {
+  max-width: 420px;
+  min-height: 720px;
+  margin: 0 auto;
+  border: 12px solid #1e293b;
+  border-radius: 28px;
+  padding: 1rem;
+  background: #f8fafc;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.25);
+}
+.assistive-app-header { margin-bottom: 1rem; }
+.assistive-app-header h1 { font-size: 1.35rem; margin: 0 0 0.25rem; }
+.assistive-subtitle { margin: 0 0 0.75rem; color: #475569; font-weight: 600; }
+.assistive-status-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; font-size: 0.9rem; }
+.assistive-controls { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+.assistive-speak-btn, .assistive-emergency-btn {
+  flex: 1;
+  min-height: 48px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+}
+.assistive-speak-btn { background: #2563eb; color: #fff; }
+.assistive-emergency-btn { background: #dc2626; color: #fff; font-weight: 700; }
+.assistive-safety-note { font-size: 0.85rem; color: #64748b; margin: 0; }
+.modular-nav-item { min-height: 44px; font-size: 0.95rem; }

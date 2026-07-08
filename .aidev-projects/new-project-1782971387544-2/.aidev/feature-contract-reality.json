@@ -1,0 +1,56 @@
+{
+  "readOnly": true,
+  "status": "PASS",
+  "overallScore": 90,
+  "plannedFeatureCount": 1,
+  "provenFeatureCount": 1,
+  "featureRealityRecords": [
+    {
+      "readOnly": true,
+      "featureId": "calculator",
+      "featureName": "Calculator",
+      "contractId": "feature-calculator",
+      "planned": true,
+      "generated": true,
+      "compiled": true,
+      "filesPresent": true,
+      "registryEntryPresent": true,
+      "routePresent": true,
+      "rendered": true,
+      "reachable": true,
+      "interactive": false,
+      "informationalOnly": false,
+      "validated": true,
+      "score": 90,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782971387544-2/src/features/calculator/CalculatorFeature.tsx",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782971387544-2/src/features/calculator/calculator.types.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782971387544-2/src/features/calculator/calculator.service.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782971387544-2/src/features/calculator/calculator.validation.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782971387544-2/src/features/calculator/index.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782971387544-2/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782971387544-2/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/new-project-1782971387544-2/src/features/FeatureAppRouter.tsx"
+      ],
+      "missingEvidence": [
+        "data-interaction-control marker missing"
+      ],
+      "failureReasons": [
+        "Interactive feature lacks data-interaction-control signal"
+      ]
+    }
+  ],
+  "failureReasons": [
+    "Interactive feature lacks data-interaction-control signal"
+  ],
+  "informationalFeatureIds": [],
+  "interactiveFeatureIds": [
+    "calculator"
+  ],
+  "recordedAt": "2026-07-02T05:50:10.363Z",
+  "buildRunId": "one-prompt-build-2",
+  "projectId": "new-project-1782971387544-2",
+  "contractPath": ".generated-builder-workspaces/new-project-1782971387544-2/universal-feature-contract.json",
+  "artifactPath": ".generated-builder-workspaces/new-project-1782971387544-2/.feature-contract-reality.json",
+  "persistentArtifactPath": null
+}

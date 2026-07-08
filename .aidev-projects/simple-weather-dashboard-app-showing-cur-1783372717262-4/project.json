@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "simple-weather-dashboard-app-showing-cur-1783372717262-4",
+  "projectName": "Simple Weather Dashboard App Showing Current Temperature And A 5 Day Forecast For A City The User Enters",
+  "createdAt": "2026-07-06T21:18:38.915Z",
+  "updatedAt": "2026-07-07T07:19:48.484Z",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "originalPrompt": "Build a modern appointment booking system for a hair salon.\n\nRequirements:\n\nCreate a clean, responsive web application.\n\nPages:\n- Dashboard\n- Appointments\n- Customers\n- Services\n- Calendar\n- Settings\n\nDashboard:\n- Today's appointments\n- Upcoming appointments\n- Total customers\n- Revenue today\n- Quick action cards\n\nAppointments:\n- List all appointments\n- Search appointments\n- Filter by date\n- Filter by status\n- Create appointment\n- Edit appointment\n- Cancel appointment\n- Mark appointment completed\n\nCustomers:\n- Add customer\n- Edit customer\n- Delete customer\n- Search customers\n- Customer profile with appointment history\n\nServices:\n- Haircut\n- Beard Trim\n- Hair Colour\n- Wash\n- Styling\n\nAllow adding, editing and deleting services.\n\nBooking Form:\n- Customer\n- Service\n- Staff member\n- Date\n- Time\n- Notes\n\nPrevent double-booking of the same staff member at the same date and time.\n\nCalendar:\n- Day view\n- Week view\n- Month view\n- Click a booking to edit it\n\nNavigation:\nUse a sidebar with clear navigation between all pages.\n\nUI:\n- Modern\n- Clean\n- Dark sidebar\n- White content area\n- Responsive\n- Professional business styling\n\nUse realistic sample data.\n\nThe application should be fully interactive without requiring a backend. Store data in browser memory.\n\nThe finished application should feel like a real salon management system rather than a simple CRUD demo.",
+  "currentSourcePath": ".aidev-projects/simple-weather-dashboard-app-showing-cur-1783372717262-4/source",
+  "activeWorkspacePath": ".aidev-projects/simple-weather-dashboard-app-showing-cur-1783372717262-4",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": "one-prompt-build-1",
+  "manifestPath": ".aidev-projects/simple-weather-dashboard-app-showing-cur-1783372717262-4/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/simple-weather-dashboard-app-showing-cur-1783372717262-4/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1783408787090",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/simple-weather-dashboard-app-showing-cur-1783372717262-4/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/simple-weather-dashboard-app-showing-cur-1783372717262-4/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-1-dup-1783408787090"
+  ],
+  "featureContractRealityPath": ".aidev-projects/simple-weather-dashboard-app-showing-cur-1783372717262-4/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/simple-weather-dashboard-app-showing-cur-1783372717262-4/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/simple-weather-dashboard-app-showing-cur-1783372717262-4/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/simple-weather-dashboard-app-showing-cur-1783372717262-4/.aidev/materialization-quality-score.json"
+}

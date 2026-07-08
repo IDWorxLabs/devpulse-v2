@@ -2,11 +2,12 @@
  * Detect one-prompt build requests from chat/API input.
  */
 
-import { isBuildIntentRequest, resolveBuildIntentProfile } from '../build-intent-routing/build-intent-detector.js';
+import { classifyBuildIntentRequest } from '../build-intent-routing/build-intent-route-parity-v1.js';
+import { resolveBuildIntentProfile } from '../build-intent-routing/build-intent-detector.js';
 import { detectTaskTrackerIdea } from '../code-generation-engine/index.js';
 
 export function isOnePromptBuildRequest(message: string): boolean {
-  return isBuildIntentRequest(message);
+  return classifyBuildIntentRequest(message).isBuildIntent;
 }
 
 export function classifyOnePromptBuildRequest(message: string): 'BUILD_FROM_PROMPT' | 'CHAT_ONLY' {

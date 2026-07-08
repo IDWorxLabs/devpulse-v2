@@ -1,0 +1,23 @@
+{
+  "readOnly": true,
+  "projectId": "readiness-audit-internal-hr-admin-1782833361273",
+  "projectName": "CRM",
+  "createdAt": "2026-06-30T15:29:21.764Z",
+  "updatedAt": "2026-06-30T15:29:21.764Z",
+  "selectedProfile": "CRM_WEB_V1",
+  "originalPrompt": "Build an HR admin tool with employee directory, onboarding checklist, time-off requests, and payroll summary.",
+  "currentSourcePath": "",
+  "activeWorkspacePath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833361273",
+  "lastBuildRunId": "readiness-audit-internal-hr-admin-1782833361273",
+  "lastSuccessfulBuildRunId": null,
+  "manifestPath": "",
+  "featureContractPath": "",
+  "buildHistoryRecordPath": ".generated-build-history/readiness-audit-internal-hr-admin-1782833361273",
+  "productionValidationPath": null,
+  "exportMetadataPath": "",
+  "projectFileIndexPath": "",
+  "status": "FAILED",
+  "immutableBuildLinks": [],
+  "lastFailedBuildRunId": "readiness-audit-internal-hr-admin-1782833361273",
+  "lastFailedSnapshotPath": ".aidev-projects/readiness-audit-internal-hr-admin-1782833361273/.aidev/snapshots/failed-readiness-audit-internal-hr-admin-1782833361273"
+}

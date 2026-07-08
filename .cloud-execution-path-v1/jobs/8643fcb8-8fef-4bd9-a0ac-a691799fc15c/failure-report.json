@@ -1,0 +1,9 @@
+{
+  "readOnly": true,
+  "jobId": "8643fcb8-8fef-4bd9-a0ac-a691799fc15c",
+  "failureClass": "BUILD_FAILURE",
+  "stage": "BUILDING",
+  "detail": "Build failure: npm build did not succeed",
+  "recoverable": true,
+  "generatedAt": "2026-07-06T20:10:18.008Z"
+}

@@ -1,0 +1,772 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-06-26T12:00:00.000Z",
+  "maturityScore": 42,
+  "blockers": 8,
+  "high": 14,
+  "medium": 20,
+  "low": 8,
+  "findings": [
+    {
+      "id": "AEP-F-001",
+      "category": "AEP-6",
+      "severity": "BLOCKER",
+      "title": "Live preview unlock bypasses evidence gate",
+      "description": "MITIGATED (Phase 1): materializationProofReady bypass removed. Orchestrator, canonical state, and client now use resolveAuthoritativePreviewUrls / livePreviewAvailable only when gate returns PREVIEW_UNLOCKED + UNLOCKED_PREVIEW_READY. Dev server URL exposed as diagnosticPreviewUrl when locked.",
+      "affectedFiles": [
+        "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts",
+        "src/live-preview-gate/live-preview-gate-bridge.ts",
+        "src/one-prompt-live-preview/canonical-live-preview-state.ts",
+        "public/founder-reality/app.js"
+      ],
+      "violates": "AEP-6 Evidence-Driven Launch — preview must not unlock on dev-server alone",
+      "recommendedFix": "DONE Phase 1 — validate:aep-preview-gate-authority enforces gate-only unlock.",
+      "suggestedValidator": "validate:aep-preview-gate-authority",
+      "implementationOrder": 1
+    },
+    {
+      "id": "AEP-F-002",
+      "category": "AEP-2",
+      "severity": "BLOCKER",
+      "title": "ASE registry declares simulationOnly",
+      "description": "MITIGATED (Phase 2): ASE registry sets simulationOnly: false and enforcementEngine: true. src/ase-enforcement-engine/ is the authoritative engineering decision layer with runAutonomousEngineering, requestEngineeringAction, and validate:ase-enforcement-engine.",
+      "affectedFiles": [
+        "src/autonomous-software-engineering-engine/ase-registry.ts",
+        "src/ase-enforcement-engine/engineering-authority.ts",
+        "src/ase-enforcement-engine/engineering-action-authority.ts"
+      ],
+      "violates": "AEP-2 Autonomous Recovery — core engineering authority is simulated not executed",
+      "recommendedFix": "DONE Phase 2 — ASE Enforcement Engine V1 with ASE_ENFORCEMENT_ENGINE_V1_PASS.",
+      "suggestedValidator": "validate:ase-enforcement-engine",
+      "implementationOrder": 2
+    },
+    {
+      "id": "AEP-F-003",
+      "category": "AEP-2",
+      "severity": "BLOCKER",
+      "title": "ASE pipeline results ignored before materialization",
+      "description": "MITIGATED (Phase 2): one-prompt orchestrator routes materialization through runAutonomousEngineering host callback only after ASE authorization. materializationAuthorized and materializationExecuted gates abort build when ASE denies or materialization fails.",
+      "affectedFiles": [
+        "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts",
+        "src/ase-enforcement-engine/engineering-authority.ts"
+      ],
+      "violates": "AEP-2 Autonomous Recovery — failures are collected but not acted on before generation",
+      "recommendedFix": "DONE Phase 2 — orchestrator thin host; ASE owns pre/post materialization engineering.",
+      "suggestedValidator": "validate:ase-enforcement-engine",
+      "implementationOrder": 3
+    },
+    {
+      "id": "AEP-F-004",
+      "category": "AEP-1",
+      "severity": "BLOCKER",
+      "title": "resumeExistingProject flag accepted but not honored",
+      "description": "OnePromptBuildInput exposes resumeExistingProject but orchestrator always creates/runs full materialization path without reading resume intent or skipping duplicate workspace creation.",
+      "affectedFiles": [
+        "src/one-prompt-live-preview/one-prompt-live-preview-types.ts",
+        "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts"
+      ],
+      "violates": "AEP-1 One-Prompt Continuity — resume requires re-prompting or manual UI instead of autonomous continuation",
+      "recommendedFix": "Implement resume branch: load stored prompt, workspace snapshot, lastSuccessfulStage; continue from failure stage without new projectId.",
+      "suggestedValidator": "validate:one-prompt-resume-orchestration",
+      "implementationOrder": 4
+    },
+    {
+      "id": "AEP-F-005",
+      "category": "AEP-1",
+      "severity": "BLOCKER",
+      "title": "Brain API projectResume payload not rendered in chat UI",
+      "description": "brain-api-handler returns projectResume on duplicate detection but app.js askBrain path does not render resume/continue actions from projectResume — only appendChatAlignmentActions for context alignment.",
+      "affectedFiles": [
+        "server/brain-api-handler.ts",
+        "public/founder-reality/app.js"
+      ],
+      "violates": "AEP-1 One-Prompt Continuity — duplicate/resume routing stops at API; user must discover manual buttons elsewhere",
+      "recommendedFix": "Render autonomous resume card in chat from projectResume with one-click continue using stored prompt; hide confirmProjectResume when safe auto-resume applies.",
+      "suggestedValidator": "validate:brain-project-resume-ui",
+      "implementationOrder": 5
+    },
+    {
+      "id": "AEP-F-006",
+      "category": "AEP-2",
+      "severity": "BLOCKER",
+      "title": "Autonomous debugging and auto-fix are simulation-only",
+      "description": "auto-fix-runtime, testing-runtime, and ASE autonomousDebugging artifacts declare simulationOnly. Failures do not trigger automatic patch application or verified retry loops.",
+      "affectedFiles": [
+        "src/auto-fix-runtime/fix-proposal-builder.ts",
+        "src/autonomous-software-engineering-engine/ase-stage-orchestrator.ts"
+      ],
+      "violates": "AEP-2 Autonomous Recovery — system reports fixes but user must debug manually",
+      "recommendedFix": "Connect fix proposals to controlled apply runtime with rollback; retry failed npm build/dev-server stages automatically up to policy limit.",
+      "suggestedValidator": "validate:autonomous-debugging-real-repair",
+      "implementationOrder": 6
+    },
+    {
+      "id": "AEP-F-007",
+      "category": "AEP-6",
+      "severity": "BLOCKER",
+      "title": "Launch readiness authority is simulation-only",
+      "description": "launch-readiness-registry and launch-readiness-authority-v2 expose simulationOnly: true. Launch verdict does not block preview or product completion in live orchestrator path.",
+      "affectedFiles": [
+        "src/launch-readiness-authority-v2/launch-readiness-registry.ts",
+        "src/launch-readiness-authority-v2/index.ts"
+      ],
+      "violates": "AEP-6 Evidence-Driven Launch — launch readiness is advisory not authoritative",
+      "recommendedFix": "Wire launch readiness PASS/FAIL into preview unlock and founder-facing launch button; defer simulation flag after real evidence chain exists.",
+      "suggestedValidator": "validate:launch-readiness-enforcement",
+      "implementationOrder": 7
+    },
+    {
+      "id": "AEP-F-008",
+      "category": "AEP-4",
+      "severity": "BLOCKER",
+      "title": "Preview unlock accepts partial product state",
+      "description": "Combined with gate bypass, apps with scaffold modules, WARN-level faithfulness, and incomplete feature contracts can reach live preview. Server and client both optimistically set validationReady/interactivity/availability to passed when a preview URL exists, masking incomplete products.",
+      "affectedFiles": [
+        "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts",
+        "src/prompt-faithful-generation/prompt-faithfulness-validator.ts",
+        "src/one-prompt-live-preview/canonical-live-preview-state.ts",
+        "public/founder-reality/app.js"
+      ],
+      "violates": "AEP-4 Full Product Completion — user sees runnable shell not launch-ready app",
+      "recommendedFix": "Tie preview to feature contract reality score + faithfulness PASS + interaction proof minimum; auto-continue build when NEEDS_WORK.",
+      "suggestedValidator": "validate:preview-requires-product-completion",
+      "implementationOrder": 8
+    },
+    {
+      "id": "AEP-F-009",
+      "category": "AEP-1",
+      "severity": "HIGH",
+      "title": "Duplicate project detection blocks with manual confirmProjectResume",
+      "description": "build-from-prompt-handler and brain-api-handler set shouldBlock when duplicate slug exists unless user sends confirmProjectResume: true — forcing explicit confirmation instead of autonomous resume.",
+      "affectedFiles": [
+        "server/build-from-prompt-handler.ts",
+        "server/brain-api-handler.ts",
+        "src/project-resume-state/duplicate-project-resume-router.ts"
+      ],
+      "violates": "AEP-1 One-Prompt Continuity — user must confirm technical resume decision",
+      "recommendedFix": "Auto-resume incomplete duplicates with stored prompt; only block when truly unsafe (conflicting active build). Surface plain-language status not confirm flag.",
+      "suggestedValidator": "validate:duplicate-auto-resume",
+      "implementationOrder": 9
+    },
+    {
+      "id": "AEP-F-010",
+      "category": "AEP-2",
+      "severity": "HIGH",
+      "title": "Manual Resume/Repair/Continue buttons in founder UI",
+      "description": "app.js renders Resume, Repair, Continue, Start Fresh buttons on incomplete project banners — shifting recovery orchestration to user as operator.",
+      "affectedFiles": [
+        "public/founder-reality/app.js",
+        "public/founder-reality/index.html"
+      ],
+      "violates": "AEP-2 Autonomous Recovery — user chooses recovery path instead of engine auto-repair",
+      "recommendedFix": "Auto-trigger resumeProjectBuild on duplicate/incomplete detection; collapse manual buttons into optional Advanced with default autonomous path.",
+      "suggestedValidator": "validate:founder-ui-no-manual-recovery-default",
+      "implementationOrder": 10
+    },
+    {
+      "id": "AEP-F-011",
+      "category": "AEP-3",
+      "severity": "HIGH",
+      "title": "Execution trace panel is primary founder UX surface",
+      "description": "Full execution trace timeline, stage IDs, and engineering events are prominently visible in normal product creation flow rather than plain-language progress.",
+      "affectedFiles": [
+        "public/founder-reality/index.html",
+        "public/founder-reality/app.js"
+      ],
+      "violates": "AEP-3 User Is Not Debugger — user inspects engineering trace to understand progress",
+      "recommendedFix": "Default to product-language status card; move execution trace to collapsible Diagnostics for support mode only.",
+      "suggestedValidator": "validate:founder-ui-product-language-default",
+      "implementationOrder": 11
+    },
+    {
+      "id": "AEP-F-012",
+      "category": "AEP-8",
+      "severity": "HIGH",
+      "title": "Workspace paths and registry IDs on project cards",
+      "description": "Project cards and status surfaces expose workspaceRel paths, buildState engineering enums, and internal registry identifiers as primary identity.",
+      "affectedFiles": [
+        "public/founder-reality/app.js",
+        "server/project-registry-handler.ts"
+      ],
+      "violates": "AEP-8 Internal Complexity Hidden — user sees filesystem/registry not product",
+      "recommendedFix": "Show product name, completion %, and next autonomous action; hide paths behind Diagnostics.",
+      "suggestedValidator": "validate:project-card-product-language",
+      "implementationOrder": 12
+    },
+    {
+      "id": "AEP-F-013",
+      "category": "AEP-6",
+      "severity": "HIGH",
+      "title": "canProceedToStage imported but never enforced in ASE orchestrator",
+      "description": "ase-stage-orchestrator imports canProceedToStage from ase-gate-controller but never calls it — stage pipeline always completes decoratively.",
+      "affectedFiles": [
+        "src/autonomous-software-engineering-engine/ase-stage-orchestrator.ts",
+        "src/autonomous-software-engineering-engine/ase-gate-controller.ts"
+      ],
+      "violates": "AEP-6 Evidence-Driven Launch — gates exist in code but not in runtime control flow",
+      "recommendedFix": "Call canProceedToStage before each stage; abort pipeline and enqueue repair when false.",
+      "suggestedValidator": "validate:ase-stage-gate-enforcement",
+      "implementationOrder": 13
+    },
+    {
+      "id": "AEP-F-014",
+      "category": "AEP-1",
+      "severity": "HIGH",
+      "title": "Resume without stored prompt returns 400 storedPromptRequired",
+      "description": "build-from-prompt-handler requires user to paste prompt again when stored prompt missing on resume — breaking one-prompt continuity after failure or session loss.",
+      "affectedFiles": [
+        "server/build-from-prompt-handler.ts",
+        "server/brain-api-handler.ts"
+      ],
+      "violates": "AEP-1 One-Prompt Continuity — original prompt not durably persisted and recoverable",
+      "recommendedFix": "Persist prompt in project.json/.aidev on first build; never require re-paste for same projectId.",
+      "suggestedValidator": "validate:stored-prompt-durability",
+      "implementationOrder": 14
+    },
+    {
+      "id": "AEP-F-015",
+      "category": "AEP-10",
+      "severity": "HIGH",
+      "title": "Project context alignment blocks user with switch/create choices",
+      "description": "project-context-alignment-assessor returns actions requiring user to switch project, create new, or confirm — before autonomous routing resolves intent.",
+      "affectedFiles": [
+        "src/project-context-alignment/project-context-alignment-assessor.ts",
+        "public/founder-reality/app.js"
+      ],
+      "violates": "AEP-10 Safe Human Review Boundary — human decision requested before autonomous safe routing",
+      "recommendedFix": "Auto-route to active project when confidence high; only escalate alignment when ambiguous AND action is irreversible.",
+      "suggestedValidator": "validate:context-alignment-autonomous-routing",
+      "implementationOrder": 15
+    },
+    {
+      "id": "AEP-F-016",
+      "category": "AEP-3",
+      "severity": "HIGH",
+      "title": "UI tells user to restart npm run dev and kill port 4321",
+      "description": "Founder-facing notifications and chat messages instruct user to stop processes and restart dev server — operator work outside product promise.",
+      "affectedFiles": [
+        "public/founder-reality/app.js"
+      ],
+      "violates": "AEP-3 User Is Not Debugger — user acts as runtime operator",
+      "recommendedFix": "Detect stale server internally; auto-restart dev server or surface single AiDevEngine action that triggers server recovery API.",
+      "suggestedValidator": "validate:founder-ui-no-operator-instructions",
+      "implementationOrder": 16
+    },
+    {
+      "id": "AEP-F-017",
+      "category": "AEP-7",
+      "severity": "HIGH",
+      "title": "Engineering buildState badges exposed to founder",
+      "description": "NEEDS_WORK, REPAIRABLE, PARTIAL, ABORTED shown as raw enums on project cards without plain-language product status or autonomous next step.",
+      "affectedFiles": [
+        "public/founder-reality/app.js",
+        "src/project-resume-state/project-build-state.ts"
+      ],
+      "violates": "AEP-7 Automatic State Clarity — ambiguous engineering states become user-facing",
+      "recommendedFix": "Map buildState to product states (Building, Fixing, Ready to preview) with autonomous action in progress indicator.",
+      "suggestedValidator": "validate:project-state-plain-language",
+      "implementationOrder": 17
+    },
+    {
+      "id": "AEP-F-018",
+      "category": "AEP-4",
+      "severity": "HIGH",
+      "title": "Prompt faithfulness missing modules can WARN instead of FAIL",
+      "description": "prompt-faithfulness-validator downgrades missing explicit modules to WARN when explicitModulesProvided — allowing generation to proceed with gaps.",
+      "affectedFiles": [
+        "src/prompt-faithful-generation/prompt-faithfulness-validator.ts"
+      ],
+      "violates": "AEP-4 Full Product Completion — partial module set accepted",
+      "recommendedFix": "FAIL when explicit prompt modules missing; trigger auto-completion loop before materialization PASS.",
+      "suggestedValidator": "validate:prompt-faithfulness-fail-on-missing",
+      "implementationOrder": 18
+    },
+    {
+      "id": "AEP-F-019",
+      "category": "AEP-5",
+      "severity": "HIGH",
+      "title": "PBM guard passes if any single module approved",
+      "description": "prompt-bounded-module-resolver sets passedPreGenerationGuard true when at least one module survives guard — not when full prompt-bounded set is satisfied.",
+      "affectedFiles": [
+        "src/prompt-bounded-materialization/prompt-bounded-module-resolver.ts",
+        "src/prompt-bounded-materialization/pre-generation-materialization-guard.ts"
+      ],
+      "violates": "AEP-5 Prompt-Bounded Engineering — partial prompt coverage treated as pass",
+      "recommendedFix": "Require all prompt-evidenced modules approved OR documented explicit deferral with auto-completion task.",
+      "suggestedValidator": "validate:pbm-full-module-coverage",
+      "implementationOrder": 19
+    },
+    {
+      "id": "AEP-F-020",
+      "category": "AEP-2",
+      "severity": "HIGH",
+      "title": "Resume and repair send same API payload",
+      "description": "resumeProjectBuild sends resumeAction but orchestrator and handlers do not differentiate repair vs continue vs resume — same build endpoint restarts full path.",
+      "affectedFiles": [
+        "public/founder-reality/app.js",
+        "server/build-from-prompt-handler.ts",
+        "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts"
+      ],
+      "violates": "AEP-2 Autonomous Recovery — repair semantics illusory; user clicks repair with no distinct behavior",
+      "recommendedFix": "Implement repair path: diagnose last failure stage, apply auto-fix, resume from stage not from PLANNING.",
+      "suggestedValidator": "validate:resume-repair-differentiation",
+      "implementationOrder": 20
+    },
+    {
+      "id": "AEP-F-021",
+      "category": "AEP-8",
+      "severity": "HIGH",
+      "title": "Project Files panel encourages manual workspace inspection",
+      "description": "Founder UI exposes project file tree and source paths as normal navigation path for understanding build output.",
+      "affectedFiles": [
+        "public/founder-reality/app.js",
+        "public/founder-reality/index.html"
+      ],
+      "violates": "AEP-8 Internal Complexity Hidden — user behaves like developer reviewing repo",
+      "recommendedFix": "Hide file tree by default; show product preview and feature checklist instead.",
+      "suggestedValidator": "validate:founder-ui-files-not-primary",
+      "implementationOrder": 21
+    },
+    {
+      "id": "AEP-F-022",
+      "category": "AEP-6",
+      "severity": "HIGH",
+      "title": "Live preview gate registry marked simulationOnly",
+      "description": "live-preview-gate-registry declares simulationOnly: true — gate evaluation not registered as production authority despite orchestrator integration.",
+      "affectedFiles": [
+        "src/live-preview-gate/live-preview-gate-registry.ts",
+        "src/live-preview-gate/index.ts"
+      ],
+      "violates": "AEP-6 Evidence-Driven Launch — preview gate lacks production authority status",
+      "recommendedFix": "Remove simulationOnly after evidence chain validated; add validator that gate registry is production mode in orchestrator path.",
+      "suggestedValidator": "validate:live-preview-gate-production-mode",
+      "implementationOrder": 22
+    },
+    {
+      "id": "AEP-F-023",
+      "category": "AEP-7",
+      "severity": "MEDIUM",
+      "title": "Project registry supports archive not autonomous delete/rebuild",
+      "description": "project-registry-v1-store archives projects but lacks autonomous rebuild-from-scratch flow that preserves prompt and replaces contaminated workspace.",
+      "affectedFiles": [
+        "src/project-registry-v1/project-registry-v1-store.ts",
+        "server/project-registry-handler.ts"
+      ],
+      "violates": "AEP-7 Automatic State Clarity — user cannot get clean relaunch without manual project management",
+      "recommendedFix": "Add rebuildProjectAutonomously(projectId) using stored prompt and snapshot rollback.",
+      "suggestedValidator": "validate:project-autonomous-rebuild",
+      "implementationOrder": 23
+    },
+    {
+      "id": "AEP-F-024",
+      "category": "AEP-7",
+      "severity": "MEDIUM",
+      "title": "Demo portfolio fallback on API failure",
+      "description": "CLIENT_DEMO_PORTFOLIO_FALLBACK injects fabricated portfolio insights when project insights API fails — masking real project state.",
+      "affectedFiles": [
+        "public/founder-reality/app.js"
+      ],
+      "violates": "AEP-7 Automatic State Clarity — false ready/demo state on errors",
+      "recommendedFix": "Show explicit unavailable state with autonomous retry; never substitute demo portfolio in production founder path.",
+      "suggestedValidator": "validate:no-demo-fallback-in-founder-path",
+      "implementationOrder": 24
+    },
+    {
+      "id": "AEP-F-025",
+      "category": "AEP-1",
+      "severity": "MEDIUM",
+      "title": "start-fresh-copy creates duplicate instead of continuation",
+      "description": "resumeProjectBuild start-fresh-copy action creates new project copy rather than in-place autonomous rebuild — proliferates duplicates.",
+      "affectedFiles": [
+        "public/founder-reality/app.js",
+        "server/build-from-prompt-handler.ts"
+      ],
+      "violates": "AEP-1 One-Prompt Continuity — duplicate projects instead of single continuing identity",
+      "recommendedFix": "Rebuild in place with new buildId under same projectId; retire copy semantics from default UX.",
+      "suggestedValidator": "validate:no-duplicate-project-on-rebuild",
+      "implementationOrder": 25
+    },
+    {
+      "id": "AEP-F-026",
+      "category": "AEP-9",
+      "severity": "MEDIUM",
+      "title": "Auto-fix proposals never applied automatically",
+      "description": "fix-proposal-builder and fix-verification-plan emit simulationOnly proposals; orchestrator does not apply fixes before returning failure to UI.",
+      "affectedFiles": [
+        "src/auto-fix-runtime/fix-proposal-builder.ts",
+        "src/auto-fix-runtime/fix-verification-plan.ts"
+      ],
+      "violates": "AEP-9 Autonomous Quality Improvement — friction detected but not auto-remediated",
+      "recommendedFix": "Apply low-risk fixes automatically; re-run failing stage; escalate to human only after retry budget exhausted.",
+      "suggestedValidator": "validate:auto-fix-apply-loop",
+      "implementationOrder": 26
+    },
+    {
+      "id": "AEP-F-027",
+      "category": "AEP-9",
+      "severity": "MEDIUM",
+      "title": "Testing runtime advisory only",
+      "description": "testing-runtime and test-plan-builder declare simulation only with no test execution before launch — quality gaps pass silently.",
+      "affectedFiles": [
+        "src/testing-runtime/test-plan-builder.ts",
+        "src/testing-runtime/test-case-model.ts",
+        "scripts/validate-testing-runtime-foundation.ts",
+        "package.json"
+      ],
+      "violates": "AEP-9 Autonomous Quality Improvement — tests planned not run pre-launch",
+      "recommendedFix": "Execute smoke tests against generated app in CI-like loop inside orchestrator; block preview on critical test fail.",
+      "suggestedValidator": "validate:pre-launch-smoke-test-execution",
+      "implementationOrder": 27
+    },
+    {
+      "id": "AEP-F-028",
+      "category": "AEP-4",
+      "severity": "MEDIUM",
+      "title": "Blueprint placeholder modules in generated apps",
+      "description": "Generated apps include analytics-placeholders, data-management-placeholders, and demo-data modules that signal scaffold not finished product behavior.",
+      "affectedFiles": [
+        ".aidev-projects/lisa-live-path-1782455436956/source/src/analytics/analytics-placeholders.ts",
+        ".aidev-projects/lisa-live-path-1782455436956/source/src/data/demo-data.ts"
+      ],
+      "violates": "AEP-4 Full Product Completion — placeholder files ship in user-facing apps",
+      "recommendedFix": "Replace placeholders during materialization with real feature implementations or strip from launch bundle.",
+      "suggestedValidator": "validate:no-placeholder-modules-in-launch",
+      "implementationOrder": 28
+    },
+    {
+      "id": "AEP-F-029",
+      "category": "AEP-5",
+      "severity": "MEDIUM",
+      "title": "Residual profile fallback leakage risk",
+      "description": "Despite PBM guard, profile-derived module candidates can still enter when prompt evidence is thin — generic modules may appear in custom apps.",
+      "affectedFiles": [
+        "src/prompt-bounded-materialization/module-candidate-collector.ts",
+        "src/prompt-faithful-generation/index.ts"
+      ],
+      "violates": "AEP-5 Prompt-Bounded Engineering — template defaults may still contaminate custom prompts",
+      "recommendedFix": "Hard deny list for generic modules unless prompt token match score exceeds threshold.",
+      "suggestedValidator": "validate:pbm-zero-generic-without-evidence",
+      "implementationOrder": 29
+    },
+    {
+      "id": "AEP-F-030",
+      "category": "AEP-6",
+      "severity": "MEDIUM",
+      "title": "Stale launch evidence may satisfy gates",
+      "description": "Authority modules cache evidence with process-local or time-keyed snapshots; orchestrator may accept prior PASS without re-validation after prompt change.",
+      "affectedFiles": [
+        "architecture/AUTHORITY_STALE_EVIDENCE_AUDIT.md",
+        "src/foundation/evidence-registry.ts"
+      ],
+      "violates": "AEP-6 Evidence-Driven Launch — stale evidence accepted",
+      "recommendedFix": "Bind evidence to buildId + prompt hash; invalidate on any prompt or module plan change.",
+      "suggestedValidator": "validate:evidence-freshness-on-build",
+      "implementationOrder": 30
+    },
+    {
+      "id": "AEP-F-031",
+      "category": "AEP-3",
+      "severity": "MEDIUM",
+      "title": "Raw validator pass tokens in notifications",
+      "description": "Build notifications and status toasts sometimes surface internal validator tokens and stage IDs instead of plain-language outcomes.",
+      "affectedFiles": [
+        "public/founder-reality/app.js",
+        "server/build-from-prompt-handler.ts",
+        "package.json",
+        "scripts/validate-autonomous-software-engineering-engine.ts"
+      ],
+      "violates": "AEP-3 User Is Not Debugger — internal validation vocabulary exposed",
+      "recommendedFix": "Map all status messages through product-language translator layer before UI render.",
+      "suggestedValidator": "validate:founder-message-plain-language",
+      "implementationOrder": 31
+    },
+    {
+      "id": "AEP-F-032",
+      "category": "AEP-7",
+      "severity": "MEDIUM",
+      "title": "Registry hydration race causes card flicker",
+      "description": "Despite startup hydration improvements, client still polls and re-renders project list during RESTORING — brief empty/error flashes possible on slow disks.",
+      "affectedFiles": [
+        "public/founder-reality/app.js",
+        "src/project-registry-startup-hydration/index.ts"
+      ],
+      "violates": "AEP-7 Automatic State Clarity — unstable project list during boot",
+      "recommendedFix": "Hold UI in restoring shell until server reports READY; debounce list render.",
+      "suggestedValidator": "validate:registry-hydration-no-flicker",
+      "implementationOrder": 32
+    },
+    {
+      "id": "AEP-F-033",
+      "category": "AEP-8",
+      "severity": "MEDIUM",
+      "title": "Execution trace uses engineering stage vocabulary",
+      "description": "Trace events expose MATERIALIZATION, PREVIEW, ASE stage names — not user intent language like adding features or fixing issues.",
+      "affectedFiles": [
+        "public/founder-reality/app.js",
+        "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts"
+      ],
+      "violates": "AEP-8 Internal Complexity Hidden — engineering ontology in default UX",
+      "recommendedFix": "Dual-layer events: internal trace + userProgressLabel on every emission.",
+      "suggestedValidator": "validate:trace-user-progress-labels",
+      "implementationOrder": 33
+    },
+    {
+      "id": "AEP-F-034",
+      "category": "AEP-2",
+      "severity": "MEDIUM",
+      "title": "No autonomous retry loop on npm build failure",
+      "description": "When npm run build fails in orchestrator, failure registers but automatic dependency install, config repair, and retry are not attempted before user notification.",
+      "affectedFiles": [
+        "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts",
+        "src/connected-build-execution/index.ts"
+      ],
+      "violates": "AEP-2 Autonomous Recovery — single-attempt build then fail",
+      "recommendedFix": "Wrap npm build in retry policy with auto-fix for common errors (missing deps, tsconfig).",
+      "suggestedValidator": "validate:npm-build-autonomous-retry",
+      "implementationOrder": 34
+    },
+    {
+      "id": "AEP-F-035",
+      "category": "AEP-10",
+      "severity": "MEDIUM",
+      "title": "Unsafe domains not blocked at generation time",
+      "description": "Medical, payment, and high-risk capability prompts are not consistently blocked or flagged before materialization — human review boundary unclear.",
+      "affectedFiles": [
+        "src/prompt-faithful-generation/index.ts",
+        "src/capability-planning/index.ts"
+      ],
+      "violates": "AEP-10 Safe Human Review Boundary — unsafe scopes may generate silently",
+      "recommendedFix": "Add risk classifier pre-build; block or require explicit human review with plain reason.",
+      "suggestedValidator": "validate:high-risk-prompt-gate",
+      "implementationOrder": 35
+    },
+    {
+      "id": "AEP-F-036",
+      "category": "AEP-4",
+      "severity": "MEDIUM",
+      "title": "NEEDS_WORK projects lack autonomous completion plan",
+      "description": "Projects marked NEEDS_WORK expose status but orchestrator does not enqueue automatic completion tasks to reach launch-ready.",
+      "affectedFiles": [
+        "src/project-resume-state/project-build-state.ts",
+        "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts"
+      ],
+      "violates": "AEP-4 Full Product Completion — terminal-ish state without auto-continue",
+      "recommendedFix": "On NEEDS_WORK, generate completion plan and auto-run until PASS or evidence-based blocker.",
+      "suggestedValidator": "validate:needs-work-auto-completion",
+      "implementationOrder": 36
+    },
+    {
+      "id": "AEP-F-037",
+      "category": "AEP-5",
+      "severity": "MEDIUM",
+      "title": "Descriptor phrases may still become feature folder names",
+      "description": "descriptor-classification-engine reduces but does not eliminate phrase-to-folder drift where prompt adjectives become module slugs.",
+      "affectedFiles": [
+        "src/prompt-bounded-materialization/descriptor-classification-engine.ts",
+        "src/code-generation-engine/code-generation-engine-authority.ts"
+      ],
+      "violates": "AEP-5 Prompt-Bounded Engineering — linguistic noise becomes architecture",
+      "recommendedFix": "Reject module slugs that fail product noun classifier; merge into nearest evidenced feature.",
+      "suggestedValidator": "validate:descriptor-not-module-slug",
+      "implementationOrder": 37
+    },
+    {
+      "id": "AEP-F-038",
+      "category": "AEP-7",
+      "severity": "MEDIUM",
+      "title": "Inconsistent resumable flag across API surfaces",
+      "description": "project-registry-handler, build handler, and brain API compute resumable differently — cards may show resumable while build endpoint rejects.",
+      "affectedFiles": [
+        "server/project-registry-handler.ts",
+        "server/build-from-prompt-handler.ts",
+        "src/project-resume-state/index.ts"
+      ],
+      "violates": "AEP-7 Automatic State Clarity — contradictory resume signals",
+      "recommendedFix": "Single deriveProjectBuildState authority consumed by all handlers and UI.",
+      "suggestedValidator": "validate:resumable-state-single-source",
+      "implementationOrder": 38
+    },
+    {
+      "id": "AEP-F-039",
+      "category": "AEP-8",
+      "severity": "MEDIUM",
+      "title": "Developer-oriented controls visible in founder command center",
+      "description": "UVL triggers, validation script names, and build manifest links appear in normal command center navigation.",
+      "affectedFiles": [
+        "public/founder-reality/app.js",
+        "public/founder-reality/index.html",
+        "package.json",
+        "scripts/validation-runtime-orchestrator.ts"
+      ],
+      "violates": "AEP-8 Internal Complexity Hidden — validator culture exposed to product user",
+      "recommendedFix": "Move UVL/validation controls to operator mode behind feature flag.",
+      "suggestedValidator": "validate:founder-ui-operator-mode-gate",
+      "implementationOrder": 39
+    },
+    {
+      "id": "AEP-F-040",
+      "category": "AEP-9",
+      "severity": "MEDIUM",
+      "title": "UVL outcomes labeled simulation only",
+      "description": "runtime-verification-layer returns simulation-only outcomes — accessibility and performance warnings not prioritized into auto-fix queue.",
+      "affectedFiles": [
+        "src/runtime-verification-layer/runtime-verification-request-parser.ts",
+        "src/runtime-verification-layer/index.ts"
+      ],
+      "violates": "AEP-9 Autonomous Quality Improvement — a11y/perf friction not auto-hardened",
+      "recommendedFix": "Promote UVL blocking findings to continuous improvement pipeline with mandatory fix attempts.",
+      "suggestedValidator": "validate:uvl-findings-to-auto-fix",
+      "implementationOrder": 40
+    },
+    {
+      "id": "AEP-F-041",
+      "category": "AEP-9",
+      "severity": "MEDIUM",
+      "title": "Continuous improvement artifacts not applied pre-launch",
+      "description": "ASE continuousImprovement stage produces recommendations but orchestrator does not apply improvements before preview unlock.",
+      "affectedFiles": [
+        "src/autonomous-software-engineering-engine/ase-stage-orchestrator.ts",
+        "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts"
+      ],
+      "violates": "AEP-9 Autonomous Quality Improvement — improvement pass is report-only",
+      "recommendedFix": "Run improvement applicator loop before preview; measure delta in quality score.",
+      "suggestedValidator": "validate:continuous-improvement-pre-preview",
+      "implementationOrder": 41
+    },
+    {
+      "id": "AEP-F-042",
+      "category": "AEP-1",
+      "severity": "MEDIUM",
+      "title": "Build history does not restore prompt continuity automatically",
+      "description": "build-history-links.json tracks builds but failed build recovery does not auto-select last prompt/build plan for continuation.",
+      "affectedFiles": [
+        "src/build-history/build-history-links.ts",
+        "server/build-from-prompt-handler.ts"
+      ],
+      "violates": "AEP-1 One-Prompt Continuity — history is audit not resume authority",
+      "recommendedFix": "Use latest build history entry as default resume context without user selection.",
+      "suggestedValidator": "validate:build-history-resume-authority",
+      "implementationOrder": 42
+    },
+    {
+      "id": "AEP-F-043",
+      "category": "AEP-3",
+      "severity": "LOW",
+      "title": "Noisy notifications on build routing miss",
+      "description": "Multiple stacked notifications when chat build routing fails add alert fatigue without clear single next action from AiDevEngine.",
+      "affectedFiles": [
+        "public/founder-reality/app.js"
+      ],
+      "violates": "AEP-3 User Is Not Debugger — alert noise without autonomous action",
+      "recommendedFix": "Collapse to one notification with in-progress server recovery status.",
+      "suggestedValidator": "validate:founder-notification-dedupe",
+      "implementationOrder": 43
+    },
+    {
+      "id": "AEP-F-044",
+      "category": "AEP-7",
+      "severity": "LOW",
+      "title": "Active/inactive project labels ambiguous",
+      "description": "Project list mixes archived, inactive, and restoring labels without unified lifecycle terminal states.",
+      "affectedFiles": [
+        "server/project-registry-handler.ts",
+        "public/founder-reality/app.js"
+      ],
+      "violates": "AEP-7 Automatic State Clarity — minor lifecycle ambiguity",
+      "recommendedFix": "Define terminal states enum shared UI/server with tooltips in product language.",
+      "suggestedValidator": "validate:project-lifecycle-terminal-states",
+      "implementationOrder": 44
+    },
+    {
+      "id": "AEP-F-045",
+      "category": "AEP-8",
+      "severity": "LOW",
+      "title": "AIDEVENGINE_REGISTRY_ROOT referenced in error messages",
+      "description": "Server misconfiguration errors may expose registry root env var name to founder UI via raw error propagation.",
+      "affectedFiles": [
+        "server/founder-reality-server.ts",
+        "server/project-registry-handler.ts"
+      ],
+      "violates": "AEP-8 Internal Complexity Hidden — env config vocabulary in user errors",
+      "recommendedFix": "Sanitize errors at API boundary; log technical detail server-side only.",
+      "suggestedValidator": "validate:api-error-sanitization",
+      "implementationOrder": 45
+    },
+    {
+      "id": "AEP-F-046",
+      "category": "AEP-1",
+      "severity": "LOW",
+      "title": "confirmProjectResume flag is operator-facing API contract",
+      "description": "Public build API requires boolean confirmProjectResume — leaky abstraction of internal resume routing.",
+      "affectedFiles": [
+        "server/build-from-prompt-handler.ts",
+        "server/brain-api-handler.ts"
+      ],
+      "violates": "AEP-1 One-Prompt Continuity — API shape requires user understand resume mechanics",
+      "recommendedFix": "Replace with intent-neutral continueBuild: true on same projectId; server decides resume vs fresh.",
+      "suggestedValidator": "validate:build-api-intent-neutral",
+      "implementationOrder": 46
+    },
+    {
+      "id": "AEP-F-047",
+      "category": "AEP-4",
+      "severity": "LOW",
+      "title": "Universal blueprint pages ship for all apps",
+      "description": "About, Legal, Feedback blueprint pages materialize even when prompt does not request them — minor scope creep.",
+      "affectedFiles": [
+        ".aidev-projects/lisa-live-path-1782455436956/source/src/blueprint/pages/AboutPage.tsx",
+        "src/universal-prompt-to-app-materialization/universal-app-materialization-engine.ts"
+      ],
+      "violates": "AEP-4 Full Product Completion — extra scaffold pages dilute focus",
+      "recommendedFix": "Materialize blueprint shell pages only when prompt or contract requires.",
+      "suggestedValidator": "validate:blueprint-pages-prompt-gated",
+      "implementationOrder": 47
+    },
+    {
+      "id": "AEP-F-048",
+      "category": "AEP-6",
+      "severity": "LOW",
+      "title": "Build history not linked to launch gate evidence",
+      "description": "build-history-links.json records builds separately from launch readiness evidence chain — audit gap for launch decisions.",
+      "affectedFiles": [
+        "src/build-history/build-history-links.ts",
+        "src/launch-readiness-authority-v2/index.ts"
+      ],
+      "violates": "AEP-6 Evidence-Driven Launch — history disconnected from gate proof",
+      "recommendedFix": "Embed gate evidence snapshot id in each build history entry.",
+      "suggestedValidator": "validate:build-history-gate-evidence-link",
+      "implementationOrder": 48
+    },
+    {
+      "id": "AEP-F-049",
+      "category": "AEP-10",
+      "severity": "LOW",
+      "title": "Human review reasons not plain language",
+      "description": "When founder test or alignment gates defer to human review, reasons cite internal engine names not user-understandable blockers.",
+      "affectedFiles": [
+        "src/founder-testing-mode/index.ts",
+        "public/founder-reality/app.js"
+      ],
+      "violates": "AEP-10 Safe Human Review Boundary — correct boundary but unclear why",
+      "recommendedFix": "Human review card must state product risk in plain language and what AiDevEngine will try next autonomously.",
+      "suggestedValidator": "validate:human-review-plain-reason",
+      "implementationOrder": 49
+    },
+    {
+      "id": "AEP-F-050",
+      "category": "AEP-7",
+      "severity": "LOW",
+      "title": "Project memory not surfaced as product continuity",
+      "description": "Shared memory and project knowledge layers exist but founder UI does not show what AiDevEngine remembers across builds — feels like amnesia between sessions.",
+      "affectedFiles": [
+        "src/shared-memory-layer/index.ts",
+        "src/project-knowledge-reasoning/index.ts",
+        "public/founder-reality/app.js"
+      ],
+      "violates": "AEP-7 Automatic State Clarity — memory exists internally not in product narrative",
+      "recommendedFix": "Show continuity chip: remembered goals, last fix, next step from project memory.",
+      "suggestedValidator": "validate:project-memory-founder-surface",
+      "implementationOrder": 50
+    }
+  ]
+}

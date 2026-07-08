@@ -1,37 +1,37 @@
 # Build History Audit Report
 
 - **Run ID:** one-prompt-build-3
-- **Created:** 2026-06-26T05:14:12.922Z
-- **Profile:** QR_APP
-- **App:** SmartQR
+- **Created:** 2026-06-30T14:13:18.506Z
+- **Profile:** GENERIC_CUSTOM_APP_V1
+- **App:** AI Chat App
 - **Status:** validation=PASS production=PENDING
 - **Immutable:** true
-- **Manifest hash:** `f9ae728c0fe6eb0b2befc9d21ed9fa9fe43308dfe45322819cd7814369a144c4`
-- **Workspace hash:** `093d53bb66b5842edf68ac9e1270025705729d12b4842cd41ded4a03bb26afdd`
-- **Comparison fingerprint:** `1b3edac67558b8e4777d0a760ea3c8352dd462f2d11d3f6854922d10a83afdba`
+- **Manifest hash:** `bda7fd79e29ab208d9be92084de668c2e3f3bb113d905915db209dd7664fecbc`
+- **Workspace hash:** `df6b4398a91ddfa585563c0120b64ee1ecc0288cd9d24df47c7c79a1adae6ad8`
+- **Comparison fingerprint:** `685a75b72378b7aaf03bedbe40234918da5003219421e27e5ba884f3062f8df8`
 
 ## Prompt
 
-Build a modern QR code scanning web application with camera scan, URL redirect, and scan history. Generate architecture, plan, tasks, and begin build execution.
+Build an AI chat app with conversation threads, prompt input, model responses, and chat history sidebar.
 
 ## Artifacts
 
-- C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/smartqr-test-1/.generated-app-manifest.json
-- C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/smartqr-test-1/build-manifest.json
-- C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/smartqr-test-1/universal-feature-contract.json
-- C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/smartqr-test-1/blueprint-manifest.json
+- C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828782809/.generated-app-manifest.json
+- C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828782809/build-manifest.json
+- C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828782809/universal-feature-contract.json
+- C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828782809/blueprint-manifest.json
 - .generated-build-history/one-prompt-build-3
 
 ## Audit Timeline
 
 | Stage | Status | Evidence |
 | --- | --- | --- |
-| Build requested | INFO | prompt length=160 |
-| Profile selected | INFO | QR_APP |
-| Workspace generated | PASS | 129 files, 28 directories |
-| Manifest written | PASS | manifestHash=f9ae728c0fe6… |
-| Feature modules generated | PASS | 13 modules |
-| Build executed | PASS | npmBuildDurationMs=2517 |
+| Build requested | INFO | prompt length=104 |
+| Profile selected | INFO | GENERIC_CUSTOM_APP_V1 |
+| Workspace generated | PASS | 69 files, 18 directories |
+| Manifest written | PASS | manifestHash=bda7fd79e29a… |
+| Feature modules generated | PASS | 4 modules |
+| Build executed | PASS | npmBuildDurationMs=3965 |
 | Preview verified | PENDING | no preview URL recorded |
 | Production validation completed | PENDING | PENDING |
 | Blueprint purity checked | PASS | PASS — 0 violations |

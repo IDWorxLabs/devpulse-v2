@@ -10,6 +10,7 @@ import {
   shouldUseCustomFeatureDefinition,
 } from '../prompt-faithful-generation/index.js';
 import { suppressFallbackModulesWhenCustomExists } from '../prompt-faithful-generation/prompt-module-name-normalizer.js';
+import { detectSimpleUtilityAppKind } from '../simple-utility-app/simple-utility-app-registry.js';
 
 export type MaterializationProfile = GeneratedAppProfile | 'GENERIC_CUSTOM_APP_V1' | 'HABIT_TRACKER_WEB_V1';
 
@@ -23,6 +24,8 @@ export interface ProfileFeatureDefinition {
   forbiddenGenericTerms: string[];
   customDomainCopy?: Record<string, string>;
   androidPhonePreviewRequired?: boolean;
+  safePaymentPlaceholderActive?: boolean;
+  paymentCapabilityClassification?: 'SAFE_PAYMENT_PLACEHOLDER' | 'FINANCIAL_TRANSACTION_EXECUTION';
 }
 
 const GENERIC_PM_FALLBACK = ['Project Management System', 'Welcome to Project Management'];
@@ -116,6 +119,50 @@ const PROFILE_FEATURE_MAP: Record<MaterializationProfile, ProfileFeatureDefiniti
     ['/', '/dashboard', '/habits', '/streaks', '/routines', '/goals', '/analytics'],
     ['habit', 'streak', 'routine', 'goal', 'analytics'],
   ),
+  ASSISTIVE_COMMUNICATION_APP_V1: {
+    readOnly: true,
+    profile: 'ASSISTIVE_COMMUNICATION_APP_V1',
+    expectedAppType: 'assistive-communication',
+    featureModules: [
+      'onboarding-calibration',
+      'eye-tracking-board',
+      'blink-input-engine',
+      'gaze-keyboard',
+      'text-to-speech',
+      'quick-phrases',
+      'caregiver-dashboard',
+      'communication-history',
+      'accessibility-settings',
+      'emergency-speech',
+      'navigation-router',
+      'persistence',
+    ],
+    routes: [
+      '/',
+      '/onboarding-calibration',
+      '/eye-tracking-board',
+      '/blink-input-engine',
+      '/gaze-keyboard',
+      '/text-to-speech',
+      '/quick-phrases',
+      '/caregiver-dashboard',
+      '/communication-history',
+      '/accessibility-settings',
+      '/emergency-speech',
+    ],
+    requiredUiTerms: [
+      'blink',
+      'gaze',
+      'speech',
+      'communication',
+      'emergency',
+      'calibration',
+      'accessibility',
+      'caregiver',
+    ],
+    forbiddenGenericTerms: GENERIC_PM_FALLBACK,
+    androidPhonePreviewRequired: true,
+  },
   GENERIC_CUSTOM_APP_V1: def(
     'GENERIC_CUSTOM_APP_V1',
     'custom-app',
@@ -133,6 +180,9 @@ export function resolveMaterializationProfile(
     return profile;
   }
   const lower = rawPrompt.toLowerCase();
+  if (/assistive communication|locked-in syndrome|locked in syndrome|gaze keyboard|blink input|eye tracking board/i.test(lower)) {
+    return 'ASSISTIVE_COMMUNICATION_APP_V1';
+  }
   if (/habit|streak|routine/.test(lower)) return 'HABIT_TRACKER_WEB_V1';
   if (/booking|appointment|schedule/.test(lower)) return 'BOOKING_WEB_V1';
   return 'GENERIC_CUSTOM_APP_V1';
@@ -142,9 +192,14 @@ export function getProfileFeatureDefinition(
   profile: MaterializationProfile,
   rawPrompt: string,
 ): ProfileFeatureDefinition {
+  if (detectSimpleUtilityAppKind(rawPrompt)) {
+    const extraction = extractPromptFeatures(rawPrompt);
+    return buildCustomProfileFeatureDefinition(extraction, rawPrompt);
+  }
+
   const extraction = extractPromptFeatures(rawPrompt);
   if (shouldUseCustomFeatureDefinition(extraction, profile)) {
-    return buildCustomProfileFeatureDefinition(extraction);
+    return buildCustomProfileFeatureDefinition(extraction, rawPrompt);
   }
 
   const base = PROFILE_FEATURE_MAP[profile];

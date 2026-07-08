@@ -1,0 +1,99 @@
+{
+  "readOnly": true,
+  "originalPrompt": "Build LISA — Locked In Syndrome App.\n\nAn assistive communication app for locked-in syndrome users that converts eye movement, gaze, and blinks into speech.\n\nMobile-first Android phone preview required.\n\nRequired modules:\n* onboarding-calibration\n* eye-tracking-board\n* blink-input-engine\n* gaze-keyboard\n* text-to-speech\n* quick-phrases\n* caregiver-dashboard\n* communication-history\n* accessibility-settings\n* emergency-speech\n\nDo not use generic project management fallback. Generate architecture, plan, tasks, and begin build execution now.",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "generationInputs": {
+    "projectId": "lisa-live-path-1782455712730",
+    "buildRunId": "one-prompt-build-1",
+    "expectedAppType": "assistive-communication",
+    "featureModules": [
+      "auth",
+      "onboarding-calibration",
+      "eye-tracking-board",
+      "blink-input-engine",
+      "gaze-keyboard",
+      "text-to-speech",
+      "quick-phrases",
+      "caregiver-dashboard",
+      "communication-history",
+      "accessibility-settings",
+      "emergency-speech",
+      "locked-in"
+    ],
+    "routes": [
+      "/",
+      "/onboarding-calibration",
+      "/eye-tracking-board",
+      "/blink-input-engine",
+      "/gaze-keyboard",
+      "/text-to-speech",
+      "/quick-phrases",
+      "/caregiver-dashboard",
+      "/communication-history",
+      "/accessibility-settings",
+      "/emergency-speech",
+      "/locked-in"
+    ],
+    "fallbackUsed": false
+  },
+  "featureContractSummary": {
+    "featureModuleCount": 12,
+    "featureModuleIds": [
+      "auth",
+      "onboarding-calibration",
+      "eye-tracking-board",
+      "blink-input-engine",
+      "gaze-keyboard",
+      "text-to-speech",
+      "quick-phrases",
+      "caregiver-dashboard",
+      "communication-history",
+      "accessibility-settings",
+      "emergency-speech",
+      "locked-in"
+    ],
+    "routes": [
+      "/",
+      "/onboarding-calibration",
+      "/eye-tracking-board",
+      "/blink-input-engine",
+      "/gaze-keyboard",
+      "/text-to-speech",
+      "/quick-phrases",
+      "/caregiver-dashboard",
+      "/communication-history",
+      "/accessibility-settings",
+      "/emergency-speech",
+      "/locked-in"
+    ]
+  },
+  "profileFeatureMapVersion": "materialization-v1",
+  "blueprintVersion": "1.0",
+  "generatorVersion": "universal-prompt-to-app-materialization-v1",
+  "dependencySnapshot": {
+    "runtime": "vite-react:generic-custom-app-v1",
+    "packageManager": "npm",
+    "note": "Captured from generated workspace package.json when present"
+  },
+  "validationCommands": [
+    "npm install",
+    "npm run build",
+    "npm run preview",
+    "npm run validate:blueprint-purity",
+    "npm run validate:production-validation"
+  ],
+  "expectedArtifacts": [
+    ".generated-app-manifest.json",
+    "src/features/registry.ts",
+    "src/features/routes.ts",
+    "src/features/FeatureAppRouter.tsx",
+    "src/blueprint/AppShell.tsx",
+    "universal-feature-contract.json"
+  ],
+  "replayInstructions": [
+    "Use originalPrompt and selectedProfile with Universal Prompt-to-App Materialization engine.",
+    "Regenerate workspace with the same contractId/projectId when possible.",
+    "Run validationCommands in the generated workspace to reproduce validation evidence.",
+    "Compare manifestHash and workspaceHash against build-record.json for regression tracking."
+  ]
+}

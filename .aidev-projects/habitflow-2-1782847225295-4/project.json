@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "habitflow-2-1782847225295-4",
+  "projectName": "HabitFlow (2)",
+  "createdAt": "2026-06-30T19:20:50.556Z",
+  "updatedAt": "2026-06-30T19:20:50.966Z",
+  "selectedProfile": "HABIT_TRACKER_WEB_V1",
+  "originalPrompt": "Build a modern web application called HabitFlow that helps users track daily habits.\n\nThe application should allow users to create, edit, archive, and delete habits; mark habits as completed each day; display daily, weekly, and monthly completion statistics; organize habits into categories; show streak counts and longest streaks; display a dashboard with progress cards and charts; filter habits by category and completion status; search habits; support dark and light mode; store data locally in the browser without requiring login or user accounts; export and import habit data as JSON; and work responsively on desktop, tablet, and mobile.\n\nGenerate a complete working application, install dependencies, verify the build, launch the live preview, and return the preview URL and final build report.",
+  "currentSourcePath": ".aidev-projects/habitflow-2-1782847225295-4/source",
+  "activeWorkspacePath": ".aidev-projects/habitflow-2-1782847225295-4",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": "one-prompt-build-1",
+  "manifestPath": ".aidev-projects/habitflow-2-1782847225295-4/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/habitflow-2-1782847225295-4/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782847250082",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/habitflow-2-1782847225295-4/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/habitflow-2-1782847225295-4/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-1-dup-1782847250082"
+  ],
+  "featureContractRealityPath": ".aidev-projects/habitflow-2-1782847225295-4/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/habitflow-2-1782847225295-4/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/habitflow-2-1782847225295-4/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/habitflow-2-1782847225295-4/.aidev/materialization-quality-score.json"
+}

@@ -20,6 +20,7 @@ import type {
 import { materializationQualityEvidenceForChat } from '../materialization-quality-score/materialization-quality-score-report.js';
 import { buildFeatureContractRealityChatSummary } from '../feature-contract-reality/feature-contract-reality-report.js';
 import { buildWorkspaceRealityAuditChatSummary } from '../workspace-reality-audit/workspace-reality-audit-report.js';
+import { buildEvidenceDimensionReport } from '../feature-contract-reality/feature-reality-workspace-fallback-collector.js';
 
 export function completeMaterializationEvidence(
   input: MaterializationEvidenceCompletionInput,
@@ -198,5 +199,18 @@ export function materializationEvidenceSummaryForChat(
             recordedAt: manifest.universalProductionProofRecordedAt,
           }
         : null,
+    evidenceDimensionReport: buildEvidenceDimensionReport({
+      promptFaithfulnessScore: manifest.promptFaithfulnessScore ?? null,
+      promptFaithfulnessPassed: manifest.promptFaithfulnessStatus === 'PASS',
+      workspaceMaterializationScore: manifest.materializationQualityScore ?? null,
+      workspaceMaterializationPassed:
+        manifest.status === 'PASS' || manifest.generatedFilesCount > 0,
+      featureRealityStatus: manifest.featureContractRealityStatus,
+      featureRealityScore: manifest.featureContractRealityScore ?? null,
+      livePreviewRealityPassed:
+        manifest.previewDurationMs > 0 ? manifest.validationStatus === 'PASS' : null,
+      productionProofPassed:
+        manifest.universalProductionProofStatus === 'PASS' ? true : null,
+    }),
   };
 }

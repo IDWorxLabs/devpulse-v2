@@ -1,0 +1,81 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-3-dup-1782829297457",
+  "createdAt": "2026-06-30T14:21:37.363Z",
+  "prompt": "Build an AI chat app with conversation threads, prompt input, model responses, and chat history sidebar.",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "appName": "AI Chat App",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782829284688",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782829284688/.generated-app-manifest.json",
+  "manifestHash": "3a98c47cef11f389632e6c01ec753e5aa36cd65f971851cc476f4b6295ce49aa",
+  "workspaceHash": "38472641b2a5a0d07b298c2be88eeda4b3ad277028b9d3639072a820ed7b1380",
+  "materializationHash": "78b128849c761ffaa32bf88416e4825f1f5ad850672683130d7a6b544c6ca020",
+  "generatedFilesCount": 69,
+  "generatedDirectoriesCount": 18,
+  "generatedFeatureModulesCount": 4,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/persistence"
+  ],
+  "generatedComponents": [
+    "src/blueprint/components/EmptyState.tsx",
+    "src/blueprint/components/ErrorState.tsx",
+    "src/blueprint/components/LoadingState.tsx",
+    "src/blueprint/components/UniversalAiAssistant.tsx"
+  ],
+  "generatedServices": [
+    "src/features/dashboard/dashboard.service.ts",
+    "src/features/navigation-router/navigation-router.service.ts",
+    "src/features/settings/settings.service.ts"
+  ],
+  "generatedModels": [
+    "src/features/dashboard/dashboard.types.ts",
+    "src/features/navigation-router/navigation-router.types.ts",
+    "src/features/settings/settings.types.ts"
+  ],
+  "generatedStyles": [
+    "src/App.css",
+    "src/features/dashboard/dashboard.module.css",
+    "src/features/feature-app-router.css",
+    "src/features/navigation-router/navigation-router.module.css",
+    "src/features/settings/settings.module.css",
+    "src/styles/global.css"
+  ],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "PASS",
+    "blueprintPurityStatus": "PASS",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": true,
+    "warnings": [
+      "AEE_PREVIEW_RECOVERY_LOOP_V1: preview recovery exhausted after 3 attempt(s) — build completed with degraded preview.",
+      "AEE respected blocker: Live Preview is locked because Launch Readiness evidence not available. Run Autonomous Debugging after resolving upstream interaction and behavior reachability failures.",
+      "AEE evidence provider: AUTONOMOUS_DEBUGGING",
+      "AEE evidence provider: MISSING_CAPABILITY_EVOLUTION",
+      "AEE evidence provider: LIVE_PREVIEW_GATE",
+      "Only 7/9 required UI terms detected in generated source."
+    ],
+    "errors": []
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782829284688/.generated-app-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782829284688/build-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782829284688/universal-feature-contract.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782829284688/blueprint-manifest.json",
+    ".generated-build-history/one-prompt-build-3-dup-1782829297457"
+  ],
+  "failureReasons": [],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-3-dup-1782829297457/replay-metadata.json",
+  "comparisonFingerprint": "c390b25f475c4f1030d31e87002c34ea7cb95508dc0eb03cdd57d8bd8768f44a",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-3-dup-1782829297457/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-3",
+  "buildHistoryRecordHash": "ae3d5c4c2bd2a670d05ece01ca75eec483ad23dd6ed9d3ea74aa6ee71bae6288"
+}

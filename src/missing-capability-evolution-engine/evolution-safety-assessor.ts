@@ -7,6 +7,7 @@ import type {
   EvolutionSafetyVerdict,
   MissingCapabilityIntakeItem,
 } from './missing-capability-evolution-types.js';
+import { isSafePaymentPlaceholderCapabilityName } from '../safe-payment-placeholder-policy/index.js';
 
 let assessmentCounter = 0;
 
@@ -75,6 +76,15 @@ function deriveVerdict(
   item: MissingCapabilityIntakeItem,
   dimensions: Record<string, 'LOW' | 'MEDIUM' | 'HIGH'>,
 ): { verdict: EvolutionSafetyVerdict; blockedReason: string | null; humanReviewReason: string | null; limitations: string[] } {
+  if (isSafePaymentPlaceholderCapabilityName(item.capabilityName)) {
+    return {
+      verdict: 'SAFE_TO_EVOLVE',
+      blockedReason: null,
+      humanReviewReason: null,
+      limitations: ['UI-only payment placeholder — no real transaction execution'],
+    };
+  }
+
   if (!item.sourceRequirementIds.length && !item.sourcePromptEvidence.length) {
     return {
       verdict: 'INSUFFICIENT_EVIDENCE',
@@ -85,7 +95,7 @@ function deriveVerdict(
   }
 
   for (const entry of HIGH_RISK_PATTERNS) {
-    if (entry.pattern.test(item.capabilityName)) {
+    if (entry.pattern.test(item.capabilityName) && !isSafePaymentPlaceholderCapabilityName(item.capabilityName)) {
       return {
         verdict: 'BLOCKED_UNSAFE',
         blockedReason: `High-risk capability blocked: ${entry.reason}`,

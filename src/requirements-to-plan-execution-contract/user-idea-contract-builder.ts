@@ -2,6 +2,8 @@
  * User Idea Contract — capture and normalize founder/user prompt.
  */
 
+import { buildSimpleUtilityUserIdeaContract } from '../simple-utility-app/simple-utility-requirement-contract.js';
+import { detectSimpleUtilityAppKind, isSimpleUtilityAppPrompt } from '../simple-utility-app/simple-utility-app-registry.js';
 import { VAGUE_PROMPT_PATTERNS } from './requirements-to-plan-contract-registry.js';
 import type { UserIdeaContract, UserIdeaStatus } from './requirements-to-plan-contract-types.js';
 
@@ -92,6 +94,12 @@ function computeConfidence(rawPrompt: string, vague: boolean, unknowns: string[]
 }
 
 export function buildUserIdeaContract(rawPrompt: string, ideaId?: string): UserIdeaContract {
+  const resolvedIdeaId = ideaId ?? nextIdeaId();
+  const simpleKind = detectSimpleUtilityAppKind(rawPrompt);
+  if (simpleKind) {
+    return buildSimpleUtilityUserIdeaContract(rawPrompt, simpleKind, resolvedIdeaId);
+  }
+
   const normalized = normalizeWhitespace(rawPrompt);
   const vague = isVaguePrompt(normalized);
   const lower = normalized.toLowerCase();

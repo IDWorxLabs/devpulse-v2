@@ -1,0 +1,101 @@
+[
+  {
+    "readOnly": true,
+    "eventId": "audit-1",
+    "timestamp": "2026-06-30T12:55:10.126Z",
+    "stage": "Build requested",
+    "status": "INFO",
+    "evidencePath": null,
+    "evidenceSummary": "prompt length=6528"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-2",
+    "timestamp": "2026-06-30T12:55:10.126Z",
+    "stage": "Profile selected",
+    "status": "INFO",
+    "evidencePath": null,
+    "evidenceSummary": "GENERIC_CUSTOM_APP_V1"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-3",
+    "timestamp": "2026-06-30T12:55:14.554Z",
+    "stage": "Workspace generated",
+    "status": "PASS",
+    "evidencePath": null,
+    "evidenceSummary": "165 files, 34 directories"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-4",
+    "timestamp": "2026-06-30T12:55:14.554Z",
+    "stage": "Manifest written",
+    "status": "PASS",
+    "evidencePath": "/.generated-app-manifest.json",
+    "evidenceSummary": "manifestHash=0b80ad2c61fd…"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-5",
+    "timestamp": "2026-06-30T12:55:14.554Z",
+    "stage": "Feature modules generated",
+    "status": "FAIL",
+    "evidencePath": null,
+    "evidenceSummary": "19 modules"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-6",
+    "timestamp": "2026-06-30T12:55:14.554Z",
+    "stage": "Build executed",
+    "status": "PASS",
+    "evidencePath": null,
+    "evidenceSummary": "npmBuildDurationMs=1666"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-7",
+    "timestamp": "2026-06-30T12:55:14.554Z",
+    "stage": "Preview verified",
+    "status": "PENDING",
+    "evidencePath": null,
+    "evidenceSummary": "no preview URL recorded"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-8",
+    "timestamp": "2026-06-30T12:55:14.554Z",
+    "stage": "Production validation completed",
+    "status": "PENDING",
+    "evidencePath": null,
+    "evidenceSummary": "PENDING"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-9",
+    "timestamp": "2026-06-30T12:55:14.554Z",
+    "stage": "Blueprint purity checked",
+    "status": "PENDING",
+    "evidencePath": ".generated-build-history/lisa-1782823112026-3-dup-1782824114615/manifest.snapshot.json",
+    "evidenceSummary": "PENDING — 0 violations"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-10",
+    "timestamp": "2026-06-30T12:55:14.554Z",
+    "stage": "Build history record persisted",
+    "status": "PASS",
+    "evidencePath": ".generated-build-history/lisa-1782823112026-3-dup-1782824114615",
+    "evidenceSummary": "Immutable build history artifacts written"
+  },
+  {
+    "readOnly": true,
+    "eventId": "audit-11",
+    "timestamp": "2026-06-30T12:55:14.554Z",
+    "stage": "Build finalized",
+    "status": "PASS",
+    "evidencePath": ".generated-build-history/lisa-1782823112026-3-dup-1782824114615/manifest.snapshot.json",
+    "evidenceSummary": "status=PARTIAL validation=PARTIAL"
+  }
+]

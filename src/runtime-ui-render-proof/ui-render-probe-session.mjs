@@ -4,6 +4,7 @@
  */
 
 import { spawn } from 'node:child_process';
+import { killChildProcessTree } from '../windows-process-cleanup/kill-child-process-tree.mjs';
 import { existsSync } from 'node:fs';
 import { get as httpGet } from 'node:http';
 import { join } from 'node:path';
@@ -186,14 +187,7 @@ async function main() {
   let cleanupStatus = 'CLEANED';
   try {
     if (child.pid) {
-      child.kill('SIGTERM');
-      await new Promise((r) => setTimeout(r, 300));
-      try {
-        process.kill(child.pid, 0);
-        child.kill('SIGKILL');
-      } catch {
-        // already dead
-      }
+      await killChildProcessTree(child);
     }
   } catch {
     cleanupStatus = 'CLEANUP_FAILED';

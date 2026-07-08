@@ -10,8 +10,10 @@ import { executeRealFileOperation } from '../real-file-workspace-execution/real-
 import { resolveSafeWorkspaceRoot } from '../real-file-workspace-execution/real-file-workspace-path-authority.js';
 import type { MaterializeGeneratedAppInput, CodeGenerationEngineResult, GeneratedAppProfile } from './code-generation-engine-types.js';
 import { buildUniversalCrudWorkspaceFiles } from './universal-crud-app-generator.js';
+import { guardPromptBoundedMaterialization, applyPromptBoundedPlanToBuildPlan } from '../prompt-bounded-materialization/index.js';
 import { resolvePromptFaithfulBuildPlan } from '../prompt-faithful-generation/index.js';
 import { materializableFeatureModules } from '../universal-prompt-to-app-materialization/modular-feature-module-generator.js';
+import { enforceDirectFeatureRootMountInWorkspace } from '../simple-utility-app/direct-feature-root-mount.js';
 
 function writeWorkspaceFile(input: {
   projectRootDir: string;
@@ -71,9 +73,28 @@ export function materializeGeneratedApplication(
     };
   }
 
-  const buildPlan =
+  const buildPlanInitial =
     input.faithfulBuildPlan ??
     resolvePromptFaithfulBuildPlan(input.rawPrompt, input.profileOverride ?? null);
+
+  const materializationGuard = guardPromptBoundedMaterialization({
+    rawPrompt: input.rawPrompt,
+    buildPlan: buildPlanInitial,
+  });
+  if (!materializationGuard.allowed) {
+    return {
+      readOnly: true,
+      generated: false,
+      profile: null,
+      workspaceId,
+      generatedFiles: [],
+      skippedReason:
+        materializationGuard.blockedReason ??
+        'Prompt-Bounded Materialization Guard blocked generation before file writes.',
+    };
+  }
+
+  const buildPlan = applyPromptBoundedPlanToBuildPlan(buildPlanInitial, materializationGuard.plan);
   const universalProfile = buildPlan.materializationProfile as GeneratedAppProfile;
   const expectedModuleIds = materializableFeatureModules(buildPlan.definition);
 
@@ -102,6 +123,16 @@ export function materializeGeneratedApplication(
       content: file.content,
     });
     if (ok) generatedFiles.push(file.relativePath);
+  }
+
+  const directMountResult = enforceDirectFeatureRootMountInWorkspace({
+    workspaceDir: rootVerdict.workspaceRoot,
+    rawPrompt: input.rawPrompt,
+    definition: buildPlan.definition,
+    displayName: buildPlan.extraction.appName,
+  });
+  if (directMountResult.applied && !generatedFiles.includes('src/App.tsx')) {
+    generatedFiles.push('src/App.tsx');
   }
 
   return {

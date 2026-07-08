@@ -179,6 +179,11 @@ export function generateBrainResponse(
       return generateRiskResponse();
     case 'PROJECT':
       return generateProjectResponse();
+    case 'BUILD':
+      return (
+        'Build intent detected. Autonomous engineering should route through the build orchestration pipeline. ' +
+        'If you see this message, the server misrouted a build prompt — restart npm run dev and retry Send.'
+      );
     case 'GENERAL':
     default:
       return generateGeneralResponse();

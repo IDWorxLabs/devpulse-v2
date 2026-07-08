@@ -1,6 +1,6 @@
 {
   "version": "V1",
-  "generatedAt": "2026-06-25T06:29:39.026Z",
+  "generatedAt": "2026-07-07T12:52:11.194Z",
   "passToken": "VALIDATION_RUNTIME_GOVERNANCE_V1_PASS",
   "active": true,
   "tiers": [
@@ -184,17 +184,17 @@
     {
       "operation": "Repeated npm install",
       "blockWhenReusableEvidenceExists": true,
-      "affectedValidatorCount": 12
+      "affectedValidatorCount": 19
     },
     {
       "operation": "Repeated npm build",
       "blockWhenReusableEvidenceExists": true,
-      "affectedValidatorCount": 49
+      "affectedValidatorCount": 54
     },
     {
       "operation": "Repeated preview startup",
       "blockWhenReusableEvidenceExists": true,
-      "affectedValidatorCount": 76
+      "affectedValidatorCount": 90
     },
     {
       "operation": "Repeated UVL execution",
@@ -209,7 +209,7 @@
     {
       "operation": "Repeated Playwright execution",
       "blockWhenReusableEvidenceExists": true,
-      "affectedValidatorCount": 13
+      "affectedValidatorCount": 17
     }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "readOnly": true,
+  "generatedFiles": [
+    {
+      "path": ".generated-app-manifest.json",
+      "size": 6771,
+      "extension": ".json",
+      "lines": 224,
+      "category": "Config",
+      "hash": "52d9b4bcf5e37ec4c3399b97da3adf8819afe35858a2f188370bbbfcc8dffdc4"
+    }
+  ],
+  "generatedDirectories": [],
+  "generatedFeatureModuleFiles": [],
+  "featureModuleDirectories": [],
+  "workspaceHash": "57ab867081481d5797ea5486a18ae227570bce398bf04cf8a8deb781aae9ed4e",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0
+}

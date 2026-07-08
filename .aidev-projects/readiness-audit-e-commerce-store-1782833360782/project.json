@@ -1,0 +1,23 @@
+{
+  "readOnly": true,
+  "projectId": "readiness-audit-e-commerce-store-1782833360782",
+  "projectName": "E-Commerce Store",
+  "createdAt": "2026-06-30T15:29:20.800Z",
+  "updatedAt": "2026-06-30T15:29:20.800Z",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "originalPrompt": "Build an e-commerce store with product catalog, shopping cart, checkout flow, and order history pages.",
+  "currentSourcePath": "",
+  "activeWorkspacePath": ".aidev-projects/readiness-audit-e-commerce-store-1782833360782",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": null,
+  "manifestPath": "",
+  "featureContractPath": "",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782833360793",
+  "productionValidationPath": null,
+  "exportMetadataPath": "",
+  "projectFileIndexPath": "",
+  "status": "FAILED",
+  "immutableBuildLinks": [],
+  "lastFailedBuildRunId": "one-prompt-build-1",
+  "lastFailedSnapshotPath": ".aidev-projects/readiness-audit-e-commerce-store-1782833360782/.aidev/snapshots/failed-one-prompt-build-1"
+}

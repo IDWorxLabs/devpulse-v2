@@ -1,0 +1,14 @@
+{
+  "routes": [
+    "/"
+  ],
+  "featureModules": [
+    {
+      "readOnly": true,
+      "id": "calculator",
+      "route": "/",
+      "componentPath": "src/features/calculator/CalculatorFeature.tsx",
+      "navLabel": "Calculator"
+    }
+  ]
+}

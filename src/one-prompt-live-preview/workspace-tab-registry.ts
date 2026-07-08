@@ -65,28 +65,43 @@ export function resolveProjectContext(input: {
   projectId?: string | null;
   projectName?: string | null;
   createIfMissing?: boolean;
+  /**
+   * When true, this request has already been classified as a brand-new build (see
+   * src/project-context-isolation-v4/), so NO previous project identifier of any kind may be
+   * reused — not the implicit process-wide activeProjectId, not a caller-supplied projectId
+   * (e.g. a frontend resending a previous build's persisted id), not any other cached/persisted
+   * identifier. A fresh project id is always minted in that case. Defaults to false to preserve
+   * existing behavior (explicit/implicit reuse allowed) for continuation-style callers.
+   */
+  blockActiveProjectFallback?: boolean;
 }): { projectId: string; projectName: string; session: MultiProjectWorkspaceSession; created: boolean } {
   const requestedId = input.projectId?.trim() || null;
-  if (requestedId && sessions.has(requestedId)) {
-    const session = sessions.get(requestedId)!;
-    if (input.projectName?.trim()) {
-      session.projectName = input.projectName.trim();
-      session.lastUpdated = new Date().toISOString();
+
+  if (!input.blockActiveProjectFallback) {
+    if (requestedId && sessions.has(requestedId)) {
+      const session = sessions.get(requestedId)!;
+      if (input.projectName?.trim()) {
+        session.projectName = input.projectName.trim();
+        session.lastUpdated = new Date().toISOString();
+      }
+      return { projectId: requestedId, projectName: session.projectName, session, created: false };
     }
-    return { projectId: requestedId, projectName: session.projectName, session, created: false };
+
+    if (requestedId && input.createIfMissing !== false) {
+      const session = createSession(requestedId, input.projectName?.trim() || requestedId);
+      setActiveProjectId(requestedId);
+      return { projectId: requestedId, projectName: session.projectName, session, created: true };
+    }
+
+    if (activeProjectId && sessions.has(activeProjectId)) {
+      const session = sessions.get(activeProjectId)!;
+      return { projectId: activeProjectId, projectName: session.projectName, session, created: false };
+    }
   }
 
-  if (requestedId && input.createIfMissing !== false) {
-    const session = createSession(requestedId, input.projectName?.trim() || requestedId);
-    setActiveProjectId(requestedId);
-    return { projectId: requestedId, projectName: session.projectName, session, created: true };
-  }
-
-  if (activeProjectId && sessions.has(activeProjectId)) {
-    const session = sessions.get(activeProjectId)!;
-    return { projectId: activeProjectId, projectName: session.projectName, session, created: false };
-  }
-
+  // blockActiveProjectFallback === true: every previous-identifier path above is skipped on
+  // purpose, regardless of what projectId/activeProjectId/session happens to already exist — a
+  // brand-new build always gets a brand-new project id.
   const newId = generateProjectId(input.projectName ?? undefined);
   const session = createSession(newId, input.projectName?.trim() || 'New Project');
   setActiveProjectId(newId);
@@ -143,8 +158,40 @@ export function getBuildResultForProject(projectId: string): OnePromptLivePrevie
   return buildResultsByProject.get(projectId) ?? null;
 }
 
+/**
+ * Fresh Build Artifact Isolation V4 — invalidates the previously stored build result (the
+ * ACTIVE_BUILD_RESULT purge category) for a project so it cannot be read as "current evidence"
+ * while a fresh build for that same project id is in flight. Called for every build (NEW_BUILD
+ * and CONTINUE_EXISTING_PROJECT alike) before planning/materialization begins; the session/tab
+ * entry itself (workspace path, chat thread, etc.) is left untouched — only the stale build
+ * result snapshot is cleared. `registerProjectBuildResult` repopulates it once the fresh build
+ * completes.
+ */
+export function invalidatePreviousBuildEvidenceForProject(projectId: string): boolean {
+  return buildResultsByProject.delete(projectId);
+}
+
 export function listMultiProjectWorkspaces(): MultiProjectWorkspaceSession[] {
   return [...sessions.values()].sort((a, b) => a.projectName.localeCompare(b.projectName));
+}
+
+export function pruneWorkspaceSessionsNotInRegistry(allowedProjectIds: readonly string[]): string[] {
+  const allowed = new Set(allowedProjectIds);
+  const removed: string[] = [];
+  for (const projectId of [...sessions.keys()]) {
+    if (!allowed.has(projectId)) {
+      removeWorkspaceSession(projectId);
+      removed.push(projectId);
+    }
+  }
+  return removed;
+}
+
+export function listMultiProjectWorkspacesForRegistry(
+  allowedProjectIds: readonly string[],
+): MultiProjectWorkspaceSession[] {
+  const allowed = new Set(allowedProjectIds);
+  return listMultiProjectWorkspaces().filter((session) => allowed.has(session.projectId));
 }
 
 export function listMultiProjectWorkspacesForProject(projectId: string): MultiProjectWorkspaceSession[] {
@@ -154,4 +201,22 @@ export function listMultiProjectWorkspacesForProject(projectId: string): MultiPr
 
 export function listProjectBuildResults(): Array<{ projectId: string; build: OnePromptLivePreviewBuildResult }> {
   return [...buildResultsByProject.entries()].map(([projectId, build]) => ({ projectId, build }));
+}
+
+export function removeWorkspaceSession(projectId: string): boolean {
+  const hadSession = sessions.has(projectId);
+  sessions.delete(projectId);
+  buildResultsByProject.delete(projectId);
+  if (activeProjectId === projectId) {
+    activeProjectId = null;
+  }
+  return hadSession;
+}
+
+export function clearActiveProjectIfMatches(projectId: string): boolean {
+  if (activeProjectId !== projectId) return false;
+  activeProjectId = null;
+  const session = sessions.get(projectId);
+  if (session) session.active = false;
+  return true;
 }

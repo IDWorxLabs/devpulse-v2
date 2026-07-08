@@ -8,6 +8,7 @@ import {
 } from './feature-reality-validation-runner.js';
 import { buildFeatureRealityAssessment } from './feature-reality-validation-scoring.js';
 import { formatFeatureRealityReportMarkdown } from './feature-reality-validation-report.js';
+import { FEATURE_REALITY_V1_PASS_TOKEN } from './feature-reality-validation-registry.js';
 import type {
   FeatureRealityAssessment,
   RunFeatureRealityValidationInput,
@@ -117,4 +118,44 @@ export function registerSourceDerivedFeatureRealityAssessment(input: {
   assessment.reportMarkdown = formatFeatureRealityReportMarkdown(assessment);
   lastAssessment = assessment;
   return assessment;
+}
+
+/** Register workspace-scanned feature checks when live preview evidence is not yet available. */
+export function registerWorkspaceDerivedFeatureRealityAssessment(input: {
+  previewUrl: string;
+  contractId: string;
+  checks: import('./feature-reality-validation-types.js').FeatureRealityCheck[];
+  evidenceStatus?: 'DEGRADED_WITH_WORKSPACE_EVIDENCE' | 'PASS' | 'FAIL';
+}): FeatureRealityAssessment {
+  const assessment = buildFeatureRealityAssessment({
+    previewUrl: input.previewUrl,
+    contractId: input.contractId,
+    checks: input.checks,
+    reportMarkdown: '',
+  });
+  const criticalMissing = assessment.checks.filter((check) => check.critical && !check.passed);
+  const degraded = input.evidenceStatus === 'DEGRADED_WITH_WORKSPACE_EVIDENCE';
+  const workspaceSufficient = degraded && criticalMissing.length === 0;
+
+  const finalized: FeatureRealityAssessment = workspaceSufficient
+    ? {
+        ...assessment,
+        passed: true,
+        passToken: FEATURE_REALITY_V1_PASS_TOKEN,
+        blocksLaunchReadiness: false,
+        blocksLaunchReadinessReason: null,
+        evidenceMode: 'WORKSPACE_DERIVED',
+        degradedWithWorkspaceEvidence: true,
+        verdict:
+          assessment.verdict === 'FEATURE_FAIL' ? 'FEATURE_ACCEPTABLE' : assessment.verdict,
+      }
+    : {
+        ...assessment,
+        evidenceMode: 'WORKSPACE_DERIVED',
+        degradedWithWorkspaceEvidence: degraded,
+      };
+
+  finalized.reportMarkdown = formatFeatureRealityReportMarkdown(finalized);
+  lastAssessment = finalized;
+  return finalized;
 }

@@ -11,13 +11,13 @@ export function getDevPulseV2VirtualUserEngine(): {
   ownerModule: string;
   passToken: string;
   phase: number;
-  simulationOnly: true;
+  enforcementAuthority: true;
 } {
   return {
     ownerModule: VIRTUAL_USER_ENGINE_OWNER_MODULE,
     passToken: VIRTUAL_USER_ENGINE_PASS_TOKEN,
     phase: 6,
-    simulationOnly: true,
+    enforcementAuthority: true,
   };
 }
 

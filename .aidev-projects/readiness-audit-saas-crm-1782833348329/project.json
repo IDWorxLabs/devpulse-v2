@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "readiness-audit-saas-crm-1782833348329",
+  "projectName": "SaaS CRM",
+  "createdAt": "2026-06-30T15:29:20.429Z",
+  "updatedAt": "2026-06-30T15:29:20.625Z",
+  "selectedProfile": "CRM_WEB_V1",
+  "originalPrompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "currentSourcePath": ".aidev-projects/readiness-audit-saas-crm-1782833348329/source",
+  "activeWorkspacePath": ".aidev-projects/readiness-audit-saas-crm-1782833348329",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": "one-prompt-build-1",
+  "manifestPath": ".aidev-projects/readiness-audit-saas-crm-1782833348329/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/readiness-audit-saas-crm-1782833348329/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782833360214",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/readiness-audit-saas-crm-1782833348329/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/readiness-audit-saas-crm-1782833348329/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-1-dup-1782833360214"
+  ],
+  "featureContractRealityPath": ".aidev-projects/readiness-audit-saas-crm-1782833348329/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/readiness-audit-saas-crm-1782833348329/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/readiness-audit-saas-crm-1782833348329/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/readiness-audit-saas-crm-1782833348329/.aidev/materialization-quality-score.json"
+}

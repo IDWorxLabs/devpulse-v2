@@ -53,12 +53,20 @@ function resolveStatus(
   records: FeatureRealityRecord[],
   overallScore: number,
 ): FeatureContractRealityStatus {
-  if (manifest.status === 'FAIL' || manifest.status === 'ABORTED') return 'FAIL';
-  if (records.length === 0) return 'FAIL';
+  if (records.length === 0) return manifest.generatedFilesCount > 0 ? 'PARTIAL' : 'FAIL';
+  const allModulesPresent = records.every(
+    (record) => record.filesPresent && record.registryEntryPresent,
+  );
+  if (allModulesPresent && manifest.npmBuildDurationMs <= 0) {
+    return 'DEGRADED_WITH_WORKSPACE_EVIDENCE';
+  }
+  if (manifest.status === 'FAIL' || manifest.status === 'ABORTED') {
+    return allModulesPresent ? 'DEGRADED_WITH_WORKSPACE_EVIDENCE' : 'FAIL';
+  }
   if (records.some((record) => !record.filesPresent || !record.registryEntryPresent)) return 'FAIL';
   if (overallScore >= 85 && records.every((record) => record.score >= 70)) return 'PASS';
   if (overallScore >= 50) return 'PARTIAL';
-  return 'FAIL';
+  return allModulesPresent ? 'DEGRADED_WITH_WORKSPACE_EVIDENCE' : 'FAIL';
 }
 
 export function buildFeatureContractRealityChatSummary(report: FeatureContractRealityReport): string {

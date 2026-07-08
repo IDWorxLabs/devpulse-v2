@@ -8,13 +8,13 @@ export function getDevPulseV2LivePreviewGate(): {
   ownerModule: string;
   passToken: string;
   phase: number;
-  simulationOnly: true;
+  enforcementAuthority: true;
 } {
   return {
     ownerModule: LIVE_PREVIEW_GATE_OWNER_MODULE,
     passToken: LIVE_PREVIEW_GATE_V1_PASS_TOKEN,
     phase: 13,
-    simulationOnly: true,
+    enforcementAuthority: true,
   };
 }
 

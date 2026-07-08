@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "aee-build-autofix-ai-chat-app-1782829992872",
+  "projectName": "AI Chat App",
+  "createdAt": "2026-06-30T14:33:27.706Z",
+  "updatedAt": "2026-06-30T14:33:27.909Z",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "originalPrompt": "Build an AI chat app with conversation threads, prompt input, model responses, and chat history sidebar.",
+  "currentSourcePath": ".aidev-projects/aee-build-autofix-ai-chat-app-1782829992872/source",
+  "activeWorkspacePath": ".aidev-projects/aee-build-autofix-ai-chat-app-1782829992872",
+  "lastBuildRunId": "one-prompt-build-3",
+  "lastSuccessfulBuildRunId": "one-prompt-build-3",
+  "manifestPath": ".aidev-projects/aee-build-autofix-ai-chat-app-1782829992872/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/aee-build-autofix-ai-chat-app-1782829992872/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-3-dup-1782830007389",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/aee-build-autofix-ai-chat-app-1782829992872/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/aee-build-autofix-ai-chat-app-1782829992872/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-3-dup-1782830007389"
+  ],
+  "featureContractRealityPath": ".aidev-projects/aee-build-autofix-ai-chat-app-1782829992872/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/aee-build-autofix-ai-chat-app-1782829992872/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/aee-build-autofix-ai-chat-app-1782829992872/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/aee-build-autofix-ai-chat-app-1782829992872/.aidev/materialization-quality-score.json"
+}

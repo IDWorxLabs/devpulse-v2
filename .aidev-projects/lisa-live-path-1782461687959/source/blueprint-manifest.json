@@ -1,0 +1,27 @@
+{
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "contractId": "lisa-live-path-1782461687959",
+  "ideaId": "idea-1",
+  "appName": "LISA — Locked In Syndrome App",
+  "generatedAt": "2026-06-26T08:14:48.337Z",
+  "defaultSections": [
+    "launch",
+    "welcome",
+    "auth",
+    "onboarding",
+    "shell",
+    "home",
+    "search",
+    "notifications",
+    "profile",
+    "settings",
+    "help",
+    "feedback",
+    "legal",
+    "analytics",
+    "security",
+    "monetization",
+    "universal-ai"
+  ]
+}

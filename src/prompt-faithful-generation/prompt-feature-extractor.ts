@@ -3,6 +3,11 @@
  */
 
 import { promptMentionsLisaOrAccessibility } from '../project-context-switching/project-context-classifier-guard.js';
+import {
+  detectSimpleUtilityAppKind,
+  isSimpleUtilityAppPrompt,
+  simpleUtilityFeatureModules,
+} from '../simple-utility-app/simple-utility-app-registry.js';
 import type { PromptFeatureExtraction } from './prompt-faithful-generation-types.js';
 import {
   classifyModulePhrase,
@@ -253,6 +258,11 @@ function inferDomain(rawPrompt: string): string {
     return 'assistive communication / accessibility / health accessibility';
   }
   const lower = rawPrompt.toLowerCase();
+  if (/calculator/.test(lower)) return 'utility / calculator';
+  if (/todo|to-do/.test(lower)) return 'utility / todo list';
+  if (/notes?/.test(lower)) return 'utility / notes';
+  if (/timer/.test(lower)) return 'utility / timer';
+  if (/counter/.test(lower)) return 'utility / counter';
   if (/recipe|meal|cook/.test(lower)) return 'culinary / recipe management';
   if (/pet|veterinar/.test(lower)) return 'pet care';
   if (/meditation|mindful/.test(lower)) return 'wellness / mindfulness';
@@ -307,6 +317,7 @@ function extractPreviewRequirements(rawPrompt: string): string[] {
 }
 
 function isCustomDomainPrompt(rawPrompt: string, explicitModules: string[]): boolean {
+  if (isSimpleUtilityAppPrompt(rawPrompt)) return true;
   if (promptMentionsLisaOrAccessibility(rawPrompt)) return true;
   if (explicitModules.length >= 3) return true;
   const capabilityModules = deriveModulesFromCapabilities(rawPrompt);
@@ -319,6 +330,12 @@ function resolveRequiredModules(
   explicit: string[],
   capability: string[],
 ): { sanitized: string[]; raw: string[]; rejected: string[] } {
+  const simpleUtilityKind = detectSimpleUtilityAppKind(rawPrompt);
+  if (simpleUtilityKind) {
+    const modules = simpleUtilityFeatureModules(simpleUtilityKind);
+    return { sanitized: modules, raw: modules, rejected: [] };
+  }
+
   if (promptMentionsLisaOrAccessibility(rawPrompt)) {
     const raw = collectRawModuleCandidates(rawPrompt);
     return {

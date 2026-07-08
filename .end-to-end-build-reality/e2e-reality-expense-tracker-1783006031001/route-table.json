@@ -1,0 +1,15 @@
+{
+  "routes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/expenses",
+    "/persistence",
+    "/income",
+    "/categories",
+    "/reports",
+    "/charts",
+    "/csv-export"
+  ],
+  "featureModules": []
+}

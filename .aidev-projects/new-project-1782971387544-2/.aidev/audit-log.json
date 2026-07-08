@@ -1,0 +1,11 @@
+{
+  "readOnly": true,
+  "entries": [
+    {
+      "timestamp": "2026-07-02T05:50:10.353Z",
+      "event": "source_promoted",
+      "buildRunId": "one-prompt-build-2",
+      "sourcePath": ".aidev-projects/new-project-1782971387544-2/source"
+    }
+  ]
+}

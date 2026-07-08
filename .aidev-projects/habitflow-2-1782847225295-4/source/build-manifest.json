@@ -1,0 +1,17 @@
+{
+  "manifestId": "habitflow-2-1782847225295-4-manifest",
+  "contractId": "habitflow-2-1782847225295-4",
+  "ideaId": "idea-1",
+  "generatedAt": "2026-06-30T19:20:25.944Z",
+  "materializationSource": "modular-feature-materialization-v1",
+  "applicationProfile": "HABIT_TRACKER_WEB_V1",
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "modularFeatureMaterialization": true,
+  "buildUnits": [
+    "unit-001",
+    "unit-002",
+    "unit-003"
+  ],
+  "runtime": "vite-react"
+}

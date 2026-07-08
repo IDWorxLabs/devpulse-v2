@@ -1,0 +1,174 @@
+{
+  "readOnly": true,
+  "status": "FAIL",
+  "score": 90,
+  "dimensions": [
+    {
+      "readOnly": true,
+      "id": "sourceTree",
+      "label": "Source Tree Reality",
+      "status": "PASS",
+      "score": 100,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/package.json",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/index.html",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/src",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/vite.config.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/tsconfig.json",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source"
+      ],
+      "failureReasons": [],
+      "warnings": []
+    },
+    {
+      "readOnly": true,
+      "id": "importGraph",
+      "label": "Import Graph Reality",
+      "status": "PASS",
+      "score": 100,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/src"
+      ],
+      "failureReasons": [],
+      "warnings": []
+    },
+    {
+      "readOnly": true,
+      "id": "routeGraph",
+      "label": "Route Graph Reality",
+      "status": "PASS",
+      "score": 100,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/src/features/FeatureAppRouter.tsx"
+      ],
+      "failureReasons": [],
+      "warnings": []
+    },
+    {
+      "readOnly": true,
+      "id": "registryConsistency",
+      "label": "Registry Consistency",
+      "status": "PASS",
+      "score": 100,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/src/features/registry.ts"
+      ],
+      "failureReasons": [],
+      "warnings": []
+    },
+    {
+      "readOnly": true,
+      "id": "contractUsage",
+      "label": "Contract Usage",
+      "status": "PASS",
+      "score": 100,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/universal-feature-contract.json",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/src/features/registry.ts"
+      ],
+      "failureReasons": [],
+      "warnings": []
+    },
+    {
+      "readOnly": true,
+      "id": "assetReality",
+      "label": "Asset Reality",
+      "status": "PASS",
+      "score": 100,
+      "evidencePaths": [],
+      "failureReasons": [],
+      "warnings": []
+    },
+    {
+      "readOnly": true,
+      "id": "metadataConsistency",
+      "label": "Metadata Consistency",
+      "status": "PASS",
+      "score": 100,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/.aidev/manifest.json",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/.aidev/project-file-index.json",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/.aidev/export-metadata.json",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/.aidev/feature-contract-reality.json",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/project.json",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/.aidev/materialization-quality-score.json"
+      ],
+      "failureReasons": [],
+      "warnings": []
+    },
+    {
+      "readOnly": true,
+      "id": "orphanLeakage",
+      "label": "Orphan / Leakage Detection",
+      "status": "FAIL",
+      "score": 10,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source"
+      ],
+      "failureReasons": [
+        "Temporary artifact leaked into source: .materialization-quality-score.json",
+        "Temporary artifact leaked into source: .feature-contract-reality.json",
+        "Temporary artifact leaked into source: .workspace-reality-audit.json"
+      ],
+      "warnings": []
+    },
+    {
+      "readOnly": true,
+      "id": "exportSafety",
+      "label": "Export Safety",
+      "status": "PASS",
+      "score": 100,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/.aidev/export-metadata.json"
+      ],
+      "failureReasons": [],
+      "warnings": []
+    }
+  ],
+  "orphanFiles": [],
+  "duplicateModules": [],
+  "missingImports": [],
+  "brokenRoutes": [],
+  "missingAssets": [],
+  "staleMetadata": [],
+  "temporaryArtifactLeaks": [
+    ".materialization-quality-score.json",
+    ".feature-contract-reality.json",
+    ".workspace-reality-audit.json"
+  ],
+  "exportSafetyIssues": [],
+  "evidencePaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/package.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/index.html",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/src",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/vite.config.ts",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/tsconfig.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/src/features/registry.ts",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/src/features/routes.ts",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/src/features/FeatureAppRouter.tsx",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source/universal-feature-contract.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/.aidev/manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/.aidev/project-file-index.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/.aidev/export-metadata.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/.aidev/feature-contract-reality.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/project.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/.aidev/materialization-quality-score.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source"
+  ],
+  "failureReasons": [
+    "Temporary artifact leaked into source: .materialization-quality-score.json",
+    "Temporary artifact leaked into source: .feature-contract-reality.json",
+    "Temporary artifact leaked into source: .workspace-reality-audit.json"
+  ],
+  "auditedSourceRoot": "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source",
+  "recordedAt": "2026-06-30T14:52:09.370Z",
+  "buildRunId": "one-prompt-build-1",
+  "projectId": "expense-tracker-ui-1",
+  "artifactPath": ".generated-builder-workspaces/expense-tracker-ui-1/.workspace-reality-audit.json",
+  "reportPath": ".generated-builder-workspaces/expense-tracker-ui-1/workspace-reality-report.md",
+  "persistentArtifactPath": null,
+  "persistentReportPath": null
+}

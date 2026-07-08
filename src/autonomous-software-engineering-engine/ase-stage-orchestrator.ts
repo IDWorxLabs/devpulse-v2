@@ -104,6 +104,27 @@ function recordStageResult(
   });
 }
 
+function enforceStageGate(
+  stageId: AseStageId,
+  stageResults: Map<AseStageId, AseStageResult>,
+  blockers: string[],
+): boolean {
+  const gate = canProceedToStage(stageId, stageResults);
+  if (!gate.allowed) {
+    blockers.push(gate.blockedReason ?? `${stageId} gate blocked`);
+    recordStageResult(stageResults, stageId, false, null, gate.blockedReason);
+    recordAseAuditDecision({
+      stage: stageId,
+      inputEvidence: [],
+      decision: 'GATE_BLOCKED',
+      reason: gate.blockedReason ?? `${stageId} cannot proceed until prior gates pass.`,
+      confidence: 1.0,
+    });
+    return false;
+  }
+  return true;
+}
+
 export function runAseStageOrchestrator(
   input: AutonomousSoftwareEngineeringPipelineInput,
 ): AutonomousSoftwareEngineeringPipelineResult {
@@ -180,29 +201,35 @@ export function runAseStageOrchestrator(
   // Stage 2 — Prompt Faithfulness
   let promptFaithfulness = input.promptFaithfulness;
   if (!skip('PROMPT_FAITHFULNESS') && !promptFaithfulness) {
-    promptFaithfulness = runPromptFaithfulnessEngineV2(input.rawPrompt, {
-      generatedModules: productIntelligenceModel.architecture.moduleIds,
-    });
-    const passed = promptFaithfulness.readyForGeneration;
-    const evidenceId = publishStageEvidence({
-      stageId: 'PROMPT_FAITHFULNESS',
-      evidenceType: 'PROMPT_EVIDENCE_CONTRACT',
-      status: passed ? 'PASS' : 'FAIL',
-      confidence: passed ? 0.9 : 0.4,
-      blockers: passed ? [] : [promptFaithfulness.blockedReason ?? 'Prompt faithfulness blocked'],
-    });
-    recordStageResult(stageResults, 'PROMPT_FAITHFULNESS', passed, evidenceId, passed ? null : promptFaithfulness.blockedReason);
-    appendAseTimelineEvent({
-      label: ASE_TIMELINE_LABELS.PROMPT_CONTRACT_CREATED,
-      stageId: 'PROMPT_FAITHFULNESS',
-      evidenceId,
-    });
-    pipelineState = updateAsePipelineState(pipelineState, {
-      currentStage: 'PROMPT_FAITHFULNESS',
-      stageStatuses: markAseStageStatus(pipelineState.stageStatuses, 'PROMPT_FAITHFULNESS', passed ? 'PASSED' : 'FAILED'),
-    });
-    if (!passed) {
-      blockers.push(promptFaithfulness.blockedReason ?? 'Prompt faithfulness blocked');
+    if (enforceStageGate('PROMPT_FAITHFULNESS', stageResults, blockers)) {
+      promptFaithfulness = runPromptFaithfulnessEngineV2(input.rawPrompt, {
+        generatedModules: productIntelligenceModel.architecture.moduleIds,
+      });
+      const passed = promptFaithfulness.readyForGeneration;
+      const evidenceId = publishStageEvidence({
+        stageId: 'PROMPT_FAITHFULNESS',
+        evidenceType: 'PROMPT_EVIDENCE_CONTRACT',
+        status: passed ? 'PASS' : 'FAIL',
+        confidence: passed ? 0.9 : 0.4,
+        blockers: passed ? [] : [promptFaithfulness.blockedReason ?? 'Prompt faithfulness blocked'],
+      });
+      recordStageResult(stageResults, 'PROMPT_FAITHFULNESS', passed, evidenceId, passed ? null : promptFaithfulness.blockedReason);
+      appendAseTimelineEvent({
+        label: ASE_TIMELINE_LABELS.PROMPT_CONTRACT_CREATED,
+        stageId: 'PROMPT_FAITHFULNESS',
+        evidenceId,
+      });
+      pipelineState = updateAsePipelineState(pipelineState, {
+        currentStage: 'PROMPT_FAITHFULNESS',
+        stageStatuses: markAseStageStatus(pipelineState.stageStatuses, 'PROMPT_FAITHFULNESS', passed ? 'PASSED' : 'FAILED'),
+      });
+      if (!passed) {
+        blockers.push(promptFaithfulness.blockedReason ?? 'Prompt faithfulness blocked');
+      }
+    } else {
+      promptFaithfulness = runPromptFaithfulnessEngineV2(input.rawPrompt, {
+        generatedModules: productIntelligenceModel.architecture.moduleIds,
+      });
     }
   } else {
     promptFaithfulness =
@@ -216,6 +243,7 @@ export function runAseStageOrchestrator(
   // Stage 3 — Capability Planning
   let capabilityPlanning = input.capabilityPlanning;
   if (!skip('CAPABILITY_PLANNING') && !capabilityPlanning) {
+    if (enforceStageGate('CAPABILITY_PLANNING', stageResults, blockers)) {
     capabilityPlanning = runCapabilityPlanningPipeline({
       rawPrompt: input.rawPrompt,
       productIntelligenceModel,
@@ -249,6 +277,14 @@ export function runAseStageOrchestrator(
       currentStage: 'CAPABILITY_PLANNING',
       stageStatuses: markAseStageStatus(pipelineState.stageStatuses, 'CAPABILITY_PLANNING', passed ? 'PASSED' : 'FAILED'),
     });
+    } else {
+      capabilityPlanning = runCapabilityPlanningPipeline({
+        rawPrompt: input.rawPrompt,
+        productIntelligenceModel,
+        promptFaithfulness,
+        promptFaithfulnessBlocked: !promptFaithfulness.readyForGeneration,
+      });
+    }
   } else {
     capabilityPlanning =
       capabilityPlanning ??
@@ -343,6 +379,7 @@ export function runAseStageOrchestrator(
     capabilityPlanning,
   });
   if (!skip('INCREMENTAL_BUILD')) {
+    if (enforceStageGate('INCREMENTAL_BUILD', stageResults, blockers)) {
     const passed = isIncrementalBuildReadyForGeneration(incrementalBuild);
     const evidenceId = publishStageEvidence({
       stageId: 'INCREMENTAL_BUILD',
@@ -364,6 +401,7 @@ export function runAseStageOrchestrator(
       resumePoint: 'FEATURE_SLICE_STABILIZED',
     });
     if (!passed) blockers.push(incrementalBuild.blockedReason ?? 'Incremental build blocked');
+    }
   } else {
     recordStageResult(stageResults, 'INCREMENTAL_BUILD', true, null, null);
     pipelineState = updateAsePipelineState(pipelineState, {

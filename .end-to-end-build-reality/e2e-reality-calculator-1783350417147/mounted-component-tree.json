@@ -1,0 +1,23 @@
+{
+  "features": [
+    {
+      "moduleId": "calculator",
+      "tagName": "main",
+      "className": ""
+    },
+    {
+      "moduleId": "calculator",
+      "tagName": "section",
+      "className": "calculator-feature"
+    }
+  ],
+  "rootFeatures": [
+    {
+      "moduleId": "calculator",
+      "tagName": "main"
+    }
+  ],
+  "modularSurfaces": 1,
+  "title": "calculator",
+  "bodyText": "calculator\n\nNumber pad with + − × ÷, clear, delete, and equals.\n\n5\nC⌫÷×789-456+123=0."
+}

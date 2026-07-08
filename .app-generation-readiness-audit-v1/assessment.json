@@ -1,0 +1,1562 @@
+{
+  "pipelineStages": [
+    {
+      "id": "USER_PROMPT_INTAKE",
+      "order": 1,
+      "name": "User prompt intake",
+      "description": "HTTP entry point that receives a build/chat prompt and hands it to the bridge/orchestrator.",
+      "primaryFiles": [
+        "server/build-from-prompt-handler.ts",
+        "server/brain-api-handler.ts",
+        "server/founder-reality-server.ts"
+      ],
+      "primaryFunctions": [
+        "handleBuildFromPromptRequest",
+        "handleBrainRespondRequest"
+      ],
+      "ownedBy": "server/build-from-prompt-handler.ts :: handleBuildFromPromptRequest",
+      "hasUnambiguousOwner": true,
+      "evidence": [
+        {
+          "file": "server/founder-reality-server.ts",
+          "note": "POST /api/build/from-prompt and POST /api/brain/respond both terminate in the same build spine."
+        },
+        {
+          "file": "server/build-from-prompt-handler.ts",
+          "function": "handleBuildFromPromptRequest",
+          "note": "Primary handler; normal path calls executeChatToBuildBridge, forceFreshProject bypasses to runOnePromptLivePreviewBuild directly."
+        }
+      ]
+    },
+    {
+      "id": "PROJECT_CONTEXT_RESOLUTION",
+      "order": 2,
+      "name": "Project context resolution",
+      "description": "Resolves which project/session a build belongs to before any generation happens.",
+      "primaryFiles": [
+        "src/one-prompt-live-preview/workspace-tab-registry.ts",
+        "src/project-session-continuity-v1/project-session-build-bridge.ts",
+        "src/project-context-switching/project-context-loader.ts",
+        "src/project-registry-v1/project-registry-v1-store.ts"
+      ],
+      "primaryFunctions": [
+        "resolveProjectContext",
+        "bootstrapProjectAndSessionForBuild",
+        "loadProjectContext"
+      ],
+      "ownedBy": "src/one-prompt-live-preview/workspace-tab-registry.ts :: resolveProjectContext",
+      "hasUnambiguousOwner": false,
+      "evidence": [
+        {
+          "file": "src/one-prompt-live-preview/workspace-tab-registry.ts",
+          "function": "resolveProjectContext",
+          "note": "When no projectId is supplied, resolution falls back to the server-side activeProjectId rather than minting a fresh project."
+        },
+        {
+          "file": "src/project-registry-v1/project-registry-v1-store.ts",
+          "function": "hydrateWorkspaceSessions",
+          "note": "On process/registry load, activeProjectId is re-set from the persisted registry file, reinforcing the fallback on restart."
+        }
+      ]
+    },
+    {
+      "id": "PROMPT_RESET_NEW_BUILD_DETECTION",
+      "order": 3,
+      "name": "Prompt reset / new build detection",
+      "description": "Decides whether an incoming prompt is a brand-new app request or a continuation of an existing project.",
+      "primaryFiles": [
+        "public/founder-reality/builder-home.js",
+        "src/chat-to-build-execution-bridge-v1/bridge-authority.ts",
+        "src/project-resume-state/duplicate-project-resume-router.ts",
+        "src/project-context-switching/project-context-reset.ts"
+      ],
+      "primaryFunctions": [
+        "newPrompt",
+        "resetTest",
+        "executeChatToBuildBridge",
+        "routeDuplicateProjectResume",
+        "buildProjectContextResetSnapshot"
+      ],
+      "ownedBy": "No single owner — split across client UI, bridge authority, and resume router.",
+      "hasUnambiguousOwner": false,
+      "evidence": [
+        {
+          "file": "public/founder-reality/builder-home.js",
+          "function": "newPrompt",
+          "note": "newPrompt() clears the client-side projectId and prompt text, but the next build request sends only { projectId: state.projectId || undefined } — it never sends confirmFreshCopy: true, so the server has no explicit \"this is a new app\" signal."
+        },
+        {
+          "file": "src/chat-to-build-execution-bridge-v1/bridge-authority.ts",
+          "function": "shouldAutoContinueDuplicate",
+          "note": "shouldAutoContinueDuplicate() returns true unless the caller explicitly passes rejectDuplicates: true, so duplicate/near-duplicate incomplete projects are auto-resumed by default."
+        },
+        {
+          "file": "src/project-resume-state/duplicate-project-resume-router.ts",
+          "function": "routeDuplicateProjectResume",
+          "note": "Duplicate detection matches an incomplete prior project by domain-keyword overlap (score >= 0.55) or substring match on name — a semantically different new prompt can still score as \"similar domain\" and get routed onto the old project."
+        },
+        {
+          "file": "src/project-context-switching/project-context-reset.ts",
+          "function": "buildProjectContextResetSnapshot",
+          "note": "buildProjectContextResetSnapshot() is explicitly read-only: it clears UI alignment warnings only, and does not clear build/domain state."
+        }
+      ]
+    },
+    {
+      "id": "CANONICAL_PRODUCT_CONTRACT_CREATION",
+      "order": 4,
+      "name": "Canonical product contract creation",
+      "description": "Builds the single-source-of-truth description of what product the user asked for.",
+      "primaryFiles": [
+        "src/product-faithfulness-v2/canonical-product-contract.ts",
+        "src/product-faithfulness-v2/index.ts"
+      ],
+      "primaryFunctions": [
+        "buildCanonicalProductContract",
+        "runGenerationFaithfulnessAudit",
+        "runGenerationGate"
+      ],
+      "ownedBy": "src/product-faithfulness-v2/canonical-product-contract.ts :: buildCanonicalProductContract",
+      "hasUnambiguousOwner": false,
+      "evidence": [
+        {
+          "file": "src/product-faithfulness-v2/index.ts",
+          "function": "runGenerationFaithfulnessAudit",
+          "lines": "L1-L74",
+          "note": "Module header states the contract is intended to be \"built once immediately after prompt understanding\" and become the source of truth for every downstream stage — but the only production caller (evaluateGenerationFaithfulnessForBuild) invokes it after the full build and interaction proof complete, from the prompt alone, purely for audit output."
+        },
+        {
+          "file": "src/product-faithfulness-v2/index.ts",
+          "function": "runGenerationGate",
+          "lines": "L76-L96",
+          "note": "runGenerationGate() is the pre-materialization entry point the design describes, but it is called only from scripts/validate-product-faithfulness-milestone-2.ts — never from the orchestrator, bridge, or code-generation engine."
+        }
+      ]
+    },
+    {
+      "id": "PRODUCT_IDENTITY_PRESERVATION",
+      "order": 5,
+      "name": "Product identity preservation",
+      "description": "Keeps the project name/domain/identity consistent and correctly scoped across a build and across rebuilds.",
+      "primaryFiles": [
+        "src/project-name-conflict-resolution-v1/project-name-conflict-authority.ts",
+        "src/project-context-alignment-v1/project-context-metadata-store.ts",
+        "src/project-context-alignment-v1/project-context-alignment-assessor.ts"
+      ],
+      "primaryFunctions": [
+        "applyProjectIdentityForBuild",
+        "upsertProjectContextMetadata",
+        "assessProjectContextAlignment"
+      ],
+      "ownedBy": "src/project-context-alignment-v1/ (advisory only — does not gate module selection or contract creation)",
+      "hasUnambiguousOwner": false,
+      "evidence": [
+        {
+          "file": "src/project-context-alignment-v1/project-context-metadata-store.ts",
+          "function": "upsertProjectContextMetadata",
+          "lines": "L77-L89",
+          "note": "upsertProjectContextMetadata merges new domain keywords into the existing keyword set for a projectId rather than replacing it, so domain identity accumulates across rebuilds on the same project instead of reflecting only the latest prompt."
+        },
+        {
+          "file": "src/project-context-alignment-v1/project-context-alignment-assessor.ts",
+          "function": "assessProjectContextAlignment",
+          "lines": "L133-L141",
+          "note": "Alignment scoring folds in metadata.lastBuildIntentSummary from a prior build alongside the current prompt when computing domain overlap."
+        }
+      ]
+    },
+    {
+      "id": "PLANNING",
+      "order": 6,
+      "name": "Planning",
+      "description": "Produces the pre-generation build plan bundle (intent, faithfulness pass, capability planning, profile ranking).",
+      "primaryFiles": [
+        "src/prompt-faithful-generation/index.ts",
+        "src/intent-understanding-engine/intent-understanding-engine.ts",
+        "src/capability-planning-engine/index.ts"
+      ],
+      "primaryFunctions": [
+        "resolvePromptFaithfulBuildPlan",
+        "runIntentUnderstandingEngine",
+        "runCapabilityPlanningPipeline",
+        "rankBuildProfiles"
+      ],
+      "ownedBy": "src/prompt-faithful-generation/index.ts :: resolvePromptFaithfulBuildPlan",
+      "hasUnambiguousOwner": true,
+      "evidence": [
+        {
+          "file": "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts",
+          "function": "runOnePromptLivePreviewBuild",
+          "lines": "~L471",
+          "note": "resolvePromptFaithfulBuildPlan is invoked once per build near the top of the orchestrator and its output (buildPlan) feeds every downstream generation decision."
+        }
+      ]
+    },
+    {
+      "id": "ARCHITECTURE_GENERATION",
+      "order": 7,
+      "name": "Architecture generation",
+      "description": "Builds the product intelligence model and architecture hints used to select a materialization profile.",
+      "primaryFiles": [
+        "src/intent-understanding-engine/product-model-builder.ts"
+      ],
+      "primaryFunctions": [
+        "buildProductIntelligenceModel",
+        "buildArchitectureHints"
+      ],
+      "ownedBy": "src/intent-understanding-engine/product-model-builder.ts",
+      "hasUnambiguousOwner": true,
+      "evidence": [
+        {
+          "file": "src/intent-understanding-engine/product-model-builder.ts",
+          "function": "buildArchitectureHints",
+          "note": "Architecture hints feed profile ranking (rankBuildProfiles) and the module candidate collector, but do not feed the Universal Feature Contract builder, which selects its entity template independently from the resolved profile string only."
+        }
+      ]
+    },
+    {
+      "id": "UNIVERSAL_FEATURE_CONTRACT_GENERATION",
+      "order": 8,
+      "name": "Universal feature contract generation",
+      "description": "Builds the per-app entity/action/route contract written to universal-feature-contract.json.",
+      "primaryFiles": [
+        "src/universal-feature-contract-intelligence/universal-feature-contract-builder.ts",
+        "src/universal-prompt-to-app-materialization/universal-app-materialization-engine.ts"
+      ],
+      "primaryFunctions": [
+        "buildUniversalFeatureContract",
+        "buildUniversalFeatureContractJson"
+      ],
+      "ownedBy": "src/universal-feature-contract-intelligence/universal-feature-contract-builder.ts :: buildUniversalFeatureContract",
+      "hasUnambiguousOwner": true,
+      "evidence": [
+        {
+          "file": "src/universal-feature-contract-intelligence/universal-feature-contract-builder.ts",
+          "function": "buildUniversalFeatureContract",
+          "lines": "L543-L580",
+          "note": "Contract entities come from a fixed per-profile template (buildProfileContract); GENERIC_CUSTOM_APP_V1 and HABIT_TRACKER_WEB_V1 share the same \"habit\" entity template regardless of what the prompt actually described."
+        },
+        {
+          "file": "src/universal-prompt-to-app-materialization/universal-app-materialization-engine.ts",
+          "function": "buildUniversalMaterializedWorkspaceFiles",
+          "lines": "L74-L183",
+          "note": "The contract used to drive materialization is built with profile: materializationProfile, but the contract written to disk as JSON is built again with profile: input.profile — the two calls can select different profiles for the same build."
+        }
+      ]
+    },
+    {
+      "id": "MODULE_SELECTION",
+      "order": 9,
+      "name": "Module selection",
+      "description": "Resolves which feature modules are approved for generation for this specific prompt.",
+      "primaryFiles": [
+        "src/prompt-bounded-materialization/prompt-bounded-module-resolver.ts",
+        "src/prompt-bounded-materialization/module-candidate-collector.ts",
+        "src/universal-prompt-to-app-materialization/profile-feature-map.ts",
+        "src/universal-prompt-to-app-materialization/prompt-app-metadata.ts"
+      ],
+      "primaryFunctions": [
+        "resolvePromptBoundedModulePlan",
+        "collectAllModuleCandidates",
+        "getProfileFeatureDefinition",
+        "deriveGenericCustomFeatureModules"
+      ],
+      "ownedBy": "src/prompt-bounded-materialization/prompt-bounded-module-resolver.ts :: resolvePromptBoundedModulePlan",
+      "hasUnambiguousOwner": true,
+      "evidence": [
+        {
+          "file": "src/prompt-bounded-materialization/prompt-bounded-module-resolver.ts",
+          "function": "resolvePromptBoundedModulePlan",
+          "lines": "L86-L174",
+          "note": "The resolver itself is evidence-gated: PROFILE_FALLBACK/TEMPLATE_DEFAULT/DEMO_DEFAULT/SAMPLE_APP_DEFAULT/GENERIC_PLACEHOLDER origins are blocked unless the prompt, product-intelligence model, or capability plan supplies explicit justification."
+        },
+        {
+          "file": "src/universal-prompt-to-app-materialization/prompt-app-metadata.ts",
+          "function": "deriveGenericCustomFeatureModules",
+          "lines": "L118-L139",
+          "note": "deriveGenericCustomFeatureModules unconditionally seeds the module set with \"dashboard\", and pads with \"records\"/\"settings\" when the prompt yields 2 or fewer distinct modules — these seeded candidates then enter the bounded resolver as material to evaluate."
+        }
+      ]
+    },
+    {
+      "id": "GENERATED_MODULES",
+      "order": 10,
+      "name": "Generated modules",
+      "description": "Writes the actual feature-module source files for each approved module.",
+      "primaryFiles": [
+        "src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts"
+      ],
+      "primaryFunctions": [
+        "buildAllModularFeatureModuleFiles",
+        "materializableFeatureModules"
+      ],
+      "ownedBy": "src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts",
+      "hasUnambiguousOwner": true,
+      "evidence": [
+        {
+          "file": "src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts",
+          "function": "buildAllModularFeatureModuleFiles",
+          "lines": "L63-L300",
+          "note": "Reads only definition.featureModules (the bounded-plan output injected via applyPromptBoundedPlanToBuildPlan). It never reads the Universal Feature Contract, so the two artifacts can describe different products for the same build."
+        }
+      ]
+    },
+    {
+      "id": "ROUTES",
+      "order": 11,
+      "name": "Routes",
+      "description": "Generates the route table for the materialized application.",
+      "primaryFiles": [
+        "src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts",
+        "src/prompt-bounded-materialization/prompt-bounded-module-resolver.ts"
+      ],
+      "primaryFunctions": [
+        "buildModularFeatureRoutesTs",
+        "buildDefinitionFromModulePlan"
+      ],
+      "ownedBy": "src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts :: buildModularFeatureRoutesTs",
+      "hasUnambiguousOwner": true,
+      "evidence": [
+        {
+          "file": "src/prompt-bounded-materialization/prompt-bounded-module-resolver.ts",
+          "function": "buildDefinitionFromModulePlan",
+          "lines": "L238-L278",
+          "note": "Routes are built index-aligned with approvedModuleIds, including infrastructure ids like \"persistence\" that are later filtered out of file generation — the route list and the generated-file list are not guaranteed to match 1:1."
+        }
+      ]
+    },
+    {
+      "id": "NAVIGATION",
+      "order": 12,
+      "name": "Navigation",
+      "description": "Generates the app router shell and feature registry used for in-app navigation.",
+      "primaryFiles": [
+        "src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts"
+      ],
+      "primaryFunctions": [
+        "buildFeatureAppRouterTsx",
+        "buildModularFeatureRegistryTs"
+      ],
+      "ownedBy": "src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts",
+      "hasUnambiguousOwner": true,
+      "evidence": [
+        {
+          "file": "src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts",
+          "function": "buildFeatureAppRouterTsx",
+          "lines": "L357-L360",
+          "note": "Navigation excludes the \"auth\" module id, yet \"auth\" still receives a route (\"/\"), and the default landing module falls back to the first non-auth module or \"dashboard\" if the list is empty."
+        }
+      ]
+    },
+    {
+      "id": "MATERIALIZATION_MANIFEST",
+      "order": 13,
+      "name": "Materialization manifest",
+      "description": "Records what was actually generated for a build (files, modules, expected app type).",
+      "primaryFiles": [
+        "src/universal-prompt-to-app-materialization/generated-app-manifest.ts",
+        "src/materialization-evidence/index.ts"
+      ],
+      "primaryFunctions": [
+        "buildInitialGeneratedAppManifest",
+        "serializeGeneratedAppManifest",
+        "initializeForensicManifest"
+      ],
+      "ownedBy": "src/universal-prompt-to-app-materialization/generated-app-manifest.ts",
+      "hasUnambiguousOwner": true,
+      "evidence": [
+        {
+          "file": "src/universal-prompt-to-app-materialization/generated-app-manifest.ts",
+          "function": "buildInitialGeneratedAppManifest",
+          "note": "Manifest is populated from the same bounded-plan definition used for module generation, so it inherits any drift already present between the bounded plan and the Universal Feature Contract rather than reconciling the two."
+        }
+      ]
+    },
+    {
+      "id": "RUNTIME_ACTIVATION",
+      "order": 14,
+      "name": "Runtime activation",
+      "description": "Starts the generated app dev server so a live preview URL exists.",
+      "primaryFiles": [
+        "src/one-prompt-live-preview/generated-dev-server-manager.ts"
+      ],
+      "primaryFunctions": [
+        "startGeneratedAppDevServer"
+      ],
+      "ownedBy": "src/one-prompt-live-preview/generated-dev-server-manager.ts :: startGeneratedAppDevServer",
+      "hasUnambiguousOwner": false,
+      "evidence": [
+        {
+          "file": "src/one-prompt-live-preview/generated-dev-server-manager.ts",
+          "function": "startGeneratedAppDevServer",
+          "lines": "L124-L264",
+          "note": "Has a 45s wall-clock timeout that always resolves with a failure result (does not hang), but the inner async IIFE that spawns the process has no attached .catch(), so an exception thrown during spawn/setup before the timer or exit/error listeners are wired can leave the returned promise unsettled indefinitely."
+        },
+        {
+          "file": "src/one-prompt-live-preview/generated-dev-server-manager.ts",
+          "function": "startGeneratedAppDevServer",
+          "lines": "L201-L208",
+          "note": "If the child process exits with code 0 but never printed a parseable Vite \"Local:\" URL, nothing resolves the promise until the 45s timer fires — a full 45s of silent waiting on every such build."
+        }
+      ]
+    },
+    {
+      "id": "LIVE_PREVIEW_PROOF",
+      "order": 15,
+      "name": "Live preview proof",
+      "description": "Loads the running generated app and proves it actually renders and responds to interaction.",
+      "primaryFiles": [
+        "src/live-preview-interaction-proof-v1/live-preview-interaction-proof-engine.ts",
+        "src/live-preview-interaction-proof-v1/live-preview-interaction-proof-runner.ts",
+        "src/live-preview-gate/live-preview-orchestrator-bridge.ts"
+      ],
+      "primaryFunctions": [
+        "runLivePreviewInteractionProof",
+        "evaluateLivePreviewGateForOrchestrator"
+      ],
+      "ownedBy": "Split — ASE interaction-proof engine decides gate unlock during the build; live-preview-interaction-proof-v1 (Playwright) proves interaction after the build, in the handler.",
+      "hasUnambiguousOwner": false,
+      "evidence": [
+        {
+          "file": "src/live-preview-interaction-proof-v1/live-preview-interaction-proof-engine.ts",
+          "function": "runLivePreviewInteractionProof",
+          "lines": "L60-L66",
+          "note": "Only gates on previewUrl and devServerRunning before loading the page — there is no check that materialization actually completed (no verification that npm install/build succeeded or that the expected files exist) before attempting to load and interact with the page."
+        },
+        {
+          "file": "src/live-preview-interaction-proof-v1/live-preview-interaction-proof-runner.ts",
+          "function": "PlaywrightProofPageDriver.launch",
+          "lines": "L93-L98",
+          "note": "chromium.launch() has no timeout attached; only per-step navigation/action calls are bounded, so a hang inside browser launch itself is not bounded by the proof engine's own budget."
+        }
+      ]
+    },
+    {
+      "id": "PRODUCT_FAITHFULNESS_EVALUATION",
+      "order": 16,
+      "name": "Product faithfulness evaluation",
+      "description": "Scores whether the finished app matches what the prompt asked for.",
+      "primaryFiles": [
+        "src/product-faithfulness-v1/product-faithfulness-engine.ts",
+        "src/product-faithfulness-v2/generation-faithfulness-auditor.ts",
+        "src/build-result-normalizer-v1/build-result-normalizer-adapter.ts"
+      ],
+      "primaryFunctions": [
+        "evaluateProductFaithfulness",
+        "runGenerationFaithfulnessAudit",
+        "evaluateGenerationFaithfulnessForBuild"
+      ],
+      "ownedBy": "src/build-result-normalizer-v1/build-result-normalizer-adapter.ts (post-build only)",
+      "hasUnambiguousOwner": false,
+      "evidence": [
+        {
+          "file": "server/build-from-prompt-handler.ts",
+          "function": "handleBuildFromPromptRequest",
+          "lines": "L210-L230",
+          "note": "Product faithfulness and generation faithfulness are both evaluated after runOnePromptLivePreviewBuild returns and after runInteractionProofForBuild completes — strictly detection, with no code path back into generation."
+        }
+      ]
+    },
+    {
+      "id": "FAILURE_REPORTING",
+      "order": 17,
+      "name": "Failure reporting",
+      "description": "Produces the final, founder-facing verdict about whether the build succeeded.",
+      "primaryFiles": [
+        "src/build-execution-stabilizer-v1/index.ts",
+        "src/build-result-normalizer-v1/build-result-normalizer.ts"
+      ],
+      "primaryFunctions": [
+        "buildExecutionReport",
+        "normalizeOnePromptBuildResult"
+      ],
+      "ownedBy": "src/build-result-normalizer-v1/build-result-normalizer.ts (relabels; does not gate)",
+      "hasUnambiguousOwner": false,
+      "evidence": [
+        {
+          "file": "src/build-result-normalizer-v1/build-result-normalizer.ts",
+          "function": "normalizeOnePromptBuildResult",
+          "lines": "L105-L134",
+          "note": "A technical interaction-proof failure (PREVIEW_INTERACTION_FAIL/PARTIAL) is downgraded to BUILT_WITH_WARNINGS when npm output and preview URL both look ready; PREVIEW_INTERACTION_BLOCKED never downgrades the result at all."
+        },
+        {
+          "file": "server/build-from-prompt-handler.ts",
+          "function": "handleBuildFromPromptRequest",
+          "lines": "L72-L77",
+          "note": "The execution monitor records a BLOCKED interaction-proof outcome as completeStage(...), the same call used for a genuine pass, so the build timeline can show a completed stage for a stage that never actually ran."
+        }
+      ]
+    }
+  ],
+  "stateOwnershipMap": [
+    {
+      "store": "sessions / activeProjectId (in-memory Map + module-level variable)",
+      "file": "src/one-prompt-live-preview/workspace-tab-registry.ts",
+      "scopeKey": "PROJECT_ID",
+      "scopedCorrectly": false,
+      "risk": "HIGH",
+      "evidence": [
+        {
+          "file": "src/one-prompt-live-preview/workspace-tab-registry.ts",
+          "function": "resolveProjectContext",
+          "lines": "L64-L93",
+          "note": "sessions is keyed by projectId (correct), but resolveProjectContext falls back to the module-level activeProjectId — a single process-wide value — whenever the caller omits projectId."
+        }
+      ]
+    },
+    {
+      "store": "Project registry cache (cachedState, cachedRootDir)",
+      "file": "src/project-registry-v1/project-registry-v1-store.ts",
+      "scopeKey": "PROCESS_GLOBAL",
+      "scopedCorrectly": true,
+      "risk": "LOW",
+      "evidence": [
+        {
+          "file": "src/project-registry-v1/project-registry-v1-store.ts",
+          "function": "hydrateWorkspaceSessions",
+          "note": "Process-wide cache of the on-disk registry file; re-hydrates activeProjectId from the persisted file on load, which is correct for restart continuity but reinforces the activeProjectId fallback above."
+        }
+      ]
+    },
+    {
+      "store": "Project context metadata (keywords, domain, lastBuildIntentSummary)",
+      "file": "src/project-context-alignment-v1/project-context-metadata-store.ts",
+      "scopeKey": "PROJECT_ID",
+      "scopedCorrectly": false,
+      "risk": "MEDIUM",
+      "evidence": [
+        {
+          "file": "src/project-context-alignment-v1/project-context-metadata-store.ts",
+          "function": "upsertProjectContextMetadata",
+          "lines": "L77-L89",
+          "note": "Correctly keyed by projectId, but upsert merges new domain keywords into the existing set for that id instead of replacing them, so the metadata is a running union of every prompt ever submitted for that id, not just the latest one."
+        }
+      ]
+    },
+    {
+      "store": "Missing-capability evolution registry (evolvedRegistry, reuseIndex)",
+      "file": "src/missing-capability-evolution-engine/missing-capability-evolution-registry.ts",
+      "scopeKey": "NONE",
+      "scopedCorrectly": false,
+      "risk": "MEDIUM",
+      "evidence": [
+        {
+          "file": "src/missing-capability-evolution-engine/missing-capability-evolution-registry.ts",
+          "function": "evolvedRegistry",
+          "note": "Not keyed by projectId at all — a capability \"evolved\" while building one project can be reused for an unrelated project."
+        }
+      ]
+    },
+    {
+      "store": "Project vault (projects Map)",
+      "file": "src/project-vault/project-vault-authority.ts",
+      "scopeKey": "PROJECT_ID",
+      "scopedCorrectly": true,
+      "risk": "LOW",
+      "evidence": [
+        {
+          "file": "src/project-vault/project-vault-authority.ts",
+          "function": "singleton",
+          "note": "In-memory singleton keyed by projectId; correctly scoped, but is process-wide and lost on restart (consistent with other in-memory stores in this codebase)."
+        }
+      ]
+    },
+    {
+      "store": "Multi-project context manager (contexts Map)",
+      "file": "src/multi-project-foundation/project-context-manager.ts",
+      "scopeKey": "PROJECT_ID",
+      "scopedCorrectly": true,
+      "risk": "LOW",
+      "evidence": [
+        {
+          "file": "src/multi-project-foundation/project-context-manager.ts",
+          "function": "contexts",
+          "note": "In-memory, correctly keyed by projectId."
+        }
+      ]
+    },
+    {
+      "store": "Build execution monitors (activeExecutionMonitors)",
+      "file": "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts",
+      "scopeKey": "PROJECT_ID",
+      "scopedCorrectly": true,
+      "risk": "LOW",
+      "evidence": [
+        {
+          "file": "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts",
+          "function": "activeExecutionMonitors",
+          "lines": "~L267-L272",
+          "note": "Correctly scoped per project per build; overwritten on each new build for the same project id (expected)."
+        }
+      ]
+    },
+    {
+      "store": "Per-project durable storage (.aidev-projects/<projectId>/)",
+      "file": "src/persistent-project-reality/persistent-project-reality-paths.ts",
+      "scopeKey": "PROJECT_ID",
+      "scopedCorrectly": true,
+      "risk": "LOW",
+      "evidence": [
+        {
+          "file": "src/persistent-project-reality/persistent-project-reality-paths.ts",
+          "function": "persistentProjectRoot",
+          "note": "On-disk storage is directory-scoped per projectId; leakage does not happen by cross-reading another project's folder, only by the wrong projectId being selected upstream (see PROJECT_CONTEXT_RESOLUTION and PROMPT_RESET_NEW_BUILD_DETECTION stages)."
+        }
+      ]
+    }
+  ],
+  "currentPromptEvidenceSources": [
+    {
+      "file": "src/build-result-normalizer-v1/build-result-normalizer-adapter.ts",
+      "function": "evaluateGenerationFaithfulnessForBuild",
+      "lines": "L156-L161",
+      "note": "evaluateGenerationFaithfulnessForBuild passes only { prompt: build.prompt } into runGenerationFaithfulnessAudit — the canonical contract, when built, is built from the current prompt alone."
+    },
+    {
+      "file": "src/product-faithfulness-v1/product-faithfulness-feature-extractor.ts",
+      "function": "extractRequestedConcepts",
+      "lines": "L262-L292",
+      "note": "extractRequestedConcepts primarily tokenizes input.prompt; it only widens to promptUnderstanding/architectureSummary/featureContract text when the prompt alone yields zero domain matches."
+    },
+    {
+      "file": "src/prompt-bounded-materialization/prompt-bounded-module-resolver.ts",
+      "function": "evaluateCandidate",
+      "note": "Module evidence gating (promptExplicitlyJustifiesGenericModule, buildGenericModuleEvidence) reads rawPrompt directly."
+    }
+  ],
+  "previousProjectEvidenceSources": [
+    {
+      "file": "src/project-context-alignment-v1/project-context-metadata-store.ts",
+      "function": "getProjectContextMetadata / upsertProjectContextMetadata",
+      "note": "getProjectContextMetadata(projectId) returns accumulated keywords/domain from all prior builds of this project id, merged (not replaced) into the current alignment score."
+    },
+    {
+      "file": "src/project-context-alignment-v1/project-context-alignment-assessor.ts",
+      "function": "assessProjectContextAlignment",
+      "lines": "L133-L141",
+      "note": "assessProjectContextAlignment folds metadata.lastBuildIntentSummary from the previous build into current domain-overlap scoring."
+    },
+    {
+      "file": "src/project-resume-state/duplicate-project-resume-router.ts",
+      "function": "routeDuplicateProjectResume",
+      "lines": "L154-L165",
+      "note": "routeDuplicateProjectResume compares the new prompt's domain signals against every existing incomplete project's name-derived domain signals and can select a prior project as the resume target."
+    },
+    {
+      "file": "src/one-prompt-live-preview/workspace-tab-registry.ts",
+      "function": "resolveProjectContext",
+      "lines": "L85-L88",
+      "note": "resolveProjectContext substitutes the server-wide activeProjectId (set by whichever project was last active) when the caller omits projectId — this is \"previous project\" evidence leaking in by omission, not by explicit merge."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F01-ACTIVE-PROJECT-FALLBACK",
+      "category": "PROJECT_CONTEXT_ISOLATION",
+      "severity": "CRITICAL",
+      "title": "Project context resolution falls back to a process-wide \"active project\" when a request omits projectId",
+      "summary": "resolveProjectContext() only mints a fresh project when the caller supplies neither a known projectId nor a still-registered activeProjectId. Any client call that omits projectId (which the \"new prompt\" UI flow does) is silently attached to whatever project happened to be active last, in this process, for any user of this server instance.",
+      "relatedStages": [
+        "PROJECT_CONTEXT_RESOLUTION",
+        "PROMPT_RESET_NEW_BUILD_DETECTION"
+      ],
+      "evidence": [
+        {
+          "file": "src/one-prompt-live-preview/workspace-tab-registry.ts",
+          "function": "resolveProjectContext",
+          "lines": "L64-L93",
+          "note": "requestedId is checked first; if absent, activeProjectId (a single module-level variable) is reused if it still has a session."
+        },
+        {
+          "file": "src/project-registry-v1/project-registry-v1-store.ts",
+          "function": "hydrateWorkspaceSessions",
+          "lines": "L199-L207",
+          "note": "activeProjectId is also re-set from disk on registry hydration, so this fallback persists across server restarts, not just within one process lifetime."
+        }
+      ],
+      "filesResponsible": [
+        "src/one-prompt-live-preview/workspace-tab-registry.ts",
+        "src/project-registry-v1/project-registry-v1-store.ts"
+      ],
+      "functionsResponsible": [
+        "resolveProjectContext",
+        "hydrateWorkspaceSessions",
+        "setActiveProjectId"
+      ]
+    },
+    {
+      "id": "F02-NEW-PROMPT-NO-FRESH-SIGNAL",
+      "category": "STALE_CONTEXT_CONTAMINATION",
+      "severity": "CRITICAL",
+      "title": "\"New prompt\" in the client UI does not tell the server to start a fresh project",
+      "summary": "The builder UI's newPrompt() handler clears local state and prompt text, and its own comment claims it starts a \"fresh project on next build\" — but the next build request it sends carries no confirmFreshCopy flag and no explicit signal distinguishing \"new app\" from \"continue previous app\". The server has no way to tell these two intents apart from this call alone.",
+      "relatedStages": [
+        "PROMPT_RESET_NEW_BUILD_DETECTION",
+        "PROJECT_CONTEXT_RESOLUTION"
+      ],
+      "evidence": [
+        {
+          "file": "public/founder-reality/builder-home.js",
+          "function": "newPrompt",
+          "lines": "L1110-L1135",
+          "note": "newPrompt() clears projectId client-side; the click handler then calls runBuild(prompt, { projectId: state.projectId || undefined }) with no other flags."
+        },
+        {
+          "file": "src/chat-to-build-execution-bridge-v1/bridge-authority.ts",
+          "function": "executeChatToBuildBridge",
+          "note": "confirmFreshCopy is a recognized bridge input, but nothing in the \"new prompt\" client path ever sets it to true."
+        }
+      ],
+      "filesResponsible": [
+        "public/founder-reality/builder-home.js",
+        "src/chat-to-build-execution-bridge-v1/bridge-authority.ts"
+      ],
+      "functionsResponsible": [
+        "newPrompt",
+        "executeChatToBuildBridge"
+      ]
+    },
+    {
+      "id": "F03-AUTO-RESUME-DUPLICATE-DEFAULT-ON",
+      "category": "STALE_CONTEXT_CONTAMINATION",
+      "severity": "HIGH",
+      "title": "Duplicate/near-duplicate project auto-resume is on by default and matches on loose domain overlap",
+      "summary": "shouldAutoContinueDuplicate() treats every request as eligible for silent resume unless the caller explicitly opts out with rejectDuplicates: true, which the primary UI flow does not do. The resume router matches an incomplete prior project whenever a domain-overlap score of 0.55+ is reached (or a name substring match), which is loose enough that a genuinely different new prompt sharing a few domain keywords with an old, unfinished project can be silently routed onto that old project's workspace, contract, and generated files.",
+      "relatedStages": [
+        "PROMPT_RESET_NEW_BUILD_DETECTION",
+        "PROJECT_CONTEXT_RESOLUTION",
+        "PRODUCT_IDENTITY_PRESERVATION"
+      ],
+      "evidence": [
+        {
+          "file": "src/chat-to-build-execution-bridge-v1/bridge-authority.ts",
+          "function": "shouldAutoContinueDuplicate",
+          "lines": "L134-L136",
+          "note": "shouldAutoContinueDuplicate returns input.rejectDuplicates !== true — default is to auto-continue."
+        },
+        {
+          "file": "src/chat-to-build-execution-bridge-v1/bridge-authority.ts",
+          "function": "executeChatToBuildBridge",
+          "lines": "L268-L270",
+          "note": "effectiveProjectId is overwritten with resumeRoute.resumingProjectId whenever auto-continue is allowed and the router flags a block."
+        },
+        {
+          "file": "src/project-resume-state/duplicate-project-resume-router.ts",
+          "function": "routeDuplicateProjectResume",
+          "lines": "L154-L165",
+          "note": "domainScore >= 0.55 (or a name-substring match) is sufficient to classify a candidate as SIMILAR_DOMAIN and route to it."
+        }
+      ],
+      "filesResponsible": [
+        "src/chat-to-build-execution-bridge-v1/bridge-authority.ts",
+        "src/project-resume-state/duplicate-project-resume-router.ts"
+      ],
+      "functionsResponsible": [
+        "shouldAutoContinueDuplicate",
+        "executeChatToBuildBridge",
+        "routeDuplicateProjectResume"
+      ]
+    },
+    {
+      "id": "F04-METADATA-KEYWORD-ACCUMULATION",
+      "category": "STALE_CONTEXT_CONTAMINATION",
+      "severity": "MEDIUM",
+      "title": "Project context metadata merges keywords across builds instead of replacing them per prompt",
+      "summary": "upsertProjectContextMetadata unions new domain keywords into the existing keyword array for a projectId rather than replacing the array with the current prompt's signals. Alignment scoring then reads this accumulated superset, so a project's \"domain identity\" is effectively the union of every prompt ever submitted under that id, including domains the user has since moved away from.",
+      "relatedStages": [
+        "PRODUCT_IDENTITY_PRESERVATION",
+        "PROJECT_CONTEXT_RESOLUTION"
+      ],
+      "evidence": [
+        {
+          "file": "src/project-context-alignment-v1/project-context-metadata-store.ts",
+          "function": "upsertProjectContextMetadata",
+          "lines": "L77-L89",
+          "note": "domainIds = [...new Set([...(existing?.keywords ?? []), ...nameSignals.domainIds, ...(promptSignals?.domainIds ?? [])])] — existing keywords are always kept."
+        }
+      ],
+      "filesResponsible": [
+        "src/project-context-alignment-v1/project-context-metadata-store.ts"
+      ],
+      "functionsResponsible": [
+        "upsertProjectContextMetadata",
+        "getProjectContextMetadata"
+      ]
+    },
+    {
+      "id": "F05-EVOLUTION-REGISTRY-NOT-PROJECT-SCOPED",
+      "category": "STALE_CONTEXT_CONTAMINATION",
+      "severity": "MEDIUM",
+      "title": "Missing-capability evolution registry is process-global, not project-scoped",
+      "summary": "evolvedRegistry/reuseIndex in the missing-capability evolution engine are not keyed by projectId. A capability \"evolved\" for one product can be silently reused while building a completely unrelated product in the same process lifetime.",
+      "relatedStages": [
+        "PLANNING"
+      ],
+      "evidence": [
+        {
+          "file": "src/missing-capability-evolution-engine/missing-capability-evolution-registry.ts",
+          "function": "evolvedRegistry",
+          "note": "Registry map has no projectId key in its type or lookup path."
+        }
+      ],
+      "filesResponsible": [
+        "src/missing-capability-evolution-engine/missing-capability-evolution-registry.ts"
+      ],
+      "functionsResponsible": [
+        "evolvedRegistry",
+        "reuseIndex"
+      ]
+    },
+    {
+      "id": "F06-UNCONDITIONAL-DASHBOARD-SEED",
+      "category": "FALLBACK_MODULE_CONTAMINATION",
+      "severity": "HIGH",
+      "title": "Generic custom-app module derivation unconditionally seeds \"dashboard\" (and pads with \"records\"/\"settings\")",
+      "summary": "deriveGenericCustomFeatureModules starts every custom-domain build's candidate set with \"dashboard\" unconditionally, and adds \"records\" and \"settings\" whenever the prompt yields two or fewer distinct modules. These are candidates fed into the evidence-gated resolver, but the seeding itself has no prompt-evidence requirement — it happens before the gate runs, so the gate's exemptions (e.g. treating \"dashboard\"/\"settings\" as allowed infrastructure ids in prompt-module-name-normalizer.ts) let them straight through even for prompts that never mentioned a dashboard.",
+      "relatedStages": [
+        "MODULE_SELECTION"
+      ],
+      "evidence": [
+        {
+          "file": "src/universal-prompt-to-app-materialization/prompt-app-metadata.ts",
+          "function": "deriveGenericCustomFeatureModules",
+          "lines": "L118-L139",
+          "note": "const modules = new Set<string>([\"dashboard\"]); — added before any prompt-term evaluation."
+        },
+        {
+          "file": "src/prompt-faithful-generation/prompt-module-name-normalizer.ts",
+          "function": "sanitizeModuleIds",
+          "lines": "L177",
+          "note": "allowInfrastructure defaults to [\"auth\", \"dashboard\", \"settings\", \"persistence\"], so these ids bypass BANNED_FALLBACK_MODULES rejection during sanitization."
+        }
+      ],
+      "filesResponsible": [
+        "src/universal-prompt-to-app-materialization/prompt-app-metadata.ts",
+        "src/prompt-faithful-generation/prompt-module-name-normalizer.ts"
+      ],
+      "functionsResponsible": [
+        "deriveGenericCustomFeatureModules",
+        "sanitizeModuleIds"
+      ]
+    },
+    {
+      "id": "F07-PROFILE-MAP-FIXED-LISTS",
+      "category": "FALLBACK_MODULE_CONTAMINATION",
+      "severity": "MEDIUM",
+      "title": "Fixed per-profile module lists (PROFILE_FEATURE_MAP) enter the candidate pool as PROFILE_FALLBACK, and some profiles auto-allow a subset",
+      "summary": "Every non-GENERIC_CUSTOM/HABIT_TRACKER profile returns its complete, hardcoded featureModules array from PROFILE_FEATURE_MAP. These become PROFILE_FALLBACK-origin candidates, which the resolver blocks by default — but PROJECT_MANAGEMENT_WEB_V1 has an explicit auto-allow path (projectManagementProfileAllowsModule) that lets a fixed subset through without prompt evidence. Wrong profile selection upstream (architecture/profile ranking) therefore has an outsized effect: it changes which fixed module list even enters consideration.",
+      "relatedStages": [
+        "MODULE_SELECTION",
+        "ARCHITECTURE_GENERATION"
+      ],
+      "evidence": [
+        {
+          "file": "src/universal-prompt-to-app-materialization/profile-feature-map.ts",
+          "function": "PROFILE_FEATURE_MAP",
+          "lines": "L51-L107",
+          "note": "PROFILE_FEATURE_MAP contains a full hardcoded featureModules array per profile (e.g. TASK_TRACKER_WEB_V1: auth, dashboard, tasks, projects, labels, calendar, reports, settings, persistence)."
+        },
+        {
+          "file": "src/prompt-bounded-materialization/module-candidate-collector.ts",
+          "function": "collectProfileModuleCandidates",
+          "lines": "L53-L73",
+          "note": "collectProfileModuleCandidates maps every profile module id to a PROFILE_FALLBACK-origin candidate unconditionally."
+        }
+      ],
+      "filesResponsible": [
+        "src/universal-prompt-to-app-materialization/profile-feature-map.ts",
+        "src/prompt-bounded-materialization/module-candidate-collector.ts"
+      ],
+      "functionsResponsible": [
+        "getProfileFeatureDefinition",
+        "collectProfileModuleCandidates",
+        "projectManagementProfileAllowsModule"
+      ]
+    },
+    {
+      "id": "F08-PERSISTENCE-ALWAYS-ON",
+      "category": "FALLBACK_MODULE_CONTAMINATION",
+      "severity": "LOW",
+      "title": "System-shell candidate collector always adds \"persistence\" for non-utility prompts",
+      "summary": "collectSystemShellCandidates adds \"persistence\" unconditionally for any prompt not classified as a simple utility app, and adds \"auth\" only when the prompt explicitly requires login. \"persistence\" is infrastructure, not a user-visible concept, so this is lower risk than F06/F07, but it does mean the route/definition list always contains at least one entry (\"persistence\") with no corresponding generated feature folder (see F09).",
+      "relatedStages": [
+        "MODULE_SELECTION"
+      ],
+      "evidence": [
+        {
+          "file": "src/prompt-bounded-materialization/module-candidate-collector.ts",
+          "function": "collectSystemShellCandidates",
+          "lines": "L124-L131",
+          "note": "const modules: string[] = [\"persistence\"]; unshift(\"auth\") only if promptExplicitlyRequiresAuth."
+        }
+      ],
+      "filesResponsible": [
+        "src/prompt-bounded-materialization/module-candidate-collector.ts"
+      ],
+      "functionsResponsible": [
+        "collectSystemShellCandidates"
+      ]
+    },
+    {
+      "id": "F09-CONTRACT-INDEPENDENT-OF-MODULE-PLAN",
+      "category": "CONTRACT_DRIFT",
+      "severity": "CRITICAL",
+      "title": "Universal Feature Contract is built from a fixed profile template, independent of the approved module plan",
+      "summary": "buildUniversalFeatureContract selects its entity/action template purely from the resolved profile string (via buildProfileContract), not from definition.featureModules / the bounded module plan that actually drives buildAllModularFeatureModuleFiles. The two systems can therefore describe different products for the same build: the contract can list entities (e.g. \"habit\") that no generated module implements, or omit entities for modules that were generated. Because buildAllModularFeatureModuleFiles never reads the contract (see F10), there is no reconciliation step anywhere in the pipeline.",
+      "relatedStages": [
+        "UNIVERSAL_FEATURE_CONTRACT_GENERATION",
+        "MODULE_SELECTION",
+        "GENERATED_MODULES"
+      ],
+      "evidence": [
+        {
+          "file": "src/universal-feature-contract-intelligence/universal-feature-contract-builder.ts",
+          "function": "buildUniversalFeatureContract",
+          "lines": "L543-L580",
+          "note": "buildProfileContract keyed only on profile; GENERIC_CUSTOM_APP_V1 and HABIT_TRACKER_WEB_V1 both produce the same \"habit\" entity/action set regardless of the prompt."
+        },
+        {
+          "file": "src/universal-prompt-to-app-materialization/universal-app-materialization-engine.ts",
+          "function": "buildUniversalMaterializedWorkspaceFiles",
+          "lines": "L74-L87",
+          "note": "Contract build call and module-generator call are two separate, unlinked steps in the same function."
+        }
+      ],
+      "filesResponsible": [
+        "src/universal-feature-contract-intelligence/universal-feature-contract-builder.ts",
+        "src/universal-prompt-to-app-materialization/universal-app-materialization-engine.ts"
+      ],
+      "functionsResponsible": [
+        "buildUniversalFeatureContract",
+        "buildProfileContract",
+        "buildUniversalMaterializedWorkspaceFiles"
+      ]
+    },
+    {
+      "id": "F10-GENERATOR-IGNORES-CONTRACT",
+      "category": "CONTRACT_DRIFT",
+      "severity": "HIGH",
+      "title": "Feature-module code generation never reads the Universal Feature Contract",
+      "summary": "buildAllModularFeatureModuleFiles takes a ProfileFeatureDefinition (module id list + routes) and never receives or reads the UniversalFeatureContract object at all. The contract is written to universal-feature-contract.json purely as a side artifact of the materialization engine, with no code path feeding it back into what gets generated.",
+      "relatedStages": [
+        "GENERATED_MODULES",
+        "UNIVERSAL_FEATURE_CONTRACT_GENERATION"
+      ],
+      "evidence": [
+        {
+          "file": "src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts",
+          "function": "buildAllModularFeatureModuleFiles",
+          "lines": "L286-L300",
+          "note": "Function signature is (appTitle: string, definition: ProfileFeatureDefinition) — no contract parameter."
+        }
+      ],
+      "filesResponsible": [
+        "src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts"
+      ],
+      "functionsResponsible": [
+        "buildAllModularFeatureModuleFiles"
+      ]
+    },
+    {
+      "id": "F11-CONTRACT-PROFILE-MISMATCH",
+      "category": "CONTRACT_DRIFT",
+      "severity": "MEDIUM",
+      "title": "The contract used for generation and the contract written to disk can be built from different profile values",
+      "summary": "Inside buildUniversalMaterializedWorkspaceFiles, the in-memory contract used elsewhere in materialization is built with profile: materializationProfile, while the JSON file written to the workspace (universal-feature-contract.json) is built with profile: input.profile ?? undefined — a second, independent call that is not guaranteed to resolve to the same profile.",
+      "relatedStages": [
+        "UNIVERSAL_FEATURE_CONTRACT_GENERATION",
+        "MATERIALIZATION_MANIFEST"
+      ],
+      "evidence": [
+        {
+          "file": "src/universal-prompt-to-app-materialization/universal-app-materialization-engine.ts",
+          "function": "buildUniversalMaterializedWorkspaceFiles",
+          "lines": "L74-L183",
+          "note": "Two separate buildUniversalFeatureContract(...)/buildUniversalFeatureContractJson(...) calls with independently-sourced profile values."
+        }
+      ],
+      "filesResponsible": [
+        "src/universal-prompt-to-app-materialization/universal-app-materialization-engine.ts"
+      ],
+      "functionsResponsible": [
+        "buildUniversalMaterializedWorkspaceFiles"
+      ]
+    },
+    {
+      "id": "F12-FAITHFULNESS-POST-BUILD-ONLY",
+      "category": "FAITHFULNESS_LATE_DETECTION",
+      "severity": "CRITICAL",
+      "title": "Product/generation faithfulness evaluation runs only after the build and interaction proof complete",
+      "summary": "evaluateProductFaithfulness and runGenerationFaithfulnessAudit (via evaluateProductFaithfulnessForBuild / evaluateGenerationFaithfulnessForBuild) are called from server/build-from-prompt-handler.ts strictly after runOnePromptLivePreviewBuild returns and after runInteractionProofForBuild finishes. Neither function, nor any function that calls them, is invoked anywhere inside one-prompt-build-orchestrator.ts, the code-generation engine, or the module resolver. By the time a mismatch is detected, the app has already been fully materialized, npm-installed, built, and preview-activated.",
+      "relatedStages": [
+        "PRODUCT_FAITHFULNESS_EVALUATION",
+        "CANONICAL_PRODUCT_CONTRACT_CREATION"
+      ],
+      "evidence": [
+        {
+          "file": "server/build-from-prompt-handler.ts",
+          "function": "handleBuildFromPromptRequest",
+          "lines": "L210-L230",
+          "note": "Evaluation calls occur after \"const livePreviewInteractionProof = await runInteractionProofForBuild(result);\" in the same function body."
+        },
+        {
+          "file": "src/build-result-normalizer-v1/build-result-normalizer-adapter.ts",
+          "function": "evaluateGenerationFaithfulnessForBuild",
+          "lines": "L32-L36",
+          "note": "Module comment: \"Builds the Product Faithfulness evidence bundle from real, already-computed build evidence only.\""
+        }
+      ],
+      "filesResponsible": [
+        "server/build-from-prompt-handler.ts",
+        "src/build-result-normalizer-v1/build-result-normalizer-adapter.ts"
+      ],
+      "functionsResponsible": [
+        "handleBuildFromPromptRequest",
+        "evaluateProductFaithfulnessForBuild",
+        "evaluateGenerationFaithfulnessForBuild"
+      ]
+    },
+    {
+      "id": "F13-GENERATION-GATE-UNWIRED",
+      "category": "FAITHFULNESS_LATE_DETECTION",
+      "severity": "HIGH",
+      "title": "The one function explicitly designed to run before materialization (runGenerationGate) is never called by the production pipeline",
+      "summary": "runGenerationGate's own doc comment states it is \"intended to run before materialization begins.\" A repository-wide search shows its only caller is scripts/validate-product-faithfulness-milestone-2.ts. It is not called from the orchestrator, the bridge, or the materialization/code-generation engines. The preventive mechanism exists as an API surface, but production traffic never reaches it.",
+      "relatedStages": [
+        "PRODUCT_FAITHFULNESS_EVALUATION",
+        "CANONICAL_PRODUCT_CONTRACT_CREATION",
+        "MODULE_SELECTION"
+      ],
+      "evidence": [
+        {
+          "file": "src/product-faithfulness-v2/index.ts",
+          "function": "runGenerationGate",
+          "lines": "L76-L96",
+          "note": "proceed: boolean output is never consumed by any generation-path caller."
+        }
+      ],
+      "filesResponsible": [
+        "src/product-faithfulness-v2/index.ts"
+      ],
+      "functionsResponsible": [
+        "runGenerationGate"
+      ]
+    },
+    {
+      "id": "F14-REPAIR-IS-IN-MEMORY-ONLY",
+      "category": "REPAIR_LIMITATION",
+      "severity": "CRITICAL",
+      "title": "Generation-faithfulness \"repair\" patches in-memory evidence and re-audits; it never regenerates a file",
+      "summary": "generation-faithfulness-repair.ts's own header states it \"never invokes a code-generation engine or LLM.\" When a concept is missing, applyMinimalRepairs either finds evidence for it elsewhere in already-collected stage evidence (a bookkeeping fix, not a code change) or records a REGENERATE_FEATURE_MODULE action with applied: false and a detail string admitting the module was not actually regenerated. repairAndReaudit re-runs the audit against this patched evidence purely in memory. No repair-path code calls materializeGeneratedApplication or buildAllModularFeatureModuleFiles again.",
+      "relatedStages": [
+        "PRODUCT_FAITHFULNESS_EVALUATION",
+        "GENERATED_MODULES"
+      ],
+      "evidence": [
+        {
+          "file": "src/product-faithfulness-v2/generation-faithfulness-repair.ts",
+          "function": "module header",
+          "lines": "L1-L13",
+          "note": "Header: \"this module never invokes a code-generation engine or LLM — so it is recorded as a planned-but-not-applied 'regenerate feature module' action instead of a fake success.\""
+        },
+        {
+          "file": "src/product-faithfulness-v2/generation-faithfulness-repair.ts",
+          "function": "applyMinimalRepairs",
+          "lines": "L68-L92",
+          "note": "applied: false branch explicitly states the concept \"would require regenerating its feature module — not applied by this evaluation-time repair.\""
+        }
+      ],
+      "filesResponsible": [
+        "src/product-faithfulness-v2/generation-faithfulness-repair.ts"
+      ],
+      "functionsResponsible": [
+        "applyMinimalRepairs",
+        "repairAndReaudit"
+      ]
+    },
+    {
+      "id": "F15-REPAIR-RELABELS-NOT-RETRIES",
+      "category": "REPAIR_LIMITATION",
+      "severity": "HIGH",
+      "title": "A successful in-memory \"repair\" only changes the result label on an already-finished build",
+      "summary": "When any in-memory repair action has applied: true, build-result-normalizer.ts relabels the finished build's normalized result as BUILT_AFTER_FAITHFULNESS_REPAIR. The app itself — the files on disk, the running dev server, the live preview — is completely unchanged by this relabeling. Separately, isSeriousFaithfulnessProblem (v1) is exported but has zero callers anywhere in the repository, so a \"serious\" verdict has no wired consequence.",
+      "relatedStages": [
+        "PRODUCT_FAITHFULNESS_EVALUATION",
+        "FAILURE_REPORTING"
+      ],
+      "evidence": [
+        {
+          "file": "src/build-result-normalizer-v1/build-result-normalizer.ts",
+          "function": "normalizeOnePromptBuildResult",
+          "lines": "L158-L165",
+          "note": "genRepairsApplied -> result = \"BUILT_AFTER_FAITHFULNESS_REPAIR\" with no accompanying regeneration step."
+        },
+        {
+          "file": "src/product-faithfulness-v1/product-faithfulness-verdict.ts",
+          "function": "isSeriousFaithfulnessProblem",
+          "lines": "L10-L20",
+          "note": "isSeriousFaithfulnessProblem is exported but has no callers in the codebase."
+        }
+      ],
+      "filesResponsible": [
+        "src/build-result-normalizer-v1/build-result-normalizer.ts",
+        "src/product-faithfulness-v1/product-faithfulness-verdict.ts"
+      ],
+      "functionsResponsible": [
+        "normalizeOnePromptBuildResult",
+        "isSeriousFaithfulnessProblem"
+      ]
+    },
+    {
+      "id": "F16-DEV-SERVER-UNCAUGHT-ASYNC",
+      "category": "RUNTIME_FAILURE_OWNERSHIP",
+      "severity": "HIGH",
+      "title": "Dev server startup has an unguarded async IIFE that can leave its promise unsettled",
+      "summary": "startGeneratedAppDevServer wraps its spawn logic in `void (async () => { ... })()` with no attached .catch(). A synchronous throw or rejected await inside that IIFE (e.g. during stopGeneratedDevServerByKey for a pre-existing server) is not converted into a resolved { ok: false } result and is not caught by the 45s timer, which is armed after the async setup runs. This is the clearest single \"silently stops responding\" path found in the runtime-activation stage.",
+      "relatedStages": [
+        "RUNTIME_ACTIVATION"
+      ],
+      "evidence": [
+        {
+          "file": "src/one-prompt-live-preview/generated-dev-server-manager.ts",
+          "function": "startGeneratedAppDevServer",
+          "lines": "L236-L264",
+          "note": "return new Promise((resolve) => { void (async () => { ... })(); }); — inner IIFE has no .catch(), no try/catch wrapping stopGeneratedDevServerByKey + spawn + bindStartupListeners."
+        }
+      ],
+      "filesResponsible": [
+        "src/one-prompt-live-preview/generated-dev-server-manager.ts"
+      ],
+      "functionsResponsible": [
+        "startGeneratedAppDevServer"
+      ]
+    },
+    {
+      "id": "F17-INTERACTION-PROOF-NO-MATERIALIZATION-PRECHECK",
+      "category": "RUNTIME_FAILURE_OWNERSHIP",
+      "severity": "MEDIUM",
+      "title": "Live preview interaction proof does not verify materialization completeness before loading the page",
+      "summary": "runLivePreviewInteractionProof only checks input.previewUrl and input.devServerRunning before calling chromium and navigating. It has no check that npm install/build actually succeeded or that the expected files/modules exist on disk. If the app is only partially materialized, the proof engine discovers this by loading a broken page and classifying the failure after the fact, inside a 30s total budget, rather than short-circuiting immediately with a clear \"materialization incomplete\" verdict.",
+      "relatedStages": [
+        "LIVE_PREVIEW_PROOF",
+        "MATERIALIZATION_MANIFEST"
+      ],
+      "evidence": [
+        {
+          "file": "src/live-preview-interaction-proof-v1/live-preview-interaction-proof-engine.ts",
+          "function": "runLivePreviewInteractionProof",
+          "lines": "L60-L66",
+          "note": "Gate condition is `if (!input.previewUrl || !input.devServerRunning)` only; materializationManifestHints is used solely to derive search terms, not to gate."
+        }
+      ],
+      "filesResponsible": [
+        "src/live-preview-interaction-proof-v1/live-preview-interaction-proof-engine.ts"
+      ],
+      "functionsResponsible": [
+        "runLivePreviewInteractionProof"
+      ]
+    },
+    {
+      "id": "F18-STABILIZER-TIMEOUTS-NOT-ENFORCED-IN-PRODUCTION",
+      "category": "RUNTIME_FAILURE_OWNERSHIP",
+      "severity": "HIGH",
+      "title": "The build-execution-stabilizer's stall/timeout policy is defined but not wired into the production orchestrator",
+      "summary": "DEFAULT_STAGE_STALL_CONFIG defines per-stage stall and total timeouts (including a dedicated PREVIEW_STARTUP: 40s and INTERACTION_PROOF: 30s budget), and runMonitoredCommand/runMonitoredPoll in build-execution-stabilizer.ts implement real stall detection with process-kill-and-fail semantics. But one-prompt-build-orchestrator.ts does not call runMonitoredCommand/runMonitoredPoll anywhere — it uses raw execSync(..., { timeout }) for npm steps and generated-dev-server-manager's own independent 45s timer for preview startup (which does not match the stabilizer's stated 40s budget). BuildExecutionMonitor itself is explicitly documented as a passive state container with \"no timers.\"",
+      "relatedStages": [
+        "RUNTIME_ACTIVATION",
+        "LIVE_PREVIEW_PROOF",
+        "FAILURE_REPORTING"
+      ],
+      "evidence": [
+        {
+          "file": "src/build-execution-stabilizer-v1/build-execution-timeouts.ts",
+          "function": "DEFAULT_STAGE_STALL_CONFIG",
+          "lines": "L10-L20",
+          "note": "DEFAULT_STAGE_STALL_CONFIG.PREVIEW_STARTUP = { stallTimeoutMs: 20_000, totalTimeoutMs: 40_000 } vs. dev-server-manager's own 45_000ms default — the two numbers disagree and only one of them is actually enforced."
+        },
+        {
+          "file": "src/build-execution-stabilizer-v1/build-execution-monitor.ts",
+          "function": "module header",
+          "lines": "L4-L8",
+          "note": "\"Pure state container — no process management, no timers.\" by design; enforcement lives only in build-execution-stabilizer.ts, which the orchestrator does not call."
+        }
+      ],
+      "filesResponsible": [
+        "src/build-execution-stabilizer-v1/build-execution-timeouts.ts",
+        "src/build-execution-stabilizer-v1/build-execution-stabilizer.ts",
+        "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts"
+      ],
+      "functionsResponsible": [
+        "runMonitoredCommand",
+        "runMonitoredPoll",
+        "runOnePromptLivePreviewBuild"
+      ]
+    },
+    {
+      "id": "F19-FRAGMENTED-PREVIEW-VERDICTS",
+      "category": "RUNTIME_FAILURE_OWNERSHIP",
+      "severity": "HIGH",
+      "title": "At least five modules each hold a partial, potentially conflicting verdict on whether the preview is actually working, with no single arbiter",
+      "summary": "The ASE interaction-proof engine decides live-preview-gate unlock during the build; AEE's preview contract can override that gate to UNLOCKED purely on an HTTP route probe passing, even when interaction verification failed (downgrading only to DEGRADED); the post-build Playwright interaction proof runs afterward and cannot affect the gate decision already baked into the build result; build-result-normalizer.ts downgrades a technical proof failure to BUILT_WITH_WARNINGS; and the handler's execution monitor records a BLOCKED proof outcome with the same completeStage(...) call used for a genuine pass. No module reconciles these into one authoritative pass/fail.",
+      "relatedStages": [
+        "LIVE_PREVIEW_PROOF",
+        "RUNTIME_ACTIVATION",
+        "FAILURE_REPORTING"
+      ],
+      "evidence": [
+        {
+          "file": "src/autonomous-engineering-executive/aee-preview-contract.ts",
+          "function": "resolveAeePreviewContract",
+          "lines": "L168-L178",
+          "note": "routeProbe.ok true -> previewStatus = \"UNLOCKED\" (or \"DEGRADED\" if interactionVerificationFailed), synthesizing a gate override."
+        },
+        {
+          "file": "src/build-result-normalizer-v1/build-result-normalizer.ts",
+          "function": "normalizeOnePromptBuildResult",
+          "lines": "L107-L134",
+          "note": "interactionProofFoundAProblem -> result = \"BUILT_WITH_WARNINGS\" rather than a failed/blocked classification."
+        },
+        {
+          "file": "server/build-from-prompt-handler.ts",
+          "function": "handleBuildFromPromptRequest",
+          "lines": "L72-L77",
+          "note": "PREVIEW_INTERACTION_BLOCKED is routed through monitor.completeStage(...), identical call path to a real pass."
+        }
+      ],
+      "filesResponsible": [
+        "src/autonomous-engineering-executive/aee-preview-contract.ts",
+        "src/build-result-normalizer-v1/build-result-normalizer.ts",
+        "server/build-from-prompt-handler.ts",
+        "src/live-preview-gate/live-preview-orchestrator-bridge.ts"
+      ],
+      "functionsResponsible": [
+        "resolveAeePreviewContract",
+        "normalizeOnePromptBuildResult",
+        "handleBuildFromPromptRequest",
+        "evaluateLivePreviewGateForOrchestrator"
+      ]
+    }
+  ],
+  "missingAuthorities": [
+    {
+      "id": "MA01-NO-EXPLICIT-NEW-BUILD-SIGNAL",
+      "title": "No explicit, unambiguous \"this is a new build\" signal or function exists",
+      "description": "A repository-wide search for isNewBuild/detectNewBuild/clearContext-style symbols returns nothing. Fresh-build semantics are expressed indirectly through confirmFreshCopy, forceFreshProject, and confirmProjectResume flags that different callers set (or fail to set) inconsistently. There is no single authority function whose job is to answer \"is this prompt starting a new app, or continuing an existing one?\" and whose answer every downstream stage is required to honor.",
+      "evidence": [
+        {
+          "file": "src/chat-to-build-execution-bridge-v1/bridge-authority.ts",
+          "function": "executeChatToBuildBridge",
+          "note": "confirmFreshCopy, forceFreshProject, confirmProjectResume are all recognized but are optional inputs the bridge trusts callers to set correctly; none is derived by the bridge itself from prompt content."
+        }
+      ]
+    },
+    {
+      "id": "MA02-NO-CONTRACT-TO-GENERATOR-ENFORCEMENT",
+      "title": "No authority enforces that generated modules/routes/contract stay consistent with each other",
+      "description": "There is no module whose job is to take the Universal Feature Contract and the approved module plan and either reconcile them or fail the build if they diverge. post-generation-contamination-validator.ts checks generated workspace folders against the approved module plan, but does not compare either of those against the Universal Feature Contract's entities/actions.",
+      "evidence": [
+        {
+          "file": "src/prompt-bounded-materialization/post-generation-contamination-validator.ts",
+          "function": "validatePostGenerationContamination",
+          "lines": "L37-L41",
+          "note": "Validates workspace folders vs. plan.approvedModuleIds only; contract entities are out of scope for this validator."
+        }
+      ]
+    },
+    {
+      "id": "MA03-NO-PRE-MATERIALIZATION-FAITHFULNESS-AUTHORITY",
+      "title": "No production authority runs faithfulness/contract checks before materialization, despite one being designed",
+      "description": "runGenerationGate exists specifically to run before materialization and can return proceed: false, but nothing in the production build path calls it (see F13). There is no pre-materialization checkpoint at all between \"module plan resolved\" and \"files written to disk.\"",
+      "evidence": [
+        {
+          "file": "src/product-faithfulness-v2/index.ts",
+          "function": "runGenerationGate",
+          "lines": "L76-L96",
+          "note": "runGenerationGate has zero production callers; only a validation script invokes it."
+        }
+      ]
+    },
+    {
+      "id": "MA04-NO-SINGLE-FAILURE-ARBITER",
+      "title": "No single module owns the final pass/fail verdict for a build",
+      "description": "BuildExecutionMonitor is a passive recorder. The build-execution-stabilizer's enforcement functions are unused in production. ASE, AEE, the live-preview gate, and the post-build normalizer each hold a partial, independently-computed opinion about success, and at least one (AEE's preview contract) can override another (the live-preview gate) using different evidence (a route probe vs. interaction/visual proof). No module sits above all of them to produce one authoritative, non-overridable verdict.",
+      "evidence": [
+        {
+          "file": "src/autonomous-engineering-executive/aee-preview-contract.ts",
+          "function": "resolveAeePreviewContract",
+          "lines": "L168-L178",
+          "note": "Can synthesize a gate override (synthesizeGateForUnlock) rather than deferring to the gate's own blocked state."
+        }
+      ]
+    },
+    {
+      "id": "MA05-NO-ACTIVITY-BASED-STALL-DETECTION-IN-RUNTIME-ACTIVATION",
+      "title": "No activity-based (only wall-clock) stall detection for dev-server startup and browser-based proof",
+      "description": "startGeneratedAppDevServer's only failure-by-time mechanism is a flat 45s timer; there is no \"no stdout activity for N seconds\" stall detector of the kind build-execution-stabilizer.ts implements elsewhere (and does not wire in here). chromium.launch() in the Playwright proof runner has no timeout at all. Both are single points where a hang can consume the full available time budget (or more) before any failure is reported.",
+      "evidence": [
+        {
+          "file": "src/one-prompt-live-preview/generated-dev-server-manager.ts",
+          "function": "startGeneratedAppDevServer",
+          "lines": "L174-L179",
+          "note": "Single setTimeout(..., input.timeoutMs) is the only time-based failure path; no lastActivity/stall tracking like build-execution-stabilizer.ts has."
+        }
+      ]
+    }
+  ],
+  "fixSequence": [
+    {
+      "order": 1,
+      "title": "Establish one explicit, mandatory new-build-vs-continuation decision authority",
+      "rationale": "Every other stale-context finding (F01-F04) is downstream of the fact that \"is this a new app?\" is currently inferred inconsistently by several independent call sites instead of decided once, explicitly, by one authority that all callers must consult.",
+      "addressesFindingIds": [
+        "F01-ACTIVE-PROJECT-FALLBACK",
+        "F02-NEW-PROMPT-NO-FRESH-SIGNAL",
+        "F03-AUTO-RESUME-DUPLICATE-DEFAULT-ON"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Remove the activeProjectId fallback from project context resolution (require an explicit id or explicit fresh-build intent)",
+      "rationale": "Directly closes the highest-severity isolation gap: a request with no projectId should never silently attach to whichever project was last active in the process.",
+      "addressesFindingIds": [
+        "F01-ACTIVE-PROJECT-FALLBACK"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Replace keyword/metadata accumulation with per-build replacement, scoped strictly to the current prompt",
+      "rationale": "F04 and F05 both stem from the same anti-pattern (union/merge instead of replace, or missing scoping). Fixing the merge semantics once, as a shared rule, prevents both.",
+      "addressesFindingIds": [
+        "F04-METADATA-KEYWORD-ACCUMULATION",
+        "F05-EVOLUTION-REGISTRY-NOT-PROJECT-SCOPED"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "Wire the canonical product contract into module selection and require the module generator to consume it",
+      "rationale": "This is the structural fix for contract drift (F09-F11): make the contract and the generator share one source of truth instead of two independently-derived artifacts.",
+      "addressesFindingIds": [
+        "F09-CONTRACT-INDEPENDENT-OF-MODULE-PLAN",
+        "F10-GENERATOR-IGNORES-CONTRACT",
+        "F11-CONTRACT-PROFILE-MISMATCH"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "Require prompt-derived evidence for every candidate before it is added to the module pool, not just before it is approved",
+      "rationale": "F06-F08 show that unconditional seeding happens upstream of the (already evidence-gated) resolver. Moving the evidence requirement earlier — into the collectors themselves — removes the need to rely on the resolver to catch every case.",
+      "addressesFindingIds": [
+        "F06-UNCONDITIONAL-DASHBOARD-SEED",
+        "F07-PROFILE-MAP-FIXED-LISTS",
+        "F08-PERSISTENCE-ALWAYS-ON"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "Wire runGenerationGate (or an equivalent pre-materialization contract check) into the real build path",
+      "rationale": "Converts faithfulness from purely detective (F12, F13) to preventive, using code that already exists but is currently unreachable from production traffic.",
+      "addressesFindingIds": [
+        "F12-FAITHFULNESS-POST-BUILD-ONLY",
+        "F13-GENERATION-GATE-UNWIRED"
+      ]
+    },
+    {
+      "order": 7,
+      "title": "Give \"repair\" a real regeneration path, or rename/relabel it so it is not mistaken for one",
+      "rationale": "F14/F15 show repair is currently cosmetic. Either connect REGENERATE_FEATURE_MODULE actions to an actual regeneration call, or stop calling the outcome \"repair\" in user-facing labels until it can perform one.",
+      "addressesFindingIds": [
+        "F14-REPAIR-IS-IN-MEMORY-ONLY",
+        "F15-REPAIR-RELABELS-NOT-RETRIES"
+      ]
+    },
+    {
+      "order": 8,
+      "title": "Wire the existing build-execution-stabilizer enforcement into the orchestrator's actual npm/dev-server/proof calls, and add a .catch() to the dev-server startup IIFE",
+      "rationale": "F16-F18 are all \"policy exists, enforcement does not reach production.\" This is the lowest-risk, highest-clarity fix in the runtime-activation area because the enforcement code (runMonitoredCommand/runMonitoredPoll) already exists and is already tested elsewhere.",
+      "addressesFindingIds": [
+        "F16-DEV-SERVER-UNCAUGHT-ASYNC",
+        "F17-INTERACTION-PROOF-NO-MATERIALIZATION-PRECHECK",
+        "F18-STABILIZER-TIMEOUTS-NOT-ENFORCED-IN-PRODUCTION"
+      ]
+    },
+    {
+      "order": 9,
+      "title": "Designate one module as the final, non-overridable build-success arbiter and make every other verdict advisory input to it",
+      "rationale": "Without this, fixing individual verdict-producers (steps 1-8) will keep leaving room for a different module to silently override or contradict the fix. This should be the last step so it can take the corrected verdict sources from steps 1-8 as its inputs.",
+      "addressesFindingIds": [
+        "F19-FRAGMENTED-PREVIEW-VERDICTS"
+      ]
+    }
+  ],
+  "riskRanking": [
+    {
+      "findingId": "F01-ACTIVE-PROJECT-FALLBACK",
+      "risk": "CRITICAL",
+      "justification": "Silently attaches a request with no projectId to an unrelated prior project; affects every \"new app, no id supplied\" request path."
+    },
+    {
+      "findingId": "F02-NEW-PROMPT-NO-FRESH-SIGNAL",
+      "risk": "CRITICAL",
+      "justification": "The primary user-facing \"start a new app\" affordance does not actually assert freshness to the server; this is the most direct explanation for the reported symptom."
+    },
+    {
+      "findingId": "F09-CONTRACT-INDEPENDENT-OF-MODULE-PLAN",
+      "risk": "CRITICAL",
+      "justification": "Guarantees the two artifacts meant to describe \"what this app is\" (contract vs. generated modules) can disagree on every custom-domain build, with no detection until post-build faithfulness audit runs."
+    },
+    {
+      "findingId": "F12-FAITHFULNESS-POST-BUILD-ONLY",
+      "risk": "CRITICAL",
+      "justification": "The one system designed to catch product mismatch runs only after all generation work (and cost) has already been spent, and has no path back into generation."
+    },
+    {
+      "findingId": "F14-REPAIR-IS-IN-MEMORY-ONLY",
+      "risk": "CRITICAL",
+      "justification": "\"Repair\" is the term most likely to be trusted by an operator watching a build; discovering it never touches files undermines confidence in every reported repair outcome."
+    },
+    {
+      "findingId": "F03-AUTO-RESUME-DUPLICATE-DEFAULT-ON",
+      "risk": "HIGH",
+      "justification": "Loose domain-overlap matching (>=0.55) plus default-on auto-resume is a second, independent path to the same stale-concept symptom, even when F01/F02 are fixed."
+    },
+    {
+      "findingId": "F06-UNCONDITIONAL-DASHBOARD-SEED",
+      "risk": "HIGH",
+      "justification": "Unconditional seeding happens before the evidence gate, meaning the gate is trusted to catch 100% of cases with no defense in depth."
+    },
+    {
+      "findingId": "F10-GENERATOR-IGNORES-CONTRACT",
+      "risk": "HIGH",
+      "justification": "Removes any possibility of the generator self-correcting toward the contract even if the contract were fixed first; both sides of F09 must be fixed together."
+    },
+    {
+      "findingId": "F13-GENERATION-GATE-UNWIRED",
+      "risk": "HIGH",
+      "justification": "A preventive mechanism already built and tested (in isolation) sits unused; wiring it is lower-risk than building new prevention from scratch."
+    },
+    {
+      "findingId": "F15-REPAIR-RELABELS-NOT-RETRIES",
+      "risk": "HIGH",
+      "justification": "Produces a user-facing label (\"repaired\") that overstates what happened, which can suppress legitimate follow-up investigation."
+    },
+    {
+      "findingId": "F16-DEV-SERVER-UNCAUGHT-ASYNC",
+      "risk": "HIGH",
+      "justification": "A genuine unbounded-hang path in the runtime-activation stage, distinct from the (bounded) 45s timeout path."
+    },
+    {
+      "findingId": "F18-STABILIZER-TIMEOUTS-NOT-ENFORCED-IN-PRODUCTION",
+      "risk": "HIGH",
+      "justification": "Existing, tested enforcement code is not reachable from the production orchestrator, so timeout policy documented in one file does not match behavior in another."
+    },
+    {
+      "findingId": "F19-FRAGMENTED-PREVIEW-VERDICTS",
+      "risk": "HIGH",
+      "justification": "Multiple authorities can each declare a different \"did the preview work\" answer for the same build, with an override path that favors the weaker (route-probe-only) evidence."
+    },
+    {
+      "findingId": "F04-METADATA-KEYWORD-ACCUMULATION",
+      "risk": "MEDIUM",
+      "justification": "Contributes to identity drift over multiple rebuilds of the same project id, slower-acting than F01-F03."
+    },
+    {
+      "findingId": "F05-EVOLUTION-REGISTRY-NOT-PROJECT-SCOPED",
+      "risk": "MEDIUM",
+      "justification": "Cross-project capability reuse without project scoping; likely lower frequency than context/module findings but same category of isolation gap."
+    },
+    {
+      "findingId": "F07-PROFILE-MAP-FIXED-LISTS",
+      "risk": "MEDIUM",
+      "justification": "Mitigated somewhat by the evidence gate blocking PROFILE_FALLBACK by default; risk concentrates on the PROJECT_MANAGEMENT_WEB_V1 auto-allow exception."
+    },
+    {
+      "findingId": "F11-CONTRACT-PROFILE-MISMATCH",
+      "risk": "MEDIUM",
+      "justification": "Narrower than F09/F10 — only triggers when input.profile and materializationProfile diverge for the same build."
+    },
+    {
+      "findingId": "F17-INTERACTION-PROOF-NO-MATERIALIZATION-PRECHECK",
+      "risk": "MEDIUM",
+      "justification": "Produces a slower, less-diagnostic failure rather than a silent one — the proof engine does eventually classify and report the failure."
+    },
+    {
+      "findingId": "F08-PERSISTENCE-ALWAYS-ON",
+      "risk": "LOW",
+      "justification": "Infrastructure-only module id; does not by itself introduce a user-visible wrong concept."
+    }
+  ],
+  "filesInspected": [
+    "public/founder-reality/builder-home.js",
+    "server/brain-api-handler.ts",
+    "server/build-from-prompt-handler.ts",
+    "server/founder-reality-server.ts",
+    "src/autonomous-engineering-executive/aee-preview-contract.ts",
+    "src/build-execution-stabilizer-v1/build-execution-monitor.ts",
+    "src/build-execution-stabilizer-v1/build-execution-stabilizer.ts",
+    "src/build-execution-stabilizer-v1/build-execution-timeouts.ts",
+    "src/build-execution-stabilizer-v1/index.ts",
+    "src/build-result-normalizer-v1/build-result-normalizer-adapter.ts",
+    "src/build-result-normalizer-v1/build-result-normalizer.ts",
+    "src/capability-planning-engine/index.ts",
+    "src/chat-to-build-execution-bridge-v1/bridge-authority.ts",
+    "src/intent-understanding-engine/intent-understanding-engine.ts",
+    "src/intent-understanding-engine/product-model-builder.ts",
+    "src/live-preview-gate/live-preview-orchestrator-bridge.ts",
+    "src/live-preview-interaction-proof-v1/live-preview-interaction-proof-engine.ts",
+    "src/live-preview-interaction-proof-v1/live-preview-interaction-proof-runner.ts",
+    "src/materialization-evidence/index.ts",
+    "src/missing-capability-evolution-engine/missing-capability-evolution-registry.ts",
+    "src/multi-project-foundation/project-context-manager.ts",
+    "src/one-prompt-live-preview/generated-dev-server-manager.ts",
+    "src/one-prompt-live-preview/one-prompt-build-orchestrator.ts",
+    "src/one-prompt-live-preview/workspace-tab-registry.ts",
+    "src/persistent-project-reality/persistent-project-reality-paths.ts",
+    "src/product-faithfulness-v1/product-faithfulness-engine.ts",
+    "src/product-faithfulness-v1/product-faithfulness-feature-extractor.ts",
+    "src/product-faithfulness-v1/product-faithfulness-verdict.ts",
+    "src/product-faithfulness-v2/canonical-product-contract.ts",
+    "src/product-faithfulness-v2/generation-faithfulness-auditor.ts",
+    "src/product-faithfulness-v2/generation-faithfulness-repair.ts",
+    "src/product-faithfulness-v2/index.ts",
+    "src/project-context-alignment-v1/project-context-alignment-assessor.ts",
+    "src/project-context-alignment-v1/project-context-metadata-store.ts",
+    "src/project-context-switching/project-context-loader.ts",
+    "src/project-context-switching/project-context-reset.ts",
+    "src/project-name-conflict-resolution-v1/project-name-conflict-authority.ts",
+    "src/project-registry-v1/project-registry-v1-store.ts",
+    "src/project-resume-state/duplicate-project-resume-router.ts",
+    "src/project-session-continuity-v1/project-session-build-bridge.ts",
+    "src/project-vault/project-vault-authority.ts",
+    "src/prompt-bounded-materialization/module-candidate-collector.ts",
+    "src/prompt-bounded-materialization/post-generation-contamination-validator.ts",
+    "src/prompt-bounded-materialization/prompt-bounded-module-resolver.ts",
+    "src/prompt-faithful-generation/index.ts",
+    "src/prompt-faithful-generation/prompt-module-name-normalizer.ts",
+    "src/universal-feature-contract-intelligence/universal-feature-contract-builder.ts",
+    "src/universal-prompt-to-app-materialization/generated-app-manifest.ts",
+    "src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts",
+    "src/universal-prompt-to-app-materialization/profile-feature-map.ts",
+    "src/universal-prompt-to-app-materialization/prompt-app-metadata.ts",
+    "src/universal-prompt-to-app-materialization/universal-app-materialization-engine.ts"
+  ],
+  "evidenceFilesChecked": 52,
+  "evidenceFilesFound": 52,
+  "evidenceFileExistenceRatio": 1,
+  "stagesCovered": 17,
+  "totalStagesRequired": 17,
+  "categoriesIdentified": [
+    "PROJECT_CONTEXT_ISOLATION",
+    "STALE_CONTEXT_CONTAMINATION",
+    "FALLBACK_MODULE_CONTAMINATION",
+    "CONTRACT_DRIFT",
+    "FAITHFULNESS_LATE_DETECTION",
+    "REPAIR_LIMITATION",
+    "RUNTIME_FAILURE_OWNERSHIP"
+  ],
+  "noAppSpecificFixesApplied": true,
+  "noProductDomainsHardcoded": true,
+  "noExistingBehaviorModified": true,
+  "noValidatorsWeakened": true,
+  "auditProofStatus": "PROVEN",
+  "passToken": "APP_GENERATION_READINESS_AUDIT_V1_PASS"
+}

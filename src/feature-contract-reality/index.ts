@@ -31,6 +31,18 @@ export {
 export { recordFeatureContractReality } from './feature-contract-reality-recorder.js';
 export { applyFeatureContractRealityToManifest } from './feature-contract-reality-manifest.js';
 export {
+  collectWorkspaceFeatureRealityFallback,
+  getLastWorkspaceFeatureRealityFallback,
+  resetWorkspaceFeatureRealityFallbackForTests,
+  listProvenWorkspaceModuleIds,
+  workspaceHasGeneratedFeatureModules,
+  hasSufficientWorkspaceFeatureEvidence,
+  buildEvidenceDimensionReport,
+  LISA_WORKSPACE_INTERACTION_SIGNALS,
+  type WorkspaceFeatureRealityEvidenceStatus,
+  type WorkspaceFeatureRealityFallbackResult,
+} from './feature-reality-workspace-fallback-collector.js';
+export {
   buildFeatureContractRealityTraceEvents,
   featureContractRealityTraceTitles,
 } from './feature-contract-reality-trace-events.js';

@@ -1,0 +1,110 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-1-dup-1782838906628",
+  "createdAt": "2026-06-30T17:01:46.545Z",
+  "prompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "selectedProfile": "CRM_WEB_V1",
+  "appName": "SaaS CRM",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-saas-crm-1782838886128",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-saas-crm-1782838886128/.generated-app-manifest.json",
+  "manifestHash": "8a1f73d0b036bd549cf844c710dca0485d8d7eb501de8c7590d30bbd4ca135c5",
+  "workspaceHash": "da6128dd98fece250b91130901080a94f5e9089efb4bdb05e2e345bbb6671324",
+  "materializationHash": "5a82f177f8dde5b27cec7071961cce259d9626179d26ab1948a6e6e96da90b47",
+  "generatedFilesCount": 114,
+  "generatedDirectoriesCount": 26,
+  "generatedFeatureModulesCount": 10,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/deals",
+    "/persistence",
+    "/customers",
+    "/pipeline",
+    "/contacts",
+    "/follow-ups",
+    "/reports"
+  ],
+  "generatedComponents": [
+    "src/blueprint/components/EmptyState.tsx",
+    "src/blueprint/components/ErrorState.tsx",
+    "src/blueprint/components/LoadingState.tsx",
+    "src/blueprint/components/UniversalAiAssistant.tsx"
+  ],
+  "generatedServices": [
+    "src/features/activities/activities.service.ts",
+    "src/features/contacts/contacts.service.ts",
+    "src/features/customers/customers.service.ts",
+    "src/features/dashboard/dashboard.service.ts",
+    "src/features/deals/deals.service.ts",
+    "src/features/follow-ups/follow-ups.service.ts",
+    "src/features/navigation-router/navigation-router.service.ts",
+    "src/features/pipeline/pipeline.service.ts",
+    "src/features/reports/reports.service.ts",
+    "src/features/settings/settings.service.ts"
+  ],
+  "generatedModels": [
+    "src/features/activities/activities.types.ts",
+    "src/features/contacts/contacts.types.ts",
+    "src/features/customers/customers.types.ts",
+    "src/features/dashboard/dashboard.types.ts",
+    "src/features/deals/deals.types.ts",
+    "src/features/follow-ups/follow-ups.types.ts",
+    "src/features/navigation-router/navigation-router.types.ts",
+    "src/features/pipeline/pipeline.types.ts",
+    "src/features/reports/reports.types.ts",
+    "src/features/settings/settings.types.ts"
+  ],
+  "generatedStyles": [
+    "src/App.css",
+    "src/features/activities/activities.module.css",
+    "src/features/contacts/contacts.module.css",
+    "src/features/customers/customers.module.css",
+    "src/features/dashboard/dashboard.module.css",
+    "src/features/deals/deals.module.css",
+    "src/features/feature-app-router.css",
+    "src/features/follow-ups/follow-ups.module.css",
+    "src/features/navigation-router/navigation-router.module.css",
+    "src/features/pipeline/pipeline.module.css",
+    "src/features/reports/reports.module.css",
+    "src/features/settings/settings.module.css",
+    "src/styles/global.css"
+  ],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "PASS",
+    "blueprintPurityStatus": "FAIL",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": true,
+    "warnings": [
+      "AEE_PREVIEW_RECOVERY_LOOP_V1: preview recovery exhausted after 3 attempt(s) — build completed with degraded preview.",
+      "AEE respected blocker: Live Preview is locked because Launch Readiness evidence not available. Run Autonomous Debugging after resolving upstream interaction and behavior reachability failures.",
+      "AEE evidence provider: AUTONOMOUS_DEBUGGING",
+      "AEE evidence provider: MISSING_CAPABILITY_EVOLUTION",
+      "AEE evidence provider: LIVE_PREVIEW_GATE",
+      "Only 5/6 required UI terms detected in generated source."
+    ],
+    "errors": []
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-saas-crm-1782838886128/.generated-app-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-saas-crm-1782838886128/build-manifest.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-saas-crm-1782838886128/universal-feature-contract.json",
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/readiness-audit-saas-crm-1782838886128/blueprint-manifest.json",
+    ".generated-build-history/one-prompt-build-1-dup-1782838906628"
+  ],
+  "failureReasons": [
+    "registry missing modules: auth, leads"
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-1-dup-1782838906628/replay-metadata.json",
+  "comparisonFingerprint": "27fe5a569ac46fd0752c044c29cb8348c4da79e19f28b23294fe0cfc825d9a05",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-1-dup-1782838906628/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-1",
+  "buildHistoryRecordHash": "57236e5dab1877b3a7d98d6f41ad1827ad72e71082e4a0e809081d5e90340eea"
+}

@@ -3,6 +3,7 @@
  */
 
 import { spawn } from 'node:child_process';
+import { killChildProcessTree } from '../windows-process-cleanup/kill-child-process-tree.mjs';
 import { existsSync, readFileSync } from 'node:fs';
 import { get as httpGet } from 'node:http';
 import { join } from 'node:path';
@@ -190,7 +191,7 @@ async function main() {
   if (!ready.ready) {
     base.firstBrokenPreviewLink = 'runtime→url';
     try {
-      child.kill();
+      await killChildProcessTree(child);
     } catch {
       /* ignore */
     }
@@ -233,7 +234,7 @@ async function main() {
   }
 
   try {
-    child.kill();
+    await killChildProcessTree(child);
   } catch {
     /* ignore */
   }

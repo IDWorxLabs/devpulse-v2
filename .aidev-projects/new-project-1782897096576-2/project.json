@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "new-project-1782897096576-2",
+  "projectName": "New Project",
+  "createdAt": "2026-07-01T09:11:36.649Z",
+  "updatedAt": "2026-07-02T05:31:25.432Z",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "originalPrompt": "build a calculator app",
+  "currentSourcePath": ".aidev-projects/new-project-1782897096576-2/source",
+  "activeWorkspacePath": ".aidev-projects/new-project-1782897096576-2",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": "one-prompt-build-1",
+  "manifestPath": ".aidev-projects/new-project-1782897096576-2/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/new-project-1782897096576-2/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782970285007",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/new-project-1782897096576-2/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/new-project-1782897096576-2/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-1-dup-1782970285007"
+  ],
+  "featureContractRealityPath": ".aidev-projects/new-project-1782897096576-2/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/new-project-1782897096576-2/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/new-project-1782897096576-2/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/new-project-1782897096576-2/.aidev/materialization-quality-score.json"
+}

@@ -1,0 +1,23 @@
+{
+  "features": [
+    {
+      "moduleId": "todo-list",
+      "tagName": "main",
+      "className": ""
+    },
+    {
+      "moduleId": "todo-list",
+      "tagName": "section",
+      "className": "modular-feature"
+    }
+  ],
+  "rootFeatures": [
+    {
+      "moduleId": "todo-list",
+      "tagName": "main"
+    }
+  ],
+  "modularSurfaces": 1,
+  "title": "todo list",
+  "bodyText": "Todo List\n\nTodo List for todo list — deliver prompt-specific capabilities.\n\ntodo list — Todo List\n\nTodo List for todo list — deliver prompt-specific capabilities.\n\nManage Todo List\n\nValidation rules: 2\n\nSample Todo List record\nTodo List preview entry"
+}

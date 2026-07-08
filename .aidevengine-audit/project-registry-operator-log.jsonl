@@ -1,0 +1,4 @@
+{"event":"PROJECT_REGISTRY_DUPLICATES_REPAIRED","at":"2026-07-02T05:32:04.658Z","count":1,"names":["New Project"],"archivedProjectIds":["new-project-1782897096576-2"],"keptProjectIds":["new-project-1"]}
+{"event":"PROJECT_REGISTRY_DUPLICATES_REPAIRED","at":"2026-07-02T05:51:01.141Z","count":1,"names":["New Project"],"archivedProjectIds":["new-project-1782971387544-2"],"keptProjectIds":["new-project-1"]}
+{"event":"PROJECT_REGISTRY_DUPLICATES_REPAIRED","at":"2026-07-06T20:49:13.191Z","count":1,"names":["Simple Counter App"],"archivedProjectIds":["simple-counter-app-1783370775362-2"],"keptProjectIds":["simple-counter-app-1783370149961-2"]}
+{"event":"PROJECT_REGISTRY_DUPLICATES_REPAIRED","at":"2026-07-07T06:54:51.132Z","count":1,"names":["Calculator App"],"archivedProjectIds":["calculator-app-1783405328375-9"],"keptProjectIds":["calculator-build-readiness-1782897881382"]}

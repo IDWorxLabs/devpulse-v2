@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "aee-build-autofix-saas-crm-1782829976759",
+  "projectName": "SaaS CRM",
+  "createdAt": "2026-06-30T14:33:12.554Z",
+  "updatedAt": "2026-06-30T14:33:12.849Z",
+  "selectedProfile": "CRM_WEB_V1",
+  "originalPrompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "currentSourcePath": ".aidev-projects/aee-build-autofix-saas-crm-1782829976759/source",
+  "activeWorkspacePath": ".aidev-projects/aee-build-autofix-saas-crm-1782829976759",
+  "lastBuildRunId": "one-prompt-build-2",
+  "lastSuccessfulBuildRunId": "one-prompt-build-2",
+  "manifestPath": ".aidev-projects/aee-build-autofix-saas-crm-1782829976759/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/aee-build-autofix-saas-crm-1782829976759/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-2-dup-1782829992173",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/aee-build-autofix-saas-crm-1782829976759/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/aee-build-autofix-saas-crm-1782829976759/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-2-dup-1782829992173"
+  ],
+  "featureContractRealityPath": ".aidev-projects/aee-build-autofix-saas-crm-1782829976759/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/aee-build-autofix-saas-crm-1782829976759/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/aee-build-autofix-saas-crm-1782829976759/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/aee-build-autofix-saas-crm-1782829976759/.aidev/materialization-quality-score.json"
+}

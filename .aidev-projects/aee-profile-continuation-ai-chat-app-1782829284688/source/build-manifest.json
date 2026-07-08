@@ -1,0 +1,17 @@
+{
+  "manifestId": "aee-profile-continuation-ai-chat-app-1782829284688-manifest",
+  "contractId": "aee-profile-continuation-ai-chat-app-1782829284688",
+  "ideaId": "idea-9",
+  "generatedAt": "2026-06-30T14:21:24.920Z",
+  "materializationSource": "modular-feature-materialization-v1",
+  "applicationProfile": "GENERIC_CUSTOM_APP_V1",
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "modularFeatureMaterialization": true,
+  "buildUnits": [
+    "unit-001",
+    "unit-002",
+    "unit-003"
+  ],
+  "runtime": "vite-react"
+}

@@ -8,6 +8,10 @@ import type {
   ExistingCapabilitySearchResult,
   RiskLevel,
 } from './capability-planning-types.js';
+import {
+  isRealPaymentProcessingCapabilityName,
+  isSafePaymentPlaceholderCapabilityName,
+} from '../safe-payment-placeholder-policy/index.js';
 
 let gapCounter = 0;
 
@@ -16,6 +20,8 @@ export function resetCapabilityGapAnalyzerForTests(): void {
 }
 
 function riskFor(requiredName: string, matchType: string): RiskLevel {
+  if (isSafePaymentPlaceholderCapabilityName(requiredName)) return 'LOW';
+  if (isRealPaymentProcessingCapabilityName(requiredName)) return 'HIGH';
   if (/payment|medical diagnosis|identity verification|location tracking|database migration/i.test(requiredName)) {
     return 'HIGH';
   }
@@ -27,6 +33,8 @@ function riskFor(requiredName: string, matchType: string): RiskLevel {
 function decide(search: ExistingCapabilitySearchResult): CapabilityGapDecision {
   const { matchType, matchConfidence, requiredCapability } = search;
 
+  if (isSafePaymentPlaceholderCapabilityName(requiredCapability.name)) return 'GENERATE_MISSING';
+  if (isRealPaymentProcessingCapabilityName(requiredCapability.name)) return 'NEEDS_HUMAN_REVIEW';
   if (/payment processing/i.test(requiredCapability.name)) return 'NEEDS_HUMAN_REVIEW';
   if (/ai assistant/i.test(requiredCapability.name) && !/ai|assistant|ml|gpt/i.test(requiredCapability.description)) {
     return 'BLOCK_BUILD';

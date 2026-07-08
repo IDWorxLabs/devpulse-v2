@@ -1,0 +1,23 @@
+{
+  "readOnly": true,
+  "projectId": "calculator-build-readiness-1782898003563",
+  "projectName": "calculator",
+  "createdAt": "2026-07-01T09:26:44.326Z",
+  "updatedAt": "2026-07-01T09:26:44.326Z",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "originalPrompt": "build a calculator app",
+  "currentSourcePath": "",
+  "activeWorkspacePath": ".aidev-projects/calculator-build-readiness-1782898003563",
+  "lastBuildRunId": "calculator-build-readiness-1782898003563",
+  "lastSuccessfulBuildRunId": null,
+  "manifestPath": "",
+  "featureContractPath": "",
+  "buildHistoryRecordPath": ".generated-build-history/calculator-build-readiness-1782898003563",
+  "productionValidationPath": null,
+  "exportMetadataPath": "",
+  "projectFileIndexPath": "",
+  "status": "FAILED",
+  "immutableBuildLinks": [],
+  "lastFailedBuildRunId": "calculator-build-readiness-1782898003563",
+  "lastFailedSnapshotPath": ".aidev-projects/calculator-build-readiness-1782898003563/.aidev/snapshots/failed-calculator-build-readiness-1782898003563"
+}

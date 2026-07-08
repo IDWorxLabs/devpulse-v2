@@ -1,0 +1,85 @@
+[
+  {
+    "order": 1,
+    "title": "Establish one explicit, mandatory new-build-vs-continuation decision authority",
+    "rationale": "Every other stale-context finding (F01-F04) is downstream of the fact that \"is this a new app?\" is currently inferred inconsistently by several independent call sites instead of decided once, explicitly, by one authority that all callers must consult.",
+    "addressesFindingIds": [
+      "F01-ACTIVE-PROJECT-FALLBACK",
+      "F02-NEW-PROMPT-NO-FRESH-SIGNAL",
+      "F03-AUTO-RESUME-DUPLICATE-DEFAULT-ON"
+    ]
+  },
+  {
+    "order": 2,
+    "title": "Remove the activeProjectId fallback from project context resolution (require an explicit id or explicit fresh-build intent)",
+    "rationale": "Directly closes the highest-severity isolation gap: a request with no projectId should never silently attach to whichever project was last active in the process.",
+    "addressesFindingIds": [
+      "F01-ACTIVE-PROJECT-FALLBACK"
+    ]
+  },
+  {
+    "order": 3,
+    "title": "Replace keyword/metadata accumulation with per-build replacement, scoped strictly to the current prompt",
+    "rationale": "F04 and F05 both stem from the same anti-pattern (union/merge instead of replace, or missing scoping). Fixing the merge semantics once, as a shared rule, prevents both.",
+    "addressesFindingIds": [
+      "F04-METADATA-KEYWORD-ACCUMULATION",
+      "F05-EVOLUTION-REGISTRY-NOT-PROJECT-SCOPED"
+    ]
+  },
+  {
+    "order": 4,
+    "title": "Wire the canonical product contract into module selection and require the module generator to consume it",
+    "rationale": "This is the structural fix for contract drift (F09-F11): make the contract and the generator share one source of truth instead of two independently-derived artifacts.",
+    "addressesFindingIds": [
+      "F09-CONTRACT-INDEPENDENT-OF-MODULE-PLAN",
+      "F10-GENERATOR-IGNORES-CONTRACT",
+      "F11-CONTRACT-PROFILE-MISMATCH"
+    ]
+  },
+  {
+    "order": 5,
+    "title": "Require prompt-derived evidence for every candidate before it is added to the module pool, not just before it is approved",
+    "rationale": "F06-F08 show that unconditional seeding happens upstream of the (already evidence-gated) resolver. Moving the evidence requirement earlier — into the collectors themselves — removes the need to rely on the resolver to catch every case.",
+    "addressesFindingIds": [
+      "F06-UNCONDITIONAL-DASHBOARD-SEED",
+      "F07-PROFILE-MAP-FIXED-LISTS",
+      "F08-PERSISTENCE-ALWAYS-ON"
+    ]
+  },
+  {
+    "order": 6,
+    "title": "Wire runGenerationGate (or an equivalent pre-materialization contract check) into the real build path",
+    "rationale": "Converts faithfulness from purely detective (F12, F13) to preventive, using code that already exists but is currently unreachable from production traffic.",
+    "addressesFindingIds": [
+      "F12-FAITHFULNESS-POST-BUILD-ONLY",
+      "F13-GENERATION-GATE-UNWIRED"
+    ]
+  },
+  {
+    "order": 7,
+    "title": "Give \"repair\" a real regeneration path, or rename/relabel it so it is not mistaken for one",
+    "rationale": "F14/F15 show repair is currently cosmetic. Either connect REGENERATE_FEATURE_MODULE actions to an actual regeneration call, or stop calling the outcome \"repair\" in user-facing labels until it can perform one.",
+    "addressesFindingIds": [
+      "F14-REPAIR-IS-IN-MEMORY-ONLY",
+      "F15-REPAIR-RELABELS-NOT-RETRIES"
+    ]
+  },
+  {
+    "order": 8,
+    "title": "Wire the existing build-execution-stabilizer enforcement into the orchestrator's actual npm/dev-server/proof calls, and add a .catch() to the dev-server startup IIFE",
+    "rationale": "F16-F18 are all \"policy exists, enforcement does not reach production.\" This is the lowest-risk, highest-clarity fix in the runtime-activation area because the enforcement code (runMonitoredCommand/runMonitoredPoll) already exists and is already tested elsewhere.",
+    "addressesFindingIds": [
+      "F16-DEV-SERVER-UNCAUGHT-ASYNC",
+      "F17-INTERACTION-PROOF-NO-MATERIALIZATION-PRECHECK",
+      "F18-STABILIZER-TIMEOUTS-NOT-ENFORCED-IN-PRODUCTION"
+    ]
+  },
+  {
+    "order": 9,
+    "title": "Designate one module as the final, non-overridable build-success arbiter and make every other verdict advisory input to it",
+    "rationale": "Without this, fixing individual verdict-producers (steps 1-8) will keep leaving room for a different module to silently override or contradict the fix. This should be the last step so it can take the corrected verdict sources from steps 1-8 as its inputs.",
+    "addressesFindingIds": [
+      "F19-FRAGMENTED-PREVIEW-VERDICTS"
+    ]
+  }
+]

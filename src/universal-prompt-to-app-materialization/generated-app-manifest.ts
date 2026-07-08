@@ -104,6 +104,8 @@ export interface GeneratedAppManifest {
   previewVerified: boolean;
   previewUrl: string | null;
   previewHtmlStatus: 'PASS' | 'FAIL' | 'PENDING';
+  visiblePreviewValidationStatus: 'PASS' | 'FAIL' | 'PENDING' | 'SKIPPED';
+  visiblePreviewValidationFailureReasons: string[];
   profileSpecificUiVerified: boolean;
   modularRoutesVerified: boolean;
   productionValidationDurationMs: number;
@@ -280,6 +282,8 @@ export function buildInitialGeneratedAppManifest(input: {
     previewVerified: false,
     previewUrl: null,
     previewHtmlStatus: 'PENDING',
+    visiblePreviewValidationStatus: 'PENDING',
+    visiblePreviewValidationFailureReasons: [],
     profileSpecificUiVerified: false,
     modularRoutesVerified: false,
     productionValidationDurationMs: 0,

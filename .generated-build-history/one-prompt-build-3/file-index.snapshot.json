@@ -3,59 +3,59 @@
   "generatedFiles": [
     {
       "path": ".generated-app-manifest.json",
-      "size": 51393,
+      "size": 30921,
       "extension": ".json",
-      "lines": 1622,
+      "lines": 980,
       "category": "Config",
-      "hash": "82d03386545d0cbd2a721bf4a2a21b5c4895020a22872820b1c75b049695e278"
+      "hash": "613c98a0198a02dea23df4a7456894d879f904bf29083a62389f75977eace8a4"
     },
     {
       "path": "blueprint-manifest.json",
-      "size": 504,
+      "size": 532,
       "extension": ".json",
       "lines": 28,
       "category": "Config",
-      "hash": "0b57305acd8d2cab1c890350d5bfb8ef2380358da8e24e568efec4a5c741e6be"
+      "hash": "4c0415515b05274e0e5b43fea6a482a7b3a717b1bb2ef1892983b4332cba0f45"
     },
     {
       "path": "build-manifest.json",
-      "size": 460,
+      "size": 546,
       "extension": ".json",
       "lines": 18,
       "category": "Config",
-      "hash": "85edf1d78ffac9ad609da733164c5737560e264f25183910fb18298f4810f951"
+      "hash": "9fccb18d201e3bf0b36d1b3cb25d14da55d453ec6de92ffb0309b80c397bdcaf"
     },
     {
       "path": "feature-contract.json",
-      "size": 1880,
+      "size": 1846,
       "extension": ".json",
-      "lines": 84,
+      "lines": 85,
       "category": "Config",
-      "hash": "76ef5c7c557ad9bac89a3e4c951e112e7b0a0f8e7b482de31cc177d83c5f35a4"
+      "hash": "c9fa42f851c733a657ed14ce1066edf99c40a649c164c2d9db4c477e76cf2a2d"
     },
     {
       "path": "index.html",
-      "size": 303,
+      "size": 296,
       "extension": ".html",
       "lines": 13,
       "category": "Utility",
-      "hash": "61224b8a339f954ae5eb1cffbd43d158e250f6c030c73dd036a56ad8497bf16b"
+      "hash": "f5f2cd12a84da0ed0f0eda2a4b30799b72da3f53979555c56ee78243e839c63c"
     },
     {
       "path": "package-lock.json",
-      "size": 58081,
+      "size": 58153,
       "extension": ".json",
       "lines": 1733,
       "category": "Config",
-      "hash": "743c0ddba0dbe356b0b33efde0419204cf848a2b8670f1f9b01e15b0f4e87580"
+      "hash": "7cca019ea357593c7c81997e372694fab997579dc28f975e7bd9b17acee7a848"
     },
     {
       "path": "package.json",
-      "size": 848,
+      "size": 907,
       "extension": ".json",
       "lines": 32,
       "category": "Config",
-      "hash": "07df51a666d7a57096cf7b9ac4ffe6dce5e9c45ff851192e1660223f2848903e"
+      "hash": "77a6a75244e5fb40febb3a616c39009545bf5fcfcdc05ab9115155b5b81c7b42"
     },
     {
       "path": "runtime/dev-server.mjs",
@@ -99,11 +99,11 @@
     },
     {
       "path": "src/blueprint/app-metadata.ts",
-      "size": 206,
+      "size": 192,
       "extension": ".ts",
       "lines": 4,
       "category": "Utility",
-      "hash": "e8ee7041c7261e67534c8fc669290b346e06edee8204ef35cfd1b350881217d2"
+      "hash": "8d2162cf660df04ed16bceee620002707b113d089696631fe397bd1bf08f2031"
     },
     {
       "path": "src/blueprint/AppShell.tsx",
@@ -259,299 +259,11 @@
     },
     {
       "path": "src/data/demo-data.ts",
-      "size": 252,
+      "size": 217,
       "extension": ".ts",
       "lines": 4,
       "category": "Utility",
-      "hash": "5e0af5c77663c97d474d8153e60fcf357398495d4787463f8b8b0e3b1ce08150"
-    },
-    {
-      "path": "src/features/analytics/analytics.module.css",
-      "size": 436,
-      "extension": ".css",
-      "lines": 7,
-      "category": "Style",
-      "hash": "3d22dd97c9c29cb7c42ff63d7f4d9649cf00953a0bd715b27605b3adb1e150f3"
-    },
-    {
-      "path": "src/features/analytics/analytics.service.ts",
-      "size": 460,
-      "extension": ".ts",
-      "lines": 12,
-      "category": "Service",
-      "hash": "16efeba2f5f8ba9fb27bf09212d80aa691dbe9abfe22fc962698541a614f84a4"
-    },
-    {
-      "path": "src/features/analytics/analytics.types.ts",
-      "size": 210,
-      "extension": ".ts",
-      "lines": 11,
-      "category": "Model",
-      "hash": "13e32df7f6566cba205739ebbf43c2f50c290977d7a41e326da9abfe43bf500f"
-    },
-    {
-      "path": "src/features/analytics/analytics.validation.ts",
-      "size": 529,
-      "extension": ".ts",
-      "lines": 14,
-      "category": "Validation",
-      "hash": "7c0d2db7c2560f4eb781ed3e5232119a0e5bd9d57f8f5f9d7799a7ed60d65f3f"
-    },
-    {
-      "path": "src/features/analytics/AnalyticsFeature.tsx",
-      "size": 1290,
-      "extension": ".tsx",
-      "lines": 39,
-      "category": "Feature",
-      "hash": "1a558d85b46f1c6bd273f27309e86ece1f90da198679da0569d0467fcfe78f81"
-    },
-    {
-      "path": "src/features/analytics/index.ts",
-      "size": 158,
-      "extension": ".ts",
-      "lines": 5,
-      "category": "Utility",
-      "hash": "2a71ac188d2d19ebfbf3aefa1cb6881f7bfaea93885b80ff02496d1c12efd157"
-    },
-    {
-      "path": "src/features/auth/auth.module.css",
-      "size": 431,
-      "extension": ".css",
-      "lines": 7,
-      "category": "Style",
-      "hash": "1072ed7dfe2f19e903fcad88a7457b3ed3f8c316c40396964176ddc0ddec5a95"
-    },
-    {
-      "path": "src/features/auth/auth.service.ts",
-      "size": 400,
-      "extension": ".ts",
-      "lines": 12,
-      "category": "Service",
-      "hash": "2a37faf9a3015958cbefa4bc49db7be68f4d524c618136b5dc979756f94cf22a"
-    },
-    {
-      "path": "src/features/auth/auth.types.ts",
-      "size": 195,
-      "extension": ".ts",
-      "lines": 11,
-      "category": "Model",
-      "hash": "9b991b8e537667367588862b50fad54fc173e6de67479b8ac20402732211a853"
-    },
-    {
-      "path": "src/features/auth/auth.validation.ts",
-      "size": 482,
-      "extension": ".ts",
-      "lines": 14,
-      "category": "Validation",
-      "hash": "11fbc48c3a8e3b72222c339b9e2dcc0acc60984d84796a7f1a8dd502992cdb1a"
-    },
-    {
-      "path": "src/features/auth/AuthFeature.tsx",
-      "size": 1346,
-      "extension": ".tsx",
-      "lines": 42,
-      "category": "Feature",
-      "hash": "94f3c898a8aed32d896296023a743e985e52357c25475200481bcb1365f93dd8"
-    },
-    {
-      "path": "src/features/auth/index.ts",
-      "size": 138,
-      "extension": ".ts",
-      "lines": 5,
-      "category": "Utility",
-      "hash": "46d9817d0714b7db7e70656e219135cab30c7c64cfa96df7c97d49cab1f27e9b"
-    },
-    {
-      "path": "src/features/categories/categories.module.css",
-      "size": 437,
-      "extension": ".css",
-      "lines": 7,
-      "category": "Style",
-      "hash": "41701ad1c51d00fd393a90b7a280355ec453de55523814d55cea2cf22ae44580"
-    },
-    {
-      "path": "src/features/categories/categories.service.ts",
-      "size": 472,
-      "extension": ".ts",
-      "lines": 12,
-      "category": "Service",
-      "hash": "3163778709541d6c282117c64cde5010de53c6a8eeb70104403a645cdeb26efa"
-    },
-    {
-      "path": "src/features/categories/categories.types.ts",
-      "size": 213,
-      "extension": ".ts",
-      "lines": 11,
-      "category": "Model",
-      "hash": "0f928d1065bf333aacafb1b5602088c5902d6e06370e52414c0bc51c3c39df12"
-    },
-    {
-      "path": "src/features/categories/categories.validation.ts",
-      "size": 536,
-      "extension": ".ts",
-      "lines": 14,
-      "category": "Validation",
-      "hash": "00947ce9b3c5cef181c77b8630db487a3be6f0d850da220d5cb3fd258bb45ed2"
-    },
-    {
-      "path": "src/features/categories/CategoriesFeature.tsx",
-      "size": 1452,
-      "extension": ".tsx",
-      "lines": 42,
-      "category": "Feature",
-      "hash": "78d3667d9de4fe81cb595d568818d47bbbffe91c12408d88819ca439092f6f39"
-    },
-    {
-      "path": "src/features/categories/index.ts",
-      "size": 162,
-      "extension": ".ts",
-      "lines": 5,
-      "category": "Utility",
-      "hash": "dead16f91d9623f07ef484f790b77a72e91bfafae39d27db37a6035b0a7da3eb"
-    },
-    {
-      "path": "src/features/charts/charts.module.css",
-      "size": 433,
-      "extension": ".css",
-      "lines": 7,
-      "category": "Style",
-      "hash": "52a8d7890a1114a2a73b3f4be0225110c703e4b0089cdde214325c12c83cad9f"
-    },
-    {
-      "path": "src/features/charts/charts.service.ts",
-      "size": 424,
-      "extension": ".ts",
-      "lines": 12,
-      "category": "Service",
-      "hash": "e1db72b72c504139b30f4ac2d25f2fa2564fdbb7a63658d44c4adf949c06061a"
-    },
-    {
-      "path": "src/features/charts/charts.types.ts",
-      "size": 201,
-      "extension": ".ts",
-      "lines": 11,
-      "category": "Model",
-      "hash": "fd49455dc84580b2e9146e44d74646035251d9e92838a638667f7627ddaa8ecc"
-    },
-    {
-      "path": "src/features/charts/charts.validation.ts",
-      "size": 502,
-      "extension": ".ts",
-      "lines": 14,
-      "category": "Validation",
-      "hash": "47894562e18905a15d5ef81a84f2d58b9092d9b09e24e3a661b27d091c9b3cf2"
-    },
-    {
-      "path": "src/features/charts/ChartsFeature.tsx",
-      "size": 1256,
-      "extension": ".tsx",
-      "lines": 39,
-      "category": "Feature",
-      "hash": "31140bdc4d6895499829f1a8acf6719b6135cf967727d9639c22f08fc72e09bb"
-    },
-    {
-      "path": "src/features/charts/index.ts",
-      "size": 146,
-      "extension": ".ts",
-      "lines": 5,
-      "category": "Utility",
-      "hash": "d81b1594a30d820cd42380d6173b9e75f3290febbd631d9fee084c73165a78c5"
-    },
-    {
-      "path": "src/features/code-history/code-history.module.css",
-      "size": 439,
-      "extension": ".css",
-      "lines": 7,
-      "category": "Style",
-      "hash": "2ca6e77f466d5c7299ee7f19ab30fb07ff40ccdbbf4d0473ad01b8f029d19c91"
-    },
-    {
-      "path": "src/features/code-history/code-history.service.ts",
-      "size": 492,
-      "extension": ".ts",
-      "lines": 12,
-      "category": "Service",
-      "hash": "7029483befce95ee6a7552661a3bae412734e5604b65f0e75771bddad7ef3798"
-    },
-    {
-      "path": "src/features/code-history/code-history.types.ts",
-      "size": 217,
-      "extension": ".ts",
-      "lines": 11,
-      "category": "Model",
-      "hash": "71b3cb59003f2989382357d45fea526f882ce7fec441b5bfd20ebcd4755d031a"
-    },
-    {
-      "path": "src/features/code-history/code-history.validation.ts",
-      "size": 555,
-      "extension": ".ts",
-      "lines": 14,
-      "category": "Validation",
-      "hash": "385eb6d9a94f2ea01ea5036178860307172cd7d324975c6e6a55da479cd3bd85"
-    },
-    {
-      "path": "src/features/code-history/CodeHistoryFeature.tsx",
-      "size": 1357,
-      "extension": ".tsx",
-      "lines": 39,
-      "category": "Feature",
-      "hash": "211a6a7b246cc556b377d6de616af91a9a7f3be6185bb72a526eb018d1631fd0"
-    },
-    {
-      "path": "src/features/code-history/index.ts",
-      "size": 169,
-      "extension": ".ts",
-      "lines": 5,
-      "category": "Utility",
-      "hash": "b7ad61e4433e23c733df23b209fc41cea2387e7d04ec5014731c8cda6d2b1732"
-    },
-    {
-      "path": "src/features/csv-export/csv-export.module.css",
-      "size": 437,
-      "extension": ".css",
-      "lines": 7,
-      "category": "Style",
-      "hash": "1c4b89281bf458ab2bdd6d55c0a4e26ed477cfa043523e9ed1be81b641931c01"
-    },
-    {
-      "path": "src/features/csv-export/csv-export.service.ts",
-      "size": 468,
-      "extension": ".ts",
-      "lines": 12,
-      "category": "Service",
-      "hash": "e078ef368c469bbbac0e648e5e94d6c97b10649890baa4dd7664a6d71546a027"
-    },
-    {
-      "path": "src/features/csv-export/csv-export.types.ts",
-      "size": 211,
-      "extension": ".ts",
-      "lines": 11,
-      "category": "Model",
-      "hash": "02c4930ac7d149a9d7fd865f6b06ab791d0924a44a3cebd9eb08e49092d883d2"
-    },
-    {
-      "path": "src/features/csv-export/csv-export.validation.ts",
-      "size": 535,
-      "extension": ".ts",
-      "lines": 14,
-      "category": "Validation",
-      "hash": "6f4d2eb4c1ad2d72c0a6863d0587296fce8da67ed43d89ae8bf486807026988d"
-    },
-    {
-      "path": "src/features/csv-export/CsvExportFeature.tsx",
-      "size": 1456,
-      "extension": ".tsx",
-      "lines": 42,
-      "category": "Feature",
-      "hash": "7b307ba7e404f5a54f93ec42f87060324c65c4e00b86a8669783bb70e92b7e6b"
-    },
-    {
-      "path": "src/features/csv-export/index.ts",
-      "size": 161,
-      "extension": ".ts",
-      "lines": 5,
-      "category": "Utility",
-      "hash": "37e6c3a2ccc02530d363c2da1340a53a77c3e7325bfc26a229225d05a9b6af19"
+      "hash": "b5db131a3df183c18e45176e6002fef4abc76b5c0ee1374f09d618d7c7e0be8d"
     },
     {
       "path": "src/features/dashboard/dashboard.module.css",
@@ -563,35 +275,35 @@
     },
     {
       "path": "src/features/dashboard/dashboard.service.ts",
-      "size": 460,
+      "size": 453,
       "extension": ".ts",
       "lines": 12,
       "category": "Service",
-      "hash": "6c399261d802aa662c22ea5e5b8b6fa042ae93b7848ce282cecdb2330e0c8a12"
+      "hash": "608eec35fe87aa047343257d182a884d9ae991381c3bd7440277e03ea3d0b271"
     },
     {
       "path": "src/features/dashboard/dashboard.types.ts",
-      "size": 210,
+      "size": 203,
       "extension": ".ts",
       "lines": 11,
       "category": "Model",
-      "hash": "10d03cef7f74d75d545e6ae9f069db9c7f5cb6b81f6162d278c34a140c68239d"
+      "hash": "3af0d6cc2e93ad1ee814599ee42a30ad47cbe8332d7b19b62622c128ddfd7047"
     },
     {
       "path": "src/features/dashboard/dashboard.validation.ts",
-      "size": 529,
+      "size": 522,
       "extension": ".ts",
       "lines": 14,
       "category": "Validation",
-      "hash": "1c9861a0134c8aa3d7cbc60ce7092828880379d7d90f656a9b75e1de1acae153"
+      "hash": "150a11c88742f3cb0a2a9dadf34e0a5b70e2eb3fcff03af1c8092b343b90a7e2"
     },
     {
       "path": "src/features/dashboard/DashboardFeature.tsx",
-      "size": 1301,
+      "size": 1374,
       "extension": ".tsx",
       "lines": 39,
       "category": "Feature",
-      "hash": "7ed91b1f68e84fc156e61ed80f19ea097d908bc98bab6ed7be9a77ff74376c24"
+      "hash": "c8f05363beb3b9e147e138ef052dd8c9019c64323d987fe7ac021221f5ae3e91"
     },
     {
       "path": "src/features/dashboard/index.ts",
@@ -600,54 +312,6 @@
       "lines": 5,
       "category": "Utility",
       "hash": "c6d1837912d799c51af4f7289e75c7b7854d7ab516ecc889482193b0404435e4"
-    },
-    {
-      "path": "src/features/expenses/expenses.module.css",
-      "size": 435,
-      "extension": ".css",
-      "lines": 7,
-      "category": "Style",
-      "hash": "d68fc74ad14341909c59d982cef553e2f22283af186fa1ffbebe3d9eee31a921"
-    },
-    {
-      "path": "src/features/expenses/expenses.service.ts",
-      "size": 448,
-      "extension": ".ts",
-      "lines": 12,
-      "category": "Service",
-      "hash": "fd225c1d2ae424595b0502e03c25199eedb0a6e2c14b637a89ccfda82e8eed70"
-    },
-    {
-      "path": "src/features/expenses/expenses.types.ts",
-      "size": 207,
-      "extension": ".ts",
-      "lines": 11,
-      "category": "Model",
-      "hash": "0927d3f543c0da345604783cc61fda25472c48e95e05c86852cc114917aa4978"
-    },
-    {
-      "path": "src/features/expenses/expenses.validation.ts",
-      "size": 518,
-      "extension": ".ts",
-      "lines": 14,
-      "category": "Validation",
-      "hash": "d0d7f147ffa917ddc33b274293e2a57f33b4343471282480412c38121a7043d8"
-    },
-    {
-      "path": "src/features/expenses/ExpensesFeature.tsx",
-      "size": 1443,
-      "extension": ".tsx",
-      "lines": 42,
-      "category": "Feature",
-      "hash": "71ec888e5164e04bea40e1ca92593d8c4aff4ff2946d0145ce8ac3419231e387"
-    },
-    {
-      "path": "src/features/expenses/index.ts",
-      "size": 154,
-      "extension": ".ts",
-      "lines": 5,
-      "category": "Utility",
-      "hash": "063a01997e771200447fe2c40be653cce45f34f1c0f408e1c404308d54bedc67"
     },
     {
       "path": "src/features/feature-app-router.css",
@@ -659,163 +323,67 @@
     },
     {
       "path": "src/features/FeatureAppRouter.tsx",
-      "size": 2307,
+      "size": 2541,
       "extension": ".tsx",
-      "lines": 70,
+      "lines": 63,
       "category": "Feature",
-      "hash": "3c3247e41b95551c93d144daf54b2e4a1e3d2b395347595ac8b05974cb79f537"
+      "hash": "d90909754b8ec49e06dde83491d30b32fea6a838652762002a5207e498d21908"
     },
     {
-      "path": "src/features/generator/generator.module.css",
-      "size": 436,
-      "extension": ".css",
-      "lines": 7,
-      "category": "Style",
-      "hash": "cea47f7f8c718fa6c7136fcfd586860b8cffbd4de9f1bb1b4de847b1635d7b4c"
-    },
-    {
-      "path": "src/features/generator/generator.service.ts",
-      "size": 460,
-      "extension": ".ts",
-      "lines": 12,
-      "category": "Service",
-      "hash": "1164d0157a06b886baf4bf0aab7adc8e50c3a98a9dbf41a6fa262c4798acbd6d"
-    },
-    {
-      "path": "src/features/generator/generator.types.ts",
-      "size": 210,
-      "extension": ".ts",
-      "lines": 11,
-      "category": "Model",
-      "hash": "088e5ae8b9dbde5b35afb2a7e9c54c80a552b9ac1a4e05cf6a0a2aab52dd89b4"
-    },
-    {
-      "path": "src/features/generator/generator.validation.ts",
-      "size": 527,
-      "extension": ".ts",
-      "lines": 14,
-      "category": "Validation",
-      "hash": "436b214b0a46c36a3f8fab1a25672a0b5d24579977569c65e2e70af8a3bae724"
-    },
-    {
-      "path": "src/features/generator/GeneratorFeature.tsx",
-      "size": 1432,
-      "extension": ".tsx",
-      "lines": 42,
-      "category": "Feature",
-      "hash": "53f990782588d781e212950a452b17e6127e162c2f138927a07f85b9c59803df"
-    },
-    {
-      "path": "src/features/generator/index.ts",
-      "size": 158,
+      "path": "src/features/navigation-router/index.ts",
+      "size": 189,
       "extension": ".ts",
       "lines": 5,
       "category": "Utility",
-      "hash": "76b075a471980e54eca669e6498099726cd1ae8a315a2ff554a859d5b9a20a9a"
+      "hash": "bcb0fdb947901a447511ab7d495782208d6d492e07f11b23885e70fd1db15c71"
     },
     {
-      "path": "src/features/income/income.module.css",
-      "size": 433,
+      "path": "src/features/navigation-router/navigation-router.module.css",
+      "size": 444,
       "extension": ".css",
       "lines": 7,
       "category": "Style",
-      "hash": "9b03e9d60d580fd08bd26386d03e905f4d3caa98627279c27db7118e23630dd9"
+      "hash": "f17eb3d8f24fbe2c10d0b1e937bc5e4a1516d79d1a40bb66a2e660bbe61b5012"
     },
     {
-      "path": "src/features/income/income.service.ts",
-      "size": 424,
+      "path": "src/features/navigation-router/navigation-router.service.ts",
+      "size": 545,
       "extension": ".ts",
       "lines": 12,
       "category": "Service",
-      "hash": "abf3664870d170fdfe6bf2f42c4330a6e7e9783d23792c8a5fbf483e495bc771"
+      "hash": "a18528d8f802307de258f10834032d0bd836219143c65d14f91c30d04359a50c"
     },
     {
-      "path": "src/features/income/income.types.ts",
-      "size": 201,
+      "path": "src/features/navigation-router/navigation-router.types.ts",
+      "size": 225,
       "extension": ".ts",
       "lines": 11,
       "category": "Model",
-      "hash": "77b96a418d2e4010dd28b96e5bfbd32ab6ee0a499380e05946d83dc411922895"
+      "hash": "5b3374dd18bec439c3c89337da568c6b58f19f8dccaad22c47346fcae29ce47a"
     },
     {
-      "path": "src/features/income/income.validation.ts",
-      "size": 500,
+      "path": "src/features/navigation-router/navigation-router.validation.ts",
+      "size": 591,
       "extension": ".ts",
       "lines": 14,
       "category": "Validation",
-      "hash": "580a0257ed25ccb6b252aac604da7c37eb265c049e6f6d59132194d3c1769d4b"
+      "hash": "821bbbd2f743ffc361338e407c9eefcccef7d0b76f1c7bac24d545306b3533ff"
     },
     {
-      "path": "src/features/income/IncomeFeature.tsx",
-      "size": 1399,
+      "path": "src/features/navigation-router/NavigationRouterFeature.tsx",
+      "size": 1561,
       "extension": ".tsx",
       "lines": 42,
       "category": "Feature",
-      "hash": "e0abb49fb6e31a222bbd6fa355ef27c4ab66a486c8b5273393f71fe0bbccff13"
-    },
-    {
-      "path": "src/features/income/index.ts",
-      "size": 146,
-      "extension": ".ts",
-      "lines": 5,
-      "category": "Utility",
-      "hash": "fff3484fe128d27b3503a04482261c31fda222c5d34184cd17cc377f728e8267"
+      "hash": "db1e10de8c3b635cfb65254c123c59d21659bca16cc8a791cb5239c45611442c"
     },
     {
       "path": "src/features/registry.ts",
-      "size": 2537,
+      "size": 1353,
       "extension": ".ts",
-      "lines": 87,
+      "lines": 43,
       "category": "Route",
-      "hash": "124ad53661bdfc93b6156a36baa6ad8e6b6c573470a888e303866dcc479fc9f5"
-    },
-    {
-      "path": "src/features/reports/index.ts",
-      "size": 150,
-      "extension": ".ts",
-      "lines": 5,
-      "category": "Utility",
-      "hash": "888aa129be40350735b3f744640b9c7b49583dc66a728bc83402110414c48c89"
-    },
-    {
-      "path": "src/features/reports/reports.module.css",
-      "size": 434,
-      "extension": ".css",
-      "lines": 7,
-      "category": "Style",
-      "hash": "e71d52b7107a4ee5b89309ff4493c06439bb65bc76a6b6174a1379065d9bfc40"
-    },
-    {
-      "path": "src/features/reports/reports.service.ts",
-      "size": 436,
-      "extension": ".ts",
-      "lines": 12,
-      "category": "Service",
-      "hash": "9732f5c2a0146b2e889a3aec8db850358b12f480ec3adbfcc81182be6e87803b"
-    },
-    {
-      "path": "src/features/reports/reports.types.ts",
-      "size": 204,
-      "extension": ".ts",
-      "lines": 11,
-      "category": "Model",
-      "hash": "f8773b6c59562d81e870af286e1c6c6d9d0a47add3ff9fcddfe858bbc58bda18"
-    },
-    {
-      "path": "src/features/reports/reports.validation.ts",
-      "size": 511,
-      "extension": ".ts",
-      "lines": 14,
-      "category": "Validation",
-      "hash": "4da6765874571dc31f1cd1efb3aa14c90c9cac1dca9ead3fc72a4ae9e4a1e920"
-    },
-    {
-      "path": "src/features/reports/ReportsFeature.tsx",
-      "size": 1260,
-      "extension": ".tsx",
-      "lines": 39,
-      "category": "Feature",
-      "hash": "09fca88fec8e4be21509c62a7220c62a6c9a9329acbd03c326da4394431269b1"
+      "hash": "bf6b3b0aacc5ad09d8d69db7eff9da4c9b0c5a11cc6b2c47a1d1451448b809d2"
     },
     {
       "path": "src/features/routes.ts",
@@ -824,54 +392,6 @@
       "lines": 14,
       "category": "Route",
       "hash": "b9faa358162b58f2688051cf166e30a1d387c2ac1ce46241f1110ee84afce0b1"
-    },
-    {
-      "path": "src/features/scanner/index.ts",
-      "size": 150,
-      "extension": ".ts",
-      "lines": 5,
-      "category": "Utility",
-      "hash": "1d8c1b8c84d62f8b503a88183686bac2b90aebf6bdd007d0edcb8fe699ef5533"
-    },
-    {
-      "path": "src/features/scanner/scanner.module.css",
-      "size": 434,
-      "extension": ".css",
-      "lines": 7,
-      "category": "Style",
-      "hash": "a496cfc578d8a478a45e12dcf593638d7adca7abedf3c41327271b4422223960"
-    },
-    {
-      "path": "src/features/scanner/scanner.service.ts",
-      "size": 436,
-      "extension": ".ts",
-      "lines": 12,
-      "category": "Service",
-      "hash": "08e4f51a1414c2b65a6c4a1dafecc620c9816b2904d1159ea8740f79e52c59a7"
-    },
-    {
-      "path": "src/features/scanner/scanner.types.ts",
-      "size": 204,
-      "extension": ".ts",
-      "lines": 11,
-      "category": "Model",
-      "hash": "1ad8f96b415e57a04ec0e53c6f2c220af6016a80ba526cb100192e1a2b2ffca3"
-    },
-    {
-      "path": "src/features/scanner/scanner.validation.ts",
-      "size": 509,
-      "extension": ".ts",
-      "lines": 14,
-      "category": "Validation",
-      "hash": "7a2e6afd2a29b23c0af112640bf5ace8efb9c6e1e1e1770382111d6273a40980"
-    },
-    {
-      "path": "src/features/scanner/ScannerFeature.tsx",
-      "size": 1411,
-      "extension": ".tsx",
-      "lines": 42,
-      "category": "Feature",
-      "hash": "a5e9f115b1d76005f4e9666e12c1125c71982d364e1ad1ef6a16dc6176522a19"
     },
     {
       "path": "src/features/settings/index.ts",
@@ -891,35 +411,35 @@
     },
     {
       "path": "src/features/settings/settings.service.ts",
-      "size": 448,
+      "size": 441,
       "extension": ".ts",
       "lines": 12,
       "category": "Service",
-      "hash": "e4384259b763a44f72da5bd2c7a0a99d786787006703e0a51d63e78f25071ea7"
+      "hash": "09a98d64f7aba2a01c9a996e03e2007fe9d381cb41423d597e6faf657c10aaeb"
     },
     {
       "path": "src/features/settings/settings.types.ts",
-      "size": 207,
+      "size": 200,
       "extension": ".ts",
       "lines": 11,
       "category": "Model",
-      "hash": "d8203d7e0c184209e62027c0b873277ab363c4d06fcf5dcf918a05abeae9c02b"
+      "hash": "506c3439d940b3a3f09be9f2fd5a57d8e924e27cf33cf1baff9b4a8623ec9789"
     },
     {
       "path": "src/features/settings/settings.validation.ts",
-      "size": 518,
+      "size": 511,
       "extension": ".ts",
       "lines": 14,
       "category": "Validation",
-      "hash": "d45238a08925de3693bb33e341cc61baadbb1bc10d321bb5a0c7044751994434"
+      "hash": "3cfb30cd07abd3216d6ce78659027ce82b39a179525747851c3148da3a05eb88"
     },
     {
       "path": "src/features/settings/SettingsFeature.tsx",
-      "size": 1421,
+      "size": 1499,
       "extension": ".tsx",
       "lines": 42,
       "category": "Feature",
-      "hash": "245cf107e9a07e26b779da4ae0b0d691136cc6be7dec5daf5e50c8fdc9026614"
+      "hash": "606bb33b92cb99cd65a1a760ed1c8181f15e6bd4bde17c016412bc0211e56fa3"
     },
     {
       "path": "src/main.tsx",
@@ -955,19 +475,19 @@
     },
     {
       "path": "src/server/index.ts",
-      "size": 58,
+      "size": 94,
       "extension": ".ts",
       "lines": 3,
       "category": "Utility",
-      "hash": "656dd665387e1aed72602ef45f7815fab384ca4b47ad196898b7ea4f4c5ddf53"
+      "hash": "9f789443ead3c6d649582256c2a0b54dbf9d81e99665a4fd84c1ad8fb03de952"
     },
     {
       "path": "src/server/routes.ts",
-      "size": 58,
+      "size": 94,
       "extension": ".ts",
       "lines": 3,
       "category": "Route",
-      "hash": "656dd665387e1aed72602ef45f7815fab384ca4b47ad196898b7ea4f4c5ddf53"
+      "hash": "9f789443ead3c6d649582256c2a0b54dbf9d81e99665a4fd84c1ad8fb03de952"
     },
     {
       "path": "src/styles/global.css",
@@ -1003,19 +523,19 @@
     },
     {
       "path": "universal-feature-contract.json",
-      "size": 1880,
+      "size": 1846,
       "extension": ".json",
-      "lines": 84,
+      "lines": 85,
       "category": "Config",
-      "hash": "76ef5c7c557ad9bac89a3e4c951e112e7b0a0f8e7b482de31cc177d83c5f35a4"
+      "hash": "c9fa42f851c733a657ed14ce1066edf99c40a649c164c2d9db4c477e76cf2a2d"
     },
     {
       "path": "verification/build-verification.json",
-      "size": 93,
+      "size": 129,
       "extension": ".json",
       "lines": 6,
       "category": "Config",
-      "hash": "23390c0bc1763c1f91ece5e885ccc6082eb4a6030d730f7704563aa751e871a1"
+      "hash": "0e0535c20cdd6235dee6aaaa753b8358982e8c5c7d7d315be01b9741e10499de"
     },
     {
       "path": "verification/run-verify.mjs",
@@ -1044,18 +564,8 @@
     "src/blueprint/pages",
     "src/data",
     "src/features",
-    "src/features/analytics",
-    "src/features/auth",
-    "src/features/categories",
-    "src/features/charts",
-    "src/features/code-history",
-    "src/features/csv-export",
     "src/features/dashboard",
-    "src/features/expenses",
-    "src/features/generator",
-    "src/features/income",
-    "src/features/reports",
-    "src/features/scanner",
+    "src/features/navigation-router",
     "src/features/settings",
     "src/monetization",
     "src/screens",
@@ -1065,79 +575,19 @@
     "verification"
   ],
   "generatedFeatureModuleFiles": [
-    "src/features/analytics/analytics.module.css",
-    "src/features/analytics/analytics.service.ts",
-    "src/features/analytics/analytics.types.ts",
-    "src/features/analytics/analytics.validation.ts",
-    "src/features/analytics/AnalyticsFeature.tsx",
-    "src/features/analytics/index.ts",
-    "src/features/auth/auth.module.css",
-    "src/features/auth/auth.service.ts",
-    "src/features/auth/auth.types.ts",
-    "src/features/auth/auth.validation.ts",
-    "src/features/auth/AuthFeature.tsx",
-    "src/features/auth/index.ts",
-    "src/features/categories/categories.module.css",
-    "src/features/categories/categories.service.ts",
-    "src/features/categories/categories.types.ts",
-    "src/features/categories/categories.validation.ts",
-    "src/features/categories/CategoriesFeature.tsx",
-    "src/features/categories/index.ts",
-    "src/features/charts/charts.module.css",
-    "src/features/charts/charts.service.ts",
-    "src/features/charts/charts.types.ts",
-    "src/features/charts/charts.validation.ts",
-    "src/features/charts/ChartsFeature.tsx",
-    "src/features/charts/index.ts",
-    "src/features/code-history/code-history.module.css",
-    "src/features/code-history/code-history.service.ts",
-    "src/features/code-history/code-history.types.ts",
-    "src/features/code-history/code-history.validation.ts",
-    "src/features/code-history/CodeHistoryFeature.tsx",
-    "src/features/code-history/index.ts",
-    "src/features/csv-export/csv-export.module.css",
-    "src/features/csv-export/csv-export.service.ts",
-    "src/features/csv-export/csv-export.types.ts",
-    "src/features/csv-export/csv-export.validation.ts",
-    "src/features/csv-export/CsvExportFeature.tsx",
-    "src/features/csv-export/index.ts",
     "src/features/dashboard/dashboard.module.css",
     "src/features/dashboard/dashboard.service.ts",
     "src/features/dashboard/dashboard.types.ts",
     "src/features/dashboard/dashboard.validation.ts",
     "src/features/dashboard/DashboardFeature.tsx",
     "src/features/dashboard/index.ts",
-    "src/features/expenses/expenses.module.css",
-    "src/features/expenses/expenses.service.ts",
-    "src/features/expenses/expenses.types.ts",
-    "src/features/expenses/expenses.validation.ts",
-    "src/features/expenses/ExpensesFeature.tsx",
-    "src/features/expenses/index.ts",
     "src/features/feature-app-router.css",
-    "src/features/generator/generator.module.css",
-    "src/features/generator/generator.service.ts",
-    "src/features/generator/generator.types.ts",
-    "src/features/generator/generator.validation.ts",
-    "src/features/generator/GeneratorFeature.tsx",
-    "src/features/generator/index.ts",
-    "src/features/income/income.module.css",
-    "src/features/income/income.service.ts",
-    "src/features/income/income.types.ts",
-    "src/features/income/income.validation.ts",
-    "src/features/income/IncomeFeature.tsx",
-    "src/features/income/index.ts",
-    "src/features/reports/index.ts",
-    "src/features/reports/reports.module.css",
-    "src/features/reports/reports.service.ts",
-    "src/features/reports/reports.types.ts",
-    "src/features/reports/reports.validation.ts",
-    "src/features/reports/ReportsFeature.tsx",
-    "src/features/scanner/index.ts",
-    "src/features/scanner/scanner.module.css",
-    "src/features/scanner/scanner.service.ts",
-    "src/features/scanner/scanner.types.ts",
-    "src/features/scanner/scanner.validation.ts",
-    "src/features/scanner/ScannerFeature.tsx",
+    "src/features/navigation-router/index.ts",
+    "src/features/navigation-router/navigation-router.module.css",
+    "src/features/navigation-router/navigation-router.service.ts",
+    "src/features/navigation-router/navigation-router.types.ts",
+    "src/features/navigation-router/navigation-router.validation.ts",
+    "src/features/navigation-router/NavigationRouterFeature.tsx",
     "src/features/settings/index.ts",
     "src/features/settings/settings.module.css",
     "src/features/settings/settings.service.ts",
@@ -1146,21 +596,11 @@
     "src/features/settings/SettingsFeature.tsx"
   ],
   "featureModuleDirectories": [
-    "src/features/analytics",
-    "src/features/auth",
-    "src/features/categories",
-    "src/features/charts",
-    "src/features/code-history",
-    "src/features/csv-export",
     "src/features/dashboard",
-    "src/features/expenses",
-    "src/features/generator",
-    "src/features/income",
-    "src/features/reports",
-    "src/features/scanner",
+    "src/features/navigation-router",
     "src/features/settings"
   ],
-  "workspaceHash": "093d53bb66b5842edf68ac9e1270025705729d12b4842cd41ded4a03bb26afdd",
-  "generatedFilesCount": 129,
-  "generatedDirectoriesCount": 28
+  "workspaceHash": "df6b4398a91ddfa585563c0120b64ee1ecc0288cd9d24df47c7c79a1adae6ad8",
+  "generatedFilesCount": 69,
+  "generatedDirectoriesCount": 18
 }

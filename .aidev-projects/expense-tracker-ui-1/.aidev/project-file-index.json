@@ -1,0 +1,1099 @@
+{
+  "readOnly": true,
+  "projectId": "expense-tracker-ui-1",
+  "sourceRoot": "C:/Users/Richa/Desktop/DevPulse-V2/.aidev-projects/expense-tracker-ui-1/source",
+  "scannedAt": "2026-06-30T14:52:09.124Z",
+  "sourceFiles": [
+    {
+      "readOnly": true,
+      "relativePath": "source/.feature-contract-reality.json",
+      "category": "source",
+      "lines": 292,
+      "size": 14469,
+      "hash": "457a07b549d4551ca186cc324c506cc27bae5ec4f656033772351525e8b13b23"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/.materialization-quality-score.json",
+      "category": "source",
+      "lines": 297,
+      "size": 9546,
+      "hash": "9f69caa030bbabaa4a673b2d19a1d499f5bc2a569e21f510484cd99a9f4ebf50"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/.workspace-reality-audit.json",
+      "category": "source",
+      "lines": 163,
+      "size": 6751,
+      "hash": "f3ee28cfbf75d7a00c4a7bc93fb0068ccf96b2fc77bb17bcc7d9d781f3b6b80f"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/blueprint-manifest.json",
+      "category": "source",
+      "lines": 28,
+      "size": 516,
+      "hash": "de6115fad7bb60535179cbf4aaf9bd4208d45a9d484c1a5ecee86f5579e33034"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/build-manifest.json",
+      "category": "source",
+      "lines": 18,
+      "size": 487,
+      "hash": "2c23983060ada6c77f0c4e4ce60b1f9af69e36fb38c195f269e5a56e11baf9bf"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/feature-contract.json",
+      "category": "source",
+      "lines": 120,
+      "size": 2904,
+      "hash": "368ca89c16bc246b0ac6c6f7fe5fc682e66a63393877b4c5812b5c92ee6865c2"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/index.html",
+      "category": "source",
+      "lines": 13,
+      "size": 310,
+      "hash": "bd64314ea32beb10799ee0c4feb13158fa159fbef341606d04dcbfc7880479cb"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/package-lock.json",
+      "category": "source",
+      "lines": 1733,
+      "size": 58093,
+      "hash": "75930ca94db5b54946c7f9d5a50d4a731c624a9cf606440028bc1a8c06bae63f"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/package.json",
+      "category": "source",
+      "lines": 32,
+      "size": 893,
+      "hash": "d2ed25460b314a8707f8a5853e5722cec07117e1edd340fb0279fa37e9558848"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/runtime/dev-server.mjs",
+      "category": "source",
+      "lines": 146,
+      "size": 4249,
+      "hash": "901dda803ba72c398b8f20d6332832d64c546ba48d48c7ce31981b15953eb0d1"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/analytics/analytics-placeholders.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 527,
+      "hash": "509dd32eaa03283a5566f131b63171c9d6571d320f03a295d0caeef55ec3fe0e"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/App.tsx",
+      "category": "source",
+      "lines": 46,
+      "size": 1369,
+      "hash": "e61b5844d18ab861850f3bd8f46bbac2627baa6eb2c228a30d4c448d907fbe4f"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/auth/auth-config.ts",
+      "category": "source",
+      "lines": 4,
+      "size": 191,
+      "hash": "61becdf74819851816e7289d7a6605a0d7b31621af9cdf6a47cb7217555c47e2"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/app-metadata.ts",
+      "category": "source",
+      "lines": 4,
+      "size": 220,
+      "hash": "7535541688450e3020ac76c49bc5bf1fdf502ffcd467ab36cdfe0d71783a67fd"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/AppShell.tsx",
+      "category": "source",
+      "lines": 107,
+      "size": 4191,
+      "hash": "ddff450104b8c19420f9fa1c6cfd367f785dc90a43e6dad805570eadf7bfeb10"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/AuthScreen.tsx",
+      "category": "source",
+      "lines": 34,
+      "size": 1349,
+      "hash": "1a59ef64b200ea62ee271d98f277566f6c9a0fa0f6e40a3f3c861d67523b7f33"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/components/EmptyState.tsx",
+      "category": "source",
+      "lines": 17,
+      "size": 472,
+      "hash": "1ba79c5db82f77489aa45250df31c5ac3d982941a1c40109c6bee3ed44284ac7"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/components/ErrorState.tsx",
+      "category": "source",
+      "lines": 20,
+      "size": 678,
+      "hash": "61420a4b2110fd0f3a3ccfc4f0e2dc4671bedd0fb9ab937c443cfb574b3003e5"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/components/LoadingState.tsx",
+      "category": "source",
+      "lines": 16,
+      "size": 479,
+      "hash": "f38845ff18fe31df98493571e19641cd3c33c8a53a68b16269e680707db4ce82"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/components/UniversalAiAssistant.tsx",
+      "category": "source",
+      "lines": 31,
+      "size": 842,
+      "hash": "ada5bca426b7c0223ba5ea5c4ef69b11d1b1494859732a124fba71f21bc65c7a"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/LaunchScreen.tsx",
+      "category": "source",
+      "lines": 18,
+      "size": 571,
+      "hash": "f48e767807dd3d7d501f02afb4323259c0bf1d161153e00d3679cce3e359c674"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/OnboardingScreen.tsx",
+      "category": "source",
+      "lines": 37,
+      "size": 1334,
+      "hash": "4e822fb3586565e025056f8701dc9c98d9c03d21f8b1dec49f96b8624f1fcc5c"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/pages/AboutPage.tsx",
+      "category": "source",
+      "lines": 13,
+      "size": 312,
+      "hash": "e436c46d4dc1e91774926793e8cb762b10db487d1155df201414126cd7fcb426"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/pages/FeedbackPage.tsx",
+      "category": "source",
+      "lines": 14,
+      "size": 575,
+      "hash": "3bd312fffb2356efbd4945c394503b45af5df18ebc6a8f9ddf5b0066f5817084"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/pages/HelpCenterPage.tsx",
+      "category": "source",
+      "lines": 26,
+      "size": 1096,
+      "hash": "4b50ab812f8a1577ae02ed1698824d7d90a801627fcb24392d2ac457b935ba59"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/pages/HomePage.tsx",
+      "category": "source",
+      "lines": 49,
+      "size": 1639,
+      "hash": "97eba1cfef22bc496781e8e5ed42a11f8f50e18ad816a1a1373e1c40b10d61a6"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/pages/LegalPage.tsx",
+      "category": "source",
+      "lines": 12,
+      "size": 611,
+      "hash": "a0d1e0b0b43640828b4a7720a541c364d74b9b93e81c60d5e8e814ab38ac4dbe"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/pages/NotificationsPage.tsx",
+      "category": "source",
+      "lines": 47,
+      "size": 2019,
+      "hash": "f81f0c4fb0c36caef3f453c7155ba5b2e2eb84a8b971dcbe849afe1bda9aada2"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/pages/ProfilePage.tsx",
+      "category": "source",
+      "lines": 25,
+      "size": 824,
+      "hash": "b523b10a3419f32b83baf1ad30b072264219d3b182effba9ca8a415fc82e9415"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/pages/SearchPage.tsx",
+      "category": "source",
+      "lines": 19,
+      "size": 722,
+      "hash": "0d580956522cb5a7eb9a1f2fb7447d07ecf274c4e5ce129dd2093d7854c63d98"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/pages/SettingsPage.tsx",
+      "category": "source",
+      "lines": 40,
+      "size": 1601,
+      "hash": "0714d0d37477a318baa76b9fe2050ed516ea613d03e02766ba4649e3062538aa"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/blueprint/WelcomeScreen.tsx",
+      "category": "source",
+      "lines": 17,
+      "size": 541,
+      "hash": "c934b6a356e2b6494142322861baa9fad35ce7aa1fd059fccfc133a4e9e9c132"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/data/data-management-placeholders.ts",
+      "category": "source",
+      "lines": 15,
+      "size": 353,
+      "hash": "ee9ad934ba34ea014cb129f37d7927cf7d72db3958e2208daf3ab888806fc04e"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/data/demo-data.ts",
+      "category": "source",
+      "lines": 4,
+      "size": 311,
+      "hash": "f57e7f193c4334349e616238cda866cb16f6599ff755b5c9e52168ca75603527"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/categories/categories.service.ts",
+      "category": "source",
+      "lines": 12,
+      "size": 479,
+      "hash": "26cbdc46c4d2999162f8ed8027f08285cfec61121064638d0eb6ff1091150fc0"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/categories/categories.types.ts",
+      "category": "source",
+      "lines": 11,
+      "size": 220,
+      "hash": "12e8350b6f1ed6a77df96ce7f14f1937d102ed013be90ca68161dcefded9ef80"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/categories/categories.validation.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 543,
+      "hash": "14922aa6bebbfc3df63240218934d1142f233e5054d2bfb9afb8e44a54e93635"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/categories/CategoriesFeature.tsx",
+      "category": "source",
+      "lines": 42,
+      "size": 1459,
+      "hash": "5a532232cd14da3ed0b2dbfe073213511db7f903c7c791b6ac4cf91150bd27d8"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/categories/index.ts",
+      "category": "source",
+      "lines": 5,
+      "size": 162,
+      "hash": "dead16f91d9623f07ef484f790b77a72e91bfafae39d27db37a6035b0a7da3eb"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/charts/charts.service.ts",
+      "category": "source",
+      "lines": 12,
+      "size": 431,
+      "hash": "efb25903cee48d674b46a2635dbba930d5534535e8e81589196f733ae8cc87ec"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/charts/charts.types.ts",
+      "category": "source",
+      "lines": 11,
+      "size": 208,
+      "hash": "ddd321876db401c48c8a276fe21b73f8ed73cea030ceb2d80d8f09a92dda01e3"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/charts/charts.validation.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 509,
+      "hash": "ba0b14317a410ebcf8d0a01abe2e2141b5909851ad24aa3568856d591430353c"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/charts/ChartsFeature.tsx",
+      "category": "source",
+      "lines": 39,
+      "size": 1263,
+      "hash": "b057bad0fec5e613f7f0927339a7b5ffbb2037649dd252b60b27d54bcc1d2551"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/charts/index.ts",
+      "category": "source",
+      "lines": 5,
+      "size": 146,
+      "hash": "d81b1594a30d820cd42380d6173b9e75f3290febbd631d9fee084c73165a78c5"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/csv-export/csv-export.service.ts",
+      "category": "source",
+      "lines": 12,
+      "size": 475,
+      "hash": "0d8894971018352d9f5714ca0072a03a60d275114317bb0ba39ad4f837c6c446"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/csv-export/csv-export.types.ts",
+      "category": "source",
+      "lines": 11,
+      "size": 218,
+      "hash": "1dc2fdcf59d055be0a13c34516fb518b31a0e42859c180e4836ba45244e58491"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/csv-export/csv-export.validation.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 542,
+      "hash": "d798c36ad2676f43b4501c68d8cb8b496924d4d0c84bb80c36fb8be7c6e357d3"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/csv-export/CsvExportFeature.tsx",
+      "category": "source",
+      "lines": 42,
+      "size": 1463,
+      "hash": "1348fcaa721f99a5dd39f6b26cd3b01b36a94fce0e44495ad43a34d279dbeba5"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/csv-export/index.ts",
+      "category": "source",
+      "lines": 5,
+      "size": 161,
+      "hash": "37e6c3a2ccc02530d363c2da1340a53a77c3e7325bfc26a229225d05a9b6af19"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/dashboard/dashboard.service.ts",
+      "category": "source",
+      "lines": 12,
+      "size": 467,
+      "hash": "daa18db4f50002ed046ee158e40d9f6666448595b4b6f7bcaa9136062b404420"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/dashboard/dashboard.types.ts",
+      "category": "source",
+      "lines": 11,
+      "size": 217,
+      "hash": "b66c2ce096820915bfca3063dd745337911f52be43c524132f37a2fe3e26877f"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/dashboard/dashboard.validation.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 536,
+      "hash": "98c1eaae58dc193e852b8384627cd8e654300c1863670e97a18c1e36471e6a3f"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/dashboard/DashboardFeature.tsx",
+      "category": "source",
+      "lines": 39,
+      "size": 1337,
+      "hash": "022fc5aee11d93be8d88668edda8c40887cbf61118736a37d00fc4d25e1e45a1"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/dashboard/index.ts",
+      "category": "source",
+      "lines": 5,
+      "size": 158,
+      "hash": "c6d1837912d799c51af4f7289e75c7b7854d7ab516ecc889482193b0404435e4"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/expenses/expenses.service.ts",
+      "category": "source",
+      "lines": 12,
+      "size": 455,
+      "hash": "030e12f9070015c49c52fecc14193fb077e360f10f1d64ab9310054cf0902bba"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/expenses/expenses.types.ts",
+      "category": "source",
+      "lines": 11,
+      "size": 214,
+      "hash": "6f8aa7883d71ec7618c206db48d18e6462a728e18166912d510cf6ff043b6b62"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/expenses/expenses.validation.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 525,
+      "hash": "3379521a1e5842ced6bdb99fb3377d378fce99cdbe546d01705d9e8703715e2b"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/expenses/ExpensesFeature.tsx",
+      "category": "source",
+      "lines": 42,
+      "size": 1450,
+      "hash": "84da31326af770b40a4241c571c9d1f54a4f34751964b111f57aa5fcb7d96e71"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/expenses/index.ts",
+      "category": "source",
+      "lines": 5,
+      "size": 154,
+      "hash": "063a01997e771200447fe2c40be653cce45f34f1c0f408e1c404308d54bedc67"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/FeatureAppRouter.tsx",
+      "category": "source",
+      "lines": 91,
+      "size": 3041,
+      "hash": "b35649e764d1612c013ac2991783137d1471b97246780bd7be644708d838a16a"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/income/income.service.ts",
+      "category": "source",
+      "lines": 12,
+      "size": 431,
+      "hash": "9204fb8003c684ac3e78d430cef0fe7c12aabe85f08d8e198f6468b012331eea"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/income/income.types.ts",
+      "category": "source",
+      "lines": 11,
+      "size": 208,
+      "hash": "dfc24772e9f756098bd1587eaacc7a1c1fa2b8b7a5c90aa6a74d20edb8ba3247"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/income/income.validation.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 507,
+      "hash": "ed82e5fc1851fe25297c9683e318b7346a7583b5b5e2e35f43ab8d8e6cf545b8"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/income/IncomeFeature.tsx",
+      "category": "source",
+      "lines": 42,
+      "size": 1406,
+      "hash": "fe52a6bfac2949b1f611d38e00c42ec41ff0e8f5d96a1f6c9487eaf2af0b93c3"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/income/index.ts",
+      "category": "source",
+      "lines": 5,
+      "size": 146,
+      "hash": "fff3484fe128d27b3503a04482261c31fda222c5d34184cd17cc377f728e8267"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/navigation-router/index.ts",
+      "category": "source",
+      "lines": 5,
+      "size": 189,
+      "hash": "bcb0fdb947901a447511ab7d495782208d6d492e07f11b23885e70fd1db15c71"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/navigation-router/navigation-router.service.ts",
+      "category": "source",
+      "lines": 12,
+      "size": 559,
+      "hash": "811460889591021e4920d2a6bed82da6614ce76f41e0b2d02bf6e6e400a582b3"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/navigation-router/navigation-router.types.ts",
+      "category": "source",
+      "lines": 11,
+      "size": 239,
+      "hash": "ab5642930b1943a7be88e0b80aea4e2fb96cbadea079597b6f951b5b2491dde6"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/navigation-router/navigation-router.validation.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 605,
+      "hash": "7baedc85e40f1836c8039064f87239eb8360982a2c8c7097a926a03873572b6a"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/navigation-router/NavigationRouterFeature.tsx",
+      "category": "source",
+      "lines": 42,
+      "size": 1589,
+      "hash": "9f8d29a9470e34798d45d36e36632e349aa4b5b9f88a6c1fa8c8c27389eefcb1"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/registry.ts",
+      "category": "source",
+      "lines": 109,
+      "size": 3230,
+      "hash": "80c125d036d12f34ce1eb198f69cb6874d8c489ff16ff5e60284c93056c3a111"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/reports/index.ts",
+      "category": "source",
+      "lines": 5,
+      "size": 150,
+      "hash": "888aa129be40350735b3f744640b9c7b49583dc66a728bc83402110414c48c89"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/reports/reports.service.ts",
+      "category": "source",
+      "lines": 12,
+      "size": 443,
+      "hash": "e391a20dc7676379d62cd9738916c849aee8388e8e3981478d2b71353346c0c6"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/reports/reports.types.ts",
+      "category": "source",
+      "lines": 11,
+      "size": 211,
+      "hash": "aafca452b3586e13f660be3b611913e93169892c418a1dbb3e4f49203bf0e228"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/reports/reports.validation.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 518,
+      "hash": "649cd33f13e29ea26dd646a4864a392e20efb6cd0eea719e883d32bd31ffed03"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/reports/ReportsFeature.tsx",
+      "category": "source",
+      "lines": 39,
+      "size": 1267,
+      "hash": "9f89c4bf24f2443499e28a91df8ef97705cfaeaaf0b584909df7e0f9abe7e10b"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/routes.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 417,
+      "hash": "b9faa358162b58f2688051cf166e30a1d387c2ac1ce46241f1110ee84afce0b1"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/settings/index.ts",
+      "category": "source",
+      "lines": 5,
+      "size": 154,
+      "hash": "edf25da821aa46c3fe8433aa5773e1e9f6f38c17ad5dfd84f068d83bba78043b"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/settings/settings.service.ts",
+      "category": "source",
+      "lines": 12,
+      "size": 455,
+      "hash": "dbd8399d63661c4a5144f045dcb0c766603862e07bf77fc08f596bfb3eed2b9b"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/settings/settings.types.ts",
+      "category": "source",
+      "lines": 11,
+      "size": 214,
+      "hash": "4342a293d8bcc4c51bf9c256db7a51f69a39d44f90c21f696107fd7efd65e22d"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/settings/settings.validation.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 525,
+      "hash": "b6d2a5a700d75f85eeb60b506882a78ef7ce91268fc9a07ccc103c419232bd6f"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/settings/SettingsFeature.tsx",
+      "category": "source",
+      "lines": 42,
+      "size": 1432,
+      "hash": "25483b62c4540139c912ab80011ad8effa59ea98b66fe331f10dd77b21ea5ec8"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/main.tsx",
+      "category": "source",
+      "lines": 14,
+      "size": 339,
+      "hash": "9a444897ca5a5b242409a82d4109b7229f2bff01ed0f4d26a39cd16f12e1d36a"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/monetization/monetization-placeholders.ts",
+      "category": "source",
+      "lines": 17,
+      "size": 517,
+      "hash": "bde039683ff6cf486af5d02b2022daa0083717c68f8e109bb2b821797573401f"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/screens/index.ts",
+      "category": "source",
+      "lines": 2,
+      "size": 76,
+      "hash": "79bcc71026f2e849b75a448da42ca0ed371b809893836d96f727a1b0ffc6f2d1"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/security/security-placeholders.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 389,
+      "hash": "908388d3dc8e6089eb69cd5f8e67ec5ecfbb9a3718949bee68d7cd9f0fd45ac2"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/server/index.ts",
+      "category": "source",
+      "lines": 3,
+      "size": 64,
+      "hash": "61b4c44d324de549ff6b3ebe5aa8adaf7deb67b3668df6cc27d7e250b4811204"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/server/routes.ts",
+      "category": "source",
+      "lines": 3,
+      "size": 64,
+      "hash": "61b4c44d324de549ff6b3ebe5aa8adaf7deb67b3668df6cc27d7e250b4811204"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/vite-env.d.ts",
+      "category": "source",
+      "lines": 2,
+      "size": 38,
+      "hash": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/tsconfig.json",
+      "category": "source",
+      "lines": 24,
+      "size": 441,
+      "hash": "d1a721a991c9465c88007b98ef55de1cca1b1070456467575228e74a64a41d52"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/tsconfig.node.json",
+      "category": "source",
+      "lines": 12,
+      "size": 180,
+      "hash": "17c275c4dd5c7f8b736f7a252d1324984cc4d473fa765adf6fba826605c6a413"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/universal-feature-contract.json",
+      "category": "source",
+      "lines": 120,
+      "size": 2904,
+      "hash": "368ca89c16bc246b0ac6c6f7fe5fc682e66a63393877b4c5812b5c92ee6865c2"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/verification/build-verification.json",
+      "category": "source",
+      "lines": 6,
+      "size": 99,
+      "hash": "6065c4589332c87adb159c3e68b94c76af7bf20779281d57e6d28e4c4317304d"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/verification/run-verify.mjs",
+      "category": "source",
+      "lines": 60,
+      "size": 1961,
+      "hash": "cd4d39f81ffa121f4cdb0fc7756b96d6886b816e400d8eef4bb6a1e700336c92"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/vite.config.ts",
+      "category": "source",
+      "lines": 8,
+      "size": 200,
+      "hash": "c5d511519db4810412b22e3afbfff272e486b68ec7a1883d306165f8a972ba89"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/workspace-reality-report.md",
+      "category": "source",
+      "lines": 20,
+      "size": 620,
+      "hash": "1ac6c136c836fc3dde00decd1c605c1f8e4671f9987a0ce9c7744c34746da436"
+    }
+  ],
+  "configFiles": [],
+  "publicAssets": [],
+  "featureModules": [],
+  "routes": [
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/routes.ts",
+      "category": "source",
+      "lines": 14,
+      "size": 417,
+      "hash": "b9faa358162b58f2688051cf166e30a1d387c2ac1ce46241f1110ee84afce0b1"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/server/routes.ts",
+      "category": "source",
+      "lines": 3,
+      "size": 64,
+      "hash": "61b4c44d324de549ff6b3ebe5aa8adaf7deb67b3668df6cc27d7e250b4811204"
+    }
+  ],
+  "registryFiles": [],
+  "styles": [
+    {
+      "readOnly": true,
+      "relativePath": "source/src/App.css",
+      "category": "style",
+      "lines": 169,
+      "size": 5452,
+      "hash": "a2621cd8c21df9f8724779a0e190620b4f0b4740d243f0336679c45239914acb"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/categories/categories.module.css",
+      "category": "style",
+      "lines": 7,
+      "size": 437,
+      "hash": "41701ad1c51d00fd393a90b7a280355ec453de55523814d55cea2cf22ae44580"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/charts/charts.module.css",
+      "category": "style",
+      "lines": 7,
+      "size": 433,
+      "hash": "52a8d7890a1114a2a73b3f4be0225110c703e4b0089cdde214325c12c83cad9f"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/csv-export/csv-export.module.css",
+      "category": "style",
+      "lines": 7,
+      "size": 437,
+      "hash": "1c4b89281bf458ab2bdd6d55c0a4e26ed477cfa043523e9ed1be81b641931c01"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/dashboard/dashboard.module.css",
+      "category": "style",
+      "lines": 7,
+      "size": 436,
+      "hash": "9848e4cb15a92cee6cb1ccb82d27df3f2c61e8d1fe893da8bba9c30a5b74a5f0"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/expenses/expenses.module.css",
+      "category": "style",
+      "lines": 7,
+      "size": 435,
+      "hash": "d68fc74ad14341909c59d982cef553e2f22283af186fa1ffbebe3d9eee31a921"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/feature-app-router.css",
+      "category": "style",
+      "lines": 6,
+      "size": 425,
+      "hash": "d6eaae9e8a63c3e284eb0d2a31f1b582b1580e39b9fd1cdc7d31cff045b950e6"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/income/income.module.css",
+      "category": "style",
+      "lines": 7,
+      "size": 433,
+      "hash": "9b03e9d60d580fd08bd26386d03e905f4d3caa98627279c27db7118e23630dd9"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/navigation-router/navigation-router.module.css",
+      "category": "style",
+      "lines": 7,
+      "size": 444,
+      "hash": "f17eb3d8f24fbe2c10d0b1e937bc5e4a1516d79d1a40bb66a2e660bbe61b5012"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/reports/reports.module.css",
+      "category": "style",
+      "lines": 7,
+      "size": 434,
+      "hash": "e71d52b7107a4ee5b89309ff4493c06439bb65bc76a6b6174a1379065d9bfc40"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/features/settings/settings.module.css",
+      "category": "style",
+      "lines": 7,
+      "size": 435,
+      "hash": "94faefeb95e72beaa4227c18860ce6c26961b0c12348b19f5b75876edcf045ca"
+    },
+    {
+      "readOnly": true,
+      "relativePath": "source/src/styles/global.css",
+      "category": "style",
+      "lines": 3,
+      "size": 78,
+      "hash": "cc35dd98ae20865a2c8c93b08c1fe75f1ad91a1ed0fde00c1311ee01122a4f09"
+    }
+  ],
+  "metadataFiles": [
+    {
+      "readOnly": true,
+      "relativePath": ".aidev/audit-log.json",
+      "category": "metadata",
+      "lines": 12,
+      "size": 244,
+      "hash": "ea2083e7891b6e2193169200aabc4ab7ae53cbaaa899a37ae450e7ff0bd0cf29"
+    },
+    {
+      "readOnly": true,
+      "relativePath": ".aidev/build-history-links.json",
+      "category": "metadata",
+      "lines": 10,
+      "size": 525,
+      "hash": "3473d085f86783322b33089aa17e98c74d8375ea843ed7d5eddd6c9a4171f9e1"
+    },
+    {
+      "readOnly": true,
+      "relativePath": ".aidev/export-metadata.json",
+      "category": "metadata",
+      "lines": 133,
+      "size": 5934,
+      "hash": "239620c10fb9d8da43153144ebc1579886ffaaadaae77ed4ec63809a10e1ebb3"
+    },
+    {
+      "readOnly": true,
+      "relativePath": ".aidev/feature-contract-reality.json",
+      "category": "metadata",
+      "lines": 292,
+      "size": 14469,
+      "hash": "457a07b549d4551ca186cc324c506cc27bae5ec4f656033772351525e8b13b23"
+    },
+    {
+      "readOnly": true,
+      "relativePath": ".aidev/feature-contract.json",
+      "category": "metadata",
+      "lines": 120,
+      "size": 2904,
+      "hash": "368ca89c16bc246b0ac6c6f7fe5fc682e66a63393877b4c5812b5c92ee6865c2"
+    },
+    {
+      "readOnly": true,
+      "relativePath": ".aidev/manifest.json",
+      "category": "metadata",
+      "lines": 1479,
+      "size": 47654,
+      "hash": "caf5d3d2abbd4354c377999ceb4e20e89062861eb41f0d5782ebca42ae290d4d"
+    },
+    {
+      "readOnly": true,
+      "relativePath": ".aidev/materialization-quality-score.json",
+      "category": "metadata",
+      "lines": 297,
+      "size": 9546,
+      "hash": "9f69caa030bbabaa4a673b2d19a1d499f5bc2a569e21f510484cd99a9f4ebf50"
+    },
+    {
+      "readOnly": true,
+      "relativePath": ".aidev/project-file-index.json",
+      "category": "metadata",
+      "lines": 1001,
+      "size": 40310,
+      "hash": "9abc41ede1061b71d2e50b86f8240e2615e419e3e8db6542240fd76e423aaf0f"
+    },
+    {
+      "readOnly": true,
+      "relativePath": ".aidev/workspace-reality-audit.json",
+      "category": "metadata",
+      "lines": 163,
+      "size": 6751,
+      "hash": "f3ee28cfbf75d7a00c4a7bc93fb0068ccf96b2fc77bb17bcc7d9d781f3b6b80f"
+    },
+    {
+      "readOnly": true,
+      "relativePath": ".aidev/workspace-reality-report.md",
+      "category": "metadata",
+      "lines": 20,
+      "size": 620,
+      "hash": "1ac6c136c836fc3dde00decd1c605c1f8e4671f9987a0ce9c7744c34746da436"
+    }
+  ],
+  "generatedLines": 8505,
+  "fileHashes": {
+    "source/.feature-contract-reality.json": "457a07b549d4551ca186cc324c506cc27bae5ec4f656033772351525e8b13b23",
+    "source/.materialization-quality-score.json": "9f69caa030bbabaa4a673b2d19a1d499f5bc2a569e21f510484cd99a9f4ebf50",
+    "source/.workspace-reality-audit.json": "f3ee28cfbf75d7a00c4a7bc93fb0068ccf96b2fc77bb17bcc7d9d781f3b6b80f",
+    "source/blueprint-manifest.json": "de6115fad7bb60535179cbf4aaf9bd4208d45a9d484c1a5ecee86f5579e33034",
+    "source/build-manifest.json": "2c23983060ada6c77f0c4e4ce60b1f9af69e36fb38c195f269e5a56e11baf9bf",
+    "source/feature-contract.json": "368ca89c16bc246b0ac6c6f7fe5fc682e66a63393877b4c5812b5c92ee6865c2",
+    "source/index.html": "bd64314ea32beb10799ee0c4feb13158fa159fbef341606d04dcbfc7880479cb",
+    "source/package-lock.json": "75930ca94db5b54946c7f9d5a50d4a731c624a9cf606440028bc1a8c06bae63f",
+    "source/package.json": "d2ed25460b314a8707f8a5853e5722cec07117e1edd340fb0279fa37e9558848",
+    "source/runtime/dev-server.mjs": "901dda803ba72c398b8f20d6332832d64c546ba48d48c7ce31981b15953eb0d1",
+    "source/src/analytics/analytics-placeholders.ts": "509dd32eaa03283a5566f131b63171c9d6571d320f03a295d0caeef55ec3fe0e",
+    "source/src/App.css": "a2621cd8c21df9f8724779a0e190620b4f0b4740d243f0336679c45239914acb",
+    "source/src/App.tsx": "e61b5844d18ab861850f3bd8f46bbac2627baa6eb2c228a30d4c448d907fbe4f",
+    "source/src/auth/auth-config.ts": "61becdf74819851816e7289d7a6605a0d7b31621af9cdf6a47cb7217555c47e2",
+    "source/src/blueprint/app-metadata.ts": "7535541688450e3020ac76c49bc5bf1fdf502ffcd467ab36cdfe0d71783a67fd",
+    "source/src/blueprint/AppShell.tsx": "ddff450104b8c19420f9fa1c6cfd367f785dc90a43e6dad805570eadf7bfeb10",
+    "source/src/blueprint/AuthScreen.tsx": "1a59ef64b200ea62ee271d98f277566f6c9a0fa0f6e40a3f3c861d67523b7f33",
+    "source/src/blueprint/components/EmptyState.tsx": "1ba79c5db82f77489aa45250df31c5ac3d982941a1c40109c6bee3ed44284ac7",
+    "source/src/blueprint/components/ErrorState.tsx": "61420a4b2110fd0f3a3ccfc4f0e2dc4671bedd0fb9ab937c443cfb574b3003e5",
+    "source/src/blueprint/components/LoadingState.tsx": "f38845ff18fe31df98493571e19641cd3c33c8a53a68b16269e680707db4ce82",
+    "source/src/blueprint/components/UniversalAiAssistant.tsx": "ada5bca426b7c0223ba5ea5c4ef69b11d1b1494859732a124fba71f21bc65c7a",
+    "source/src/blueprint/LaunchScreen.tsx": "f48e767807dd3d7d501f02afb4323259c0bf1d161153e00d3679cce3e359c674",
+    "source/src/blueprint/OnboardingScreen.tsx": "4e822fb3586565e025056f8701dc9c98d9c03d21f8b1dec49f96b8624f1fcc5c",
+    "source/src/blueprint/pages/AboutPage.tsx": "e436c46d4dc1e91774926793e8cb762b10db487d1155df201414126cd7fcb426",
+    "source/src/blueprint/pages/FeedbackPage.tsx": "3bd312fffb2356efbd4945c394503b45af5df18ebc6a8f9ddf5b0066f5817084",
+    "source/src/blueprint/pages/HelpCenterPage.tsx": "4b50ab812f8a1577ae02ed1698824d7d90a801627fcb24392d2ac457b935ba59",
+    "source/src/blueprint/pages/HomePage.tsx": "97eba1cfef22bc496781e8e5ed42a11f8f50e18ad816a1a1373e1c40b10d61a6",
+    "source/src/blueprint/pages/LegalPage.tsx": "a0d1e0b0b43640828b4a7720a541c364d74b9b93e81c60d5e8e814ab38ac4dbe",
+    "source/src/blueprint/pages/NotificationsPage.tsx": "f81f0c4fb0c36caef3f453c7155ba5b2e2eb84a8b971dcbe849afe1bda9aada2",
+    "source/src/blueprint/pages/ProfilePage.tsx": "b523b10a3419f32b83baf1ad30b072264219d3b182effba9ca8a415fc82e9415",
+    "source/src/blueprint/pages/SearchPage.tsx": "0d580956522cb5a7eb9a1f2fb7447d07ecf274c4e5ce129dd2093d7854c63d98",
+    "source/src/blueprint/pages/SettingsPage.tsx": "0714d0d37477a318baa76b9fe2050ed516ea613d03e02766ba4649e3062538aa",
+    "source/src/blueprint/WelcomeScreen.tsx": "c934b6a356e2b6494142322861baa9fad35ce7aa1fd059fccfc133a4e9e9c132",
+    "source/src/data/data-management-placeholders.ts": "ee9ad934ba34ea014cb129f37d7927cf7d72db3958e2208daf3ab888806fc04e",
+    "source/src/data/demo-data.ts": "f57e7f193c4334349e616238cda866cb16f6599ff755b5c9e52168ca75603527",
+    "source/src/features/categories/categories.module.css": "41701ad1c51d00fd393a90b7a280355ec453de55523814d55cea2cf22ae44580",
+    "source/src/features/categories/categories.service.ts": "26cbdc46c4d2999162f8ed8027f08285cfec61121064638d0eb6ff1091150fc0",
+    "source/src/features/categories/categories.types.ts": "12e8350b6f1ed6a77df96ce7f14f1937d102ed013be90ca68161dcefded9ef80",
+    "source/src/features/categories/categories.validation.ts": "14922aa6bebbfc3df63240218934d1142f233e5054d2bfb9afb8e44a54e93635",
+    "source/src/features/categories/CategoriesFeature.tsx": "5a532232cd14da3ed0b2dbfe073213511db7f903c7c791b6ac4cf91150bd27d8",
+    "source/src/features/categories/index.ts": "dead16f91d9623f07ef484f790b77a72e91bfafae39d27db37a6035b0a7da3eb",
+    "source/src/features/charts/charts.module.css": "52a8d7890a1114a2a73b3f4be0225110c703e4b0089cdde214325c12c83cad9f",
+    "source/src/features/charts/charts.service.ts": "efb25903cee48d674b46a2635dbba930d5534535e8e81589196f733ae8cc87ec",
+    "source/src/features/charts/charts.types.ts": "ddd321876db401c48c8a276fe21b73f8ed73cea030ceb2d80d8f09a92dda01e3",
+    "source/src/features/charts/charts.validation.ts": "ba0b14317a410ebcf8d0a01abe2e2141b5909851ad24aa3568856d591430353c",
+    "source/src/features/charts/ChartsFeature.tsx": "b057bad0fec5e613f7f0927339a7b5ffbb2037649dd252b60b27d54bcc1d2551",
+    "source/src/features/charts/index.ts": "d81b1594a30d820cd42380d6173b9e75f3290febbd631d9fee084c73165a78c5",
+    "source/src/features/csv-export/csv-export.module.css": "1c4b89281bf458ab2bdd6d55c0a4e26ed477cfa043523e9ed1be81b641931c01",
+    "source/src/features/csv-export/csv-export.service.ts": "0d8894971018352d9f5714ca0072a03a60d275114317bb0ba39ad4f837c6c446",
+    "source/src/features/csv-export/csv-export.types.ts": "1dc2fdcf59d055be0a13c34516fb518b31a0e42859c180e4836ba45244e58491",
+    "source/src/features/csv-export/csv-export.validation.ts": "d798c36ad2676f43b4501c68d8cb8b496924d4d0c84bb80c36fb8be7c6e357d3",
+    "source/src/features/csv-export/CsvExportFeature.tsx": "1348fcaa721f99a5dd39f6b26cd3b01b36a94fce0e44495ad43a34d279dbeba5",
+    "source/src/features/csv-export/index.ts": "37e6c3a2ccc02530d363c2da1340a53a77c3e7325bfc26a229225d05a9b6af19",
+    "source/src/features/dashboard/dashboard.module.css": "9848e4cb15a92cee6cb1ccb82d27df3f2c61e8d1fe893da8bba9c30a5b74a5f0",
+    "source/src/features/dashboard/dashboard.service.ts": "daa18db4f50002ed046ee158e40d9f6666448595b4b6f7bcaa9136062b404420",
+    "source/src/features/dashboard/dashboard.types.ts": "b66c2ce096820915bfca3063dd745337911f52be43c524132f37a2fe3e26877f",
+    "source/src/features/dashboard/dashboard.validation.ts": "98c1eaae58dc193e852b8384627cd8e654300c1863670e97a18c1e36471e6a3f",
+    "source/src/features/dashboard/DashboardFeature.tsx": "022fc5aee11d93be8d88668edda8c40887cbf61118736a37d00fc4d25e1e45a1",
+    "source/src/features/dashboard/index.ts": "c6d1837912d799c51af4f7289e75c7b7854d7ab516ecc889482193b0404435e4",
+    "source/src/features/expenses/expenses.module.css": "d68fc74ad14341909c59d982cef553e2f22283af186fa1ffbebe3d9eee31a921",
+    "source/src/features/expenses/expenses.service.ts": "030e12f9070015c49c52fecc14193fb077e360f10f1d64ab9310054cf0902bba",
+    "source/src/features/expenses/expenses.types.ts": "6f8aa7883d71ec7618c206db48d18e6462a728e18166912d510cf6ff043b6b62",
+    "source/src/features/expenses/expenses.validation.ts": "3379521a1e5842ced6bdb99fb3377d378fce99cdbe546d01705d9e8703715e2b",
+    "source/src/features/expenses/ExpensesFeature.tsx": "84da31326af770b40a4241c571c9d1f54a4f34751964b111f57aa5fcb7d96e71",
+    "source/src/features/expenses/index.ts": "063a01997e771200447fe2c40be653cce45f34f1c0f408e1c404308d54bedc67",
+    "source/src/features/feature-app-router.css": "d6eaae9e8a63c3e284eb0d2a31f1b582b1580e39b9fd1cdc7d31cff045b950e6",
+    "source/src/features/FeatureAppRouter.tsx": "b35649e764d1612c013ac2991783137d1471b97246780bd7be644708d838a16a",
+    "source/src/features/income/income.module.css": "9b03e9d60d580fd08bd26386d03e905f4d3caa98627279c27db7118e23630dd9",
+    "source/src/features/income/income.service.ts": "9204fb8003c684ac3e78d430cef0fe7c12aabe85f08d8e198f6468b012331eea",
+    "source/src/features/income/income.types.ts": "dfc24772e9f756098bd1587eaacc7a1c1fa2b8b7a5c90aa6a74d20edb8ba3247",
+    "source/src/features/income/income.validation.ts": "ed82e5fc1851fe25297c9683e318b7346a7583b5b5e2e35f43ab8d8e6cf545b8",
+    "source/src/features/income/IncomeFeature.tsx": "fe52a6bfac2949b1f611d38e00c42ec41ff0e8f5d96a1f6c9487eaf2af0b93c3",
+    "source/src/features/income/index.ts": "fff3484fe128d27b3503a04482261c31fda222c5d34184cd17cc377f728e8267",
+    "source/src/features/navigation-router/index.ts": "bcb0fdb947901a447511ab7d495782208d6d492e07f11b23885e70fd1db15c71",
+    "source/src/features/navigation-router/navigation-router.module.css": "f17eb3d8f24fbe2c10d0b1e937bc5e4a1516d79d1a40bb66a2e660bbe61b5012",
+    "source/src/features/navigation-router/navigation-router.service.ts": "811460889591021e4920d2a6bed82da6614ce76f41e0b2d02bf6e6e400a582b3",
+    "source/src/features/navigation-router/navigation-router.types.ts": "ab5642930b1943a7be88e0b80aea4e2fb96cbadea079597b6f951b5b2491dde6",
+    "source/src/features/navigation-router/navigation-router.validation.ts": "7baedc85e40f1836c8039064f87239eb8360982a2c8c7097a926a03873572b6a",
+    "source/src/features/navigation-router/NavigationRouterFeature.tsx": "9f8d29a9470e34798d45d36e36632e349aa4b5b9f88a6c1fa8c8c27389eefcb1",
+    "source/src/features/registry.ts": "80c125d036d12f34ce1eb198f69cb6874d8c489ff16ff5e60284c93056c3a111",
+    "source/src/features/reports/index.ts": "888aa129be40350735b3f744640b9c7b49583dc66a728bc83402110414c48c89",
+    "source/src/features/reports/reports.module.css": "e71d52b7107a4ee5b89309ff4493c06439bb65bc76a6b6174a1379065d9bfc40",
+    "source/src/features/reports/reports.service.ts": "e391a20dc7676379d62cd9738916c849aee8388e8e3981478d2b71353346c0c6",
+    "source/src/features/reports/reports.types.ts": "aafca452b3586e13f660be3b611913e93169892c418a1dbb3e4f49203bf0e228",
+    "source/src/features/reports/reports.validation.ts": "649cd33f13e29ea26dd646a4864a392e20efb6cd0eea719e883d32bd31ffed03",
+    "source/src/features/reports/ReportsFeature.tsx": "9f89c4bf24f2443499e28a91df8ef97705cfaeaaf0b584909df7e0f9abe7e10b",
+    "source/src/features/routes.ts": "b9faa358162b58f2688051cf166e30a1d387c2ac1ce46241f1110ee84afce0b1",
+    "source/src/features/settings/index.ts": "edf25da821aa46c3fe8433aa5773e1e9f6f38c17ad5dfd84f068d83bba78043b",
+    "source/src/features/settings/settings.module.css": "94faefeb95e72beaa4227c18860ce6c26961b0c12348b19f5b75876edcf045ca",
+    "source/src/features/settings/settings.service.ts": "dbd8399d63661c4a5144f045dcb0c766603862e07bf77fc08f596bfb3eed2b9b",
+    "source/src/features/settings/settings.types.ts": "4342a293d8bcc4c51bf9c256db7a51f69a39d44f90c21f696107fd7efd65e22d",
+    "source/src/features/settings/settings.validation.ts": "b6d2a5a700d75f85eeb60b506882a78ef7ce91268fc9a07ccc103c419232bd6f",
+    "source/src/features/settings/SettingsFeature.tsx": "25483b62c4540139c912ab80011ad8effa59ea98b66fe331f10dd77b21ea5ec8",
+    "source/src/main.tsx": "9a444897ca5a5b242409a82d4109b7229f2bff01ed0f4d26a39cd16f12e1d36a",
+    "source/src/monetization/monetization-placeholders.ts": "bde039683ff6cf486af5d02b2022daa0083717c68f8e109bb2b821797573401f",
+    "source/src/screens/index.ts": "79bcc71026f2e849b75a448da42ca0ed371b809893836d96f727a1b0ffc6f2d1",
+    "source/src/security/security-placeholders.ts": "908388d3dc8e6089eb69cd5f8e67ec5ecfbb9a3718949bee68d7cd9f0fd45ac2",
+    "source/src/server/index.ts": "61b4c44d324de549ff6b3ebe5aa8adaf7deb67b3668df6cc27d7e250b4811204",
+    "source/src/server/routes.ts": "61b4c44d324de549ff6b3ebe5aa8adaf7deb67b3668df6cc27d7e250b4811204",
+    "source/src/styles/global.css": "cc35dd98ae20865a2c8c93b08c1fe75f1ad91a1ed0fde00c1311ee01122a4f09",
+    "source/src/vite-env.d.ts": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
+    "source/tsconfig.json": "d1a721a991c9465c88007b98ef55de1cca1b1070456467575228e74a64a41d52",
+    "source/tsconfig.node.json": "17c275c4dd5c7f8b736f7a252d1324984cc4d473fa765adf6fba826605c6a413",
+    "source/universal-feature-contract.json": "368ca89c16bc246b0ac6c6f7fe5fc682e66a63393877b4c5812b5c92ee6865c2",
+    "source/verification/build-verification.json": "6065c4589332c87adb159c3e68b94c76af7bf20779281d57e6d28e4c4317304d",
+    "source/verification/run-verify.mjs": "cd4d39f81ffa121f4cdb0fc7756b96d6886b816e400d8eef4bb6a1e700336c92",
+    "source/vite.config.ts": "c5d511519db4810412b22e3afbfff272e486b68ec7a1883d306165f8a972ba89",
+    "source/workspace-reality-report.md": "1ac6c136c836fc3dde00decd1c605c1f8e4671f9987a0ce9c7744c34746da436",
+    ".aidev/audit-log.json": "ea2083e7891b6e2193169200aabc4ab7ae53cbaaa899a37ae450e7ff0bd0cf29",
+    ".aidev/build-history-links.json": "3473d085f86783322b33089aa17e98c74d8375ea843ed7d5eddd6c9a4171f9e1",
+    ".aidev/export-metadata.json": "239620c10fb9d8da43153144ebc1579886ffaaadaae77ed4ec63809a10e1ebb3",
+    ".aidev/feature-contract-reality.json": "457a07b549d4551ca186cc324c506cc27bae5ec4f656033772351525e8b13b23",
+    ".aidev/feature-contract.json": "368ca89c16bc246b0ac6c6f7fe5fc682e66a63393877b4c5812b5c92ee6865c2",
+    ".aidev/manifest.json": "caf5d3d2abbd4354c377999ceb4e20e89062861eb41f0d5782ebca42ae290d4d",
+    ".aidev/materialization-quality-score.json": "9f69caa030bbabaa4a673b2d19a1d499f5bc2a569e21f510484cd99a9f4ebf50",
+    ".aidev/project-file-index.json": "9abc41ede1061b71d2e50b86f8240e2615e419e3e8db6542240fd76e423aaf0f",
+    ".aidev/workspace-reality-audit.json": "f3ee28cfbf75d7a00c4a7bc93fb0068ccf96b2fc77bb17bcc7d9d781f3b6b80f",
+    ".aidev/workspace-reality-report.md": "1ac6c136c836fc3dde00decd1c605c1f8e4671f9987a0ce9c7744c34746da436"
+  }
+}

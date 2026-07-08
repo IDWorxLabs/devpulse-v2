@@ -1,0 +1,15 @@
+/**
+ * Command Center Fast Create Parity V1 — shared contract for UI fast-create parity.
+ */
+
+export const COMMAND_CENTER_FAST_CREATE_PARITY_V1_PASS_TOKEN =
+  'COMMAND_CENTER_FAST_CREATE_PARITY_V1_PASS';
+
+export const COMMAND_CENTER_FAST_CREATE_SUCCESS_TRACE =
+  'COMMAND_CENTER_FAST_CREATE_SUCCESS';
+
+export const COMMAND_CENTER_FAST_CREATE_CLIENT_PATH =
+  '/command-center-fast-create-client.js';
+
+export const COMMAND_CENTER_FAST_CREATE_CONTRACT_VERSION =
+  'COMMAND_CENTER_FAST_CREATE_PARITY_V1';

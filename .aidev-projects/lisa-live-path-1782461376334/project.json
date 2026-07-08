@@ -1,0 +1,23 @@
+{
+  "readOnly": true,
+  "projectId": "lisa-live-path-1782461376334",
+  "projectName": "LISA — Locked In Syndrome App",
+  "createdAt": "2026-06-26T08:09:37.420Z",
+  "updatedAt": "2026-06-26T08:09:37.420Z",
+  "selectedProfile": "GENERIC_CUSTOM_APP_V1",
+  "originalPrompt": "Build LISA — Locked In Syndrome App.\n\nAn assistive communication app for locked-in syndrome users that converts eye movement, gaze, and blinks into speech.\n\nMobile-first Android phone preview required.\n\nRequired modules:\n* onboarding-calibration\n* eye-tracking-board\n* blink-input-engine\n* gaze-keyboard\n* text-to-speech\n* quick-phrases\n* caregiver-dashboard\n* communication-history\n* accessibility-settings\n* emergency-speech\n\nDo not use generic project management fallback. Generate architecture, plan, tasks, and begin build execution now.",
+  "currentSourcePath": "",
+  "activeWorkspacePath": ".aidev-projects/lisa-live-path-1782461376334",
+  "lastBuildRunId": "lisa-live-path-1782461376334",
+  "lastSuccessfulBuildRunId": null,
+  "manifestPath": "",
+  "featureContractPath": "",
+  "buildHistoryRecordPath": ".generated-build-history/lisa-live-path-1782461376334",
+  "productionValidationPath": null,
+  "exportMetadataPath": "",
+  "projectFileIndexPath": "",
+  "status": "FAILED",
+  "immutableBuildLinks": [],
+  "lastFailedBuildRunId": "lisa-live-path-1782461376334",
+  "lastFailedSnapshotPath": ".aidev-projects/lisa-live-path-1782461376334/.aidev/snapshots/failed-lisa-live-path-1782461376334"
+}

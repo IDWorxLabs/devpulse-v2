@@ -5,6 +5,7 @@
 import type { ProductIntelligenceModel } from '../intent-understanding-engine/intent-understanding-types.js';
 import type { PromptFaithfulnessV2Result } from '../prompt-faithfulness-engine-v2/prompt-faithfulness-v2-types.js';
 import { promptMentionsLisaOrAccessibility } from '../project-context-switching/project-context-classifier-guard.js';
+import { resolvePaymentCapabilityName, promptRequestsCheckoutOrPayment } from '../safe-payment-placeholder-policy/index.js';
 import type { RequiredCapability } from './capability-planning-types.js';
 
 let requiredCounter = 0;
@@ -38,7 +39,7 @@ const CAPABILITY_PATTERNS: Array<{
   { pattern: /\bexport|csv/i, name: 'CSV Export', description: 'CSV export capability', category: 'API' },
   { pattern: /\breport|chart|dashboard/i, name: 'Reporting Dashboard', description: 'Reporting and dashboard views', category: 'FUNCTIONAL' },
   { pattern: /\bauth|login|sign[\s-]?in/i, name: 'Authentication', description: 'User authentication', category: 'AUTHENTICATION' },
-  { pattern: /\bpayment|billing|stripe|checkout/i, name: 'Payment Processing', description: 'Real payment processing', category: 'SECURITY', mandatory: true },
+  { pattern: /\bpayment|billing|stripe|checkout/i, name: '__PAYMENT_DYNAMIC__', description: '__PAYMENT_DYNAMIC__', category: 'SECURITY', mandatory: true },
   { pattern: /\bsync|cloud|real[\s-]?time/i, name: 'Cloud Synchronization', description: 'Cloud sync capability', category: 'SYNCHRONIZATION' },
   { pattern: /\bai\b.*\bassistant|\bmachine learning\b/i, name: 'AI Assistant', description: 'AI assistant capability', category: 'FUNCTIONAL' },
 ];
@@ -76,6 +77,12 @@ export function discoverRequiredCapabilities(input: {
 
   for (const entry of CAPABILITY_PATTERNS) {
     if (entry.pattern.test(input.rawPrompt)) {
+      if (entry.name === '__PAYMENT_DYNAMIC__' && promptRequestsCheckoutOrPayment(input.rawPrompt)) {
+        const resolved = resolvePaymentCapabilityName(input.rawPrompt);
+        add(resolved.name, resolved.description, entry.category, resolved.classification !== 'NOT_APPLICABLE');
+        continue;
+      }
+      if (entry.name === '__PAYMENT_DYNAMIC__') continue;
       add(entry.name, entry.description, entry.category, entry.mandatory ?? false);
     }
   }

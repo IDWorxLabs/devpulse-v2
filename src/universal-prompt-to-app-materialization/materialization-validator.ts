@@ -2,7 +2,7 @@
  * Universal Prompt-to-App Materialization V1 — materialization validation.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import type { GeneratedAppProfile } from '../code-generation-engine/code-generation-engine-types.js';
 import { GENERATED_APP_MANIFEST_FILENAME, type GeneratedAppManifest } from './generated-app-manifest.js';
@@ -12,6 +12,12 @@ import {
   type ProfileFeatureDefinition,
 } from './profile-feature-map.js';
 import { extractPromptAppTitle } from './prompt-app-metadata.js';
+import {
+  detectSimpleUtilityAppKind,
+  isForbiddenSimpleUtilityModule,
+  isSimpleUtilityAppPrompt,
+  simpleUtilityFeatureModules,
+} from '../simple-utility-app/simple-utility-app-registry.js';
 import {
   materializableFeatureModules,
   moduleIdToPascalCase,
@@ -58,6 +64,21 @@ function readIfExists(path: string): string {
   return existsSync(path) ? readFileSync(path, 'utf8') : '';
 }
 
+function collectFeatureModuleSource(workspaceDir: string): string {
+  const featuresRoot = join(workspaceDir, 'src/features');
+  if (!existsSync(featuresRoot)) return '';
+  const chunks: string[] = [];
+  for (const entry of readdirSync(featuresRoot)) {
+    const entryPath = join(featuresRoot, entry);
+    if (!statSync(entryPath).isDirectory()) continue;
+    for (const fileName of readdirSync(entryPath)) {
+      if (!/\.(tsx?|css|jsx)$/.test(fileName)) continue;
+      chunks.push(readIfExists(join(entryPath, fileName)));
+    }
+  }
+  return chunks.join('\n');
+}
+
 function collectSourceBundle(workspaceDir: string): string {
   const paths = [
     'src/App.tsx',
@@ -68,7 +89,7 @@ function collectSourceBundle(workspaceDir: string): string {
     'src/blueprint/pages/HomePage.tsx',
     'index.html',
   ];
-  return paths.map((rel) => readIfExists(join(workspaceDir, rel))).join('\n');
+  return [...paths.map((rel) => readIfExists(join(workspaceDir, rel))), collectFeatureModuleSource(workspaceDir)].join('\n');
 }
 
 function isMonolithicDomainFeaturePrimaryRenderer(workspaceDir: string): boolean {
@@ -173,27 +194,49 @@ export function validateUniversalAppMaterialization(input: {
     ? [appTitle]
     : sourceBundle.includes(titleLower) ? [appTitle] : [];
 
-  const forbiddenTermsFound =
-    materializationProfile !== 'PROJECT_MANAGEMENT_WEB_V1'
+  const forbiddenTermsFound = isSimpleUtilityAppPrompt(input.rawPrompt)
+    ? definition.featureModules
+        .filter((moduleId) => isForbiddenSimpleUtilityModule(moduleId))
+        .map((moduleId) => `feature-module:${moduleId}`)
+    : materializationProfile !== 'PROJECT_MANAGEMENT_WEB_V1'
       ? definition.forbiddenGenericTerms.filter((term) => sourceBundle.includes(term.toLowerCase()))
       : [];
 
-  const blueprintShellPresent =
-    existsSync(join(input.workspaceDir, 'src/blueprint/AppShell.tsx')) &&
-    existsSync(join(input.workspaceDir, 'src/App.tsx')) &&
-    readIfExists(join(input.workspaceDir, 'src/App.tsx')).includes('AppShell');
+  const appTsxPath = join(input.workspaceDir, 'src/App.tsx');
+  const appTsxSource = readIfExists(appTsxPath);
+  const simpleUtilityKind = detectSimpleUtilityAppKind(input.rawPrompt);
+  const simpleUtilityModuleId =
+    simpleUtilityKind !== null ? simpleUtilityFeatureModules(simpleUtilityKind)[0]! : null;
+  const simpleUtilityComponentName = simpleUtilityModuleId
+    ? `${moduleIdToPascalCase(simpleUtilityModuleId)}Feature`
+    : null;
+  const simpleUtilityDirectMount =
+    simpleUtilityKind !== null &&
+    appTsxSource.includes('data-simple-utility-app') &&
+    simpleUtilityComponentName !== null &&
+    appTsxSource.includes(simpleUtilityComponentName) &&
+    appTsxSource.includes(`<${simpleUtilityComponentName}`);
+
+  const blueprintShellPresent = simpleUtilityDirectMount
+    ? true
+    : existsSync(join(input.workspaceDir, 'src/blueprint/AppShell.tsx')) &&
+      existsSync(appTsxPath) &&
+      appTsxSource.includes('AppShell');
 
   const appShellSource = readIfExists(join(input.workspaceDir, 'src/blueprint/AppShell.tsx'));
   const shellUsesModularRouter =
     appShellSource.includes('FeatureAppRouter') || sourceBundle.includes('feature-app-router');
 
-  const featureModulesPresent =
-    missingFeatureModules.length === 0 &&
-    modularValidation.passed &&
-    shellUsesModularRouter &&
-    !isMonolithicDomainFeaturePrimaryRenderer(input.workspaceDir);
+  const featureModulesPresent = simpleUtilityDirectMount
+    ? missingFeatureModules.length === 0 && modularValidation.passed
+    : missingFeatureModules.length === 0 &&
+      modularValidation.passed &&
+      shellUsesModularRouter &&
+      !isMonolithicDomainFeaturePrimaryRenderer(input.workspaceDir);
 
-  const modularFeaturesPresent = modularValidation.passed && shellUsesModularRouter;
+  const modularFeaturesPresent = simpleUtilityDirectMount
+    ? modularValidation.passed
+    : modularValidation.passed && shellUsesModularRouter;
 
   const promptSpecificTermsPresent =
     matchedUiTerms.length >= Math.min(3, definition.requiredUiTerms.length) ||

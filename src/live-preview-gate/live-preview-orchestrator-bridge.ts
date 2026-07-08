@@ -14,7 +14,8 @@ import type { VirtualDevicePipelineResult } from '../virtual-device-laboratory/v
 import type { VirtualUserPipelineResult } from '../virtual-user-engine/virtual-user-types.js';
 import type { ProductIntelligenceModel } from '../intent-understanding-engine/intent-understanding-types.js';
 import type { LivePreviewGateResult, LivePreviewLockState } from './live-preview-gate-types.js';
-import { evaluateLivePreviewGate, isLivePreviewGateUnlocked } from './live-preview-unlock-authority.js';
+import { isAuthoritativePreviewUnlocked } from '../aep-preview-gate-authority/index.js';
+import { evaluateLivePreviewGate } from './live-preview-unlock-authority.js';
 
 export interface LivePreviewOrchestratorBridgeInput {
   rawPrompt: string;
@@ -68,8 +69,8 @@ export function evaluateLivePreviewGateForOrchestrator(
     workspaceDir: input.workspaceDir ?? null,
   });
 
-  const unlocked = isLivePreviewGateUnlocked(gate);
-  const previewUrl = unlocked ? input.previewUrl : gate.isLimitedPreview ? input.previewUrl : null;
+  const unlocked = isAuthoritativePreviewUnlocked(gate);
+  const previewUrl = unlocked ? input.previewUrl : null;
 
   return {
     readOnly: true,

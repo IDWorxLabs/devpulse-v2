@@ -1,0 +1,17 @@
+{
+  "manifestId": "readiness-audit-assistive-mobile-accessibility-1782838838009-manifest",
+  "contractId": "readiness-audit-assistive-mobile-accessibility-1782838838009",
+  "ideaId": "idea-1",
+  "generatedAt": "2026-06-30T17:00:39.124Z",
+  "materializationSource": "modular-feature-materialization-v1",
+  "applicationProfile": "ASSISTIVE_COMMUNICATION_APP_V1",
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "modularFeatureMaterialization": true,
+  "buildUnits": [
+    "unit-001",
+    "unit-002",
+    "unit-003"
+  ],
+  "runtime": "vite-react"
+}

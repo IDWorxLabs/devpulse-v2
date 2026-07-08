@@ -1,0 +1,91 @@
+{
+  "readOnly": true,
+  "originalPrompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "selectedProfile": "CRM_WEB_V1",
+  "generationInputs": {
+    "projectId": "readiness-audit-saas-crm-1782837957764",
+    "buildRunId": "one-prompt-build-1",
+    "expectedAppType": "crm",
+    "featureModules": [
+      "navigation-router",
+      "dashboard",
+      "settings",
+      "deals",
+      "persistence",
+      "customers",
+      "pipeline",
+      "contacts",
+      "follow-ups",
+      "reports"
+    ],
+    "routes": [
+      "/navigation-router",
+      "/dashboard",
+      "/settings",
+      "/deals",
+      "/persistence",
+      "/customers",
+      "/pipeline",
+      "/contacts",
+      "/follow-ups",
+      "/reports"
+    ],
+    "fallbackUsed": false
+  },
+  "featureContractSummary": {
+    "featureModuleCount": 10,
+    "featureModuleIds": [
+      "navigation-router",
+      "dashboard",
+      "settings",
+      "deals",
+      "persistence",
+      "customers",
+      "pipeline",
+      "contacts",
+      "follow-ups",
+      "reports"
+    ],
+    "routes": [
+      "/navigation-router",
+      "/dashboard",
+      "/settings",
+      "/deals",
+      "/persistence",
+      "/customers",
+      "/pipeline",
+      "/contacts",
+      "/follow-ups",
+      "/reports"
+    ]
+  },
+  "profileFeatureMapVersion": "materialization-v1",
+  "blueprintVersion": "1.0",
+  "generatorVersion": "universal-prompt-to-app-materialization-v1",
+  "dependencySnapshot": {
+    "runtime": "vite-react:crm-web-v1",
+    "packageManager": "npm",
+    "note": "Captured from generated workspace package.json when present"
+  },
+  "validationCommands": [
+    "npm install",
+    "npm run build",
+    "npm run preview",
+    "npm run validate:blueprint-purity",
+    "npm run validate:production-validation"
+  ],
+  "expectedArtifacts": [
+    ".generated-app-manifest.json",
+    "src/features/registry.ts",
+    "src/features/routes.ts",
+    "src/features/FeatureAppRouter.tsx",
+    "src/blueprint/AppShell.tsx",
+    "universal-feature-contract.json"
+  ],
+  "replayInstructions": [
+    "Use originalPrompt and selectedProfile with Universal Prompt-to-App Materialization engine.",
+    "Regenerate workspace with the same contractId/projectId when possible.",
+    "Run validationCommands in the generated workspace to reproduce validation evidence.",
+    "Compare manifestHash and workspaceHash against build-record.json for regression tracking."
+  ]
+}

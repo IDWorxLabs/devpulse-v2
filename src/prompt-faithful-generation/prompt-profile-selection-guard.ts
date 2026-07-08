@@ -7,6 +7,10 @@ import type { ProfileRankingResult } from '../build-profile-classification/profi
 import { isRealTaskTrackerPrompt } from '../project-context-switching/project-context-classifier-guard.js';
 import { extractPromptFeatures } from './prompt-feature-extractor.js';
 import {
+  promptDescribesAssistiveCommunication,
+  resolveAssistiveCommunicationProfile,
+} from './assistive-communication-profile.js';
+import {
   BANNED_FALLBACK_MODULES,
   KNOWN_FALLBACK_PROFILES,
   type PromptProfileGuardResult,
@@ -89,6 +93,9 @@ function isStrongSupportedProfile(
     return ranking.confidence === 'HIGH' && ranking.matchedKeywords.includes('booking system');
   }
   if (profile === 'HABIT_TRACKER_WEB_V1' && /\bhabit tracker\b/i.test(rawPrompt)) return true;
+  if (profile === 'ASSISTIVE_COMMUNICATION_APP_V1' && promptDescribesAssistiveCommunication(rawPrompt)) {
+    return true;
+  }
   if (profile === 'PROJECT_MANAGEMENT_WEB_V1') {
     if (promptContainsNegatedProjectManagement(rawPrompt)) return false;
     if (/\bproject management system\b/i.test(rawPrompt) && ranking.confidence === 'HIGH') return true;
@@ -112,8 +119,16 @@ export function shouldRejectKnownProfileForCustomPrompt(
     extraction.explicitModulesProvided &&
     extraction.requiredModules.length >= 3 &&
     selected !== 'GENERIC_CUSTOM_APP_V1' &&
+    selected !== 'ASSISTIVE_COMMUNICATION_APP_V1' &&
     !isStrongSupportedProfile(selected, rawPrompt, ranking)
   ) {
+    const assistive = resolveAssistiveCommunicationProfile(rawPrompt);
+    if (assistive) {
+      return {
+        reject: true,
+        reason: `Explicit assistive communication modules require ${assistive} instead of ${selected}.`,
+      };
+    }
     return {
       reject: true,
       reason: `Explicit prompt modules (${extraction.requiredModules.join(', ')}) require GENERIC_CUSTOM_APP_V1 instead of ${selected}.`,
@@ -141,6 +156,13 @@ export function shouldRejectKnownProfileForCustomPrompt(
   }
 
   if (strongTerms.length >= 3 && KNOWN_FALLBACK_PROFILES.includes(selected)) {
+    const assistive = resolveAssistiveCommunicationProfile(rawPrompt);
+    if (assistive) {
+      return {
+        reject: true,
+        reason: `Assistive communication domain evidence (${strongTerms.join(', ')}) requires ${assistive} instead of ${selected}.`,
+      };
+    }
     return {
       reject: true,
       reason: `Custom domain evidence (${strongTerms.join(', ')}) requires GENERIC_CUSTOM_APP_V1 instead of ${selected}.`,
@@ -154,6 +176,23 @@ export function applyPromptProfileSelectionGuard(
   rawPrompt: string,
   ranking: ProfileRankingResult,
 ): PromptProfileGuardResult {
+  const assistiveProfile = resolveAssistiveCommunicationProfile(rawPrompt);
+  if (assistiveProfile && (ranking.selectedProfile !== assistiveProfile || promptDescribesAssistiveCommunication(rawPrompt))) {
+    return {
+      readOnly: true,
+      selectedProfile: assistiveProfile,
+      originalProfile: ranking.selectedProfile,
+      guardApplied: ranking.selectedProfile !== assistiveProfile,
+      rejectedFallbackProfiles: ranking.selectedProfile && ranking.selectedProfile !== assistiveProfile
+        ? [ranking.selectedProfile]
+        : [],
+      rejectionReason:
+        ranking.selectedProfile !== assistiveProfile
+          ? `Assistive communication domain detected — selected ${assistiveProfile} over ${ranking.selectedProfile ?? 'none'}.`
+          : null,
+    };
+  }
+
   const rejection = shouldRejectKnownProfileForCustomPrompt(rawPrompt, ranking);
   if (!rejection.reject || !ranking.selectedProfile) {
     return {
@@ -166,9 +205,11 @@ export function applyPromptProfileSelectionGuard(
     };
   }
 
+  const fallbackProfile = resolveAssistiveCommunicationProfile(rawPrompt) ?? 'GENERIC_CUSTOM_APP_V1';
+
   return {
     readOnly: true,
-    selectedProfile: 'GENERIC_CUSTOM_APP_V1',
+    selectedProfile: fallbackProfile,
     originalProfile: ranking.selectedProfile,
     guardApplied: true,
     rejectedFallbackProfiles: [ranking.selectedProfile],

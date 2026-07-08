@@ -120,6 +120,12 @@ function resolveTestReadiness(
     };
   }
   if (outputState === 'OUTPUT_READY_FOR_TESTING') {
+    if (input.visibleFeatureDomValidated === false) {
+      return {
+        state: 'NOT_TESTABLE',
+        reason: 'Preview is running but required feature UI was not validated in the DOM.',
+      };
+    }
     return { state: 'TESTABLE', reason: 'Output is visible, current, interactive, and meaningful to test.' };
   }
   if (outputState === 'OUTPUT_INTERACTIVE') {
@@ -268,12 +274,24 @@ function buildOperatorFeed(
           : 'Warning',
   });
 
-  if (outputState === 'OUTPUT_READY_FOR_TESTING' && testReadiness === 'TESTABLE') {
+  if (
+    outputState === 'OUTPUT_READY_FOR_TESTING' &&
+    testReadiness === 'TESTABLE' &&
+    input.visibleFeatureDomValidated !== false
+  ) {
     events.push({
       section: 'Learning',
       action: 'Running application ready for review',
       detail: 'The visible application is current, interactive, and ready for founder testing.',
       status: 'Completed',
+    });
+  } else if (outputState === 'OUTPUT_READY_FOR_TESTING' && input.visibleFeatureDomValidated === false) {
+    events.push({
+      section: 'Approvals',
+      action: 'Visible feature validation failed',
+      detail:
+        'Preview is running but the required feature UI was not validated — do not treat this build as ready for founder testing.',
+      status: 'Blocked',
     });
   }
 

@@ -1,0 +1,17 @@
+{
+  "manifestId": "lisa-live-path-1782455712730-manifest",
+  "contractId": "lisa-live-path-1782455712730",
+  "ideaId": "idea-1",
+  "generatedAt": "2026-06-26T06:35:12.902Z",
+  "materializationSource": "modular-feature-materialization-v1",
+  "applicationProfile": "GENERIC_CUSTOM_APP_V1",
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "modularFeatureMaterialization": true,
+  "buildUnits": [
+    "unit-001",
+    "unit-002",
+    "unit-003"
+  ],
+  "runtime": "vite-react"
+}

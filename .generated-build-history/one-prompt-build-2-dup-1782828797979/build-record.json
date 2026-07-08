@@ -1,0 +1,62 @@
+{
+  "readOnly": true,
+  "runId": "one-prompt-build-2-dup-1782828797979",
+  "createdAt": "2026-06-30T14:13:17.978Z",
+  "prompt": "Build a SaaS CRM with customer records, deal pipeline, activity timeline, and team dashboard.",
+  "selectedProfile": "CRM_WEB_V1",
+  "appName": "SaaS CRM",
+  "workspaceDir": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828797810",
+  "manifestPath": "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828797810/.generated-app-manifest.json",
+  "manifestHash": "906767185c420655c4d02cd8bacfa4823b2965c0eb66fbaae3d51c25beeccbb0",
+  "workspaceHash": "0e25347efedcab3f87da774665a1bfb55d9304bb0a6a52e65c6b567dbfac3fcc",
+  "materializationHash": "6407d0739f4b4038633e0b86361d4a838651256c58ed6a243529e95678893497",
+  "generatedFilesCount": 1,
+  "generatedDirectoriesCount": 0,
+  "generatedFeatureModulesCount": 0,
+  "generatedRoutes": [
+    "/navigation-router",
+    "/dashboard",
+    "/settings",
+    "/deals",
+    "/persistence",
+    "/customers",
+    "/pipeline",
+    "/contacts",
+    "/follow-ups",
+    "/reports"
+  ],
+  "generatedComponents": [],
+  "generatedServices": [],
+  "generatedModels": [],
+  "generatedStyles": [],
+  "validationResults": {
+    "readOnly": true,
+    "validationStatus": "FAIL",
+    "blueprintPurityStatus": "PENDING",
+    "productionValidationStatus": "PENDING",
+    "previewVerified": false,
+    "promptSpecificTermsPresent": false,
+    "warnings": [],
+    "errors": [
+      "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker. AEE forbids PLANNING_FAILED after workspace evidence exists."
+    ]
+  },
+  "productionValidationStatus": "PENDING",
+  "previewVerified": false,
+  "previewUrl": null,
+  "artifactPaths": [
+    "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-saas-crm-1782828797810/.generated-app-manifest.json",
+    ".generated-build-history/one-prompt-build-2-dup-1782828797979"
+  ],
+  "failureReasons": [
+    "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker. AEE forbids PLANNING_FAILED after workspace evidence exists.",
+    "Prompt is invalid or faithfulness did not pass — concrete pre-workspace blocker. AEE forbids PLANNING_FAILED after workspace evidence exists."
+  ],
+  "replayMetadataPath": ".generated-build-history/one-prompt-build-2-dup-1782828797979/replay-metadata.json",
+  "comparisonFingerprint": "521d4468b71dd3e2ab77c451cdc5a538866d2b15ccf956b09f4219ba6a09bedc",
+  "auditTimelinePath": ".generated-build-history/one-prompt-build-2-dup-1782828797979/audit-timeline.json",
+  "immutable": true,
+  "deduplicatedRunId": true,
+  "originalRunId": "one-prompt-build-2",
+  "buildHistoryRecordHash": "7e7b129b423244c56bc6147ad560b1a1ae4fc4c47be1880ad01617f50c7b35d6"
+}

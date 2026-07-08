@@ -1,0 +1,11 @@
+{
+  "readOnly": true,
+  "entries": [
+    {
+      "timestamp": "2026-06-30T16:00:56.415Z",
+      "event": "source_promoted",
+      "buildRunId": "one-prompt-build-1",
+      "sourcePath": ".aidev-projects/readiness-audit-saas-crm-1782835244894/source"
+    }
+  ]
+}

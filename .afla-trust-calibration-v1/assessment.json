@@ -402,6 +402,157 @@
         "productArchitecturePenalty": 20,
         "cqiRootCause": "Poor Requirements"
       },
+      "promptFaithfulness": {
+        "readOnly": true,
+        "sourceId": "prompt-faithfulness",
+        "sourceName": "Prompt Faithfulness",
+        "available": true,
+        "passed": false,
+        "score": 63,
+        "blockers": [
+          "Prompt drift detected",
+          "Faithfulness score below threshold"
+        ],
+        "warnings": [],
+        "findings": [
+          "Faithfulness score: 63.0%",
+          "Requirements: 13",
+          "Traceability links: 12",
+          "Drift detected: yes",
+          "Contract ID: pec-1-1783428751293"
+        ]
+      },
+      "capabilityPlanning": {
+        "readOnly": true,
+        "sourceId": "capability-planning",
+        "sourceName": "Capability Planning",
+        "available": true,
+        "passed": true,
+        "score": 75,
+        "blockers": [],
+        "warnings": [
+          "Capability evolution planned before generation"
+        ],
+        "findings": [
+          "Required capabilities: 16",
+          "Reused: 14, composed: 0, generated: 2",
+          "Permission verdict: NEEDS_CAPABILITY_EVOLUTION",
+          "Human review count: 0"
+        ]
+      },
+      "incrementalBuild": {
+        "readOnly": true,
+        "sourceId": "incremental-build",
+        "sourceName": "Incremental Build",
+        "available": true,
+        "passed": true,
+        "score": 95,
+        "blockers": [],
+        "warnings": [],
+        "findings": [
+          "Planned features: 2",
+          "Stabilized: 2, repaired: 0",
+          "Whole-app assembly: pass",
+          "Permission verdict: READY_FOR_ASSEMBLY"
+        ]
+      },
+      "behaviorSimulation": {
+        "readOnly": true,
+        "sourceId": "behavior-simulation",
+        "sourceName": "Behavior Simulation",
+        "available": true,
+        "passed": true,
+        "score": 95,
+        "blockers": [],
+        "warnings": [],
+        "findings": [
+          "Required scenarios: 1",
+          "Passed: 1, failed: 0",
+          "Whole-app sweep: pass",
+          "Verdict: READY_FOR_PREVIEW"
+        ]
+      },
+      "virtualUserSimulation": {
+        "readOnly": true,
+        "sourceId": "virtual-user-simulation",
+        "sourceName": "Virtual User Simulation",
+        "available": true,
+        "passed": true,
+        "score": 95,
+        "blockers": [],
+        "warnings": [],
+        "findings": [
+          "Virtual users: 1",
+          "Goals: 1, journeys: 1",
+          "Completed: 1, failed: 0",
+          "Whole-app sweep: pass",
+          "Verdict: READY_FOR_PREVIEW"
+        ]
+      },
+      "virtualDeviceLaboratory": {
+        "readOnly": true,
+        "sourceId": "virtual-device-laboratory",
+        "sourceName": "Virtual Device Laboratory",
+        "available": true,
+        "passed": true,
+        "score": 95,
+        "blockers": [],
+        "warnings": [],
+        "findings": [
+          "Required profiles: 3",
+          "Passed: 3, failed: 0",
+          "Whole-app sweep: pass",
+          "Verdict: READY_FOR_PREVIEW"
+        ]
+      },
+      "interactionProof": {
+        "readOnly": true,
+        "sourceId": "interaction-proof",
+        "sourceName": "Interaction Proof",
+        "available": true,
+        "passed": true,
+        "score": 95,
+        "blockers": [],
+        "warnings": [],
+        "findings": [
+          "Total interactions: 1",
+          "Required: 1, passed: 1, failed: 0",
+          "Whole-app sweep: pass",
+          "Verdict: READY_FOR_PREVIEW"
+        ]
+      },
+      "autonomousDebugging": {
+        "readOnly": true,
+        "sourceId": "autonomous-debugging",
+        "sourceName": "Autonomous Debugging",
+        "available": true,
+        "passed": true,
+        "score": 95,
+        "blockers": [],
+        "warnings": [],
+        "findings": [
+          "Failures: 0, repaired: 0, unresolved: 0",
+          "Repair attempts: 0, patches applied: 0",
+          "Human review: not required",
+          "Verdict: READY_FOR_PREVIEW"
+        ]
+      },
+      "continuousProductImprovement": {
+        "readOnly": true,
+        "sourceId": "continuous-product-improvement",
+        "sourceName": "Continuous Product Improvement",
+        "available": true,
+        "passed": true,
+        "score": 72,
+        "blockers": [],
+        "warnings": [],
+        "findings": [
+          "Signals: 0, opportunities: 0",
+          "Applied: 0, deferred: 0, blocked: 0",
+          "Quality score: 72/100",
+          "Verdict: READY_FOR_PREVIEW"
+        ]
+      },
       "launchReadiness": {
         "readOnly": true,
         "sourceId": "launch-readiness",
@@ -437,12 +588,27 @@
     },
     "remediationPlan": null,
     "blocksLaunch": true,
-    "blocksLaunchReason": "Requirement Discovery incomplete",
+    "blocksLaunchReason": "Verification Hub insufficient (coverage 6%, confidence 26, gaps: Structure: Blueprint structure verification incomplete; Structure: Blueprint structure not evaluated)",
+    "blockingRules": [
+      "Verification Hub insufficient (coverage 6%, confidence 26, gaps: Structure: Blueprint structure verification incomplete; Structure: Blueprint structure not evaluated)",
+      "Product Architecture incomplete (readiness 0/100, 6 critical gap(s))",
+      "Requirement Discovery poorly understood",
+      "Prompt Faithfulness compromised (score 63, blockers: Prompt drift detected; Faithfulness score below threshold)",
+      "Prompt drift blocks launch approval",
+      "Founder prerequisite missing: Requirement Discovery incomplete",
+      "Founder prerequisite missing: Verification Hub incomplete",
+      "Founder prerequisite missing: Build Reality",
+      "Founder prerequisite missing: Blueprint Structure",
+      "Founder prerequisite missing: Blueprint Visual",
+      "Founder prerequisite missing: Feature Reality",
+      "Founder prerequisite missing: Universal Feature Contract",
+      "Founder prerequisite missing: Engineering Reality"
+    ],
     "userPhase": "LAUNCH_NOT_READY",
     "userLabel": "✗ Launch Not Ready",
     "contractId": null,
     "productName": "CRM",
-    "generatedAt": "2026-06-25T06:29:52.861Z",
+    "generatedAt": "2026-07-07T12:52:32.915Z",
     "reportMarkdown": "",
     "launchDecisionExplainability": {
       "readOnly": true,
@@ -459,5 +625,5 @@
       "reasonForVerdict": "Requirement Discovery incomplete"
     }
   },
-  "generatedAt": "2026-06-25T06:29:52.861Z"
+  "generatedAt": "2026-07-07T12:52:32.923Z"
 }

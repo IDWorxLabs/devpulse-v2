@@ -15,13 +15,13 @@ export function getDevPulseV2MissingCapabilityEvolutionEngine(): {
   ownerModule: string;
   passToken: string;
   phase: number;
-  simulationOnly: true;
+  enforcementAuthority: true;
 } {
   return {
     ownerModule: MISSING_CAPABILITY_EVOLUTION_ENGINE_OWNER_MODULE,
     passToken: MISSING_CAPABILITY_EVOLUTION_ENGINE_PASS_TOKEN,
     phase: 10,
-    simulationOnly: true,
+    enforcementAuthority: true,
   };
 }
 

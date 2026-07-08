@@ -1,0 +1,11 @@
+{
+  "readOnly": true,
+  "entries": [
+    {
+      "timestamp": "2026-06-30T14:33:12.554Z",
+      "event": "source_promoted",
+      "buildRunId": "one-prompt-build-2",
+      "sourcePath": ".aidev-projects/aee-build-autofix-saas-crm-1782829976759/source"
+    }
+  ]
+}

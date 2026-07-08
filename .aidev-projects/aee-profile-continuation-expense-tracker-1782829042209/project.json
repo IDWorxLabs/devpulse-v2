@@ -1,0 +1,27 @@
+{
+  "readOnly": true,
+  "projectId": "aee-profile-continuation-expense-tracker-1782829042209",
+  "projectName": "Expense Tracker",
+  "createdAt": "2026-06-30T14:17:41.344Z",
+  "updatedAt": "2026-06-30T14:17:41.873Z",
+  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
+  "originalPrompt": "Build an expense tracker where users add expenses, categorize spending, view monthly totals, and filter by date range.",
+  "currentSourcePath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782829042209/source",
+  "activeWorkspacePath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782829042209",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": "one-prompt-build-1",
+  "manifestPath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782829042209/.aidev/manifest.json",
+  "featureContractPath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782829042209/.aidev/feature-contract.json",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782829060217",
+  "productionValidationPath": null,
+  "exportMetadataPath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782829042209/.aidev/export-metadata.json",
+  "projectFileIndexPath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782829042209/.aidev/project-file-index.json",
+  "status": "PROMOTED",
+  "immutableBuildLinks": [
+    ".generated-build-history/one-prompt-build-1-dup-1782829060217"
+  ],
+  "featureContractRealityPath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782829042209/.aidev/feature-contract-reality.json",
+  "workspaceRealityAuditPath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782829042209/.aidev/workspace-reality-audit.json",
+  "workspaceRealityReportPath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782829042209/.aidev/workspace-reality-report.md",
+  "materializationQualityScorePath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782829042209/.aidev/materialization-quality-score.json"
+}

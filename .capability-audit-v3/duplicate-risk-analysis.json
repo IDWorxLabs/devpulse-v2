@@ -2,7 +2,7 @@
   "duplicateRiskCount": 49,
   "highDuplicateRiskCount": 11,
   "mediumDuplicateRiskCount": 38,
-  "lowDuplicateRiskCount": 49,
+  "lowDuplicateRiskCount": 50,
   "oneCapabilityOneOwnerValid": true,
   "authorityOwnershipChecks": [
     {

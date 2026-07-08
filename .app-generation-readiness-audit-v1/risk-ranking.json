@@ -1,0 +1,97 @@
+[
+  {
+    "findingId": "F01-ACTIVE-PROJECT-FALLBACK",
+    "risk": "CRITICAL",
+    "justification": "Silently attaches a request with no projectId to an unrelated prior project; affects every \"new app, no id supplied\" request path."
+  },
+  {
+    "findingId": "F02-NEW-PROMPT-NO-FRESH-SIGNAL",
+    "risk": "CRITICAL",
+    "justification": "The primary user-facing \"start a new app\" affordance does not actually assert freshness to the server; this is the most direct explanation for the reported symptom."
+  },
+  {
+    "findingId": "F09-CONTRACT-INDEPENDENT-OF-MODULE-PLAN",
+    "risk": "CRITICAL",
+    "justification": "Guarantees the two artifacts meant to describe \"what this app is\" (contract vs. generated modules) can disagree on every custom-domain build, with no detection until post-build faithfulness audit runs."
+  },
+  {
+    "findingId": "F12-FAITHFULNESS-POST-BUILD-ONLY",
+    "risk": "CRITICAL",
+    "justification": "The one system designed to catch product mismatch runs only after all generation work (and cost) has already been spent, and has no path back into generation."
+  },
+  {
+    "findingId": "F14-REPAIR-IS-IN-MEMORY-ONLY",
+    "risk": "CRITICAL",
+    "justification": "\"Repair\" is the term most likely to be trusted by an operator watching a build; discovering it never touches files undermines confidence in every reported repair outcome."
+  },
+  {
+    "findingId": "F03-AUTO-RESUME-DUPLICATE-DEFAULT-ON",
+    "risk": "HIGH",
+    "justification": "Loose domain-overlap matching (>=0.55) plus default-on auto-resume is a second, independent path to the same stale-concept symptom, even when F01/F02 are fixed."
+  },
+  {
+    "findingId": "F06-UNCONDITIONAL-DASHBOARD-SEED",
+    "risk": "HIGH",
+    "justification": "Unconditional seeding happens before the evidence gate, meaning the gate is trusted to catch 100% of cases with no defense in depth."
+  },
+  {
+    "findingId": "F10-GENERATOR-IGNORES-CONTRACT",
+    "risk": "HIGH",
+    "justification": "Removes any possibility of the generator self-correcting toward the contract even if the contract were fixed first; both sides of F09 must be fixed together."
+  },
+  {
+    "findingId": "F13-GENERATION-GATE-UNWIRED",
+    "risk": "HIGH",
+    "justification": "A preventive mechanism already built and tested (in isolation) sits unused; wiring it is lower-risk than building new prevention from scratch."
+  },
+  {
+    "findingId": "F15-REPAIR-RELABELS-NOT-RETRIES",
+    "risk": "HIGH",
+    "justification": "Produces a user-facing label (\"repaired\") that overstates what happened, which can suppress legitimate follow-up investigation."
+  },
+  {
+    "findingId": "F16-DEV-SERVER-UNCAUGHT-ASYNC",
+    "risk": "HIGH",
+    "justification": "A genuine unbounded-hang path in the runtime-activation stage, distinct from the (bounded) 45s timeout path."
+  },
+  {
+    "findingId": "F18-STABILIZER-TIMEOUTS-NOT-ENFORCED-IN-PRODUCTION",
+    "risk": "HIGH",
+    "justification": "Existing, tested enforcement code is not reachable from the production orchestrator, so timeout policy documented in one file does not match behavior in another."
+  },
+  {
+    "findingId": "F19-FRAGMENTED-PREVIEW-VERDICTS",
+    "risk": "HIGH",
+    "justification": "Multiple authorities can each declare a different \"did the preview work\" answer for the same build, with an override path that favors the weaker (route-probe-only) evidence."
+  },
+  {
+    "findingId": "F04-METADATA-KEYWORD-ACCUMULATION",
+    "risk": "MEDIUM",
+    "justification": "Contributes to identity drift over multiple rebuilds of the same project id, slower-acting than F01-F03."
+  },
+  {
+    "findingId": "F05-EVOLUTION-REGISTRY-NOT-PROJECT-SCOPED",
+    "risk": "MEDIUM",
+    "justification": "Cross-project capability reuse without project scoping; likely lower frequency than context/module findings but same category of isolation gap."
+  },
+  {
+    "findingId": "F07-PROFILE-MAP-FIXED-LISTS",
+    "risk": "MEDIUM",
+    "justification": "Mitigated somewhat by the evidence gate blocking PROFILE_FALLBACK by default; risk concentrates on the PROJECT_MANAGEMENT_WEB_V1 auto-allow exception."
+  },
+  {
+    "findingId": "F11-CONTRACT-PROFILE-MISMATCH",
+    "risk": "MEDIUM",
+    "justification": "Narrower than F09/F10 — only triggers when input.profile and materializationProfile diverge for the same build."
+  },
+  {
+    "findingId": "F17-INTERACTION-PROOF-NO-MATERIALIZATION-PRECHECK",
+    "risk": "MEDIUM",
+    "justification": "Produces a slower, less-diagnostic failure rather than a silent one — the proof engine does eventually classify and report the failure."
+  },
+  {
+    "findingId": "F08-PERSISTENCE-ALWAYS-ON",
+    "risk": "LOW",
+    "justification": "Infrastructure-only module id; does not by itself introduce a user-visible wrong concept."
+  }
+]

@@ -57,6 +57,14 @@ export function validateLaunchEvidence(
         sourceId: source.sourceId,
         detail: `${source.sourceName} evidence unavailable`,
       });
+    } else if (source.status === 'DEGRADED_WITH_WORKSPACE_EVIDENCE') {
+      issues.push({
+        readOnly: true,
+        code: 'EVIDENCE_DEGRADED',
+        severity: 'WARNING',
+        sourceId: source.sourceId,
+        detail: `${source.sourceName} derived from workspace source — live runtime evidence deferred`,
+      });
     }
 
     if (!source.evidenceId || source.evidenceId.length < 8) {
@@ -129,7 +137,9 @@ export function validateLaunchEvidence(
   const blocking = issues.filter((i) => i.severity === 'BLOCKING');
   const requiredCount = REQUIRED_LAUNCH_EVIDENCE_SOURCES.length;
   const collectedCount = evidence.sources.filter(
-    (s) => s.status !== 'UNAVAILABLE' && s.status !== 'INCOMPLETE',
+    (s) =>
+      s.status !== 'UNAVAILABLE' &&
+      s.status !== 'INCOMPLETE',
   ).length;
   const completenessScore = Math.round((collectedCount / requiredCount) * 100);
   const freshnessScore = Math.round(

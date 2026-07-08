@@ -1,0 +1,8 @@
+{
+  "features": [
+    "calculator"
+  ],
+  "modularSurfaces": 1,
+  "title": "calculator",
+  "bodyText": "calculator\n\nNumber pad with + − × ÷, clear, delete, and equals.\n\n0.875\nC⌫÷×789-456+123=0."
+}

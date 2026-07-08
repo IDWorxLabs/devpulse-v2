@@ -1,0 +1,11 @@
+{
+  "readOnly": true,
+  "entries": [
+    {
+      "timestamp": "2026-06-30T14:21:24.387Z",
+      "event": "source_promoted",
+      "buildRunId": "one-prompt-build-2",
+      "sourcePath": ".aidev-projects/aee-profile-continuation-saas-crm-1782829270275/source"
+    }
+  ]
+}

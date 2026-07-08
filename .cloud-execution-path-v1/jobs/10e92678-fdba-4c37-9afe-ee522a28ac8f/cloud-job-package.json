@@ -1,0 +1,56 @@
+{
+  "readOnly": true,
+  "contractVersion": "V1",
+  "jobId": "10e92678-fdba-4c37-9afe-ee522a28ac8f",
+  "projectId": "proj-task_tracker_web_v1",
+  "executionMode": "CLOUD_SIMULATED",
+  "jobMetadata": {
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "requestedAt": "2026-06-30T19:50:51.953Z",
+    "workerId": "worker-5510d541"
+  },
+  "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+  "requirementsSnapshot": {
+    "readOnly": true,
+    "profile": "TASK_TRACKER_WEB_V1",
+    "productName": "Task Tracker",
+    "prompt": "Build a task tracker where users can add tasks, mark them complete, delete tasks, and filter by all, active, and completed.",
+    "requirementConfidence": 25
+  },
+  "buildPlan": {
+    "readOnly": true,
+    "contractId": "build-ready-idea-36",
+    "planningSummary": "Contract build-ready-idea-36",
+    "codegenProfile": "TASK_TRACKER_WEB_V1"
+  },
+  "workspaceSpec": {
+    "readOnly": true,
+    "workspaceId": "cep-10e92678-fdba-4c37-9afe-ee522a28ac8f",
+    "workspacePath": "C:\\Users\\Richa\\Desktop\\DevPulse-V2\\.generated-builder-workspaces\\cep-10e92678-fdba-4c37-9afe-ee522a28ac8f",
+    "isolationToken": "10e92678-fdba-4c37-9afe-ee522a28ac8f",
+    "boundedLogsMaxLines": 500,
+    "boundedArtifactsMaxBytes": 5000000,
+    "runtimeTimeoutMs": 300000
+  },
+  "expectedArtifactOutputs": [
+    "generated-source-manifest.json",
+    "build-logs.txt",
+    "preview-proof.json",
+    "uvl-verification-proof.json",
+    "product-architect-proof.json",
+    "afla-verdict.json",
+    "production-readiness-result.json",
+    "execution-summary.json",
+    "cloud-job-package.json"
+  ],
+  "validationRequirements": [
+    "Build proof required",
+    "Preview proof required",
+    "UVL verification proof required",
+    "AFLA verdict required",
+    "Production readiness gate required",
+    "Unique isolated workspace required"
+  ],
+  "generatedAt": "2026-06-30T19:51:34.661Z"
+}

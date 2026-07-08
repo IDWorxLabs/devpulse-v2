@@ -1,0 +1,1278 @@
+{
+  "readOnly": true,
+  "generatedFiles": [
+    {
+      "path": ".generated-app-manifest.json",
+      "size": 77591,
+      "extension": ".json",
+      "lines": 2025,
+      "category": "Config",
+      "hash": "36dc2a72e5f60de2dab51d643dd0f7ec26946b0431c78d5ade19a9c76dcca22b"
+    },
+    {
+      "path": "blueprint-manifest.json",
+      "size": 665,
+      "extension": ".json",
+      "lines": 28,
+      "category": "Config",
+      "hash": "6388007afae610f9950129915f711613bda53676b09122aceac0787eafa307ed"
+    },
+    {
+      "path": "build-manifest.json",
+      "size": 487,
+      "extension": ".json",
+      "lines": 18,
+      "category": "Config",
+      "hash": "0506e54a2fb5cc6ebde2dd72e017edeb4dc7f924b393f2fd197fd18c53d2b2ff"
+    },
+    {
+      "path": "feature-contract.json",
+      "size": 8259,
+      "extension": ".json",
+      "lines": 85,
+      "category": "Config",
+      "hash": "b72bb64faa9617dfb69dfc911a878c408f35806f6be7e29798304e2d3aa085df"
+    },
+    {
+      "path": "index.html",
+      "size": 458,
+      "extension": ".html",
+      "lines": 13,
+      "category": "Utility",
+      "hash": "2b46939b7a2d02eb177888527a5a3ce05230df35f56b4ec994a90b731403a1aa"
+    },
+    {
+      "path": "package-lock.json",
+      "size": 58093,
+      "extension": ".json",
+      "lines": 1733,
+      "category": "Config",
+      "hash": "544b4debfd603305c0fe43143d5fd718831c225a94b3d9172de19579d72863f4"
+    },
+    {
+      "path": "package.json",
+      "size": 1039,
+      "extension": ".json",
+      "lines": 32,
+      "category": "Config",
+      "hash": "59e4ad3670e5ac876e64dc913baa5f3ae530f456e0dee37baba4970d0f0f0b81"
+    },
+    {
+      "path": "runtime/dev-server.mjs",
+      "size": 4249,
+      "extension": ".mjs",
+      "lines": 146,
+      "category": "Utility",
+      "hash": "901dda803ba72c398b8f20d6332832d64c546ba48d48c7ce31981b15953eb0d1"
+    },
+    {
+      "path": "src/analytics/analytics-placeholders.ts",
+      "size": 527,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Utility",
+      "hash": "509dd32eaa03283a5566f131b63171c9d6571d320f03a295d0caeef55ec3fe0e"
+    },
+    {
+      "path": "src/App.css",
+      "size": 5452,
+      "extension": ".css",
+      "lines": 169,
+      "category": "Style",
+      "hash": "a2621cd8c21df9f8724779a0e190620b4f0b4740d243f0336679c45239914acb"
+    },
+    {
+      "path": "src/App.tsx",
+      "size": 1369,
+      "extension": ".tsx",
+      "lines": 46,
+      "category": "Utility",
+      "hash": "e61b5844d18ab861850f3bd8f46bbac2627baa6eb2c228a30d4c448d907fbe4f"
+    },
+    {
+      "path": "src/auth/auth-config.ts",
+      "size": 191,
+      "extension": ".ts",
+      "lines": 4,
+      "category": "Utility",
+      "hash": "61becdf74819851816e7289d7a6605a0d7b31621af9cdf6a47cb7217555c47e2"
+    },
+    {
+      "path": "src/blueprint/app-metadata.ts",
+      "size": 516,
+      "extension": ".ts",
+      "lines": 4,
+      "category": "Utility",
+      "hash": "a664041475517815baf7a3467bb0be19fa575e5771a79ddf07941a7f8b15f638"
+    },
+    {
+      "path": "src/blueprint/AppShell.tsx",
+      "size": 4191,
+      "extension": ".tsx",
+      "lines": 107,
+      "category": "Utility",
+      "hash": "ddff450104b8c19420f9fa1c6cfd367f785dc90a43e6dad805570eadf7bfeb10"
+    },
+    {
+      "path": "src/blueprint/AuthScreen.tsx",
+      "size": 1349,
+      "extension": ".tsx",
+      "lines": 34,
+      "category": "Utility",
+      "hash": "1a59ef64b200ea62ee271d98f277566f6c9a0fa0f6e40a3f3c861d67523b7f33"
+    },
+    {
+      "path": "src/blueprint/components/EmptyState.tsx",
+      "size": 472,
+      "extension": ".tsx",
+      "lines": 17,
+      "category": "Component",
+      "hash": "1ba79c5db82f77489aa45250df31c5ac3d982941a1c40109c6bee3ed44284ac7"
+    },
+    {
+      "path": "src/blueprint/components/ErrorState.tsx",
+      "size": 678,
+      "extension": ".tsx",
+      "lines": 20,
+      "category": "Component",
+      "hash": "61420a4b2110fd0f3a3ccfc4f0e2dc4671bedd0fb9ab937c443cfb574b3003e5"
+    },
+    {
+      "path": "src/blueprint/components/LoadingState.tsx",
+      "size": 479,
+      "extension": ".tsx",
+      "lines": 16,
+      "category": "Component",
+      "hash": "f38845ff18fe31df98493571e19641cd3c33c8a53a68b16269e680707db4ce82"
+    },
+    {
+      "path": "src/blueprint/components/UniversalAiAssistant.tsx",
+      "size": 842,
+      "extension": ".tsx",
+      "lines": 31,
+      "category": "Component",
+      "hash": "ada5bca426b7c0223ba5ea5c4ef69b11d1b1494859732a124fba71f21bc65c7a"
+    },
+    {
+      "path": "src/blueprint/LaunchScreen.tsx",
+      "size": 571,
+      "extension": ".tsx",
+      "lines": 18,
+      "category": "Utility",
+      "hash": "f48e767807dd3d7d501f02afb4323259c0bf1d161153e00d3679cce3e359c674"
+    },
+    {
+      "path": "src/blueprint/OnboardingScreen.tsx",
+      "size": 1334,
+      "extension": ".tsx",
+      "lines": 37,
+      "category": "Utility",
+      "hash": "4e822fb3586565e025056f8701dc9c98d9c03d21f8b1dec49f96b8624f1fcc5c"
+    },
+    {
+      "path": "src/blueprint/pages/AboutPage.tsx",
+      "size": 312,
+      "extension": ".tsx",
+      "lines": 13,
+      "category": "Page",
+      "hash": "e436c46d4dc1e91774926793e8cb762b10db487d1155df201414126cd7fcb426"
+    },
+    {
+      "path": "src/blueprint/pages/FeedbackPage.tsx",
+      "size": 575,
+      "extension": ".tsx",
+      "lines": 14,
+      "category": "Page",
+      "hash": "3bd312fffb2356efbd4945c394503b45af5df18ebc6a8f9ddf5b0066f5817084"
+    },
+    {
+      "path": "src/blueprint/pages/HelpCenterPage.tsx",
+      "size": 1096,
+      "extension": ".tsx",
+      "lines": 26,
+      "category": "Page",
+      "hash": "4b50ab812f8a1577ae02ed1698824d7d90a801627fcb24392d2ac457b935ba59"
+    },
+    {
+      "path": "src/blueprint/pages/HomePage.tsx",
+      "size": 1639,
+      "extension": ".tsx",
+      "lines": 49,
+      "category": "Page",
+      "hash": "97eba1cfef22bc496781e8e5ed42a11f8f50e18ad816a1a1373e1c40b10d61a6"
+    },
+    {
+      "path": "src/blueprint/pages/LegalPage.tsx",
+      "size": 611,
+      "extension": ".tsx",
+      "lines": 12,
+      "category": "Page",
+      "hash": "a0d1e0b0b43640828b4a7720a541c364d74b9b93e81c60d5e8e814ab38ac4dbe"
+    },
+    {
+      "path": "src/blueprint/pages/NotificationsPage.tsx",
+      "size": 2019,
+      "extension": ".tsx",
+      "lines": 47,
+      "category": "Page",
+      "hash": "f81f0c4fb0c36caef3f453c7155ba5b2e2eb84a8b971dcbe849afe1bda9aada2"
+    },
+    {
+      "path": "src/blueprint/pages/ProfilePage.tsx",
+      "size": 824,
+      "extension": ".tsx",
+      "lines": 25,
+      "category": "Page",
+      "hash": "b523b10a3419f32b83baf1ad30b072264219d3b182effba9ca8a415fc82e9415"
+    },
+    {
+      "path": "src/blueprint/pages/SearchPage.tsx",
+      "size": 722,
+      "extension": ".tsx",
+      "lines": 19,
+      "category": "Page",
+      "hash": "0d580956522cb5a7eb9a1f2fb7447d07ecf274c4e5ce129dd2093d7854c63d98"
+    },
+    {
+      "path": "src/blueprint/pages/SettingsPage.tsx",
+      "size": 1601,
+      "extension": ".tsx",
+      "lines": 40,
+      "category": "Page",
+      "hash": "0714d0d37477a318baa76b9fe2050ed516ea613d03e02766ba4649e3062538aa"
+    },
+    {
+      "path": "src/blueprint/WelcomeScreen.tsx",
+      "size": 541,
+      "extension": ".tsx",
+      "lines": 17,
+      "category": "Utility",
+      "hash": "c934b6a356e2b6494142322861baa9fad35ce7aa1fd059fccfc133a4e9e9c132"
+    },
+    {
+      "path": "src/data/data-management-placeholders.ts",
+      "size": 353,
+      "extension": ".ts",
+      "lines": 15,
+      "category": "Utility",
+      "hash": "ee9ad934ba34ea014cb129f37d7927cf7d72db3958e2208daf3ab888806fc04e"
+    },
+    {
+      "path": "src/data/demo-data.ts",
+      "size": 778,
+      "extension": ".ts",
+      "lines": 4,
+      "category": "Utility",
+      "hash": "2fa2ba46d7ecbb3862c4c9a642cac7e1a5d16fa1d9bde25fdc59e7d5b2937bf5"
+    },
+    {
+      "path": "src/features/accessibility-layer/accessibility-layer.module.css",
+      "size": 446,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "521a59025554e5af87adddef6f5426484fbcf99f9229887f6a5083db241c9550"
+    },
+    {
+      "path": "src/features/accessibility-layer/accessibility-layer.service.ts",
+      "size": 731,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "b089d9b3098a90fd89a8ef45781a9d6cd7475d7c4229331f363f29cc29a2f793"
+    },
+    {
+      "path": "src/features/accessibility-layer/accessibility-layer.types.ts",
+      "size": 393,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "f5e99f40e795bee44fbb53217502583906aaaf8afe2176470e24d93611c5168d"
+    },
+    {
+      "path": "src/features/accessibility-layer/accessibility-layer.validation.ts",
+      "size": 771,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "e38ce233f8dc7e2ce093312f0edbac9b9683032d6c3920b353d56259969d10eb"
+    },
+    {
+      "path": "src/features/accessibility-layer/AccessibilityLayerFeature.tsx",
+      "size": 1921,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "c577cd73c09477cc92bf72fb807c3c15c747b968370a58f1ff74ccdcf0c0d4f7"
+    },
+    {
+      "path": "src/features/accessibility-layer/index.ts",
+      "size": 197,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "c7c8c8469a2b544faa452d718a280c767d4c7da979198b6657d80f60693607bb"
+    },
+    {
+      "path": "src/features/accessibility-settings/accessibility-settings.module.css",
+      "size": 449,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "25b7885264ddea074ac441acde074d288c98d448758a662c161e3aa6a8ed0360"
+    },
+    {
+      "path": "src/features/accessibility-settings/accessibility-settings.service.ts",
+      "size": 767,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "aa83b10e2c8f2282ef4ed41f397f9eb26bf633eefee760c7a8141f72ba5dc423"
+    },
+    {
+      "path": "src/features/accessibility-settings/accessibility-settings.types.ts",
+      "size": 402,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "4a59efcaf0589962e077c1913e5858ffd4675efcb57cce4e45fd2e004c0c73dd"
+    },
+    {
+      "path": "src/features/accessibility-settings/accessibility-settings.validation.ts",
+      "size": 798,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "f74a39b79189390cc18cb835728283aec248eb566ba684e7fdac196e0740de25"
+    },
+    {
+      "path": "src/features/accessibility-settings/AccessibilitySettingsFeature.tsx",
+      "size": 1839,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "4f42fc5c14a240dd14c62104b9bd96c5377bdd3d3bebd4187ac3b505b469ca13"
+    },
+    {
+      "path": "src/features/accessibility-settings/index.ts",
+      "size": 209,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "23fc1bbf01fe062eb8e4999999cd91f57b024f2403afbcc51ef641065f3b5e22"
+    },
+    {
+      "path": "src/features/auth/auth.module.css",
+      "size": 431,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "1072ed7dfe2f19e903fcad88a7457b3ed3f8c316c40396964176ddc0ddec5a95"
+    },
+    {
+      "path": "src/features/auth/auth.service.ts",
+      "size": 555,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "9b2d474a33b05ae03255adda38fc21c2715d1ef653d9b2cc66c299eec8bc242e"
+    },
+    {
+      "path": "src/features/auth/auth.types.ts",
+      "size": 350,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "8c4d7bce482bf54101d3c646299e560fb55966531efa98e90012ddd61d647a57"
+    },
+    {
+      "path": "src/features/auth/auth.validation.ts",
+      "size": 637,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "d22718ad7f84e0c6f6e745589fdf3ab880767b2133e67fa393f048ba275b2c34"
+    },
+    {
+      "path": "src/features/auth/AuthFeature.tsx",
+      "size": 1548,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "91ceace48e48ac87b4624f482aeaae177249f80183fc7c61e597876af54cc1f8"
+    },
+    {
+      "path": "src/features/auth/index.ts",
+      "size": 138,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "46d9817d0714b7db7e70656e219135cab30c7c64cfa96df7c97d49cab1f27e9b"
+    },
+    {
+      "path": "src/features/blink-input-engine/blink-input-engine.module.css",
+      "size": 445,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "f4243edde69a6f575dddeb84d3819af30cb2b26d637b0512c67e1c4641385697"
+    },
+    {
+      "path": "src/features/blink-input-engine/blink-input-engine.service.ts",
+      "size": 715,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "2c67676c53c126b24785d420758c3c031bbeb70386f3df7988ecc9f43c68bf3f"
+    },
+    {
+      "path": "src/features/blink-input-engine/blink-input-engine.types.ts",
+      "size": 388,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "26928b9699c44da86af81b0f1dd4ac14b38a5a3b23d1b509b310c55b2cf97041"
+    },
+    {
+      "path": "src/features/blink-input-engine/blink-input-engine.validation.ts",
+      "size": 761,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "207d33ce557312a1d32bc7548869c7606632a187f051dae1b5ffbab4be6bbcab"
+    },
+    {
+      "path": "src/features/blink-input-engine/BlinkInputEngineFeature.tsx",
+      "size": 1783,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "36e78cbf2abce87d825573be560b201507594b639fe9749140302d70a944868d"
+    },
+    {
+      "path": "src/features/blink-input-engine/index.ts",
+      "size": 192,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "f9887bad0bf915a20c9f4bb8fac24cf9f290b9a3fda6fdd4ce2bb553183be784"
+    },
+    {
+      "path": "src/features/caregiver-dashboard/caregiver-dashboard.module.css",
+      "size": 446,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "c9ce4afd679c9da63131a112175fc1946e49f0a04b3989a35402437571742827"
+    },
+    {
+      "path": "src/features/caregiver-dashboard/caregiver-dashboard.service.ts",
+      "size": 731,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "caedb49b99d57ece6464b6433fca2b6a5c37995364055a3f85889ef14bec2692"
+    },
+    {
+      "path": "src/features/caregiver-dashboard/caregiver-dashboard.types.ts",
+      "size": 393,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "8df12542e1bbbc22c3882427b30c85a4f4f9dfb0bf8c7598ebbb53590db99cf3"
+    },
+    {
+      "path": "src/features/caregiver-dashboard/caregiver-dashboard.validation.ts",
+      "size": 771,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "c91c1347b4d86d7c7fb488ab99e72fa24438f9f438ead022757ff443fd26e200"
+    },
+    {
+      "path": "src/features/caregiver-dashboard/CaregiverDashboardFeature.tsx",
+      "size": 1792,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "082acfc8ad567320f65a05ad8783e89723e6df339e55d27bbeaaa5fe3a7645df"
+    },
+    {
+      "path": "src/features/caregiver-dashboard/index.ts",
+      "size": 197,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "e830e9909a73ebefae6ea41e65517f11b1b63e689536120a1872e04961e11cf7"
+    },
+    {
+      "path": "src/features/communication-history/communication-history.module.css",
+      "size": 448,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "9800449a6d6ab3614403efb49448ec13a4527d73604c2538eba1cd673b7569f5"
+    },
+    {
+      "path": "src/features/communication-history/communication-history.service.ts",
+      "size": 755,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "f2e82d2adbe2167c12ededb7a33b180b1ad71452bb71cb13095f372e4bc04a1d"
+    },
+    {
+      "path": "src/features/communication-history/communication-history.types.ts",
+      "size": 399,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "d39d892ea63c60c7c79962e8223e71f48cd359cc2f9f44e4e50a763961061f8d"
+    },
+    {
+      "path": "src/features/communication-history/communication-history.validation.ts",
+      "size": 789,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "531760671a61084e09de1f276ea9ff27bf576661084c17146ab3313139b4476c"
+    },
+    {
+      "path": "src/features/communication-history/CommunicationHistoryFeature.tsx",
+      "size": 1808,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "ce3dac552f4d769f84fda7982d7adfac0095e37a40de36060884b21effd7dfde"
+    },
+    {
+      "path": "src/features/communication-history/index.ts",
+      "size": 205,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "e82a5efe244cb7eeff0cc9039a437ec4abc9600cfc5aea31a68c1f1b52138086"
+    },
+    {
+      "path": "src/features/csv-export/csv-export.module.css",
+      "size": 437,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "1c4b89281bf458ab2bdd6d55c0a4e26ed477cfa043523e9ed1be81b641931c01"
+    },
+    {
+      "path": "src/features/csv-export/csv-export.service.ts",
+      "size": 623,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "441bc2a29ee5887da230e8e8558a8b8f58f146ab4c60e2f55e262ed1750b4cd6"
+    },
+    {
+      "path": "src/features/csv-export/csv-export.types.ts",
+      "size": 366,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "13a7d5c1dfd06d5352f22afc23debfd21984786e5cc50c8db7b37c4dafcb7a17"
+    },
+    {
+      "path": "src/features/csv-export/csv-export.validation.ts",
+      "size": 690,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "8494ad33d8682fd1bf2012ca000f48a18a7439d500da65a8b62b8ad370230bff"
+    },
+    {
+      "path": "src/features/csv-export/CsvExportFeature.tsx",
+      "size": 1759,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "1c77784d4b9d854756ef2deb74413754c9dd65535fbe9a8817b5636273bdcc71"
+    },
+    {
+      "path": "src/features/csv-export/index.ts",
+      "size": 161,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "37e6c3a2ccc02530d363c2da1340a53a77c3e7325bfc26a229225d05a9b6af19"
+    },
+    {
+      "path": "src/features/emergency-speech/emergency-speech.module.css",
+      "size": 443,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "189ed059af587d29269ed7e9cef90716ee0fb23995e5f9def74260d5951346fa"
+    },
+    {
+      "path": "src/features/emergency-speech/emergency-speech.service.ts",
+      "size": 695,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "99d6e0fc17b76eaa23a68697963237aca7c5be19363919fab9a9d6c2ff572a22"
+    },
+    {
+      "path": "src/features/emergency-speech/emergency-speech.types.ts",
+      "size": 384,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "64afb8a3fc260430920b1751ac99070fcf07af1a990c43ccb002404734f25f88"
+    },
+    {
+      "path": "src/features/emergency-speech/emergency-speech.validation.ts",
+      "size": 744,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "b537210444b8c74deabce142b999e3257a058cb71db89a780e73894097b82ffa"
+    },
+    {
+      "path": "src/features/emergency-speech/EmergencySpeechFeature.tsx",
+      "size": 1719,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "a7cdf175ac1105625aae591e83da4ff261068e2c2a4820c8e06e3db7d85674b6"
+    },
+    {
+      "path": "src/features/emergency-speech/index.ts",
+      "size": 185,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "0eac8873fe2a08c7565ccd3948e63d57100a6de8cdae75f5fb5876f0079841e1"
+    },
+    {
+      "path": "src/features/eye-tracking-board/eye-tracking-board.module.css",
+      "size": 445,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "05254230922dd61d7a11dae30fde8b58dea4f187a8b7ac495d0c4241eb3bbe53"
+    },
+    {
+      "path": "src/features/eye-tracking-board/eye-tracking-board.service.ts",
+      "size": 715,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "4dc1f690dc053457fc23c3a9e82a673fbd3d2ceac4e1c6d80078bf135b1c337b"
+    },
+    {
+      "path": "src/features/eye-tracking-board/eye-tracking-board.types.ts",
+      "size": 388,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "8d96c1a0057a32e49093fe936ac441b2f6f8c8c212ba6317a062c0dac870a8b7"
+    },
+    {
+      "path": "src/features/eye-tracking-board/eye-tracking-board.validation.ts",
+      "size": 761,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "32d16e4fb8052a28e0176875b82a5a794e0696b068a551de460314464f561e7f"
+    },
+    {
+      "path": "src/features/eye-tracking-board/EyeTrackingBoardFeature.tsx",
+      "size": 1776,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "029a07e0ff197db4a62d599b3c530cb1fd041f596a76e9aaa46ab16d0896aa93"
+    },
+    {
+      "path": "src/features/eye-tracking-board/index.ts",
+      "size": 192,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "3cb4eec131921bf1bf160ba0bfb25f35203a0941390ba6bdfaf6215fc8b5563a"
+    },
+    {
+      "path": "src/features/feature-app-router.css",
+      "size": 1474,
+      "extension": ".css",
+      "lines": 34,
+      "category": "Style",
+      "hash": "c816a6cd1673b4fd0a204f1b1176c0d4094738efa92850b28d1fe985343d86d4"
+    },
+    {
+      "path": "src/features/FeatureAppRouter.tsx",
+      "size": 5693,
+      "extension": ".tsx",
+      "lines": 141,
+      "category": "Feature",
+      "hash": "3699363028dfac3e07104cb42419bd57e1c198ddea9e8e322e5979f724af931f"
+    },
+    {
+      "path": "src/features/filter-ui/filter-ui.module.css",
+      "size": 436,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "f0048c12eb90772a6cb5a3879116f6a84c140018a58233dfa13a25e6537c5b93"
+    },
+    {
+      "path": "src/features/filter-ui/filter-ui.service.ts",
+      "size": 611,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "88fc36cf15e7513192b16e7571f6a7541f54d876c7700c2932ca1a412b050586"
+    },
+    {
+      "path": "src/features/filter-ui/filter-ui.types.ts",
+      "size": 363,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "c1f55eb6b0b3bc4772cd139e1e9fce46fb4c98ea0eb0bc044c22dd82cd64611f"
+    },
+    {
+      "path": "src/features/filter-ui/filter-ui.validation.ts",
+      "size": 681,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "ab7fdc68401e75ad91690b1b20b2039b9739d859f545146d1f9c2cf311c7db8c"
+    },
+    {
+      "path": "src/features/filter-ui/FilterUiFeature.tsx",
+      "size": 1741,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "bf1d68b4b22d6593d519a4a82b68e485da5238712a4e3bfd5db4a4e5cf7437ea"
+    },
+    {
+      "path": "src/features/filter-ui/index.ts",
+      "size": 157,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "ec0e8e158feae8f54dca2453a175a7f4160da79d65c7a7d48b352a8b02993dd3"
+    },
+    {
+      "path": "src/features/gaze-keyboard/gaze-keyboard.module.css",
+      "size": 440,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "5ba1bcc59dc07f0921115edf99342673bddfe5a0b2a7787764da0dbe04fd7982"
+    },
+    {
+      "path": "src/features/gaze-keyboard/gaze-keyboard.service.ts",
+      "size": 659,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "b2edd987485a1030c52aefbc27f6473e1a782b024160eb245dcbc245e2d95e8f"
+    },
+    {
+      "path": "src/features/gaze-keyboard/gaze-keyboard.types.ts",
+      "size": 375,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "877e4e76d7e1757a859ff5767c17820def7192b8a2d2a66c853a806b6d56d6a9"
+    },
+    {
+      "path": "src/features/gaze-keyboard/gaze-keyboard.validation.ts",
+      "size": 717,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "9ebc13ff2bb94576680cc89bcc9b94173193e22de0554d3e0bbc9d4ec48b0da1"
+    },
+    {
+      "path": "src/features/gaze-keyboard/GazeKeyboardFeature.tsx",
+      "size": 1697,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "723c82c35f35db23f042bd489f3ad38dc9149b624a20f0c5b3a07a580ff0691a"
+    },
+    {
+      "path": "src/features/gaze-keyboard/index.ts",
+      "size": 173,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "a71119175df0e92e44c136e215ae8b4373f94b736462ee0ae891219701f4ff94"
+    },
+    {
+      "path": "src/features/navigation-router/index.ts",
+      "size": 189,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "bcb0fdb947901a447511ab7d495782208d6d492e07f11b23885e70fd1db15c71"
+    },
+    {
+      "path": "src/features/navigation-router/navigation-router.module.css",
+      "size": 444,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "f17eb3d8f24fbe2c10d0b1e937bc5e4a1516d79d1a40bb66a2e660bbe61b5012"
+    },
+    {
+      "path": "src/features/navigation-router/navigation-router.service.ts",
+      "size": 707,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "32d44ff70949a4c4c6b7ad32ce24314b506b14e7e844125110a3a11b166c5a85"
+    },
+    {
+      "path": "src/features/navigation-router/navigation-router.types.ts",
+      "size": 387,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "52c34e53f921d1b261fadb0703e01e7e402106e5f9ce8e8fce7ad8ebbe87dbee"
+    },
+    {
+      "path": "src/features/navigation-router/navigation-router.validation.ts",
+      "size": 753,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "a0bb4caf71ab8cade30b910fd5ffc53467a32d2f27b136ab8c8bdd87be18d8ca"
+    },
+    {
+      "path": "src/features/navigation-router/NavigationRouterFeature.tsx",
+      "size": 1885,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "cb3dffa59db7d29896a036360097fdfedb04649eca4e8a57cdbe6968b3e13b77"
+    },
+    {
+      "path": "src/features/onboarding-calibration/index.ts",
+      "size": 209,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "495130cebd6e27d08777b17908583890508e0201027246c5078d7814a71fc7d8"
+    },
+    {
+      "path": "src/features/onboarding-calibration/onboarding-calibration.module.css",
+      "size": 449,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "397a1c50bab8a99cd8a56327d86f085e30e549672a77fb5b86725b5d3048b15b"
+    },
+    {
+      "path": "src/features/onboarding-calibration/onboarding-calibration.service.ts",
+      "size": 767,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "1bc972a96bce39fa7ad16f30729bbb0afcc48ef98640e8ada4b2cf6a17f42a52"
+    },
+    {
+      "path": "src/features/onboarding-calibration/onboarding-calibration.types.ts",
+      "size": 402,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "c82f67f896e89120d71ed8ada31f7653bedce3bde5b2ec8a7e973598fff7f120"
+    },
+    {
+      "path": "src/features/onboarding-calibration/onboarding-calibration.validation.ts",
+      "size": 798,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "951b0b5cb2b869195ed7f3d1aa50942ddb2ca44f150e7b663aa56f0a05aed8e7"
+    },
+    {
+      "path": "src/features/onboarding-calibration/OnboardingCalibrationFeature.tsx",
+      "size": 1875,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "303ebac9eda8a7fefa4134f44ea7257b4c8a1011111e9ec3f6d6ec92bd8ac046"
+    },
+    {
+      "path": "src/features/quick-phrases/index.ts",
+      "size": 173,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "a37ecbf1bb41f60fac44955b69913475e2f3d04dfd57505cd700bc44def5e872"
+    },
+    {
+      "path": "src/features/quick-phrases/quick-phrases.module.css",
+      "size": 440,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "205f67037d189b9394d0f214946fd7c6e44144ebe5be71f4b8510c77fba4ee0f"
+    },
+    {
+      "path": "src/features/quick-phrases/quick-phrases.service.ts",
+      "size": 659,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "f01ee7ded9b836226f4028de64551d83b6f8a9a4e8f8f7552b67b6658074d303"
+    },
+    {
+      "path": "src/features/quick-phrases/quick-phrases.types.ts",
+      "size": 375,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "d27f8fc1556ba6db417dd962d5d3429b2d4a4dd71478cdf7c0c6829cd7b6a51a"
+    },
+    {
+      "path": "src/features/quick-phrases/quick-phrases.validation.ts",
+      "size": 717,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "61c2a4f476686ae548e83e561bb4eca607f536eb1e0c576b85492ac817f270ab"
+    },
+    {
+      "path": "src/features/quick-phrases/QuickPhrasesFeature.tsx",
+      "size": 1673,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "343692f2232a0e23a676a6365679b3cec8230305767891260198033642546e99"
+    },
+    {
+      "path": "src/features/registry.ts",
+      "size": 6185,
+      "extension": ".ts",
+      "lines": 175,
+      "category": "Route",
+      "hash": "2b6be051a6c14b4d7c4ede76043b30c21d041d17905ab6d6c2ba432e171cfb28"
+    },
+    {
+      "path": "src/features/routes.ts",
+      "size": 417,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Route",
+      "hash": "b9faa358162b58f2688051cf166e30a1d387c2ac1ce46241f1110ee84afce0b1"
+    },
+    {
+      "path": "src/features/text-to-speech/index.ts",
+      "size": 176,
+      "extension": ".ts",
+      "lines": 5,
+      "category": "Utility",
+      "hash": "2a8df2b020f403da90a81330e83108a725b0d852b2c65a313f8fa683db7ec46c"
+    },
+    {
+      "path": "src/features/text-to-speech/text-to-speech.module.css",
+      "size": 441,
+      "extension": ".css",
+      "lines": 7,
+      "category": "Style",
+      "hash": "20ded107ffd0f44600a35d5270a4a2f6b4dd3f438cbd452b6d9c548ecbca9bfc"
+    },
+    {
+      "path": "src/features/text-to-speech/text-to-speech.service.ts",
+      "size": 667,
+      "extension": ".ts",
+      "lines": 12,
+      "category": "Service",
+      "hash": "a6a83db4f964cf39dd1199c6faa6307326ea707e7453c701722b286a1b4be1e8"
+    },
+    {
+      "path": "src/features/text-to-speech/text-to-speech.types.ts",
+      "size": 376,
+      "extension": ".ts",
+      "lines": 11,
+      "category": "Model",
+      "hash": "a30f5bc64b38344f83baac28bb7a0bdbcf01929b80a6ed64f3f38cbc884a0c25"
+    },
+    {
+      "path": "src/features/text-to-speech/text-to-speech.validation.ts",
+      "size": 725,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Validation",
+      "hash": "9d6d8439d84d3f39d75369e3afe34f6818df29d3d0769bead8b6e62da17eba17"
+    },
+    {
+      "path": "src/features/text-to-speech/TextToSpeechFeature.tsx",
+      "size": 1687,
+      "extension": ".tsx",
+      "lines": 42,
+      "category": "Feature",
+      "hash": "490f5202fa5237376ce8d47b21fba74de8f10c2ea498dc394625d36b58a61d82"
+    },
+    {
+      "path": "src/main.tsx",
+      "size": 339,
+      "extension": ".tsx",
+      "lines": 14,
+      "category": "Utility",
+      "hash": "9a444897ca5a5b242409a82d4109b7229f2bff01ed0f4d26a39cd16f12e1d36a"
+    },
+    {
+      "path": "src/monetization/monetization-placeholders.ts",
+      "size": 517,
+      "extension": ".ts",
+      "lines": 17,
+      "category": "Utility",
+      "hash": "bde039683ff6cf486af5d02b2022daa0083717c68f8e109bb2b821797573401f"
+    },
+    {
+      "path": "src/screens/index.ts",
+      "size": 76,
+      "extension": ".ts",
+      "lines": 2,
+      "category": "Utility",
+      "hash": "79bcc71026f2e849b75a448da42ca0ed371b809893836d96f727a1b0ffc6f2d1"
+    },
+    {
+      "path": "src/security/security-placeholders.ts",
+      "size": 389,
+      "extension": ".ts",
+      "lines": 14,
+      "category": "Utility",
+      "hash": "908388d3dc8e6089eb69cd5f8e67ec5ecfbb9a3718949bee68d7cd9f0fd45ac2"
+    },
+    {
+      "path": "src/server/index.ts",
+      "size": 64,
+      "extension": ".ts",
+      "lines": 3,
+      "category": "Utility",
+      "hash": "83f89a9e2b25c1c5f5fc150571e1d1b87af22d7a4501dc3b9e39c1d96947034b"
+    },
+    {
+      "path": "src/server/routes.ts",
+      "size": 64,
+      "extension": ".ts",
+      "lines": 3,
+      "category": "Route",
+      "hash": "83f89a9e2b25c1c5f5fc150571e1d1b87af22d7a4501dc3b9e39c1d96947034b"
+    },
+    {
+      "path": "src/styles/global.css",
+      "size": 78,
+      "extension": ".css",
+      "lines": 3,
+      "category": "Style",
+      "hash": "cc35dd98ae20865a2c8c93b08c1fe75f1ad91a1ed0fde00c1311ee01122a4f09"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "size": 38,
+      "extension": ".ts",
+      "lines": 2,
+      "category": "Utility",
+      "hash": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "tsconfig.json",
+      "size": 441,
+      "extension": ".json",
+      "lines": 24,
+      "category": "Config",
+      "hash": "d1a721a991c9465c88007b98ef55de1cca1b1070456467575228e74a64a41d52"
+    },
+    {
+      "path": "tsconfig.node.json",
+      "size": 180,
+      "extension": ".json",
+      "lines": 12,
+      "category": "Config",
+      "hash": "17c275c4dd5c7f8b736f7a252d1324984cc4d473fa765adf6fba826605c6a413"
+    },
+    {
+      "path": "universal-feature-contract.json",
+      "size": 8259,
+      "extension": ".json",
+      "lines": 85,
+      "category": "Config",
+      "hash": "b72bb64faa9617dfb69dfc911a878c408f35806f6be7e29798304e2d3aa085df"
+    },
+    {
+      "path": "verification/build-verification.json",
+      "size": 99,
+      "extension": ".json",
+      "lines": 6,
+      "category": "Config",
+      "hash": "a1708c3a9b9a5a669354ca6cdeb79db9efa8d02a146404b034e58f096d480bb4"
+    },
+    {
+      "path": "verification/run-verify.mjs",
+      "size": 1961,
+      "extension": ".mjs",
+      "lines": 60,
+      "category": "Utility",
+      "hash": "cd4d39f81ffa121f4cdb0fc7756b96d6886b816e400d8eef4bb6a1e700336c92"
+    },
+    {
+      "path": "vite.config.ts",
+      "size": 200,
+      "extension": ".ts",
+      "lines": 8,
+      "category": "Config",
+      "hash": "c5d511519db4810412b22e3afbfff272e486b68ec7a1883d306165f8a972ba89"
+    }
+  ],
+  "generatedDirectories": [
+    "runtime",
+    "src",
+    "src/analytics",
+    "src/auth",
+    "src/blueprint",
+    "src/blueprint/components",
+    "src/blueprint/pages",
+    "src/data",
+    "src/features",
+    "src/features/accessibility-layer",
+    "src/features/accessibility-settings",
+    "src/features/auth",
+    "src/features/blink-input-engine",
+    "src/features/caregiver-dashboard",
+    "src/features/communication-history",
+    "src/features/csv-export",
+    "src/features/emergency-speech",
+    "src/features/eye-tracking-board",
+    "src/features/filter-ui",
+    "src/features/gaze-keyboard",
+    "src/features/navigation-router",
+    "src/features/onboarding-calibration",
+    "src/features/quick-phrases",
+    "src/features/text-to-speech",
+    "src/monetization",
+    "src/screens",
+    "src/security",
+    "src/server",
+    "src/styles",
+    "verification"
+  ],
+  "generatedFeatureModuleFiles": [
+    "src/features/accessibility-layer/accessibility-layer.module.css",
+    "src/features/accessibility-layer/accessibility-layer.service.ts",
+    "src/features/accessibility-layer/accessibility-layer.types.ts",
+    "src/features/accessibility-layer/accessibility-layer.validation.ts",
+    "src/features/accessibility-layer/AccessibilityLayerFeature.tsx",
+    "src/features/accessibility-layer/index.ts",
+    "src/features/accessibility-settings/accessibility-settings.module.css",
+    "src/features/accessibility-settings/accessibility-settings.service.ts",
+    "src/features/accessibility-settings/accessibility-settings.types.ts",
+    "src/features/accessibility-settings/accessibility-settings.validation.ts",
+    "src/features/accessibility-settings/AccessibilitySettingsFeature.tsx",
+    "src/features/accessibility-settings/index.ts",
+    "src/features/auth/auth.module.css",
+    "src/features/auth/auth.service.ts",
+    "src/features/auth/auth.types.ts",
+    "src/features/auth/auth.validation.ts",
+    "src/features/auth/AuthFeature.tsx",
+    "src/features/auth/index.ts",
+    "src/features/blink-input-engine/blink-input-engine.module.css",
+    "src/features/blink-input-engine/blink-input-engine.service.ts",
+    "src/features/blink-input-engine/blink-input-engine.types.ts",
+    "src/features/blink-input-engine/blink-input-engine.validation.ts",
+    "src/features/blink-input-engine/BlinkInputEngineFeature.tsx",
+    "src/features/blink-input-engine/index.ts",
+    "src/features/caregiver-dashboard/caregiver-dashboard.module.css",
+    "src/features/caregiver-dashboard/caregiver-dashboard.service.ts",
+    "src/features/caregiver-dashboard/caregiver-dashboard.types.ts",
+    "src/features/caregiver-dashboard/caregiver-dashboard.validation.ts",
+    "src/features/caregiver-dashboard/CaregiverDashboardFeature.tsx",
+    "src/features/caregiver-dashboard/index.ts",
+    "src/features/communication-history/communication-history.module.css",
+    "src/features/communication-history/communication-history.service.ts",
+    "src/features/communication-history/communication-history.types.ts",
+    "src/features/communication-history/communication-history.validation.ts",
+    "src/features/communication-history/CommunicationHistoryFeature.tsx",
+    "src/features/communication-history/index.ts",
+    "src/features/csv-export/csv-export.module.css",
+    "src/features/csv-export/csv-export.service.ts",
+    "src/features/csv-export/csv-export.types.ts",
+    "src/features/csv-export/csv-export.validation.ts",
+    "src/features/csv-export/CsvExportFeature.tsx",
+    "src/features/csv-export/index.ts",
+    "src/features/emergency-speech/emergency-speech.module.css",
+    "src/features/emergency-speech/emergency-speech.service.ts",
+    "src/features/emergency-speech/emergency-speech.types.ts",
+    "src/features/emergency-speech/emergency-speech.validation.ts",
+    "src/features/emergency-speech/EmergencySpeechFeature.tsx",
+    "src/features/emergency-speech/index.ts",
+    "src/features/eye-tracking-board/eye-tracking-board.module.css",
+    "src/features/eye-tracking-board/eye-tracking-board.service.ts",
+    "src/features/eye-tracking-board/eye-tracking-board.types.ts",
+    "src/features/eye-tracking-board/eye-tracking-board.validation.ts",
+    "src/features/eye-tracking-board/EyeTrackingBoardFeature.tsx",
+    "src/features/eye-tracking-board/index.ts",
+    "src/features/feature-app-router.css",
+    "src/features/filter-ui/filter-ui.module.css",
+    "src/features/filter-ui/filter-ui.service.ts",
+    "src/features/filter-ui/filter-ui.types.ts",
+    "src/features/filter-ui/filter-ui.validation.ts",
+    "src/features/filter-ui/FilterUiFeature.tsx",
+    "src/features/filter-ui/index.ts",
+    "src/features/gaze-keyboard/gaze-keyboard.module.css",
+    "src/features/gaze-keyboard/gaze-keyboard.service.ts",
+    "src/features/gaze-keyboard/gaze-keyboard.types.ts",
+    "src/features/gaze-keyboard/gaze-keyboard.validation.ts",
+    "src/features/gaze-keyboard/GazeKeyboardFeature.tsx",
+    "src/features/gaze-keyboard/index.ts",
+    "src/features/navigation-router/index.ts",
+    "src/features/navigation-router/navigation-router.module.css",
+    "src/features/navigation-router/navigation-router.service.ts",
+    "src/features/navigation-router/navigation-router.types.ts",
+    "src/features/navigation-router/navigation-router.validation.ts",
+    "src/features/navigation-router/NavigationRouterFeature.tsx",
+    "src/features/onboarding-calibration/index.ts",
+    "src/features/onboarding-calibration/onboarding-calibration.module.css",
+    "src/features/onboarding-calibration/onboarding-calibration.service.ts",
+    "src/features/onboarding-calibration/onboarding-calibration.types.ts",
+    "src/features/onboarding-calibration/onboarding-calibration.validation.ts",
+    "src/features/onboarding-calibration/OnboardingCalibrationFeature.tsx",
+    "src/features/quick-phrases/index.ts",
+    "src/features/quick-phrases/quick-phrases.module.css",
+    "src/features/quick-phrases/quick-phrases.service.ts",
+    "src/features/quick-phrases/quick-phrases.types.ts",
+    "src/features/quick-phrases/quick-phrases.validation.ts",
+    "src/features/quick-phrases/QuickPhrasesFeature.tsx",
+    "src/features/text-to-speech/index.ts",
+    "src/features/text-to-speech/text-to-speech.module.css",
+    "src/features/text-to-speech/text-to-speech.service.ts",
+    "src/features/text-to-speech/text-to-speech.types.ts",
+    "src/features/text-to-speech/text-to-speech.validation.ts",
+    "src/features/text-to-speech/TextToSpeechFeature.tsx"
+  ],
+  "featureModuleDirectories": [
+    "src/features/accessibility-layer",
+    "src/features/accessibility-settings",
+    "src/features/auth",
+    "src/features/blink-input-engine",
+    "src/features/caregiver-dashboard",
+    "src/features/communication-history",
+    "src/features/csv-export",
+    "src/features/emergency-speech",
+    "src/features/eye-tracking-board",
+    "src/features/filter-ui",
+    "src/features/gaze-keyboard",
+    "src/features/navigation-router",
+    "src/features/onboarding-calibration",
+    "src/features/quick-phrases",
+    "src/features/text-to-speech"
+  ],
+  "workspaceHash": "29f174ff134009b6adb6483e277d0e6c22ab61fd6aed30bf557a1596d7d17cb4",
+  "generatedFilesCount": 141,
+  "generatedDirectoriesCount": 30
+}

@@ -11,13 +11,13 @@ export function getDevPulseV2LaunchReadinessAuthorityV2(): {
   ownerModule: string;
   passToken: string;
   phase: number;
-  simulationOnly: true;
+  enforcementAuthority: true;
 } {
   return {
     ownerModule: LAUNCH_READINESS_AUTHORITY_V2_OWNER_MODULE,
     passToken: LAUNCH_READINESS_AUTHORITY_V2_PASS_TOKEN,
     phase: 12,
-    simulationOnly: true,
+    enforcementAuthority: true,
   };
 }
 

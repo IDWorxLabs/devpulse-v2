@@ -6,6 +6,15 @@
 import type { OnePromptLivePreviewBuildResult } from './one-prompt-live-preview-types.js';
 import { composeOnePromptBuildChatResponse, getOnePromptLivePreviewPublicState } from './one-prompt-build-orchestrator.js';
 import { analyzeBuildProfileClassification } from '../build-result-conversational-intelligence/build-result-classification-evidence.js';
+import {
+  buildAeeControlledResponseEnvelope,
+  buildAeeControlledTraceEvent,
+  composeAeeAwareBuildChatResponse,
+  deriveAeeFinalReportFromDecision,
+  refineProfileClassificationForAeeBuild,
+  BUILD_RESPONSE_SOURCE_AEE_CONTROLLED,
+} from '../autonomous-engineering-executive/index.js';
+import { summarizeAelEvidenceForResponse } from '../autonomous-engineering-loop/index.js';
 import { rankBuildProfiles } from '../build-profile-classification/index.js';
 import { buildOnePromptLivePreviewWorkspaceSync } from './canonical-live-preview-state.js';
 import { getPreviewRuntimeDiagnostics, listPreviewSessions, listPreviewTargets } from '../live-preview-runtime/index.js';
@@ -30,8 +39,16 @@ export function composeOnePromptBuildBrainApiPayload(input: {
   message: string;
   buildResult: OnePromptLivePreviewBuildResult;
 }): Record<string, unknown> {
-  const buildLivePreview = getOnePromptLivePreviewPublicState(input.buildResult.projectId);
-  const brainResponse = composeOnePromptBuildChatResponse(input.buildResult);
+  const buildResult: OnePromptLivePreviewBuildResult = {
+    ...input.buildResult,
+    aeeFinalReport:
+      input.buildResult.aeeFinalReport ??
+      deriveAeeFinalReportFromDecision(
+        input.buildResult,
+        input.buildResult.aeeExecutiveDecision ?? null,
+      ),
+  };
+  const buildLivePreview = getOnePromptLivePreviewPublicState(buildResult.projectId);
   const previewDiag = getPreviewRuntimeDiagnostics();
   const sessions = listPreviewSessions();
   const targets = listPreviewTargets();
@@ -87,50 +104,78 @@ export function composeOnePromptBuildBrainApiPayload(input: {
     },
   );
 
-  const buildRun = getBuildIntentRun(input.buildResult.buildId);
+  const buildRun = getBuildIntentRun(buildResult.buildId);
   const ranking = rankBuildProfiles(input.message);
-  const classificationEvidence = analyzeBuildProfileClassification(
-    input.message,
-    input.buildResult.generatedProfile,
+  const classificationEvidence = refineProfileClassificationForAeeBuild(
+    buildResult,
+    analyzeBuildProfileClassification(input.message, buildResult.generatedProfile),
   );
+  const aeeControlledResponse = buildAeeControlledResponseEnvelope(buildResult);
+  const aeeTraceEvent = buildAeeControlledTraceEvent(buildResult);
 
-  const executionTraceEvents = buildOnePromptExecutionTraceEvents(
-    input.buildResult,
-    input.message,
-  );
+  const executionTraceEvents = [
+    ...buildOnePromptExecutionTraceEvents(buildResult, input.message),
+    {
+      eventId: `${buildResult.buildId}-trace-aee-response-source`,
+      timestamp: Date.parse(buildResult.updatedAt) || Date.now(),
+      runtimeStage: 'Build',
+      component: 'autonomous_engineering_executive',
+      severity: 'INFO' as const,
+      eventTitle: aeeTraceEvent.eventTitle,
+      technicalDetail: aeeTraceEvent.technicalDetail,
+      status: 'Completed' as const,
+      metadata: aeeTraceEvent.metadata,
+      informationalOnly: true,
+      section: 'Build',
+      action: aeeTraceEvent.eventTitle,
+      detail: aeeTraceEvent.technicalDetail,
+      stepIndex: 0,
+      stepTotal: 0,
+    },
+  ];
   const executionTraceEvidence = buildOnePromptExecutionTraceEvidence(
-    input.buildResult,
+    buildResult,
     input.message,
   );
   const operatorFeedEvents = executionTraceEventsToOperatorFeed(executionTraceEvents);
 
   return {
-    responseId: `brain-build-${input.buildResult.buildId}`,
+    responseId: `brain-build-${buildResult.buildId}`,
     userMessage: input.message,
-    brainResponse,
+    brainResponse: composeAeeAwareBuildChatResponse(buildResult),
     category: 'BUILD',
-    buildRunId: input.buildResult.buildId,
-    activeProjectId: input.buildResult.projectId ?? getActiveProjectId(),
+    buildResponseSource: BUILD_RESPONSE_SOURCE_AEE_CONTROLLED,
+    aeeControlledResponse,
+    aeeExecutiveDecision: buildResult.aeeExecutiveDecision ?? null,
+    aeeFinalReport: buildResult.aeeFinalReport ?? null,
+    aelEvidence:
+      buildResult.aelReport && buildResult.aelEvidence
+        ? summarizeAelEvidenceForResponse(buildResult.aelEvidence, buildResult.aelReport)
+        : null,
+    aelReport: buildResult.aelReport ?? null,
+    aelFinalOutcome: buildResult.aelFinalOutcome ?? null,
+    buildRunId: buildResult.buildId,
+    activeProjectId: buildResult.projectId ?? getActiveProjectId(),
     multiProjectWorkspaces: listMultiProjectWorkspaces(),
     buildExecution: {
-      buildRunId: input.buildResult.buildId,
-      projectId: input.buildResult.projectId,
-      projectName: input.buildResult.projectName,
-      status: input.buildResult.status,
-      stage: buildRun?.stage ?? input.buildResult.status,
-      workspacePath: input.buildResult.workspacePath,
-      previewUrl: input.buildResult.previewUrl,
-      generatedProfile: input.buildResult.generatedProfile,
+      buildRunId: buildResult.buildId,
+      projectId: buildResult.projectId,
+      projectName: buildResult.projectName,
+      status: buildResult.status,
+      stage: buildRun?.stage ?? buildResult.status,
+      workspacePath: buildResult.workspacePath,
+      previewUrl: buildResult.previewUrl,
+      generatedProfile: buildResult.generatedProfile,
       planTaskCount: buildRun?.planTaskCount ?? null,
       architectureSummary: buildRun?.architectureSummary ?? null,
-      livePreviewPending: input.buildResult.status === 'BUILDING',
-      livePreviewAvailable: input.buildResult.livePreviewAvailable,
+      livePreviewPending: buildResult.status === 'BUILDING',
+      livePreviewAvailable: buildResult.livePreviewAvailable,
     },
     classification: classificationEvidence,
     profileAlignment: {
       verdict: classificationEvidence.alignmentVerdict,
       reason: classificationEvidence.alignmentReason,
-      selectedProfile: input.buildResult.generatedProfile,
+      selectedProfile: buildResult.generatedProfile,
       rankedProfile: ranking.selectedProfile,
       matchedKeywords: classificationEvidence.matchedKeywords,
       profileMismatchWarnings: classificationEvidence.profileMismatchWarnings,
@@ -138,6 +183,7 @@ export function composeOnePromptBuildBrainApiPayload(input: {
     systemsReferenced: [
       'code_generation_engine',
       'one_prompt_live_preview',
+      'autonomous_engineering_loop',
       'build_result_conversational_intelligence',
       'execution_trace',
     ],
@@ -145,13 +191,13 @@ export function composeOnePromptBuildBrainApiPayload(input: {
     executionTraceEvidence,
     operatorFeedEvents,
     materializationEvidence: materializationEvidenceSummaryForChat(
-      input.buildResult.materializationManifest,
+      buildResult.materializationManifest,
     ),
-    materializationManifest: input.buildResult.materializationManifest,
-    onePromptLivePreview: input.buildResult,
+    materializationManifest: buildResult.materializationManifest,
+    onePromptLivePreview: buildResult,
     buildLivePreview,
     livePreviewWorkspaceSync,
-    buildChatTemplateFallback: brainResponse,
+    buildChatTemplateFallback: composeAeeAwareBuildChatResponse(buildResult),
     confirmation: {
       intelligenceOnly: false,
       noExecutionPerformed: false,
@@ -159,7 +205,9 @@ export function composeOnePromptBuildBrainApiPayload(input: {
       noFilesModified: false,
       noCodeGenerated: false,
       noDeploymentPerformed: true,
-      noAutoFixPerformed: true,
+      noAutoFixPerformed:
+        !(buildResult.buildAutofixAttempts && buildResult.buildAutofixAttempts > 0) &&
+        !(buildResult.previewRecoveryAttempts && buildResult.previewRecoveryAttempts > 0),
       noRuntimeMutation: false,
       noExternalAiCalls: true,
       noPersistence: false,
@@ -196,10 +244,14 @@ export function composeOnePromptBuildFailurePayload(input: {
     npmInstallOk: false,
     npmBuildOk: false,
     previewUrl: null,
+    diagnosticPreviewUrl: null,
+    limitedPreviewUrl: null,
+    devServerRunning: false,
     livePreviewAvailable: false,
     failureReason: input.failureReason,
     featureSignals: null,
-    materializationManifest: null,
+    livePreviewGate: null,
+    autonomousSoftwareEngineering: null,
     updatedAt: new Date().toISOString(),
   };
 

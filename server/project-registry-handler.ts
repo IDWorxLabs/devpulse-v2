@@ -17,8 +17,25 @@ import {
   getProjectRegistryV1FilePath,
   validateCreateRegistryProjectName,
 } from '../src/project-registry-v1/index.js';
-import { listMultiProjectWorkspaces } from '../src/one-prompt-live-preview/workspace-tab-registry.js';
+import {
+  listMultiProjectWorkspacesForRegistry,
+  pruneWorkspaceSessionsNotInRegistry,
+} from '../src/one-prompt-live-preview/workspace-tab-registry.js';
 import { executeProjectTabContextSwitch } from '../src/project-context-switching/index.js';
+import {
+  deriveProjectBuildState,
+  listProjectBuildStates,
+} from '../src/project-resume-state/index.js';
+import {
+  getProjectRegistryHydrationSnapshot,
+  isProjectRegistryHydrationReady,
+} from '../src/project-registry-startup-hydration/index.js';
+import {
+  isUserFacingRegistryProject,
+  resolveProjectKind,
+} from '../src/project-registry-v1/project-kind.js';
+import { countRegistryTierProjects, listUserFacingActiveProjectIds } from '../src/project-registry-sovereignty/index.js';
+import { executeRegistrySovereigntyCleanup } from '../src/project-registry-sovereignty/registry-sovereignty-engine.js';
 
 function sendJson(res: ServerResponse, status: number, body: unknown): void {
   res.writeHead(status, {
@@ -38,27 +55,95 @@ async function readJsonBody(req: IncomingMessage): Promise<Record<string, unknow
   return JSON.parse(Buffer.concat(chunks).toString('utf8')) as Record<string, unknown>;
 }
 
-function buildRegistryGetResponse(rootDir: string) {
+export function buildRegistryGetResponse(
+  rootDir: string,
+  options?: { includeSystemProjects?: boolean },
+) {
+  const includeSystemProjects = options?.includeSystemProjects === true;
+  const hydration = getProjectRegistryHydrationSnapshot();
   const state = readProjectRegistryState(rootDir);
   const summary = buildProjectRegistrySummaryFast(rootDir);
   const registryPath = getProjectRegistryV1FilePath(rootDir);
+  const sovereignUserProjectIds = new Set(listUserFacingActiveProjectIds(rootDir));
   const activeRecords = state.projects.filter((project) => project.status === 'ACTIVE');
+  const visibleActiveRecords = includeSystemProjects
+    ? activeRecords
+    : activeRecords.filter((project) => sovereignUserProjectIds.has(project.projectId));
   const updatedAt =
     activeRecords.reduce(
       (latest, project) => (project.updatedAt > latest ? project.updatedAt : latest),
       activeRecords[0]?.updatedAt ?? '',
     ) || new Date().toISOString();
 
+  const projectsWithBuildState = summary.items
+    .filter((item) =>
+      includeSystemProjects ? true : isUserFacingRegistryProject({ ...item, status: 'ACTIVE' }),
+    )
+    .map((item) => {
+    const buildState = deriveProjectBuildState(item.projectId, rootDir);
+    return {
+      ...item,
+      projectKind: item.projectKind ?? resolveProjectKind({ projectId: item.projectId, projectKind: item.projectKind }),
+      buildState: buildState?.buildState ?? 'NEEDS_WORK',
+      resumable: buildState?.resumable ?? false,
+      repairable: buildState?.repairable ?? false,
+      bannerMessage: buildState?.bannerMessage ?? null,
+      primaryActions: buildState?.primaryActions ?? [],
+      hasOriginalPrompt: buildState?.evidence.hasOriginalPrompt ?? false,
+    };
+  });
+
+  const archivedProjects = state.projects
+    .filter((project) => project.status === 'ARCHIVED')
+    .map((project) => ({
+      projectId: project.projectId,
+      name: project.name,
+      status: project.status,
+      summary: project.summary,
+      createdAt: project.createdAt,
+      lastActivityAt: project.lastActivityAt,
+      isActive: false,
+    }));
+
+  const registryProjectIds = visibleActiveRecords.map((project) => project.projectId);
+  pruneWorkspaceSessionsNotInRegistry(registryProjectIds);
+
+  const filteredActiveProjectId =
+    state.activeProjectId &&
+    visibleActiveRecords.some((project) => project.projectId === state.activeProjectId)
+      ? state.activeProjectId
+      : visibleActiveRecords[0]?.projectId ?? null;
+
   return {
     ok: true,
-    registry: state,
-    projects: summary,
-    activeProjectId: state.activeProjectId,
-    total: summary.count,
-    active: summary.activeCount,
+    hydrationStatus: hydration.phase,
+    hydration: hydration,
+    hydrationReady: isProjectRegistryHydrationReady(),
+    registry: {
+      ...state,
+      projects: includeSystemProjects
+        ? state.projects
+        : state.projects.filter(
+            (project) => project.status !== 'ACTIVE' || isUserFacingRegistryProject(project),
+          ),
+    },
+    registrySovereignty: countRegistryTierProjects(rootDir),
+    projects: {
+      ...summary,
+      count: visibleActiveRecords.length,
+      activeCount: filteredActiveProjectId ? 1 : 0,
+      items: projectsWithBuildState,
+    },
+    includeSystemProjects,
+    hiddenSystemProjectCount: activeRecords.length - visibleActiveRecords.length,
+    archivedProjects,
+    projectBuildStates: listProjectBuildStates(rootDir),
+    activeProjectId: filteredActiveProjectId,
+    total: visibleActiveRecords.length,
+    active: filteredActiveProjectId ? 1 : 0,
     registryPath,
     updatedAt,
-    multiProjectWorkspaces: listMultiProjectWorkspaces(),
+    multiProjectWorkspaces: listMultiProjectWorkspacesForRegistry(registryProjectIds),
   };
 }
 
@@ -66,8 +151,12 @@ function buildFastRegistryResponse(rootDir: string) {
   return buildRegistryGetResponse(rootDir);
 }
 
-export function sendProjectRegistryJson(res: ServerResponse, rootDir: string): void {
-  sendJson(res, 200, buildRegistryGetResponse(rootDir));
+export function sendProjectRegistryJson(
+  res: ServerResponse,
+  rootDir: string,
+  options?: { includeSystemProjects?: boolean },
+): void {
+  sendJson(res, 200, buildRegistryGetResponse(rootDir, options));
 }
 
 export const PROJECT_REGISTRY_GET_PATHS = [
@@ -84,6 +173,7 @@ export function handleProjectRegistryGetRequest(
   req: IncomingMessage,
   res: ServerResponse,
   rootDir: string,
+  searchParams?: URLSearchParams,
 ): void {
   if (req.method === 'HEAD') {
     res.writeHead(200, {
@@ -94,17 +184,45 @@ export function handleProjectRegistryGetRequest(
     res.end();
     return;
   }
-  sendProjectRegistryJson(res, rootDir);
+  const includeSystemProjects = searchParams?.get('includeSystemProjects') === 'true';
+  sendProjectRegistryJson(res, rootDir, { includeSystemProjects });
 }
 
 export async function handleProjectRegistryMutation(
   req: IncomingMessage,
   res: ServerResponse,
-  action: 'create' | 'rename' | 'archive' | 'set-active' | 'context-switch',
+  action: 'create' | 'rename' | 'archive' | 'set-active' | 'context-switch' | 'cleanup-test-projects',
   rootDir: string,
 ): Promise<void> {
   try {
     const body = await readJsonBody(req);
+    if (action === 'cleanup-test-projects') {
+      const sovereignty = await executeRegistrySovereigntyCleanup({
+        rootDir,
+        confirmed: body.confirmed === true,
+        preview: body.preview === true || body.confirmed !== true,
+      });
+      sendJson(res, 200, {
+        ...buildFastRegistryResponse(rootDir),
+        action: 'cleanup-test-projects',
+        cleanup: {
+          ok: sovereignty.ok,
+          preview: sovereignty.preview,
+          confirmed: sovereignty.confirmed,
+          candidates: sovereignty.migration.migrated.map((entry) => ({
+            projectId: entry.projectId,
+            name: entry.name,
+            projectKind: entry.projectKind,
+            source: entry.from,
+          })),
+          deletedProjectIds: [...sovereignty.deletedArtifactProjectIds],
+          preservedUserProjectIds: [...sovereignty.preservedUserProjectIds],
+          errors: [...sovereignty.errors],
+        },
+        registrySovereignty: sovereignty,
+      });
+      return;
+    }
     if (action === 'create') {
       const name = String(body.name ?? '').trim();
       const summary = body.summary ? String(body.summary) : undefined;

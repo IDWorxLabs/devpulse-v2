@@ -1,0 +1,288 @@
+{
+  "readOnly": true,
+  "overallScore": 45,
+  "verdict": "NOT_MATERIALIZED",
+  "categories": [
+    {
+      "readOnly": true,
+      "id": "blueprint",
+      "label": "Blueprint",
+      "score": 25,
+      "weight": 0.08,
+      "weightedContribution": 2,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/.generated-app-manifest.json"
+      ],
+      "reasons": [],
+      "missingEvidence": [
+        "blueprintPurityStatus pending",
+        "shellPurityVerified",
+        "domainLanguageBoundaryVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "promptAlignment",
+      "label": "Prompt Alignment",
+      "score": 35,
+      "weight": 0.08,
+      "weightedContribution": 3,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "Prompt faithfulness PASS (score 100)",
+        "Materialization validation incomplete"
+      ],
+      "missingEvidence": [
+        "promptSpecificTermsPresent",
+        "profileSpecificUiVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "featureCoverage",
+      "label": "Feature Coverage",
+      "score": 100,
+      "weight": 0.12,
+      "weightedContribution": 12,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/universal-feature-contract.json",
+        "src/features/navigation-router/NavigationRouterFeature.tsx",
+        "src/features/dashboard/DashboardFeature.tsx",
+        "src/features/settings/SettingsFeature.tsx"
+      ],
+      "reasons": [
+        "All 2 expected feature modules present"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "modularArchitecture",
+      "label": "Modular Architecture",
+      "score": 100,
+      "weight": 0.1,
+      "weightedContribution": 10,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/src/features/FeatureAppRouter.tsx"
+      ],
+      "reasons": [
+        "3 modular feature modules generated",
+        "Separate module directories present",
+        "Modular registry/router architecture verified"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "routeReachability",
+      "label": "Routes",
+      "score": 85,
+      "weight": 0.07,
+      "weightedContribution": 6,
+      "status": "PASS",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/src/features/FeatureAppRouter.tsx"
+      ],
+      "reasons": [
+        "4/2 routes generated"
+      ],
+      "missingEvidence": [
+        "modularRoutesVerified"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "serviceTypesValidation",
+      "label": "Services/Types/Validation",
+      "score": 100,
+      "weight": 0.07,
+      "weightedContribution": 7,
+      "status": "PASS",
+      "evidencePaths": [
+        "src/features/dashboard/dashboard.service.ts",
+        "src/features/navigation-router/navigation-router.service.ts",
+        "src/features/settings/settings.service.ts",
+        "src/features/dashboard/dashboard.types.ts",
+        "src/features/navigation-router/navigation-router.types.ts",
+        "src/features/settings/settings.types.ts",
+        "src/features/dashboard/dashboard.validation.ts",
+        "src/features/navigation-router/navigation-router.validation.ts"
+      ],
+      "reasons": [
+        "3 service files",
+        "3 types files",
+        "3 validation files"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "build",
+      "label": "Build",
+      "score": 0,
+      "weight": 0.08,
+      "weightedContribution": 0,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/.generated-app-manifest.json"
+      ],
+      "reasons": [],
+      "missingEvidence": [
+        "validationStatus",
+        "npmBuildDurationMs",
+        "dist/index.html"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "preview",
+      "label": "Preview",
+      "score": 15,
+      "weight": 0.08,
+      "weightedContribution": 1,
+      "status": "FAIL",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/.generated-app-manifest.json"
+      ],
+      "reasons": [],
+      "missingEvidence": [
+        "previewVerified",
+        "previewHtmlStatus pending",
+        "previewUrl"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "productionValidation",
+      "label": "Production Validation",
+      "score": 25,
+      "weight": 0.1,
+      "weightedContribution": 3,
+      "status": "FAIL",
+      "evidencePaths": [],
+      "reasons": [],
+      "missingEvidence": [
+        "productionValidationStatus pending",
+        "productionValidationStages"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "buildHistory",
+      "label": "Build History",
+      "score": 100,
+      "weight": 0.05,
+      "weightedContribution": 5,
+      "status": "PASS",
+      "evidencePaths": [
+        ".generated-build-history/simple-weather-dashboard-app-showing-cur-1783372717262-4",
+        ".generated-build-history/simple-weather-dashboard-app-showing-cur-1783372717262-4/replay-metadata.json",
+        ".generated-build-history/simple-weather-dashboard-app-showing-cur-1783372717262-4/audit-timeline.json"
+      ],
+      "reasons": [
+        "Build history recorded",
+        "Immutable build record hash present"
+      ],
+      "missingEvidence": []
+    },
+    {
+      "readOnly": true,
+      "id": "persistentProjectReality",
+      "label": "Persistent Project Reality",
+      "score": 10,
+      "weight": 0.08,
+      "weightedContribution": 1,
+      "status": "FAIL",
+      "evidencePaths": [],
+      "reasons": [],
+      "missingEvidence": [
+        "persistent project promotion skipped",
+        "persistentProjectSourceRoot",
+        "projectFileIndexPath",
+        "exportMetadataPath",
+        "exportReady"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "genericityAvoidance",
+      "label": "Genericity Avoidance",
+      "score": 70,
+      "weight": 0.08,
+      "weightedContribution": 6,
+      "status": "WARN",
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/.generated-app-manifest.json"
+      ],
+      "reasons": [
+        "No generic Project Management fallback in shell"
+      ],
+      "missingEvidence": [
+        "promptSpecificTermsPresent"
+      ]
+    },
+    {
+      "readOnly": true,
+      "id": "launchReadiness",
+      "label": "Launch Readiness",
+      "score": 0,
+      "weight": 0.11,
+      "weightedContribution": 0,
+      "status": "FAIL",
+      "evidencePaths": [],
+      "reasons": [
+        "Generated app materialization validation failed: Only 7/9 required UI terms detected in generated source.",
+        "Launch readiness blocked by critical gaps"
+      ],
+      "missingEvidence": [
+        "manifest.status not PASS",
+        "preview not verified",
+        "production validation not PASS",
+        "exportReady false",
+        "validationStatus not PASS"
+      ]
+    }
+  ],
+  "strengths": [
+    "Feature Coverage",
+    "Modular Architecture",
+    "Services/Types/Validation",
+    "Build History"
+  ],
+  "gaps": [
+    "Calibration",
+    "Accessibility",
+    "Live preview verification incomplete",
+    "Persistent project workspace not promoted"
+  ],
+  "criticalFailures": [
+    "Generated app materialization validation failed: Only 7/9 required UI terms detected in generated source."
+  ],
+  "recommendedNextActions": [
+    "Fix the build failure and re-run materialization",
+    "Verify preview HTML and dev server startup",
+    "Promote successful build into persistent project source"
+  ],
+  "computedFromCategories": true,
+  "recordedAt": "2026-07-06T21:18:39.038Z",
+  "buildRunId": "simple-weather-dashboard-app-showing-cur-1783372717262-4",
+  "projectId": "simple-weather-dashboard-app-showing-cur-1783372717262-4",
+  "scoreArtifactPath": "C:/Users/Richa/Desktop/DevPulse-V4/.generated-builder-workspaces/simple-weather-dashboard-app-showing-cur-1783372717262-4/.materialization-quality-score.json",
+  "persistentScoreArtifactPath": ".aidev-projects/simple-weather-dashboard-app-showing-cur-1783372717262-4/.aidev/materialization-quality-score.json",
+  "featureContractRealityPath": null,
+  "featureContractRealityScore": 0,
+  "featureContractRealityStatus": "PENDING",
+  "workspaceRealityAuditPath": null,
+  "workspaceRealityAuditScore": 0,
+  "workspaceRealityAuditStatus": "PENDING"
+}

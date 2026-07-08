@@ -1,0 +1,82 @@
+{
+  "readOnly": true,
+  "status": "PASS",
+  "overallScore": 100,
+  "plannedFeatureCount": 2,
+  "provenFeatureCount": 2,
+  "featureRealityRecords": [
+    {
+      "readOnly": true,
+      "featureId": "dashboard",
+      "featureName": "Dashboard",
+      "contractId": "feature-dashboard",
+      "planned": true,
+      "generated": true,
+      "compiled": true,
+      "filesPresent": true,
+      "registryEntryPresent": true,
+      "routePresent": true,
+      "rendered": true,
+      "reachable": true,
+      "interactive": true,
+      "informationalOnly": true,
+      "validated": true,
+      "score": 100,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/dashboard/DashboardFeature.tsx",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/dashboard/dashboard.types.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/dashboard/dashboard.service.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/dashboard/dashboard.validation.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/dashboard/index.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/FeatureAppRouter.tsx"
+      ],
+      "missingEvidence": [],
+      "failureReasons": []
+    },
+    {
+      "readOnly": true,
+      "featureId": "settings",
+      "featureName": "Settings",
+      "contractId": "feature-settings",
+      "planned": true,
+      "generated": true,
+      "compiled": true,
+      "filesPresent": true,
+      "registryEntryPresent": true,
+      "routePresent": true,
+      "rendered": true,
+      "reachable": true,
+      "interactive": true,
+      "informationalOnly": false,
+      "validated": true,
+      "score": 100,
+      "evidencePaths": [
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/settings/SettingsFeature.tsx",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/settings/settings.types.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/settings/settings.service.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/settings/settings.validation.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/settings/index.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/registry.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/routes.ts",
+        "C:/Users/Richa/Desktop/DevPulse-V2/.generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/src/features/FeatureAppRouter.tsx"
+      ],
+      "missingEvidence": [],
+      "failureReasons": []
+    }
+  ],
+  "failureReasons": [],
+  "informationalFeatureIds": [
+    "dashboard"
+  ],
+  "interactiveFeatureIds": [
+    "settings"
+  ],
+  "recordedAt": "2026-06-30T14:16:19.043Z",
+  "buildRunId": "one-prompt-build-3",
+  "projectId": "aee-profile-continuation-ai-chat-app-1782828963059",
+  "contractPath": ".generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/universal-feature-contract.json",
+  "artifactPath": ".generated-builder-workspaces/aee-profile-continuation-ai-chat-app-1782828963059/.feature-contract-reality.json",
+  "persistentArtifactPath": null
+}

@@ -1,0 +1,23 @@
+{
+  "readOnly": true,
+  "projectId": "aee-profile-continuation-expense-tracker-1782828782215",
+  "projectName": "Expense Tracker",
+  "createdAt": "2026-06-30T14:13:02.577Z",
+  "updatedAt": "2026-06-30T14:13:02.577Z",
+  "selectedProfile": "EXPENSE_TRACKER_WEB_V1",
+  "originalPrompt": "Build an expense tracker where users add expenses, categorize spending, view monthly totals, and filter by date range.",
+  "currentSourcePath": "",
+  "activeWorkspacePath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782828782215",
+  "lastBuildRunId": "one-prompt-build-1",
+  "lastSuccessfulBuildRunId": null,
+  "manifestPath": "",
+  "featureContractPath": "",
+  "buildHistoryRecordPath": ".generated-build-history/one-prompt-build-1-dup-1782828782559",
+  "productionValidationPath": null,
+  "exportMetadataPath": "",
+  "projectFileIndexPath": "",
+  "status": "FAILED",
+  "immutableBuildLinks": [],
+  "lastFailedBuildRunId": "one-prompt-build-1",
+  "lastFailedSnapshotPath": ".aidev-projects/aee-profile-continuation-expense-tracker-1782828782215/.aidev/snapshots/failed-one-prompt-build-1"
+}

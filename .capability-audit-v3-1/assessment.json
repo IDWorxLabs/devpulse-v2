@@ -1,13 +1,13 @@
 {
   "version": "V3.1",
-  "generatedAt": "2026-06-25T06:29:45.142Z",
+  "generatedAt": "2026-07-07T12:52:20.277Z",
   "passToken": "AIDEVENGINE_CAPABILITY_AUDIT_V3_1_PASS",
   "readOnly": true,
   "priorAuditVersion": "V2",
   "categoryCount": 16,
-  "capabilityCount": 98,
+  "capabilityCount": 99,
   "matureCount": 38,
-  "partialCount": 55,
+  "partialCount": 56,
   "experimentalCount": 4,
   "missingCount": 1,
   "highDuplicateRiskCount": 11,
@@ -102,11 +102,11 @@
     },
     {
       "categoryId": "ENGINEERING_REVIEW",
-      "capabilityCount": 7,
-      "maturityScore": 90,
+      "capabilityCount": 8,
+      "maturityScore": 89,
       "status": "MATURE",
       "matureCount": 6,
-      "partialCount": 1,
+      "partialCount": 2,
       "experimentalCount": 0,
       "missingCount": 0
     },
@@ -666,6 +666,17 @@
       "ownerPath": "src/repository-typecheck-reality/",
       "validateScript": "validate:repository-typecheck-reality",
       "summary": "Repository typecheck truth; Launch Council member."
+    },
+    {
+      "name": "Repository Typecheck Stabilization Authority V1",
+      "category": "ENGINEERING_REVIEW",
+      "status": "PARTIAL",
+      "maturity": 85,
+      "duplicateRisk": "LOW",
+      "recommendation": "KEEP",
+      "ownerPath": "src/repo-typecheck-stabilization-authority-v1/",
+      "validateScript": "validate:repo-typecheck-stabilization-authority-v1",
+      "summary": "Deterministic repo-wide TypeScript stabilization with bounded repair and rollback."
     },
     {
       "name": "Execution Reality Validation",
@@ -1563,7 +1574,7 @@
     "detail": "Code Generation Engine V1 materializes 5 CRUD profiles with Real Build Execution V1.1 (15 categories). General-Purpose Code Generation V1 adds workflow-driven, role-aware, domain-specific generation with 10/10 non-trivial app types proven."
   },
   "operationalMaturity": {
-    "generatedAt": "2026-06-25T06:29:45.084Z",
+    "generatedAt": "2026-07-07T12:52:20.171Z",
     "operationalMaturityScore": 100,
     "provenCategoryCount": 15,
     "supportedCategoryCount": 58,

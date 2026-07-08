@@ -1,0 +1,11 @@
+{
+  "readOnly": true,
+  "entries": [
+    {
+      "timestamp": "2026-07-06T20:46:52.730Z",
+      "event": "source_promoted",
+      "buildRunId": "one-prompt-build-1",
+      "sourcePath": ".aidev-projects/simple-counter-app-1783370775362-2/source"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "manifestId": "new-project-1782897096576-2-manifest",
+  "contractId": "new-project-1782897096576-2",
+  "ideaId": "idea-simple-calculator",
+  "generatedAt": "2026-07-02T05:31:12.947Z",
+  "materializationSource": "modular-feature-materialization-v1",
+  "applicationProfile": "GENERIC_CUSTOM_APP_V1",
+  "universalBlueprintVersion": "1.0",
+  "universalBlueprintEnabled": true,
+  "modularFeatureMaterialization": true,
+  "buildUnits": [
+    "unit-001",
+    "unit-002",
+    "unit-003",
+    "unit-004"
+  ],
+  "runtime": "vite-react"
+}

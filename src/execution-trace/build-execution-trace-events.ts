@@ -33,6 +33,12 @@ import {
   resolvePromptFaithfulBuildPlan,
 } from '../prompt-faithful-generation/index.js';
 import { buildIntentUnderstandingTraceEvents } from '../intent-understanding-engine/index.js';
+import {
+  aeeOverrideWasApplied,
+  buildSpineReachedInstallOrBeyond,
+  isStaleAseFailureReason,
+  resolveAeeControlledFailureReason,
+} from '../autonomous-engineering-executive/index.js';
 
 type BuildTraceStage = {
   runtimeStage: string;
@@ -298,7 +304,9 @@ export function buildOnePromptExecutionTraceEvents(
     }
     const detail =
       failedAt === step
-        ? result.failureReason ?? `${stage.eventTitle} failed`
+        ? resolveAeeControlledFailureReason(result) ??
+          result.failureReason ??
+          `${stage.eventTitle} failed`
         : matched
           ? stage.technicalDetail
           : `${stage.eventTitle} — pending`;
@@ -332,9 +340,19 @@ export function buildOnePromptExecutionTraceEvents(
   if (result.materializationManifest) {
     const manifest = result.materializationManifest;
     const failedBuild =
-      manifest.status === 'FAIL' ||
-      manifest.status === 'PARTIAL' ||
-      manifest.status === 'ABORTED';
+      (manifest.status === 'FAIL' ||
+        manifest.status === 'PARTIAL' ||
+        manifest.status === 'ABORTED') &&
+      !(
+        buildSpineReachedInstallOrBeyond(result) &&
+        (aeeOverrideWasApplied(result) || result.npmInstallOk || result.npmBuildOk)
+      );
+    const manifestFailureReason =
+      isStaleAseFailureReason(manifest.failureReason) && buildSpineReachedInstallOrBeyond(result)
+        ? result.failureReason && !isStaleAseFailureReason(result.failureReason)
+          ? result.failureReason
+          : 'Build spine progressed under AEE after upstream authority denial.'
+        : manifest.failureReason;
     const hashPreview =
       manifest.materializationHash ||
       manifest.partialMaterializationHash ||
@@ -425,7 +443,7 @@ export function buildOnePromptExecutionTraceEvents(
         component: 'forensic_manifest',
         severity: 'ERROR',
         eventTitle: `Build failed at ${manifest.failureStage ?? 'unknown'}`,
-        technicalDetail: manifest.failureReason ?? result.failureReason ?? 'Build failed',
+        technicalDetail: manifestFailureReason ?? result.failureReason ?? 'Build failed',
         status: 'FAIL',
         metadata: {
           milestone: true,
