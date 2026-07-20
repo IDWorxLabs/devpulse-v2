@@ -301,9 +301,10 @@ async function main(): Promise<void> {
   );
   assert(
     '32. execution status softens "stopped/blocked" wording when the app is actually running',
-    /function renderExecutionStatus\s*\(\s*buildExecution,\s*appIsRunning\s*\)/.test(js) &&
-      /appIsRunning[\s\S]{0,200}(FAILED|BLOCKED)/.test(js),
-    'expected renderExecutionStatus(buildExecution, appIsRunning) to reframe FAILED/BLOCKED wording when appIsRunning is true',
+    /function renderExecutionStatus\s*\(\s*buildExecution,\s*appIsRunning(?:,\s*productionPath)?\s*\)/.test(js) &&
+      /blockedByProductionPath/.test(js) &&
+      /appIsRunning[\s\S]{0,400}(FAILED|BLOCKED)/.test(js),
+    'expected renderExecutionStatus to reframe FAILED/BLOCKED only when productionPath does not block the build',
   );
   assert(
     '33. Interaction proof is shown as one compact line with expandable details, not as a full page state',

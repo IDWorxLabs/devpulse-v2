@@ -55,6 +55,15 @@ export { auditGenerationPipeline, buildStageEvidence } from './generation-faithf
 export type { GenerationStageRawEvidence } from './generation-faithfulness-auditor.js';
 export { applyMinimalRepairs, repairAndReaudit } from './generation-faithfulness-repair.js';
 export { buildGenerationFaithfulnessReport } from './generation-faithfulness-report.js';
+export {
+  normalizeCapabilityIdentity,
+  capabilityIdentitiesMatch,
+  isLexicalFragmentOfCapability,
+  suppressLexicalFragmentsOfCapabilities,
+  matchCapabilityAgainstSurfaces,
+  assertFaithfulnessMetricInvariants,
+  retentionPercentFromMissing,
+} from './verification-accuracy.js';
 
 /**
  * Runs the full Milestone 2 pipeline: build the canonical contract, build the concept graph,

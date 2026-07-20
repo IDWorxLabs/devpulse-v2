@@ -26,6 +26,7 @@ import type {
   GpcaStageDescriptor,
   GpcaTraceabilityResult,
 } from './generation-pipeline-compliance-types.js';
+import type { InfrastructureProductBoundaryAudit } from '../infrastructure-product-boundary-authority-v1/index.js';
 
 export interface GpcaGateResult {
   readonly outcome: GpcaGenerationGateOutcome;
@@ -43,6 +44,7 @@ export function runGenerationPipelineComplianceGate(
   scores: readonly GpcaStageComplianceScore[],
   traceability: readonly GpcaTraceabilityResult[],
   overallCompliancePercent: number,
+  boundaryAudit?: InfrastructureProductBoundaryAudit | null,
 ): GpcaGateResult {
   const contractBypass = detectContractBypassedInputs(evidence);
   const contractBypassDetected: string[] = [
@@ -83,7 +85,7 @@ export function runGenerationPipelineComplianceGate(
     };
   }
 
-  const blueprintBypassDetected = detectBlueprintBypass(evidence);
+  const blueprintBypassDetected = detectBlueprintBypass(evidence, boundaryAudit);
   if (blueprintBypassDetected.length > 0) {
     return {
       outcome: 'COMPLIANCE_BLOCKED_BLUEPRINT_BYPASS',
@@ -99,7 +101,7 @@ export function runGenerationPipelineComplianceGate(
     };
   }
 
-  const genericShell = detectGenericShellInjection(evidence);
+  const genericShell = detectGenericShellInjection(evidence, boundaryAudit);
   if (genericShell.detectedPaths.length > 0) {
     return {
       outcome: 'COMPLIANCE_BLOCKED_LEGACY_GENERATOR',

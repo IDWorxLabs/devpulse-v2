@@ -73,6 +73,33 @@ export interface UniversalFeatureOutcome {
   required: boolean;
 }
 
+export type FeatureContractCapabilityClassification =
+  | 'ENTITY'
+  | 'WORKFLOW'
+  | 'CAPABILITY';
+
+export interface FeatureContractCompletenessItem {
+  capability: string;
+  classification: FeatureContractCapabilityClassification;
+  outcome: 'RETAINED' | 'MERGED' | 'DISCARDED';
+  matchedFeature: string | null;
+  reason: string;
+}
+
+export interface FeatureContractCompletenessReport {
+  contractVersion: 'FEATURE_CONTRACT_COMPLETENESS_V1';
+  score: number;
+  requestedCount: number;
+  retainedCount: number;
+  discardedCount: number;
+  mergedCount: number;
+  hallucinatedCount: number;
+  genericSubstitutionCount: number;
+  capabilities: FeatureContractCompletenessItem[];
+  hallucinatedCapabilities: string[];
+  genericSubstitutions: string[];
+}
+
 export interface UniversalFeatureContract {
   contractVersion: '1.0';
   contractId: string;
@@ -85,6 +112,73 @@ export interface UniversalFeatureContract {
   rules: UniversalFeatureRule[];
   workflows: UniversalFeatureWorkflow[];
   outcomes: UniversalFeatureOutcome[];
+  completeness?: FeatureContractCompletenessReport;
+  /**
+   * Navigation Computation Collapse V1 (PPC-1207 No Parallel Truth) — the approved, CBGA-repaired
+   * navigation plan's labels (`ApprovedNavigationPlan.productEntries`), in their approved order.
+   * Absent/`null` only for pre-CBGA/isolated/test-only contracts built without an approved
+   * navigation plan — never independently derived from `entities[].navLabel` or any other
+   * in-contract source. Optional (rather than required) so every existing per-profile contract
+   * literal in `buildProfileContract` needs no change — this field is populated at the single
+   * override point `buildUniversalFeatureContract` already uses for `approvedProductName`.
+   */
+  navigation?: readonly string[] | null;
+  /**
+   * Module Computation Collapse V1 (PPC-1207 No Parallel Truth) — the approved, CBGA-repaired
+   * module plan's moduleIds (`ApprovedModulePlan.moduleIds`), in their approved order.
+   * Absent/`null` only for pre-CBGA/isolated/test-only contracts built without an approved module
+   * plan — never independently derived from `entities[].id` or any other in-contract source.
+   * Optional (rather than required) so every existing per-profile contract literal in
+   * `buildProfileContract` needs no change — this field is populated at the single override point
+   * `buildUniversalFeatureContract` already uses for `approvedProductName`/`navigation`.
+   */
+  modules?: readonly string[] | null;
+  /**
+   * Metadata Computation Collapse V1 (PPC-1207 No Parallel Truth) — the approved, CBGA-composed
+   * metadata projection (`ApprovedMetadataPlan` fields: title, subtitle, module/navigation/route
+   * counts). Absent/`null` only for pre-CBGA/isolated/test-only contracts built without an
+   * approved metadata plan — never independently derived from prompt parsing, counting, or
+   * summarization. Optional so every existing per-profile contract literal in `buildProfileContract`
+   * needs no change — populated at the single override point `buildUniversalFeatureContract` already
+   * uses for identity/navigation/modules.
+   */
+  metadata?: {
+    readonly applicationTitle: string;
+    readonly applicationSubtitle: string;
+    readonly approvedModuleCount: number;
+    readonly approvedNavigationCount: number;
+    readonly approvedRouteCount: number;
+  } | null;
+  /**
+   * Sample Data Computation Collapse V1 (PPC-1207 No Parallel Truth) — the approved, CBGA-composed
+   * sample data projection. Absent/`null` only for pre-CBGA/isolated/test-only contracts — never
+   * independently derived from generator-invented demo records.
+   */
+  sampleData?: {
+    readonly approvedSamplesPresent: boolean;
+    readonly sampleSummary: string;
+    readonly approvedEntityTypeCount: number;
+  } | null;
+  /**
+   * Provenance Computation Collapse V1 (PPC-1207 No Parallel Truth) — the approved, CBGA-composed
+   * provenance projection. Absent/`null` only for pre-CBGA/isolated/test-only contracts — never
+   * independently reconstructed from heuristics or duplicate ancestry computation.
+   */
+  provenance?: {
+    readonly provenanceSummary: string;
+    readonly contractId: string;
+    readonly ancestryChainCount: number;
+    readonly provenAncestryChainCount: number;
+  } | null;
+  /**
+   * Repair Reality Alignment V1 (PPC-1207 No Parallel Truth) — the approved, classified repair
+   * projection. Absent/`null` only for pre-CBGA/isolated/test-only contracts.
+   */
+  repairReality?: {
+    readonly repairSummary: string;
+    readonly repairEntryCount: number;
+    readonly workspaceMutationCount: number;
+  } | null;
 }
 
 export interface BuildUniversalFeatureContractInput {
@@ -93,6 +187,84 @@ export interface BuildUniversalFeatureContractInput {
   profile?: UniversalAppProfile;
   requirements?: readonly string[];
   clarifyingAnswers?: readonly string[];
+  /**
+   * Identity Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single approved,
+   * CBGA-repaired product identity for this build. When present, it replaces `productName` on the
+   * returned contract; `rawPrompt`/profile-derived `productName` (via `extractPromptAppTitle`)
+   * only runs when this is omitted — pre-CBGA/isolated/test-only callers only.
+   */
+  approvedProductName?: string | null;
+  /**
+   * Navigation Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single approved,
+   * CBGA-repaired navigation plan's labels for this build. When present, it replaces `navigation`
+   * on the returned contract unconditionally; omitted (pre-CBGA/isolated/test-only calls) leaves
+   * `navigation` unset.
+   */
+  approvedNavigationLabels?: readonly string[] | null;
+  /**
+   * Module Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single approved,
+   * CBGA-repaired module plan's moduleIds for this build. When present, it replaces `modules` on
+   * the returned contract unconditionally; omitted (pre-CBGA/isolated/test-only calls) leaves
+   * `modules` unset.
+   */
+  approvedModuleIds?: readonly string[] | null;
+  /** Canonical CBGA contract evidence used to score prompt-to-feature retention. */
+  approvedCanonicalContract?: {
+    readonly coreEntities: readonly string[];
+    readonly primaryWorkflows: readonly string[];
+    readonly majorFeatureGroups: readonly string[];
+  } | null;
+  /** Approved module identities used as the semantic entity authority for generic custom apps. */
+  approvedModuleEntries?: readonly {
+    readonly moduleId: string;
+    readonly displayName: string;
+    readonly contractSource: string;
+  }[] | null;
+  /**
+   * Metadata Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single approved,
+   * CBGA-composed metadata projection for this build. When present, it replaces `metadata` on the
+   * returned contract unconditionally; omitted (pre-CBGA/isolated/test-only calls) leaves `metadata`
+   * unset.
+   */
+  approvedMetadata?: {
+    readonly applicationTitle: string;
+    readonly applicationSubtitle: string;
+    readonly approvedModuleCount: number;
+    readonly approvedNavigationCount: number;
+    readonly approvedRouteCount: number;
+  } | null;
+  /**
+   * Sample Data Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single approved,
+   * CBGA-composed sample data projection for this build. When present, it replaces `sampleData` on
+   * the returned contract unconditionally; omitted (pre-CBGA/isolated/test-only calls) leaves
+   * `sampleData` unset.
+   */
+  approvedSampleData?: {
+    readonly approvedSamplesPresent: boolean;
+    readonly sampleSummary: string;
+    readonly approvedEntityTypeCount: number;
+  } | null;
+  /**
+   * Provenance Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single approved,
+   * CBGA-composed provenance projection for this build. When present, it replaces `provenance` on
+   * the returned contract unconditionally; omitted (pre-CBGA/isolated/test-only calls) leaves
+   * `provenance` unset.
+   */
+  approvedProvenance?: {
+    readonly provenanceSummary: string;
+    readonly contractId: string;
+    readonly ancestryChainCount: number;
+    readonly provenAncestryChainCount: number;
+  } | null;
+  /**
+   * Repair Reality Alignment V1 (PPC-1207 No Parallel Truth) — the single approved repair reality
+   * projection for this build. When present, it replaces `repairReality` unconditionally.
+   */
+  approvedRepairReality?: {
+    readonly repairSummary: string;
+    readonly repairEntryCount: number;
+    readonly workspaceMutationCount: number;
+  } | null;
 }
 
 export type FeatureValidationStepKind =

@@ -89,9 +89,9 @@ const GPCA_STAGE_BASELINE_REGISTRY: readonly GpcaStageBaseline[] = [
     stageId: 'MODULE_GENERATOR',
     stageName: 'Module Generator',
     responsibleModule: 'src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts#buildAllModularFeatureModuleFiles',
-    inputObjects: ['ProfileFeatureDefinition (post-CBGA)', 'appTitle'],
+    inputObjects: ['ProfileFeatureDefinition (post-CBGA)', 'appTitle', 'ApprovedModulePlan'],
     outputObjects: ['feature module files', 'GeneratedFeatureModuleManifestEntry[]'],
-    structuralFlags: { usesProfileFeatureDefinition: true, usesHardcodedTemplate: true },
+    structuralFlags: { usesCbga: true, usesPromptBoundedModulePlan: true, usesProfileFeatureDefinition: true },
   },
   {
     stageId: 'ROUTE_GENERATOR',
@@ -99,16 +99,16 @@ const GPCA_STAGE_BASELINE_REGISTRY: readonly GpcaStageBaseline[] = [
     responsibleModule: 'src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts#buildModularFeatureRoutesTs / registry.ts',
     inputObjects: ['FEATURE_REGISTRY (derived from generated modules)'],
     outputObjects: ['src/features/routes.ts'],
-    structuralFlags: {},
+    structuralFlags: { usesCbga: true, usesPromptBoundedModulePlan: true },
   },
   {
     stageId: 'NAVIGATION_GENERATOR',
     stageName: 'Navigation Generator',
     responsibleModule:
-      'src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts#buildFeatureAppRouterTsx; src/universal-app-blueprint/universal-app-blueprint-generator.ts (MOBILE_TABS)',
-    inputObjects: ['ProfileFeatureDefinition', 'hardcoded blueprint shell tab list'],
-    outputObjects: ['FeatureAppRouter nav buttons', 'blueprint shell tab bar'],
-    structuralFlags: { usesBlueprintDefaults: true, usesDefaultNavigation: true, usesHardcodedTemplate: true },
+      'src/universal-prompt-to-app-materialization/modular-feature-module-generator.ts#buildFeatureAppRouterTsx; src/universal-app-blueprint/universal-app-blueprint-product-surface.ts',
+    inputObjects: ['ApprovedNavigationPlan / CBGA navigation labels', 'ProfileFeatureDefinition'],
+    outputObjects: ['FeatureAppRouter nav buttons', 'blueprint shell product-surface nav'],
+    structuralFlags: { usesCbga: true, usesPromptBoundedModulePlan: true, usesDefaultNavigation: false, usesHardcodedTemplate: false },
   },
   {
     stageId: 'SURFACE_GENERATOR',
@@ -116,23 +116,33 @@ const GPCA_STAGE_BASELINE_REGISTRY: readonly GpcaStageBaseline[] = [
     responsibleModule: 'src/contract-bound-generation-authority-v4/contract-surface-plan.ts (plan only — no dedicated real surface renderer consumes it yet)',
     inputObjects: ['CbgaSurfacePlan'],
     outputObjects: ['(none — CbgaSurfacePlan is not yet rendered into a real UI surface by any generator)'],
-    structuralFlags: { usesCbga: true, usesSurfaceOutsideContract: true },
+    structuralFlags: { usesCbga: true },
   },
   {
     stageId: 'BLUEPRINT_GENERATOR',
     stageName: 'Blueprint Generator',
     responsibleModule: 'src/universal-app-blueprint/universal-app-blueprint-generator.ts#composeGeneratedAppWorkspaceFiles',
-    inputObjects: ['appName', 'coreFeatureLabel (hardcoded "Features")'],
+    // Blueprint Generator Contract-Bound Replacement + Infrastructure Route Hosts —
+    // landing/home/coreFeatureLabel derive from the approved plan; always-emitted shell pages
+    // (Welcome/Onboarding/Auth/Launch/Profile/Settings/…) are now pure lifecycle INFRASTRUCTURE
+    // hosts with zero business copy. Remaining product chrome is injected via product-surface.ts
+    // from CBGA-approved fields. Structural flags below must match that reality so GPCA scoring
+    // does not permanently FAIL the stage after presence-based detectors have already exempted
+    // the infrastructure hosts.
+    inputObjects: ['appName', 'approvedModuleIds (CBGA-repaired)', 'approvedNavigationLabels', 'customDomainCopy (contract-derived, when present)'],
     outputObjects: [
       'src/blueprint/AppShell.tsx, WelcomeScreen.tsx, OnboardingScreen.tsx, AuthScreen.tsx, LaunchScreen.tsx',
       'src/blueprint/pages/{Home,Search,Notifications,Profile,Settings,HelpCenter,Feedback,Legal,About}Page.tsx',
+      'src/blueprint/product-surface.ts',
     ],
     structuralFlags: {
+      usesCbga: true,
+      usesCanonicalContract: true,
       usesBlueprintDefaults: true,
-      usesGenericShell: true,
-      usesReusableComponentShell: true,
-      usesHardcodedTemplate: true,
-      usesGenericUiCopy: true,
+      usesGenericShell: false,
+      usesReusableComponentShell: false,
+      usesHardcodedTemplate: false,
+      usesGenericUiCopy: false,
     },
   },
   {

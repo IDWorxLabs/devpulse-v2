@@ -133,6 +133,8 @@ export function repairModulePlan(
   }
 
   const keptSet = new Set(kept);
+  // Contract module plan is authoritative for required entities (including prompt-evidenced
+  // domain synonyms). Silent synonym contamination is prevented upstream (glossary surface forms).
   const required = plans.modulePlan.filter((entry) => entry.generationAllowed && !keptSet.has(entry.moduleId));
   const moduleIds = [...kept, ...required.map((entry) => entry.moduleId)];
 
@@ -189,16 +191,29 @@ export function replaceGenericAppIdentity(
   currentTitle: string,
   surfaceEvaluation: { titleIsGeneric: boolean; titleMatchesProductIdentity: boolean },
 ): { appTitle: string; actions: CbgaRepairAction[] } {
+  // Real Production Path Integration Repair V1 — a prompt-derived, non-generic app title from the
+  // build plan (e.g. "Operations Management Platform") that already derives from product identity
+  // must never be replaced by the canonical contract's concept-join fallback
+  // (`conceptA / conceptB / conceptC`). That join is audit vocabulary for Product Faithfulness, not
+  // the approved display name shown in the Builder UI.
   if (!surfaceEvaluation.titleIsGeneric && surfaceEvaluation.titleMatchesProductIdentity) {
-    return { appTitle: currentTitle, actions: [] };
+    return { appTitle: currentTitle.trim(), actions: [] };
   }
+  // End-to-End Autonomous Production Convergence V1 — a title that is non-generic yet does NOT
+  // derive from the product identity (the observed real-build failure: an all-caps format token
+  // like "CSV" selected from "... CSV export ...") is exactly the case the surface gate flags as
+  // GENERATION_REQUIRES_SURFACE_PLAN_REPAIR. Previously this branch was a no-op, so the gate stayed
+  // permanently blocked with no repair ever applied. Repairing it to the contract's own identity
+  // (the surface plan's titleRequirement) is the contract-bound resolution and lets the re-run gate
+  // pass. This is fully generic — it never inspects the product domain.
+  const reason = surfaceEvaluation.titleIsGeneric ? 'generic' : 'contract-mismatched';
   return {
     appTitle: plans.surfacePlan.titleRequirement,
     actions: [
       {
         readOnly: true,
         actionId: 'REPLACE_GENERIC_APP_IDENTITY',
-        detail: `Replaced generic/mismatched app title "${currentTitle}" with contract product identity "${plans.surfacePlan.titleRequirement}".`,
+        detail: `Replaced ${reason} app title "${currentTitle}" with contract product identity "${plans.surfacePlan.titleRequirement}".`,
       },
     ],
   };

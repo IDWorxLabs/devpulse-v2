@@ -27,6 +27,7 @@ export {
   classifyRequestedDomain,
   extractGeneratedConcepts,
   extractRequestedConcepts,
+  maskNegatedProductPhrases,
 } from './product-faithfulness-feature-extractor.js';
 export { compareProductConcepts, computeFaithfulnessScore } from './product-faithfulness-comparator.js';
 export { isSeriousFaithfulnessProblem, resolveFaithfulnessVerdict } from './product-faithfulness-verdict.js';

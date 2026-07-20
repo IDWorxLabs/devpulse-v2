@@ -116,6 +116,7 @@ export async function runLivePreviewInteractionProof(
       };
     }
 
+    await driver.prepareFeatureSurface?.();
     const rootUiCount = await driver.countRootUi();
     const rootUiFound = rootUiCount > 0;
 

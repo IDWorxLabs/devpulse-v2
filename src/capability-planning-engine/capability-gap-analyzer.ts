@@ -25,7 +25,16 @@ function riskFor(requiredName: string, matchType: string): RiskLevel {
   if (/payment|medical diagnosis|identity verification|location tracking|database migration/i.test(requiredName)) {
     return 'HIGH';
   }
-  if (/ai assistant|sync|cloud|auth/i.test(requiredName)) return 'MEDIUM';
+  // Production Synchronization Engine (and peers) are VALIDATED LOW — do not treat the word
+  // "sync" alone as forever MEDIUM when a validated match exists.
+  if (
+    /synchronization engine|conflict resolution|retry queue|offline (?:sync|persistence)|cloud synchronization|local storage/i.test(
+      requiredName,
+    )
+  ) {
+    return 'LOW';
+  }
+  if (/ai assistant|cloud api|auth/i.test(requiredName)) return 'MEDIUM';
   if (matchType === 'INCOMPATIBLE') return 'HIGH';
   return 'LOW';
 }

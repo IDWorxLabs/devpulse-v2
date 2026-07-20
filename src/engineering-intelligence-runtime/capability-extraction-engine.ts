@@ -149,20 +149,13 @@ function extractExplicitModulesFromPrompt(rawPrompt: string): string[] {
 function capabilityFromCatalogEntry(
   entry: DomainCapabilityCatalogEntry,
   rawPrompt: string,
-  forceInclude: boolean,
+  _forceInclude: boolean,
 ): RequiredCapability | null {
   const matchedTriggers = entry.triggers.filter((trigger) => trigger.test(rawPrompt));
-  if (!forceInclude && matchedTriggers.length === 0 && !entry.optional) {
-    return {
-      readOnly: true,
-      capabilityId: entry.capabilityId,
-      label: entry.label,
-      moduleIds: entry.moduleIds,
-      optional: false,
-      promptEvidence: [`Domain baseline capability: ${entry.label}`],
-    };
-  }
-  if (!forceInclude && entry.optional && matchedTriggers.length === 0) return null;
+  // Never invent domain-baseline modules without prompt evidence. Force-including an entire
+  // domain catalog (e.g. Expenses from a false finance classification) drifts product truth
+  // and breaks CBGA/GPCA when EI regenerates unapproved navigation.
+  if (matchedTriggers.length === 0) return null;
 
   return {
     readOnly: true,
@@ -170,10 +163,7 @@ function capabilityFromCatalogEntry(
     label: entry.label,
     moduleIds: entry.moduleIds,
     optional: entry.optional === true,
-    promptEvidence:
-      matchedTriggers.length > 0
-        ? matchedTriggers.map((t) => `Prompt matches ${t.source}`)
-        : [`Domain baseline capability: ${entry.label}`],
+    promptEvidence: matchedTriggers.map((t) => `Prompt matches ${t.source}`),
   };
 }
 

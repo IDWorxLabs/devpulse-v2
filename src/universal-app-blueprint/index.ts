@@ -35,3 +35,28 @@ export {
 } from './universal-app-blueprint-planning-rule.js';
 
 export { composeGeneratedAppWorkspaceFiles } from './universal-app-blueprint-authority.js';
+
+export {
+  deriveBlueprintContractCopy,
+  findArtifactProvenance,
+  runBlueprintTemplateEliminationAudit,
+  UNIVERSAL_APP_BLUEPRINT_ARTIFACT_PROVENANCE,
+  type BlueprintContractDerivedCopy,
+  type BlueprintContractDerivationInput,
+  type BlueprintArtifactProvenance,
+  type BlueprintArtifactProvenanceKind,
+  type BlueprintTemplateEliminationAuditReport,
+} from './universal-app-blueprint-contract-provenance.js';
+
+export {
+  buildBlueprintProductSurface,
+  buildBlueprintProductSurfaceTs,
+  type BlueprintContentOrigin,
+  type BlueprintProductSurface,
+  type BlueprintProductSurfaceContent,
+  type BlueprintProductSurfaceInput,
+  type BlueprintProductSurfaceNavItem,
+  type BlueprintProductSurfaceProvenance,
+} from './universal-app-blueprint-product-surface.js';
+
+export type { InfrastructureNavigationItem, InfrastructureNavigationKind } from '../infrastructure-product-boundary-authority-v1/infrastructure-navigation-model.js';

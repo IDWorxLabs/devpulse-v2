@@ -39,6 +39,17 @@ function normalizeWords(text: string): string[] {
     .filter((w) => w.length > 2);
 }
 
+/** Soft lexical relatedness — plural/singular and shared stems, never domain-specific. */
+function wordsRelated(a: string, b: string): boolean {
+  if (a === b) return true;
+  if (a.length >= 3 && b.length >= 3 && (a.startsWith(b) || b.startsWith(a))) return true;
+  if (a.endsWith('s') && a.slice(0, -1) === b) return true;
+  if (b.endsWith('s') && b.slice(0, -1) === a) return true;
+  if (a.endsWith('es') && a.slice(0, -2) === b) return true;
+  if (b.endsWith('es') && b.slice(0, -2) === a) return true;
+  return false;
+}
+
 export function buildContractSurfacePlan(
   contract: CbgaCanonicalContractEvidence,
   modulePlan: readonly CbgaModulePlanEntry[],
@@ -64,12 +75,12 @@ export function buildContractSurfacePlan(
 
 /** Does the text reference at least one real contract concept (by word overlap)? */
 function referencesContractConcept(text: string, contract: CbgaCanonicalContractEvidence): boolean {
-  const words = new Set(normalizeWords(text));
-  const conceptWords = new Set(
-    [contract.productIdentity, ...contract.allConceptNames].flatMap((c) => normalizeWords(c)),
+  const words = normalizeWords(text);
+  const conceptWords = [contract.productIdentity, ...contract.allConceptNames].flatMap((concept) =>
+    normalizeWords(concept),
   );
   for (const word of words) {
-    if (conceptWords.has(word)) return true;
+    if (conceptWords.some((conceptWord) => wordsRelated(word, conceptWord))) return true;
   }
   return false;
 }

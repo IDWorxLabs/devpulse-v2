@@ -2,6 +2,10 @@
  * Simple Utility App — detection, module contracts, and planning templates.
  * Covers calculator, todo, notes, timer, and counter prompts that must build without
  * irrelevant dashboard/settings infrastructure.
+ *
+ * Critically: these detectors only fire for *single-purpose* utility prompts. A product that
+ * lists several entity capabilities (contacts + tasks + notes, menu + orders + inventory, …)
+ * is a multi-feature application and must never collapse to the first matching utility word.
  */
 
 export type SimpleUtilityAppKind = 'calculator' | 'todo' | 'notes' | 'timer' | 'counter';
@@ -9,16 +13,52 @@ export type SimpleUtilityAppKind = 'calculator' | 'todo' | 'notes' | 'timer' | '
 const SIMPLE_UTILITY_PATTERNS: ReadonlyArray<{ kind: SimpleUtilityAppKind; pattern: RegExp }> = [
   { kind: 'calculator', pattern: /\bcalculator\b/i },
   { kind: 'todo', pattern: /\b(?:todo|to-do)(?:\s+(?:list|app))?\b/i },
-  { kind: 'notes', pattern: /\bnotes?(?:\s+app)?\b/i },
+  // Require "notes app" / leading purpose — bare "notes" is a common capability noun, not a
+  // sufficient signal that the entire product is a single-purpose notes utility.
+  { kind: 'notes', pattern: /\bnotes?\s+app\b|\bsimple\s+notes?\b|\bnote[\s-]?taking\b/i },
   { kind: 'timer', pattern: /\btimer(?:\s+app)?\b/i },
   { kind: 'counter', pattern: /\bcounter(?:\s+app)?\b/i },
 ];
 
 const BUILD_VERB_PATTERN = /\b(build|create|make)\b/i;
 
+/**
+ * Domain-neutral product-entity nouns. Two or more distinct hits mean the prompt describes a
+ * composed application, not a single-purpose utility — simple-utility detection must yield.
+ */
+const MULTI_ENTITY_PRODUCT_PATTERNS: readonly RegExp[] = [
+  /\bcontacts?\b/i,
+  /\btasks?\b/i,
+  /\bnotes?\b/i,
+  /\bcategories?\b/i,
+  /\bproducts?\b/i,
+  /\bstock\b/i,
+  /\bsuppliers?\b/i,
+  /\bappointments?\b/i,
+  /\bservices?\b/i,
+  /\borders?\b/i,
+  /\bmenu\b/i,
+  /\binventory\b/i,
+  /\bcustomers?\b/i,
+  /\bstaff\b/i,
+  /\btables?\b/i,
+];
+
+export function promptDescribesMultiEntityProduct(rawPrompt: string): boolean {
+  let hits = 0;
+  for (const pattern of MULTI_ENTITY_PRODUCT_PATTERNS) {
+    if (pattern.test(rawPrompt)) {
+      hits += 1;
+      if (hits >= 2) return true;
+    }
+  }
+  return false;
+}
+
 export function detectSimpleUtilityAppKind(rawPrompt: string): SimpleUtilityAppKind | null {
   const normalized = rawPrompt.trim();
   if (!BUILD_VERB_PATTERN.test(normalized)) return null;
+  if (promptDescribesMultiEntityProduct(normalized)) return null;
   for (const entry of SIMPLE_UTILITY_PATTERNS) {
     if (entry.pattern.test(normalized)) return entry.kind;
   }

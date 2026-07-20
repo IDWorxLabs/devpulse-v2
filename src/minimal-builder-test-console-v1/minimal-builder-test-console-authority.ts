@@ -23,6 +23,12 @@ export function resolveBuilderTestPrompt(body: Record<string, unknown>): string 
 }
 
 export function resolveBuilderTestProjectName(body: Record<string, unknown>, prompt: string): string {
+  // A product identity explicitly declared in the current prompt is authoritative for a fresh
+  // build. A populated project-name field may be residue from the previous test.
+  if (/\b(?:called|named)\s+/i.test(prompt)) {
+    const promptName = deriveProjectNameFromPrompt(prompt);
+    if (promptName && promptName !== 'New Project') return promptName;
+  }
   for (const field of ['projectName', 'name', 'requestedName'] as const) {
     const raw = body[field];
     if (typeof raw === 'string' && raw.trim()) {
@@ -43,8 +49,10 @@ export function bootstrapFreshProjectForBuilderTest(input: {
   }
 
   const requestedName =
-    input.projectName?.trim() ||
-    deriveProjectNameFromPrompt(trimmedPrompt, input.projectName) ||
+    (/\b(?:called|named)\s+/i.test(trimmedPrompt)
+      ? deriveProjectNameFromPrompt(trimmedPrompt)
+      : input.projectName?.trim()) ||
+    deriveProjectNameFromPrompt(trimmedPrompt) ||
     'BuilderTest';
 
   const fresh = executeFastProjectCreate({

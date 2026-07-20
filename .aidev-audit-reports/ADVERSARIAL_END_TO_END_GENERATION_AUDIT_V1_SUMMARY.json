@@ -1,0 +1,74 @@
+{
+  "readOnly": true,
+  "executedAt": "2026-07-20T17:34:56.577Z",
+  "productsGenerated": 56,
+  "successfulGenerations": 56,
+  "failedGenerations": 0,
+  "successRatePercent": 100,
+  "averageCapabilityRetentionPercent": 98.2,
+  "buildSuccessRatePercent": 100,
+  "previewSuccessRatePercent": 100,
+  "integritySuccessRatePercent": 100,
+  "domainCoverage": [
+    "healthcare",
+    "logistics",
+    "agriculture",
+    "finance",
+    "manufacturing",
+    "education",
+    "legal",
+    "hospitality",
+    "marine",
+    "aviation",
+    "construction",
+    "emergency",
+    "insurance",
+    "government",
+    "retail",
+    "scientific",
+    "industrial",
+    "entertainment",
+    "sports",
+    "accessibility"
+  ],
+  "adversarialCount": 16,
+  "contamination": {
+    "scannedWorkspaces": 56,
+    "forbiddenBareBannedModules": [],
+    "contractBoundBareBannedModules": [
+      {
+        "id": "blood-bank-inventory-data",
+        "module": "inventory"
+      },
+      {
+        "id": "immigration-case-timeline",
+        "module": "tasks"
+      },
+      {
+        "id": "boutique-spa-bookings",
+        "module": "inventory"
+      },
+      {
+        "id": "ga-maintenance-hangar",
+        "module": "inventory"
+      },
+      {
+        "id": "wildfire-incident-timeline",
+        "module": "tasks"
+      },
+      {
+        "id": "consignment-boutique",
+        "module": "inventory"
+      },
+      {
+        "id": "clinical-trial-randomization",
+        "module": "inventory"
+      }
+    ],
+    "fallbackFails": [],
+    "isolationLeaks": [],
+    "passed": true
+  },
+  "manualInterventionsRequired": 0,
+  "passTokenEligible": true
+}

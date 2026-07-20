@@ -16,14 +16,19 @@ export function resetEvolutionSafetyAssessorForTests(): void {
 }
 
 const HIGH_RISK_PATTERNS: Array<{ pattern: RegExp; reason: string; dimension: string }> = [
-  { pattern: /payment|billing|stripe|checkout|financial transaction/i, reason: 'Financial transaction execution', dimension: 'Financial Risk' },
-  { pattern: /identity verification|kyc|biometric auth/i, reason: 'Identity verification', dimension: 'Authentication Risk' },
-  { pattern: /medical diagnosis|clinical decision|prescription/i, reason: 'Medical diagnosis', dimension: 'Medical Risk' },
-  { pattern: /legal advice|contract generation|compliance ruling/i, reason: 'Legal advice automation', dimension: 'Legal Risk' },
-  { pattern: /delete.*account|account deletion|purge user/i, reason: 'External account deletion', dimension: 'External System Risk' },
-  { pattern: /database migration|schema migration|drop table/i, reason: 'Production database migration', dimension: 'Production Mutation Risk' },
-  { pattern: /credential|password|secret|api key|token storage/i, reason: 'Credential handling', dimension: 'Security Risk' },
-  { pattern: /surveillance|tracking|location monitor|spy/i, reason: 'Surveillance or tracking capability', dimension: 'Privacy Risk' },
+  // Word boundaries prevent "checkout" matching inside "equipment-checkouts".
+  {
+    pattern: /\b(?:payments?|billings?|stripe|checkout|financial\s+transactions?)\b/i,
+    reason: 'Financial transaction execution',
+    dimension: 'Financial Risk',
+  },
+  { pattern: /\b(?:identity\s+verification|kyc|biometric\s+auth)\b/i, reason: 'Identity verification', dimension: 'Authentication Risk' },
+  { pattern: /\b(?:medical\s+diagnosis|clinical\s+decision|prescription)\b/i, reason: 'Medical diagnosis', dimension: 'Medical Risk' },
+  { pattern: /\b(?:legal\s+advice|contract\s+generation|compliance\s+ruling)\b/i, reason: 'Legal advice automation', dimension: 'Legal Risk' },
+  { pattern: /\b(?:delete.*account|account\s+deletion|purge\s+user)\b/i, reason: 'External account deletion', dimension: 'External System Risk' },
+  { pattern: /\b(?:database\s+migration|schema\s+migration|drop\s+table)\b/i, reason: 'Production database migration', dimension: 'Production Mutation Risk' },
+  { pattern: /\b(?:credential|password|secret|api\s+key|token\s+storage)\b/i, reason: 'Credential handling', dimension: 'Security Risk' },
+  { pattern: /\b(?:surveillance|tracking|location\s+monitor|spy)\b/i, reason: 'Surveillance or tracking capability', dimension: 'Privacy Risk' },
 ];
 
 function assessDimensions(name: string, riskHints: readonly string[]): Record<string, 'LOW' | 'MEDIUM' | 'HIGH'> {

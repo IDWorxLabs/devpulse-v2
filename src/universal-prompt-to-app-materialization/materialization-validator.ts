@@ -216,27 +216,39 @@ export function validateUniversalAppMaterialization(input: {
     simpleUtilityComponentName !== null &&
     appTsxSource.includes(simpleUtilityComponentName) &&
     appTsxSource.includes(`<${simpleUtilityComponentName}`);
+  // Multi-entity custom apps may mount FeatureAppRouter directly (no auth/welcome shell).
+  // That is a valid production entry — do not require AppShell just to pass validation.
+  const modularRouterDirectMount =
+    appTsxSource.includes('FeatureAppRouter') &&
+    (appTsxSource.includes('data-direct-feature-app') ||
+      appTsxSource.includes('data-root-feature') ||
+      /<FeatureAppRouter[\s/>]/.test(appTsxSource));
 
-  const blueprintShellPresent = simpleUtilityDirectMount
-    ? true
-    : existsSync(join(input.workspaceDir, 'src/blueprint/AppShell.tsx')) &&
-      existsSync(appTsxPath) &&
-      appTsxSource.includes('AppShell');
+  const blueprintShellPresent =
+    simpleUtilityDirectMount || modularRouterDirectMount
+      ? true
+      : existsSync(join(input.workspaceDir, 'src/blueprint/AppShell.tsx')) &&
+        existsSync(appTsxPath) &&
+        appTsxSource.includes('AppShell');
 
   const appShellSource = readIfExists(join(input.workspaceDir, 'src/blueprint/AppShell.tsx'));
   const shellUsesModularRouter =
-    appShellSource.includes('FeatureAppRouter') || sourceBundle.includes('feature-app-router');
+    modularRouterDirectMount ||
+    appShellSource.includes('FeatureAppRouter') ||
+    sourceBundle.includes('feature-app-router');
 
-  const featureModulesPresent = simpleUtilityDirectMount
-    ? missingFeatureModules.length === 0 && modularValidation.passed
-    : missingFeatureModules.length === 0 &&
-      modularValidation.passed &&
-      shellUsesModularRouter &&
-      !isMonolithicDomainFeaturePrimaryRenderer(input.workspaceDir);
+  const featureModulesPresent =
+    simpleUtilityDirectMount || modularRouterDirectMount
+      ? missingFeatureModules.length === 0 && modularValidation.passed
+      : missingFeatureModules.length === 0 &&
+        modularValidation.passed &&
+        shellUsesModularRouter &&
+        !isMonolithicDomainFeaturePrimaryRenderer(input.workspaceDir);
 
-  const modularFeaturesPresent = simpleUtilityDirectMount
-    ? modularValidation.passed
-    : modularValidation.passed && shellUsesModularRouter;
+  const modularFeaturesPresent =
+    simpleUtilityDirectMount || modularRouterDirectMount
+      ? modularValidation.passed
+      : modularValidation.passed && shellUsesModularRouter;
 
   const promptSpecificTermsPresent =
     matchedUiTerms.length >= Math.min(3, definition.requiredUiTerms.length) ||

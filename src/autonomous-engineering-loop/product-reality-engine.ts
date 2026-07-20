@@ -115,7 +115,25 @@ export function evaluateProductReality(input: {
     );
     return moduleIds.some((m) => modules.includes(m));
   });
-  const missingCapabilities = requiredCapabilities.filter((id) => !coveredCapabilities.includes(id));
+  let missingCapabilities = requiredCapabilities.filter((id) => !coveredCapabilities.includes(id));
+  // End-to-End Autonomous Production Convergence V1 — the Autonomous Engineering Loop must never
+  // evolve a capability into a brand-new top-level module/navigation surface that the CBGA envelope
+  // never approved. That is exactly the post-preview drift GPCA rejects (observed: a "Records"
+  // capability, a decomposition artifact of the approved "stock-records" module, was materialized as
+  // an unapproved nav item). A capability is only an ACTIONABLE gap when its target module is part
+  // of the approved module set (i.e. an approved module that failed to materialize). Capabilities
+  // whose module is not approved are either already covered by an approved module under a different
+  // decomposition or genuinely out of approved scope — both must be reported as gaps, never silently
+  // materialized. Fully generic: it bounds evolution to the constitutional approved envelope.
+  if (input.approvedModuleIds && input.approvedModuleIds.length > 0) {
+    const approved = new Set(input.approvedModuleIds);
+    missingCapabilities = missingCapabilities.filter((id) => {
+      const moduleIds = listCapabilityModuleIds(
+        contract.requiredCapabilities.filter((c) => c.capabilityId === id),
+      );
+      return moduleIds.some((m) => approved.has(m));
+    });
+  }
 
   const requiredModules = contract.requiredModules;
   const coreWorkflowCoverage = fidelity.productFidelityScore;

@@ -125,8 +125,19 @@
     return date.toLocaleTimeString();
   }
 
-  /** Builds the step-by-step work log from real engine output — never fabricated. */
+  /** Builds the step-by-step work log from canonical productionPath timeline when present. */
   function buildWorkLogSteps(payload) {
+    if (payload && payload.productionPath && Array.isArray(payload.productionPath.progressItems) && payload.productionPath.progressItems.length) {
+      return payload.productionPath.progressItems.map(function (item) {
+        return {
+          title: item.label || 'Build step',
+          detail: item.detail || '',
+          status: item.status || 'pending',
+          timestamp: null,
+        };
+      });
+    }
+
     var progressItems =
       (payload.chatToBuildExecutionBridge && payload.chatToBuildExecutionBridge.progressItems) ||
       payload.progressItems ||
@@ -183,7 +194,10 @@
       var icon = document.createElement('span');
       icon.className = 'builder-worklog-icon';
       icon.textContent =
-        step.status === 'complete' ? '✓' : step.status === 'failed' ? '✕' : step.status === 'active' ? '•' : '';
+        step.status === 'complete' ? '✓' :
+        step.status === 'failed' || step.status === 'blocked' ? '✕' :
+        step.status === 'active' ? '•' :
+        step.status === 'skipped' ? '–' : '';
 
       var body = document.createElement('div');
       var title = document.createElement('div');
@@ -214,12 +228,13 @@
   // Live preview panel
   // ---------------------------------------------------------------------
 
-  function renderPreview(build) {
+  function renderPreview(build, productionPath) {
     var frame = el('builder-preview-frame');
     var empty = el('builder-preview-empty');
     var emptySub = el('builder-preview-empty-sub');
     var openLink = el('builder-preview-open-link');
-    var url = build && build.previewUrl ? build.previewUrl : null;
+    var previewBlocked = productionPath && productionPath.previewAvailable === false;
+    var url = !previewBlocked && build && build.previewUrl ? build.previewUrl : null;
 
     if (url) {
       if (frame.getAttribute('src') !== url) frame.src = url;
@@ -424,7 +439,7 @@
    * only; the raw execution timeline (which is the closest thing to process logs here) lives in
    * Advanced Diagnostics.
    */
-  function renderExecutionStatus(buildExecution, appIsRunning) {
+  function renderExecutionStatus(buildExecution, appIsRunning, productionPath) {
     var section = el('builder-execution-section');
     if (!buildExecution) {
       section.hidden = true;
@@ -432,13 +447,13 @@
     }
 
     section.hidden = false;
+    var blockedByProductionPath =
+      productionPath &&
+      (productionPath.executionStatus === 'BLOCKED' || productionPath.previewAvailable === false);
     var info = EXECUTION_BADGE[buildExecution.state] || { label: buildExecution.state, tone: '' };
     var headlineText = buildExecution.headline || '';
 
-    // The execution stabilizer only knows about its own stages, not whether the app the user
-    // cares about is actually up. If the app IS running, never show alarming "stopped/blocked"
-    // wording here — reframe it as a background note instead of a scary headline.
-    if (appIsRunning && (buildExecution.state === 'FAILED' || buildExecution.state === 'BLOCKED')) {
+    if (!blockedByProductionPath && appIsRunning && (buildExecution.state === 'FAILED' || buildExecution.state === 'BLOCKED')) {
       info = { label: 'Needs a look', tone: 'execution-recovering' };
       headlineText = 'The app is running in the live preview. One background build stage needed attention — see details below.';
     }
@@ -549,43 +564,64 @@
    * retention/drift, and any repairs AiDevEngine already applied. Raw per-stage evidence and the
    * concept graph live in Advanced Diagnostics only.
    */
-  function renderGenerationFaithfulness(generationFaithfulness) {
+  function renderGenerationFaithfulness(generationFaithfulness, productionPath) {
     var section = el('builder-generation-faithfulness');
-    if (!generationFaithfulness) {
+    var rootCauseFindings =
+      productionPath && Array.isArray(productionPath.canonicalRootCauseFindings)
+        ? productionPath.canonicalRootCauseFindings
+        : [];
+    if (!generationFaithfulness && rootCauseFindings.length === 0) {
       section.hidden = true;
       return;
     }
 
     section.hidden = false;
-    el('builder-generation-faithfulness-identity').textContent = generationFaithfulness.productIdentity || '';
+    el('builder-generation-faithfulness-identity').textContent =
+      (productionPath && productionPath.projectTitle) ||
+      (generationFaithfulness && generationFaithfulness.productIdentity) ||
+      '';
 
     var badge = el('builder-generation-faithfulness-badge');
-    var info = GENERATION_FAITHFULNESS_BADGE[generationFaithfulness.verdict] || { label: generationFaithfulness.verdict, tone: '' };
+    var verdict =
+      rootCauseFindings.length > 0
+        ? 'INCONSISTENT'
+        : generationFaithfulness
+          ? generationFaithfulness.verdict
+          : 'CONSISTENT';
+    var info = GENERATION_FAITHFULNESS_BADGE[verdict] || { label: verdict, tone: '' };
     badge.textContent = info.label;
     badge.className = 'builder-generation-faithfulness-badge' + (info.tone ? ' ' + info.tone : '');
 
-    el('builder-generation-faithfulness-retention').textContent = 'Concept retention: ' + generationFaithfulness.conceptRetentionPercent + '%';
-    el('builder-generation-faithfulness-drift').textContent = 'Concept drift: ' + generationFaithfulness.conceptDriftPercent + '%';
+    if (generationFaithfulness) {
+      el('builder-generation-faithfulness-retention').textContent =
+        'Concept retention: ' + generationFaithfulness.conceptRetentionPercent + '%';
+      el('builder-generation-faithfulness-drift').textContent =
+        'Concept drift: ' + generationFaithfulness.conceptDriftPercent + '%';
+    }
 
-    renderResultList(
-      'builder-generation-faithfulness-recovered-list',
-      'builder-generation-faithfulness-recovered-wrap',
-      generationFaithfulness.recoveredConcepts,
-    );
+    renderResultList('builder-generation-faithfulness-recovered-list', 'builder-generation-faithfulness-recovered-wrap', []);
     renderResultList(
       'builder-generation-faithfulness-missing-list',
       'builder-generation-faithfulness-missing-wrap',
-      generationFaithfulness.remainingMissingConcepts,
+      rootCauseFindings.length
+        ? rootCauseFindings.map(function (finding) {
+            return (
+              finding.concept +
+              ' — first broken at ' +
+              finding.firstBrokenBoundary +
+              '. ' +
+              finding.requiredAction
+            );
+          })
+        : generationFaithfulness
+          ? generationFaithfulness.remainingMissingConcepts
+          : [],
     );
-    renderResultList(
-      'builder-generation-faithfulness-repairs-list',
-      'builder-generation-faithfulness-repairs-wrap',
-      generationFaithfulness.repairsPerformed,
-    );
+    renderResultList('builder-generation-faithfulness-repairs-list', 'builder-generation-faithfulness-repairs-wrap', []);
 
     var details = el('builder-generation-faithfulness-details');
     if (details) {
-      details.open = generationFaithfulness.verdict === 'SUBSTITUTED' || generationFaithfulness.verdict === 'INCONSISTENT';
+      details.open = rootCauseFindings.length > 0 || verdict === 'SUBSTITUTED' || verdict === 'INCONSISTENT';
     }
   }
 
@@ -594,7 +630,14 @@
    * facts (never the scary raw internal jargon), e.g. "Preview is available. Interaction
    * proof could not confirm one behavior."
    */
-  function buildSecondaryDetailLine(normalized) {
+  function buildSecondaryDetailLine(normalized, productionPath) {
+    if (productionPath && (productionPath.executionStatus === 'BLOCKED' || productionPath.previewAvailable === false)) {
+      var diagnosticRoot =
+        (productionPath.diagnostics && productionPath.diagnostics.rootCause) ||
+        productionPath.completionMessage ||
+        '';
+      return diagnosticRoot;
+    }
     var stages = normalized.stages || {};
     var lines = [];
     if (stages.previewReady) lines.push('Preview is available.');
@@ -622,7 +665,7 @@
    * FAILED_WITH_REPAIR_AVAILABLE / FAILED_BLOCKED) using the server-computed normalizedBuild.
    * Raw JSON and internal authority names never appear here — only in Advanced Diagnostics.
    */
-  function renderBuildResult(normalized) {
+  function renderBuildResult(normalized, productionPath) {
     var panel = el('builder-result-panel');
     panel.hidden = false;
     panel.classList.remove('hidden');
@@ -630,19 +673,25 @@
     panel.classList.add(RESULT_TONE[normalized.result] || 'tone-blocked');
 
     el('builder-result-title').textContent = RESULT_TITLE[normalized.result] || 'Build result';
-    el('builder-result-detail-line').textContent = buildSecondaryDetailLine(normalized);
-    el('builder-result-headline').textContent = normalized.summary.headline;
+    el('builder-result-detail-line').textContent = buildSecondaryDetailLine(normalized, productionPath);
+    el('builder-result-headline').textContent =
+      (productionPath && productionPath.completionMessage) || normalized.summary.headline;
 
+    var whatFailed =
+      productionPath && productionPath.diagnostics && Array.isArray(productionPath.diagnostics.summaryLines) && productionPath.diagnostics.summaryLines.length
+        ? productionPath.diagnostics.summaryLines
+        : normalized.summary.whatFailed;
     renderResultList('builder-result-worked-list', 'builder-result-worked-wrap', normalized.summary.whatWorked);
-    renderResultList('builder-result-failed-list', 'builder-result-failed-wrap', normalized.summary.whatFailed);
+    renderResultList('builder-result-failed-list', 'builder-result-failed-wrap', whatFailed);
     renderResultList('builder-repair-attempts-list', 'builder-repair-attempts', normalized.summary.whatAiDevEngineTried);
     renderWorkspaceStatus(normalized.workspaceMaterialization);
-    renderExecutionStatus(normalized.buildExecution, normalized.showLivePreview === true);
+    renderExecutionStatus(normalized.buildExecution, productionPath ? productionPath.previewAvailable === true : normalized.showLivePreview === true, productionPath);
     renderInteractionProof(normalized.livePreviewProof);
     renderFaithfulness(normalized.productFaithfulness);
-    renderGenerationFaithfulness(normalized.generationFaithfulness);
+    renderGenerationFaithfulness(normalized.generationFaithfulness, productionPath);
 
-    el('builder-result-next').textContent = normalized.summary.whatToDoNext;
+    el('builder-result-next').textContent =
+      (productionPath && productionPath.nextStep) || normalized.summary.whatToDoNext;
 
     // Keep the summary short and calm by default; auto-expand full details only when there's
     // something the user should actually look at, so a clean success stays a one-glance panel.
@@ -889,15 +938,27 @@
     return null;
   }
 
+  function resolveProjectTitle(payload, build) {
+    if (payload && payload.productionPath && payload.productionPath.projectTitle) {
+      return payload.productionPath.projectTitle;
+    }
+    if (build && build.approvedProductIdentity && build.approvedProductIdentity.displayName) {
+      return build.approvedProductIdentity.displayName;
+    }
+    if (build && build.projectName) return build.projectName;
+    return 'Identity resolution failed — approved product identity missing.';
+  }
+
   function applyBuildPayload(payload) {
     var build = extractBuild(payload);
     state.lastPayload = payload;
     state.lastBuild = build;
 
     if (build && build.projectId) persistProjectId(build.projectId);
-    if (build && build.projectName) {
-      el('builder-prompt-hint').textContent = 'Project: ' + build.projectName;
+    if (build && build.buildId && payload.productionPath && payload.productionPath.buildRequestId !== build.buildId) {
+      return;
     }
+    el('builder-prompt-hint').textContent = 'Project: ' + resolveProjectTitle(payload, build);
 
     var steps = buildWorkLogSteps(payload);
     renderWorkLog(steps);
@@ -907,7 +968,7 @@
 
     if (status === 'READY' || status === 'FAILED') {
       if (normalized) {
-        renderBuildResult(normalized);
+        renderBuildResult(normalized, payload.productionPath || null);
       } else {
         setStatusBadge('Failed', 'failed');
         showFailure(resolveFailureReason(build, payload), describeRepairAttempts(build));
@@ -919,7 +980,7 @@
       setStatusBadge(status, null);
     }
 
-    renderPreview(build);
+    renderPreview(build, payload.productionPath || null);
     renderDiagnostics(payload, build);
   }
 

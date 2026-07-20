@@ -47,8 +47,12 @@ const MODULE_SYNONYM_TO_CANONICAL: Record<string, string | null> = {
   'to-speech': 'text-to-speech',
   'eye-tracking': 'eye-tracking-board',
   'communication-board': 'eye-tracking-board',
-  settings: 'accessibility-settings',
+  settings: null, // never remap generic settings → assistive accessibility-settings
   calibration: 'onboarding-calibration',
+  // Escape-room / org prompts list "teams"; never collapse to banned singular "team".
+  team: 'teams',
+  // Product entity "routes" collides with router file src/features/routes.ts.
+  routes: 'delivery-routes',
 };
 
 const INTERACTION_PHRASES = [
@@ -101,13 +105,21 @@ const IMPLEMENTATION_NOTE_PHRASES = [
 ];
 
 export function normalizeModuleId(raw: string): string {
-  return raw
+  let normalized = raw
     .trim()
     .toLowerCase()
     .replace(/[—–]/g, '-')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .replace(/-+/g, '-');
+  normalized = normalized.replace(/^(?:a|an|the)-/, '');
+  // Structural collapse: "audit-timeline-of-randomization-decisions" → "audit-timeline".
+  // Prevents long of/for-phrases from losing their qualifier and collapsing to a bare banned term.
+  normalized = normalized.replace(
+    /^([a-z][a-z0-9]*(?:-[a-z0-9]+)*)-(timeline|history|log|register|ledger)-(?:of|for)(?:-.+)?$/,
+    '$1-$2',
+  );
+  return normalized;
 }
 
 export function isValidModuleId(moduleId: string): boolean {
@@ -125,6 +137,37 @@ export function dedupeModuleIds(moduleIds: string[]): string[] {
   }
   return result;
 }
+
+/** Domain-neutral entity modules frequently listed in product requirements. */
+export const KNOWN_UNIVERSAL_ENTITY_MODULES = new Set([
+  'contacts',
+  'tasks',
+  'notes',
+  'categories',
+  'products',
+  'stock',
+  'suppliers',
+  'appointments',
+  'services',
+  'customers',
+  'staff',
+  'orders',
+  'inventory',
+  'tables',
+  'reminders',
+  'reports',
+  'projects',
+  'labels',
+  // Prompt-named CRM / org nouns — banned as silent profile defaults, legitimate when listed.
+  'deals',
+  'leads',
+  'companies',
+  'teams',
+  'team',
+  'routes',
+  'delivery-routes',
+  'schedule',
+]);
 
 export function classifyModulePhrase(raw: string): ModulePhraseClassification {
   const normalized = normalizeModuleId(raw);
@@ -144,14 +187,27 @@ export function classifyModulePhrase(raw: string): ModulePhraseClassification {
   if (IMPLEMENTATION_NOTE_PHRASES.some((phrase) => lowerRaw.includes(phrase) || normalized === normalizeModuleId(phrase))) {
     return 'implementation-note';
   }
+  // Explicit universal entity modules win over the banned-fallback denylist. The denylist exists
+  // to stop profile DEFAULTS from injecting tasks/inventory/etc.; when the prompt itself names
+  // those entities they are legitimate product modules.
+  if (KNOWN_UNIVERSAL_ENTITY_MODULES.has(normalized)) return 'module';
   if (WEAK_MODULE_PHRASES.has(normalized) || ADJECTIVE_STYLE_MODULE_PHRASES.has(normalized)) {
     return normalized in MODULE_SYNONYM_TO_CANONICAL ? 'module' : 'rejected';
   }
+  // Reject qualifier/metric compounds that are not entity heads.
+  if (
+    /^(?:plus|a|an|the)-/.test(normalized) ||
+    /-(?:totals?|list|with|a|an|the)(?:-|$)/.test(normalized) ||
+    /-with-/.test(normalized)
+  ) {
+    return 'rejected';
+  }
   if (normalized.includes('-') && normalized.length >= 5) return 'module';
-  if (isValidModuleId(normalized) && normalized.length >= 8) return 'module';
+  // Short plural entity nouns (spaces, berths, boats, rates, members, shows) are legitimate
+  // modules; the previous ≥8 cutoff silently dropped them from colon/feature lists.
+  if (isValidModuleId(normalized) && normalized.length >= 4) return 'module';
   return 'rejected';
 }
-
 export function resolveModuleSynonym(moduleId: string): string | null {
   const normalized = normalizeModuleId(moduleId);
   if (!normalized) return null;
@@ -161,7 +217,11 @@ export function resolveModuleSynonym(moduleId: string): string | null {
   if (WEAK_MODULE_PHRASES.has(normalized) && !(normalized in MODULE_SYNONYM_TO_CANONICAL)) {
     return null;
   }
-  if (BANNED_FALLBACK_MODULES.includes(normalized as (typeof BANNED_FALLBACK_MODULES)[number])) {
+  // Banned-fallback denylist rejects silent profile injection — not prompt-named universal entities.
+  if (
+    BANNED_FALLBACK_MODULES.includes(normalized as (typeof BANNED_FALLBACK_MODULES)[number]) &&
+    !KNOWN_UNIVERSAL_ENTITY_MODULES.has(normalized)
+  ) {
     return null;
   }
   return normalized;
@@ -193,7 +253,13 @@ export function sanitizeModuleIds(
       rejected.push(normalizeModuleId(raw));
       continue;
     }
-    if (BANNED_FALLBACK_MODULES.includes(resolved as (typeof BANNED_FALLBACK_MODULES)[number]) && !allow.has(resolved)) {
+    // Explicit prompt entities that appear in KNOWN_UNIVERSAL_ENTITY_MODULES are never treated
+    // as banned profile-fallback modules — the ban only prevents silent injection.
+    if (
+      BANNED_FALLBACK_MODULES.includes(resolved as (typeof BANNED_FALLBACK_MODULES)[number]) &&
+      !allow.has(resolved) &&
+      !KNOWN_UNIVERSAL_ENTITY_MODULES.has(resolved)
+    ) {
       rejected.push(resolved);
       continue;
     }
@@ -211,12 +277,18 @@ export function suppressFallbackModulesWhenCustomExists(
 ): string[] {
   if (customModules.length < 2) return modules;
   const banned = new Set<string>(BANNED_FALLBACK_MODULES);
-  return modules.filter((moduleId) => !banned.has(moduleId));
+  // Keep prompt-named universal entities even if they also appear on the banned-fallback list.
+  return modules.filter(
+    (moduleId) => !banned.has(moduleId) || KNOWN_UNIVERSAL_ENTITY_MODULES.has(moduleId),
+  );
 }
 
 export function isRejectedNonModulePhrase(moduleId: string): boolean {
   const normalized = normalizeModuleId(moduleId);
   if (!normalized || normalized === 'auth') return false;
+  // Prompt-named universal entities (tasks, inventory, …) are valid modules even though the
+  // same tokens are banned as silent profile fallbacks.
+  if (KNOWN_UNIVERSAL_ENTITY_MODULES.has(normalized)) return false;
   if (BANNED_FALLBACK_MODULES.includes(normalized as (typeof BANNED_FALLBACK_MODULES)[number])) {
     return true;
   }

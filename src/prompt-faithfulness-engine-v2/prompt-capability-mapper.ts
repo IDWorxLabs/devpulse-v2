@@ -6,7 +6,11 @@ import type { CapabilityMappingEntry, PromptRequirement } from './prompt-faithfu
 
 const CAPABILITY_PATTERNS: Array<{ pattern: RegExp; chain: string[] }> = [
   { pattern: /offline|local edit/i, chain: ['Local Storage', 'Synchronization Engine', 'Conflict Resolution', 'Retry Queue', 'Validation'] },
-  { pattern: /sync|cloud/i, chain: ['Cloud API', 'Synchronization Engine', 'Conflict Resolution', 'Retry Queue'] },
+  // Synchronization is a data-consistency behavior, not proof that a separate "Cloud API"
+  // platform capability is required. Remote providers are represented by the generic integration
+  // adapter chain below; provider credentials remain deployment configuration.
+  { pattern: /\bsync(?:hroniz(?:e|ed|es|ing|ation))?\b/i, chain: ['Synchronization Engine', 'Conflict Resolution', 'Retry Queue'] },
+  { pattern: /\b(?:cloud|remote|third[\s-]?party)\s+(?:api|service|provider|storage|backend)\b/i, chain: ['API Client', 'Integration Adapter', 'Error Handling', 'Retry Logic'] },
   { pattern: /auth|login|sign[\s-]?in/i, chain: ['Authentication Service', 'Session Management', 'Authorization'] },
   { pattern: /notif/i, chain: ['Notification Service', 'Push Gateway', 'User Preferences'] },
   { pattern: /search|filter/i, chain: ['Search Index', 'Query Engine', 'Filter UI'] },

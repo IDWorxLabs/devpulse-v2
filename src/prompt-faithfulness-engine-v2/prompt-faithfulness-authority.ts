@@ -152,14 +152,16 @@ export function runPromptFaithfulnessEngineV2(
     (completeness.safeToGenerate || contract.mandatoryRequirements.length >= 5) &&
     (faithfulnessScore.meetsThreshold || contract.mandatoryRequirements.length >= 8);
 
-  const blockedReason = deriveBlockedReason({
-    conflicts: blockingConflicts,
-    ambiguities: blockingAmbiguities,
-    assumptions: rejectedAssumptions,
-    completeness: completeness.safeToGenerate,
-    score: faithfulnessScore.meetsThreshold,
-    conflictSummary: conflicts[0]?.summary,
-  });
+  const blockedReason = readyForGeneration
+    ? null
+    : deriveBlockedReason({
+        conflicts: blockingConflicts,
+        ambiguities: blockingAmbiguities,
+        assumptions: rejectedAssumptions,
+        completeness: completeness.safeToGenerate || contract.mandatoryRequirements.length >= 5,
+        score: faithfulnessScore.meetsThreshold || contract.mandatoryRequirements.length >= 8,
+        conflictSummary: conflicts[0]?.summary,
+      });
 
   const result: PromptFaithfulnessV2Result = {
     readOnly: true,

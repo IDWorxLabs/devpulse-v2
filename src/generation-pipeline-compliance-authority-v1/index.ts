@@ -2,6 +2,10 @@
  * Generation Pipeline Compliance Authority V1 — public API.
  */
 
+export * from './rendered-content-types.js';
+export * from './rendered-content-fingerprints.js';
+export * from './rendered-content-collector.js';
+export * from './rendered-content-gate.js';
 export * from './generation-pipeline-compliance-types.js';
 export * from './pipeline-stage-discovery.js';
 export * from './generator-legacy-detection.js';

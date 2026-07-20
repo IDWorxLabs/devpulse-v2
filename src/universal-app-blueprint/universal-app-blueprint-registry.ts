@@ -8,6 +8,7 @@ export const UNIVERSAL_APP_BLUEPRINT_PHASE = 'default-build-foundation' as const
 
 /** Required artifact paths every generated app must include. */
 export const UNIVERSAL_APP_BLUEPRINT_REQUIRED_ARTIFACTS = [
+  'src/blueprint/product-surface.ts',
   'src/blueprint/LaunchScreen.tsx',
   'src/blueprint/WelcomeScreen.tsx',
   'src/blueprint/AuthScreen.tsx',

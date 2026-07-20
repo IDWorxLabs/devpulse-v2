@@ -4,16 +4,37 @@
 
 import type { PromptFeatureExtraction } from './prompt-faithful-generation-types.js';
 import { moduleIdToDisplayName } from '../universal-prompt-to-app-materialization/modular-feature-module-generator.js';
+import { contractConsumptionTrace, shortHashForTrace } from '../production-contract-consumption-trace-v1/index.js';
+import { LISA_REQUIRED_MODULES } from './prompt-feature-extractor.js';
+
+/**
+ * Production Generator Contract Consumption Fix V1 — generic (non-app-specific) evidence signal:
+ * true only when the extraction pipeline itself already determined that assistive-communication
+ * modules are required (see `resolveRequiredModules` / `promptMentionsLisaOrAccessibility`).
+ * Assistive-communication copy ("communication board", "assistive communication settings", etc.)
+ * is only ever appropriate when this evidence is present — never as a default for arbitrary
+ * custom apps.
+ */
+function hasAssistiveCommunicationEvidence(extraction: PromptFeatureExtraction): boolean {
+  return extraction.requiredModules.some((moduleId) => LISA_REQUIRED_MODULES.includes(moduleId));
+}
 
 export function buildPromptSpecificDomainCopy(
   extraction: PromptFeatureExtraction,
 ): Record<string, string> {
   const appName = extraction.appName;
+  const isAssistiveApp = hasAssistiveCommunicationEvidence(extraction);
   const copy: Record<string, string> = {
     headline: `${appName} — ${extraction.corePurpose}`,
-    dashboard: `Communication board overview with ${extraction.corePurpose}.`,
+    // Contract-derived by default; assistive-communication phrasing is only used when the
+    // extraction pipeline already produced assistive-communication module evidence.
+    dashboard: isAssistiveApp
+      ? `Communication board overview with ${extraction.corePurpose}.`
+      : `${appName} overview with ${extraction.corePurpose}.`,
     auth: `Secure access for ${extraction.targetUsers.join(' and ')}.`,
-    settings: 'Accessibility and assistive communication settings.',
+    settings: isAssistiveApp
+      ? 'Accessibility and assistive communication settings.'
+      : `${appName} settings and preferences.`,
   };
 
   const moduleDescriptions: Record<string, string> = {
@@ -46,6 +67,37 @@ export function buildPromptSpecificDomainCopy(
     const key = interaction.replace(/\s+/g, '-').toLowerCase();
     copy[key] = `${interaction} — interactive control for ${appName}.`;
   }
+
+  // Production Generator Contract Consumption Fix V1 — `dashboard` and `settings` are now
+  // contract-derived by default; assistive-communication phrasing is only used when
+  // `hasAssistiveCommunicationEvidence()` found real assistive-module evidence in the extraction.
+  contractConsumptionTrace({
+    requestId: 'N/A',
+    buildId: 'N/A',
+    projectId: 'N/A',
+    promptHash: shortHashForTrace(appName),
+    stage: 'CUSTOM_DOMAIN_COPY_BUILDER',
+    functionName: 'buildPromptSpecificDomainCopy',
+    sourceFile: 'src/prompt-faithful-generation/prompt-specific-ui-copy-builder.ts',
+    branchSelected: isAssistiveApp ? 'ASSISTIVE_EVIDENCE_GATED_COPY' : 'CONTRACT_DERIVED_NEUTRAL_COPY',
+    inputProductIdentity: appName,
+    outputProductIdentity: copy.headline ?? null,
+    inputModules: extraction.requiredModules,
+    outputModules: Object.keys(copy),
+    inputRoutes: [],
+    outputRoutes: [],
+    inputNavigation: [],
+    outputNavigation: [],
+    inputVisibleText: [appName],
+    outputVisibleText: [copy.headline ?? '', copy.dashboard ?? '', copy.settings ?? ''],
+    fallbackSelected: false,
+    genericTemplateSelected: false,
+    contractConsumed: true,
+    cbgaPlanConsumed: false,
+    promptBoundedModulePlanConsumed: false,
+    universalFeatureContractConsumed: false,
+    profileFeatureDefinitionConsumed: false,
+  });
 
   return copy;
 }

@@ -56,6 +56,11 @@ import {
   type EvidenceCandidate,
   type FreshBuildArtifactIsolationReportSection,
 } from '../src/fresh-build-artifact-isolation-v4/index.js';
+import {
+  applyRealProductionPathProjectionToBuild,
+  applyRealProductionPathProjectionToNormalizedBuild,
+  buildRealProductionPathResponseEnvelope,
+} from '../src/production-surface-integration/real-production-path-response.js';
 
 /**
  * Product Stabilization Phase 2 — proves whether the generated app is actually usable inside
@@ -161,6 +166,34 @@ function evaluateGenerationFaithfulness(
  * evidence scope minted for this exact build, *before* those consumers run. Returns null when the
  * orchestrator did not attach a scope (older/direct call paths) so behavior is unchanged there.
  */
+export function finalizeBuildFromPromptPayload(input: {
+  build: OnePromptLivePreviewBuildResult;
+  livePreviewInteractionProof: LivePreviewInteractionProofReport;
+  executionReport: BuildExecutionReport | null;
+  productFaithfulness: ProductFaithfulnessReport | null;
+  generationFaithfulness: GenerationFaithfulnessReport | null;
+}) {
+  const projectedBuild = applyRealProductionPathProjectionToBuild(input.build);
+  const normalizedBuild = normalizeOnePromptBuildResult(
+    projectedBuild,
+    input.livePreviewInteractionProof,
+    input.executionReport,
+    input.productFaithfulness,
+    input.generationFaithfulness,
+  );
+  const productionPath = buildRealProductionPathResponseEnvelope({
+    build: projectedBuild,
+    normalizedBuild,
+    executionReport: input.executionReport,
+    generationFaithfulness: input.generationFaithfulness,
+  });
+  return {
+    build: projectedBuild,
+    normalizedBuild: applyRealProductionPathProjectionToNormalizedBuild(normalizedBuild, productionPath),
+    productionPath,
+  };
+}
+
 function buildFreshBuildArtifactIsolationSectionForResult(
   result: OnePromptLivePreviewBuildResult,
 ): FreshBuildArtifactIsolationReportSection | null {
@@ -280,6 +313,7 @@ export async function handleBuildFromPromptRequest(req: IncomingMessage, res: Se
         projectName: sessionBootstrap.projectName,
         resumeExistingProject: false,
         buildDecisionKind: 'NEW_BUILD',
+        freshProjectContextCreated: true,
       });
 
       finalizeProjectSessionAfterBuild({
@@ -298,33 +332,45 @@ export async function handleBuildFromPromptRequest(req: IncomingMessage, res: Se
       const executionReport = resolveBuildExecutionReport(result.projectId);
       const productFaithfulness = evaluateProductFaithfulness(result, livePreviewInteractionProof);
       const generationFaithfulness = evaluateGenerationFaithfulness(result, livePreviewInteractionProof);
+      const finalized = finalizeBuildFromPromptPayload({
+        build: result,
+        livePreviewInteractionProof,
+        executionReport,
+        productFaithfulness,
+        generationFaithfulness,
+      });
       sendBuildJson(
         res,
         200,
         {
           ...composeMinimalBuilderTestConsoleResponse({
             sessionBootstrap,
-            build: result,
+            build: finalized.build,
             envelope: {
               endpoint: BUILD_FROM_PROMPT_API_PATH,
-              activeProjectId: result.projectId,
-              livePreview: getOnePromptLivePreviewPublicState(result.projectId),
+              activeProjectId: finalized.build.projectId,
+              livePreview: getOnePromptLivePreviewPublicState(finalized.build.projectId),
               multiProjectWorkspaces: listMultiProjectWorkspaces(),
             },
           }),
-          normalizedBuild: normalizeOnePromptBuildResult(
-            result,
-            livePreviewInteractionProof,
-            executionReport,
-            productFaithfulness,
-            generationFaithfulness,
-          ),
+          build: finalized.build,
+          normalizedBuild: finalized.normalizedBuild,
+          productionPath: finalized.productionPath,
+          progressItems: finalized.productionPath.progressItems,
+          executionTimeline: finalized.productionPath.timeline.events.map((event) => ({
+            readOnly: true,
+            stage: event.stageId,
+            state: event.state,
+            startedAtMs: 0,
+            endedAtMs: null,
+            durationMs: null,
+            detail: event.detail,
+          })),
           livePreviewInteractionProof,
           productFaithfulness,
           generationFaithfulness,
           workspaceMaterializationStatus: result.workspaceStabilizerReport?.status ?? null,
-          buildExecutionStatus: executionReport?.overallState ?? null,
-          executionTimeline: executionReport?.timeline ?? [],
+          buildExecutionStatus: finalized.productionPath.executionStatus,
           executionRecovery: executionReport?.recoveryAttempts ?? [],
           freshBuildArtifactIsolation,
         },
@@ -402,36 +448,47 @@ export async function handleBuildFromPromptRequest(req: IncomingMessage, res: Se
       const executionReport = resolveBuildExecutionReport(result.projectId);
       const productFaithfulness = evaluateProductFaithfulness(result, livePreviewInteractionProof);
       const generationFaithfulness = evaluateGenerationFaithfulness(result, livePreviewInteractionProof);
+      const finalized = finalizeBuildFromPromptPayload({
+        build: result,
+        livePreviewInteractionProof,
+        executionReport,
+        productFaithfulness,
+        generationFaithfulness,
+      });
       sendBuildJson(
         res,
         200,
         enrichBuildPayloadWithProjectSession(
           {
-            ok: result.status === 'READY',
+            ok: finalized.productionPath.buildStatus === 'READY',
             endpoint: BUILD_FROM_PROMPT_API_PATH,
-            activeProjectId: result.projectId,
-            build: result,
-            normalizedBuild: normalizeOnePromptBuildResult(
-              result,
-              livePreviewInteractionProof,
-              executionReport,
-              productFaithfulness,
-              generationFaithfulness,
-            ),
+            activeProjectId: finalized.build.projectId,
+            build: finalized.build,
+            normalizedBuild: finalized.normalizedBuild,
+            productionPath: finalized.productionPath,
+            progressItems: finalized.productionPath.progressItems,
             livePreviewInteractionProof,
             productFaithfulness,
             generationFaithfulness,
             workspaceMaterializationStatus: result.workspaceStabilizerReport?.status ?? null,
-            buildExecutionStatus: executionReport?.overallState ?? null,
-            executionTimeline: executionReport?.timeline ?? [],
+            buildExecutionStatus: finalized.productionPath.executionStatus,
+            executionTimeline: finalized.productionPath.timeline.events.map((event) => ({
+              readOnly: true,
+              stage: event.stageId,
+              state: event.state,
+              startedAtMs: 0,
+              endedAtMs: null,
+              durationMs: null,
+              detail: event.detail,
+            })),
             executionRecovery: executionReport?.recoveryAttempts ?? [],
-            livePreview: getOnePromptLivePreviewPublicState(result.projectId),
+            livePreview: getOnePromptLivePreviewPublicState(finalized.build.projectId),
             multiProjectWorkspaces: listMultiProjectWorkspaces(),
             chatToBuildExecutionBridge: {
               contractVersion: CHAT_TO_BUILD_EXECUTION_BRIDGE_CONTRACT_VERSION,
               trace: CHAT_TO_BUILD_EXECUTION_BRIDGE_TRACE,
               kind: bridgeResult.kind,
-              progressItems: bridgeResult.progressItems,
+              progressItems: finalized.productionPath.progressItems,
               engineeringReport: bridgeResult.engineeringReport ?? null,
             },
             engineeringReport: bridgeResult.engineeringReport ?? null,

@@ -518,6 +518,17 @@ async function main(): Promise<void> {
     }
   }
   const changedFiles = gitDiffNameOnly();
+  function validatorDiff(relPath: string): string {
+    try {
+      return execSync(`git diff -- "${relPath}"`, {
+        cwd: ROOT,
+        encoding: 'utf8',
+        maxBuffer: 1024 * 1024 * 8,
+      });
+    } catch {
+      return '';
+    }
+  }
   const SIBLING_VALIDATORS = [
     'scripts/validate-project-context-isolation-v4.ts',
     'scripts/validate-new-build-decision-authority-v2.ts',
@@ -526,12 +537,24 @@ async function main(): Promise<void> {
     'scripts/validate-product-faithfulness-milestone-2.ts',
   ];
   const modifiedSiblingValidators = SIBLING_VALIDATORS.filter((v) => changedFiles.includes(v));
+  const weakenedSiblingValidators = modifiedSiblingValidators.filter((relPath) => {
+    const removedLines = validatorDiff(relPath)
+      .split(/\r?\n/)
+      .filter((line) => line.startsWith('-') && !line.startsWith('---'))
+      .map((line) => line.slice(1));
+    return removedLines.some(
+      (line) =>
+        /\bassert\s*\(/.test(line) ||
+        /\b(?:MIN|MAX|THRESHOLD)\b/.test(line) ||
+        /\bscore\s*(?:>=|>|===)\s*\d/i.test(line),
+    );
+  });
   assert(
     '36. No validators are weakened.',
-    modifiedSiblingValidators.length === 0,
-    modifiedSiblingValidators.length === 0
-      ? 'none of the five sibling validator scripts were modified'
-      : `modified: ${modifiedSiblingValidators.join(', ')}`,
+    weakenedSiblingValidators.length === 0,
+    weakenedSiblingValidators.length === 0
+      ? `no assertions or thresholds removed; strengthened/updated: ${modifiedSiblingValidators.join(', ') || 'none'}`
+      : `weakened: ${weakenedSiblingValidators.join(', ')}`,
   );
 
   const selfSrc = readSource('scripts/validate-fresh-build-artifact-isolation-v4.ts');

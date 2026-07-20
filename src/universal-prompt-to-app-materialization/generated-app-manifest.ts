@@ -71,6 +71,35 @@ export interface GeneratedAppManifest {
   generatedDirectories: string[];
   featureModules: string[];
   routes: string[];
+  /**
+   * Navigation Computation Collapse V1 (PPC-1207 No Parallel Truth) — the approved, CBGA-repaired
+   * navigation plan's labels (`ApprovedNavigationPlan.productEntries`) for this build. Absent for
+   * pre-CBGA/isolated/test-only manifests built without an approved navigation plan.
+   */
+  navigationLabels?: string[];
+  /**
+   * Module Computation Collapse V1 (PPC-1207 No Parallel Truth) — the approved, CBGA-repaired
+   * module plan's moduleIds (`ApprovedModulePlan.moduleIds`) for this build. Absent for
+   * pre-CBGA/isolated/test-only manifests built without an approved module plan.
+   */
+  approvedModuleIds?: string[];
+  /**
+   * Metadata Computation Collapse V1 (PPC-1207 No Parallel Truth) — the approved, CBGA-composed
+   * metadata plan's canonical subtitle (`ApprovedMetadataPlan.applicationSubtitle`) and manifest
+   * summary string (`ApprovedMetadataPlan.manifestSummary`) for this build. Absent for
+   * pre-CBGA/isolated/test-only manifests built without an approved metadata plan.
+   */
+  approvedApplicationSubtitle?: string;
+  approvedMetadataSummary?: string;
+  /**
+   * Sample Data Computation Collapse V1 — the approved sample data plan's canonical summary and
+   * presence flag for this build. Absent for pre-CBGA/isolated/test-only manifests.
+   */
+  approvedSampleSummary?: string;
+  approvedSamplesPresent?: boolean;
+  approvedProvenanceSummary?: string;
+  /** Repair Reality Alignment V1 — canonical repair summary from ApprovedRepairRealityPlan. */
+  approvedRepairRealitySummary?: string;
   services: string[];
   models: string[];
   assets: string[];
@@ -196,6 +225,14 @@ export function buildInitialGeneratedAppManifest(input: {
   confidence: string;
   featureModules?: string[];
   routes?: string[];
+  navigationLabels?: string[];
+  approvedModuleIds?: string[];
+  approvedApplicationSubtitle?: string;
+  approvedMetadataSummary?: string;
+  approvedSampleSummary?: string;
+  approvedSamplesPresent?: boolean;
+  approvedProvenanceSummary?: string;
+  approvedRepairRealitySummary?: string;
   featureModuleDetails?: GeneratedFeatureModuleManifestEntry[];
   generatedFeatureModuleFiles?: string[];
   featureModuleDirectories?: string[];
@@ -249,6 +286,26 @@ export function buildInitialGeneratedAppManifest(input: {
     generatedDirectories: [],
     featureModules: input.featureModules ?? [],
     routes: input.routes ?? [],
+    ...(input.navigationLabels !== undefined ? { navigationLabels: input.navigationLabels } : {}),
+    ...(input.approvedModuleIds !== undefined ? { approvedModuleIds: input.approvedModuleIds } : {}),
+    ...(input.approvedApplicationSubtitle !== undefined
+      ? { approvedApplicationSubtitle: input.approvedApplicationSubtitle }
+      : {}),
+    ...(input.approvedMetadataSummary !== undefined
+      ? { approvedMetadataSummary: input.approvedMetadataSummary }
+      : {}),
+    ...(input.approvedSampleSummary !== undefined
+      ? { approvedSampleSummary: input.approvedSampleSummary }
+      : {}),
+    ...(input.approvedSamplesPresent !== undefined
+      ? { approvedSamplesPresent: input.approvedSamplesPresent }
+      : {}),
+    ...(input.approvedProvenanceSummary !== undefined
+      ? { approvedProvenanceSummary: input.approvedProvenanceSummary }
+      : {}),
+    ...(input.approvedRepairRealitySummary !== undefined
+      ? { approvedRepairRealitySummary: input.approvedRepairRealitySummary }
+      : {}),
     services: [],
     models: [],
     assets: [],

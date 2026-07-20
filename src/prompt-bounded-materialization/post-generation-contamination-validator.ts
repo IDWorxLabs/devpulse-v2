@@ -2,6 +2,7 @@
  * Prompt-Bounded Materialization — post-generation contamination validator.
  */
 
+import { CBGA_SYSTEM_SHELL_MODULE_IDS } from '../contract-bound-generation-authority-v4/contract-bound-generation-types.js';
 import { listWorkspaceFeatureModuleIds } from '../prompt-faithful-generation/prompt-faithful-materialization-gate.js';
 import type {
   BlockedModuleRecord,
@@ -10,12 +11,24 @@ import type {
 } from './prompt-bounded-materialization-types.js';
 import { isGenericFallbackModuleTerm } from './module-origin-evidence.js';
 
+/** System-shell modules are never materialized as src/features/* folders — do not treat them as missing product modules. */
+function nonFeaturePlannedModules(approvedModuleIds: readonly string[]): Set<string> {
+  const approved = new Set(approvedModuleIds);
+  const blocked = new Set<string>([...CBGA_SYSTEM_SHELL_MODULE_IDS, 'registry']);
+  // Router file lives at src/features/routes.ts — only skip the folder scan when routes is NOT an approved product module.
+  if (!approved.has('routes') && !approved.has('delivery-routes')) blocked.add('routes');
+  return blocked;
+}
+
 export function validatePostGenerationContamination(input: {
   workspaceDir: string;
   plan: PromptBoundedModulePlan;
 }): PostGenerationContaminationResult {
-  const generated = listWorkspaceFeatureModuleIds(input.workspaceDir);
+  const generated = listWorkspaceFeatureModuleIds(input.workspaceDir, {
+    approvedModuleIds: input.plan.approvedModuleIds,
+  });
   const approved = new Set(input.plan.approvedModuleIds);
+  const skipMissing = nonFeaturePlannedModules(input.plan.approvedModuleIds);
   const unjustifiedModules: BlockedModuleRecord[] = [];
   const failureMessages: string[] = [];
 
@@ -35,8 +48,8 @@ export function validatePostGenerationContamination(input: {
   }
 
   for (const moduleId of input.plan.approvedModuleIds) {
-    if (moduleId === 'auth' || moduleId === 'persistence') continue;
-    if (!generated.includes(moduleId) && !['registry', 'routes'].includes(moduleId)) {
+    if (skipMissing.has(moduleId)) continue;
+    if (!generated.includes(moduleId)) {
       failureMessages.push(`Planned module missing from workspace: ${moduleId}`);
     }
   }
@@ -54,7 +67,7 @@ export function validatePostGenerationContamination(input: {
     passed: unjustifiedModules.length === 0 && failureMessages.length === 0,
     unjustifiedModules,
     missingPlannedModules: input.plan.approvedModuleIds.filter(
-      (moduleId) => !generated.includes(moduleId) && moduleId !== 'auth' && moduleId !== 'persistence',
+      (moduleId) => !generated.includes(moduleId) && !skipMissing.has(moduleId),
     ),
     failureMessages,
   };

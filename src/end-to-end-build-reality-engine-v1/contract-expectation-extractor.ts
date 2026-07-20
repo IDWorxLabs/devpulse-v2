@@ -50,6 +50,14 @@ function parseFeatureRegistry(workspaceDir: string): E2EContractFeatureModule[] 
   return modules;
 }
 
+/** The module id App.tsx mounts at the root — the definitive home surface the preview renders. */
+function detectRootMountedModuleId(workspaceDir: string): string | null {
+  const appPath = join(workspaceDir, 'src/App.tsx');
+  if (!existsSync(appPath)) return null;
+  const source = readFileSync(appPath, 'utf8');
+  return source.match(/data-root-feature="([^"]+)"/)?.[1] ?? null;
+}
+
 function detectMountMode(workspaceDir: string): E2EContractExpectationBundle['mountMode'] {
   const appPath = join(workspaceDir, 'src/App.tsx');
   if (!existsSync(appPath)) return 'unknown';
@@ -148,8 +156,19 @@ export function extractContractExpectations(input: {
       ? featureModules.map((m) => m.route)
       : manifest?.routes ?? contract?.entities.map((e) => `/${e.slug}`) ?? [];
 
+  // The primary (home) module is the one actually mounted at the root route `/` — NOT merely the
+  // first registry entry. Registry order and home-route assignment can differ (e.g. CBGA homes a
+  // module that is not listed first), so positional `[0]` produced a false "primary" that the app
+  // never renders at root and DOM reality then reported as "not visible".
+  const rootMountedModuleId = detectRootMountedModuleId(input.workspaceDir);
+  const homeRouteModuleId = featureModules.find((m) => m.route === '/')?.id ?? null;
   const primaryModuleId =
-    featureModules[0]?.id ?? manifest?.featureModules?.[0] ?? manifest?.promptDerivedModules?.[0] ?? null;
+    rootMountedModuleId ??
+    homeRouteModuleId ??
+    featureModules[0]?.id ??
+    manifest?.featureModules?.[0] ??
+    manifest?.promptDerivedModules?.[0] ??
+    null;
 
   return {
     readOnly: true,

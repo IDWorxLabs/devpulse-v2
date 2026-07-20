@@ -27,6 +27,9 @@ export type {
   UniversalFeatureContractAssessment,
   UniversalFeatureContractSuiteResult,
   RunUniversalFeatureValidationInput,
+  FeatureContractCapabilityClassification,
+  FeatureContractCompletenessItem,
+  FeatureContractCompletenessReport,
 } from './universal-feature-contract-types.js';
 
 export {
@@ -60,5 +63,9 @@ export {
 } from './universal-feature-contract-authority.js';
 
 export { formatUniversalFeatureContractReportMarkdown } from './universal-feature-contract-report.js';
+export {
+  computeFeatureContractCompleteness,
+  type CanonicalFeatureContractEvidence,
+} from './feature-contract-completeness.js';
 
 export { mapUniversalFeatureContractLaunchCouncilAuthority } from './universal-feature-contract-integration.js';

@@ -5,6 +5,7 @@
 export {
   detectSimpleUtilityAppKind,
   isSimpleUtilityAppPrompt,
+  promptDescribesMultiEntityProduct,
   simpleUtilityFeatureModules,
   simpleUtilityRoutes,
   simpleUtilityAppTitle,

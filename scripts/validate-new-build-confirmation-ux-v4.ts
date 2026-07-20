@@ -113,6 +113,7 @@ async function main(): Promise<void> {
   // 2-9, 19-20: Frontend confirmation panel + resubmission wiring (source-of-truth checks)
   // ---------------------------------------------------------------------------------------
   const frontendSource = readSource('public/founder-reality/builder-home.js');
+  const commandCenterSource = readSource('public/founder-reality/app.js');
 
   const idxResumeRequired = frontendSource.indexOf("payload.resumeRequired");
   const idxNewBuildConfirmation = frontendSource.indexOf("payload.outcome === 'NEW_BUILD_CONFIRMATION_REQUIRED'");
@@ -193,6 +194,26 @@ async function main(): Promise<void> {
     'runBuild forwards buildIntentOverride to the request body (wiring proof for scenarios 8-9)',
     frontendSource.includes('if (options.buildIntentOverride) body.buildIntentOverride = options.buildIntentOverride;'),
     'runBuild copies options.buildIntentOverride onto the POST body sent to /api/build/from-prompt',
+  );
+  assert(
+    'Command Center renders the same explicit new-build versus continuation round trip.',
+    commandCenterSource.includes('function appendNewBuildConfirmationActions') &&
+      commandCenterSource.includes("choice.id === 'START_NEW_BUILD'") &&
+      commandCenterSource.includes('buildIntentOverride: choice.id') &&
+      commandCenterSource.includes('buildIntentOverride: options.buildIntentOverride || null') &&
+      commandCenterSource.includes('if (result.newBuildConfirmation)'),
+    'Command Center renders both server choices and resubmits the unchanged prompt with the selected buildIntentOverride.',
+  );
+  const envelopeSource = readSource(
+    'src/contract-bound-generation-authority-v4/approved-production-build-envelope.ts',
+  );
+  assert(
+    'Confirmation result is immutably bound into the approved production envelope.',
+    envelopeSource.includes('buildContextDecision: {') &&
+      envelopeSource.includes('confirmationOverride:') &&
+      envelopeSource.includes('explicitlyConfirmed:') &&
+      envelopeSource.includes('buildIntentOverride: buildContextDecision.confirmationOverride'),
+    'The approved envelope stores the decision and confirmation override and incorporates both into its build fingerprint.',
   );
   checkpoint('scenarios 8, 9 (resubmission wiring)');
 

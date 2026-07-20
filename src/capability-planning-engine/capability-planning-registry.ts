@@ -21,7 +21,16 @@ const CAPABILITY_UNIVERSE: CapabilityRecord[] = [
   cap('cap-keyboard-nav', 'Keyboard Navigation', 'VALIDATED', 'universal-app-blueprint', 'src/blueprint', ['ACCESSIBILITY', 'NAVIGATION'], ['*'], ['WEB'], [], 0.87, 'LOW'),
   cap('cap-caregiver-workflow', 'Caregiver Communication Workflow', 'VALIDATED', 'caregiver-dashboard', 'src/features/caregiver-dashboard', ['USER_WORKFLOW'], ['ASSISTIVE_COMMUNICATION'], ['WEB'], ['cap-message-history'], 0.88, 'LOW'),
   cap('cap-settings-persist', 'Settings Persistence', 'VALIDATED', 'accessibility-settings', 'src/features/accessibility-settings', ['STORAGE'], ['*'], ['WEB'], ['cap-local-storage'], 0.86, 'LOW'),
-  cap('cap-offline-sync', 'Offline Sync', 'AVAILABLE_WITH_LIMITATIONS', 'connected-build-execution', 'src/connected-build-execution', ['OFFLINE_BEHAVIOR', 'SYNCHRONIZATION'], ['*'], ['OFFLINE', 'WEB'], ['cap-local-storage'], 0.7, 'MEDIUM'),
+  // Synchronization Engine family — domain-neutral, backed by universal-synchronization-pack.
+  // Exact names match prompt-capability-mapper chains so Capability Planning REUSE_EXISTING.
+  cap('cap-sync-engine', 'Synchronization Engine', 'VALIDATED', 'universal-synchronization-pack', 'src/universal-capability-packs/universal-synchronization-pack', ['SYNCHRONIZATION', 'OFFLINE_BEHAVIOR'], ['*'], ['OFFLINE', 'WEB'], ['cap-local-storage'], 0.94, 'LOW'),
+  cap('cap-conflict-resolution', 'Conflict Resolution', 'VALIDATED', 'universal-synchronization-pack', 'src/universal-capability-packs/universal-synchronization-pack', ['SYNCHRONIZATION'], ['*'], ['OFFLINE', 'WEB'], ['cap-sync-engine'], 0.93, 'LOW'),
+  cap('cap-retry-queue', 'Retry Queue', 'VALIDATED', 'universal-synchronization-pack', 'src/universal-capability-packs/universal-synchronization-pack', ['SYNCHRONIZATION'], ['*'], ['OFFLINE', 'WEB'], ['cap-sync-engine'], 0.93, 'LOW'),
+  cap('cap-offline-persistence', 'Offline Persistence', 'VALIDATED', 'universal-synchronization-pack', 'src/universal-capability-packs/universal-synchronization-pack', ['OFFLINE_BEHAVIOR', 'STORAGE'], ['*'], ['OFFLINE', 'WEB'], ['cap-local-storage', 'cap-sync-engine'], 0.92, 'LOW'),
+  cap('cap-cloud-sync', 'Cloud Synchronization', 'VALIDATED', 'universal-synchronization-pack', 'src/universal-capability-packs/universal-synchronization-pack', ['SYNCHRONIZATION'], ['*'], ['WEB'], ['cap-sync-engine'], 0.9, 'LOW'),
+  cap('cap-offline-sync', 'Offline Sync', 'VALIDATED', 'universal-synchronization-pack', 'src/universal-capability-packs/universal-synchronization-pack', ['OFFLINE_BEHAVIOR', 'SYNCHRONIZATION'], ['*'], ['OFFLINE', 'WEB'], ['cap-local-storage', 'cap-sync-engine'], 0.92, 'LOW'),
+  cap('cap-local-storage-alias', 'Local Storage', 'VALIDATED', 'universal-prompt-to-app-materialization', 'src/data', ['STORAGE', 'OFFLINE_BEHAVIOR'], ['*'], ['WEB', 'OFFLINE'], [], 0.9, 'LOW'),
+  cap('cap-csv-export', 'CSV Export', 'VALIDATED', 'universal-data-export-pack-basic', 'src/universal-capability-packs/universal-data-export-pack-basic', ['API', 'IMPORT_EXPORT'], ['*'], ['WEB'], ['cap-crud'], 0.92, 'LOW'),
   cap('cap-payment-processing', 'Payment Processing', 'REQUIRES_HUMAN_REVIEW', 'external', 'n/a', ['SECURITY', 'FUNCTIONAL'], ['FINANCE'], ['WEB'], [], 0.3, 'HIGH'),
 ];
 

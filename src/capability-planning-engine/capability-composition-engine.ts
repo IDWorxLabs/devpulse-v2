@@ -38,6 +38,24 @@ const COMPOSITION_RECIPES: Array<{
     integration: ['Bind dashboard to CRUD entities', 'Optional export action when CSV capability is generated'],
     deps: ['cap-crud'],
   },
+  {
+    pattern: /synchronization engine|offline sync|offline persistence|cloud synchronization|conflict resolution|retry queue/i,
+    name: 'Synchronization Engine',
+    sources: [
+      'cap-local-storage',
+      'cap-sync-engine',
+      'cap-conflict-resolution',
+      'cap-retry-queue',
+      'cap-offline-persistence',
+    ],
+    integration: [
+      'Wire local persistence to Synchronization Engine change queue',
+      'Apply conflict resolution strategy on version divergence',
+      'Retry queued mutations when connectivity returns',
+      'Expose sync health diagnostics in runtime',
+    ],
+    deps: ['cap-local-storage', 'cap-sync-engine'],
+  },
 ];
 
 export function composeCapabilitiesFromGaps(

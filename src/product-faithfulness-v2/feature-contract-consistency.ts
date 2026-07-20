@@ -8,9 +8,14 @@
 
 import type { ExtractedProductConcept } from '../product-faithfulness-v1/product-faithfulness-types.js';
 import type { CanonicalProductContract, DriftCategory, GenerationStageName, StageConsistencyResult, StageDriftKind } from './generation-faithfulness-types.js';
+import {
+  capabilityIdentitiesMatch,
+  normalizeCapabilityIdentity,
+  suppressLexicalFragmentsOfCapabilities,
+} from './verification-accuracy.js';
 
 function canonicalName(name: string): string {
-  return name.trim().toLowerCase();
+  return normalizeCapabilityIdentity(name) || name.trim().toLowerCase();
 }
 
 export interface ConceptSetComparison {
@@ -29,14 +34,25 @@ export function compareConceptSets(canonicalConceptNames: string[], stageConcept
   const retained: string[] = [];
   const missing: string[] = [];
   for (const name of canonicalConceptNames) {
-    if (stageByCanonicalName.has(canonicalName(name))) retained.push(name);
+    const key = canonicalName(name);
+    const hit =
+      stageByCanonicalName.has(key) ||
+      [...stageByCanonicalName.keys()].some((stageKey) => capabilityIdentitiesMatch(key, stageKey));
+    if (hit) retained.push(name);
     else missing.push(name);
   }
 
-  const unexpected: string[] = [];
+  const retainedIds = new Set(retained.map(canonicalName));
+  const unexpectedRaw: string[] = [];
   for (const [key, display] of stageByCanonicalName) {
-    if (!canonicalSet.has(key)) unexpected.push(display);
+    if (canonicalSet.has(key) || retainedIds.has(key)) continue;
+    if ([...canonicalSet].some((canonicalKey) => capabilityIdentitiesMatch(key, canonicalKey))) continue;
+    unexpectedRaw.push(display);
   }
+  const unexpected = suppressLexicalFragmentsOfCapabilities(unexpectedRaw, [
+    ...canonicalConceptNames,
+    ...retained,
+  ]);
 
   const retentionRatio = canonicalConceptNames.length === 0 ? 1 : retained.length / canonicalConceptNames.length;
   return { retained, missing, unexpected, retentionRatio };

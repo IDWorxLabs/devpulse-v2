@@ -36,6 +36,11 @@ export interface OnePromptLivePreviewBuildInput {
    * the context isolation report can show that confirmation was required and what was selected.
    */
   buildIntentOverride?: 'START_NEW_BUILD' | 'CONTINUE_EXISTING_PROJECT' | null;
+  /**
+   * Trusted server-side evidence that projectId was created for this exact request before the
+   * orchestrator started. Never set this from an untrusted browser projectId.
+   */
+  freshProjectContextCreated?: boolean;
 }
 
 export interface OnePromptLivePreviewBuildResult {
@@ -93,6 +98,59 @@ export interface OnePromptLivePreviewBuildResult {
   /** Project Context Isolation V4 report — makes stale-context prevention visible on every build. */
   contextIsolation?: import('../project-context-isolation-v4/index.js').ContextIsolationReportSection | null;
   /**
+   * Identity Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single approved,
+   * CBGA-repaired product identity this build's generation stages consumed. `null` only for builds
+   * that failed before Contract-Bound Generation Authority V4 ran.
+   */
+  approvedProductIdentity?: import('../contract-bound-generation-authority-v4/index.js').ApprovedProductIdentity | null;
+  /**
+   * Navigation Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single approved,
+   * CBGA-repaired navigation plan every production generator this build consumed instead of
+   * independently deriving/inferring/merging navigation of its own. `null` only for build paths
+   * that failed before Contract-Bound Generation Authority V4 ran.
+   */
+  approvedNavigationPlan?: import('../contract-bound-generation-authority-v4/index.js').ApprovedNavigationPlan | null;
+  /**
+   * Module Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single approved,
+   * CBGA-repaired module plan every production generator this build consumed instead of
+   * independently deriving/inferring/merging/inventing a module list of its own. `null` only for
+   * build paths that failed before Contract-Bound Generation Authority V4 ran.
+   */
+  approvedModulePlan?: import('../contract-bound-generation-authority-v4/index.js').ApprovedModulePlan | null;
+  /**
+   * Metadata Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single, composed metadata
+   * plan (title, subtitle, description, module/navigation/route counts, summary strings) every
+   * downstream stage this build's generation consumed instead of independently parsing/inferring/
+   * counting/summarizing metadata of its own. `null` only for build paths that failed before
+   * Contract-Bound Generation Authority V4 ran.
+   */
+  approvedMetadataPlan?: import('../contract-bound-generation-authority-v4/index.js').ApprovedMetadataPlan | null;
+  /**
+   * Sample Data Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single, composed sample
+   * data plan every downstream stage this build's generation consumed instead of independently
+   * inventing sample/demo/preview/seed data of its own. `null` only for build paths that failed
+   * before Contract-Bound Generation Authority V4 ran.
+   */
+  approvedSampleDataPlan?: import('../contract-bound-generation-authority-v4/index.js').ApprovedSampleDataPlan | null;
+  /**
+   * Provenance Computation Collapse V1 (PPC-1207 No Parallel Truth) — the single, composed
+   * provenance/ancestry plan every downstream stage this build's generation consumed instead of
+   * independently reconstructing/inferring artifact provenance of its own. `null` only for build
+   * paths that failed before Contract-Bound Generation Authority V4 ran.
+   */
+  approvedProvenancePlan?: import('../contract-bound-generation-authority-v4/index.js').ApprovedProvenancePlan | null;
+  /**
+   * Repair Reality Alignment V1 (PPC-1207 No Parallel Truth) — the single classified repair record
+   * every downstream stage consumed instead of inferring repair type or claiming false mutations.
+   */
+  approvedRepairRealityPlan?: import('../contract-bound-generation-authority-v4/index.js').ApprovedRepairRealityPlan | null;
+  /**
+   * Final Immutable Production Pipeline V1 (PPC-1207 No Parallel Truth) — the single immutable
+   * ApprovedProductionBuildEnvelope every downstream production stage consumed instead of reading
+   * individual constitutional handoffs in parallel. `null` only when CBGA never ran.
+   */
+  approvedProductionBuildEnvelope?: import('../contract-bound-generation-authority-v4/index.js').ApprovedProductionBuildEnvelope | null;
+  /**
    * Fresh Build Artifact Isolation V4 — the runtime evidence scope minted for this build (ids,
    * allowed/blocked evidence namespaces, purge actions performed, stale evidence detections).
    * Every downstream consumer (product faithfulness, live preview proof, report rendering, UI)
@@ -112,6 +170,25 @@ export interface OnePromptLivePreviewBuildResult {
    * instead of a legacy template or generic blueprint default. Null when GPCA was not run.
    */
   gpcaComplianceReport?: import('../generation-pipeline-compliance-authority-v1/index.js').GpcaComplianceReport | null;
+  /**
+   * GPCA Production Enforcement Fix V1 — set true the moment GPCA's gate is the reason this
+   * build terminated. When true, `status` is always 'FAILED', `previewUrl`/`livePreviewAvailable`
+   * are always false, and no workspace-generation/npm-build/dev-server/live-preview-proof stage
+   * downstream of the gate is ever allowed to run for this build — the gate result is terminal,
+   * never something Autonomous Software/Engineering continuation logic may override.
+   */
+  gpcaHardStop?: boolean;
+  /** True whenever a GPCA hard-stop occurred — the build was never allowed to reach a servable/promoted workspace. */
+  gpcaBlockedMaterialization?: boolean;
+  /** True whenever a GPCA hard-stop occurred — the dev server / live preview proof were never started for this build. */
+  gpcaBlockedPreviewActivation?: boolean;
+  /**
+   * Production Pipeline Constitution Adoption Phase 1 — the permanent constitutional rule IDs
+   * (docs/production-pipeline-constitution-v1.md) violated when this build's GPCA report was
+   * invalidated by a post-audit workspace mutation (or was blocking at the pre-preview final
+   * gate). Present only when a GPCA hard-stop tied to this milestone's re-audit wiring occurred.
+   */
+  gpcaViolatedConstitutionRuleIds?: readonly string[];
   updatedAt: string;
 }
 

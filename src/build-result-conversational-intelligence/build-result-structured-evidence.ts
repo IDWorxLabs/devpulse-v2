@@ -17,6 +17,10 @@ import {
   resolveAeeControlledBuildStatus,
   resolveAeeControlledFailureReason,
 } from '../autonomous-engineering-executive/index.js';
+import {
+  projectProductionSurfaceStatus,
+  resolveProductionSurfaceBuildOutcomeFromResult,
+} from '../production-surface-integration/index.js';
 
 export interface BuildResultStructuredEvidence {
   readOnly: true;
@@ -70,10 +74,14 @@ function inferBuildStage(
   buildResult: OnePromptLivePreviewBuildResult,
   buildRunStage: string | null,
 ): string {
+  const surfaceOutcome = resolveProductionSurfaceBuildOutcomeFromResult(buildResult);
+  if (buildResult.gpcaHardStop || buildResult.gpcaBlockedPreviewActivation || buildResult.gpcaBlockedMaterialization) {
+    return projectProductionSurfaceStatus(surfaceOutcome).currentStage;
+  }
   if (buildRunStage) return buildRunStage;
   if (buildResult.status === 'BUILDING') return 'materializing';
-  if (buildResult.status === 'READY') return 'complete';
-  if (buildResult.status === 'FAILED') return 'failed';
+  if (buildResult.status === 'READY') return projectProductionSurfaceStatus(surfaceOutcome).currentStage;
+  if (buildResult.status === 'FAILED') return projectProductionSurfaceStatus(surfaceOutcome).currentStage;
   return buildResult.status;
 }
 
@@ -81,6 +89,15 @@ function inferOutcomeCategory(
   context: BuildResultConversationalContext,
   buildResult: OnePromptLivePreviewBuildResult,
 ): BuildResultStructuredEvidence['outcomeCategory'] {
+  const surfaceOutcome = resolveProductionSurfaceBuildOutcomeFromResult(buildResult);
+  if (buildResult.gpcaHardStop || buildResult.gpcaBlockedPreviewActivation || buildResult.gpcaBlockedMaterialization) {
+    return 'FAILED';
+  }
+  const statusProjection = projectProductionSurfaceStatus(surfaceOutcome);
+  if (statusProjection.executionStatus === 'BLOCKED') {
+    return 'FAILED';
+  }
+
   const aeeStatus = resolveAeeControlledBuildStatus(buildResult);
   if (aeeStatus.outcomeCategory !== 'FAILED') {
     return aeeStatus.outcomeCategory;
@@ -165,7 +182,7 @@ export function buildBuildResultStructuredEvidence(
     readOnly: true,
     originalUserPrompt: context.userPrompt,
     activeProjectId: context.activeProjectId,
-    activeProjectName: context.activeProjectName,
+    activeProjectName: buildResult.approvedProductIdentity?.displayName?.trim() || context.activeProjectName,
     buildRunId: context.buildRunId,
     selectedProfile: context.selectedProfile,
     expectedProfile: resolveExpectedProfileLabel(context),

@@ -30,13 +30,20 @@ export const LISA_ACCEPTED_TERMS = [
 
 const LISA_NAME_PATTERN = /\b(lisa|locked[\s-]?in[\s-]?syndrome)\b/i;
 
-const LISA_PROMPT_PATTERN = new RegExp(
-  LISA_ACCEPTED_TERMS
-    .filter((term) => term.length >= 4)
-    .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-    .join('|'),
-  'i',
-);
+// Generic words such as "calibration", "speech", "communication", and "accessibility" occur in
+// many unrelated products. They are useful vocabulary after an assistive-communication product
+// has been identified, but a single occurrence is not product-identity evidence.
+const ASSISTIVE_COMMUNICATION_SIGNALS: RegExp[] = [
+  /\bassistive\s+communication\b/i,
+  /\bsevere\s+motor\s+impairment\b/i,
+  /\bgaze\s+(?:selection|keyboard|input)\b/i,
+  /\bblink\s+input\b/i,
+  /\beye[\s-]?(?:tracking|movement)\b/i,
+  /\btext[\s-]?to[\s-]?speech\b/i,
+  /\bcommunication\s+board\b/i,
+  /\bcaregiver[\s-]?(?:assisted\s+)?calibration\b/i,
+  /\bemergency[\s-]?speech\b/i,
+];
 
 const TASK_TRACKER_BOILERPLATE =
   /\b(generate architecture,\s*plan,\s*tasks|begin build execution|generate tasks)\b/i;
@@ -54,7 +61,11 @@ export function promptMentionsLisaOrAccessibility(prompt: string): boolean {
   const normalized = prompt.trim();
   if (!normalized) return false;
   if (LISA_NAME_PATTERN.test(normalized)) return true;
-  return LISA_PROMPT_PATTERN.test(normalized);
+  const signalCount = ASSISTIVE_COMMUNICATION_SIGNALS.reduce(
+    (count, pattern) => count + (pattern.test(normalized) ? 1 : 0),
+    0,
+  );
+  return /\bassistive\s+communication\b/i.test(normalized) || signalCount >= 2;
 }
 
 export function promptMentionsActiveProjectName(prompt: string, projectName: string): boolean {

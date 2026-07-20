@@ -37,6 +37,8 @@ export function resolveDirectFeatureRootMount(input: {
   rawPrompt: string;
   definition: ProfileFeatureDefinition;
   displayName?: string;
+  /** CBGA/router home module — must match FeatureAppRouter default and registry `/`. */
+  preferredPrimaryModuleId?: string | null;
 }): DirectFeatureRootMountResolution | null {
   if (promptExplicitlyRequiresAuth(input.rawPrompt)) {
     return null;
@@ -47,11 +49,17 @@ export function resolveDirectFeatureRootMount(input: {
     return null;
   }
 
-  const primaryModuleId = modules[0]!;
-  const primaryRoute =
-    input.definition.routes[0] && input.definition.routes[0] !== '/auth'
-      ? input.definition.routes[0]!
-      : '/';
+  const preferred =
+    input.preferredPrimaryModuleId && modules.includes(input.preferredPrimaryModuleId)
+      ? input.preferredPrimaryModuleId
+      : null;
+  const homeIndex = input.definition.routes.findIndex((route) => route === '/');
+  const primaryModuleId =
+    preferred ??
+    (homeIndex >= 0 && modules.includes(input.definition.featureModules[homeIndex] ?? '')
+      ? (input.definition.featureModules[homeIndex] as string)
+      : modules[0]!);
+  const primaryRoute = '/';
 
   const simpleUtilityKind = detectSimpleUtilityAppKind(input.rawPrompt);
   if (simpleUtilityKind) {
@@ -100,7 +108,8 @@ export default function App() {
     readOnly: true,
     apply: true,
     primaryModuleId,
-    primaryRoute,
+    // Multi-module router always homes at `/`; patchRegistryPrimaryRoute demotes any other `/`.
+    primaryRoute: '/',
     simpleUtilityKind: null,
     appTsx: `import FeatureAppRouter from './features/FeatureAppRouter';
 
@@ -117,14 +126,17 @@ export default function App() {
 }
 
 export function patchRegistryPrimaryRoute(registrySource: string, primaryModuleId: string): string {
-  const routePattern = new RegExp(
-    `(id:\\s*['"]${primaryModuleId}['"][\\s\\S]*?route:\\s*['"])([^'"]+)(['"])`,
-    'm',
+  // Rewrite every registry entry's route: only primaryModuleId owns `/`.
+  return registrySource.replace(
+    /\{\s*id:\s*'([^']+)',\s*name:\s*'([^']*)',\s*route:\s*'([^']*)'/g,
+    (_match, id: string, name: string) => {
+      const route = id === primaryModuleId ? '/' : `/${id}`;
+      return `{
+    id: '${id}',
+    name: '${name}',
+    route: '${route}'`;
+    },
   );
-  if (!routePattern.test(registrySource)) {
-    return registrySource;
-  }
-  return registrySource.replace(routePattern, `$1/$3`);
 }
 
 export function enforceDirectFeatureRootMountInWorkspace(input: {
@@ -149,14 +161,27 @@ export function enforceDirectFeatureRootMountInWorkspace(input: {
     current.includes('data-direct-feature-app') ||
     (current.includes('data-root-feature') && !blueprintShellAppSource(current));
 
+  // Home Module Consistency V1 — when App.tsx is ALREADY a materialized direct-feature mount, its
+  // `data-root-feature` reflects the CBGA-approved home module chosen during materialization. That
+  // decision is authoritative; this post-materialization pass must NOT recompute a different home
+  // from `definition` (which lacks the CBGA route plan) and patch only the registry — that produced
+  // a registry/App.tsx/router disagreement (registry `/`=X, App.tsx root=Y) that fails DOM reality.
+  const alreadyMountedRootFeature =
+    alreadyDirect && !blueprintShellAppSource(current)
+      ? current.match(/data-root-feature="([^"]+)"/)?.[1] ?? null
+      : null;
+
   if (!alreadyDirect || blueprintShellAppSource(current)) {
     writeFileSync(appPath, resolution.appTsx, 'utf8');
   }
 
+  // Registry primary must match whatever home App.tsx actually mounts.
+  const effectivePrimaryModuleId = alreadyMountedRootFeature ?? resolution.primaryModuleId;
+
   const registryPath = join(input.workspaceDir, 'src/features/registry.ts');
   if (existsSync(registryPath) && resolution.primaryRoute === '/') {
     const registrySource = readFileSync(registryPath, 'utf8');
-    const patched = patchRegistryPrimaryRoute(registrySource, resolution.primaryModuleId);
+    const patched = patchRegistryPrimaryRoute(registrySource, effectivePrimaryModuleId);
     if (patched !== registrySource) {
       writeFileSync(registryPath, patched, 'utf8');
     }

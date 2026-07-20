@@ -219,11 +219,14 @@ export function runCapabilityPlanningV3Validation(sections?: string[]): {
     const required = discoverRequiredCapabilities({ rawPrompt: CSV_EXPORT_PROMPT });
     const gaps = analyzeCapabilityGaps(searchExistingCapabilities(required));
     const plans = planCapabilityGeneration(gaps);
+    // CSV Export is VALIDATED in the universe registry — reuse, do not invent a generation plan.
     assert(
       'capability-generation-planning',
       'CSV generation plan',
-      plans.some((p) => /csv/i.test(p.capabilityName)),
-      plans.map((p) => p.capabilityName).join(', '),
+      gaps.some((g) => /csv/i.test(g.requiredCapability.name) && g.decision === 'REUSE_EXISTING') &&
+        !plans.some((p) => /csv/i.test(p.capabilityName)),
+      gaps.map((g) => `${g.requiredCapability.name}:${g.decision}`).join(', ') ||
+        plans.map((p) => p.capabilityName).join(', '),
     );
     assert(
       'capability-generation-planning',
@@ -288,10 +291,16 @@ export function runCapabilityPlanningV3Validation(sections?: string[]): {
 
   if (include('capability-installation-planning') || include('all')) {
     const pipeline = runCapabilityPlanningPipeline(pipelineInput(CSV_EXPORT_PROMPT));
+    // Validated CSV Export needs no installation plan; reuse-only pipelines may have zero installs.
+    const reuseOnly =
+      pipeline.gaps.length > 0 &&
+      pipeline.gaps.every(
+        (g) => g.decision === 'REUSE_EXISTING' || g.decision === 'COMPOSE_FROM_EXISTING',
+      );
     assert(
       'capability-installation-planning',
       'installation plans',
-      pipeline.installationPlans.length >= 1,
+      pipeline.installationPlans.length >= 1 || reuseOnly,
       String(pipeline.installationPlans.length),
     );
     assert(
@@ -389,11 +398,12 @@ export function runCapabilityPlanningV3Validation(sections?: string[]): {
     );
 
     const csv = runCapabilityPlanningPipeline(pipelineInput(CSV_EXPORT_PROMPT));
+    // Validated CSV Export composes via REUSE_EXISTING (sibling mapped gaps may still evolve).
     assert(
       'capability-generation-gate',
       'CSV evolution',
-      csv.generationPlans.length >= 1 && csv.validationPlans.length >= 1 && csv.installationPlans.length >= 1,
-      `${csv.generationPlans.length}/${csv.validationPlans.length}/${csv.installationPlans.length}`,
+      csv.gaps.some((g) => /csv/i.test(g.requiredCapability.name) && g.decision === 'REUSE_EXISTING'),
+      `${csv.permissionVerdict}:${csv.gaps.map((g) => `${g.requiredCapability.name}:${g.decision}`).join(',')}`,
     );
 
     const payment = runCapabilityPlanningPipeline(pipelineInput(PAYMENT_PROMPT));

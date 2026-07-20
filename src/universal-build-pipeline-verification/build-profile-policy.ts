@@ -21,14 +21,16 @@ export interface ProfilePolicyResult {
 
 export function promptExplicitlyRequiresAuth(rawPrompt: string): boolean {
   if (
-    /\b(no|without|not)\s+.{0,32}\b(login|sign[\s-]?in|sign[\s-]?up|authentication|user\s+accounts?|sessions?)\b/i.test(
+    /\b(no|without|not)\s+.{0,32}\b(login|sign[\s-]?in|sign[\s-]?up|authentication|user\s+accounts?|auth(?:entication)?\s+sessions?|login\s+sessions?|user\s+roles?)\b/i.test(
       rawPrompt,
     ) ||
     /\b(login|sign[\s-]?in|authentication)\s+not\s+required\b/i.test(rawPrompt)
   ) {
     return false;
   }
-  return /\b(login|sign[\s-]?in|sign[\s-]?up|user\s+accounts?|user\s+management|user\s+registration|roles?|sessions?|protected data|authentication)\b/i.test(
+  // Bare "sessions" / "roles" are business nouns (class sessions, PT sessions, garage
+  // sessions, staff roles) — only treat auth-qualified phrases as requiring auth.
+  return /\b(login|sign[\s-]?in|sign[\s-]?up|user\s+accounts?|user\s+management|user\s+registration|user\s+roles?|auth(?:entication)?\s+sessions?|login\s+sessions?|protected data|authentication)\b/i.test(
     rawPrompt,
   );
 }

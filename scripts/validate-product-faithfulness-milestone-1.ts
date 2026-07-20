@@ -32,6 +32,12 @@ interface Check {
   detail: string;
 }
 
+interface FreshValidatorEvidence {
+  schema: 'AIDEVENGINE_FRESH_VALIDATOR_EVIDENCE_V1';
+  generatedAt: string;
+  validators: Record<string, { passToken: string; exitCode: number; output: string }>;
+}
+
 const results: Check[] = [];
 
 function assert(name: string, condition: boolean, detail: string): void {
@@ -79,6 +85,29 @@ function readModuleSource(): string {
  * token. Invokes tsx's CLI entry directly via `node` — cross-platform, no shell required.
  */
 function runPreviousValidator(scriptRelativePath: string, passToken: string): { ok: boolean; detail: string } {
+  const evidencePath = process.env.AIDEVENGINE_FRESH_VALIDATOR_EVIDENCE_V1;
+  if (evidencePath && existsSync(evidencePath)) {
+    try {
+      const evidence = JSON.parse(readFileSync(evidencePath, 'utf8')) as FreshValidatorEvidence;
+      const generatedAt = Date.parse(evidence.generatedAt);
+      const ageMs = Date.now() - generatedAt;
+      const entry = evidence.validators?.[scriptRelativePath];
+      if (
+        evidence.schema === 'AIDEVENGINE_FRESH_VALIDATOR_EVIDENCE_V1' &&
+        Number.isFinite(generatedAt) &&
+        ageMs >= -5_000 &&
+        ageMs <= 300_000 &&
+        entry?.exitCode === 0 &&
+        entry.passToken === passToken &&
+        entry.output.includes(passToken)
+      ) {
+        return { ok: true, detail: `fresh independent process evidence consumed (ageMs=${ageMs})` };
+      }
+    } catch {
+      // Invalid or stale evidence must fall through to an independent child execution.
+    }
+  }
+
   const tsxCli = require.resolve('tsx/cli');
   try {
     const output = execFileSync(process.execPath, [tsxCli, scriptRelativePath], {

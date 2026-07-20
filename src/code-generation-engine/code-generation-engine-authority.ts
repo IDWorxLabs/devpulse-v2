@@ -112,6 +112,15 @@ export function materializeGeneratedApplication(
     profile: universalProfile,
     buildRunId: input.contract.contractId,
     faithfulBuildPlan: buildPlan,
+    approvedNavigationLabels: input.approvedNavigationLabels,
+    approvedProductionBuildEnvelope: input.approvedProductionBuildEnvelope,
+    approvedIdentity: input.approvedIdentity,
+    approvedNavigationPlan: input.approvedNavigationPlan,
+    approvedModulePlan: input.approvedModulePlan,
+    approvedMetadataPlan: input.approvedMetadataPlan,
+    approvedSampleDataPlan: input.approvedSampleDataPlan,
+    approvedProvenancePlan: input.approvedProvenancePlan,
+    approvedRepairRealityPlan: input.approvedRepairRealityPlan,
   });
 
   const generatedFiles: string[] = [];

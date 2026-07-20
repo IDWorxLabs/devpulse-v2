@@ -16,6 +16,17 @@ import type { ProductFaithfulnessInput, ProductFaithfulnessReport } from '../pro
 import { runGenerationFaithfulnessAudit } from '../product-faithfulness-v2/index.js';
 import type { GenerationFaithfulnessReport, GenerationStageName } from '../product-faithfulness-v2/generation-faithfulness-types.js';
 import type { GenerationStageRawEvidence } from '../product-faithfulness-v2/generation-faithfulness-auditor.js';
+import { buildCanonicalProductContract } from '../product-faithfulness-v2/index.js';
+import { runContractToModuleTraceabilityEvaluation } from '../contract-to-module-traceability/contract-to-module-traceability-authority.js';
+import { resolveUniversalFeatureNamesForCurrentBuild } from '../contract-to-module-traceability/feature-contract-surface-resolver.js';
+import { buildCanonicalProductFaithfulnessFindings } from '../production-surface-integration/product-faithfulness-surface.js';
+import { requireApprovedProductionBuildEnvelopeForContext } from '../contract-bound-generation-authority-v4/index.js';
+import {
+  assertFaithfulnessMetricInvariants,
+  normalizeCapabilityIdentity,
+  retentionPercentFromMissing,
+  suppressLexicalFragmentsOfCapabilities,
+} from '../product-faithfulness-v2/verification-accuracy.js';
 
 /** Derives generic, app-agnostic interaction-proof hints from the materialization manifest. */
 export function deriveMaterializationManifestHints(
@@ -40,14 +51,26 @@ export function deriveProductFaithfulnessInput(
 ): ProductFaithfulnessInput {
   const manifest = build.materializationManifest;
   const featureModuleDetails = manifest?.featureModuleDetails ?? [];
+  const approvedModuleIds =
+    build.approvedProductionBuildEnvelope?.approvedModulePlan.moduleIds ?? [];
+  const approvedNavigationEntries =
+    build.approvedProductionBuildEnvelope?.approvedNavigationPlan.productEntries ?? [];
+  const featureNames =
+    featureModuleDetails.length > 0
+      ? featureModuleDetails.map((module) => module.name).filter(Boolean)
+      : [...approvedModuleIds];
+  const navigationLabels =
+    featureModuleDetails.length > 0
+      ? featureModuleDetails.map((module) => module.name).filter(Boolean)
+      : [...new Set([...approvedNavigationEntries, ...approvedModuleIds])];
 
   return {
     prompt: build.prompt ?? '',
     architectureSummary: manifest?.promptSummary ? [manifest.promptSummary, manifest.expectedAppType ?? ''] : null,
-    featureContract: featureModuleDetails.map((m) => ({ featureName: m.name })),
+    featureContract: featureNames.map((featureName) => ({ featureName })),
     materializationManifestHints: manifest
       ? {
-          featureModuleNames: featureModuleDetails.map((m) => m.name).filter(Boolean),
+          featureModuleNames: featureNames,
           promptTerms: featureModuleDetails.flatMap((m) => m.promptTerms ?? []),
           routes: manifest.routes ?? [],
         }
@@ -55,7 +78,7 @@ export function deriveProductFaithfulnessInput(
     generatedRoutes: manifest?.routes ?? [],
     generatedFeatureModules: manifest?.featureModules ?? [],
     generatedComponents: featureModuleDetails.map((m) => m.componentPath).filter(Boolean),
-    navigationLabels: featureModuleDetails.map((m) => m.name).filter(Boolean),
+    navigationLabels,
     generatedProfile: manifest?.selectedProfile ? String(manifest.selectedProfile) : null,
     visibleHeadings: [],
     domText: livePreviewInteractionProof?.evidence.primaryFeatureTextFound ?? null,
@@ -96,6 +119,20 @@ export function deriveGenerationFaithfulnessStages(
 ): GenerationStageRawEvidence[] {
   const manifest = build.materializationManifest;
   const featureModuleDetails = manifest?.featureModuleDetails ?? [];
+  const approvedModuleIds =
+    build.approvedProductionBuildEnvelope?.approvedModulePlan.moduleIds ?? [];
+  const approvedNavigationEntries =
+    build.approvedProductionBuildEnvelope?.approvedNavigationPlan.productEntries ?? [];
+  const featureNames =
+    featureModuleDetails.length > 0
+      ? featureModuleDetails.map((module) => module.name).filter(Boolean)
+      : [...approvedModuleIds];
+  const navigationLabels =
+    featureModuleDetails.length > 0
+      ? featureModuleDetails.map((module) => module.name).filter(Boolean)
+      : [...new Set([...approvedNavigationEntries, ...approvedModuleIds])];
+  const previewVerifiedModuleIds =
+    manifest?.previewVerified === true ? (manifest.featureModules ?? []) : [];
 
   const stages: Array<{ stage: GenerationStageName; input: ProductFaithfulnessInput }> = [
     {
@@ -103,11 +140,12 @@ export function deriveGenerationFaithfulnessStages(
       input: {
         prompt: '',
         architectureSummary: manifest?.promptSummary ? [manifest.promptSummary, manifest.expectedAppType ?? ''] : null,
+        generatedFeatureModules: [...approvedModuleIds],
       },
     },
     {
       stage: 'FEATURE_CONTRACT',
-      input: { prompt: '', featureContract: featureModuleDetails.map((m) => ({ featureName: m.name })) },
+      input: { prompt: '', featureContract: featureNames.map((featureName) => ({ featureName })) },
     },
     {
       stage: 'GENERATED_MODULES',
@@ -119,13 +157,14 @@ export function deriveGenerationFaithfulnessStages(
     },
     {
       stage: 'NAVIGATION',
-      input: { prompt: '', navigationLabels: featureModuleDetails.map((m) => m.name).filter(Boolean) },
+      input: { prompt: '', navigationLabels },
     },
     {
       stage: 'MANIFEST',
       input: {
         prompt: '',
         workspaceManifestSummary: manifest ? [manifest.expectedAppType ?? '', manifest.promptSummary ?? ''].filter(Boolean) : null,
+        generatedFeatureModules: manifest?.featureModules ?? [],
       },
     },
     {
@@ -133,6 +172,7 @@ export function deriveGenerationFaithfulnessStages(
       input: {
         prompt: '',
         domText: livePreviewInteractionProof?.evidence.primaryFeatureTextFound ?? null,
+        generatedFeatureModules: previewVerifiedModuleIds,
         interactionProofEvidence: livePreviewInteractionProof
           ? {
               primaryFeatureTextFound: livePreviewInteractionProof.evidence.primaryFeatureTextFound,
@@ -149,15 +189,128 @@ export function deriveGenerationFaithfulnessStages(
 }
 
 /**
- * Evaluates Product Faithfulness Milestone 2 for a real build result: builds the canonical
- * contract from the original prompt, audits every evidenced generation stage against it, attempts
- * minimal repair, and returns the extended report. Returns null only when there is no prompt.
+ * Evaluates Product Faithfulness Milestone 2 for a real build result. When an approved production
+ * envelope is present, missing concepts are reported once from Contract-to-Module Traceability —
+ * never as duplicated stage-by-stage downstream reports.
  */
 export function evaluateGenerationFaithfulnessForBuild(
   build: OnePromptLivePreviewBuildResult,
   livePreviewInteractionProof?: LivePreviewInteractionProofReport | null,
 ): GenerationFaithfulnessReport | null {
   if (!build.prompt) return null;
+
+  const envelope = build.approvedProductionBuildEnvelope;
+  if (envelope) {
+    const scopedEnvelope = requireApprovedProductionBuildEnvelopeForContext(
+      envelope,
+      {
+        buildId: build.buildId,
+        projectId: build.projectId,
+        promptHash: build.runtimeEvidenceScope?.promptHash ?? envelope.promptHash ?? '',
+      },
+      'evaluateGenerationFaithfulnessForBuild',
+    );
+    const contract = buildCanonicalProductContract({ prompt: build.prompt });
+    const surfaces = resolveUniversalFeatureNamesForCurrentBuild({
+      contract,
+      envelope: scopedEnvelope,
+      workspacePath: build.workspacePath,
+      proposedModuleIds: scopedEnvelope.approvedModulePlan.moduleIds,
+    });
+    const manifestFeatureNames =
+      build.materializationManifest?.featureModuleDetails
+        ?.map((module) => module.name)
+        .filter(Boolean) ?? [];
+    const universalFeatureNames = [
+      ...new Set([...surfaces.universalFeatureNames, ...manifestFeatureNames]),
+    ];
+    const traceabilityReport = runContractToModuleTraceabilityEvaluation({
+      contract,
+      envelope: scopedEnvelope,
+      workspaceFiles: surfaces.workspaceFiles,
+      proposedModuleIds: scopedEnvelope.approvedModulePlan.moduleIds,
+      universalFeatureNames,
+    });
+    const canonicalFindings = buildCanonicalProductFaithfulnessFindings(traceabilityReport);
+    const remainingMissingConcepts = canonicalFindings.map((finding) => finding.concept);
+    const baseReport = runGenerationFaithfulnessAudit(
+      { prompt: build.prompt },
+      deriveGenerationFaithfulnessStages(build, livePreviewInteractionProof),
+    );
+    const metrics = retentionPercentFromMissing(
+      contract.allConceptNames.length,
+      remainingMissingConcepts.length,
+    );
+    const unexpectedDominantConcepts = suppressLexicalFragmentsOfCapabilities(
+      baseReport.unexpectedDominantConcepts,
+      contract.allConceptNames,
+    );
+    const firstBrokenByConcept = new Map(
+      canonicalFindings.map((finding) => [
+        normalizeCapabilityIdentity(finding.concept),
+        finding.firstBrokenBoundary,
+      ] as const),
+    );
+    const provenDownstreamConcepts = [
+      ...scopedEnvelope.approvedModulePlan.moduleIds,
+      ...scopedEnvelope.approvedModulePlan.moduleEntries.map((entry) => entry.displayName),
+      ...universalFeatureNames,
+    ];
+    assertFaithfulnessMetricInvariants({
+      requestedConcepts: contract.allConceptNames,
+      matchedConcepts: contract.allConceptNames.filter(
+        (concept) =>
+          !remainingMissingConcepts.some(
+            (missing) =>
+              normalizeCapabilityIdentity(missing) === normalizeCapabilityIdentity(concept),
+          ),
+      ),
+      missingConcepts: remainingMissingConcepts,
+      unexpectedConcepts: unexpectedDominantConcepts,
+      conceptRetentionPercent: metrics.conceptRetentionPercent,
+      conceptDriftPercent: metrics.conceptDriftPercent,
+      firstBrokenByConcept,
+      provenDownstreamConcepts:
+        remainingMissingConcepts.length === 0 ? provenDownstreamConcepts : [],
+    });
+    return {
+      ...baseReport,
+      contract: {
+        ...baseReport.contract,
+        productIdentity: scopedEnvelope.approvedProductIdentity.displayName,
+      },
+      repairsPerformed: [],
+      recoveredConcepts: [],
+      remainingMissingConcepts,
+      unexpectedDominantConcepts,
+      conceptRetentionPercent: metrics.conceptRetentionPercent,
+      conceptDriftPercent: metrics.conceptDriftPercent,
+      audit: {
+        ...baseReport.audit,
+        conceptRetentionRatio: metrics.conceptRetentionRatio,
+        conceptDriftRatio: metrics.conceptDriftRatio,
+        remainingMissingConcepts,
+        unexpectedDominantConcepts,
+      },
+      summary: {
+        ...baseReport.summary,
+        headline:
+          remainingMissingConcepts.length === 0
+            ? baseReport.summary.headline
+            : 'Canonical traceability root-cause report',
+        reason:
+          remainingMissingConcepts.length === 0
+            ? `${metrics.conceptRetentionPercent}% of the canonical product concepts were retained through generation.`
+            : canonicalFindings
+                .map(
+                  (finding) =>
+                    `${finding.concept}: first broken at ${finding.firstBrokenBoundary}. ${finding.requiredAction}`,
+                )
+                .join(' '),
+      },
+    };
+  }
+
   return runGenerationFaithfulnessAudit({ prompt: build.prompt }, deriveGenerationFaithfulnessStages(build, livePreviewInteractionProof));
 }
 

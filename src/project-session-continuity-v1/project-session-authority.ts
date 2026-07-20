@@ -34,10 +34,21 @@ import { resolveLivePreviewSessionBinding } from './project-session-live-preview
 
 const GENERIC_PROJECT_NAME = 'New Project';
 
+function extractExplicitPromptProjectName(rawPrompt: string): string | null {
+  const match = rawPrompt.match(
+    /\b(?:called|named)\s+["“]?([A-Za-z][A-Za-z0-9]*(?:[ \t_-]+[A-Za-z0-9]+){0,7}?)["”]?(?=[ \t]+(?:for|with|that|which)\b|[.!?\r\n]|$)/i,
+  );
+  return match?.[1]?.trim() || null;
+}
+
 function deriveProjectNameFromPrompt(rawPrompt: string, explicitName?: string | null): string {
   const trimmedExplicit = explicitName?.trim();
   if (trimmedExplicit && trimmedExplicit !== GENERIC_PROJECT_NAME) {
     return trimmedExplicit;
+  }
+  const promptDeclaredName = extractExplicitPromptProjectName(rawPrompt);
+  if (promptDeclaredName) {
+    return promptDeclaredName;
   }
   const signals = extractPromptDomainSignals(rawPrompt);
   if (signals.proposedProjectName?.trim()) {

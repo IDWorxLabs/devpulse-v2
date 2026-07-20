@@ -14,6 +14,14 @@ import {
 } from '../prompt-faithful-generation/prompt-module-name-normalizer.js';
 import { promptExplicitlyRequiresAuth } from '../universal-build-pipeline-verification/build-profile-policy.js';
 
+/**
+ * Identity Computation Collapse V1 — DRAFT / PRE-CONTRACT ONLY. Independent raw-prompt title
+ * derivation. Every real production materialization call site now supplies `approvedIdentity`
+ * (the CBGA-repaired identity — PPC-1207 No Parallel Truth) and this function is only reached as a
+ * fallback for pre-CBGA/isolated/test-only callers that intentionally omit it. No production stage
+ * downstream of Contract-Bound Generation Authority V4 may treat this function's output as
+ * authoritative.
+ */
 export function extractPromptAppTitle(rawPrompt: string): string {
   const called = rawPrompt.match(/\bcalled\s+([A-Za-z][A-Za-z0-9]*)/i);
   if (called?.[1]) return called[1];
@@ -21,15 +29,32 @@ export function extractPromptAppTitle(rawPrompt: string): string {
   const named = rawPrompt.match(/\bnamed\s+([A-Za-z][A-Za-z0-9]*)/i);
   if (named?.[1]) return named[1];
 
+  // Longest-first articles `(?:an|a|the)` — never `(?:a|an|the)` which truncates "an" to leftover "n".
   const buildMatch = rawPrompt.match(
-    /\bbuild\s+(?:a|an|the)?\s*(?:modern\s+|simple\s+|full-featured\s+)?([A-Za-z][A-Za-z0-9\s]{2,48}?)(?:\s+(?:web|mobile)\s+(?:app|application)|\s+app|\s+application|\s+system|\s+platform)/i,
+    /\b(?:build|create|make|generate|develop|provision|scaffold)\s+(?:an|a|the)?\s*(?:modern\s+|simple\s+|full-featured\s+|small-business\s+)?([A-Za-z][A-Za-z0-9\s-]{2,48}?)(?:\s+(?:web|mobile)\s+(?:app|application)|\s+app|\s+application|\s+system|\s+platform|\s+console|\s+software|\s+manager|\s+tool)/i,
   );
   if (buildMatch?.[1]) {
-    return buildMatch[1]
+    const title = buildMatch[1]
       .trim()
       .split(/\s+/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .map((word) => {
+        if (/^[A-Z0-9]{2,6}$/.test(word)) return word;
+        if (word.includes('-')) {
+          return word
+            .split('-')
+            .map((part) =>
+              !part
+                ? part
+                : /^[A-Z0-9]{2,6}$/.test(part)
+                  ? part
+                  : part.charAt(0).toUpperCase() + part.slice(1).toLowerCase(),
+            )
+            .join('-');
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      })
       .join(' ');
+    if (title.length >= 2 && !/^n\b/i.test(title) && !/\brelationships?\b/i.test(title)) return title;
   }
 
   return 'Custom App';
@@ -40,11 +65,20 @@ export function deriveNeutralAppTagline(appName: string): string {
 }
 
 /** Prompt-derived metadata — domain language in app names is allowed here only. */
-export function buildPromptAppMetadataTs(appName: string, tagline?: string): string {
+export function buildPromptAppMetadataTs(
+  appName: string,
+  tagline?: string,
+  landingSummary?: string,
+  homeSummary?: string,
+): string {
   const resolvedTagline = tagline ?? deriveNeutralAppTagline(appName);
+  const resolvedLandingSummary = landingSummary ?? `${appName}.`;
+  const resolvedHomeSummary = homeSummary ?? `${appName} is ready.`;
   return `/** Prompt-derived app metadata — not part of the universal blueprint shell */
 export const APP_NAME = ${JSON.stringify(appName)};
 export const APP_TAGLINE = ${JSON.stringify(resolvedTagline)};
+export const APP_LANDING_SUMMARY = ${JSON.stringify(resolvedLandingSummary)};
+export const APP_HOME_SUMMARY = ${JSON.stringify(resolvedHomeSummary)};
 `;
 }
 

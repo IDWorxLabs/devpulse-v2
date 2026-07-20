@@ -34,6 +34,11 @@ export type AeoFailureClass =
   | 'CONTRACT_TRACEABILITY_FAILURE'
   | 'GENERATOR_INPUT_BYPASS'
   | 'PIPELINE_COMPLIANCE_FAILURE'
+  /** GPCA Rendered Content Evidence Expansion V1 — structure passed, but real rendered output did not. */
+  | 'RENDERED_CONTENT_NON_COMPLIANT'
+  | 'PLACEHOLDER_APPLICATION'
+  | 'GENERIC_TEMPLATE_OUTPUT'
+  | 'RENDERED_CONTRACT_DRIFT'
   | 'UNKNOWN_FAILURE';
 
 export const AEO_FAILURE_CLASSES: readonly AeoFailureClass[] = [
@@ -61,6 +66,10 @@ export const AEO_FAILURE_CLASSES: readonly AeoFailureClass[] = [
   'CONTRACT_TRACEABILITY_FAILURE',
   'GENERATOR_INPUT_BYPASS',
   'PIPELINE_COMPLIANCE_FAILURE',
+  'RENDERED_CONTENT_NON_COMPLIANT',
+  'PLACEHOLDER_APPLICATION',
+  'GENERIC_TEMPLATE_OUTPUT',
+  'RENDERED_CONTRACT_DRIFT',
   'UNKNOWN_FAILURE',
 ];
 
@@ -317,6 +326,42 @@ export const AEO_FAILURE_CLASS_METADATA: Readonly<Record<AeoFailureClass, AeoFai
     defaultSeverity: 'HIGH',
     likelyOwnerSystem: 'generation-pipeline-compliance-authority-v1',
     defaultAffectedStages: ['MODULE_GENERATION', 'WORKSPACE_MATERIALIZATION'],
+    repairMayBeAttempted: false,
+    missingCapabilityPlanningMayBeNeeded: true,
+  },
+  RENDERED_CONTENT_NON_COMPLIANT: {
+    readOnly: true,
+    failureClass: 'RENDERED_CONTENT_NON_COMPLIANT',
+    defaultSeverity: 'CRITICAL',
+    likelyOwnerSystem: 'generation-pipeline-compliance-authority-v1 (rendered-content-collector)',
+    defaultAffectedStages: ['MODULE_GENERATION', 'WORKSPACE_MATERIALIZATION', 'PREVIEW_STARTUP'],
+    repairMayBeAttempted: false,
+    missingCapabilityPlanningMayBeNeeded: true,
+  },
+  PLACEHOLDER_APPLICATION: {
+    readOnly: true,
+    failureClass: 'PLACEHOLDER_APPLICATION',
+    defaultSeverity: 'CRITICAL',
+    likelyOwnerSystem: 'generation-pipeline-compliance-authority-v1 (rendered-content-collector)',
+    defaultAffectedStages: ['MODULE_GENERATION', 'WORKSPACE_MATERIALIZATION', 'PREVIEW_STARTUP'],
+    repairMayBeAttempted: false,
+    missingCapabilityPlanningMayBeNeeded: true,
+  },
+  GENERIC_TEMPLATE_OUTPUT: {
+    readOnly: true,
+    failureClass: 'GENERIC_TEMPLATE_OUTPUT',
+    defaultSeverity: 'CRITICAL',
+    likelyOwnerSystem: 'generation-pipeline-compliance-authority-v1 (rendered-content-collector)',
+    defaultAffectedStages: ['MODULE_GENERATION', 'WORKSPACE_MATERIALIZATION', 'PREVIEW_STARTUP'],
+    repairMayBeAttempted: false,
+    missingCapabilityPlanningMayBeNeeded: true,
+  },
+  RENDERED_CONTRACT_DRIFT: {
+    readOnly: true,
+    failureClass: 'RENDERED_CONTRACT_DRIFT',
+    defaultSeverity: 'CRITICAL',
+    likelyOwnerSystem: 'generation-pipeline-compliance-authority-v1 (rendered-content-collector)',
+    defaultAffectedStages: ['MODULE_GENERATION', 'WORKSPACE_MATERIALIZATION', 'PREVIEW_STARTUP'],
     repairMayBeAttempted: false,
     missingCapabilityPlanningMayBeNeeded: true,
   },

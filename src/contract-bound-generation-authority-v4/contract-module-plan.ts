@@ -10,6 +10,7 @@ import {
   CBGA_GENERIC_FALLBACK_MODULE_TERMS,
   CBGA_SYSTEM_SHELL_MODULE_IDS,
 } from './contract-bound-generation-types.js';
+import { resolveModuleSynonym } from '../prompt-faithful-generation/prompt-module-name-normalizer.js';
 import type {
   CbgaCanonicalContractEvidence,
   CbgaModuleEvidenceSource,
@@ -18,11 +19,13 @@ import type {
 } from './contract-bound-generation-types.js';
 
 export function slugifyConcept(concept: string): string {
-  return concept
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 40) || 'concept';
+  const slug =
+    concept
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 40) || 'concept';
+  return resolveModuleSynonym(slug) ?? slug;
 }
 
 export function titleCaseConcept(concept: string): string {

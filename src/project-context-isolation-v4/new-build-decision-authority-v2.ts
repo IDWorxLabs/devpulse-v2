@@ -22,6 +22,7 @@ import {
   computeContinuationEvidence,
   computeNewBuildEvidence,
   isIdentityCompatible,
+  tokenizeMeaningful,
   sumConfidence,
   CONTINUATION_MODERATE_THRESHOLD,
   CONTINUATION_STRONG_THRESHOLD,
@@ -94,6 +95,15 @@ export function classifyNewBuildDecisionV2(input: NewBuildDecisionV2Input): NewB
     input.currentProjectIdentitySummary && input.currentProjectIdentitySummary.trim(),
   );
   const identityCompatible = isIdentityCompatible(rawPrompt, input.currentProjectIdentitySummary);
+  const hasStandaloneIdentityEvidence = newBuildEvidence.some((evidence) =>
+    [
+      'EXPLICIT_BUILD_VERB',
+      'EXPLICIT_BUILD_VERB_WITH_PRODUCT_NOUN',
+      'COMPLETE_STANDALONE_DESCRIPTION',
+      'LARGE_FEATURE_SPECIFICATION',
+    ].includes(evidence.id),
+  );
+  const hasPromptIdentityVocabulary = tokenizeMeaningful(rawPrompt).length >= 3;
 
   let decision: BuildDecisionKind;
   let explanation: string;
@@ -108,7 +118,18 @@ export function classifyNewBuildDecisionV2(input: NewBuildDecisionV2Input): NewB
   const CONFIRM_MESSAGE_TOO_VAGUE =
     'It is not clear whether this is a request to start a new app or continue an existing project. Please describe the app you want to build, or specify which existing project to continue.';
 
-  if (identityHasSummary && !identityCompatible) {
+  if (input.hasKnownExistingProject && !identityHasSummary) {
+    decision = 'AMBIGUOUS_REQUIRES_CONFIRMATION';
+    winningEvidence = ambiguityEvidence;
+    rejectedEvidence = [...newBuildEvidence, ...continuationEvidence];
+    message = CONFIRM_MESSAGE_BOTH_PLAUSIBLE;
+    explanation =
+      'An existing project is attached, but its canonical identity summary is unavailable. Classification is blocked until the caller supplies that identity or the user makes an explicit new-build/continuation choice; lexical prompt overlap is not sufficient.';
+  } else if (
+    identityHasSummary &&
+    !identityCompatible &&
+    (hasStandaloneIdentityEvidence || hasPromptIdentityVocabulary)
+  ) {
     // Decisive: continuation-context compatibility (requirement — continuation requires BOTH
     // explicit continuation intent AND a compatible existing project) is the strongest possible
     // safety signal, and never depends on generic-word overlap (see isIdentityCompatible).
@@ -117,6 +138,13 @@ export function classifyNewBuildDecisionV2(input: NewBuildDecisionV2Input): NewB
     rejectedEvidence = [...continuationEvidence, ...ambiguityEvidence];
     explanation =
       "The current project's identity summary shares no meaningful (non-generic) vocabulary with this prompt, so continuation is unsafe regardless of any continuation-flavored wording elsewhere in the prompt — treated decisively as a new build.";
+  } else if (identityHasSummary && !identityCompatible) {
+    decision = 'AMBIGUOUS_REQUIRES_CONFIRMATION';
+    winningEvidence = ambiguityEvidence;
+    rejectedEvidence = [...newBuildEvidence, ...continuationEvidence];
+    message = CONFIRM_MESSAGE_BOTH_PLAUSIBLE;
+    explanation =
+      "The prompt is too vague to establish a new product identity and is not compatible with the current project's identity. An explicit new-build or continuation choice is required.";
   } else if (continuationScore >= CONTINUATION_STRONG_THRESHOLD && continuationScore > newBuildScore) {
     if (input.hasKnownExistingProject) {
       decision = 'CONTINUE_EXISTING_PROJECT';

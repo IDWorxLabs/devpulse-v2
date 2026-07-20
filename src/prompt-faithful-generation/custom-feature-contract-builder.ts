@@ -59,20 +59,18 @@ export function buildCustomProfileFeatureDefinition(
     promptExplicitlyRequiresAuth(rawPrompt) ? ['auth', ...productModules] : productModules,
   );
   const routes = modules.map((moduleId) => (moduleId === 'auth' ? '/' : `/${moduleId}`));
-  const uiTerms = [
-    ...productModules.flatMap((m) => [m.replace(/-/g, ' '), ...m.split('-').filter((part) => part.length >= 4)]),
-    'blink',
-    'gaze',
-    'speech',
-    'communication',
-    'emergency',
-    'calibration',
-    'accessibility',
-  ].filter(Boolean);
+  const assistiveProfile = resolveAssistiveCommunicationProfile(rawPrompt);
+  // Keep compound module phrases intact. Emitting hyphen fragments (planning/management/tracking)
+  // caused Product Faithfulness to treat lexical children as standalone unexpected concepts.
+  const productUiTerms = productModules.map((m) => m.replace(/-/g, ' '));
+  // Lisa assistive vocabulary only when the assistive profile is actually selected — never
+  // append those terms to a generic contact/task/inventory custom app and then fail validation.
+  const assistiveUiTerms = assistiveProfile
+    ? ['blink', 'gaze', 'speech', 'communication', 'emergency', 'calibration', 'accessibility']
+    : [];
+  const uiTerms = [...productUiTerms, ...assistiveUiTerms].filter(Boolean);
 
   const customDomainCopy = buildPromptSpecificDomainCopy(extraction);
-
-  const assistiveProfile = resolveAssistiveCommunicationProfile(rawPrompt);
 
   return {
     readOnly: true,

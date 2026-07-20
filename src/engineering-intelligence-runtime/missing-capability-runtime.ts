@@ -204,6 +204,7 @@ export async function runMissingCapabilityRepairLoop(
       contract: input.contract,
       fidelity,
       existingModuleIds: listExistingFeatureModuleIds(input.workspaceDir),
+      approvedModuleIds: input.approvedModuleIds,
     });
 
     if (!repairPlan) break;

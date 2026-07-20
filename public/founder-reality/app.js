@@ -620,6 +620,7 @@
     projectSessionClient.activeProjectId = context.projectId;
     projectSessionClient.activeSessionId = context.sessionId;
     projectSessionClient.hydrationState = 'ready';
+    window.CommandCenterProjectSessionReady = context.projectId;
     var merged = ProjectSessionContinuity.applySessionContextToWorkspace
       ? ProjectSessionContinuity.applySessionContextToWorkspace(
           context,
@@ -11498,6 +11499,34 @@
     scrollChatToBottom();
   }
 
+  function appendNewBuildConfirmationActions(confirmation, pendingMessage) {
+    if (!confirmation || !confirmation.choices || !confirmation.choices.length) return;
+    var history = el('chat-history');
+    if (!history) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'chat-alignment-actions chat-new-build-confirmation-actions';
+    for (var i = 0; i < confirmation.choices.length; i += 1) {
+      (function (choice) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = choice.id === 'START_NEW_BUILD' ? 'btn-primary' : 'btn-secondary';
+        btn.textContent = choice.label;
+        btn.addEventListener('click', function () {
+          var buttons = wrap.querySelectorAll('button');
+          for (var index = 0; index < buttons.length; index += 1) buttons[index].disabled = true;
+          askBrain(pendingMessage, {
+            buildIntentOverride: choice.id,
+            activeProjectIdSnapshot: confirmation.activeProjectId || null,
+            projectNameSnapshot: confirmation.activeProjectSummary || null,
+          });
+        });
+        wrap.appendChild(btn);
+      })(confirmation.choices[i]);
+    }
+    history.appendChild(wrap);
+    scrollChatToBottom();
+  }
+
   function chatAuditEvents() {
     var Audit = window.CommandCenterChatExecutionAudit || {};
     return Audit.EVENTS || {};
@@ -11703,11 +11732,19 @@
         var fetchPayload = {
           message: message,
           timestamp: Date.now(),
-          activeProjectId: options.confirmFreshCopy ? null : activeProjectId,
-          projectName: getActiveProjectName(),
+          activeProjectId: options.confirmFreshCopy
+            ? null
+            : (options.activeProjectIdSnapshot !== undefined
+              ? options.activeProjectIdSnapshot
+              : activeProjectId),
+          projectName:
+            options.projectNameSnapshot !== undefined
+              ? options.projectNameSnapshot
+              : getActiveProjectName(),
           confirmProjectContextAlignment: options.confirmProjectContextAlignment === true,
           confirmProjectResume: options.confirmProjectResume === true,
           confirmFreshCopy: options.confirmFreshCopy === true,
+          buildIntentOverride: options.buildIntentOverride || null,
           chatExecutionAuditId: auditId,
         };
         chatAuditRecord(
@@ -11870,7 +11907,11 @@
           setLastRequestStatus('Resume choice required');
           pushNotification('Choose resume, fresh copy, or cancel');
         }
-        if (result.category === 'BUILD') {
+        if (result.newBuildConfirmation) {
+          appendNewBuildConfirmationActions(result.newBuildConfirmation, message);
+          setLastRequestStatus('Build context choice required');
+          pushNotification('Choose new build or continuation');
+        } else if (result.category === 'BUILD') {
           applyOnePromptLivePreview(
             result.onePromptLivePreview,
             result.buildLivePreview,
@@ -12113,6 +12154,12 @@
 
   function askBrain(message, options) {
     options = options || {};
+    if (options.activeProjectIdSnapshot === undefined) {
+      options.activeProjectIdSnapshot = activeProjectId;
+    }
+    if (options.projectNameSnapshot === undefined) {
+      options.projectNameSnapshot = getActiveProjectName();
+    }
     var AuditEvents = chatAuditEvents();
     var auditId = options.auditId || null;
     if (!auditId && window.CommandCenterChatExecutionAudit) {
@@ -16229,4 +16276,5 @@
     });
 
   initOperatorFeedControls();
+  window.CommandCenterAppReady = true;
 })();

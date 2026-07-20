@@ -123,8 +123,9 @@ const DOMAIN_PROFILES: readonly DomainProfile[] = [
   {
     domain: 'finance-expense',
     signals: [
-      { pattern: /\bexpense\s+tracker\b|\bexpenses?\b/i, weight: 5, evidence: 'expense context' },
-      { pattern: /\bcategor(?:y|ies|ize)\b/i, weight: 3, evidence: 'categories mentioned' },
+      { pattern: /\bexpense\s+tracker\b|\bexpenses?\b|\bspending\b|\bbudget\b/i, weight: 5, evidence: 'expense context' },
+      // Categories alone are universal tagging — only score with explicit finance language.
+      { pattern: /\bcategor(?:y|ies|ize)\b/i, weight: 1, evidence: 'categories mentioned' },
       { pattern: /\bmonthly\s+totals?\b|\bincome\b/i, weight: 3, evidence: 'totals/income mentioned' },
       { pattern: /\bcharts?\b|\breports?\b/i, weight: 2, evidence: 'charts/reports mentioned' },
       { pattern: /\bcsv\s+export\b|\bexport\b/i, weight: 1, evidence: 'export mentioned' },
@@ -202,12 +203,30 @@ export interface ProductDomainClassification {
 export function classifyProductDomain(rawPrompt: string): ProductDomainClassification {
   const normalized = rawPrompt.trim();
   let best: ProductDomainClassification = {
+    readOnly: true,
     domain: 'custom-general',
     confidence: 0.35,
     score: 0,
     evidence: ['No strong domain signals — classified as custom/general.'],
     runnerUp: null,
   };
+
+  // Multi-entity contact/task/notes products are custom-general unless explicit finance/CRM language
+  // is present. Prevents `categories` alone from collapsing them into expense-tracker baseline.
+  const multiEntityContactTask =
+    /\bcontacts?\b/i.test(normalized) &&
+    /\btasks?\b/i.test(normalized) &&
+    !/\bexpenses?\b|\bspending\b|\bbudget\b|\bcrm\b|\bdeal\s+pipeline\b/i.test(normalized);
+  if (multiEntityContactTask) {
+    return {
+      readOnly: true,
+      domain: 'custom-general',
+      confidence: 0.82,
+      score: 8,
+      evidence: ['Contact/task multi-entity product — custom/general composition path.'],
+      runnerUp: null,
+    };
+  }
 
   const scores: Array<{ domain: ProductDomain; score: number; evidence: string[] }> = [];
 
@@ -220,6 +239,10 @@ export function classifyProductDomain(rawPrompt: string): ProductDomainClassific
         evidence.push(signal.evidence);
       }
     }
+    // Finance domain requires an explicit expense/income/budget signal — categories alone is never enough.
+    if (profile.domain === 'finance-expense' && !/\bexpenses?\b|\bspending\b|\bbudget\b|\bincome\b|expense\s+tracker/i.test(normalized)) {
+      score = 0;
+    }
     if (score > 0) scores.push({ domain: profile.domain, score, evidence });
   }
 
@@ -230,6 +253,7 @@ export function classifyProductDomain(rawPrompt: string): ProductDomainClassific
   if (top) {
     const maxPossible = DOMAIN_PROFILES.find((p) => p.domain === top.domain)?.signals.reduce((s, sig) => s + sig.weight, 0) ?? top.score;
     best = {
+      readOnly: true,
       domain: top.domain,
       score: top.score,
       confidence: Math.min(0.98, 0.45 + top.score / Math.max(maxPossible, 1) * 0.5),

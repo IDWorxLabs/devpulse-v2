@@ -74,8 +74,31 @@ export function resolveProjectContext(input: {
    * existing behavior (explicit/implicit reuse allowed) for continuation-style callers.
    */
   blockActiveProjectFallback?: boolean;
+  /**
+   * Trusted server-side bootstrap evidence that `projectId` was minted for this exact request.
+   * This is intentionally separate from blockActiveProjectFallback: NEW_BUILD must reject a
+   * browser-supplied stale id, while still retaining the fresh immutable id created immediately
+   * upstream for the same request.
+   */
+  freshlyCreatedProjectId?: string | null;
 }): { projectId: string; projectName: string; session: MultiProjectWorkspaceSession; created: boolean } {
   const requestedId = input.projectId?.trim() || null;
+  const freshlyCreatedProjectId = input.freshlyCreatedProjectId?.trim() || null;
+
+  if (
+    input.blockActiveProjectFallback &&
+    requestedId &&
+    freshlyCreatedProjectId === requestedId
+  ) {
+    const session = sessions.get(requestedId) ??
+      createSession(requestedId, input.projectName?.trim() || requestedId);
+    if (input.projectName?.trim()) {
+      session.projectName = input.projectName.trim();
+      session.lastUpdated = new Date().toISOString();
+    }
+    setActiveProjectId(requestedId);
+    return { projectId: requestedId, projectName: session.projectName, session, created: true };
+  }
 
   if (!input.blockActiveProjectFallback) {
     if (requestedId && sessions.has(requestedId)) {
@@ -129,6 +152,8 @@ export function registerProjectBuildResult(input: {
   }
   if (input.projectName?.trim()) {
     session.projectName = input.projectName.trim();
+  } else if (input.build.approvedProductIdentity?.displayName?.trim()) {
+    session.projectName = input.build.approvedProductIdentity.displayName.trim();
   }
   session.workspacePath = input.build.workspacePath;
   session.previewUrl = input.build.previewUrl;

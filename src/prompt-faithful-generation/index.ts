@@ -16,6 +16,8 @@ export type { PromptFaithfulnessVerdict } from './prompt-faithful-generation-typ
 export type { PromptBoundedModulePlan } from '../prompt-bounded-materialization/index.js';
 export { PROMPT_FAITHFUL_GENERATION_PASS_TOKEN as PASS_TOKEN } from './prompt-faithfulness-trace-events.js';
 
+import { contractConsumptionTrace, shortHashForTrace } from '../production-contract-consumption-trace-v1/index.js';
+
 export { extractPromptFeatures } from './prompt-feature-extractor.js';
 export {
   applyPromptProfileSelectionGuard,
@@ -54,12 +56,30 @@ export {
 export {
   enforcePromptFaithfulMaterialization,
   detectBannedFallbackModulesInWorkspace,
+  detectForbiddenBannedFallbackModulesInWorkspace,
   detectStaleWorkspaceModules,
   removeWorkspaceFeatureModules,
   sanitizeWorkspaceForBuildPlan,
   evaluateBannedFallbackScan,
   listWorkspaceFeatureModuleIds,
 } from './prompt-faithful-materialization-gate.js';
+export {
+  classifyModuleFallbackStatus,
+  classifyWorkspaceBannedFallbackContamination,
+  findMatchingBannedTerm,
+  hasAuthoritativeExactAncestry,
+  isCompoundOverBannedTerm,
+  isDisguisedBannedForm,
+  moduleIdMatchesBannedTerm,
+  promptJustifiesBareBannedFallback,
+  promptJustifiesExactModuleId,
+  SYSTEM_SHELL_MODULE_IDS,
+} from './fallback-module-classification.js';
+export type {
+  FallbackStatus,
+  ModuleFallbackClassification,
+  ModuleFallbackClassificationInput,
+} from './fallback-module-classification.js';
 export { buildPromptFaithfulnessTraceEvents } from './prompt-faithfulness-trace-events.js';
 
 import { rankBuildProfiles } from '../build-profile-classification/profile-ranking-engine.js';
@@ -300,6 +320,36 @@ export function resolvePromptFaithfulBuildPlan(
 
   const modulePlan = engineeringApplied.modulePlan;
   definition = applySafePaymentPlaceholderPolicyToDefinition(engineeringApplied.definition, rawPrompt);
+
+  contractConsumptionTrace({
+    requestId: 'N/A',
+    buildId: 'N/A',
+    projectId: 'N/A',
+    promptHash: shortHashForTrace(rawPrompt),
+    stage: 'PROMPT_BOUNDED_MODULE_PLAN',
+    functionName: 'resolvePromptFaithfulBuildPlan (resolvePromptBoundedModulePlan)',
+    sourceFile: 'src/prompt-faithful-generation/index.ts',
+    branchSelected: shouldUseCustomFeatureDefinition(extraction, materializationProfile)
+      ? 'CUSTOM_PROFILE_FEATURE_DEFINITION'
+      : 'PROFILE_FEATURE_DEFINITION_FOR_PROFILE',
+    inputProductIdentity: extraction.appName,
+    outputProductIdentity: extraction.appName,
+    inputModules: extraction.requiredModules ?? [],
+    outputModules: modulePlan.approvedModuleIds,
+    inputRoutes: [],
+    outputRoutes: modulePlan.routes,
+    inputNavigation: [],
+    outputNavigation: modulePlan.approvedModuleIds,
+    inputVisibleText: [],
+    outputVisibleText: [],
+    fallbackSelected: modulePlan.contaminationDetected === true,
+    genericTemplateSelected: false,
+    contractConsumed: false,
+    cbgaPlanConsumed: false,
+    promptBoundedModulePlanConsumed: true,
+    universalFeatureContractConsumed: false,
+    profileFeatureDefinitionConsumed: true,
+  });
 
   if (productIntelligenceModel.platform.primaryTarget === 'PHONE_FIRST') {
     definition = { ...definition, androidPhonePreviewRequired: true };

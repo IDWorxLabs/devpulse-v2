@@ -2,7 +2,7 @@
  * One-prompt build orchestrator — planning → materialization → build → live preview.
  */
 
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { execSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -44,7 +44,10 @@ import {
 import {
   recordBuildIntentRun,
 } from '../build-intent-routing/build-intent-run-store.js';
-import { resolveProjectRegistryRootDir } from '../project-registry-v1/project-registry-v1-store.js';
+import {
+  getRegistryProject,
+  resolveProjectRegistryRootDir,
+} from '../project-registry-v1/project-registry-v1-store.js';
 import { ensureRegistryProjectRecord } from '../persistent-project-reality/persistent-project-reality-registry.js';
 import { resolveRegistryRootForPersistentProject } from '../audit-project-isolation/audit-registry-root.js';
 import {
@@ -55,6 +58,8 @@ import {
   buildContextScope,
   buildPromptResetPlan,
   classifyNewBuildDecision,
+  assertNoStaleContext,
+  runStaleContextCheck,
   type BuildDecisionResult,
   type ContextIsolationReportSection,
   buildContextIsolationReportSection,
@@ -84,6 +89,7 @@ import {
   listWorkspaceFeatureModuleIds,
   resolvePromptFaithfulBuildPlan,
   sanitizeWorkspaceForBuildPlan,
+  type ResolvedPromptFaithfulBuildPlan,
 } from '../prompt-faithful-generation/index.js';
 import { buildIntentUnderstandingTraceEvents } from '../intent-understanding-engine/index.js';
 import {
@@ -158,9 +164,37 @@ import {
   type AeoOrchestratorReport,
 } from '../autonomous-engineering-orchestrator-v1/index.js';
 import { buildCanonicalProductContract } from '../product-faithfulness-v2/index.js';
+import type { CanonicalProductContract } from '../product-faithfulness-v2/generation-faithfulness-types.js';
 import {
   applyContractBoundGenerationToBuildPlan,
+  isApprovedProductionBuildEnvelopeValid,
+  requireApprovedProductionBuildEnvelope,
+  requireApprovedProductionBuildEnvelopeForContext,
+  constitutionalHandoffsFromApprovedProductionBuildEnvelope,
+  withApprovedProductionBuildEnvelopeRepairPlan,
+  advanceApprovedProductionBuildEnvelopeState,
+  lockApprovedProductionBuildEnvelopeWorkspace,
+  assertApprovedProductionBuildEnvelopePreviewGuarantee,
+  syncCbgaGenerationReportWithProductionBuildEnvelope,
+  appendApprovedRepairRealityEntries,
+  createWorkspaceMutationRepairEntry,
+  createAutofixCompilationRepairEntry,
+  createPreviewRecoveryRepairEntry,
+  createPipelineRestartRepairEntry,
+  createGeneratorRegenerationRepairEntry,
+  createCapabilityEvolutionRepairEntry,
+  recordApprovedRepairRealityRevalidation,
+  repairRevalidationSatisfiedBeforePreview,
+  repairRealityRequiresRevalidationBeforePreview,
   type CbgaGenerationReport,
+  type ApprovedProductIdentity,
+  type ApprovedNavigationPlan,
+  type ApprovedModulePlan,
+  type ApprovedMetadataPlan,
+  type ApprovedSampleDataPlan,
+  type ApprovedProvenancePlan,
+  type ApprovedRepairRealityPlan,
+  type ApprovedProductionBuildEnvelope,
 } from '../contract-bound-generation-authority-v4/index.js';
 import {
   buildGpcaPostMaterializationReport,
@@ -169,8 +203,135 @@ import {
   gpcaFailureReason,
   type GpcaComplianceReport,
 } from '../generation-pipeline-compliance-authority-v1/index.js';
+import { contractConsumptionTrace, shortHashForTrace } from '../production-contract-consumption-trace-v1/index.js';
 
 let buildCounter = 0;
+
+// Production Pipeline Constitution Adoption Phase 1 — PPC-702 ("every stage that reuses or skips
+// materializing a workspace must audit the COMPLETE set of product/blueprint artifacts already on
+// disk, never a partial subset") and PPC-606 ("existing workspace file presence alone is never
+// sufficient evidence of compliance"). Recursively collects every source/style file under a given
+// subtree, relative to that subtree's root. Generic, structural-only: no app-specific file names,
+// extensions, or product vocabulary — the exact same walk for every build, every profile, every
+// domain.
+const GENERATED_CODE_FILE_EXTENSION_PATTERN = /\.(?:tsx?|jsx?|css)$/;
+
+function collectGeneratedFilesRecursively(rootDir: string): string[] {
+  const relativePaths: string[] = [];
+  const walk = (currentDir: string, relativePrefix: string): void => {
+    let entries: import('node:fs').Dirent[];
+    try {
+      entries = readdirSync(currentDir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      const entryRelativePath = relativePrefix ? `${relativePrefix}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) {
+        walk(join(currentDir, entry.name), entryRelativePath);
+      } else if (GENERATED_CODE_FILE_EXTENSION_PATTERN.test(entry.name)) {
+        relativePaths.push(entryRelativePath);
+      }
+    }
+  };
+  walk(rootDir, '');
+  return relativePaths;
+}
+
+// Generated, provenance-bearing JSON manifests written directly to the workspace root by the
+// production generators. Never product/business content by themselves, but they are real evidence
+// GPCA's rendered-content and navigation-label extraction already reads — so a continuation audit
+// that omits them is auditing an incomplete picture of "what this workspace actually is" (PPC-702).
+// Generic, structural filenames only — never an app-specific artifact name.
+const GENERATED_WORKSPACE_MANIFEST_FILENAMES = ['blueprint-manifest.json', 'build-manifest.json'] as const;
+
+// GPCA Continuation Workspace Compliance Fix V1 / Production Pipeline Constitution Adoption
+// Phase 1 (Tier 0) — enumerates every relative file path an EXISTING workspace already has on
+// disk, in the exact same shape (`generatedFilePaths`) the Code Generation Engine reports for a
+// fresh materialization. Previously this only walked one level into `src/features/<module>/` and
+// `src/App.tsx` — silently skipping root-level `src/features/*.ts(x)` files (e.g. the feature
+// router itself), the entire `src/blueprint/**` subtree (AppShell, screens, pages, components,
+// product-surface, app-metadata), `src/App.css`, and generated manifests. A stale/non-compliant
+// blueprint or product-surface file could therefore sit on disk, forever unaudited, once the
+// workspace was judged to "already have feature modules" by presence alone. This never writes
+// anything and never invents a path — a file is only included when it is actually present right
+// now. Generic/structural only: no app-specific file names or product vocabulary are referenced
+// here. Exported (read-only, pure, no build-state closure) so the fix's validator can exercise the
+// exact same file-listing logic the orchestrator uses, deterministically and without going through
+// the live HTTP build path.
+export function listExistingWorkspaceGeneratedFilePaths(existingWorkspaceDir: string): string[] {
+  const relativePaths: string[] = [];
+
+  const featuresDir = join(existingWorkspaceDir, 'src/features');
+  if (existsSync(featuresDir)) {
+    for (const rel of collectGeneratedFilesRecursively(featuresDir)) {
+      relativePaths.push(`src/features/${rel.replace(/\\/g, '/')}`);
+    }
+  }
+
+  const blueprintDir = join(existingWorkspaceDir, 'src/blueprint');
+  if (existsSync(blueprintDir)) {
+    for (const rel of collectGeneratedFilesRecursively(blueprintDir)) {
+      relativePaths.push(`src/blueprint/${rel.replace(/\\/g, '/')}`);
+    }
+  }
+
+  if (existsSync(join(existingWorkspaceDir, 'src/App.tsx'))) {
+    relativePaths.push('src/App.tsx');
+  }
+  if (existsSync(join(existingWorkspaceDir, 'src/App.css'))) {
+    relativePaths.push('src/App.css');
+  }
+
+  for (const manifestName of GENERATED_WORKSPACE_MANIFEST_FILENAMES) {
+    if (existsSync(join(existingWorkspaceDir, manifestName))) {
+      relativePaths.push(manifestName);
+    }
+  }
+
+  return relativePaths;
+}
+
+// Production Pipeline Constitution Adoption Phase 1 — the permanent constitutional rule IDs
+// (docs/production-pipeline-constitution-v1.md) this milestone enforces in production. Reported on
+// every GPCA hard-stop this milestone's re-audit wiring produces, so a blocked build always names
+// exactly which constitutional rules it protected — never a generic, unattributed failure.
+export const PRODUCTION_PIPELINE_CONSTITUTION_ADOPTION_PHASE_1_RULE_IDS = [
+  'PPC-606',
+  'PPC-607',
+  'PPC-702',
+  'PPC-1001',
+  'PPC-1002',
+  'PPC-1203',
+  'PPC-1205',
+  'PPC-1304',
+] as const;
+
+// Production Pipeline Constitution Adoption Phase 1 (Tier 1) — PPC-1203/PPC-1304: "GPCA reports
+// are perishable; any file write to the workspace after a GPCA report was produced invalidates
+// that report." PPC-606/607/1001/1002/1205: "before stabilization, build, or preview activation
+// proceeds past a mutation, GPCA must be re-run against the CURRENT workspace state — never a
+// stale in-memory report captured earlier in the request." This is the single, shared, pure
+// re-audit primitive every post-mutation call site below uses: same contract, same cbgaReport,
+// same buildPlan, same generic file-listing walk as every other GPCA call site in this file — it
+// changes no GPCA scoring/authority logic, adds no app-specific logic, and never repairs or
+// rewrites the workspace. Exported so the validator can exercise the exact same re-audit primitive
+// the orchestrator uses.
+export function auditCurrentWorkspaceStateForGpca(input: {
+  contract: CanonicalProductContract;
+  cbgaReport: CbgaGenerationReport;
+  buildPlan: ResolvedPromptFaithfulBuildPlan;
+  workspaceDir: string;
+}): GpcaComplianceReport {
+  const currentFilePaths = listExistingWorkspaceGeneratedFilePaths(input.workspaceDir);
+  return buildGpcaPostMaterializationReport({
+    contract: input.contract,
+    cbgaReport: input.cbgaReport,
+    buildPlan: input.buildPlan,
+    generatedFilePaths: currentFilePaths,
+    workspaceDir: input.workspaceDir,
+  });
+}
 
 export function resetOnePromptLivePreviewForTests(): void {
   buildCounter = 0;
@@ -205,7 +366,9 @@ function tryAutonomousRecovery(input: {
 
 function nextBuildId(): string {
   buildCounter += 1;
-  return `one-prompt-build-${buildCounter}`;
+  // Timestamp keeps history paths unique even when resetOnePromptLivePreviewForTests()
+  // zeroes the counter between sequential production builds.
+  return `one-prompt-build-${Date.now()}-${buildCounter}`;
 }
 
 function excerptBuildOutput(output: string, max = 240): string {
@@ -264,6 +427,12 @@ function composeFailureResult(input: {
   buildAutofixAttempts?: number;
   buildAutofixLoop?: OnePromptLivePreviewBuildResult['buildAutofixLoop'];
   workspaceStabilizerReport?: OnePromptLivePreviewBuildResult['workspaceStabilizerReport'];
+  gpcaComplianceReport?: OnePromptLivePreviewBuildResult['gpcaComplianceReport'];
+  aeoReport?: OnePromptLivePreviewBuildResult['aeoReport'];
+  gpcaHardStop?: boolean;
+  gpcaBlockedMaterialization?: boolean;
+  gpcaBlockedPreviewActivation?: boolean;
+  gpcaViolatedConstitutionRuleIds?: OnePromptLivePreviewBuildResult['gpcaViolatedConstitutionRuleIds'];
 }): OnePromptLivePreviewBuildResult {
   return {
     readOnly: true,
@@ -296,6 +465,12 @@ function composeFailureResult(input: {
     buildAutofixAttempts: input.buildAutofixAttempts,
     buildAutofixLoop: input.buildAutofixLoop ?? null,
     workspaceStabilizerReport: input.workspaceStabilizerReport ?? null,
+    gpcaComplianceReport: input.gpcaComplianceReport ?? null,
+    aeoReport: input.aeoReport ?? null,
+    gpcaHardStop: input.gpcaHardStop ?? false,
+    gpcaBlockedMaterialization: input.gpcaBlockedMaterialization ?? false,
+    gpcaBlockedPreviewActivation: input.gpcaBlockedPreviewActivation ?? false,
+    gpcaViolatedConstitutionRuleIds: input.gpcaViolatedConstitutionRuleIds,
     updatedAt: new Date().toISOString(),
   };
 }
@@ -324,6 +499,12 @@ const activeContextIsolationRecords = new Map<string, ContextIsolationReportSect
  * carries its scope id, purge actions performed, and any stale-evidence detections.
  */
 const activeRuntimeEvidenceScopes = new Map<string, RuntimeEvidenceScope>();
+/**
+ * Current immutable CBGA envelope per project. It is attached to terminal failures as well as
+ * successes, so a blocked build never loses the build/project/prompt provenance needed to prove
+ * which context produced the diagnostic.
+ */
+const activeProductionBuildEnvelopes = new Map<string, ApprovedProductionBuildEnvelope>();
 
 export function getActiveBuildExecutionMonitor(projectId: string): BuildExecutionMonitor | undefined {
   return activeExecutionMonitors.get(projectId);
@@ -342,21 +523,60 @@ function attachExecutionReport(
   build: OnePromptLivePreviewBuildResult,
 ): OnePromptLivePreviewBuildResult {
   let enriched = build;
+  const productionEnvelope = activeProductionBuildEnvelopes.get(projectId);
+  if (productionEnvelope) {
+    if (productionEnvelope.buildId !== build.buildId || productionEnvelope.projectId !== build.projectId) {
+      throw new Error(
+        `CROSS_RUN_ARTIFACT_CONTEXT_MISMATCH: terminal build result ${build.buildId}/${build.projectId} cannot consume envelope ${productionEnvelope.buildId ?? '(none)'}/${productionEnvelope.projectId ?? '(none)'}.`,
+      );
+    }
+    enriched = {
+      ...enriched,
+      approvedProductIdentity: productionEnvelope.approvedProductIdentity,
+      approvedNavigationPlan: productionEnvelope.approvedNavigationPlan,
+      approvedModulePlan: productionEnvelope.approvedModulePlan,
+      approvedMetadataPlan: productionEnvelope.approvedMetadataPlan,
+      approvedSampleDataPlan: productionEnvelope.approvedSampleDataPlan,
+      approvedProvenancePlan: productionEnvelope.approvedProvenancePlan,
+      approvedRepairRealityPlan: productionEnvelope.approvedRepairRealityPlan,
+      approvedProductionBuildEnvelope: productionEnvelope,
+    };
+  }
   const monitor = activeExecutionMonitors.get(projectId);
+  const gpcaBlocked =
+    build.gpcaHardStop === true ||
+    build.gpcaBlockedMaterialization === true ||
+    build.gpcaBlockedPreviewActivation === true;
   if (monitor) {
-    monitor.finalizeDanglingStage(
-      build.status !== 'FAILED',
-      build.status === 'FAILED'
-        ? (build.failureReason ?? 'Build did not complete.')
-        : 'Stage completed as part of a successful build.',
-    );
+    if (gpcaBlocked) {
+      monitor.blockStage('GENERATION', build.failureReason ?? 'Generation pipeline compliance blocked this build.');
+    } else {
+      monitor.finalizeDanglingStage(
+        build.status !== 'FAILED',
+        build.status === 'FAILED'
+          ? (build.failureReason ?? 'Build did not complete.')
+          : 'Stage completed as part of a successful build.',
+      );
+    }
     const report = buildExecutionReport(monitor);
     enriched = {
       ...enriched,
-      buildExecutionStatus: report.overallState,
+      buildExecutionStatus: gpcaBlocked ? 'BLOCKED' : report.overallState,
       executionTimeline: report.timeline,
       executionRecovery: report.recoveryAttempts,
-      executionReport: report,
+      executionReport: gpcaBlocked
+        ? {
+            ...report,
+            overallState: 'BLOCKED',
+            summary: {
+              ...report.summary,
+              headline: 'Build blocked.',
+              currentStageLabel: 'Generation compliance validation',
+              heartbeatLabel: 'Generation stopped because unapproved input reached a generator',
+              nextStepLabel: 'Correct or regenerate the approved generation input',
+            },
+          }
+        : report,
     };
   }
   const contextIsolation = activeContextIsolationRecords.get(projectId);
@@ -519,6 +739,12 @@ export async function runOnePromptLivePreviewBuild(
   const source = input.source ?? 'api';
 
   const priorActiveProjectId = getActiveProjectId();
+  const requestedRegistryProject = input.projectId
+    ? getRegistryProject(input.projectId, resolveProjectRegistryRootDir())
+    : null;
+  const currentProjectIdentitySummary = requestedRegistryProject
+    ? [requestedRegistryProject.name, requestedRegistryProject.summary].filter(Boolean).join(' — ')
+    : input.projectName?.trim() || null;
   // NEW_BUILD_CONFIRMATION_REQUIRED UX V4 — when the caller (chat-to-build bridge) already
   // resolved an explicit buildIntentOverride upstream, that acceptance/rejection is carried
   // through verbatim so the context isolation report can show confirmation-required/selected
@@ -544,22 +770,57 @@ export async function runOnePromptLivePreviewBuild(
         rawPrompt: prompt,
         requestedProjectId: input.projectId ?? null,
         requestedProjectName: input.projectName ?? null,
-        hasKnownExistingProject: Boolean(input.projectId) || input.resumeExistingProject === true,
-        currentProjectIdentitySummary: null,
+        hasKnownExistingProject: Boolean(requestedRegistryProject) || input.resumeExistingProject === true,
+        currentProjectIdentitySummary,
         buildIntentOverride: input.buildIntentOverride ?? null,
       });
   // Only a decision explicitly and confidently classified as continuation may reuse the
   // process-wide active project; every other case (new build, or unresolved ambiguity reaching
   // this far) mints a fresh project instead of silently falling back to activeProjectId.
   const blockActiveProjectFallback = buildDecision.decision !== 'CONTINUE_EXISTING_PROJECT';
+  const promptConceptTokens = prompt.toLowerCase().match(/[a-z0-9]+/g) ?? [];
+  const priorActiveRegistryProject = priorActiveProjectId
+    ? getRegistryProject(priorActiveProjectId, resolveProjectRegistryRootDir())
+    : null;
+  const previousProjectIdentity = priorActiveRegistryProject
+    ? [priorActiveRegistryProject.name, priorActiveRegistryProject.summary].filter(Boolean).join(' — ')
+    : null;
+  const preselectionScope = buildContextScope({
+    requestId: buildId,
+    buildId,
+    projectId: input.projectId ?? 'pending-fresh-project',
+    decision: buildDecision.decision,
+    currentPromptHash: hashPromptForContextScope(prompt),
+    explicitlyReferencedProjectId:
+      buildDecision.decision === 'CONTINUE_EXISTING_PROJECT' ? (input.projectId ?? null) : null,
+    activeProjectIdCandidate: priorActiveProjectId,
+  });
+  const preselectionStaleCheck = runStaleContextCheck({
+    stage: 'PRE_PROJECT_SELECTION',
+    scope: preselectionScope,
+    currentPromptConcepts: promptConceptTokens,
+    canonicalIdentity: input.projectName ?? null,
+    candidateInheritedConcepts: [],
+    candidateGeneratedConcepts: [],
+    previousProjectIdentity,
+    previousMetadataKeywords: previousProjectIdentity?.toLowerCase().match(/[a-z0-9]+/g) ?? [],
+    activeProjectIdCandidate: priorActiveProjectId,
+    requestedProjectId: input.projectId ?? null,
+  });
+  assertNoStaleContext(preselectionStaleCheck);
 
   const projectContext = resolveProjectContext({
     projectId: input.projectId,
     projectName: input.projectName,
     createIfMissing: true,
     blockActiveProjectFallback,
+    freshlyCreatedProjectId:
+      buildDecision.decision === 'NEW_BUILD' && input.freshProjectContextCreated === true
+        ? (input.projectId ?? null)
+        : null,
   });
-  const { projectId, projectName } = projectContext;
+  const { projectId } = projectContext;
+  let { projectName } = projectContext;
   const activeProjectIdFallbackBlocked = blockActiveProjectFallback && Boolean(priorActiveProjectId) && priorActiveProjectId !== projectId;
 
   const contextScope = buildContextScope({
@@ -571,6 +832,19 @@ export async function runOnePromptLivePreviewBuild(
     explicitlyReferencedProjectId: buildDecision.decision === 'CONTINUE_EXISTING_PROJECT' ? (input.projectId ?? null) : null,
     activeProjectIdCandidate: priorActiveProjectId,
   });
+  const resolvedContextStaleCheck = runStaleContextCheck({
+    stage: 'POST_PROJECT_SELECTION_PRE_PLANNING',
+    scope: contextScope,
+    currentPromptConcepts: promptConceptTokens,
+    canonicalIdentity: projectName,
+    candidateInheritedConcepts: [],
+    candidateGeneratedConcepts: [],
+    previousProjectIdentity,
+    previousMetadataKeywords: previousProjectIdentity?.toLowerCase().match(/[a-z0-9]+/g) ?? [],
+    activeProjectIdCandidate: priorActiveProjectId,
+    requestedProjectId: projectId,
+  });
+  assertNoStaleContext(resolvedContextStaleCheck);
   // Prompt Reset Authority — a NEW_BUILD_PROMPT trigger runs before planning/materialization
   // begin. A freshly-minted project id has no prior workspace/state under that id at all, so
   // every reset category is satisfied by construction; requirement 3's "clear stale generation
@@ -613,7 +887,10 @@ export async function runOnePromptLivePreviewBuild(
     ENGINEERING_REPORT_SUMMARY: () => activeExecutionMonitors.delete(projectId),
     UI_PROJECT_SUMMARY: () => activeContextIsolationRecords.delete(projectId),
     FALLBACK_MODULE_EVIDENCE: () => resetLastPromptBoundedMaterializationEvidenceForFreshBuild(),
-    RUNTIME_ACTIVATION_RESULT: () => activeRuntimeEvidenceScopes.delete(projectId),
+    RUNTIME_ACTIVATION_RESULT: () => {
+      activeRuntimeEvidenceScopes.delete(projectId);
+      activeProductionBuildEnvelopes.delete(projectId);
+    },
   });
   // The full plan (not just the subset with a live in-process executor) is what gets reported —
   // FRESH_SCOPE entries are purged by construction (fresh project id) and NOT_APPLICABLE entries
@@ -626,6 +903,7 @@ export async function runOnePromptLivePreviewBuild(
       decision: buildDecision,
       scope: contextScope,
       resetPlan: promptResetPlan,
+      staleChecks: [preselectionStaleCheck, resolvedContextStaleCheck],
       productIdentity: projectName,
       activeProjectIdFallbackBlocked,
     }),
@@ -670,9 +948,72 @@ export async function runOnePromptLivePreviewBuild(
   // mismatch. The generator itself is unmodified: it keeps reading `buildPlan.modulePlan` /
   // `buildPlan.extraction.appName` exactly as before.
   const canonicalProductContract = buildCanonicalProductContract({ prompt });
-  const contractBoundResult = applyContractBoundGenerationToBuildPlan(buildPlan, canonicalProductContract);
+  const contractBoundResult = applyContractBoundGenerationToBuildPlan(buildPlan, canonicalProductContract, {
+    promptHash: contextScope.currentPromptHash,
+    buildId,
+    projectId,
+    buildContextDecision: buildDecision.decision === 'AMBIGUOUS_REQUIRES_CONFIRMATION'
+      ? null
+      : buildDecision.decision,
+    buildIntentOverride: buildDecision.overrideApplied ?? null,
+  });
   const contractBoundGeneration: CbgaGenerationReport = contractBoundResult.report;
   buildPlan = contractBoundResult.buildPlan;
+  // Final Immutable Production Pipeline V1 (PPC-1207 No Parallel Truth) — exactly one immutable
+  // ApprovedProductionBuildEnvelope is the constitutional source for this entire build. Every
+  // downstream production stage consumes this envelope — never individual handoffs in parallel.
+  let productionBuildEnvelope: ApprovedProductionBuildEnvelope = requireApprovedProductionBuildEnvelopeForContext(
+    requireApprovedProductionBuildEnvelope(
+      contractBoundGeneration.approvedProductionBuildEnvelope,
+      'one-prompt-build-orchestrator',
+    ),
+    {
+      buildId,
+      projectId,
+      promptHash: contextScope.currentPromptHash,
+    },
+    'one-prompt-build-orchestrator-context-binding',
+  );
+  activeProductionBuildEnvelopes.set(projectId, productionBuildEnvelope);
+  const constitutionalHandoffs = constitutionalHandoffsFromApprovedProductionBuildEnvelope(productionBuildEnvelope);
+  const approvedIdentity: ApprovedProductIdentity = constitutionalHandoffs.approvedProductIdentity;
+  // Production Surface Integration Cleanup V1 — project identity for every downstream surface must
+  // derive from the CBGA-approved envelope, never from session residue or caller-supplied names.
+  if (approvedIdentity.displayName.trim()) {
+    projectContext.session.projectName = approvedIdentity.displayName.trim();
+  }
+  projectName = projectContext.session.projectName;
+  const approvedNavigationPlan: ApprovedNavigationPlan = constitutionalHandoffs.approvedNavigationPlan;
+  const cbgaApprovedNavigationLabels = approvedNavigationPlan.productEntries;
+  const approvedModulePlan: ApprovedModulePlan = constitutionalHandoffs.approvedModulePlan;
+  const approvedMetadataPlan: ApprovedMetadataPlan = constitutionalHandoffs.approvedMetadataPlan;
+  projectName = approvedMetadataPlan.applicationTitle?.trim() || projectName;
+  projectContext.session.projectName = projectName;
+  const approvedSampleDataPlan: ApprovedSampleDataPlan = constitutionalHandoffs.approvedSampleDataPlan;
+  const approvedProvenancePlan: ApprovedProvenancePlan = constitutionalHandoffs.approvedProvenancePlan;
+  let approvedRepairRealityPlan: ApprovedRepairRealityPlan = constitutionalHandoffs.approvedRepairRealityPlan;
+  let gpcaCbgaReport: CbgaGenerationReport = syncCbgaGenerationReportWithProductionBuildEnvelope(
+    contractBoundGeneration,
+    productionBuildEnvelope,
+  );
+  const syncGpcaCbgaEnvelope = (): void => {
+    gpcaCbgaReport = syncCbgaGenerationReportWithProductionBuildEnvelope(gpcaCbgaReport, productionBuildEnvelope);
+    activeProductionBuildEnvelopes.set(projectId, productionBuildEnvelope);
+  };
+  const applyRepairPlanToEnvelope = (): void => {
+    productionBuildEnvelope = withApprovedProductionBuildEnvelopeRepairPlan(
+      productionBuildEnvelope,
+      approvedRepairRealityPlan,
+    );
+    syncGpcaCbgaEnvelope();
+  };
+  const advanceProductionEnvelopeState = (
+    nextState: ApprovedProductionBuildEnvelope['pipelineState']['currentState'],
+    detail: string,
+  ): void => {
+    productionBuildEnvelope = advanceApprovedProductionBuildEnvelopeState(productionBuildEnvelope, nextState, detail);
+    syncGpcaCbgaEnvelope();
+  };
   // Generation Pipeline Compliance Authority V1 — CBGA above decides *what* is allowed to be
   // generated; GPCA proves every real generation stage actually *consumes* that decision instead
   // of a legacy/template/blueprint default. This pre-materialization pass verifies the inputs the
@@ -682,7 +1023,7 @@ export async function runOnePromptLivePreviewBuild(
   // actually be proven, because those files do not exist until the workspace has been written.
   let gpcaComplianceReport: GpcaComplianceReport = buildGpcaPreMaterializationReport({
     contract: canonicalProductContract,
-    cbgaReport: contractBoundGeneration,
+    cbgaReport: gpcaCbgaReport,
     buildPlan,
   });
   const ranking = buildPlan.ranking;
@@ -706,6 +1047,13 @@ export async function runOnePromptLivePreviewBuild(
   const workspaceRel = `${GENERATED_BUILDER_WORKSPACES_DIR}/${projectId}`.replace(/\\/g, '/');
   assertWorkspacePathBelongsToProject(workspaceRel, projectId);
   const workspaceDir = join(artifactRoot, workspaceRel);
+  // NEW_BUILD must never reuse prior on-disk source for a remapped project id. Identity
+  // consolidation can map a fresh request onto an existing projectId while still deciding
+  // NEW_BUILD — without this wipe, stale blueprint/feature files from earlier engine versions
+  // survive CREATE_FILE overwrites races and fail post-mat GPCA on obsolete content.
+  if (buildDecision.decision === 'NEW_BUILD' && existsSync(workspaceDir)) {
+    rmSync(workspaceDir, { recursive: true, force: true });
+  }
   mkdirSync(workspaceDir, { recursive: true });
 
   const staleModulesRemoved = sanitizeWorkspaceForBuildPlan(
@@ -759,7 +1107,10 @@ export async function runOnePromptLivePreviewBuild(
         failureReason:
           buildPlan.intentUnderstanding.blockedReason ??
           buildPlan.promptFaithfulness.blockedReason ??
-          'Product Intelligence Model or Prompt Evidence Contract blocked generation.',
+          buildPlan.capabilityPlanning.blockedReason ??
+          buildPlan.incrementalBuild.blockedReason ??
+          buildPlan.behaviorSimulation.blockedReason ??
+          'Product Intelligence Model, Prompt Evidence Contract, or Capability Planning blocked generation.',
         workspaceId: projectId,
         workspacePath: workspaceRel,
       },
@@ -1006,13 +1357,26 @@ export async function runOnePromptLivePreviewBuild(
   }
 
   if (gpcaBlocksGeneration(gpcaComplianceReport)) {
+    const gpcaReason = gpcaFailureReason(gpcaComplianceReport);
+    const failureReason = `GENERATION_PIPELINE_NON_COMPLIANT: ${gpcaReason}`;
+    // Pre-materialization hard-stop — no workspace file has been written for this build yet, so
+    // this is the cheapest possible place to stop: never call the code-generation engine, never
+    // run npm install/build, never start a dev server, never run live preview proof.
+    const aeoReport: AeoOrchestratorReport = await runAutonomousEngineeringOrchestrator({
+      diagnosisInput: {
+        gpcaComplianceReport: {
+          finalGateOutcome: gpcaComplianceReport.finalGateOutcome,
+          blockedReasons: gpcaComplianceReport.blockedReasons,
+        },
+      },
+    });
     return registerFailedBuild({
       projectId,
       projectName,
       workspaceDir,
       failure: {
         failureStage: 'PLANNING',
-        failureReason: gpcaFailureReason(gpcaComplianceReport),
+        failureReason,
         status: 'ABORTED',
         lastSuccessfulStage,
       },
@@ -1022,10 +1386,15 @@ export async function runOnePromptLivePreviewBuild(
         projectName,
         prompt,
         source,
-        failureReason: gpcaFailureReason(gpcaComplianceReport),
+        failureReason,
         workspaceId: projectId,
         workspacePath: workspaceRel,
         generatedProfile: effectiveProfile,
+        gpcaComplianceReport,
+        aeoReport,
+        gpcaHardStop: true,
+        gpcaBlockedMaterialization: true,
+        gpcaBlockedPreviewActivation: true,
       },
     });
   }
@@ -1044,6 +1413,17 @@ export async function runOnePromptLivePreviewBuild(
     aseContinuationOverrideApplied && aseContinuationWarning ? [aseContinuationWarning] : undefined;
 
   const runWorkspaceMaterialization = (): { ok: boolean; failureReason: string | null } => {
+    // Final Immutable Production Pipeline V1 (PPC-1207 No Parallel Truth) — materialization must
+    // never proceed without a structurally valid ApprovedProductionBuildEnvelope from CBGA. There
+    // is no fallback path: individual handoff reads are forbidden after CBGA approval.
+    if (!isApprovedProductionBuildEnvelopeValid(productionBuildEnvelope)) {
+      return {
+        ok: false,
+        failureReason:
+          'GENERATION_PIPELINE_NON_COMPLIANT: PPC-1207 No Parallel Truth violation — Contract-Bound Generation Authority V4 did not produce a structurally valid ApprovedProductionBuildEnvelope; materialization refused rather than reading individual constitutional handoffs.',
+      };
+    }
+    advanceProductionEnvelopeState('MATERIALIZATION', 'Workspace materialization started from immutable production build envelope.');
     executionMonitor.startStage('GENERATION');
     const materializationStartedAt = performance.now();
     const materialization = materializeBuildProofGapArtifacts({
@@ -1061,6 +1441,8 @@ export async function runOnePromptLivePreviewBuild(
       rawPrompt: prompt,
       faithfulBuildPlan: buildPlan,
       profileOverride: effectiveProfile,
+      approvedNavigationLabels: cbgaApprovedNavigationLabels,
+      approvedProductionBuildEnvelope: productionBuildEnvelope,
     });
     timings.materializationDurationMs = roundDurationMs(materializationStartedAt);
     timings.fileGenerationDurationMs = timings.materializationDurationMs;
@@ -1088,11 +1470,62 @@ export async function runOnePromptLivePreviewBuild(
     // actually be *proven* (not merely predicted). GPCA never repairs or rewrites what was
     // written — if any stage's real output cannot be traced back to CBGA's approved plan, this
     // build fails here, before the dev server / live preview is ever started.
+    //
+    // Rendered Content Evidence Expansion V1 — `workspaceDir` lets GPCA read the real contents of
+    // every file this build just wrote and audit what a user would actually *see* (headings, nav,
+    // buttons, page titles, static text, generic template/placeholder/reusable-shell fingerprints),
+    // not just the file paths/names it already checked above. This can only turn an otherwise-
+    // ALLOWED structural outcome into a block — it is strictly additive coverage, integrated at the
+    // same single gate every downstream stage (workspace approval, preview activation, live
+    // preview, interaction proof) already re-consults via `gpcaBlocksGeneration` below.
     gpcaComplianceReport = buildGpcaPostMaterializationReport({
       contract: canonicalProductContract,
-      cbgaReport: contractBoundGeneration,
+      cbgaReport: gpcaCbgaReport,
       buildPlan,
       generatedFilePaths: engineResult.generatedFiles,
+      workspaceDir,
+    });
+    if (!gpcaBlocksGeneration(gpcaComplianceReport)) {
+      approvedRepairRealityPlan = recordApprovedRepairRealityRevalidation(
+        approvedRepairRealityPlan,
+        'GENERATION_PIPELINE_COMPLIANCE_AUTHORITY',
+      );
+      approvedRepairRealityPlan = recordApprovedRepairRealityRevalidation(
+        approvedRepairRealityPlan,
+        'PRODUCT_FAITHFULNESS_V2',
+      );
+      approvedRepairRealityPlan = recordApprovedRepairRealityRevalidation(
+        approvedRepairRealityPlan,
+        'PRODUCTION_PIPELINE_CONSTITUTION_V1',
+      );
+      applyRepairPlanToEnvelope();
+    }
+    contractConsumptionTrace({
+      requestId: buildId,
+      buildId,
+      projectId,
+      promptHash: shortHashForTrace(prompt),
+      stage: 'WORKSPACE_MATERIALIZATION',
+      functionName: 'runWorkspaceMaterialization',
+      sourceFile: 'src/one-prompt-live-preview/one-prompt-build-orchestrator.ts',
+      branchSelected: 'FRESH_MATERIALIZATION',
+      inputProductIdentity: canonicalProductContract.productIdentity,
+      outputProductIdentity: canonicalProductContract.productIdentity,
+      inputModules: buildPlan.modulePlan.approvedModuleIds,
+      outputModules: engineResult.generatedFiles,
+      inputRoutes: buildPlan.modulePlan.routes,
+      outputRoutes: [],
+      inputNavigation: [],
+      outputNavigation: [],
+      inputVisibleText: [],
+      outputVisibleText: [],
+      fallbackSelected: false,
+      genericTemplateSelected: false,
+      contractConsumed: true,
+      cbgaPlanConsumed: true,
+      promptBoundedModulePlanConsumed: true,
+      universalFeatureContractConsumed: false,
+      profileFeatureDefinitionConsumed: true,
     });
     if (gpcaBlocksGeneration(gpcaComplianceReport)) {
       const failureReason = gpcaFailureReason(gpcaComplianceReport);
@@ -1188,9 +1621,212 @@ export async function runOnePromptLivePreviewBuild(
       registerAssessment: true,
     });
 
+    const workspaceFingerprint = shortHashForTrace(`${workspaceRel}:${engineResult.generatedFiles.join('|')}`);
+    productionBuildEnvelope = lockApprovedProductionBuildEnvelopeWorkspace(
+      productionBuildEnvelope,
+      workspaceRel,
+      workspaceFingerprint,
+    );
+    syncGpcaCbgaEnvelope();
+    advanceProductionEnvelopeState('WORKSPACE_READY', 'Materialized workspace locked on production build envelope.');
+    advanceProductionEnvelopeState('GPCA_APPROVED', 'GPCA post-materialization audit passed.');
+
     continuationMaterializationExecuted = true;
     return { ok: true, failureReason: null };
   };
+
+  // GPCA Continuation Workspace Compliance Fix V1 — this is the exact fix for the bypass GPCA
+  // Runtime Wiring Trace V1 proved: `buildGpcaPostMaterializationReport` (which includes the
+  // Rendered Content Evidence Expansion V1 rendered-content audit) previously only ran *inside*
+  // `runWorkspaceMaterialization`. Every continuation branch below that decided the existing
+  // workspace already had feature modules — via `workspaceHasGeneratedFeatureModules`, which only
+  // checks *presence*, never compliance — and therefore skipped materialization entirely never
+  // called it at all, so a stale/non-compliant workspace already on disk could reach workspace
+  // stabilization, npm install/build, dev server start, and preview activation without ever being
+  // audited. This closure runs the identical `buildGpcaPostMaterializationReport` call — same
+  // contract, same cbgaReport, same buildPlan, same `workspaceDir` — against whatever files the
+  // EXISTING workspace has right now, and assigns the result to the same single authoritative
+  // `gpcaComplianceReport` that every hard-stop check in this function already re-consults via
+  // `gpcaBlocksGeneration`. It changes no GPCA scoring/authority logic, adds no app-specific
+  // logic, and never repairs or rewrites the workspace — it only ensures the audit that already
+  // exists is actually invoked on this path too.
+  const auditExistingWorkspaceForContinuation = (): void => {
+    const existingFilePaths = listExistingWorkspaceGeneratedFilePaths(workspaceDir);
+    gpcaComplianceReport = auditCurrentWorkspaceStateForGpca({
+      contract: canonicalProductContract,
+      cbgaReport: gpcaCbgaReport,
+      buildPlan,
+      workspaceDir,
+    });
+    contractConsumptionTrace({
+      requestId: buildId,
+      buildId,
+      projectId,
+      promptHash: shortHashForTrace(prompt),
+      stage: 'WORKSPACE_MATERIALIZATION',
+      functionName: 'auditExistingWorkspaceForContinuation',
+      sourceFile: 'src/one-prompt-live-preview/one-prompt-build-orchestrator.ts',
+      branchSelected: 'CONTINUATION_SKIP_REUSES_EXISTING_WORKSPACE',
+      inputProductIdentity: canonicalProductContract.productIdentity,
+      outputProductIdentity: canonicalProductContract.productIdentity,
+      inputModules: buildPlan.modulePlan.approvedModuleIds,
+      outputModules: existingFilePaths,
+      inputRoutes: buildPlan.modulePlan.routes,
+      outputRoutes: [],
+      inputNavigation: [],
+      outputNavigation: [],
+      inputVisibleText: [],
+      outputVisibleText: [],
+      fallbackSelected: true,
+      genericTemplateSelected: false,
+      contractConsumed: true,
+      cbgaPlanConsumed: true,
+      promptBoundedModulePlanConsumed: false,
+      universalFeatureContractConsumed: false,
+      profileFeatureDefinitionConsumed: false,
+    });
+    if (productionBuildEnvelope.pipelineState.currentState === 'BUILD_ENVELOPE_CREATED') {
+      advanceProductionEnvelopeState('MATERIALIZATION', 'Continuation path auditing existing workspace without regeneration.');
+    }
+    if (!productionBuildEnvelope.pipelineState.workspacePath) {
+      const workspaceFingerprint = shortHashForTrace(`${workspaceRel}:${existingFilePaths.join('|')}`);
+      productionBuildEnvelope = lockApprovedProductionBuildEnvelopeWorkspace(
+        productionBuildEnvelope,
+        workspaceRel,
+        workspaceFingerprint,
+      );
+      syncGpcaCbgaEnvelope();
+      if (productionBuildEnvelope.pipelineState.currentState === 'MATERIALIZATION') {
+        advanceProductionEnvelopeState('WORKSPACE_READY', 'Continuation path locked existing workspace on envelope.');
+      }
+      advanceProductionEnvelopeState('GPCA_APPROVED', 'GPCA continuation workspace audit completed.');
+    }
+  };
+
+  // GPCA Production Enforcement Fix V1 — this is the single, generic terminal gate for every
+  // GPCA hard-stop, regardless of which stage detected it (pre-materialization inputs,
+  // post-materialization real files, or a re-check immediately before preview activation). It is
+  // called from every point in this function that could otherwise let a build continue past a
+  // GPCA-blocked `gpcaComplianceReport` — including the ASE/AEE continuation-override branches,
+  // which previously only inspected a collapsed `materializationExecuted` boolean and could
+  // override a GPCA block once the (already non-compliant) workspace had files on disk. Once this
+  // fires, the build is terminal: no further workspace generation, npm build, dev server start, or
+  // live preview proof is ever attempted for this build. It never repairs, rewrites, or fabricates
+  // compliance — it only stops, using GPCA's own evidence.
+  const registerGpcaHardStop = async (
+    stageLabel: ForensicBuildStage,
+  ): Promise<OnePromptLivePreviewBuildResult> => {
+    const gpcaReason = gpcaFailureReason(gpcaComplianceReport);
+    const failureReason = `GENERATION_PIPELINE_NON_COMPLIANT: ${gpcaReason}`;
+    touchForensicStage(workspaceDir, { stage: stageLabel, errors: [failureReason] });
+    const aeoReport: AeoOrchestratorReport = await runAutonomousEngineeringOrchestrator({
+      diagnosisInput: {
+        gpcaComplianceReport: {
+          finalGateOutcome: gpcaComplianceReport.finalGateOutcome,
+          blockedReasons: gpcaComplianceReport.blockedReasons,
+        },
+      },
+    });
+    return registerFailedBuild({
+      projectId,
+      projectName,
+      workspaceDir,
+      failure: {
+        failureStage: stageLabel,
+        failureReason,
+        status: 'ABORTED',
+        lastSuccessfulStage,
+      },
+      result: {
+        buildId,
+        projectId,
+        projectName,
+        prompt,
+        source,
+        failureReason,
+        workspaceId: projectId,
+        workspacePath: workspaceRel,
+        generatedProfile: generatedProfileForBuild,
+        gpcaComplianceReport,
+        aeoReport,
+        gpcaHardStop: true,
+        gpcaBlockedMaterialization: true,
+        gpcaBlockedPreviewActivation: true,
+        gpcaViolatedConstitutionRuleIds: PRODUCTION_PIPELINE_CONSTITUTION_ADOPTION_PHASE_1_RULE_IDS,
+      },
+    });
+  };
+
+  // Production Pipeline Constitution Adoption Phase 1 (Tier 1 — PPC-1203/PPC-1304/PPC-606/607/
+  // 1001/1002/1205) — every repair/stabilization system downstream of the initial GPCA audit that
+  // can write real files into `workspaceDir` (workspace stabilizer, build AutoFix, Engineering
+  // Intelligence, capability evolution / AEL, and any other file-mutating repair loop) must call
+  // this immediately after it runs. It marks the previously-captured `gpcaComplianceReport` stale,
+  // re-runs the identical post-materialization audit against the CURRENT workspace state (never
+  // the file list captured before the mutation), and returns whether the fresh report now blocks.
+  // The caller — never this function — decides what to do with a block; this function only ever
+  // re-audits and reports, it never rewrites the workspace and never changes GPCA's own scoring.
+  let gpcaReportStale = false;
+  // Production Pipeline Constitution Adoption Phase 1 — set the moment a POST-preview-activation
+  // mutation (Engineering Intelligence repair, capability evolution) invalidates GPCA's report and
+  // the fresh re-audit blocks. The dev server is already running by the time these two specific
+  // stages execute, so this milestone cannot retroactively un-start it — but the final build
+  // result must never claim a compliant/available live preview once this is set.
+  let postPreviewGpcaBlockedMutationLabel: string | null = null;
+  const reauditGpcaAfterWorkspaceMutation = (mutationLabel: string): boolean => {
+    gpcaReportStale = true;
+    syncGpcaCbgaEnvelope();
+    const freshFilePaths = listExistingWorkspaceGeneratedFilePaths(workspaceDir);
+    gpcaComplianceReport = auditCurrentWorkspaceStateForGpca({
+      contract: canonicalProductContract,
+      cbgaReport: gpcaCbgaReport,
+      buildPlan,
+      workspaceDir,
+    });
+    approvedRepairRealityPlan = recordApprovedRepairRealityRevalidation(
+      approvedRepairRealityPlan,
+      'GENERATION_PIPELINE_COMPLIANCE_AUTHORITY',
+    );
+    approvedRepairRealityPlan = recordApprovedRepairRealityRevalidation(
+      approvedRepairRealityPlan,
+      'PRODUCT_FAITHFULNESS_V2',
+    );
+    approvedRepairRealityPlan = recordApprovedRepairRealityRevalidation(
+      approvedRepairRealityPlan,
+      'PRODUCTION_PIPELINE_CONSTITUTION_V1',
+    );
+    applyRepairPlanToEnvelope();
+    gpcaReportStale = false;
+    contractConsumptionTrace({
+      requestId: buildId,
+      buildId,
+      projectId,
+      promptHash: shortHashForTrace(prompt),
+      stage: 'WORKSPACE_MATERIALIZATION',
+      functionName: 'reauditGpcaAfterWorkspaceMutation',
+      sourceFile: 'src/one-prompt-live-preview/one-prompt-build-orchestrator.ts',
+      branchSelected: `POST_AUDIT_MUTATION:${mutationLabel}`,
+      inputProductIdentity: canonicalProductContract.productIdentity,
+      outputProductIdentity: canonicalProductContract.productIdentity,
+      inputModules: buildPlan.modulePlan.approvedModuleIds,
+      outputModules: freshFilePaths,
+      inputRoutes: buildPlan.modulePlan.routes,
+      outputRoutes: [],
+      inputNavigation: [],
+      outputNavigation: [],
+      inputVisibleText: [],
+      outputVisibleText: [],
+      fallbackSelected: false,
+      genericTemplateSelected: false,
+      contractConsumed: true,
+      cbgaPlanConsumed: true,
+      promptBoundedModulePlanConsumed: false,
+      universalFeatureContractConsumed: false,
+      profileFeatureDefinitionConsumed: false,
+    });
+    return gpcaBlocksGeneration(gpcaComplianceReport);
+  };
+  void gpcaReportStale;
 
   const engineeringPartial = await runAutonomousEngineering({
     rawPrompt: prompt,
@@ -1206,6 +1842,15 @@ export async function runOnePromptLivePreviewBuild(
       executeMaterialization: () => runWorkspaceMaterialization(),
     },
   });
+
+  // Primary enforcement point: the moment ASE's materialization host call returns, re-check
+  // GPCA's own report directly — never the collapsed `materializationExecuted` boolean. This runs
+  // BEFORE any ASE/AEE continuation or override logic below, so a GPCA block can never be
+  // reinterpreted as an overridable "ASE denial" just because the (non-compliant) workspace
+  // already has files on disk.
+  if (gpcaBlocksGeneration(gpcaComplianceReport)) {
+    return registerGpcaHardStop('MATERIALIZATION');
+  }
 
   if (!engineeringPartial.materializationExecuted) {
     const aseBlockers = collectAseMaterializationBlockers(engineeringPartial);
@@ -1286,6 +1931,9 @@ export async function runOnePromptLivePreviewBuild(
 
       if (needsMaterialization) {
         const continuationResult = runWorkspaceMaterialization();
+        if (gpcaBlocksGeneration(gpcaComplianceReport)) {
+          return registerGpcaHardStop('MATERIALIZATION');
+        }
         if (!continuationResult.ok) {
           return registerFailedBuild({
             projectId,
@@ -1314,6 +1962,13 @@ export async function runOnePromptLivePreviewBuild(
           });
         }
       } else {
+        // GPCA Continuation Workspace Compliance Fix V1 — materialization is being skipped
+        // because the existing workspace already appears to have feature modules; audit its
+        // real, current contents before any workspace stabilization/build/preview step below.
+        auditExistingWorkspaceForContinuation();
+        if (gpcaBlocksGeneration(gpcaComplianceReport)) {
+          return registerGpcaHardStop('MATERIALIZATION');
+        }
         if (!materializationForEvidence) {
           materializationForEvidence = materializeBuildProofGapArtifacts({
             projectRootDir: materializationRoot,
@@ -1410,6 +2065,9 @@ export async function runOnePromptLivePreviewBuild(
       });
       if (!workspaceHasGeneratedFeatureModules(workspaceDir)) {
         const continuationResult = runWorkspaceMaterialization();
+        if (gpcaBlocksGeneration(gpcaComplianceReport)) {
+          return registerGpcaHardStop('MATERIALIZATION');
+        }
         if (!continuationResult.ok) {
           return registerFailedBuild({
             projectId,
@@ -1437,9 +2095,24 @@ export async function runOnePromptLivePreviewBuild(
           });
         }
       } else {
+        // GPCA Continuation Workspace Compliance Fix V1 — same bypass, second branch: AEE
+        // forbade abort and the workspace already appears to have feature modules, so
+        // materialization is skipped here too. Audit the existing workspace before continuing.
+        auditExistingWorkspaceForContinuation();
+        if (gpcaBlocksGeneration(gpcaComplianceReport)) {
+          return registerGpcaHardStop('MATERIALIZATION');
+        }
         continuationMaterializationExecuted = true;
       }
     }
+  }
+
+  // Defense-in-depth re-check: whatever path the ASE/AEE continuation logic above took, GPCA's
+  // own report is the single authoritative source — re-consult it directly (never a derived
+  // boolean) before any workspace-stabilization/npm-install/npm-build/preview stage below is
+  // allowed to run.
+  if (gpcaBlocksGeneration(gpcaComplianceReport)) {
+    return registerGpcaHardStop('MATERIALIZATION');
   }
 
   if (
@@ -1539,6 +2212,31 @@ export async function runOnePromptLivePreviewBuild(
     });
   }
 
+  // Production Pipeline Constitution Adoption Phase 1 (Tier 1) — the workspace stabilizer applies
+  // targeted, evidence-driven repairs (missing router/manifest/barrel-export files, etc.) directly
+  // to `workspaceDir`. Any repair actually applied is a real post-audit workspace mutation, so the
+  // GPCA report captured before this stage ran is now stale evidence — re-run GPCA against the
+  // CURRENT workspace state before npm install/build/preview are ever allowed to proceed.
+  if (workspaceStabilizerReport.repairActions.some((action) => action.applied)) {
+    approvedRepairRealityPlan = appendApprovedRepairRealityEntries(
+      approvedRepairRealityPlan,
+      workspaceStabilizerReport.repairActions
+        .filter((action) => action.applied)
+        .map((action, index) =>
+          createWorkspaceMutationRepairEntry({
+            repairId: `workspace-stabilizer-${action.findingId}-${index}`,
+            repairReason: action.detail || action.description,
+            producer: 'WORKSPACE_MATERIALIZATION_STABILIZER_V1',
+            mutatedPaths: action.path ? [action.path] : [],
+          }),
+        ),
+    );
+    applyRepairPlanToEnvelope();
+    if (reauditGpcaAfterWorkspaceMutation('WORKSPACE_STABILIZATION')) {
+      return registerGpcaHardStop('WORKSPACE_STABILIZATION');
+    }
+  }
+
   executionMonitor.startStage('NPM_INSTALL');
   touchForensicStage(workspaceDir, { stage: 'NPM_INSTALL' });
   const npmInstallStartedAt = performance.now();
@@ -1603,7 +2301,18 @@ export async function runOnePromptLivePreviewBuild(
     if (recovered) {
       npmInstallOk = true;
       lastSuccessfulStage = 'NPM_INSTALL';
-      executionMonitor.markRecovered('NPM_INSTALL', 'Recovery succeeded. Continuing build…');
+      approvedRepairRealityPlan = appendApprovedRepairRealityEntries(approvedRepairRealityPlan, [
+        createPipelineRestartRepairEntry({
+          repairId: 'npm-install-pipeline-restart',
+          repairReason: 'npm install succeeded after one bounded pipeline restart — no workspace files mutated.',
+          stage: 'NPM_INSTALL',
+        }),
+      ]);
+      applyRepairPlanToEnvelope();
+      executionMonitor.markRecovered(
+        'NPM_INSTALL',
+        'Pipeline restart succeeded (npm install retried). No workspace mutation occurred.',
+      );
     } else {
       executionMonitor.failStage('NPM_INSTALL', commandFailure.failureMessage);
     touchForensicStage(workspaceDir, {
@@ -1682,6 +2391,7 @@ export async function runOnePromptLivePreviewBuild(
     });
     lastSuccessfulStage = 'NPM_BUILD';
     executionMonitor.completeStage('NPM_BUILD', `npm build finished in ${Math.round(timings.npmBuildDurationMs)}ms.`);
+    advanceProductionEnvelopeState('BUILD_VALIDATED', 'npm build passed — build validated before preview.');
   } else {
     const npmBuildStalled = /timeout|timed out|ETIMEDOUT|SIGTERM/i.test(initialBuildOutput);
     executionMonitor.markStall(
@@ -1720,7 +2430,12 @@ export async function runOnePromptLivePreviewBuild(
         : buildAutofixLoop.summary,
     });
     if (npmBuildOk) {
-      executionMonitor.markRecovered('NPM_BUILD', 'Recovery succeeded. Continuing build…');
+      executionMonitor.markRecovered(
+        'NPM_BUILD',
+        buildAutofixLoop.report.filesChanged.length > 0
+          ? `Compilation AutoFix repaired workspace source files (${buildAutofixLoop.report.filesChanged.length} file(s) mutated).`
+          : 'npm build succeeded after bounded retry — no workspace source mutation.',
+      );
     } else {
       executionMonitor.failStage('NPM_BUILD', buildAutofixLoop.summary);
     }
@@ -1734,6 +2449,26 @@ export async function runOnePromptLivePreviewBuild(
       evidenceProviders: ['AEE_BUILD_AUTOFIX_LOOP'],
     });
 
+    // Production Pipeline Constitution Adoption Phase 1 (Tier 1) — Build AutoFix rewrites real
+    // workspace files (`report.filesChanged`) to repair a failing `npm run build`. Any file it
+    // actually changed is a real post-audit mutation, so the GPCA report captured before this
+    // stage ran is now stale — re-run GPCA against the CURRENT workspace state before this build
+    // is ever allowed to reach npm-build success, workspace stabilization already having passed,
+    // dev server start, or live preview.
+    if (buildAutofixLoop.report.filesChanged.length > 0) {
+      approvedRepairRealityPlan = appendApprovedRepairRealityEntries(approvedRepairRealityPlan, [
+        createAutofixCompilationRepairEntry({
+          repairId: `npm-build-autofix-${buildAutofixAttempts}`,
+          repairReason: `Build AutoFix compilation repair changed ${buildAutofixLoop.report.filesChanged.length} workspace file(s).`,
+          mutatedPaths: buildAutofixLoop.report.filesChanged,
+        }),
+      ]);
+      applyRepairPlanToEnvelope();
+      if (reauditGpcaAfterWorkspaceMutation('NPM_BUILD_AUTOFIX')) {
+        return registerGpcaHardStop('NPM_BUILD');
+      }
+    }
+
     if (npmBuildOk) {
       timings.npmBuildDurationMs = roundDurationMs(npmBuildStartedAt);
       touchForensicStage(workspaceDir, {
@@ -1743,6 +2478,7 @@ export async function runOnePromptLivePreviewBuild(
         warnings: [`Build AutoFix succeeded after ${buildAutofixAttempts} attempt(s).`],
       });
       lastSuccessfulStage = 'NPM_BUILD';
+      advanceProductionEnvelopeState('BUILD_VALIDATED', 'npm build passed after AutoFix — build validated before preview.');
     } else if (buildAutofixLoop.exhausted) {
       touchForensicStage(workspaceDir, {
         stage: 'AUTO_REPAIRING',
@@ -1914,6 +2650,65 @@ export async function runOnePromptLivePreviewBuild(
     }
   }
 
+  // Production Pipeline Constitution Adoption Phase 1 (Tier 1 — PPC-1001/PPC-1002/PPC-1205) —
+  // final hard gate before preview activation. GPCA never gets to be "the check we ran earlier
+  // and forgot about", and it never gets to rely on a stale in-memory report captured earlier in
+  // the request: this ALWAYS re-runs the post-materialization audit against the CURRENT workspace
+  // state — after the workspace stabilizer and Build AutoFix have both already had their own
+  // narrower re-audits above, and after whatever continuation/materialization path this build
+  // took — one last time, immediately before the only production call site that starts a real dev
+  // server for this build. The dev server (and every live-preview-proof step downstream of it)
+  // must never start for a build whose freshest possible GPCA evidence is a blocking outcome.
+  if (reauditGpcaAfterWorkspaceMutation('PRE_PREVIEW_FINAL_GATE')) {
+    return registerGpcaHardStop('PREVIEW');
+  }
+  if (
+    repairRevalidationSatisfiedBeforePreview(approvedRepairRealityPlan) === false &&
+    repairRealityRequiresRevalidationBeforePreview(approvedRepairRealityPlan)
+  ) {
+    return registerGpcaHardStop('PREVIEW');
+  }
+
+  try {
+    assertApprovedProductionBuildEnvelopePreviewGuarantee(productionBuildEnvelope);
+  } catch (previewGuaranteeErr) {
+    const failureReason =
+      previewGuaranteeErr instanceof Error
+        ? previewGuaranteeErr.message
+        : 'CONSTITUTIONAL_VIOLATION_PPC_2200: preview guarantee failed before preview activation.';
+    return registerFailedBuild({
+      projectId,
+      projectName,
+      workspaceDir,
+      failure: {
+        failureStage: 'PREVIEW',
+        failureReason,
+        lastSuccessfulStage,
+        status: 'PARTIAL',
+        warnings: continuationFailureWarnings(),
+      },
+      result: {
+        buildId,
+        projectId,
+        projectName,
+        prompt,
+        source,
+        failureReason,
+        workspaceId: projectId,
+        workspacePath: workspaceRel,
+        generatedProfile,
+        planningProofLevel: contractAssessment.report.proofLevel,
+        materializationProofLevel: materialization.proofLevel,
+        npmInstallOk: true,
+        npmBuildOk: true,
+      },
+    });
+  }
+  advanceProductionEnvelopeState(
+    'PREVIEW_READY',
+    'Preview guarantee verified — GPCA-audited workspace equals preview workspace.',
+  );
+
   executionMonitor.startStage('PREVIEW_STARTUP');
   touchForensicStage(workspaceDir, { stage: 'PREVIEW' });
   const previewStartedAt = performance.now();
@@ -2079,7 +2874,20 @@ export async function runOnePromptLivePreviewBuild(
         detail: previewRecoverySummary ?? 'Preview recovery attempted.',
       });
       if (livePreviewAvailable) {
-        executionMonitor.markRecovered('PREVIEW_STARTUP', previewRecoverySummary ?? 'Preview recovered.');
+        approvedRepairRealityPlan = appendApprovedRepairRealityEntries(approvedRepairRealityPlan, [
+          createPreviewRecoveryRepairEntry({
+            repairId: `preview-recovery-${previewRecoveryAttempts}`,
+            repairReason:
+              previewRecoverySummary ??
+              'Preview startup recovered via bounded preview recovery (runtime/preview restart, no workspace source mutation).',
+          }),
+        ]);
+        applyRepairPlanToEnvelope();
+        executionMonitor.markRecovered(
+          'PREVIEW_STARTUP',
+          previewRecoverySummary ??
+            'Preview startup recovered via preview recovery (runtime restart — no workspace source mutation).',
+        );
       } else {
         executionMonitor.failStage('PREVIEW_STARTUP', previewRecoverySummary ?? 'Preview did not recover.');
       }
@@ -2190,6 +2998,32 @@ export async function runOnePromptLivePreviewBuild(
     npmBuildOk = false;
   } else if (engineeringIntelligencePostWorkspace?.repairResult?.finalNpmBuildOk === true) {
     npmBuildOk = true;
+  }
+
+  // Production Pipeline Constitution Adoption Phase 1 (Tier 1) — Engineering Intelligence's
+  // missing-capability repair loop generates/rewrites real workspace files
+  // (`repairResult.repairAttempts`). This runs after the dev server has already been started
+  // above, so — unlike the pre-preview mutation points — this milestone cannot retroactively
+  // "not start preview" for an already-running server; instead it re-audits immediately and, if
+  // GPCA now blocks, the final result below is corrected to never report a compliant/available
+  // preview for this build, and no further repair stage (capability evolution) is allowed to run.
+  if ((engineeringIntelligencePostWorkspace?.repairResult?.repairAttempts.length ?? 0) > 0) {
+    approvedRepairRealityPlan = appendApprovedRepairRealityEntries(
+      approvedRepairRealityPlan,
+      (engineeringIntelligencePostWorkspace?.repairResult?.repairAttempts ?? []).map((attempt) =>
+        createGeneratorRegenerationRepairEntry({
+          repairId: `engineering-intelligence-regen-${attempt.attemptNumber}`,
+          repairReason: `Engineering Intelligence generator regeneration attempt ${attempt.attemptNumber}.`,
+          mutatedPaths: [...attempt.modulesGenerated],
+        }),
+      ),
+    );
+    applyRepairPlanToEnvelope();
+    if (reauditGpcaAfterWorkspaceMutation('ENGINEERING_INTELLIGENCE_POST_WORKSPACE')) {
+      postPreviewGpcaBlockedMutationLabel = 'ENGINEERING_INTELLIGENCE_POST_WORKSPACE';
+      livePreviewAvailable = false;
+      devServerRunning = false;
+    }
   }
 
   const postBuildManifestFaithfulness =
@@ -2375,6 +3209,28 @@ export async function runOnePromptLivePreviewBuild(
   });
   const aelReport: AelFinalReport = aelLoopResult.report;
   const aelEvidence: AelEvidenceBundle = aelLoopResult.evidence;
+
+  // Production Pipeline Constitution Adoption Phase 1 (Tier 1) — the Autonomous Engineering
+  // Loop's capability-evolution repair path generates new real feature module files directly into
+  // `workspaceDir` (`report.capabilitiesEvolved`). Like Engineering Intelligence above, this runs
+  // after the dev server has already been started, so this milestone re-audits and — if GPCA now
+  // blocks — corrects the final result below rather than retroactively un-starting the server.
+  if (aelReport.capabilitiesEvolved.length > 0) {
+    approvedRepairRealityPlan = appendApprovedRepairRealityEntries(approvedRepairRealityPlan, [
+      createCapabilityEvolutionRepairEntry({
+        repairId: 'capability-evolution',
+        repairReason: `Capability evolution generated: ${aelReport.capabilitiesEvolved.join(', ')}`,
+        mutatedPaths: aelReport.capabilitiesEvolved,
+      }),
+    ]);
+    applyRepairPlanToEnvelope();
+    if (reauditGpcaAfterWorkspaceMutation('CAPABILITY_EVOLUTION')) {
+      postPreviewGpcaBlockedMutationLabel = 'CAPABILITY_EVOLUTION';
+      livePreviewAvailable = false;
+      devServerRunning = false;
+    }
+  }
+
   if (aelLoopResult.enabled && aelReport.remainingGaps.length > 0) {
     aeeFinalReport = {
       ...aeeFinalReport,
@@ -2469,12 +3325,27 @@ export async function runOnePromptLivePreviewBuild(
         ]
       : []),
   ];
-  const finalBuildStatus = launchEvidenceBlocked ? 'FAILED' : 'READY';
-  const finalBuildResult = launchEvidenceBlocked ? 'FAIL' : 'PASS';
-  const finalFailureReason = launchEvidenceBlocked
-    ? launchBlockReasons.join('; ') ||
-      'End-to-end build reality validation failed'
-    : null;
+  // Production Pipeline Constitution Adoption Phase 1 (Tier 1) — if a POST-preview-activation
+  // mutation (Engineering Intelligence repair, capability evolution) invalidated GPCA's report and
+  // the fresh re-audit blocked, this build's final result must never report a compliant/ready
+  // outcome — GPCA's own evidence is the freshest, most authoritative signal available, and it
+  // overrides workspace-reality/E2E evidence exactly the way every pre-preview GPCA hard-stop in
+  // this file already does.
+  const gpcaBlockedAfterPreviewActivation = postPreviewGpcaBlockedMutationLabel !== null;
+  const finalBuildStatus = gpcaBlockedAfterPreviewActivation || launchEvidenceBlocked ? 'FAILED' : 'READY';
+  if (finalBuildStatus === 'READY' && productionBuildEnvelope.pipelineState.currentState === 'PREVIEW_READY') {
+    advanceProductionEnvelopeState(
+      'ENGINEERING_REPORT_COMPLETE',
+      'Engineering report complete — immutable production pipeline state machine finished.',
+    );
+  }
+  const finalBuildResult = gpcaBlockedAfterPreviewActivation || launchEvidenceBlocked ? 'FAIL' : 'PASS';
+  const finalFailureReason = gpcaBlockedAfterPreviewActivation
+    ? `GENERATION_PIPELINE_NON_COMPLIANT: ${gpcaFailureReason(gpcaComplianceReport)} (post-preview-activation mutation: ${postPreviewGpcaBlockedMutationLabel})`
+    : launchEvidenceBlocked
+      ? launchBlockReasons.join('; ') ||
+        'End-to-end build reality validation failed'
+      : null;
 
   if (launchEvidenceBlocked) {
     executionMonitor.failStage('VALIDATION', finalFailureReason ?? 'Final validation failed.');
@@ -2531,6 +3402,36 @@ export async function runOnePromptLivePreviewBuild(
     aelReport,
     aelFinalOutcome: aelLoopResult.finalOutcome,
     aelEvidence,
+    gpcaComplianceReport,
+    // Identity Computation Collapse V1 — the single approved post-CBGA product identity this build
+    // consumed everywhere (blueprint, router, feature modules, manifests, GPCA evidence). Every
+    // identity string elsewhere in this result (projectName, materializationManifest.projectName,
+    // gpcaComplianceReport.productIdentity) must trace back to this object.
+    approvedProductIdentity: approvedIdentity,
+    // Navigation Computation Collapse V1 — the single approved post-CBGA navigation plan this
+    // build consumed everywhere (blueprint, router, feature modules, manifests, GPCA evidence).
+    // Every navigation label elsewhere in this result must trace back to this object.
+    approvedNavigationPlan,
+    // Module Computation Collapse V1 — the single approved post-CBGA module plan this build
+    // consumed everywhere (blueprint, router, feature modules, manifests, GPCA evidence). Every
+    // module id/displayName/route elsewhere in this result must trace back to this object.
+    approvedModulePlan,
+    // Metadata Computation Collapse V1 — the single approved post-CBGA metadata plan this build
+    // consumed everywhere (materialization, blueprint runtime shell, feature contract, manifests,
+    // engineering report, GPCA evidence). Every title/subtitle/description/count/summary elsewhere
+    // in this result must trace back to this object.
+    approvedMetadataPlan,
+    approvedSampleDataPlan,
+    approvedProvenancePlan,
+    approvedRepairRealityPlan,
+    approvedProductionBuildEnvelope: productionBuildEnvelope,
+    ...(gpcaBlockedAfterPreviewActivation
+      ? {
+          gpcaHardStop: true,
+          gpcaBlockedPreviewActivation: true,
+          gpcaViolatedConstitutionRuleIds: PRODUCTION_PIPELINE_CONSTITUTION_ADOPTION_PHASE_1_RULE_IDS,
+        }
+      : {}),
     updatedAt: new Date().toISOString(),
   };
   persistBuildIntentRun({

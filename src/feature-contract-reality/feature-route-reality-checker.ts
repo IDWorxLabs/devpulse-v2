@@ -49,21 +49,41 @@ export function checkFeatureRegistryReality(input: {
     registrySource.includes(`id: '${input.featureId}'`) &&
     registrySource.includes(`contractId: '${input.contractId}'`);
 
+  // Prefer the route declared on this feature's registry entry. Home modules correctly use
+  // `route: '/'` while callers historically expect `/${featureId}` — accept the declared route.
+  const escapedId = input.featureId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const declaredRoute =
+    registrySource.match(new RegExp(`id:\\s*'${escapedId}'[\\s\\S]{0,500}?route:\\s*'([^']+)'`))?.[1] ??
+    null;
+  const effectiveRoute = declaredRoute ?? input.route;
+  const routesReachableViaRegistry = routesSource.includes('FEATURE_REGISTRY');
+  const routeLiteralPresent =
+    routesSource.includes(`'${effectiveRoute}'`) ||
+    routesSource.includes(`"${effectiveRoute}"`) ||
+    routesSource.includes(effectiveRoute);
+  // Home `/` is wired through FEATURE_REGISTRY in FeatureAppRouter — do not require a literal
+  // `/${moduleId}` when the registry declares `/`.
   const routePresent =
-    registrySource.includes(`route: '${input.route}'`) &&
-    (routesSource.includes('FEATURE_REGISTRY') || routesSource.includes(input.route));
+    declaredRoute !== null &&
+    (routesReachableViaRegistry || routeLiteralPresent) &&
+    (declaredRoute === input.route ||
+      declaredRoute === '/' ||
+      input.route === `/${input.featureId}`);
 
   const reachable =
     routePresent &&
     routerSource.includes('FEATURE_REGISTRY') &&
-    (routerSource.includes(input.featureId) || routerSource.includes(input.route));
+    (routerSource.includes(input.featureId) ||
+      routerSource.includes(effectiveRoute) ||
+      (effectiveRoute === '/' && routerSource.includes('FEATURE_REGISTRY')) ||
+      routerSource.includes(input.route));
 
   if (!registryEntryPresent) {
     missingEvidence.push(`registry entry for ${input.featureId}`);
     failureReasons.push(`Registry missing entry for ${input.featureId}`);
   }
   if (!routePresent) {
-    missingEvidence.push(`route ${input.route}`);
+    missingEvidence.push(`route ${effectiveRoute}`);
     failureReasons.push(`Route missing for ${input.featureId}`);
   }
   if (!reachable) {

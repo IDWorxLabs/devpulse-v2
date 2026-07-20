@@ -21,7 +21,7 @@ export function profileDomainCopy(profile: ProfileFeatureDefinition['profile'], 
         reports: 'Generate spending and income reports.',
         charts: 'Visualize trends with charts and analytics.',
         'csv-export': 'Export transactions to CSV for accounting.',
-        persistence: 'Demo data persists in local storage for preview testing.',
+        persistence: 'Data persists in local storage.',
       };
     case 'CRM_WEB_V1':
       return {
@@ -161,7 +161,6 @@ export function buildDomainAppFeatureTsx(
           <p>${esc(description)}</p>
           <div className="domain-cards">
             <article className="domain-card"><h3>${safeTitle}</h3><p>${esc(description)}</p></article>
-            <article className="domain-card"><h3>Demo data</h3><p>Sample ${label} records loaded for Live Preview.</p></article>
           </div>
         </section>
       ) : null}`;
@@ -215,7 +214,25 @@ export function buildDomainAppFeatureCss(): string {
 `;
 }
 
-export function buildDemoDataTs(appTitle: string, definition: ProfileFeatureDefinition): string {
+export function buildDemoDataTs(
+  appTitleOrPlan: string | import('../contract-bound-generation-authority-v4/approved-sample-data-plan.js').ApprovedSampleDataPlan,
+  definition?: import('./profile-feature-map.js').ProfileFeatureDefinition,
+): string {
+  if (typeof appTitleOrPlan !== 'string') {
+    const plan = appTitleOrPlan;
+    return `/** Approved sample data — constitutional handoff (ApprovedSampleDataPlan, source=${plan.source}) */
+export const DEMO_APP_TITLE = ${JSON.stringify(plan.demoAppTitle)};
+export const DEMO_FEATURE_MODULES = ${JSON.stringify([...plan.demoFeatureModuleIds])} as const;
+export const APPROVED_SAMPLES_PRESENT = ${plan.approvedSamplesPresent};
+export const APPROVED_SAMPLE_DATA_SOURCE = ${JSON.stringify(plan.source)};
+export const APPROVED_SAMPLE_DATA_SCHEMA_VERSION = ${JSON.stringify(plan.schemaVersion)};
+export const APPROVED_SAMPLE_COLLECTIONS = ${JSON.stringify(plan.sampleCollections)} as const;
+`;
+  }
+  const appTitle = appTitleOrPlan;
+  if (!definition) {
+    throw new Error('buildDemoDataTs: ProfileFeatureDefinition is required for pre-CBGA draft demo-data emission.');
+  }
   return `/** Demo data — generated for ${appTitle} (${definition.profile}) */
 export const DEMO_APP_TITLE = ${JSON.stringify(appTitle)};
 export const DEMO_FEATURE_MODULES = ${JSON.stringify(definition.featureModules)} as const;

@@ -8,7 +8,7 @@ import { GENERIC_FALLBACK_MODULE_TERMS } from './prompt-bounded-materialization-
 const MODULE_EVIDENCE_PATTERNS: Record<GenericFallbackModuleTerm, readonly RegExp[]> = {
   projects: [/\bprojects?\b/i, /\bproject management\b/i, /\bproject manager\b/i],
   tasks: [/\btasks?\b/i, /\btask manager\b/i, /\btask tracker\b/i, /\btask tracking\b/i],
-  team: [/\bteam\b/i, /\bteam members?\b/i, /\bassign team\b/i],
+  team: [/\bteams?\b/i, /\bteam members?\b/i, /\bassign team\b/i],
   timeline: [/\btimeline\b/i, /\bgantt\b/i, /\bproject timeline\b/i],
   dashboard: [/\bdashboard\b/i],
   board: [/\bkanban board\b/i, /\bproject board\b/i, /\btask board\b/i],
@@ -18,8 +18,9 @@ const MODULE_EVIDENCE_PATTERNS: Record<GenericFallbackModuleTerm, readonly RegEx
   kanban: [/\bkanban\b/i],
   calendar: [/\bcalendar\b/i, /\bscheduling\b/i, /\bappointments?\b/i],
   users: [/\busers?\b/i, /\buser management\b/i, /\buser accounts?\b/i],
-  deals: [/\bdeals?\b/i, /\bsales pipeline\b/i, /\bcrm\b/i],
-  leads: [/\bleads?\b/i, /\blead management\b/i],
+  // Require deal/CRM nouns — "leasing pipeline" alone must not inject CRM deals.
+  deals: [/\bdeals?\b/i, /\bsales\s+pipeline\b/i, /\bcrm\b/i],
+  leads: [/\bleads?\b/i, /\blead management\b/i, /\bsales\s+leads?\b/i],
   expenses: [/\bexpenses?\b/i, /\bexpense tracker\b/i, /\bexpensetracker\b/i],
   inventory: [/\binventory\b/i, /\bstock management\b/i],
   filter: [/\bfilter\b/i, /\bfiltering\b/i, /\bsearch and filter\b/i],
@@ -46,10 +47,14 @@ export function promptExplicitlyJustifiesGenericModule(rawPrompt: string, module
   if (!GENERIC_FALLBACK_MODULE_TERMS.includes(normalized as GenericFallbackModuleTerm)) {
     return false;
   }
+  const singular = normalized.endsWith('s') ? normalized.slice(0, -1) : normalized;
+  const plural = normalized.endsWith('s') ? normalized : `${normalized}s`;
   if (
-    new RegExp(`\\bno\\s+${normalized}s?\\b`, 'i').test(rawPrompt) ||
-    new RegExp(`\\bwithout\\s+${normalized}s?\\b`, 'i').test(rawPrompt) ||
-    new RegExp(`\\bnot\\s+.*\\b${normalized}s?\\b`, 'i').test(rawPrompt)
+    new RegExp(`\\bno\\s+(?:${singular}|${plural})\\b`, 'i').test(rawPrompt) ||
+    new RegExp(`\\bwithout\\s+(?:${singular}|${plural})\\b`, 'i').test(rawPrompt) ||
+    new RegExp(`\\bnot\\s+(?:a\\s+|an\\s+)?(?:generic\\s+|bare\\s+)?(?:[\\w-]+\\s+){0,4}(?:${singular}|${plural})\\b`, 'i').test(
+      rawPrompt,
+    )
   ) {
     return false;
   }

@@ -6,9 +6,14 @@
  */
 
 import type { ExtractedProductConcept, ProductFaithfulnessComparison } from './product-faithfulness-types.js';
+import {
+  capabilityIdentitiesMatch,
+  normalizeCapabilityIdentity,
+  suppressLexicalFragmentsOfCapabilities,
+} from '../product-faithfulness-v2/verification-accuracy.js';
 
 function canonical(concept: string): string {
-  return concept.trim().toLowerCase();
+  return normalizeCapabilityIdentity(concept) || concept.trim().toLowerCase();
 }
 
 export function compareProductConcepts(
@@ -17,26 +22,35 @@ export function compareProductConcepts(
 ): ProductFaithfulnessComparison {
   const requestedNames = new Map(requested.map((c) => [canonical(c.concept), c.concept]));
   const generatedNames = new Map(generated.map((c) => [canonical(c.concept), c.concept]));
+  const requestedDisplay = requested.map((c) => c.concept);
 
   const matched: string[] = [];
   const missing: string[] = [];
   for (const [key, displayName] of requestedNames) {
-    if (generatedNames.has(key)) {
+    const generatedHit =
+      generatedNames.has(key) ||
+      [...generatedNames.keys()].some((generatedKey) => capabilityIdentitiesMatch(key, generatedKey));
+    if (generatedHit) {
       matched.push(displayName);
     } else {
       missing.push(displayName);
     }
   }
 
-  const unexpected: string[] = [];
+  const matchedIds = new Set(matched.map(canonical));
+  const unexpectedRaw: string[] = [];
   for (const [key, displayName] of generatedNames) {
-    if (!requestedNames.has(key)) {
-      unexpected.push(displayName);
-    }
+    if (matchedIds.has(key) || requestedNames.has(key)) continue;
+    if ([...requestedNames.keys()].some((requestedKey) => capabilityIdentitiesMatch(key, requestedKey))) continue;
+    unexpectedRaw.push(displayName);
   }
+  const unexpected = suppressLexicalFragmentsOfCapabilities(unexpectedRaw, [
+    ...requestedDisplay,
+    ...matched,
+  ]);
 
   const requestedTotal = Math.max(1, requestedNames.size);
-  const generatedTotal = Math.max(1, generatedNames.size);
+  const generatedTotal = Math.max(1, matched.length + unexpected.length);
 
   return {
     readOnly: true,

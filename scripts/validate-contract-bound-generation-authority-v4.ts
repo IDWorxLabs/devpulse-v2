@@ -28,6 +28,16 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
+  detectDomainSpecificBranchViolations,
+  detectParallelCrudExecutableViolations,
+  detectVereProductionDependencies,
+  inspectOrchestratorCbgaGpcaWiring,
+  orchestratorCbgaPrecedesMaterialization,
+  proseMayMentionVere,
+  stableStructuralJson,
+} from './lib/production-validator-inspection.js';
+
+import {
   buildContractModulePlan,
   evaluateProposedModules,
   buildContractRoutePlan,
@@ -443,19 +453,30 @@ async function main(): Promise<void> {
     join(ROOT, 'src/one-prompt-live-preview/one-prompt-build-orchestrator.ts'),
     'utf8',
   );
-  const importIdx = orchestratorSource.indexOf("from '../contract-bound-generation-authority-v4/index.js'");
-  const callIdx = orchestratorSource.indexOf('applyContractBoundGenerationToBuildPlan(buildPlan, canonicalProductContract)');
-  const runWorkspaceMaterializationDefIdx = orchestratorSource.indexOf('const runWorkspaceMaterialization = ()');
-  const materializeCallIdx = orchestratorSource.indexOf('materializeGeneratedApplication({');
+  const orchestratorWiring = inspectOrchestratorCbgaGpcaWiring(orchestratorSource);
   assert(
     '26. real orchestrator invokes the contract-bound gate before materialization',
-    importIdx > -1 &&
-      callIdx > -1 &&
-      runWorkspaceMaterializationDefIdx > -1 &&
-      materializeCallIdx > -1 &&
-      callIdx < runWorkspaceMaterializationDefIdx &&
-      callIdx < materializeCallIdx,
-    `importIdx=${importIdx}, callIdx=${callIdx}, runWorkspaceMaterializationDefIdx=${runWorkspaceMaterializationDefIdx}, materializeCallIdx=${materializeCallIdx}`,
+    orchestratorCbgaPrecedesMaterialization(orchestratorWiring),
+    `cbgaImportIdx=${orchestratorWiring.cbgaImportIdx}, cbgaCallIdx=${orchestratorWiring.cbgaCallIdx}, envelopeRequireIdx=${orchestratorWiring.envelopeRequireIdx}, envelopeHandoffIdx=${orchestratorWiring.envelopeHandoffIdx}, runWorkspaceMaterializationDefIdx=${orchestratorWiring.runWorkspaceMaterializationDefIdx}, materializeCallIdx=${orchestratorWiring.materializeCallIdx}`,
+  );
+
+  const missingCbgaFixture = `
+    materializeGeneratedApplication({});
+    requireApprovedProductionBuildEnvelope(null, 'test');
+  `;
+  const ignoredCbgaFixture = `
+    const contractBoundResult = applyContractBoundGenerationToBuildPlan(buildPlan, canonicalProductContract, {});
+    materializeGeneratedApplication({});
+  `;
+  assert(
+    '26b. missing CBGA invocation fails orchestrator wiring inspection',
+    !orchestratorCbgaPrecedesMaterialization(inspectOrchestratorCbgaGpcaWiring(missingCbgaFixture)),
+    'missing cbga',
+  );
+  assert(
+    '26c. CBGA invoked but envelope ignored before materialization fails wiring inspection',
+    !orchestratorCbgaPrecedesMaterialization(inspectOrchestratorCbgaGpcaWiring(ignoredCbgaFixture)),
+    'ignored envelope',
   );
 
   // -------------------------------------------------------------------------------------------
@@ -588,12 +609,13 @@ async function main(): Promise<void> {
   // -------------------------------------------------------------------------------------------
   const CBGA_DIR = join(ROOT, 'src/contract-bound-generation-authority-v4');
   const cbgaFiles = readdirSync(CBGA_DIR).filter((f) => f.endsWith('.ts'));
+  const cbgaExecutableSource = cbgaFiles
+    .filter((f) => !f.endsWith('-report.ts'))
+    .map((f) => readFileSync(join(CBGA_DIR, f), 'utf8'))
+    .join('\n');
+  const cbgaReportSource = readFileSync(join(CBGA_DIR, 'contract-bound-generation-report.ts'), 'utf8');
   const cbgaSource = cbgaFiles.map((f) => readFileSync(join(CBGA_DIR, f), 'utf8')).join('\n');
-  const APPLICATION_SPECIFIC_LOGIC_PATTERNS = [
-    /if\s*\(\s*(domain|product|profile)\s*===\s*['"](restaurant|calculator|crm|booking|inventory|notes|converter)['"]/i,
-    /switch\s*\(\s*(domain|product|profile)\s*\)/i,
-  ];
-  const logicHits = APPLICATION_SPECIFIC_LOGIC_PATTERNS.filter((p) => p.test(cbgaSource));
+  const logicHits = detectDomainSpecificBranchViolations(cbgaExecutableSource);
   assert(
     '36. no application-specific logic introduced (no per-domain special-casing branches)',
     logicHits.length === 0,
@@ -614,13 +636,29 @@ async function main(): Promise<void> {
     'note-taking',
     '\\blisa\\b',
     'authentication provider',
-    '\\bcrud\\b',
   ];
-  const domainHits = FORBIDDEN_DOMAIN_WORDS.filter((w) => new RegExp(w, 'i').test(cbgaSource));
+  const domainHits = FORBIDDEN_DOMAIN_WORDS.filter((w) => new RegExp(w, 'i').test(cbgaExecutableSource));
+  const parallelCrudHits = detectParallelCrudExecutableViolations(cbgaExecutableSource);
+  const crudProseFixture = 'Threaded through universal-crud-app-generator into universal-app-materialization-engine.';
+  const parallelCrudFixture = "import { buildUniversalCrudEntityModuleFiles } from '../universal-crud-generation-engine/index.js';";
   assert(
     '37. no hardcoded product-domain words introduced in the CBGA module',
-    domainHits.length === 0,
-    domainHits.length === 0 ? `inspected ${cbgaFiles.length} CBGA source file(s) — no forbidden domain words found` : `found: ${domainHits.join(', ')}`,
+    domainHits.length === 0 && parallelCrudHits.length === 0,
+    domainHits.length === 0
+      ? parallelCrudHits.length === 0
+        ? `inspected ${cbgaFiles.length} CBGA source file(s) — no forbidden executable domain logic found`
+        : `parallel crud hits: ${parallelCrudHits.join(', ')}`
+      : `found: ${domainHits.join(', ')}`,
+  );
+  assert(
+    '37b. CBGA report prose mentioning CRUD passes executable inspection',
+    /crud/i.test(cbgaReportSource) && detectParallelCrudExecutableViolations(crudProseFixture).length === 0,
+    'crud prose allowed',
+  );
+  assert(
+    '37c. parallel CRUD generator import inside CBGA fails executable inspection',
+    detectParallelCrudExecutableViolations(parallelCrudFixture).length > 0,
+    `hits=${detectParallelCrudExecutableViolations(parallelCrudFixture).length}`,
   );
 
   // -------------------------------------------------------------------------------------------
@@ -642,11 +680,17 @@ async function main(): Promise<void> {
   // -------------------------------------------------------------------------------------------
   // 39. No VERE work introduced.
   // -------------------------------------------------------------------------------------------
-  const vereMention = /\bvere\b/i.test(cbgaSource);
+  const vereDependencyHits = detectVereProductionDependencies(cbgaExecutableSource);
   assert(
-    '39. no VERE / validation-evidence-reuse work was added by this milestone',
-    !vereMention,
-    vereMention ? 'unexpected VERE reference found in CBGA module' : 'no VERE references found in CBGA module',
+    '39. no VERE / validation-evidence-reuse production dependency was added by this milestone',
+    vereDependencyHits.length === 0,
+    vereDependencyHits.length === 0 ? 'no VERE production dependencies in executable CBGA code' : `found: ${vereDependencyHits.join(', ')}`,
+  );
+  assert(
+    '39b. CBGA prose mentioning VERE passes dependency inspection',
+    proseMayMentionVere('Never weakens CBGA, Product Faithfulness, AEO, EIAA, or VERE.') &&
+      detectVereProductionDependencies('Never weakens CBGA, Product Faithfulness, AEO, EIAA, or VERE.').length === 0,
+    'vere prose allowed',
   );
 
   // -------------------------------------------------------------------------------------------
@@ -704,11 +748,26 @@ async function main(): Promise<void> {
   };
   const detA = runContractBoundGenerationAuthority(detInput);
   const detB = runContractBoundGenerationAuthority(detInput);
-  const strip = (r: typeof detA) => JSON.stringify({ ...r, generatedAt: null });
+  const structuralA = stableStructuralJson(detA);
+  const structuralB = stableStructuralJson(detB);
+  const changedInput = runContractBoundGenerationAuthority({
+    ...detInput,
+    proposed: { ...detInput.proposed, proposedAppTitle: 'Different App Title' },
+  });
   assert(
     'extra. CBGA is deterministic — identical input yields byte-identical structural output',
-    strip(detA) === strip(detB),
-    strip(detA) === strip(detB) ? 'two independent runs produced identical structural output' : 'runs diverged',
+    structuralA === structuralB,
+    structuralA === structuralB ? 'two independent runs produced identical structural output' : 'runs diverged',
+  );
+  assert(
+    'extra. CBGA fingerprint changes when canonical input meaningfully changes',
+    stableStructuralJson(changedInput) !== structuralA,
+    'changed title should change structural output',
+  );
+  assert(
+    'extra. repeated same-process CBGA runs remain deterministic',
+    stableStructuralJson(runContractBoundGenerationAuthority(detInput)) === structuralA,
+    'third run matches first',
   );
 
   // -------------------------------------------------------------------------------------------

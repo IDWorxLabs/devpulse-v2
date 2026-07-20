@@ -213,6 +213,61 @@ export interface CbgaGenerationReport {
   contractVersion: typeof CONTRACT_BOUND_GENERATION_AUTHORITY_V4_CONTRACT;
   contractId: string;
   productIdentity: string;
+  /**
+   * Identity Computation Collapse V1 — the single authoritative post-repair product identity
+   * (PPC-1207 No Parallel Truth). Every downstream production stage must consume this instead of
+   * independently deriving `productIdentity`/`repairedInputs.appTitle` on its own.
+   */
+  approvedIdentity: import('./approved-product-identity.js').ApprovedProductIdentity;
+  /**
+   * Navigation Computation Collapse V1 — the single authoritative post-repair navigation plan
+   * (PPC-1207 No Parallel Truth). Every downstream production stage must consume this instead of
+   * independently deriving/inferring/merging/repairing `navigationPlan`/`repairedInputs.navigationLabels`.
+   */
+  approvedNavigationPlan: import('./approved-navigation-plan.js').ApprovedNavigationPlan;
+  /**
+   * Module Computation Collapse V1 — the single authoritative post-repair module plan (PPC-1207
+   * No Parallel Truth). Every downstream production stage must consume this instead of
+   * independently deriving/inferring/merging/repairing/inventing a module list of its own
+   * (`modulePlan`/`repairedInputs.moduleIds` remain the raw CBGA plans this object packages).
+   */
+  approvedModulePlan: import('./approved-module-plan.js').ApprovedModulePlan;
+  /**
+   * Metadata Computation Collapse V1 — the single, immutable, composed metadata handoff (title,
+   * subtitle, description, module/navigation/route counts, and summary strings) every downstream
+   * production stage must consume instead of independently parsing/inferring/counting/summarizing
+   * metadata of its own. Composed only from `approvedIdentity` + `approvedNavigationPlan` +
+   * `approvedModulePlan` + the canonical contract evidence — never a new derivation.
+   */
+  approvedMetadataPlan: import('./approved-metadata-plan.js').ApprovedMetadataPlan;
+  /**
+   * Sample Data Computation Collapse V1 — the single, immutable, composed sample/demo/seed/preview
+   * handoff every downstream production stage must consume instead of independently inventing sample
+   * data of its own. Composed only from `approvedIdentity` + `approvedNavigationPlan` +
+   * `approvedModulePlan` + `approvedMetadataPlan` + the canonical contract evidence — never a new
+   * derivation of business records.
+   */
+  approvedSampleDataPlan: import('./approved-sample-data-plan.js').ApprovedSampleDataPlan;
+  /**
+   * Provenance Computation Collapse V1 — the single, immutable, composed provenance/ancestry handoff
+   * every downstream production stage must consume instead of independently reconstructing/inferring
+   * artifact provenance of its own. Composed only from all prior approved handoffs plus CBGA's
+   * repaired inputs and canonical contract evidence — never a new derivation.
+   */
+  approvedProvenancePlan: import('./approved-provenance-plan.js').ApprovedProvenancePlan;
+  /**
+   * Repair Reality Alignment V1 — the single, immutable, classified repair record every downstream
+   * production stage must consume instead of inferring repair type or claiming mutations heuristically.
+   * Built from CBGA repairs at approval time; extended immutably by the orchestrator after every
+   * real post-CBGA repair.
+   */
+  approvedRepairRealityPlan: import('./approved-repair-reality-plan.js').ApprovedRepairRealityPlan;
+  /**
+   * Final Immutable Production Pipeline V1 — the single immutable constitutional envelope for this
+   * build. Every downstream production stage must consume this object instead of reading individual
+   * handoffs in parallel (PPC-1207 No Parallel Truth).
+   */
+  approvedProductionBuildEnvelope: import('./approved-production-build-envelope.js').ApprovedProductionBuildEnvelope;
   modulePlan: CbgaModulePlanEntry[];
   routePlan: CbgaRoutePlanEntry[];
   navigationPlan: CbgaNavigationPlanItem[];

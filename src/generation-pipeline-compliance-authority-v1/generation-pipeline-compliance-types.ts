@@ -15,6 +15,8 @@
  */
 
 import type { CbgaCanonicalContractEvidence, CbgaGenerationReport } from '../contract-bound-generation-authority-v4/index.js';
+import type { InfrastructureProductBoundaryAudit } from '../infrastructure-product-boundary-authority-v1/index.js';
+import type { GpcaRenderedContentAudit } from './rendered-content-types.js';
 
 export const GENERATION_PIPELINE_COMPLIANCE_AUTHORITY_V1_CONTRACT =
   'GENERATION_PIPELINE_COMPLIANCE_AUTHORITY_V1' as const;
@@ -155,7 +157,7 @@ export interface GpcaProvenanceLink {
 export interface GpcaTraceabilityResult {
   readOnly: true;
   artifact: string;
-  artifactKind: 'MODULE' | 'ROUTE' | 'NAVIGATION_ITEM' | 'TITLE' | 'SURFACE';
+  artifactKind: 'MODULE' | 'ROUTE' | 'NAVIGATION_ITEM' | 'TITLE' | 'SURFACE' | 'METADATA' | 'SAMPLE_DATA' | 'PROVENANCE' | 'REPAIR_REALITY' | 'PRODUCTION_BUILD_ENVELOPE';
   proven: boolean;
   chain: readonly GpcaProvenanceLink[];
   brokenAtLink: string | null;
@@ -169,7 +171,12 @@ export type GpcaGenerationGateOutcome =
   | 'COMPLIANCE_BLOCKED_BLUEPRINT_BYPASS'
   | 'COMPLIANCE_BLOCKED_CONTRACT_TRACEABILITY_FAILURE'
   | 'COMPLIANCE_BLOCKED_GENERATOR_INPUT_BYPASS'
-  | 'COMPLIANCE_BLOCKED_PIPELINE_NON_COMPLIANCE';
+  | 'COMPLIANCE_BLOCKED_PIPELINE_NON_COMPLIANCE'
+  /** Rendered Content Evidence Expansion V1 — structure passed, but real rendered output did not. */
+  | 'COMPLIANCE_BLOCKED_PLACEHOLDER_APPLICATION'
+  | 'COMPLIANCE_BLOCKED_GENERIC_TEMPLATE_OUTPUT'
+  | 'COMPLIANCE_BLOCKED_RENDERED_CONTRACT_DRIFT'
+  | 'COMPLIANCE_BLOCKED_RENDERED_CONTENT_NON_COMPLIANCE';
 
 export const GPCA_GENERATION_GATE_OUTCOMES: readonly GpcaGenerationGateOutcome[] = [
   'COMPLIANCE_ALLOWED',
@@ -179,6 +186,10 @@ export const GPCA_GENERATION_GATE_OUTCOMES: readonly GpcaGenerationGateOutcome[]
   'COMPLIANCE_BLOCKED_CONTRACT_TRACEABILITY_FAILURE',
   'COMPLIANCE_BLOCKED_GENERATOR_INPUT_BYPASS',
   'COMPLIANCE_BLOCKED_PIPELINE_NON_COMPLIANCE',
+  'COMPLIANCE_BLOCKED_PLACEHOLDER_APPLICATION',
+  'COMPLIANCE_BLOCKED_GENERIC_TEMPLATE_OUTPUT',
+  'COMPLIANCE_BLOCKED_RENDERED_CONTRACT_DRIFT',
+  'COMPLIANCE_BLOCKED_RENDERED_CONTENT_NON_COMPLIANCE',
 ];
 
 export type GpcaFailureClass =
@@ -188,7 +199,12 @@ export type GpcaFailureClass =
   | 'BLUEPRINT_BYPASS'
   | 'CONTRACT_TRACEABILITY_FAILURE'
   | 'GENERATOR_INPUT_BYPASS'
-  | 'PIPELINE_COMPLIANCE_FAILURE';
+  | 'PIPELINE_COMPLIANCE_FAILURE'
+  /** Rendered Content Evidence Expansion V1. */
+  | 'RENDERED_CONTENT_NON_COMPLIANT'
+  | 'PLACEHOLDER_APPLICATION'
+  | 'GENERIC_TEMPLATE_OUTPUT'
+  | 'RENDERED_CONTRACT_DRIFT';
 
 export const GPCA_FAILURE_CLASSES: readonly GpcaFailureClass[] = [
   'GENERATION_PIPELINE_NON_COMPLIANCE',
@@ -198,6 +214,10 @@ export const GPCA_FAILURE_CLASSES: readonly GpcaFailureClass[] = [
   'CONTRACT_TRACEABILITY_FAILURE',
   'GENERATOR_INPUT_BYPASS',
   'PIPELINE_COMPLIANCE_FAILURE',
+  'RENDERED_CONTENT_NON_COMPLIANT',
+  'PLACEHOLDER_APPLICATION',
+  'GENERIC_TEMPLATE_OUTPUT',
+  'RENDERED_CONTRACT_DRIFT',
 ];
 
 /** Maps a GPCA gate outcome to the AEO failure class it should be diagnosed as. */
@@ -209,6 +229,21 @@ export const GPCA_GATE_OUTCOME_TO_FAILURE_CLASS: Readonly<Record<GpcaGenerationG
   COMPLIANCE_BLOCKED_CONTRACT_TRACEABILITY_FAILURE: 'CONTRACT_TRACEABILITY_FAILURE',
   COMPLIANCE_BLOCKED_GENERATOR_INPUT_BYPASS: 'GENERATOR_INPUT_BYPASS',
   COMPLIANCE_BLOCKED_PIPELINE_NON_COMPLIANCE: 'PIPELINE_COMPLIANCE_FAILURE',
+  COMPLIANCE_BLOCKED_PLACEHOLDER_APPLICATION: 'PLACEHOLDER_APPLICATION',
+  COMPLIANCE_BLOCKED_GENERIC_TEMPLATE_OUTPUT: 'GENERIC_TEMPLATE_OUTPUT',
+  COMPLIANCE_BLOCKED_RENDERED_CONTRACT_DRIFT: 'RENDERED_CONTRACT_DRIFT',
+  COMPLIANCE_BLOCKED_RENDERED_CONTENT_NON_COMPLIANCE: 'RENDERED_CONTENT_NON_COMPLIANT',
+};
+
+/** Maps a rendered-content gate outcome (rendered-content-gate.ts) to the GPCA gate outcome it becomes. */
+export const RENDERED_CONTENT_OUTCOME_TO_GATE_OUTCOME: Readonly<
+  Record<import('./rendered-content-types.js').GpcaRenderedContentGateOutcome, GpcaGenerationGateOutcome>
+> = {
+  RENDERED_CONTENT_ALLOWED: 'COMPLIANCE_ALLOWED',
+  RENDERED_CONTENT_BLOCKED_PLACEHOLDER_APPLICATION: 'COMPLIANCE_BLOCKED_PLACEHOLDER_APPLICATION',
+  RENDERED_CONTENT_BLOCKED_GENERIC_TEMPLATE_OUTPUT: 'COMPLIANCE_BLOCKED_GENERIC_TEMPLATE_OUTPUT',
+  RENDERED_CONTENT_BLOCKED_RENDERED_CONTRACT_DRIFT: 'COMPLIANCE_BLOCKED_RENDERED_CONTRACT_DRIFT',
+  RENDERED_CONTENT_BLOCKED_NON_COMPLIANCE: 'COMPLIANCE_BLOCKED_RENDERED_CONTENT_NON_COMPLIANCE',
 };
 
 /**
@@ -261,5 +296,21 @@ export interface GpcaComplianceReport {
   blockedReasons: readonly string[];
   overallCompliancePercent: number;
   phase: 'PRE_MATERIALIZATION' | 'POST_MATERIALIZATION';
+  /**
+   * Rendered Content Evidence Expansion V1 — audits what a real user actually sees (headings, nav,
+   * buttons, page titles, static text, generic-template/placeholder/reusable-shell fingerprints),
+   * not just structure. `null` before materialization or when no rendered file contents were
+   * supplied to this report — never fabricated, only ever real evidence.
+   */
+  renderedContentAudit: GpcaRenderedContentAudit | null;
+  /**
+   * Infrastructure vs Product Boundary Authority V1 — per-file INFRASTRUCTURE/PRODUCT/MIXED/UNKNOWN
+   * classification for this build's real generated files, or `null` before real file content exists
+   * (pre-materialization) or when the caller supplied none. Purely additive evidence: it can only
+   * ever exempt a file the presence-based detectors below would otherwise flag, by proving — from
+   * the file's own real content, never its path — that it is pure hosting infrastructure with zero
+   * business content. It can never turn a genuine violation into an allow.
+   */
+  boundaryAudit: InfrastructureProductBoundaryAudit | null;
   generatedAt: string;
 }

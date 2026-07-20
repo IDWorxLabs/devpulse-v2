@@ -52,7 +52,7 @@ function buildSummary(monitor: BuildExecutionMonitor, overallState: BuildExecuti
     }
     case 'BLOCKED':
       headline = 'Build blocked.';
-      nextStepLabel = 'A required stage could not proceed safely.';
+      nextStepLabel = 'Resolve current build-context blockers before preview activation.';
       break;
     case 'STALL_DETECTED':
       headline = 'Build paused.';

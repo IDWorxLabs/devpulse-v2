@@ -22,6 +22,11 @@ const GPCA_FAILURE_CLASSES: readonly AeoFailureClass[] = [
   'CONTRACT_TRACEABILITY_FAILURE',
   'GENERATOR_INPUT_BYPASS',
   'PIPELINE_COMPLIANCE_FAILURE',
+  // Rendered Content Evidence Expansion V1 — structure passed, but real rendered output did not.
+  'RENDERED_CONTENT_NON_COMPLIANT',
+  'PLACEHOLDER_APPLICATION',
+  'GENERIC_TEMPLATE_OUTPUT',
+  'RENDERED_CONTRACT_DRIFT',
 ];
 
 function limitationsOf(plan: AeoRepairPlan): string[] {

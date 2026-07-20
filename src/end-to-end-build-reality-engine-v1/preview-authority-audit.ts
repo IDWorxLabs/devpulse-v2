@@ -302,7 +302,10 @@ export async function runPreviewAuthorityAudit(input: {
     },
   );
 
-  const iframePreviewUrl = canonical.livePreview.previewUrl;
+  // When founder-host iframe registry is empty (API/validator builds), the gate-unlocked /
+  // Playwright preview URL is the live preview authority — do not invent a second frame URL.
+  const iframePreviewUrl =
+    canonical.livePreview.previewUrl ?? gateUnlockedPreviewUrl ?? playwrightPreviewUrl;
   const appTsxChecksumExpected = previewServingWorkspaceDir
     ? computeAppTsxChecksum(previewServingWorkspaceDir)
     : activeProjectWorkspaceDir

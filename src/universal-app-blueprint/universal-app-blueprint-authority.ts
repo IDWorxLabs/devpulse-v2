@@ -17,10 +17,12 @@ export function composeGeneratedAppWorkspaceFiles(input: {
   for (const file of blueprintFiles) {
     byPath.set(file.relativePath, file);
   }
-  for (const file of input.sharedFiles ?? []) {
+  // Feature modules first, then shared infrastructure (registry/routes/App/router) so
+  // CBGA-approved shell files always win over any accidental feature-layer duplicates.
+  for (const file of input.featureFiles) {
     byPath.set(file.relativePath, file);
   }
-  for (const file of input.featureFiles) {
+  for (const file of input.sharedFiles ?? []) {
     byPath.set(file.relativePath, file);
   }
 

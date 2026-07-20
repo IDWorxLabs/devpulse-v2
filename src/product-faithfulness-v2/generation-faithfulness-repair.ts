@@ -15,6 +15,7 @@
 
 import type { ExtractedProductConcept } from '../product-faithfulness-v1/product-faithfulness-types.js';
 import { auditGenerationPipeline } from './generation-faithfulness-auditor.js';
+import { GENERATION_STAGE_ORDER } from './generation-faithfulness-types.js';
 import type {
   CanonicalProductContract,
   GenerationFaithfulnessAuditResult,
@@ -42,16 +43,12 @@ function repairActionTypeForStage(stage: GenerationStageName): RepairActionType 
 }
 
 export function applyMinimalRepairs(
-  _contract: CanonicalProductContract,
+  contract: CanonicalProductContract,
   stageEvidence: GenerationStageEvidence[],
   audit: GenerationFaithfulnessAuditResult,
 ): { repairedStages: GenerationStageEvidence[]; actions: RepairAction[] } {
   const actions: RepairAction[] = [];
-
-  const conceptPresentSomewhere = new Map<string, ExtractedProductConcept>();
-  for (const stage of stageEvidence) {
-    for (const c of stage.concepts) conceptPresentSomewhere.set(c.concept.toLowerCase(), c);
-  }
+  const canonicalConcepts = new Set(contract.allConceptNames.map((concept) => concept.toLowerCase()));
 
   // Pass-through by reference by default — only stages the audit flags are ever replaced.
   const repairedStages: GenerationStageEvidence[] = [...stageEvidence];
@@ -66,10 +63,24 @@ export function applyMinimalRepairs(
     let mutated = false;
 
     for (const missingConcept of stageResult.missing) {
-      const evidenceElsewhere = conceptPresentSomewhere.get(missingConcept.toLowerCase());
+      const targetStageIndex = GENERATION_STAGE_ORDER.indexOf(stageResult.stage);
+      let evidenceElsewhere: ExtractedProductConcept | undefined;
+      let ancestryStage: GenerationStageName | undefined;
+      for (let index = targetStageIndex - 1; index >= 0; index -= 1) {
+        const candidateStage = stageEvidence.find((stage) => stage.stage === GENERATION_STAGE_ORDER[index]);
+        const candidate = candidateStage?.concepts.find(
+          (concept) => concept.concept.toLowerCase() === missingConcept.toLowerCase(),
+        );
+        if (candidate) {
+          evidenceElsewhere = candidate;
+          ancestryStage = candidateStage?.stage;
+          break;
+        }
+      }
       const actionType = repairActionTypeForStage(stageResult.stage);
+      const hasCanonicalAncestry = canonicalConcepts.has(missingConcept.toLowerCase());
 
-      if (evidenceElsewhere) {
+      if (hasCanonicalAncestry && evidenceElsewhere && ancestryStage) {
         newConcepts.push({ readOnly: true, concept: missingConcept, sources: evidenceElsewhere.sources });
         mutated = true;
         actions.push({
@@ -77,7 +88,7 @@ export function applyMinimalRepairs(
           type: actionType,
           stage: stageResult.stage,
           concept: missingConcept,
-          detail: `Recovered "${missingConcept}" into ${stageResult.stage.toLowerCase().replace(/_/g, ' ')} — it was already present in other generation evidence but not wired into this stage.`,
+          detail: `Recovered "${missingConcept}" into ${stageResult.stage.toLowerCase().replace(/_/g, ' ')} — its canonical-contract ancestry was verified in the preceding ${ancestryStage.toLowerCase().replace(/_/g, ' ')} stage.`,
           applied: true,
         });
       } else {
@@ -86,7 +97,9 @@ export function applyMinimalRepairs(
           type: 'REGENERATE_FEATURE_MODULE',
           stage: stageResult.stage,
           concept: missingConcept,
-          detail: `"${missingConcept}" is missing from all generation evidence and would require regenerating its feature module — not applied by this evaluation-time repair.`,
+          detail: hasCanonicalAncestry
+            ? `"${missingConcept}" has no verified preceding-stage ancestry for ${stageResult.stage.toLowerCase().replace(/_/g, ' ')} and would require regenerating its feature module — not applied by this evaluation-time repair.`
+            : `"${missingConcept}" is not present in the current canonical product contract and cannot be recovered into this build.`,
           applied: false,
         });
       }

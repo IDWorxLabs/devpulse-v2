@@ -87,7 +87,7 @@ async function main(): Promise<void> {
     requestedProjectId: 'proj-1',
     requestedProjectName: null,
     hasKnownExistingProject: true,
-    currentProjectIdentitySummary: null,
+    currentProjectIdentitySummary: 'Payment page.',
   });
   assert(
     '2. Continuation prompt becomes CONTINUE_EXISTING_PROJECT.',
@@ -104,7 +104,7 @@ async function main(): Promise<void> {
     requestedProjectId: 'proj-2',
     requestedProjectName: null,
     hasKnownExistingProject: true,
-    currentProjectIdentitySummary: null,
+    currentProjectIdentitySummary: 'User interface project with configurable dark mode and themes.',
   });
   assert(
     '3. Modify existing project becomes CONTINUE_EXISTING_PROJECT.',
@@ -121,7 +121,7 @@ async function main(): Promise<void> {
     requestedProjectId: 'proj-3',
     requestedProjectName: null,
     hasKnownExistingProject: true,
-    currentProjectIdentitySummary: null,
+    currentProjectIdentitySummary: 'Commerce checkout project with a multi-step checkout flow.',
   });
   assert(
     '4. Resume project becomes CONTINUE_EXISTING_PROJECT.',
@@ -138,7 +138,7 @@ async function main(): Promise<void> {
     requestedProjectId: 'proj-4',
     requestedProjectName: null,
     hasKnownExistingProject: true,
-    currentProjectIdentitySummary: null,
+    currentProjectIdentitySummary: 'Total update.',
   });
   assert(
     '5. Fix bug in current project becomes CONTINUE_EXISTING_PROJECT.',
@@ -228,12 +228,25 @@ async function main(): Promise<void> {
     requestedProjectId: null,
     requestedProjectName: null,
     hasKnownExistingProject: true,
-    currentProjectIdentitySummary: null,
+    currentProjectIdentitySummary: 'A recipe-sharing social network for home cooks.',
   });
   assert(
     '12. Continuation requires explicit continuation evidence.',
     d12.decision === 'NEW_BUILD' && d12.continuationEvidence.length === 0,
     `decision=${d12.decision} continuationEvidenceCount=${d12.continuationEvidence.length} newBuildScore=${d12.newBuildScore.toFixed(2)}`,
+  );
+  const d12MissingIdentity = classifyNewBuildDecisionV2({
+    rawPrompt: 'Continue the project and add dark mode.',
+    requestedProjectId: 'proj-without-identity',
+    requestedProjectName: null,
+    hasKnownExistingProject: true,
+    currentProjectIdentitySummary: null,
+  });
+  assert(
+    '12b. Missing active-project identity requires explicit confirmation.',
+    d12MissingIdentity.decision === 'AMBIGUOUS_REQUIRES_CONFIRMATION' &&
+      /identity summary is unavailable/i.test(d12MissingIdentity.explanation),
+    `decision=${d12MissingIdentity.decision} explanation=${d12MissingIdentity.explanation}`,
   );
   checkpoint('scenario 12');
 

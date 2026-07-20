@@ -15,6 +15,30 @@ import {
   isRejectedNonModulePhrase,
   moduleIdsInclude,
 } from './prompt-module-name-normalizer.js';
+import { promptExplicitlyJustifiesGenericModule } from '../prompt-bounded-materialization/module-origin-evidence.js';
+import {
+  classifyWorkspaceBannedFallbackContamination,
+  moduleIdMatchesBannedTerm,
+  promptJustifiesBareBannedFallback,
+} from './fallback-module-classification.js';
+
+function moduleIdIsBannedTerm(moduleId: string, banned: string): boolean {
+  return moduleIdMatchesBannedTerm(moduleId, banned);
+}
+
+function promptNamesOrJustifiesModule(
+  rawPrompt: string,
+  banned: string,
+  promptNamedModules: Set<string>,
+): boolean {
+  if (promptNamedModules.has(banned)) return true;
+  if (promptNamedModules.has(`${banned}s`) || promptNamedModules.has(banned.replace(/s$/, ''))) {
+    return true;
+  }
+  // Bare banned terms require standalone evidence — compound phrases do not justify bare fallbacks.
+  if (banned === 'timeline') return promptJustifiesBareBannedFallback(rawPrompt, banned);
+  return promptExplicitlyJustifiesGenericModule(rawPrompt, banned);
+}
 
 export function validatePromptFaithfulness(input: {
   rawPrompt: string;
@@ -27,11 +51,14 @@ export function validatePromptFaithfulness(input: {
   const extraction = extractPromptFeatures(input.rawPrompt);
   const failureReasons: string[] = [];
   const approvedModules = new Set(input.approvedModuleIds ?? []);
-  const bannedDetected = BANNED_FALLBACK_MODULES.filter(
-    (banned) =>
-      !approvedModules.has(banned) &&
-      input.generatedModules.some((moduleId) => moduleId === banned || moduleId.includes(banned)),
-  );
+  const promptNamedModules = new Set(extraction.requiredModules);
+  const contamination = classifyWorkspaceBannedFallbackContamination({
+    workspaceModuleIds: input.generatedModules,
+    approvedModuleIds: input.approvedModuleIds,
+    promptRequiredModules: extraction.requiredModules,
+    rawPrompt: input.rawPrompt,
+  });
+  const bannedDetected = contamination.forbiddenBannedTerms;
 
   const overExtractedInWorkspace = extraction.rejectedNonModulePhrases.filter((phrase) => {
     const isSanitizedModule = extraction.requiredModules.some(
@@ -55,8 +82,13 @@ export function validatePromptFaithfulness(input: {
   );
 
   const definitionModules = input.definition?.featureModules ?? input.generatedModules;
-  const fallbackModulesAppendedByGenerator = BANNED_FALLBACK_MODULES.filter((banned) =>
-    definitionModules.some((moduleId) => moduleId === banned),
+  // Only exact banned ids count as generator-appended fallbacks. Contract-bound compounds
+  // (occupancy-timeline) must not be reported as an appended bare "timeline" fallback.
+  const fallbackModulesAppendedByGenerator = BANNED_FALLBACK_MODULES.filter(
+    (banned) =>
+      definitionModules.some((moduleId) => moduleId === banned) &&
+      !approvedModules.has(banned) &&
+      !promptNamesOrJustifiesModule(input.rawPrompt, banned, promptNamedModules),
   );
 
   if (

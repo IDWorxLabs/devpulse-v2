@@ -9,6 +9,8 @@
  */
 
 import { CBGA_DEFAULT_SHELL_NAVIGATION_LABELS, CBGA_SYSTEM_SHELL_MODULE_IDS } from '../contract-bound-generation-authority-v4/index.js';
+import { isPathSafeInfrastructure } from '../infrastructure-product-boundary-authority-v1/index.js';
+import type { InfrastructureProductBoundaryAudit } from '../infrastructure-product-boundary-authority-v1/index.js';
 import {
   GPCA_KNOWN_GENERIC_BLUEPRINT_PAGES,
   type GpcaPipelineEvidenceInput,
@@ -41,7 +43,18 @@ export function detectContractBypassedInputs(evidence: GpcaPipelineEvidenceInput
   const navigationBypass = evidence.proposed.navigationLabels.filter(
     (label) => !approvedNavLabels.has(label) && CBGA_DEFAULT_SHELL_NAVIGATION_LABELS.includes(label),
   );
-  const titleBypassed = evidence.proposed.appTitle !== cbga.productIdentity;
+  const approvedTitles = new Set(
+    [
+      cbga.productIdentity,
+      cbga.approvedIdentity?.displayName,
+      cbga.approvedMetadataPlan?.applicationTitle,
+      cbga.repairedInputs?.appTitle,
+    ].filter((value): value is string => typeof value === 'string' && value.trim().length > 0),
+  );
+  // Identity Computation Collapse — a title that matches any CBGA-approved identity surface is
+  // not a generator bypass. Comparing only to contract.productIdentity falsely blocks prompt-
+  // derived non-generic titles that CBGA intentionally preserved.
+  const titleBypassed = !approvedTitles.has(evidence.proposed.appTitle);
 
   return {
     moduleBypass,
@@ -82,14 +95,28 @@ function isNavLabelJustifiedByContract(label: string, evidence: GpcaPipelineEvid
   return haystack.some((c) => c === normalized || c.includes(normalized) || normalized.includes(c));
 }
 
-/** Detects generic blueprint shell pages actually present on disk that the contract does not justify. */
-export function detectGenericShellInjection(evidence: GpcaPipelineEvidenceInput): GpcaGenericShellDetection {
+/**
+ * Detects generic blueprint shell pages actually present on disk that the contract does not
+ * justify.
+ *
+ * Infrastructure vs Product Boundary Authority V1 — Phase 6 asks a different question than "does
+ * this file exist?": when a real, content-based `boundaryAudit` is supplied and it classifies the
+ * exact file as pure `INFRASTRUCTURE` (zero business-content signal in its real, current content —
+ * never a filename lookup, never a whitelist), the file is exempt from this presence-based check.
+ * Any other classification (`PRODUCT`, `MIXED`, `UNKNOWN`) — or no boundary evidence at all — leaves
+ * this detector exactly as strict as before this milestone.
+ */
+export function detectGenericShellInjection(
+  evidence: GpcaPipelineEvidenceInput,
+  boundaryAudit?: InfrastructureProductBoundaryAudit | null,
+): GpcaGenericShellDetection {
   const detectedPaths: string[] = [];
   const justifiedPaths: string[] = [];
   for (const page of GPCA_KNOWN_GENERIC_BLUEPRINT_PAGES) {
     if (!evidence.proposed.generatedFilePaths.includes(page.path)) continue;
-    const justified = page.navLabel !== null && isNavLabelJustifiedByContract(page.navLabel, evidence);
-    if (justified) {
+    const justifiedByContract = page.navLabel !== null && isNavLabelJustifiedByContract(page.navLabel, evidence);
+    const justifiedByBoundary = isPathSafeInfrastructure(boundaryAudit, page.path);
+    if (justifiedByContract || justifiedByBoundary) {
       justifiedPaths.push(page.path);
     } else {
       detectedPaths.push(page.path);
@@ -98,10 +125,23 @@ export function detectGenericShellInjection(evidence: GpcaPipelineEvidenceInput)
   return { detectedPaths, justifiedPaths };
 }
 
-/** Detects the unconditional reusable blueprint shell (welcome/onboarding) bypassing the product surface. */
-export function detectBlueprintBypass(evidence: GpcaPipelineEvidenceInput): string[] {
+/**
+ * Detects the unconditional reusable blueprint shell (welcome/onboarding) bypassing the product
+ * surface.
+ *
+ * Same Phase 6 boundary exemption as `detectGenericShellInjection` above: a supplied `boundaryAudit`
+ * that classifies the exact file as pure `INFRASTRUCTURE` from its own real content exempts it. No
+ * boundary evidence (or any other classification) preserves this detector's original, unmodified
+ * strictness.
+ */
+export function detectBlueprintBypass(
+  evidence: GpcaPipelineEvidenceInput,
+  boundaryAudit?: InfrastructureProductBoundaryAudit | null,
+): string[] {
   const bypassPaths = ['src/blueprint/WelcomeScreen.tsx', 'src/blueprint/OnboardingScreen.tsx'];
-  return bypassPaths.filter((p) => evidence.proposed.generatedFilePaths.includes(p));
+  return bypassPaths.filter(
+    (p) => evidence.proposed.generatedFilePaths.includes(p) && !isPathSafeInfrastructure(boundaryAudit, p),
+  );
 }
 
 /** Navigation labels present in the proposed output that are default-shell labels with no contract support. */

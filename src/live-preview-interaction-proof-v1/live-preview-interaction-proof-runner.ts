@@ -22,6 +22,8 @@ import { PLAYWRIGHT_INSTALL_INSTRUCTION } from './live-preview-interaction-proof
 
 export interface ProofPageDriver {
   goto(url: string, timeoutMs: number): Promise<{ ok: boolean; error?: string }>;
+  /** Traverses generic blueprint launch/onboarding chrome to the first product feature surface. */
+  prepareFeatureSurface?(): Promise<void>;
   /** Generic console.error() messages — informational, not necessarily fatal. */
   getConsoleErrors(): string[];
   /** Uncaught exceptions (pageerror) or console errors that clearly indicate a crash. */
@@ -104,6 +106,51 @@ class PlaywrightProofPageDriver implements ProofPageDriver {
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err instanceof Error ? err.message : String(err) };
+    }
+  }
+
+  async prepareFeatureSurface(): Promise<void> {
+    try {
+      await this.page
+        .waitForSelector(
+          '[data-blueprint="welcome-screen"], [data-blueprint="onboarding"], [data-blueprint="app-shell"], [data-feature-module]',
+          { timeout: 5_000, state: 'visible' },
+        )
+        .catch(() => undefined);
+
+      if (await this.page.locator('[data-blueprint="welcome-screen"]').isVisible().catch(() => false)) {
+        await this.page
+          .locator('[data-blueprint="welcome-screen"] .blueprint-btn-primary')
+          .click({ timeout: 3_000 });
+        await this.page
+          .waitForSelector('[data-blueprint="onboarding"], [data-blueprint="app-shell"]', {
+            timeout: 5_000,
+            state: 'visible',
+          })
+          .catch(() => undefined);
+      }
+
+      if (await this.page.locator('[data-blueprint="onboarding"]').isVisible().catch(() => false)) {
+        await this.page.getByRole('button', { name: 'Skip', exact: true }).click({ timeout: 3_000 });
+      }
+
+      if (
+        (await this.page.locator('[data-blueprint="app-shell"]').isVisible().catch(() => false)) &&
+        !(await this.page.locator('[data-feature-module]').first().isVisible().catch(() => false))
+      ) {
+        const productNavigation = this.page.locator('.blueprint-sidenav .blueprint-nav-item').nth(1);
+        if (await productNavigation.isVisible().catch(() => false)) {
+          await productNavigation.click({ timeout: 3_000 });
+          await this.page
+            .waitForSelector('[data-feature-module], [data-root-feature]', {
+              timeout: 5_000,
+              state: 'visible',
+            })
+            .catch(() => undefined);
+        }
+      }
+    } catch {
+      // Best effort: the normal proof probes below report any remaining reachability failure.
     }
   }
 

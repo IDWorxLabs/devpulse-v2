@@ -19,6 +19,15 @@ import type {
   CbgaGenerationReport,
   CbgaProposedGeneratorInputs,
 } from './contract-bound-generation-types.js';
+import { buildApprovedProductIdentity } from './approved-product-identity.js';
+import { buildApprovedNavigationPlan } from './approved-navigation-plan.js';
+import { buildApprovedModulePlan } from './approved-module-plan.js';
+import { buildApprovedMetadataPlan } from './approved-metadata-plan.js';
+import { buildApprovedSampleDataPlan } from './approved-sample-data-plan.js';
+import { buildApprovedProvenancePlan } from './approved-provenance-plan.js';
+import { buildApprovedRepairRealityPlan } from './approved-repair-reality-plan.js';
+import { buildApprovedProductionBuildEnvelope } from './approved-production-build-envelope.js';
+import { deriveNeutralAppTagline } from '../universal-prompt-to-app-materialization/prompt-app-metadata.js';
 
 export function buildContractBoundGenerationPlans(contract: CbgaCanonicalContractEvidence): CbgaGatePlans {
   const modulePlan = buildContractModulePlan(contract);
@@ -31,6 +40,12 @@ export function buildContractBoundGenerationPlans(contract: CbgaCanonicalContrac
 export function runContractBoundGenerationAuthority(input: {
   contract: CbgaCanonicalContractEvidence;
   proposed: CbgaProposedGeneratorInputs;
+  /** Identity Computation Collapse V1 — carried into the approved identity handoff when known. */
+  promptHash?: string | null;
+  buildId?: string | null;
+  projectId?: string | null;
+  buildContextDecision?: 'NEW_BUILD' | 'CONTINUE_EXISTING_PROJECT' | null;
+  buildIntentOverride?: 'START_NEW_BUILD' | 'CONTINUE_EXISTING_PROJECT' | null;
 }): CbgaGenerationReport {
   const plans = buildContractBoundGenerationPlans(input.contract);
   const initialGate = runContractGenerationGate(plans, input.proposed);
@@ -46,11 +61,111 @@ export function runContractBoundGenerationAuthority(input: {
     proposedPrimaryWorkflowInteractive: input.proposed.proposedPrimaryWorkflowInteractive,
   });
 
+  const approvedIdentity = buildApprovedProductIdentity({
+    contractProductIdentity: input.contract.productIdentity,
+    repairedAppTitle: repairedInputs.appTitle,
+    promptHash: input.promptHash ?? null,
+    buildId: input.buildId ?? null,
+  });
+
+  const approvedNavigationPlan = buildApprovedNavigationPlan({
+    navigationPlan: plans.navigationPlan,
+    approvedModuleIds: repairedInputs.moduleIds,
+    promptHash: input.promptHash ?? null,
+    buildId: input.buildId ?? null,
+  });
+
+  const approvedModulePlan = buildApprovedModulePlan({
+    modulePlan: plans.modulePlan,
+    routePlan: plans.routePlan,
+    approvedModuleIds: repairedInputs.moduleIds,
+    promptHash: input.promptHash ?? null,
+    buildId: input.buildId ?? null,
+  });
+
+  // Metadata Computation Collapse V1 — composed last, from the three handoffs above plus the
+  // canonical contract evidence; never an independent derivation of its own.
+  const approvedMetadataPlan = buildApprovedMetadataPlan({
+    identity: approvedIdentity,
+    navigationPlan: approvedNavigationPlan,
+    modulePlan: approvedModulePlan,
+    contract: input.contract,
+    deriveApplicationSubtitle: deriveNeutralAppTagline,
+    promptHash: input.promptHash ?? null,
+    buildId: input.buildId ?? null,
+  });
+
+  // Sample Data Computation Collapse V1 — composed last, from the four handoffs above plus the
+  // canonical contract evidence; never an independent derivation of sample/demo/preview records.
+  const approvedSampleDataPlan = buildApprovedSampleDataPlan({
+    identity: approvedIdentity,
+    navigationPlan: approvedNavigationPlan,
+    modulePlan: approvedModulePlan,
+    metadataPlan: approvedMetadataPlan,
+    contract: input.contract,
+    promptHash: input.promptHash ?? null,
+    buildId: input.buildId ?? null,
+  });
+
+  // Provenance Computation Collapse V1 — composed last, from every prior handoff plus CBGA's
+  // repaired inputs; never an independent reconstruction of ancestry.
+  const approvedProvenancePlan = buildApprovedProvenancePlan({
+    identity: approvedIdentity,
+    navigationPlan: approvedNavigationPlan,
+    modulePlan: approvedModulePlan,
+    metadataPlan: approvedMetadataPlan,
+    sampleDataPlan: approvedSampleDataPlan,
+    contract: input.contract,
+    repairedInputs,
+    legacyModulePlan: plans.modulePlan,
+    legacyRoutePlan: plans.routePlan,
+    legacyNavigationPlan: plans.navigationPlan,
+    surfacePlan: plans.surfacePlan,
+    finalGateOutcome: finalGate.outcome,
+    promptHash: input.promptHash ?? null,
+    buildId: input.buildId ?? null,
+  });
+
+  // Repair Reality Alignment V1 — every CBGA repair is classified exactly once; orchestrator extends
+  // this plan immutably after every real post-CBGA repair instead of reporting ambiguous recovery.
+  const approvedRepairRealityPlan = buildApprovedRepairRealityPlan({
+    contractId: input.contract.contractId,
+    cbgaRepairs: repairedInputs.actionsPerformed,
+    promptHash: input.promptHash ?? null,
+    buildId: input.buildId ?? null,
+  });
+
+  const approvedProductionBuildEnvelope = buildApprovedProductionBuildEnvelope({
+    approvedProductIdentity: approvedIdentity,
+    approvedNavigationPlan,
+    approvedModulePlan,
+    approvedMetadataPlan,
+    approvedSampleDataPlan,
+    approvedProvenancePlan,
+    approvedRepairRealityPlan,
+    canonicalProductContract: input.contract,
+    finalGateOutcome: finalGate.outcome,
+    repairsAppliedCount: repairedInputs.actionsPerformed.length,
+    promptHash: input.promptHash ?? null,
+    buildId: input.buildId ?? null,
+    projectId: input.projectId ?? null,
+    buildContextDecision: input.buildContextDecision ?? null,
+    buildIntentOverride: input.buildIntentOverride ?? null,
+  });
+
   return {
     readOnly: true,
     contractVersion: CONTRACT_BOUND_GENERATION_AUTHORITY_V4_CONTRACT,
     contractId: input.contract.contractId,
     productIdentity: input.contract.productIdentity,
+    approvedIdentity,
+    approvedNavigationPlan,
+    approvedModulePlan,
+    approvedMetadataPlan,
+    approvedSampleDataPlan,
+    approvedProvenancePlan,
+    approvedRepairRealityPlan,
+    approvedProductionBuildEnvelope,
     modulePlan: plans.modulePlan,
     routePlan: plans.routePlan,
     navigationPlan: plans.navigationPlan,

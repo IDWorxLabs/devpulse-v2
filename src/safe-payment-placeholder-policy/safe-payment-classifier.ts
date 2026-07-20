@@ -16,15 +16,19 @@ const CHECKOUT_PAYMENT_PROMPT_PATTERN =
 
 const REAL_TRANSACTION_PATTERNS: Array<{ pattern: RegExp; evidence: string }> = [
   { pattern: /\bcharge\s+(real|actual|live)\b/i, evidence: 'explicit real charge request' },
-  { pattern: /\bprocess\s+(real|live|actual)\s+payments?\b/i, evidence: 'process real payments' },
+  // Cover both "process" and "processes" / "processing" conjugations.
+  { pattern: /\bprocess(?:es|ing)?\s+(real|live|actual)\s+payments?\b/i, evidence: 'process real payments' },
+  { pattern: /\breal\s+payments?\b/i, evidence: 'real payments requested' },
   { pattern: /\b(real|live)\s+(credit\s+card|debit\s+card|payment)\s+(charges?|processing)\b/i, evidence: 'real card charges' },
   { pattern: /\bproduction\s+payment\s+integration\b/i, evidence: 'production payment integration' },
+  // Named payment providers imply real integration whether or not "live/production" is stated.
+  { pattern: /\b(stripe|paypal|braintree|square|adyen)\b/i, evidence: 'named payment provider' },
   { pattern: /\b(stripe|paypal|braintree|square|adyen)\s+(live|production)\b/i, evidence: 'live payment provider integration' },
   { pattern: /\b(sk_live|pk_live|rk_live|whsec_live)\b/i, evidence: 'live payment provider credential' },
   { pattern: /\bpayment\s+provider\s+credentials?\b/i, evidence: 'payment provider credentials' },
   { pattern: /\bmerchant\s+account\s+(credentials?|api)\b/i, evidence: 'merchant account credentials' },
   { pattern: /\bauthorize\.net\b.*\b(live|production)\b/i, evidence: 'Authorize.net production integration' },
-  { pattern: /\bprocess\s+credit\s+card\s+transactions?\b/i, evidence: 'process credit card transactions' },
+  { pattern: /\bprocess(?:es|ing)?\s+credit\s+card\s+transactions?\b/i, evidence: 'process credit card transactions' },
   { pattern: /\bwithout\s+provider\s+isolation\b/i, evidence: 'missing provider isolation' },
 ];
 

@@ -78,19 +78,33 @@ async function navigateToFeatureSurface(
   if (expectations.mountMode === 'direct-feature') {
     return;
   }
+  // Generated blueprint apps begin on a timed launch screen. Do not sample synchronously and
+  // conclude that there is no onboarding path merely because the welcome screen has not mounted
+  // yet; wait for the first actionable phase (or an already-open app shell).
+  await page.waitForSelector(
+    '[data-blueprint="welcome-screen"], [data-blueprint="auth"], [data-blueprint="auth-guest"], [data-blueprint="onboarding"], [data-blueprint="app-shell"]',
+    { timeout: 12_000, state: 'visible' },
+  );
   const welcomeVisible = await page.isVisible('[data-blueprint="welcome-screen"]');
-  if (!welcomeVisible) return;
-  await page.waitForSelector('[data-blueprint="welcome-screen"] .blueprint-btn-primary', {
-    timeout: 8000,
-    state: 'visible',
-  });
-  await page.clickSelector('[data-blueprint="welcome-screen"] .blueprint-btn-primary');
+  if (welcomeVisible) {
+    await page.waitForSelector('[data-blueprint="welcome-screen"] .blueprint-btn-primary', {
+      timeout: 8000,
+      state: 'visible',
+    });
+    await page.clickSelector('[data-blueprint="welcome-screen"] .blueprint-btn-primary');
+    await page.waitForSelector('[data-blueprint="onboarding"], [data-blueprint="app-shell"]', {
+      timeout: 8_000,
+      state: 'visible',
+    });
+  }
   const guestVisible = await page.isVisible('[data-blueprint="auth-guest"]');
   if (guestVisible) {
     await page.clickSelector('[data-blueprint="auth-guest"]');
   }
-  await page.waitForSelector('[data-blueprint="onboarding"]', { timeout: 5000, state: 'visible' });
-  await page.clickRoleButton('Skip');
+  const onboardingVisible = await page.isVisible('[data-blueprint="onboarding"]');
+  if (onboardingVisible) {
+    await page.clickRoleButton('Skip');
+  }
   await page.waitForSelector('[data-blueprint="app-shell"]', { timeout: 8000, state: 'visible' });
   const navLabel = expectations.featureModules[0]?.navLabel ?? 'Features';
   await page.clickRoleButton(navLabel);
@@ -142,11 +156,37 @@ export async function runContractDerivedDomReality(input: {
       .filter(Boolean),
   );
 
+  // A modular feature router mounts only the ACTIVE module at a time. Proving every module is
+  // "mounted" therefore means navigating to each via its nav control and confirming it renders —
+  // not requiring all modules to be simultaneously present at the root. The home module (mounted
+  // at `/`) is what subsequent surface/interaction checks expect, so we restore it afterward.
+  const navLabelById = new Map(
+    input.expectations.featureModules
+      .filter((m) => typeof m.navLabel === 'string' && m.navLabel.length > 0)
+      .map((m) => [m.id, m.navLabel as string] as const),
+  );
+  const homeModuleId = input.expectations.primaryModuleId;
+  const homeNavLabel = homeModuleId ? navLabelById.get(homeModuleId) ?? null : null;
+
   for (const step of input.steps) {
     switch (step.kind) {
       case 'feature-mounted': {
         const selector = step.selectors.featureRoot ?? `[data-feature-module="${step.moduleId}"]`;
-        const visible = await input.page.isVisible(selector);
+        let visible = await input.page.isVisible(selector);
+        let navigatedAway = false;
+        if (!visible && step.moduleId && step.moduleId !== homeModuleId) {
+          const navLabel = navLabelById.get(step.moduleId);
+          if (navLabel) {
+            try {
+              await input.page.clickRoleButton(navLabel);
+              await input.page.waitForSelector(selector, { timeout: 4_000, state: 'visible' });
+              navigatedAway = true;
+            } catch {
+              // fall through to a final visibility probe
+            }
+            visible = await input.page.isVisible(selector);
+          }
+        }
         record(checks, {
           id: step.id,
           stageId: 'DOM_REALITY',
@@ -155,6 +195,20 @@ export async function runContractDerivedDomReality(input: {
           detail: visible ? `${step.moduleId} mounted` : `${step.moduleId} not mounted in DOM`,
           critical: step.critical,
         });
+        // Restore the home surface so later DOM/interaction checks see the primary module.
+        if (navigatedAway && homeNavLabel) {
+          try {
+            await input.page.clickRoleButton(homeNavLabel);
+            if (homeModuleId) {
+              await input.page.waitForSelector(
+                `[data-feature-module="${homeModuleId}"], [data-root-feature="${homeModuleId}"]`,
+                { timeout: 4_000, state: 'visible' },
+              );
+            }
+          } catch {
+            // best effort — home restore failure is surfaced by later home-surface checks
+          }
+        }
         break;
       }
       case 'route-registered': {

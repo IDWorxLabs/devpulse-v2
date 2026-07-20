@@ -47,6 +47,7 @@ export interface PromptFeatureExtraction {
   androidPhonePreviewRequired: boolean;
   isCustomDomainPrompt: boolean;
   explicitModulesProvided: boolean;
+  structuredCoreModulesProvided?: boolean;
   sanitizedModuleCount: number;
   rawExtractedModuleCount: number;
 }

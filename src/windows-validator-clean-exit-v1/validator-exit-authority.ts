@@ -12,6 +12,7 @@ import type { ValidatorCleanExitOptions } from './windows-validator-clean-exit-t
 import {
   closeHttpServerSafely,
   closeRegisteredValidatorHttpServers,
+  registerValidatorHttpServer,
 } from './validator-http-server-shutdown.js';
 
 async function closeUndiciGlobalDispatcher(): Promise<void> {
@@ -65,9 +66,6 @@ export async function exitValidator(
   if (process.platform === 'win32') {
     await new Promise<void>((resolve) => setTimeout(resolve, 150));
     await settleValidatorEventLoop();
-    if (code === 0) {
-      return;
-    }
   }
   await safeProcessExit(code);
 }
@@ -77,6 +75,7 @@ export async function startValidatorHttpServer(
   host = '127.0.0.1',
 ): Promise<{ server: Server; baseUrl: string; close: () => Promise<void> }> {
   const server = createServer();
+  registerValidatorHttpServer(server);
   await new Promise<void>((resolve, reject) => {
     const onError = (err: Error) => reject(err);
     server.once('error', onError);

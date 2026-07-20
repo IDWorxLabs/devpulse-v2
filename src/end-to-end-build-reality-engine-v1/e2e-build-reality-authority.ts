@@ -3,7 +3,7 @@
  * Proves engineering reality matches user-visible reality. No application-specific logic.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { assessRequirementsToPlanExecutionContract } from '../requirements-to-plan-execution-contract/index.js';
@@ -114,10 +114,17 @@ export async function runEndToEndBuildReality(
   );
 
   t0 = performance.now();
+  // When the orchestrator already completed a real production build (skipFullBuild), honor its
+  // generation-ready signal — a second, divergent planning pass must not soft-fail READY builds.
+  const planningReady = input.buildReady === true || buildReady;
   markStage(
     'PLANNING',
-    buildReady,
-    buildReady ? 'BUILD_READY contract produced' : planning.report.buildReadyContract?.readinessState ?? 'not ready',
+    planningReady,
+    planningReady
+      ? input.buildReady === true && !buildReady
+        ? 'BUILD_READY accepted from completed production build plan'
+        : 'BUILD_READY contract produced'
+      : planning.report.buildReadyContract?.readinessState ?? 'not ready',
     t0,
   );
 
@@ -374,7 +381,10 @@ export async function runEndToEndBuildReality(
             expectations,
             steps: plan,
             page: domPage,
-            skipNavigation: true,
+            // Preview Authority verifies workspace/URL identity, but intentionally does not drive
+            // launch, welcome, authentication, onboarding, or shell navigation. DOM Reality must
+            // traverse that prompt-derived UI path before asserting feature mounts.
+            skipNavigation: false,
           });
           checks.push(...domResult.checks);
           mountedFeatureModules = domResult.mountedFeatureModules;
@@ -613,6 +623,34 @@ export async function runEndToEndBuildReality(
 
   if (previewAuthorityAudit?.evidencePath) {
     evidence = { ...evidence, previewAuthorityAuditPath: previewAuthorityAudit.evidencePath };
+  }
+
+  if (process.env.AIDEVENGINE_E2E_DEBUG === '1') {
+    try {
+      const dbgDir = join(input.projectRootDir, '.end-to-end-build-reality', projectId);
+      mkdirSync(dbgDir, { recursive: true });
+      writeFileSync(
+        join(dbgDir, 'stage-debug.json'),
+        `${JSON.stringify(
+          {
+            verdict,
+            failingStage,
+            workspaceDir,
+            previewUrl,
+            stages: stages.map((s) => ({ stageId: s.stageId, passed: s.passed, detail: s.detail })),
+            criticalChecks: checks
+              .filter((c) => c.critical && !c.passed)
+              .map((c) => ({ stageId: c.stageId, detail: c.detail })),
+            falseSuccess: falseSuccessFindings.map((f) => ({ code: f.code, critical: f.critical, detail: f.detail })),
+          },
+          null,
+          2,
+        )}\n`,
+        'utf8',
+      );
+    } catch {
+      // debug only
+    }
   }
 
   let autofixReport: BuildRealityAutofixReport | null = null;

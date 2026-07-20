@@ -93,9 +93,24 @@ export function buildMaterializationQualityCategoryScores(
   const profile = String(manifest.selectedProfile) as MaterializationProfile;
   const definition = getProfileFeatureDefinition(profile, manifest.prompt);
   const expectedModules = definition.featureModules.filter((moduleId) => moduleId !== 'persistence');
-  const presentModules = manifest.featureModuleDetails.map((entry) => entry.id);
+  // featureModuleDetails can be empty after forensic finalize even when modules exist on disk.
+  // Use every identity surface already present on the manifest so coverage does not false-report
+  // 0/N missing while featureModules / directories prove the modules were generated.
+  const presentModules = [
+    ...manifest.featureModules,
+    ...manifest.featureModuleDirectories.map((directory) =>
+      directory.replace(/\\/g, '/').split('/').filter(Boolean).at(-1) ?? directory,
+    ),
+    ...manifest.featureModuleDetails.map((entry) => entry.id),
+    ...manifest.featureModuleDetails.map((entry) => entry.name),
+  ].filter(Boolean);
   const missingModules = expectedModules.filter(
-    (moduleId) => !presentModules.some((present) => present.toLowerCase().includes(moduleId.toLowerCase())),
+    (moduleId) =>
+      !presentModules.some((present) => {
+        const left = present.toLowerCase();
+        const right = moduleId.toLowerCase();
+        return left === right || left.includes(right) || right.includes(left);
+      }),
   );
 
   const manifestPath = join(bundle.workspaceDir, GENERATED_APP_MANIFEST_FILENAME);

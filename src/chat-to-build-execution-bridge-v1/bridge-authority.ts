@@ -19,6 +19,7 @@ import {
 } from '../project-resume-state/index.js';
 import {
   bootstrapProjectAndSessionForBuild,
+  deriveProjectNameFromPrompt,
   enrichBrainPayloadWithProjectSession,
   finalizeProjectSessionAfterBuild,
 } from '../project-session-continuity-v1/index.js';
@@ -55,6 +56,7 @@ import {
   HTTP_ROUTING_FORENSIC_EVENTS,
   recordHttpForensicStage,
 } from '../command-center-http-routing-forensic-audit-v1/index.js';
+import { getRegistryProject } from '../project-registry-v1/project-registry-v1-store.js';
 
 function auditBridgeEvent(input: {
   auditId?: string | null;
@@ -153,7 +155,12 @@ function hashPromptForBridge(prompt: string): string {
  * straight into the decision authority itself, which is the single place override
  * acceptance/rejection rules live (requirement 5) — it never bypasses the classification below.
  */
-function resolveBridgeBuildDecision(input: ChatToBuildBridgeInput, buildPrompt: string): BuildDecisionResult {
+function resolveBridgeBuildDecision(
+  input: ChatToBuildBridgeInput,
+  buildPrompt: string,
+  currentProjectIdentitySummary: string | null,
+  hasKnownExistingProject: boolean,
+): BuildDecisionResult {
   if (input.confirmFreshCopy === true) {
     return {
       readOnly: true,
@@ -184,8 +191,8 @@ function resolveBridgeBuildDecision(input: ChatToBuildBridgeInput, buildPrompt: 
     rawPrompt: buildPrompt,
     requestedProjectId: input.activeProjectId ?? null,
     requestedProjectName: input.projectName ?? null,
-    hasKnownExistingProject: Boolean(input.activeProjectId),
-    currentProjectIdentitySummary: null,
+    hasKnownExistingProject,
+    currentProjectIdentitySummary,
     buildIntentOverride: input.buildIntentOverride ?? null,
   });
 }
@@ -224,6 +231,7 @@ function buildNewBuildConfirmationPayload(input: {
     outcome: 'NEW_BUILD_CONFIRMATION_REQUIRED',
     message,
     currentPromptSummary: summarizePromptForConfirmation(input.buildPrompt),
+    activeProjectId: input.activeProjectId,
     activeProjectSummary: input.activeProjectName ?? input.activeProjectId ?? null,
     choices: [
       {
@@ -337,12 +345,23 @@ export async function executeChatToBuildBridge(
   });
 
   let buildPrompt = input.message.trim();
+  const selectedProject = input.activeProjectId
+    ? getRegistryProject(input.activeProjectId, input.rootDir)
+    : null;
+  const currentProjectIdentitySummary = selectedProject
+    ? [selectedProject.name, selectedProject.summary].filter(Boolean).join(' — ')
+    : input.projectName?.trim() || null;
 
   // New Build Decision Authority — classifies this request as NEW_BUILD,
   // CONTINUE_EXISTING_PROJECT, or AMBIGUOUS_REQUIRES_CONFIRMATION from current-request evidence
   // only, before any duplicate/resume/activeProjectId logic can influence the outcome. See
   // src/project-context-isolation-v4/.
-  const buildDecision = resolveBridgeBuildDecision(input, buildPrompt);
+  const buildDecision = resolveBridgeBuildDecision(
+    input,
+    buildPrompt,
+    currentProjectIdentitySummary,
+    Boolean(selectedProject),
+  );
 
   if (buildDecision.decision === 'AMBIGUOUS_REQUIRES_CONFIRMATION') {
     machine.transition('PROJECT_IDENTITY', {
@@ -550,10 +569,14 @@ export async function executeChatToBuildBridge(
   });
 
   try {
+    const promptBoundProjectName =
+      buildDecision.decision === 'NEW_BUILD'
+        ? deriveProjectNameFromPrompt(buildPrompt)
+        : (input.projectName ?? resumeRoute.resumingProjectName ?? undefined);
     const sessionBootstrap = bootstrapProjectAndSessionForBuild({
       rawPrompt: buildPrompt,
       projectId: effectiveProjectId,
-      projectName: input.projectName ?? resumeRoute.resumingProjectName ?? undefined,
+      projectName: promptBoundProjectName,
       confirmFreshCopy: input.confirmFreshCopy === true || buildDecision.decision === 'NEW_BUILD',
       rejectDuplicates: input.rejectDuplicates === true,
       rootDir: input.rootDir,
@@ -566,12 +589,18 @@ export async function executeChatToBuildBridge(
       ['PLANNING', 'Planning started', 'Autonomous planning pipeline engaged.'],
       ['ARCHITECTURE', 'Architecture complete', 'Architecture brief materialized.'],
       ['FEATURE_GENERATION', 'Universal Feature Contract generated', 'Feature contract approved for build.'],
-      ['CODE_GENERATION', 'Code generation started', 'Generating feature modules and source files.'],
-      ['WORKSPACE_BUILD', 'Workspace materialization', 'Writing workspace artifacts.'],
     ] as const) {
       machine.transition(stage[0], { title: stage[1], detail: stage[2] });
       machine.completeLast();
     }
+
+    // Materialization / module generation are only marked complete after the orchestrator returns
+    // without a GPCA pre-generation block — never optimistic.
+    machine.transition('CODE_GENERATION', {
+      title: 'Code generation started',
+      detail: 'Awaiting Contract-Bound Generation Authority and Generation Pipeline Compliance.',
+      status: 'Active',
+    });
 
     auditBridgeEvent({
       auditId: input.chatExecutionAuditId,
@@ -606,6 +635,8 @@ export async function executeChatToBuildBridge(
       projectName: sessionBootstrap.projectName,
       buildDecisionKind: buildDecision.decision,
       buildIntentOverride: buildDecision.overrideApplied ?? null,
+      freshProjectContextCreated:
+        buildDecision.decision === 'NEW_BUILD' && sessionBootstrap.createdProject,
       resumeExistingProject:
         buildDecision.decision === 'CONTINUE_EXISTING_PROJECT' &&
         (buildDecision.overrideApplied === 'CONTINUE_EXISTING_PROJECT' ||
@@ -626,22 +657,48 @@ export async function executeChatToBuildBridge(
       machine.completeLast();
     }
 
-    for (const stage of [
-      ['RUNTIME_START', 'Runtime started', 'Generated workspace runtime activation attempted.'],
-      [
-        'LIVE_PREVIEW',
-        'Live Preview started',
-        buildResult.previewUrl ? `Preview URL: ${buildResult.previewUrl}` : 'Preview activation attempted.',
-      ],
-      ['VALIDATION', 'Validation running', 'Feature reality and workspace validation executed.'],
-      ['FOUNDER_EVIDENCE', 'Engineering report generated', 'Founder evidence collection complete.'],
-    ] as const) {
-      machine.transition(stage[0], {
-        title: stage[1],
-        detail: stage[2],
-        status: buildResult.status === 'FAILED' && stage[0] === 'VALIDATION' ? 'Warning' : 'Completed',
+    const gpcaBlockedBuild =
+      buildResult.gpcaHardStop === true ||
+      buildResult.gpcaBlockedMaterialization === true ||
+      buildResult.gpcaBlockedPreviewActivation === true;
+
+    // Do not emit optimistic completed events for stages that never ran when GPCA blocked.
+    if (!gpcaBlockedBuild) {
+      machine.transition('CODE_GENERATION', {
+        title: 'Modules generated',
+        detail: 'Feature modules and source files generated.',
+        status: 'Completed',
       });
       machine.completeLast();
+      machine.transition('WORKSPACE_BUILD', {
+        title: 'Workspace materialized',
+        detail: 'Workspace artifacts written.',
+        status: 'Completed',
+      });
+      machine.completeLast();
+      for (const stage of [
+        ['RUNTIME_START', 'Runtime started', 'Generated workspace runtime activation attempted.'],
+        [
+          'LIVE_PREVIEW',
+          'Live Preview started',
+          buildResult.previewUrl ? `Preview URL: ${buildResult.previewUrl}` : 'Preview activation attempted.',
+        ],
+        ['VALIDATION', 'Validation running', 'Feature reality and workspace validation executed.'],
+        ['FOUNDER_EVIDENCE', 'Engineering report generated', 'Founder evidence collection complete.'],
+      ] as const) {
+        machine.transition(stage[0], {
+          title: stage[1],
+          detail: stage[2],
+          status: buildResult.status === 'FAILED' && stage[0] === 'VALIDATION' ? 'Warning' : 'Completed',
+        });
+        machine.completeLast();
+      }
+    } else {
+      machine.transition('VALIDATION', {
+        title: 'Generation compliance validation',
+        detail: buildResult.failureReason ?? 'Generation pipeline compliance blocked this build.',
+        status: 'Failed',
+      });
     }
 
     const finalState: ChatToBuildEngineeringState =

@@ -8,6 +8,11 @@ import type { AeeFinalReport, AeeExecutiveDecisionResult } from './aee-types.js'
 import { AEE_OVERRIDE_ASE_DENIAL_EVENT } from './aee-types.js';
 import { buildStatusSeparateFromPreview } from './aee-preview-contract.js';
 import type { BuildProfileClassificationEvidence } from '../build-result-conversational-intelligence/build-result-conversational-types.js';
+import {
+  projectProductionSurfaceStatus,
+  resolveProductionSurfaceBuildOutcomeFromResult,
+} from '../production-surface-integration/index.js';
+import { isBlockedBuildOutcome } from '../build-context-integrity/build-outcome.js';
 
 export const BUILD_RESPONSE_SOURCE_AEE_CONTROLLED = 'AEE_CONTROLLED_RESULT' as const;
 
@@ -238,6 +243,63 @@ export function buildAeeControlledResponseEnvelope(
 }
 
 export function composeAeeAwareBuildChatResponse(result: OnePromptLivePreviewBuildResult): string {
+  const surfaceOutcome = resolveProductionSurfaceBuildOutcomeFromResult(result);
+  const surfaceStatus = projectProductionSurfaceStatus(surfaceOutcome);
+  if (isBlockedBuildOutcome(surfaceOutcome)) {
+    return [
+      surfaceStatus.completionWording,
+      '',
+      surfaceStatus.engineeringSummary,
+      '',
+      surfaceStatus.nextStep,
+      result.failureReason ? `Detail: ${result.failureReason}` : null,
+      '',
+      'See Execution Trace for canonical BuildOutcome evidence.',
+    ]
+      .filter(Boolean)
+      .join('\n');
+  }
+
+  // GPCA Production Enforcement Fix V1 — a GPCA hard-stop is always terminal and always takes
+  // priority over every other status branch below: no build-spine/preview text is shown, because
+  // no build-spine/preview stage was allowed to run past the gate. Generic across every product
+  // domain — nothing here names a specific app kind, module, or contract.
+  if (result.gpcaHardStop) {
+    const report = result.gpcaComplianceReport;
+    const detectionLines = report
+      ? [
+          `Consumed Contract-Bound Generation Authority: ${
+            report.contractBypassDetected.length === 0 ? 'YES' : 'NO'
+          }`,
+          `Generic shell detected: ${report.genericShellSurfacesBlocked.length > 0 || report.blueprintBypassDetected.length > 0 ? 'YES' : 'NO'}`,
+          `Legacy/template generator detected: ${
+            report.legacyGeneratorsDetected.length > 0 || report.templateGeneratorsDetected.length > 0 ? 'YES' : 'NO'
+          }`,
+          // Rendered Content Evidence Expansion V1 — reports what the rendered-output audit found,
+          // independent of the structural checks above (see GpcaComplianceReport.renderedContentAudit).
+          `Rendered content non-compliant: ${
+            report.renderedContentAudit && report.renderedContentAudit.gateOutcome !== 'RENDERED_CONTENT_ALLOWED' ? 'YES' : 'NO'
+          }`,
+          `Gate outcome: ${report.finalGateOutcome}`,
+        ]
+      : [];
+    return [
+      'Build blocked before generation.',
+      '',
+      'Reason: Generation pipeline is not compliant with the approved product contract.',
+      '',
+      ...detectionLines,
+      'Blocked materialization: YES',
+      'Blocked preview activation: YES',
+      '',
+      result.failureReason ? `Detail: ${result.failureReason}` : null,
+      '',
+      'See Execution Trace / gpcaComplianceReport for the full per-stage compliance evidence.',
+    ]
+      .filter((line) => line !== null)
+      .join('\n');
+  }
+
   const profileLabel = result.generatedProfile ?? 'your application';
   const envelope = buildAeeControlledResponseEnvelope(result);
   const report = result.aeeFinalReport;

@@ -16,6 +16,7 @@ import type {
   UniversalFeatureRule,
   UniversalFeatureWorkflow,
 } from './universal-feature-contract-types.js';
+import { computeFeatureContractCompleteness } from './feature-contract-completeness.js';
 
 function slugify(value: string): string {
   return value
@@ -88,6 +89,49 @@ function crudActions(entityRef: UniversalFeatureEntity, extras: UniversalFeature
     },
   ];
   return [...base, ...extras];
+}
+
+function alignGenericContractToApprovedModules(
+  contract: UniversalFeatureContract,
+  entries: NonNullable<BuildUniversalFeatureContractInput['approvedModuleEntries']>,
+): UniversalFeatureContract {
+  const entities = entries.map((entry, index) =>
+    entity(
+      entry.moduleId.replace(/-/g, '_'),
+      entry.displayName,
+      entry.displayName,
+      entry.displayName,
+      index === 0,
+    ),
+  );
+  if (entities.length === 0) return contract;
+  const primary = entities[0]!;
+  return {
+    ...contract,
+    entities,
+    actions: entities.flatMap((entry) => crudActions(entry)),
+    rules: entities.map((entry) => ({
+      id: `${entry.id}-label-required`,
+      entityId: entry.id,
+      label: `${entry.label} must have a name`,
+      required: true,
+    })),
+    workflows: [
+      {
+        id: `${primary.id}-lifecycle`,
+        entityId: primary.id,
+        label: 'Create → Update → Complete',
+        stages: ['draft', 'active', 'completed'],
+        required: true,
+      },
+    ],
+    outcomes: entities.map((entry) => ({
+      id: `${entry.id}-persisted`,
+      entityId: entry.id,
+      label: `${entry.label} records persist locally`,
+      required: true,
+    })),
+  };
 }
 
 function buildProfileContract(input: {
@@ -540,8 +584,7 @@ function buildProfileContract(input: {
       };
     }
 
-    case 'HABIT_TRACKER_WEB_V1':
-    case 'GENERIC_CUSTOM_APP_V1': {
+    case 'HABIT_TRACKER_WEB_V1': {
       const habit = entity('habit', 'Habit', 'Habits', 'Habits', true);
       return {
         contractVersion: '1.0',
@@ -560,6 +603,77 @@ function buildProfileContract(input: {
       };
     }
 
+    case 'GENERIC_CUSTOM_APP_V1': {
+      // Derive entities from prompt-faithful modules — never fall through to habit-tracker shells.
+      const plan = resolvePromptFaithfulBuildPlan(input.rawPrompt);
+      const moduleIds =
+        plan.definition.featureModules.filter((m) => !['auth', 'persistence', 'dashboard', 'settings'].includes(m))
+          .length > 0
+          ? plan.definition.featureModules.filter((m) => !['auth', 'persistence', 'dashboard', 'settings'].includes(m))
+          : ['records'];
+      const entities = moduleIds.map((moduleId, index) => {
+        const label = moduleId
+          .split('-')
+          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+          .join(' ');
+        const singular =
+          label.endsWith('ies') && label.length > 3
+            ? `${label.slice(0, -3)}y`
+            : label.endsWith('s') && label.length > 3
+              ? label.slice(0, -1)
+              : label;
+        return entity(moduleId.replace(/-/g, '_'), singular, label, label, index === 0);
+      });
+      const primary = entities[0]!;
+      const markComplete = includesAny(lower, ['mark complete', 'complete', 'done']);
+      return {
+        contractVersion: '1.0',
+        contractId: input.contractId,
+        productProfile: input.profile,
+        productName: extractPromptAppTitle(input.rawPrompt),
+        generatedAt,
+        sourcePrompt: input.rawPrompt,
+        entities,
+        actions: entities.flatMap((entry) =>
+          crudActions(
+            entry,
+            markComplete && entry.id === primary.id
+              ? [
+                  {
+                    id: `mark-${entry.id}-complete`,
+                    entityId: entry.id,
+                    verb: 'complete',
+                    label: 'Mark Complete',
+                    required: true,
+                  },
+                ]
+              : [],
+          ),
+        ),
+        rules: entities.map((entry) => ({
+          id: `${entry.id}-label-required`,
+          entityId: entry.id,
+          label: `${entry.label} must have a name`,
+          required: true,
+        })),
+        workflows: [
+          {
+            id: `${primary.id}-lifecycle`,
+            entityId: primary.id,
+            label: 'Create → Update → Complete',
+            stages: ['draft', 'active', 'completed'],
+            required: true,
+          },
+        ],
+        outcomes: entities.map((entry) => ({
+          id: `${entry.id}-persisted`,
+          entityId: entry.id,
+          label: `${entry.label} records persist locally`,
+          required: true,
+        })),
+      };
+    }
+
     default:
       throw new Error(`Unsupported profile: ${input.profile satisfies never}`);
   }
@@ -573,11 +687,18 @@ export function buildUniversalFeatureContract(
     throw new Error('Unable to infer application profile from user idea');
   }
 
-  const contract = buildProfileContract({
+  let contract = buildProfileContract({
     contractId: input.contractId,
     rawPrompt: input.rawPrompt,
     profile,
   });
+  if (
+    profile === 'GENERIC_CUSTOM_APP_V1' &&
+    input.approvedModuleEntries !== undefined &&
+    input.approvedModuleEntries !== null
+  ) {
+    contract = alignGenericContractToApprovedModules(contract, input.approvedModuleEntries);
+  }
 
   if (input.requirements?.length) {
     for (const requirement of input.requirements) {
@@ -595,7 +716,70 @@ export function buildUniversalFeatureContract(
     }
   }
 
-  return contract;
+  // Identity Computation Collapse V1 (PPC-1207 No Parallel Truth) — a single override point
+  // instead of touching every per-profile branch above. When the caller supplies the approved,
+  // CBGA-repaired identity, it replaces `productName` unconditionally; every per-profile branch's
+  // own `extractPromptAppTitle(rawPrompt)` derivation above only determines the result when no
+  // approved identity was supplied (pre-CBGA/isolated/test-only calls).
+  // Navigation Computation Collapse V1 (PPC-1207 No Parallel Truth) — the same single-override
+  // pattern as `approvedProductName` above: when the caller supplies the approved, CBGA-repaired
+  // navigation plan's labels, they replace `navigation` unconditionally; no per-profile branch
+  // above independently derives `navigation` from `entities[].navLabel` or any other source.
+  const withNavigation =
+    input.approvedNavigationLabels !== undefined && input.approvedNavigationLabels !== null
+      ? { ...contract, navigation: input.approvedNavigationLabels }
+      : contract;
+
+  // Module Computation Collapse V1 (PPC-1207 No Parallel Truth) — the same single-override
+  // pattern as `approvedNavigationLabels` above: when the caller supplies the approved,
+  // CBGA-repaired module plan's moduleIds, they replace `modules` unconditionally; no per-profile
+  // branch above independently derives `modules` from `entities[].id` or any other source.
+  const withModules =
+    input.approvedModuleIds !== undefined && input.approvedModuleIds !== null
+      ? { ...withNavigation, modules: input.approvedModuleIds }
+      : withNavigation;
+
+  // Metadata Computation Collapse V1 (PPC-1207 No Parallel Truth) — the same single-override
+  // pattern as `approvedModuleIds` above: when the caller supplies the approved, CBGA-composed
+  // metadata projection, it replaces `metadata` unconditionally; no per-profile branch above
+  // independently derives title/subtitle/counts from the prompt or entity list.
+  const withMetadata =
+    input.approvedMetadata !== undefined && input.approvedMetadata !== null
+      ? { ...withModules, metadata: input.approvedMetadata }
+      : withModules;
+
+  // Sample Data Computation Collapse V1 (PPC-1207 No Parallel Truth) — the same single-override
+  // pattern as `approvedMetadata` above: when the caller supplies the approved, CBGA-composed sample
+  // data projection, it replaces `sampleData` unconditionally; no per-profile branch above
+  // independently derives demo/preview/seed records.
+  const withSampleData =
+    input.approvedSampleData !== undefined && input.approvedSampleData !== null
+      ? { ...withMetadata, sampleData: input.approvedSampleData }
+      : withMetadata;
+
+  const withProvenance =
+    input.approvedProvenance !== undefined && input.approvedProvenance !== null
+      ? { ...withSampleData, provenance: input.approvedProvenance }
+      : withSampleData;
+
+  const withRepairReality =
+    input.approvedRepairReality !== undefined && input.approvedRepairReality !== null
+      ? { ...withProvenance, repairReality: input.approvedRepairReality }
+      : withProvenance;
+
+  const withIdentity =
+    input.approvedProductName && input.approvedProductName.trim().length > 0
+      ? { ...withRepairReality, productName: input.approvedProductName }
+      : withRepairReality;
+  return input.approvedCanonicalContract
+    ? {
+        ...withIdentity,
+        completeness: computeFeatureContractCompleteness({
+          canonical: input.approvedCanonicalContract,
+          featureContract: withIdentity,
+        }),
+      }
+    : withIdentity;
 }
 
 export function buildUniversalFeatureContractJson(input: BuildUniversalFeatureContractInput): string {

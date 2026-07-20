@@ -25,15 +25,23 @@ export const AEO_REPAIR_CAPABILITY_REGISTRY: readonly AeoRepairCapabilityDefinit
       'CONTRACT_TRACEABILITY_FAILURE',
       'GENERATOR_INPUT_BYPASS',
       'PIPELINE_COMPLIANCE_FAILURE',
+      // Rendered Content Evidence Expansion V1 — structure passed, but real rendered output did not.
+      'RENDERED_CONTENT_NON_COMPLIANT',
+      'PLACEHOLDER_APPLICATION',
+      'GENERIC_TEMPLATE_OUTPUT',
+      'RENDERED_CONTRACT_DRIFT',
     ],
     inputEvidenceRequired: [
       'CanonicalProductContract (product-faithfulness-v2)',
       'CbgaGenerationReport (contract-bound-generation-authority-v4)',
       'the actual proposed/generated module, route, navigation, title, and file-path evidence for this build',
+      'GpcaRenderedContentAudit — real rendered headings/navigation/buttons/titles/text extracted from this build\'s actual generated files (rendered-content-collector.ts)',
     ],
     // GPCA is a production-wired audit/gate authority, not a repair: it only ever proves whether
     // the pipeline complied and blocks when it did not. It never writes or regenerates a file, so
     // it is intentionally never safe to "auto-run as a repair" — there is no repair action to run.
+    // This is also why AEO never attempts preview recovery for a rendered-content block: there is no
+    // "retry the same dev server" action that could ever change what a generator already rendered.
     safeToRunAutomatically: false,
     maxAttempts: 0,
     affectedStages: ['MODULE_GENERATION', 'WORKSPACE_MATERIALIZATION'],
@@ -43,8 +51,9 @@ export const AEO_REPAIR_CAPABILITY_REGISTRY: readonly AeoRepairCapabilityDefinit
     mayChangeProductIdentity: false,
     limitations: [
       'GPCA never generates code and never repairs a generator — when it blocks, the underlying generator (e.g. the blueprint generator\'s unconditional shell pages) still needs a real, separate fix.',
-      'Runs twice per build in one-prompt-build-orchestrator.ts: once pre-materialization (verifies proposed inputs) and once post-materialization (verifies real generated files) — before the dev server / live preview is ever started.',
+      'Runs twice per build in one-prompt-build-orchestrator.ts: once pre-materialization (verifies proposed inputs) and once post-materialization (verifies real generated files, now including rendered-content evidence) — before the dev server / live preview is ever started.',
       'Engineering Intelligence is only invoked for these failure classes if EIAA\'s policy allows it after GPCA proves the generator itself lacks the capability to satisfy compliance.',
+      'Rendered Content Evidence Expansion V1 only ever turns an otherwise-ALLOWED structural outcome into a block — it never overrides an existing structural block, and never runs before real generated files exist on disk.',
     ],
     confidence: 90,
   },
