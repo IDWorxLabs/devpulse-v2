@@ -3,7 +3,26 @@ dist/
 build/
 coverage/
 .playwright/
-.generated-builder-workspaces/
-.aidevengine/
 *.log
 .env
+
+# Runtime / generated application artifacts (never source)
+.generated-builder-workspaces/
+.generated-build-history/
+.end-to-end-build-reality/
+.aidev-projects/
+.cloud-execution-path-v1/
+.aidevengine/
+.aidevengine-audit/
+
+# Audit evidence directory: keep only compact permanent reports
+.aidev-audit-reports/*
+!.aidev-audit-reports/ADVERSARIAL_END_TO_END_GENERATION_AUDIT_V1_SUMMARY.json
+!.aidev-audit-reports/adversarial-e2e-generation-audit-v1-ledger.jsonl
+
+# Local scratch / diagnostics (not checkpoint evidence)
+tmp-debug-*.ts
+tmp-debug-*.mts
+debug_nav.mts
+tsc_baseline.txt
+tsc_full_output.txt
