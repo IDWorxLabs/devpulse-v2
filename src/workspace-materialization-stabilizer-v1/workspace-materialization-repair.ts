@@ -91,6 +91,21 @@ function minimalMainEntry(): string {
     '  </StrictMode>,',
     ');',
     '',
+    '/* AIDEVENGINE_PREVIEW_READINESS_HANDSHAKE_V1 */',
+    'requestAnimationFrame(() => {',
+    '  requestAnimationFrame(() => {',
+    "    try {",
+    "      document.documentElement.setAttribute('data-aidev-preview-hydrated', '1');",
+    "      document.documentElement.setAttribute('data-aidev-preview-route-ready', '1');",
+    "      document.documentElement.setAttribute('data-aidev-preview-ready', '1');",
+    "      const mount = document.getElementById('root');",
+    "      if (mount) mount.setAttribute('data-aidev-preview-ready', '1');",
+    '    } catch {',
+    '      /* ignore */',
+    '    }',
+    '  });',
+    '});',
+    '',
   ].join('\n');
 }
 

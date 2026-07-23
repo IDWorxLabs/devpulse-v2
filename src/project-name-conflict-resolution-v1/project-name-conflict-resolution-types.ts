@@ -19,6 +19,7 @@ export type ProjectNameConflictResolutionMode =
   | 'EXISTING_PROJECT_CONTINUATION'
   | 'EXISTING_PROJECT_RECOVERY'
   | 'VERSIONED_REBUILD'
+  | 'FRESH_ISOLATED_BUILD'
   | 'EXPLICIT_REJECTION';
 
 export interface ProjectIdentityContract {

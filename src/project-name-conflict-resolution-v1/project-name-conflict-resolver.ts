@@ -191,17 +191,18 @@ export function resolveProjectNameConflict(
     input.confirmFreshCopy === true ||
     promptRequestsFreshRebuild(input.rawPrompt ?? '')
   ) {
-    const versionedName = deriveVersionedRebuildName(requestedName, input.rootDir);
+    // Keep the user-facing display name; allocate a new internal project id + workspace.
+    // Do not rename the product in the UI (ContinuityHub stays ContinuityHub).
     return {
       readOnly: true,
       requestedName,
-      resolvedProjectName: versionedName,
+      resolvedProjectName: requestedName,
       projectId: null,
       workspacePath: null,
-      resolutionMode: 'VERSIONED_REBUILD',
+      resolutionMode: 'FRESH_ISOLATED_BUILD',
       conflictFound: true,
       continuationAllowed: true,
-      reason: `Fresh rebuild requested — creating versioned project "${versionedName}".`,
+      reason: `Fresh build requested — creating an isolated project that keeps display name "${requestedName}" with a new internal project id.`,
       existingProjectId: existing.projectId,
       shouldCreateProject: true,
       shouldFail: false,

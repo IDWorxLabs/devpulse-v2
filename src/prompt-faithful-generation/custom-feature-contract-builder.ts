@@ -19,6 +19,51 @@ import {
 } from './prompt-module-name-normalizer.js';
 import { resolveAssistiveCommunicationProfile } from './assistive-communication-profile.js';
 
+/**
+ * Derive expectedAppType from dominant modules / affirmative domain — never from a bare
+ * first slash-segment of a contaminated multi-label domain string.
+ */
+export function deriveExpectedAppTypeFromExtraction(extraction: PromptFeatureExtraction): string {
+  const modules = extraction.requiredModules ?? [];
+  const joined = modules.join(' ');
+  if (
+    /incident|continuity|runbook|escalation|stakeholder-directory|risk-register|on-call|post-incident|evidence-locker|status-page/.test(
+      joined,
+    )
+  ) {
+    return 'incident-continuity-operations';
+  }
+  if (modules.includes('contacts') && (modules.includes('deals') || modules.includes('leads') || /crm/i.test(extraction.domain))) {
+    return 'crm';
+  }
+  if (modules.includes('contacts') && modules.every((m) => ['contacts', 'notes', 'tasks', 'auth', 'dashboard'].includes(m))) {
+    return 'contacts';
+  }
+  if (modules.some((m) => /inventory|stock|products/.test(m))) {
+    return 'inventory-operations';
+  }
+  if (modules.some((m) => /cart|checkout/.test(m))) {
+    return 'ecommerce';
+  }
+  if (modules.some((m) => /appointment|booking/.test(m))) {
+    return 'appointments-scheduling';
+  }
+  const domain = (extraction.domain ?? '').trim().toLowerCase();
+  if (!domain || domain.startsWith('custom application')) {
+    return 'custom-application';
+  }
+  // Prefer full domain slug when it is already a single affirmative label.
+  if (!domain.includes('/')) {
+    return domain.replace(/\s+/g, '-');
+  }
+  // Multi-label domains: pick the first segment only when it is not a weak generic noun alone.
+  const first = domain.split('/')[0]?.trim().replace(/\s+/g, '-') ?? 'custom-application';
+  if (first === 'contacts' && !modules.includes('contacts')) {
+    return 'custom-application';
+  }
+  return first || 'custom-application';
+}
+
 export function buildCustomProfileFeatureDefinition(
   extraction: PromptFeatureExtraction,
   rawPrompt = '',
@@ -75,7 +120,9 @@ export function buildCustomProfileFeatureDefinition(
   return {
     readOnly: true,
     profile: assistiveProfile ?? 'GENERIC_CUSTOM_APP_V1',
-    expectedAppType: assistiveProfile ? 'assistive-communication' : extraction.domain.split('/')[0]?.trim().replace(/\s+/g, '-') ?? 'custom-app',
+    expectedAppType: assistiveProfile
+      ? 'assistive-communication'
+      : deriveExpectedAppTypeFromExtraction(extraction),
     featureModules: modules,
     routes,
     requiredUiTerms: [...new Set(uiTerms)].slice(0, 12),

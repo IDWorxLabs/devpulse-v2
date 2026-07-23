@@ -51,7 +51,23 @@ import {
   recordHttpForensicStage,
 } from '../src/command-center-http-routing-forensic-audit-v1/index.js';
 
-const MAX_BODY_BYTES = 16_384;
+/** Chat / brain JSON payloads stay intentionally modest. */
+export const BRAIN_MAX_BODY_BYTES = 16_384;
+/** Build-from-prompt accepts thorough production specs (ContinuityHub-scale). */
+export const BUILD_MAX_BODY_BYTES = 2_097_152; // 2 MiB
+/** @deprecated Use BRAIN_MAX_BODY_BYTES — kept for older imports. */
+const MAX_BODY_BYTES = BRAIN_MAX_BODY_BYTES;
+
+export class RequestBodyTooLargeError extends Error {
+  readonly code = 'REQUEST_BODY_TOO_LARGE' as const;
+  readonly statusCode = 413;
+  readonly maxBytes: number;
+  constructor(maxBytes: number) {
+    super(`Request body too large (limit ${maxBytes} bytes)`);
+    this.name = 'RequestBodyTooLargeError';
+    this.maxBytes = maxBytes;
+  }
+}
 const ROOT_DIR = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 
 export function sendBrainOperationalTruth(res: ServerResponse): void {
@@ -134,20 +150,35 @@ export function sendBrainHealth(res: ServerResponse, options?: { headOnly?: bool
   );
 }
 
-export function readRequestBody(req: IncomingMessage): Promise<string> {
+/**
+ * Reads the full request body up to `maxBytes`.
+ * Oversized bodies are drained to completion (no mid-stream destroy) so callers can return a
+ * structured HTTP 413 instead of closing the socket — which browsers surface as "Failed to fetch".
+ */
+export function readRequestBody(
+  req: IncomingMessage,
+  maxBytes: number = MAX_BODY_BYTES,
+): Promise<string> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
     let size = 0;
+    let tooLarge = false;
     req.on('data', (chunk: Buffer) => {
       size += chunk.length;
-      if (size > MAX_BODY_BYTES) {
-        reject(new Error('Request body too large'));
-        req.destroy();
+      if (size > maxBytes) {
+        tooLarge = true;
+        chunks.length = 0;
         return;
       }
-      chunks.push(chunk);
+      if (!tooLarge) chunks.push(chunk);
     });
-    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    req.on('end', () => {
+      if (tooLarge) {
+        reject(new RequestBodyTooLargeError(maxBytes));
+        return;
+      }
+      resolve(Buffer.concat(chunks).toString('utf8'));
+    });
     req.on('error', reject);
   });
 }

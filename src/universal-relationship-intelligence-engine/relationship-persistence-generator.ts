@@ -33,11 +33,11 @@ export type RelationshipLifecyclePolicy = 'RESTRICT' | 'CASCADE' | 'SET_NULL' | 
     },
     {
       relativePath: `${RUNTIME_ROOT}/link-store.ts`,
-      content: `/** Universal relationship link store — reuses B1 memory provider */
-import { createMemoryCrudProvider } from '../universal-crud-runtime/memory-provider';
+      content: `/** Universal relationship link store — durable CRUD provider (project-scoped) */
+import { createLocalStorageCrudProvider } from '../universal-crud-runtime/local-storage-provider';
 import type { RelationshipLinkRecord, RelationshipOperationResult } from './types';
 
-const provider = createMemoryCrudProvider<RelationshipLinkRecord & { label: string }>('universal-relationship-links');
+const provider = createLocalStorageCrudProvider<RelationshipLinkRecord & { label: string }>('universal-relationship-links');
 
 export function linkRecords(relationshipId: string, sourceId: string, targetId: string, orderedIndex: number | null = null): RelationshipOperationResult {
   if (!sourceId || !targetId) return { ok: false, message: 'Referential validation failed: missing endpoint' };

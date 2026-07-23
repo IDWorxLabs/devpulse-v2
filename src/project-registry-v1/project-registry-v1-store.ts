@@ -272,40 +272,14 @@ export function repairDuplicateActiveProjects(state: ProjectRegistryFile): Proje
   const archivedProjectIds: string[] = [];
   const keptProjectIds: string[] = [];
 
+  // Normalize whitespace only. Multiple ACTIVE projects may share a display name when each has a
+  // unique projectId (fresh builds of the same product). Do not archive same-name siblings.
   for (const record of state.projects) {
     const trimmed = record.name.trim();
     if (trimmed !== record.name) {
       record.name = trimmed;
       touchRecord(record);
       mutated = true;
-    }
-  }
-
-  const activeByNormalizedName = new Map<string, ProjectRegistryRecord[]>();
-  for (const record of state.projects) {
-    if (record.status !== 'ACTIVE') continue;
-    const normalized = normalizeProjectName(record.name);
-    const group = activeByNormalizedName.get(normalized) ?? [];
-    group.push(record);
-    activeByNormalizedName.set(normalized, group);
-  }
-
-  for (const group of activeByNormalizedName.values()) {
-    if (group.length <= 1) continue;
-    const primary = pickPrimaryActiveProject(group);
-    keptProjectIds.push(primary.projectId);
-    for (const duplicate of group) {
-      if (duplicate.projectId === primary.projectId) continue;
-      duplicate.status = 'ARCHIVED';
-      touchRecord(duplicate);
-      archivedNames.push(duplicate.name);
-      archivedProjectIds.push(duplicate.projectId);
-      repairedCount += 1;
-      mutated = true;
-      if (state.activeProjectId === duplicate.projectId) {
-        state.activeProjectId = primary.projectId;
-        mutated = true;
-      }
     }
   }
 
@@ -464,10 +438,23 @@ export function createRegistryProject(input: {
   summary?: string;
   rootDir?: string;
   projectKind?: ProjectRegistryRecord['projectKind'];
+  /**
+   * When true, multiple ACTIVE projects may share this display name; uniqueness is enforced by
+   * projectId only. Used by the build pipeline for genuine fresh builds of the same product.
+   * Manual `/api/projects/create` keeps the default (false) so explicit create still warns.
+   */
+  allowDuplicateDisplayName?: boolean;
 }): ProjectRegistryRecord {
-  const trimmed = validateCreateRegistryProjectName(input.name, input.rootDir);
+  const trimmed = input.name.trim();
+  if (!trimmed) {
+    throw new Error('Project name is required');
+  }
 
   const state = loadState(input.rootDir);
+  if (input.allowDuplicateDisplayName !== true) {
+    assertActiveProjectNameAvailable(state, trimmed);
+  }
+
   const stamp = nowIso();
   const record: ProjectRegistryRecord = {
     projectId: generateProjectId(trimmed),

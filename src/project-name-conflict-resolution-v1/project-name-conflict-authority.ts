@@ -113,6 +113,11 @@ export function applyProjectIdentityForBuild(
       summary: input.summary ?? input.rawPrompt?.slice(0, 160),
       rootDir: input.rootDir,
       projectKind: 'USER',
+      // Fresh / same-display-name builds are unique by projectId, not by display name.
+      allowDuplicateDisplayName:
+        plan.resolutionMode === 'FRESH_ISOLATED_BUILD' ||
+        plan.resolutionMode === 'VERSIONED_REBUILD' ||
+        plan.resolutionMode === 'NO_CONFLICT',
     });
     createdProject = true;
   } else {

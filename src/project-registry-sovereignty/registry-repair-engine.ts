@@ -20,16 +20,6 @@ function touchRecord(record: ProjectRegistryRecord): void {
   record.lastActivityAt = stamp;
 }
 
-function pickPrimaryActiveProject(group: ProjectRegistryRecord[]): ProjectRegistryRecord {
-  return group
-    .slice()
-    .sort((a, b) => {
-      const byCreated = a.createdAt.localeCompare(b.createdAt);
-      if (byCreated !== 0) return byCreated;
-      return a.projectId.localeCompare(b.projectId);
-    })[0]!;
-}
-
 export function repairDuplicateNormalizedNames(
   state: ProjectRegistryFile,
 ): { mutated: boolean; repairs: RegistryDuplicateRepairRecord[] } {
@@ -62,26 +52,16 @@ export function repairDuplicateNormalizedNames(
     activeByNormalizedName.set(normalized, group);
   }
 
+  // Normalize whitespace + projectKind only. Multiple ACTIVE USER projects may share a display
+  // name when each has a distinct projectId (genuine fresh builds of the same product).
   for (const [normalizedName, group] of activeByNormalizedName) {
     if (group.length <= 1) continue;
-    const primary = pickPrimaryActiveProject(group);
-    const archivedProjectIds: string[] = [];
-    for (const duplicate of group) {
-      if (duplicate.projectId === primary.projectId) continue;
-      duplicate.status = 'ARCHIVED';
-      touchRecord(duplicate);
-      archivedProjectIds.push(duplicate.projectId);
-      mutated = true;
-      if (state.activeProjectId === duplicate.projectId) {
-        state.activeProjectId = primary.projectId;
-        mutated = true;
-      }
-    }
+    // Record awareness without archiving — same-name isolation is intentional.
     repairs.push({
       readOnly: true,
       normalizedName,
-      keptProjectId: primary.projectId,
-      archivedProjectIds,
+      keptProjectId: group.map((g) => g.projectId).sort().join(','),
+      archivedProjectIds: [],
     });
   }
 

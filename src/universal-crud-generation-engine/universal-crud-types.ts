@@ -74,7 +74,8 @@ export function entityDescriptorFromApprovedModule(input: {
     displayName: input.displayName,
     contractId: input.contractId ?? `feature-${input.moduleId}`,
     route: input.route,
-    persistenceProvider: input.persistenceProvider ?? 'memory',
+    // Browser-generated production apps default to durable localStorage — memory is opt-in for tests.
+    persistenceProvider: input.persistenceProvider ?? 'localStorage',
   };
 }
 

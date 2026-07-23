@@ -7,6 +7,7 @@ import {
   SAFE_PAYMENT_PLACEHOLDER_NOTICE,
   SAFE_PAYMENT_SIMULATED_GAP,
 } from './safe-payment-placeholder-types.js';
+import { maskModuleExtractionExclusions } from '../prompt-faithful-generation/contextual-module-qualification.js';
 
 export const SAFE_PAYMENT_PLACEHOLDER_CAPABILITY_NAME = 'Safe Payment Placeholder' as const;
 export const REAL_PAYMENT_PROCESSING_CAPABILITY_NAME = 'Payment Processing' as const;
@@ -35,12 +36,17 @@ const REAL_TRANSACTION_PATTERNS: Array<{ pattern: RegExp; evidence: string }> = 
 const PLACEHOLDER_EXPLICIT_PATTERN =
   /\b(payment\s+placeholder|placeholder\s+checkout|mock\s+payment|simulated\s+payment|no\s+real\s+charges?)\b/i;
 
+/** Affirmative prompt text only — exclusions like "No ecommerce" must not mint cart/checkout. */
+function affirmativePaymentPrompt(rawPrompt: string): string {
+  return maskModuleExtractionExclusions(rawPrompt);
+}
+
 export function promptRequestsCheckoutOrPayment(rawPrompt: string): boolean {
-  return CHECKOUT_PAYMENT_PROMPT_PATTERN.test(rawPrompt);
+  return CHECKOUT_PAYMENT_PROMPT_PATTERN.test(affirmativePaymentPrompt(rawPrompt));
 }
 
 export function promptRequiresRealPaymentIntegration(rawPrompt: string): boolean {
-  return REAL_TRANSACTION_PATTERNS.some((entry) => entry.pattern.test(rawPrompt));
+  return REAL_TRANSACTION_PATTERNS.some((entry) => entry.pattern.test(affirmativePaymentPrompt(rawPrompt)));
 }
 
 export function isSafePaymentPlaceholderCapabilityName(name: string): boolean {
@@ -52,9 +58,10 @@ export function isRealPaymentProcessingCapabilityName(name: string): boolean {
 }
 
 export function classifyPaymentIntent(rawPrompt: string): PaymentIntentAssessment {
-  const checkoutRequested = /\b(checkout|shopping\s+cart|\bcart\b|order\s+review)\b/i.test(rawPrompt);
-  const paymentRequested = /\b(payment|billing|pay\s+now)\b/i.test(rawPrompt);
-  const commerceContext = /\b(e[\s-]?commerce|online\s+store|storefront)\b/i.test(rawPrompt);
+  const affirmative = affirmativePaymentPrompt(rawPrompt);
+  const checkoutRequested = /\b(checkout|shopping\s+cart|\bcart\b|order\s+review)\b/i.test(affirmative);
+  const paymentRequested = /\b(payment|billing|pay\s+now)\b/i.test(affirmative);
+  const commerceContext = /\b(e[\s-]?commerce|online\s+store|storefront)\b/i.test(affirmative);
 
   if (!promptRequestsCheckoutOrPayment(rawPrompt)) {
     return {
@@ -70,7 +77,7 @@ export function classifyPaymentIntent(rawPrompt: string): PaymentIntentAssessmen
     };
   }
 
-  const realEvidence = REAL_TRANSACTION_PATTERNS.filter((entry) => entry.pattern.test(rawPrompt)).map(
+  const realEvidence = REAL_TRANSACTION_PATTERNS.filter((entry) => entry.pattern.test(affirmative)).map(
     (entry) => entry.evidence,
   );
 
@@ -89,10 +96,10 @@ export function classifyPaymentIntent(rawPrompt: string): PaymentIntentAssessmen
   }
 
   const modules: string[] = [];
-  if (checkoutRequested || commerceContext || /\bcart\b/i.test(rawPrompt)) modules.push('cart');
-  if (/\bcheckout\b/i.test(rawPrompt) || commerceContext) modules.push('checkout');
-  if (paymentRequested || /\bcheckout\b/i.test(rawPrompt)) modules.push('payments');
-  if (/\border\b/i.test(rawPrompt)) modules.push('orders');
+  if (checkoutRequested || commerceContext || /\bcart\b/i.test(affirmative)) modules.push('cart');
+  if (/\bcheckout\b/i.test(affirmative) || commerceContext) modules.push('checkout');
+  if (paymentRequested || /\bcheckout\b/i.test(affirmative)) modules.push('payments');
+  if (/\border\b/i.test(affirmative)) modules.push('orders');
 
   return {
     readOnly: true,
@@ -102,7 +109,7 @@ export function classifyPaymentIntent(rawPrompt: string): PaymentIntentAssessmen
     allowsPlaceholder: true,
     requiresRealIntegration: false,
     blockedReason: null,
-    evidence: PLACEHOLDER_EXPLICIT_PATTERN.test(rawPrompt)
+    evidence: PLACEHOLDER_EXPLICIT_PATTERN.test(affirmative)
       ? ['Explicit placeholder payment language in prompt', ...realEvidence]
       : ['Checkout/payment requested without real provider credentials or production integration.'],
     requiredPlaceholderModules: [...new Set(modules)],

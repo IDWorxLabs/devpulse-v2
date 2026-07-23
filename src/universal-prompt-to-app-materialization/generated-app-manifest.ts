@@ -23,6 +23,7 @@ import type {
 } from '../feature-contract-reality/feature-contract-reality-types.js';
 import type { WorkspaceRealityAuditStatus } from '../workspace-reality-audit/workspace-reality-audit-types.js';
 import type { PromptFaithfulnessManifestFields } from '../prompt-faithful-generation/prompt-faithful-generation-types.js';
+import { partitionProductAndInfrastructureModules } from '../contract-to-module-traceability/contract-to-module-infrastructure-registry.js';
 
 export const GENERATED_APP_MANIFEST_FILENAME = '.generated-app-manifest.json';
 
@@ -69,7 +70,13 @@ export interface GeneratedAppManifest {
   promptSpecificTermsPresent: boolean;
   generatedFiles: GeneratedFileInventoryEntry[];
   generatedDirectories: string[];
+  /** User/domain-facing product modules only — never infrastructure shells. */
   featureModules: string[];
+  /**
+   * Infrastructure / system-shell capabilities recorded separately from product featureModules.
+   * Exact-id shells (persistence adapters, auth plumbing, routing infrastructure, etc.) live here.
+   */
+  infrastructureModules?: string[];
   routes: string[];
   /**
    * Navigation Computation Collapse V1 (PPC-1207 No Parallel Truth) — the approved, CBGA-repaired
@@ -224,6 +231,7 @@ export function buildInitialGeneratedAppManifest(input: {
   promptSummary: string;
   confidence: string;
   featureModules?: string[];
+  infrastructureModules?: string[];
   routes?: string[];
   navigationLabels?: string[];
   approvedModuleIds?: string[];
@@ -241,6 +249,10 @@ export function buildInitialGeneratedAppManifest(input: {
   promptFaithfulness?: PromptFaithfulnessManifestFields;
 }): GeneratedAppManifest {
   const now = new Date().toISOString();
+  const partitioned = partitionProductAndInfrastructureModules([
+    ...(input.featureModules ?? []),
+    ...(input.infrastructureModules ?? []),
+  ]);
   return {
     readOnly: true,
     projectId: input.projectId,
@@ -284,7 +296,10 @@ export function buildInitialGeneratedAppManifest(input: {
     promptSpecificTermsPresent: false,
     generatedFiles: [],
     generatedDirectories: [],
-    featureModules: input.featureModules ?? [],
+    featureModules: partitioned.productFeatureModules,
+    ...(partitioned.infrastructureModules.length > 0
+      ? { infrastructureModules: partitioned.infrastructureModules }
+      : {}),
     routes: input.routes ?? [],
     ...(input.navigationLabels !== undefined ? { navigationLabels: input.navigationLabels } : {}),
     ...(input.approvedModuleIds !== undefined ? { approvedModuleIds: input.approvedModuleIds } : {}),

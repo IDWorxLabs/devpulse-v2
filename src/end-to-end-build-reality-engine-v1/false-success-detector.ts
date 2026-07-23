@@ -41,7 +41,8 @@ export function detectFalseSuccesses(input: {
       code: 'VISIBLE_DOM_CONTRACT_MISMATCH',
       label: 'Visible browser DOM differs from contract',
       detail:
-        'Initial Live Preview surface shows auth/shell instead of contract-derived feature UI — automated navigation must not satisfy readiness alone.',
+        input.previewAuthorityDetail ??
+        'Initial Live Preview surface does not match the contract-derived feature UI (auth/shell, welcome shell, or unhydrated root) — automated navigation must not satisfy readiness alone.',
       critical: true,
     });
   }
@@ -79,6 +80,7 @@ export function detectFalseSuccesses(input: {
   if (
     input.workspaceHash &&
     input.previewWorkspaceHash &&
+    !input.previewWorkspaceHash.startsWith('pre-vite-') &&
     input.workspaceHash !== input.previewWorkspaceHash &&
     input.previewHttpOk
   ) {

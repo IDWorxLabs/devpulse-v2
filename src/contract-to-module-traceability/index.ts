@@ -70,4 +70,13 @@ export { toB11TraceabilityBlockers } from './contract-to-module-b11-adapter.js';
 export { buildProductFaithfulnessTraceabilityEvidence } from './contract-to-module-product-faithfulness-adapter.js';
 export { projectBuildStatusFromTraceabilityOutcome, mergeTraceabilityBuildOutcome, type CanonicalBuildStatusProjection } from './contract-to-module-status-projection.js';
 export { reconcileApprovedAndGeneratedModules } from './contract-to-module-output-reconciliation.js';
-export { INFRASTRUCTURE_MODULE_REGISTRY, isRegisteredInfrastructureModule } from './contract-to-module-infrastructure-registry.js';
+export {
+  INFRASTRUCTURE_MODULE_REGISTRY,
+  INFRASTRUCTURE_SHELL_MODULE_IDS,
+  isInfrastructureShellModuleId,
+  isRegisteredInfrastructureModule,
+  partitionProductAndInfrastructureModules,
+  resolveInfrastructureModuleAncestry,
+  type InfrastructureModuleDescriptor,
+  type ProductInfrastructurePartition,
+} from './contract-to-module-infrastructure-registry.js';

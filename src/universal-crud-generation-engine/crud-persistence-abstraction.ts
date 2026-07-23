@@ -154,37 +154,174 @@ export function createMemoryCrudProvider<T extends CrudEntityBase>(
 `,
     },
     {
+      relativePath: `${RUNTIME_ROOT}/persistence-scope.ts`,
+      content: `/** Durable persistence scope — project-isolated keys for browser-generated apps */
+export const AIDEV_CRUD_SCHEMA_VERSION = 1 as const;
+
+/**
+ * Resolve a stable project identity for storage namespacing.
+ * Prefer stamped preview meta (aidevengine-project-id); never use preview port, URL, or PID.
+ */
+export function resolvePersistenceProjectId(): string {
+  try {
+    const meta = globalThis.document?.querySelector?.('meta[name="aidevengine-project-id"]');
+    const fromMeta = meta?.getAttribute?.('content')?.trim();
+    if (fromMeta) return fromMeta;
+  } catch {
+    /* ignore */
+  }
+  try {
+    const attr = globalThis.document?.documentElement?.getAttribute?.('data-aidev-project-id')?.trim();
+    if (attr) return attr;
+  } catch {
+    /* ignore */
+  }
+  return 'unscoped-project';
+}
+
+export function buildDurableStorageKey(namespace: string, projectId?: string): string {
+  const scope = (projectId?.trim() || resolvePersistenceProjectId()).replace(/[^a-zA-Z0-9._:-]/g, '_');
+  const ns = namespace.replace(/[^a-zA-Z0-9._:-]/g, '_');
+  return \`aidev-crud:v\${AIDEV_CRUD_SCHEMA_VERSION}:\${scope}:\${ns}\`;
+}
+
+export function isBrowserLocalStorageAvailable(): boolean {
+  try {
+    const store = globalThis.localStorage;
+    if (!store) return false;
+    const probe = '__aidev_persist_probe__';
+    store.setItem(probe, '1');
+    store.removeItem(probe);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export class DurableStorageUnavailableError extends Error {
+  readonly code = 'STORAGE_UNAVAILABLE' as const;
+  constructor(message = 'Durable browser storage is unavailable') {
+    super(message);
+    this.name = 'DurableStorageUnavailableError';
+  }
+}
+
+export class DurableStorageCorruptionError extends Error {
+  readonly code = 'STORAGE_CORRUPTED' as const;
+  constructor(message = 'Persisted application state is incompatible or corrupted') {
+    super(message);
+    this.name = 'DurableStorageCorruptionError';
+  }
+}
+`,
+    },
+    {
       relativePath: `${RUNTIME_ROOT}/local-storage-provider.ts`,
-      content: `/** LocalStorage CRUD persistence provider */
+      content: `/** Durable LocalStorage CRUD persistence provider — project-scoped, schema-versioned */
 import type { CrudEntityBase, CrudListQuery, CrudListResult } from './types';
 import type { CrudPersistenceProvider } from './persistence-abstraction';
 import { createMemoryCrudProvider } from './memory-provider';
+import {
+  AIDEV_CRUD_SCHEMA_VERSION,
+  buildDurableStorageKey,
+  DurableStorageCorruptionError,
+  DurableStorageUnavailableError,
+  isBrowserLocalStorageAvailable,
+  resolvePersistenceProjectId,
+} from './persistence-scope';
 
-function storageKey(namespace: string): string {
-  return \`universal-crud:\${namespace}\`;
+interface DurableEnvelope<T extends CrudEntityBase> {
+  schemaVersion: number;
+  projectId: string;
+  namespace: string;
+  records: T[];
+  updatedAt: string;
 }
 
+function readEnvelope<T extends CrudEntityBase>(
+  key: string,
+  expectedProjectId: string,
+  namespace: string,
+): T[] {
+  const raw = globalThis.localStorage!.getItem(key);
+  if (!raw) return [];
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new DurableStorageCorruptionError(\`Invalid JSON in persistence key \${key}\`);
+  }
+  // Legacy bare-array format — migrate once into envelope on next write.
+  if (Array.isArray(parsed)) return parsed as T[];
+  if (!parsed || typeof parsed !== 'object') {
+    throw new DurableStorageCorruptionError(\`Unexpected persistence payload for \${key}\`);
+  }
+  const envelope = parsed as DurableEnvelope<T>;
+  if (envelope.schemaVersion !== AIDEV_CRUD_SCHEMA_VERSION) {
+    // Controlled reset on schema mismatch — do not merge incompatible shapes.
+    globalThis.localStorage!.removeItem(key);
+    return [];
+  }
+  if (envelope.projectId && envelope.projectId !== expectedProjectId) {
+    throw new DurableStorageCorruptionError(
+      \`Persistence project mismatch for \${namespace}: expected \${expectedProjectId}, found \${envelope.projectId}\`,
+    );
+  }
+  return Array.isArray(envelope.records) ? envelope.records : [];
+}
+
+/**
+ * Authoritative durable provider for browser-generated applications.
+ * Does NOT silently fall back to memory-only on storage failure.
+ */
 export function createLocalStorageCrudProvider<T extends CrudEntityBase>(
   namespace: string,
 ): CrudPersistenceProvider<T> {
+  if (!isBrowserLocalStorageAvailable()) {
+    throw new DurableStorageUnavailableError(
+      \`Cannot initialize durable persistence for "\${namespace}" — localStorage is unavailable\`,
+    );
+  }
+  const projectId = resolvePersistenceProjectId();
+  const key = buildDurableStorageKey(namespace, projectId);
   const memory = createMemoryCrudProvider<T>(namespace);
   try {
-    const raw = globalThis.localStorage?.getItem(storageKey(namespace));
-    if (raw) {
-      const parsed = JSON.parse(raw) as T[];
-      if (Array.isArray(parsed)) memory.batchCreate(parsed);
+    const records = readEnvelope<T>(key, projectId, namespace);
+    if (records.length > 0) memory.batchCreate(records);
+  } catch (error) {
+    if (error instanceof DurableStorageCorruptionError) {
+      // Controlled recovery: clear bad state and continue empty.
+      try {
+        globalThis.localStorage!.removeItem(key);
+      } catch {
+        /* ignore */
+      }
+    } else {
+      throw error;
     }
-  } catch {
-    /* start empty */
   }
+
   const persist = (): void => {
+    if (!isBrowserLocalStorageAvailable()) {
+      throw new DurableStorageUnavailableError(\`Save failed for "\${namespace}" — storage unavailable\`);
+    }
+    const all = memory.list({ page: 1, pageSize: 1_000_000 }).items;
+    const envelope: DurableEnvelope<T> = {
+      schemaVersion: AIDEV_CRUD_SCHEMA_VERSION,
+      projectId,
+      namespace,
+      records: all,
+      updatedAt: new Date().toISOString(),
+    };
     try {
-      const all = memory.list({ page: 1, pageSize: 100000 }).items;
-      globalThis.localStorage?.setItem(storageKey(namespace), JSON.stringify(all));
-    } catch {
-      /* ignore quota errors in preview */
+      globalThis.localStorage!.setItem(key, JSON.stringify(envelope));
+    } catch (error) {
+      throw new DurableStorageUnavailableError(
+        \`Save failed for "\${namespace}": \${error instanceof Error ? error.message : String(error)}\`,
+      );
     }
   };
+
   return {
     ...memory,
     create(entity: T): T {
@@ -220,9 +357,9 @@ export function createLocalStorageCrudProvider<T extends CrudEntityBase>(
     clear(): void {
       memory.clear();
       try {
-        globalThis.localStorage?.removeItem(storageKey(namespace));
+        globalThis.localStorage!.removeItem(key);
       } catch {
-        /* ignore */
+        throw new DurableStorageUnavailableError(\`Clear failed for "\${namespace}"\`);
       }
     },
     list(query?: CrudListQuery): CrudListResult<T> {
@@ -233,6 +370,9 @@ export function createLocalStorageCrudProvider<T extends CrudEntityBase>(
     },
   };
 }
+
+/** Alias used by relationship/workflow generators — same durable authority. */
+export const createDurableCrudProvider = createLocalStorageCrudProvider;
 `,
     },
     {
@@ -240,6 +380,7 @@ export function createLocalStorageCrudProvider<T extends CrudEntityBase>(
       content: `export * from './types';
 export * from './persistence-abstraction';
 export * from './memory-provider';
+export * from './persistence-scope';
 export * from './local-storage-provider';
 `,
     },

@@ -344,7 +344,11 @@ export async function runEndToEndBuildReality(
   if (previewUrl && workspaceDir && (await probePlaywright())) {
     const playwright = await import('playwright');
     const browser = await playwright.chromium.launch({ headless: true });
-    const page = await browser.newPage();
+    // Isolated context per generated app — no localStorage/session/cookies leak across builds.
+    const context = await browser.newContext({
+      serviceWorkers: 'block',
+    });
+    const page = await context.newPage();
     try {
       const domPage = createPlaywrightDomRealityPage(page);
       previewAuthorityAudit = await runPreviewAuthorityAudit({
@@ -469,6 +473,7 @@ export async function runEndToEndBuildReality(
         failingStage = 'PREVIEW_AUTHORITY';
       }
     } finally {
+      await context.close().catch(() => undefined);
       await browser.close();
     }
   } else if (previewUrl) {

@@ -17,6 +17,7 @@ export type PreviewInteractionProofResultKind =
 
 export type PlannedInteractionType =
   | 'BUTTON_CLICK'
+  | 'CREATE_WORKFLOW'
   | 'INPUT_SUBMIT'
   | 'CHECKBOX_TOGGLE'
   | 'SELECT_CHANGE'

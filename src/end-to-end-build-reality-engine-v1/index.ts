@@ -58,6 +58,13 @@ export {
   fetchPreviewIdentityFromUrl,
 } from './preview-workspace-identity.js';
 export {
+  PREVIEW_READY_ATTR,
+  PREVIEW_READY_SELECTOR,
+  ensurePreviewReadinessHandshake,
+  htmlSignalsPreviewReady,
+  classifyPreviewDomFailure,
+} from './preview-readiness-contract.js';
+export {
   resolvePreviewServingWorkspaceDir,
   resolveBuilderWorkspaceDir,
   previewWorkspacePathsAligned,

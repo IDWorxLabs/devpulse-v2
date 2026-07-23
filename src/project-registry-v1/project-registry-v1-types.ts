@@ -86,15 +86,20 @@ export class ProjectRegistryDuplicateNameError extends Error {
   readonly code: typeof PROJECT_REGISTRY_DUPLICATE_NAME_CODE;
   readonly displayName: string;
   readonly existingProjectId: string;
+  readonly recoveryAction: string;
 
   constructor(displayName: string, existingProjectId: string) {
     super(
-      `A project named ${displayName} already exists. Choose a different name or open the existing project.`,
+      `A project named ${displayName} already exists (internal id: ${existingProjectId}). ` +
+        `Use Start fresh & retry to create an isolated build that keeps the display name, ` +
+        `or open the existing project, or choose a different name for an explicit create.`,
     );
     this.name = 'ProjectRegistryDuplicateNameError';
     this.code = PROJECT_REGISTRY_DUPLICATE_NAME_CODE;
     this.displayName = displayName;
     this.existingProjectId = existingProjectId;
+    this.recoveryAction =
+      'Start fresh & retry (new internal project id, same display name), open the existing project, or pick a different name.';
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }

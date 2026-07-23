@@ -10,11 +10,11 @@ export function generateWorkflowInstanceRepositorySource(
   descriptor: UniversalWorkflowDescriptor,
   input: UniversalWorkflowMaterializationInput,
 ): string {
-  return `/** Workflow instance persistence — reuses universal CRUD runtime providers */
-import { createMemoryCrudProvider } from '../../universal-crud-runtime/memory-provider';
+  return `/** Workflow instance persistence — durable CRUD runtime provider */
+import { createLocalStorageCrudProvider } from '../../universal-crud-runtime/local-storage-provider';
 import type { WorkflowInstanceSnapshot } from '../../universal-workflow-runtime/types';
 
-const provider = createMemoryCrudProvider<WorkflowInstanceSnapshot & { id: string; label: string; createdAt: string; updatedAt: string }>(
+const provider = createLocalStorageCrudProvider<WorkflowInstanceSnapshot & { id: string; label: string; createdAt: string; updatedAt: string }>(
   '${escWorkflowString(input.moduleId)}-workflow-instance',
 );
 

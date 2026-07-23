@@ -87,7 +87,18 @@ export function derivePrimaryFeatureCandidates(input: {
  */
 export function planInteractions(maxInteractionAttempts: number): PlannedInteraction[] {
   const plan: PlannedInteraction[] = [
-    { readOnly: true, id: 'button-click-1', type: 'BUTTON_CLICK', label: 'Click the first visible button' },
+    {
+      readOnly: true,
+      id: 'create-workflow-1',
+      type: 'CREATE_WORKFLOW',
+      label: 'Create a record via the primary create control',
+    },
+    {
+      readOnly: true,
+      id: 'button-click-1',
+      type: 'BUTTON_CLICK',
+      label: 'Click a visible primary application action button',
+    },
     { readOnly: true, id: 'input-submit-1', type: 'INPUT_SUBMIT', label: 'Fill the first visible text input and submit it' },
     { readOnly: true, id: 'checkbox-toggle-1', type: 'CHECKBOX_TOGGLE', label: 'Toggle the first visible checkbox' },
     { readOnly: true, id: 'select-change-1', type: 'SELECT_CHANGE', label: 'Change the first visible dropdown selection' },

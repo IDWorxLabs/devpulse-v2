@@ -35,7 +35,16 @@ import { resolveLivePreviewSessionBinding } from './project-session-live-preview
 const GENERIC_PROJECT_NAME = 'New Project';
 
 function extractExplicitPromptProjectName(rawPrompt: string): string | null {
-  const match = rawPrompt.match(
+  const text = rawPrompt.replace(/^\uFEFF/, '');
+  // "Build ContinuityHub — …" / "Create HarborFlow, a …" — prefer PascalCase / camelCase product titles.
+  // Use [a-z0-9]+ (not [A-Za-z0-9]*) so "ContinuityHub" does not greedily collapse into one segment.
+  const buildTarget = text.match(
+    /\b(?:build|create|make|generate|implement|develop|design|scaffold)\s+([A-Z][a-z0-9]+(?:[A-Z][a-z0-9]+)*)\b/i,
+  );
+  if (buildTarget?.[1]) {
+    return buildTarget[1].trim();
+  }
+  const match = text.match(
     /\b(?:called|named)\s+["“]?([A-Za-z][A-Za-z0-9]*(?:[ \t_-]+[A-Za-z0-9]+){0,7}?)["”]?(?=[ \t]+(?:for|with|that|which)\b|[.!?\r\n]|$)/i,
   );
   return match?.[1]?.trim() || null;
@@ -46,7 +55,7 @@ function deriveProjectNameFromPrompt(rawPrompt: string, explicitName?: string | 
   if (trimmedExplicit && trimmedExplicit !== GENERIC_PROJECT_NAME) {
     return trimmedExplicit;
   }
-  const promptDeclaredName = extractExplicitPromptProjectName(rawPrompt);
+  const promptDeclaredName = extractExplicitPromptProjectName(rawPrompt.replace(/^\uFEFF/, ''));
   if (promptDeclaredName) {
     return promptDeclaredName;
   }

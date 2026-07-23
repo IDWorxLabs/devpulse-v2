@@ -14,6 +14,12 @@ import type { PromptFeatureExtraction } from './prompt-faithful-generation-types
 import { BANNED_FALLBACK_MODULES } from './prompt-faithful-generation-types.js';
 import { promptJustifiesBareBannedFallback } from './fallback-module-classification.js';
 import {
+  capabilityMatchIsDisqualified,
+  dashClauseLooksLikeProseDescription,
+  forClauseLooksLikeAudienceNotFeatureList,
+  maskModuleExtractionExclusions,
+} from './contextual-module-qualification.js';
+import {
   classifyModulePhrase,
   dedupeModuleIds,
   isValidModuleId,
@@ -354,11 +360,27 @@ function extractAppName(rawPrompt: string): string {
     // Longest-first articles: `(?:an|a|the)` — never `(?:a|an|the)` which leaves a leading "n"
     // from "an" (e.g. "Build an escape room…" → "n escape room").
     const introClause = introClauseRaw.replace(LEADING_INSTRUCTION_PREFIX, '');
+    // Prefer a single-line intro so section headers like "PRODUCT IDENTITY" on later lines
+    // cannot be glued onto the product name via whitespace that includes newlines.
+    const introLine = introClause.split(/\r?\n/, 1)[0] ?? introClause;
+
+    // PascalCase / camelCase product titles immediately after the instruction
+    // ("Build ContinuityHub — …", "Create HarborFlow for …") beat multi-word Title-Case
+    // scans that otherwise absorb the next section heading across a blank line.
+    const pascalProduct = introLine.match(/^([A-Z][a-z0-9]+(?:[A-Z][a-z0-9]+)*)\b/);
+    if (
+      pascalProduct?.[1] &&
+      !looksLikeImplementationGuidance(pascalProduct[1]) &&
+      !isWeakProductIdentity(pascalProduct[1])
+    ) {
+      trace('PASCAL_CASE_PRODUCT_MATCH', pascalProduct[1], false);
+      return pascalProduct[1];
+    }
 
     // Preferred: an explicit "... <Name> app/application" phrase, anchored to real word
     // boundaries via \b so "appropriate" (app + ropriate, no boundary) can never satisfy this —
     // this is the word-boundary anchoring fix.
-    const appSuffixed = introClause.match(
+    const appSuffixed = introLine.match(
       /^([^\n.]{1,80}?)\s+(?:web\s+|mobile\s+)?app(?:lication)?\b/i,
     );
     if (
@@ -375,7 +397,7 @@ function extractAppName(rawPrompt: string): string {
 
     // Lowercase product noun phrase after instruction strip (jargon / sentence-case prompts).
     // Prefer this before mid-sentence Title-Case verbs ("Track", "Manage") can win.
-    const lowerNoun = introClause.match(
+    const lowerNoun = introLine.match(
       /^([a-z][a-z0-9-]*(?:\s+[a-z][a-z0-9-]*){0,6})\s+((?:web\s+|mobile\s+)?(?:app|application|system|platform|software|console|manager|tool|scheduler|desk|ledger|board|registry|monitor|tracker|queue|roster|logger|log))\b/i,
     );
     if (
@@ -391,15 +413,17 @@ function extractAppName(rawPrompt: string): string {
       }
     }
 
-    // Fallback within the same intro clause: earliest multi-word Title-Case phrase only.
-    // Single-token Title-Case matches are rejected — they are usually mid-sentence imperatives
-    // ("Track dialysis chairs…", "Manage blood units…") rather than product names.
-    const titleCasePhrase = introClause.match(/\b([A-Z][a-zA-Z0-9]*(?:\s+[A-Z][a-zA-Z0-9]*){1,6})\b/);
+    // Fallback within the same intro *line*: earliest multi-word Title-Case phrase only.
+    // Do not let `\s` cross newlines — that previously glued "PRODUCT IDENTITY" + the next
+    // product token into a false display name. Single-token Title-Case matches are rejected —
+    // they are usually mid-sentence imperatives rather than product names.
+    const titleCasePhrase = introLine.match(/\b([A-Z][a-zA-Z0-9]*(?:[ \t]+[A-Z][a-zA-Z0-9]*){1,6})\b/);
     if (
       titleCasePhrase?.[1] &&
       !looksLikeImplementationGuidance(titleCasePhrase[1]) &&
       !isBareAcronymPhrase(titleCasePhrase[1]) &&
-      !isWeakProductIdentity(titleCasePhrase[1])
+      !isWeakProductIdentity(titleCasePhrase[1]) &&
+      !/\bPRODUCT IDENTITY\b/i.test(titleCasePhrase[1])
     ) {
       const name = titleCasePhrase[1].trim();
       trace('TITLE_CASE_PHRASE_MATCH', name, false);
@@ -487,12 +511,13 @@ function extractExplicitBulletModules(rawPrompt: string): string[] {
 }
 
 /**
- * Extracts first-level module headings from long structured "CORE MODULES" sections. The suffixes
- * are generic information-architecture nouns, not product/domain vocabulary; detail rows such as
- * "Create records", "Duration", or "Status" therefore cannot be mistaken for module boundaries.
+ * Extracts first-level module headings from long structured "CORE MODULES" or
+ * "CORE CAPABILITIES" sections. Numbered capability lines ("1. Incident command board — …")
+ * become module ids. Detail rows such as "Create records" are ignored.
  */
 function extractStructuredCoreModuleHeadings(rawPrompt: string): string[] {
-  const start = /(?:^|\n)\s*CORE\s+MODULES?\s*\n/i.exec(rawPrompt);
+  const start =
+    /(?:^|\n)\s*CORE\s+(?:MODULES?|CAPABILITIES)\s*(?:\([^)]*\))?\s*\n/i.exec(rawPrompt);
   if (!start) return [];
   const boundaryHeadings = new Set([
     'COLLABORATION',
@@ -503,13 +528,16 @@ function extractStructuredCoreModuleHeadings(rawPrompt: string): string[] {
     'SECURITY',
     'REPORTING',
     'NON-FUNCTIONAL REQUIREMENTS',
+    'INFORMATION ARCHITECTURE',
+    'DATA & WORKFLOWS',
+    'DATA AND WORKFLOWS',
+    'NON-GOALS',
+    'QUALITY BAR',
   ]);
   const sectionLines: string[] = [];
   for (const rawLine of rawPrompt.slice(start.index + start[0].length).split(/\r?\n/)) {
     const trimmed = rawLine.trim();
     const upper = trimmed.toUpperCase();
-    // Section boundaries in structured specifications are uppercase headings. A title-cased
-    // product module such as "Search" must remain inside CORE MODULES.
     if (trimmed === upper && boundaryHeadings.has(upper)) break;
     sectionLines.push(rawLine);
   }
@@ -517,7 +545,7 @@ function extractStructuredCoreModuleHeadings(rawPrompt: string): string[] {
   const establishedHeadingSuffix =
     /\b(?:management|planning|scheduling|collection|logistics|fleet|tracking)\s*$/i;
   const extendedHeadingSuffix =
-    /\b(?:registry|lifecycle|maintenance|reporting|mapping|monitoring|dashboards?|control|operations?|coordination|administration|research|incidents?|response)\s*$/i;
+    /\b(?:registry|lifecycle|maintenance|reporting|mapping|monitoring|dashboards?|control|operations?|coordination|administration|research|incidents?|response|board|timeline|directory|library|paths?|maps?|publisher|workspace|locker|rotations?|windows?|templates?|trail)\s*$/i;
   const isTitleCaseHeading = (value: string): boolean => {
     const words = value.split(/\s+/).filter((word) => word !== '&' && word.length > 0);
     return (
@@ -529,11 +557,24 @@ function extractStructuredCoreModuleHeadings(rawPrompt: string): string[] {
   const modules: string[] = [];
   for (const rawLine of section.split(/\r?\n/)) {
     const line = rawLine.trim();
+    if (!line || line.length > 120) continue;
+
+    // Numbered CORE CAPABILITIES: "1. Incident command board — open incidents…"
+    const numbered = line.match(
+      /^\d{1,2}[.)]\s+([A-Za-z][A-Za-z0-9][A-Za-z0-9\s\-/&]{1,60}?)(?:\s*[—–:].*)?$/,
+    );
+    if (numbered?.[1]) {
+      const heading = numbered[1].trim();
+      const moduleId = normalizeModuleId(heading);
+      if (moduleId && classifyModulePhrase(moduleId) !== 'rejected') {
+        modules.push(moduleId);
+      }
+      continue;
+    }
+
     if (
-      !line ||
-      line.length > 80 ||
-      (!establishedHeadingSuffix.test(line) &&
-        !(extendedHeadingSuffix.test(line) && isTitleCaseHeading(line)))
+      !establishedHeadingSuffix.test(line) &&
+      !(extendedHeadingSuffix.test(line) && isTitleCaseHeading(line))
     ) {
       continue;
     }
@@ -545,9 +586,11 @@ function extractStructuredCoreModuleHeadings(rawPrompt: string): string[] {
 
 function extractNamedModuleMentions(rawPrompt: string): string[] {
   const modules: string[] = [];
-  for (const match of rawPrompt.matchAll(/\b([a-z][a-z0-9-]*(?:-[a-z0-9-]+)*)\s+module\b/gi)) {
+  for (const match of rawPrompt.matchAll(/\b([a-z][a-z0-9-]*(?:-[a-z0-9-]+)*)\s+modules?\b/gi)) {
     const candidate = normalizeModuleId(match[1] ?? '');
     if (!candidate || MODULE_PROSE_STOPWORDS.has(candidate)) continue;
+    // Meta phrases: "product modules", "feature modules", "fallback modules"
+    if (/^(?:product|feature|fallback|banned|core|primary)\b/i.test(candidate)) continue;
     const canonical = resolveModuleSynonym(candidate);
     if (canonical) {
       modules.push(canonical);
@@ -627,15 +670,22 @@ function extractFeatureListModules(rawPrompt: string): string[] {
   // "manage leads, contacts, companies, deals …" — paragraph prompts commonly use manage/track.
   // Parentheses must be allowed so status enumerations ("workflow (scheduled, …)") do not abort
   // the entire feature-list match before the terminating period.
-  const patterns = [
-    /\b(?:with|including|featuring|supports?|containing|manages?|managing|tracks?|tracking)\s+([a-z0-9][a-z0-9\s,\-/()]{8,400}?)(?:\.|$)/i,
-    // "… manager/desk/board for vendors, stall assignments, …"
-    /\b(?:manager|app|application|system|desk|board|tracker|scheduler|console|registry|log|roster|ledger)\s+for\s+([a-z0-9][a-z0-9\s,\-/()]{8,400}?)(?:\.|$)/i,
-  ];
-  for (const pattern of patterns) {
-    const listMatch = rawPrompt.match(pattern);
-    if (!listMatch?.[1]) continue;
-    const cleanedList = listMatch[1].replace(/\([^)]*\)/g, ' ');
+  const withIncludingPattern =
+    /\b(?:with|including|featuring|supports?|containing|manages?|managing|tracks?|tracking)\s+([a-z0-9][a-z0-9\s,\-/()]{8,400}?)(?:\.|$)/i;
+  // "… manager/desk/board for vendors, stall assignments, …" — not audience ("system for a hair salon").
+  const forEnumerationPattern =
+    /\b(?:manager|app|application|system|desk|board|tracker|scheduler|console|registry|log|roster|ledger)\s+for\s+([a-z0-9][a-z0-9\s,\-/()]{8,400}?)(?:\.|$)/i;
+
+  const withMatch = rawPrompt.match(withIncludingPattern);
+  if (withMatch?.[1]) {
+    const modules = parseCommaSeparatedFeatureList(withMatch[1].replace(/\([^)]*\)/g, ' '));
+    if (modules.length > 0) return modules;
+  }
+
+  const forMatch = rawPrompt.match(forEnumerationPattern);
+  if (forMatch?.[1]) {
+    const cleanedList = forMatch[1].replace(/\([^)]*\)/g, ' ');
+    if (forClauseLooksLikeAudienceNotFeatureList(cleanedList)) return [];
     const modules = parseCommaSeparatedFeatureList(cleanedList);
     if (modules.length > 0) return modules;
   }
@@ -655,7 +705,10 @@ function extractLeadingDashListModules(rawPrompt: string): string[] {
   if (!dashMatch?.[2]) return [];
   const head = (dashMatch[1] ?? '').toLowerCase();
   if (/\b(?:do\s+not|never|must\s+not|should\s+not)\b/i.test(head)) return [];
-  return parseCommaSeparatedFeatureList(dashMatch[2].replace(/\([^)]*\)/g, ' '));
+  const listBody = dashMatch[2].replace(/\([^)]*\)/g, ' ');
+  // "Build ContinuityHub — a production Continuity of Operations…" is a tagline, not a module list.
+  if (dashClauseLooksLikeProseDescription(listBody)) return [];
+  return parseCommaSeparatedFeatureList(listBody);
 }
 
 /**
@@ -731,11 +784,17 @@ function capabilityKeywordIsProductIdentityNoun(rawPrompt: string, match: RegExp
 }
 
 function deriveModulesFromCapabilities(rawPrompt: string): string[] {
+  const affirmative = maskModuleExtractionExclusions(rawPrompt);
   const modules: string[] = [];
   for (const entry of CAPABILITY_TO_MODULE) {
-    const match = rawPrompt.match(entry.pattern);
+    // Prefer affirmative text so exclusions/redefinitions do not mint modules.
+    const match = affirmative.match(entry.pattern) ?? rawPrompt.match(entry.pattern);
     if (!match) continue;
+    // If the only hit is in the original prompt but not in the masked affirmative text,
+    // it lived inside an exclusion/redefinition clause — skip it.
+    if (!affirmative.match(entry.pattern) && rawPrompt.match(entry.pattern)) continue;
     if (capabilityKeywordIsProductIdentityNoun(rawPrompt, match)) continue;
+    if (capabilityMatchIsDisqualified(rawPrompt, entry.module, match)) continue;
     modules.push(entry.module);
   }
   return dedupeModuleIds(modules);
@@ -829,14 +888,32 @@ function inferDomain(rawPrompt: string): string {
   if (promptMentionsLisaOrAccessibility(rawPrompt)) {
     return 'assistive communication / accessibility / health accessibility';
   }
-  const lower = rawPrompt.toLowerCase();
-  // Prefer composed multi-entity products over single-utility domain labels when several
-  // entity nouns appear (e.g. contact/task manager that also mentions notes).
-  if (promptDescribesMultiEntityProduct(rawPrompt)) {
-    if (/\bcontact/.test(lower) && /\btask/.test(lower)) return 'contacts / tasks';
-    if (/\binventory|\bstock|\bproduct/.test(lower)) return 'inventory / operations';
+  // Use the same exclusion mask as module minting — disclaimer/simile/negation text must not
+  // drive product domain labels (e.g. "appear as contacts" must not yield contacts domain).
+  const affirmative = maskModuleExtractionExclusions(rawPrompt);
+  const lower = affirmative.toLowerCase();
+
+  // Dominant operational domains from affirmative capability language.
+  if (
+    /\b(?:incident|continuity|coop|runbook|escalation|stakeholder\s+director|risk\s+register|on-?call|post-?incident|business\s+continuity)\b/i.test(
+      affirmative,
+    )
+  ) {
+    return 'incident-continuity-operations';
+  }
+  if (/\b(?:crm|sales\s+pipeline|deals?\b|leads?\b)\b/i.test(affirmative) && /\bcontacts?\b/i.test(affirmative)) {
+    return 'crm / contacts';
+  }
+  if (promptDescribesMultiEntityProduct(affirmative)) {
+    if (/\bcontact/.test(lower) && /\btask/.test(lower) && !/\bnot\s+a\s+generic\s+task/.test(rawPrompt.toLowerCase())) {
+      return 'contacts / tasks';
+    }
+    if (/\binventory|\bstock|\bproduct/.test(lower) && !/\bnot\s+(?:retail\s+)?(?:stock|inventory)/.test(rawPrompt.toLowerCase())) {
+      return 'inventory / operations';
+    }
     if (/\bappointment|\bbooking/.test(lower)) return 'appointments / scheduling';
     if (/\brestaurant|\bmenu|\border/.test(lower)) return 'restaurant / operations';
+    if (/\bcart\b|\bcheckout\b|\be[\s-]?commerce\b/.test(lower)) return 'ecommerce / retail';
     return 'custom application domain';
   }
   if (/calculator/.test(lower)) return 'utility / calculator';
@@ -958,17 +1035,26 @@ function resolveRequiredModules(
 }
 
 export function extractPromptFeatures(rawPrompt: string): PromptFeatureExtraction {
-  const explicit = extractExplicitModules(rawPrompt);
   const structuredCoreModules = extractStructuredCoreModuleHeadings(rawPrompt);
-  // A structured CORE MODULES section is stronger evidence than context-free lexical matches.
-  // In that mode, preserve explicitly matched compound capabilities but suppress bare lexical
-  // nouns so incidental "notes/services/suppliers" cannot become peer modules.
+  const explicit = extractExplicitModules(rawPrompt);
+  // A structured CORE MODULES / CORE CAPABILITIES section is stronger evidence than
+  // context-free lexical matches. Preserve compound capabilities; suppress bare lexical nouns
+  // so incidental "notes/contacts/products/stock/inventory" cannot become peer modules.
   const capability =
     structuredCoreModules.length >= 2
       ? deriveModulesFromCapabilities(rawPrompt).filter((moduleId) => moduleId.includes('-'))
       : deriveModulesFromCapabilities(rawPrompt);
   const classified = extractClassifiedPhrases(rawPrompt);
-  const { sanitized, raw, rejected } = resolveRequiredModules(rawPrompt, explicit, capability);
+  // When structured core IA is present, do not merge bare capability peers into the explicit set.
+  const explicitForResolve =
+    structuredCoreModules.length >= 2
+      ? dedupeModuleIds([...structuredCoreModules, ...explicit.filter((m) => m.includes('-') || structuredCoreModules.includes(m))])
+      : explicit;
+  const { sanitized, raw, rejected } = resolveRequiredModules(
+    rawPrompt,
+    explicitForResolve,
+    capability,
+  );
 
   const androidPhonePreviewRequired = /android[\s-]?first|android phone|mobile[\s-]?first/i.test(rawPrompt);
 

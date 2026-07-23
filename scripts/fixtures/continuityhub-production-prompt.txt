@@ -1,0 +1,115 @@
+Build ContinuityHub — a production Continuity of Operations (COOP) and incident-command platform for multi-site organizations.
+
+PRODUCT IDENTITY
+ContinuityHub is not a CRM, not a generic task tracker, and not a project management suite. It is an operations continuity console. Stakeholders appear as contacts only in the sense of notified parties. "Inventory" means failover capacity / spare kits / cold-spare site kits — not retail stock. "Timeline" means the incident command timeline — not a Gantt chart.
+
+CORE CAPABILITIES (must all be present)
+1. Incident command board — open incidents, severity, commander, status, linked sites.
+2. Incident timeline — ordered operational events, decisions, and evidence attachments.
+3. Stakeholder directory — roles (commander, PIO, legal, exec sponsor), notification preferences.
+4. Runbook library — linked to incident types, with step checklists and ownership.
+5. Escalation paths — severity → role chain, SLAs, acknowledgement tracking.
+6. Dependency maps — critical systems, vendors, upstream/downstream failure impact.
+7. Status page publisher — internal/external messages with approval gates.
+8. Post-incident review workspace — timeline import, contributing factors, actions.
+9. Evidence locker — immutable pointers to logs, screenshots, tickets (metadata only).
+10. On-call rotations — schedules, handoff notes, coverage gaps.
+11. Change windows — freeze periods, exception requests, conflict detection vs incidents.
+12. Risk register — continuity risks, residual rating, owners, review cadence.
+13. Communication templates — SMS/email/voice scripts parameterized by incident fields.
+14. Audit trail — who changed severity, who published status, who closed incidents.
+
+INFORMATION ARCHITECTURE
+Primary navigation must be ContinuityHub product modules only (incident board, timeline, stakeholders, runbooks, escalations, dependencies, status publisher, PIR, evidence, on-call, change windows, risks, templates, audit). Do not inject banned fallback shells (projects, tasks, team, deals, leads, expenses) unless contract-bound by this prompt's exact continuity meaning.
+
+DATA & WORKFLOWS
+- Create incident → assign commander → auto-start timeline → propose escalation path.
+- Acknowledge escalation steps; block severity downgrade without commander note.
+- Attach evidence metadata; never invent binary blobs.
+- Publish status only after approval when severity ≥ high.
+- Close incident requires PIR draft link or explicit waiver.
+
+NON-GOALS
+No payments. No ecommerce inventory. No CRM pipeline. No generic todo list. No HarborFlow / ExpeditionOS / ResilienceOS branding.
+
+QUALITY BAR
+Production-faithful modules, local persistence, preview-ready navigation, validation gates, and contract traceability from this ContinuityHub prompt into generated feature modules.
+
+Additional ContinuityHub production clause 2997: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 3219: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 3441: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 3663: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 3885: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 4107: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 4329: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 4551: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 4773: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 4995: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 5217: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 5439: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 5661: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 5883: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 6105: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 6327: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 6549: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 6771: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 6993: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 7215: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 7437: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 7659: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 7881: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 8103: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 8325: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 8547: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 8769: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 8991: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 9213: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 9435: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 9657: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 9879: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 10101: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 10323: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 10545: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 10767: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 10989: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 11211: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 11433: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 11655: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 11877: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 12099: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 12321: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 12543: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 12765: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 12987: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 13209: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 13431: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 13653: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 13875: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 14097: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 14319: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 14541: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 14763: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 14985: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 15207: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 15429: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 15651: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 15873: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 16095: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 16317: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 16539: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 16761: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 16983: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 17205: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 17427: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 17649: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 17871: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 18093: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 18315: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 18537: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 18759: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 18981: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 19203: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 19425: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 19647: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 19869: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.
+Additional ContinuityHub production clause 20091: maintain incident timeline integrity, stakeholder notification acknowledgements, runbook linkage, and evidence locker metadata without inventing CRM/tasks fallback modules.

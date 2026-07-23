@@ -12,6 +12,7 @@
   'use strict';
 
   var BUILD_API = '/api/build/from-prompt';
+  var BUILD_READY_API = '/api/build/ready';
   var RUNTIME_AUTHORITY_API = '/api/runtime/authority';
   var STORAGE_KEY = 'aidevengine.builder.projectId';
   var PROMPT_STORAGE_KEY = 'aidevengine.builder.lastPrompt';
@@ -25,6 +26,8 @@
     hasStartedAnyBuild: false,
     requestId: 0,
     abortController: null,
+    apiReady: null,
+    apiReadyDetail: null,
   };
 
   try {
@@ -58,41 +61,138 @@
   }
 
   // ---------------------------------------------------------------------
-  // Runtime status pill
+  // API readiness (submission path) + runtime status pill
   // ---------------------------------------------------------------------
 
-  var RUNTIME_POLL_MAX_ATTEMPTS = 4;
-  var RUNTIME_POLL_INTERVAL_MS = 4000;
+  var RUNTIME_POLL_MAX_ATTEMPTS = 8;
+  var RUNTIME_POLL_INTERVAL_MS = 1500;
 
   /**
-   * Polls runtime status a bounded number of times so the pill never gets stuck saying
-   * "Runtime starting…" once the runtime is actually ready — it settles on either
-   * "Runtime ready" (as soon as true) or a neutral "Runtime status unknown" (if it never
-   * confirms within the poll budget), rather than implying an indefinite startup.
+   * Classifies transport / fetch failures so the UI never collapses every network problem into
+   * the opaque browser message "Failed to fetch".
+   */
+  function classifyTransportError(err, httpStatus, payload) {
+    var message = err && err.message ? String(err.message) : String(err || 'Unknown network failure');
+    var lower = message.toLowerCase();
+    var code = (payload && payload.code) || (err && err.code) || null;
+
+    if (code === 'PAYLOAD_TOO_LARGE' || httpStatus === 413) {
+      return {
+        kind: 'PAYLOAD_TOO_LARGE',
+        title: 'Prompt payload rejected (too large)',
+        detail: (payload && payload.error) || message,
+        recovery: (payload && payload.recoveryAction) || 'Shorten the prompt slightly and retry Build.',
+      };
+    }
+    if (code === 'BUILD_REQUEST_REJECTED' || (httpStatus >= 400 && httpStatus < 500 && httpStatus !== 408)) {
+      return {
+        kind: 'BUILD_REQUEST_REJECTED',
+        title: 'Build request rejected',
+        detail: (payload && payload.error) || message,
+        recovery: (payload && payload.recoveryAction) || 'Fix the reported issue, then retry Build.',
+      };
+    }
+    if (httpStatus === 408 || /timeout|timed out|aborted/.test(lower)) {
+      return {
+        kind: 'REQUEST_TIMEOUT',
+        title: 'Request timed out',
+        detail: message,
+        recovery: 'The API did not finish in time. Confirm AiDevEngine is running (`npm run dev`), then retry.',
+      };
+    }
+    if (/failed to fetch|networkerror|load failed|err_connection_refused|connection refused|econnrefused/.test(lower)) {
+      return {
+        kind: 'BACKEND_UNAVAILABLE',
+        title: 'Backend unavailable',
+        detail: 'The browser could not reach the AiDevEngine API used for Build.',
+        recovery: 'Start AiDevEngine with `npm run dev` (opens http://127.0.0.1:4321). Do not open the UI from a static file or a different port.',
+      };
+    }
+    if (/cors|cross-origin|preflight/.test(lower)) {
+      return {
+        kind: 'CORS_OR_PREFLIGHT',
+        title: 'CORS or preflight failure',
+        detail: message,
+        recovery: 'Use the same origin as the API (http://127.0.0.1:4321). Avoid mixing localhost and 127.0.0.1.',
+      };
+    }
+    if (/unreadable response|invalid json|unexpected token/.test(lower)) {
+      return {
+        kind: 'INVALID_API_RESPONSE',
+        title: 'Invalid API response',
+        detail: message,
+        recovery: 'The API returned a non-JSON body. Check server logs, then retry.',
+      };
+    }
+    return {
+      kind: 'UNKNOWN_NETWORK_FAILURE',
+      title: 'Network failure',
+      detail: message,
+      recovery: 'Confirm `npm run dev` is healthy, open http://127.0.0.1:4321, then retry Build.',
+    };
+  }
+
+  function formatTransportFailure(classified) {
+    return classified.title + ': ' + classified.detail + ' — Recovery: ' + classified.recovery;
+  }
+
+  function setRuntimePill(text, tone) {
+    var pill = el('builder-runtime-pill');
+    if (!pill) return;
+    pill.textContent = text;
+    pill.className = 'builder-runtime-pill' + (tone ? ' ' + tone : '');
+  }
+
+  /**
+   * Polls the exact build submission readiness endpoint (`/api/build/ready`).
+   * Falls back to runtime authority only for supplemental messaging.
    */
   function checkRuntimeStatus(attempt) {
     attempt = attempt || 1;
-    var pill = el('builder-runtime-pill');
-    fetch(RUNTIME_AUTHORITY_API, { cache: 'no-store' })
-      .then(function (res) { return res.json().catch(function () { return {}; }); })
+    fetch(BUILD_READY_API, { cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Build readiness HTTP ' + res.status);
+        return res.json().catch(function () { return {}; });
+      })
       .then(function (payload) {
-        if (payload && payload.ok) {
-          pill.textContent = 'Runtime ready';
-          pill.className = 'builder-runtime-pill ready';
+        if (payload && payload.ok && payload.submissionReady !== false) {
+          state.apiReady = true;
+          state.apiReadyDetail = payload;
+          setRuntimePill('API ready · submission online', 'ready');
           return;
         }
+        state.apiReady = false;
         if (attempt < RUNTIME_POLL_MAX_ATTEMPTS) {
-          pill.textContent = 'Checking runtime…';
-          pill.className = 'builder-runtime-pill';
+          setRuntimePill('Waiting for build API…');
           setTimeout(function () { checkRuntimeStatus(attempt + 1); }, RUNTIME_POLL_INTERVAL_MS);
         } else {
-          pill.textContent = 'Runtime status unknown';
-          pill.className = 'builder-runtime-pill';
+          setRuntimePill('Build API not ready', 'down');
         }
       })
-      .catch(function () {
-        pill.textContent = 'Runtime unreachable';
-        pill.className = 'builder-runtime-pill down';
+      .catch(function (err) {
+        state.apiReady = false;
+        // Supplemental: still probe runtime authority so the pill distinguishes startup vs down.
+        fetch(RUNTIME_AUTHORITY_API, { cache: 'no-store' })
+          .then(function (res) { return res.json().catch(function () { return {}; }); })
+          .then(function (authority) {
+            if (authority && authority.ok) {
+              setRuntimePill('Runtime up · build ready route missing', 'down');
+            } else if (attempt < RUNTIME_POLL_MAX_ATTEMPTS) {
+              setRuntimePill('Starting AiDevEngine API…');
+              setTimeout(function () { checkRuntimeStatus(attempt + 1); }, RUNTIME_POLL_INTERVAL_MS);
+            } else {
+              var classified = classifyTransportError(err);
+              setRuntimePill(classified.title, 'down');
+            }
+          })
+          .catch(function () {
+            if (attempt < RUNTIME_POLL_MAX_ATTEMPTS) {
+              setRuntimePill('Backend unreachable — retrying…', 'down');
+              setTimeout(function () { checkRuntimeStatus(attempt + 1); }, RUNTIME_POLL_INTERVAL_MS);
+            } else {
+              setRuntimePill('Backend unavailable — run npm run dev', 'down');
+            }
+          });
       });
   }
 
@@ -234,7 +334,17 @@
     var emptySub = el('builder-preview-empty-sub');
     var openLink = el('builder-preview-open-link');
     var previewBlocked = productionPath && productionPath.previewAvailable === false;
-    var url = !previewBlocked && build && build.previewUrl ? build.previewUrl : null;
+    var verifiedUrl = !previewBlocked && build && build.previewUrl ? build.previewUrl : null;
+    var diagnosticUrl =
+      build &&
+      (build.diagnosticPreviewUrl ||
+        (build.previewContract && build.previewContract.previewUrl) ||
+        (build.livePreviewGate && build.livePreviewGate.previewUrl) ||
+        null);
+    // Prefer verified live preview; otherwise surface an unlocked diagnostic preview so a
+    // PREVIEW_AUTHORITY / verification failure does not hide a running generated app.
+    var url = verifiedUrl || diagnosticUrl || null;
+    var isDiagnosticOnly = !verifiedUrl && Boolean(diagnosticUrl);
 
     if (url) {
       if (frame.getAttribute('src') !== url) frame.src = url;
@@ -243,6 +353,10 @@
       empty.classList.add('hidden');
       openLink.href = url;
       openLink.classList.remove('hidden');
+      if (isDiagnosticOnly && emptySub) {
+        emptySub.textContent =
+          'Preview is running for this build but verification has not passed yet. You can still interact with the app below.';
+      }
       return;
     }
 
@@ -714,7 +828,10 @@
           primary: false,
           onClick: function () {
             persistProjectId(null);
-            runBuild(state.lastPrompt, { confirmFreshCopy: true });
+            runBuild(state.lastPrompt, {
+              confirmFreshCopy: true,
+              buildIntentOverride: 'START_NEW_BUILD',
+            });
           },
         },
       ]);
@@ -791,7 +908,10 @@
         primary: false,
         onClick: function () {
           persistProjectId(null);
-          runBuild(state.lastPrompt, { confirmFreshCopy: true });
+          runBuild(state.lastPrompt, {
+            confirmFreshCopy: true,
+            buildIntentOverride: 'START_NEW_BUILD',
+          });
         },
       },
     ]);
@@ -1108,6 +1228,22 @@
     }
     if (state.building) return;
 
+    // Do not begin a build while the submission API is known-down.
+    if (state.apiReady === false) {
+      setStatusBadge('Failed', 'failed');
+      showFailure(
+        formatTransportFailure({
+          kind: 'BACKEND_UNAVAILABLE',
+          title: 'Backend unavailable',
+          detail: 'Build API readiness check has not succeeded yet.',
+          recovery: 'Wait until the status pill shows “API ready”, or run `npm run dev` and reload http://127.0.0.1:4321.',
+        }),
+        [],
+      );
+      checkRuntimeStatus(1);
+      return;
+    }
+
     state.building = true;
     state.hasStartedAnyBuild = true;
     el('builder-reset-btn').disabled = false;
@@ -1139,14 +1275,32 @@
     };
     if (controller) fetchOptions.signal = controller.signal;
 
-    fetch(BUILD_API, fetchOptions)
+    // Reconfirm readiness immediately before submission (covers "backend becomes ready after UI load").
+    var readyGate = fetch(BUILD_READY_API, { cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Build readiness HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (readyPayload) {
+        if (!readyPayload || readyPayload.ok !== true || readyPayload.submissionReady === false) {
+          var gateErr = new Error('Build submission route is not ready');
+          gateErr.code = 'BACKEND_UNAVAILABLE';
+          throw gateErr;
+        }
+        state.apiReady = true;
+        return fetch(BUILD_API, fetchOptions);
+      });
+
+    readyGate
       .then(function (res) {
         return res.text().then(function (text) {
           var payload = null;
           try {
             payload = text ? JSON.parse(text) : null;
           } catch (parseErr) {
-            throw new Error('AiDevEngine returned an unreadable response.');
+            var invalid = new Error('AiDevEngine returned an unreadable response.');
+            invalid.code = 'INVALID_API_RESPONSE';
+            throw invalid;
           }
           return { res: res, payload: payload };
         });
@@ -1180,7 +1334,11 @@
           return;
         }
         if (!res.ok) {
-          throw new Error(payload.error || 'Build request failed (HTTP ' + res.status + ').');
+          var rejected = new Error(payload.error || 'Build request failed (HTTP ' + res.status + ').');
+          rejected.code = payload.code || (res.status === 413 ? 'PAYLOAD_TOO_LARGE' : 'BUILD_REQUEST_REJECTED');
+          rejected.httpStatus = res.status;
+          rejected.payload = payload;
+          throw rejected;
         }
 
         applyBuildPayload(payload);
@@ -1189,7 +1347,12 @@
         if (thisRequestId !== state.requestId) return; // cancelled via Reset test / New prompt
         if (err && err.name === 'AbortError') return; // deliberate cancellation, not a real failure
         setStatusBadge('Failed', 'failed');
-        showFailure(err && err.message ? err.message : String(err), []);
+        var classified = classifyTransportError(err, err && err.httpStatus, err && err.payload);
+        showFailure(formatTransportFailure(classified), []);
+        if (classified.kind === 'BACKEND_UNAVAILABLE') {
+          state.apiReady = false;
+          checkRuntimeStatus(1);
+        }
       })
       .finally(function () {
         if (thisRequestId !== state.requestId) return;

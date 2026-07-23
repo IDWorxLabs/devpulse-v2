@@ -115,8 +115,24 @@ export function normalizeBuildResult(input: BuildResultNormalizerInput): Normali
     executionReport === null ||
     executionReport.overallState === 'COMPLETED' ||
     executionReport.overallState === 'RECOVERED';
+  const executionFailedOrBlocked =
+    executionReport !== null &&
+    (executionReport.overallState === 'FAILED' || executionReport.overallState === 'BLOCKED');
+  // Preview-startup recovery can exhaust while Vite still serves a working app. Do not convert
+  // that into a product warning when the preview is actually reachable. Unrecovered failures in
+  // earlier stages (npm install/build) still downgrade to BUILT_WITH_WARNINGS.
+  const previewOnlyExecutionFailure =
+    executionFailedOrBlocked &&
+    (() => {
+      const recoveryStages = (executionReport?.recoveryAttempts ?? []).map((attempt) => String(attempt.stage ?? ''));
+      if (recoveryStages.length > 0) {
+        return recoveryStages.every((stage) => /PREVIEW/i.test(stage));
+      }
+      const label = String(executionReport?.summary?.currentStageLabel ?? '');
+      return /preview/i.test(label);
+    })();
   const executionUnrecoveredFailure =
-    executionReport !== null && (executionReport.overallState === 'FAILED' || executionReport.overallState === 'BLOCKED');
+    executionFailedOrBlocked && !(previewReady && previewOnlyExecutionFailure);
 
   const faithfulnessReport = input.productFaithfulnessReport ?? null;
   const faithfulnessIsMismatch = faithfulnessReport?.verdict === 'PRODUCT_MISMATCH';

@@ -49,7 +49,11 @@ import type { LivePreviewInteractionProofReport } from '../src/live-preview-inte
 import type { OnePromptLivePreviewBuildResult } from '../src/one-prompt-live-preview/one-prompt-live-preview-types.js';
 import type { ProductFaithfulnessReport } from '../src/product-faithfulness-v1/index.js';
 import type { GenerationFaithfulnessReport } from '../src/product-faithfulness-v2/index.js';
-import { readRequestBody } from './brain-api-handler.js';
+import {
+  BUILD_MAX_BODY_BYTES,
+  RequestBodyTooLargeError,
+  readRequestBody,
+} from './brain-api-handler.js';
 import {
   buildFreshBuildArtifactIsolationReportSection,
   runBuildArtifactStalenessCheck,
@@ -261,7 +265,7 @@ function sendBuildJson(
 
 export async function handleBuildFromPromptRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
   try {
-    const raw = await readRequestBody(req);
+    const raw = await readRequestBody(req, BUILD_MAX_BODY_BYTES);
     const body = JSON.parse(raw) as {
       prompt?: string;
       message?: string;
@@ -439,8 +443,16 @@ export async function handleBuildFromPromptRequest(req: IncomingMessage, res: Se
       return;
     }
 
-    if (bridgeResult.buildResult && bridgeResult.brainPayload) {
-      const result = bridgeResult.buildResult;
+    // Prefer the orchestrator build result; fall back to the synthetic failure result embedded in
+    // brainPayload when the bridge catch path could not attach buildResult (still a real acceptance
+    // of the prompt — never collapse that into an opaque transport-looking 400).
+    const bridgeBuildResult =
+      bridgeResult.buildResult ??
+      ((bridgeResult.brainPayload?.onePromptLivePreview as OnePromptLivePreviewBuildResult | undefined) ??
+        null);
+
+    if (bridgeBuildResult && bridgeResult.brainPayload) {
+      const result = bridgeBuildResult;
       // Fresh Build Artifact Isolation V4 — same ordering guarantee as the forceFreshProject path
       // above: freshness is checked before this evidence is handed to faithfulness/proof.
       const freshBuildArtifactIsolation = buildFreshBuildArtifactIsolationSectionForResult(result);
@@ -502,8 +514,39 @@ export async function handleBuildFromPromptRequest(req: IncomingMessage, res: Se
       return;
     }
 
-    sendBuildJson(res, 400, { error: 'Build bridge did not produce a build result.' });
+    if (bridgeResult.kind === 'CHAT_ONLY') {
+      sendBuildJson(res, 400, {
+        ok: false,
+        error: 'Build intent was not detected for this prompt.',
+        code: 'BUILD_REQUEST_REJECTED',
+        bridgeKind: bridgeResult.kind,
+        progressItems: bridgeResult.progressItems ?? [],
+        recoveryAction: 'Rephrase as an explicit app-build request, or retry Build (forceBuildIntent is already set by the V4 UI).',
+      });
+      return;
+    }
+
+    sendBuildJson(res, 400, {
+      ok: false,
+      error: 'Build bridge did not produce a build result.',
+      code: 'BUILD_REQUEST_REJECTED',
+      bridgeKind: bridgeResult.kind,
+      progressItems: bridgeResult.progressItems ?? [],
+      recoveryAction: 'Check server logs for the bridge failure, then retry Build.',
+    });
   } catch (err) {
+    if (err instanceof RequestBodyTooLargeError) {
+      sendBuildJson(res, 413, {
+        ok: false,
+        error:
+          'Build prompt payload is too large for this server. Shorten the prompt or raise BUILD_MAX_BODY_BYTES.',
+        code: 'PAYLOAD_TOO_LARGE',
+        maxBodyBytes: err.maxBytes,
+        endpoint: BUILD_FROM_PROMPT_API_PATH,
+        recoveryAction: 'Reduce prompt size or restart AiDevEngine with the updated body limit, then retry Build.',
+      });
+      return;
+    }
     if (err instanceof ProjectNameConflictRejectedError) {
       sendBuildJson(res, 409, {
         ok: false,
@@ -514,8 +557,31 @@ export async function handleBuildFromPromptRequest(req: IncomingMessage, res: Se
       return;
     }
     const message = err instanceof Error ? err.message : 'Invalid build-from-prompt request';
-    sendBuildJson(res, 400, { error: message });
+    sendBuildJson(res, 400, { error: message, code: 'BUILD_REQUEST_REJECTED' });
   }
+}
+
+/**
+ * Build submission readiness — used by the V4 builder UI before enabling Build.
+ * Confirms the same process that serves `/api/build/from-prompt` is alive and accepting
+ * production-sized prompts (not merely that some unrelated runtime authority state exists).
+ */
+export function handleBuildReadyRequest(_req: IncomingMessage, res: ServerResponse): void {
+  sendBuildJson(res, 200, {
+    ok: true,
+    ready: true,
+    submissionReady: true,
+    endpoint: BUILD_FROM_PROMPT_API_PATH,
+    method: 'POST',
+    maxBodyBytes: BUILD_MAX_BODY_BYTES,
+    dependencies: {
+      buildSubmissionRoute: true,
+      livePreviewStatusRoute: true,
+      serverProcessAlive: true,
+    },
+    recoveryAction: null,
+    checkedAt: new Date().toISOString(),
+  });
 }
 
 export function handleBuildLivePreviewStatusRequest(req: IncomingMessage, res: ServerResponse): void {

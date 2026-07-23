@@ -5,6 +5,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { ensurePreviewReadinessHandshake } from './preview-readiness-contract.js';
 
 export const PREVIEW_WORKSPACE_HASH_META = 'aidevengine-workspace-hash';
 export const PREVIEW_PROJECT_ID_META = 'aidevengine-project-id';
@@ -58,6 +59,13 @@ export function stampPreviewWorkspaceIdentity(input: {
   html = upsertMetaTag(html, PREVIEW_PROJECT_ID_META, input.projectId);
   html = upsertMetaTag(html, PREVIEW_APP_TSX_CHECKSUM_META, appTsxChecksum);
   writeFileSync(indexPath, html, 'utf8');
+
+  // Runtime handshake: signals HYDRATED/ROUTE_READY after React paints (generic, not product-specific).
+  ensurePreviewReadinessHandshake({
+    workspaceDir: input.workspaceDir,
+    projectId: input.projectId,
+    workspaceHash: input.workspaceHash,
+  });
 
   return {
     readOnly: true,

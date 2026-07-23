@@ -140,12 +140,20 @@ export async function finalizeAutonomousRuntimeAuthority(input: {
 
 export function buildRuntimeAuthorityApiPayload(): Record<string, unknown> {
   const state = getRuntimeAuthorityState();
+  const managed = process.env.AIDEVENGINE_RUNTIME_AUTHORITY_MANAGED === '1';
+  const bypassed = isRuntimeAuthorityBypassed();
+  // Child server processes inherit MANAGED=1 after the parent verifies readiness, but do not
+  // hold the parent's in-memory state. Treat a live managed child as ready for API consumers
+  // (builder health pill) so the UI is not stuck on "Runtime status unknown".
+  const ready = state?.ready === true || (managed && !bypassed);
   return {
-    ok: state?.ready ?? false,
+    ok: ready,
     contractVersion: RUNTIME_AUTHORITY_V1_CONTRACT_VERSION,
-    managed: process.env.AIDEVENGINE_RUNTIME_AUTHORITY_MANAGED === '1',
-    bypassed: isRuntimeAuthorityBypassed(),
+    managed,
+    bypassed,
     state,
     launchPlan: getRuntimeLaunchPlan(),
+    submissionEndpoint: '/api/build/from-prompt',
+    buildReadyEndpoint: '/api/build/ready',
   };
 }

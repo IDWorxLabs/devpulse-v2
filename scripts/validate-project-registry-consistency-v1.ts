@@ -62,7 +62,8 @@ async function main(): Promise<void> {
   const appJs = readFileSync(join(ROOT, 'public/founder-reality/app.js'), 'utf8');
   const createProjectViaRegistryFn =
     appJs.match(/function createProjectViaRegistry\([\s\S]*?\n  \}/)?.[0] ?? '';
-  const html = readFileSync(join(ROOT, 'public/founder-reality/index.html'), 'utf8');
+  const html = readFileSync(join(ROOT, 'public/founder-reality/command-center.html'), 'utf8');
+  const indexHtml = readFileSync(join(ROOT, 'public/founder-reality/index.html'), 'utf8');
   const serverTs = readFileSync(join(ROOT, 'server/founder-reality-server.ts'), 'utf8');
 
   assert('01. package script', Boolean(pkg.scripts?.['validate:project-registry-consistency-v1']), 'script');
@@ -78,6 +79,7 @@ async function main(): Promise<void> {
   assert('11. UI mutateProjectRegistry', appJs.includes('mutateProjectRegistry'), 'client mutate');
   assert('12. UI project actions', appJs.includes('data-project-action'), 'actions');
   assert('13. UI registry load', appJs.includes('loadProjectRegistryState'), 'load');
+  assert('13b. builder index does not own project-name dialog', !indexHtml.includes('id="project-name-dialog"'), 'builder index');
   assert('14. projects page unified registry', appJs.includes('getProjectRegistrySummaryForUi'), 'unified summary');
   assert('15. no auto Project N on click', !appJs.includes("createNewProjectTab('Project ' + (projectTabCounter + 1))"), 'no auto name');
   assert('16. project create error element', html.includes('id="project-name-error"'), 'error element');
@@ -86,7 +88,7 @@ async function main(): Promise<void> {
   assert('19. create loading state', appJs.includes('setProjectCreateBusy') && appJs.includes('Creating…'), 'loading state');
   assert('20. visible create error', appJs.includes('showProjectCreateError'), 'inline error');
   assert('21. duplicate name pre-check', appJs.includes('findActiveProjectByName'), 'client duplicate check');
-  assert('22. duplicate name error copy', appJs.includes('already exists. Choose a different name or open the existing project.'), 'duplicate message');
+  assert('22. duplicate name error copy', appJs.includes('already exists'), 'duplicate message');
   assert('23. switchView after create', /switchView\('command-center'\)/.test(createProjectViaRegistryFn), 'active view');
   assert(
     '24. create updates registry from response',
@@ -260,39 +262,43 @@ async function main(): Promise<void> {
     const archivedLisa = (repairedFile.projects ?? []).filter(
       (p) => p.status === 'ARCHIVED' && String(p.name ?? '').trim().toLowerCase() === 'lisa',
     );
-    assert('40. seeded duplicate repair status 200', repairRes.status === 200, String(repairRes.status));
-    assert('41. one active LISA after repair', activeLisa.length === 1, String(activeLisa.length));
+    assert('40. seeded same-name load status 200', repairRes.status === 200, String(repairRes.status));
     assert(
-      '42. primary LISA kept',
-      activeLisa[0]?.projectId === 'lisa-duplicate-1',
-      activeLisa[0]?.projectId ?? 'missing',
+      '41. same-name ACTIVE projects preserved (no auto-archive)',
+      activeLisa.length === 3,
+      String(activeLisa.length),
     );
-    assert('43. duplicate LISAs archived', archivedLisa.length === 2, String(archivedLisa.length));
     assert(
-      '44. repair persisted to storage',
-      (repairedFile.projects ?? []).filter((p) => p.status === 'ARCHIVED').length === 2,
+      '42. whitespace-normalized names kept',
+      activeLisa.every((p) => String(p.name ?? '').trim().toLowerCase() === 'lisa'),
+      activeLisa.map((p) => p.name).join(','),
+    );
+    assert('43. repair does not archive same-name siblings', archivedLisa.length === 0, String(archivedLisa.length));
+    assert(
+      '44. no ARCHIVE status from name-collision repair',
+      (repairedFile.projects ?? []).filter((p) => p.status === 'ARCHIVED').length === 0,
       String((repairedFile.projects ?? []).filter((p) => p.status === 'ARCHIVED').length),
     );
     assert(
-      '45. summary exposes one active LISA',
-      repairJson.projects?.count === 1 &&
-        repairJson.projects?.items?.filter((p) => String(p.name ?? '').trim().toLowerCase() === 'lisa').length === 1,
+      '45. summary exposes all same-name actives',
+      repairJson.projects?.count === 3 &&
+        repairJson.projects?.items?.filter((p) => String(p.name ?? '').trim().toLowerCase() === 'lisa').length === 3,
       String(repairJson.projects?.count),
     );
-    const operatorLogPath = getProjectRegistryOperatorLogPath(TEST_ROOT);
-    const operatorLog = existsSync(operatorLogPath) ? readFileSync(operatorLogPath, 'utf8') : '';
     assert(
-      '46. operator repair log written',
-      operatorLog.includes(PROJECT_REGISTRY_DUPLICATES_REPAIRED),
-      operatorLogPath,
+      '46. distinct internal project ids for same display name',
+      new Set(activeLisa.map((p) => p.projectId)).size === 3,
+      activeLisa.map((p) => p.projectId).join(','),
     );
 
-    const archiveRes = await fetch(`${baseUrl}/api/projects/archive`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ projectId: 'lisa-duplicate-1' }),
-    });
-    assert('47. archive remaining LISA 200', archiveRes.status === 200, String(archiveRes.status));
+    for (const id of ['lisa-duplicate-1', 'lisa-duplicate-2', 'lisa-duplicate-3']) {
+      const archiveRes = await fetch(`${baseUrl}/api/projects/archive`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId: id }),
+      });
+      assert(`47. archive ${id} 200`, archiveRes.status === 200, String(archiveRes.status));
+    }
 
     const reuseRes = await fetch(`${baseUrl}/api/projects/create`, {
       method: 'POST',

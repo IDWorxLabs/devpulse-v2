@@ -907,7 +907,16 @@
     "dev": "tsx server/founder-reality-dev-entry.ts",
     "start": "tsx server/founder-reality-dev-entry.ts",
     "dev:server-only": "tsx server/founder-reality-server.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate:build-submission-transport-v1": "tsx scripts/validate-build-submission-transport-v1.ts",
+    "validate:same-name-fresh-build-v1": "tsx scripts/validate-same-name-fresh-build-v1.ts",
+    "validate:preview-hydration-authority-v1": "tsx scripts/validate-preview-hydration-authority-v1.ts",
+    "validate:contextual-fallback-suppression-v1": "tsx scripts/validate-contextual-fallback-suppression-v1.ts",
+    "validate:generated-app-persistence-v1": "tsx scripts/validate-generated-app-persistence-v1.ts",
+    "validate:product-faithfulness-projection-v1": "tsx scripts/validate-product-faithfulness-projection-v1.ts",
+    "validate:expected-app-type-classification-v1": "tsx scripts/validate-expected-app-type-classification-v1.ts",
+    "validate:generated-interaction-proof-v1": "tsx scripts/validate-generated-interaction-proof-v1.ts",
+    "validate:infrastructure-module-classification-v1": "tsx scripts/validate-infrastructure-module-classification-v1.ts"
   },
   "devDependencies": {
     "@types/node": "^22.15.21",

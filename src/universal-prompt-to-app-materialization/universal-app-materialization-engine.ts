@@ -46,7 +46,7 @@ import {
   resolveDirectFeatureRootMount,
 } from '../simple-utility-app/direct-feature-root-mount.js';
 import { buildCanonicalProductContract } from '../product-faithfulness-v2/index.js';
-import { augmentWorkspaceWithContractToModuleTraceability, resolveMaterializationModuleIdsFromEnvelope } from '../contract-to-module-traceability/index.js';
+import { augmentWorkspaceWithContractToModuleTraceability, resolveMaterializationModuleIdsFromEnvelope, partitionProductAndInfrastructureModules } from '../contract-to-module-traceability/index.js';
 import { augmentWorkspaceWithBuildContextIntegrity } from '../build-context-integrity/index.js';
 import { augmentWorkspaceWithProductionSurfaceIntegration } from '../production-surface-integration/index.js';
 import {
@@ -365,6 +365,8 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
     input.approvedProductionBuildEnvelope !== undefined && input.approvedProductionBuildEnvelope !== null
       ? resolveMaterializationModuleIdsFromEnvelope(definition, input.approvedProductionBuildEnvelope)
       : materializableFeatureModules(definition);
+  const infrastructureModules = partitionProductAndInfrastructureModules(definition.featureModules)
+    .infrastructureModules;
   const navMaterializedModuleIds =
     approvedNavItems && approvedNavItems.length > 0
       ? [...new Set(approvedNavItems.map((item) => item.moduleId).filter((moduleId) => moduleIds.includes(moduleId)))]
@@ -382,6 +384,7 @@ export function buildUniversalMaterializedWorkspaceFiles(input: {
     promptSummary: summarizePrompt(input.rawPrompt),
     confidence: boundedBuildPlan.ranking.confidence,
     featureModules: moduleIds,
+    infrastructureModules,
     routes: definition.routes,
     navigationLabels: approvedNavPlanValid ? [...approvedNavLabels] : undefined,
     approvedModuleIds: approvedModulePlanValid ? [...suppliedModulePlan.moduleIds] : undefined,

@@ -66,7 +66,9 @@ export function deriveProductFaithfulnessInput(
 
   return {
     prompt: build.prompt ?? '',
-    architectureSummary: manifest?.promptSummary ? [manifest.promptSummary, manifest.expectedAppType ?? ''] : null,
+    // Do not feed expectedAppType / domain labels into generated-concept extraction —
+    // those are classifiers, not materialized product surfaces.
+    architectureSummary: manifest?.promptSummary ? [manifest.promptSummary] : null,
     featureContract: featureNames.map((featureName) => ({ featureName })),
     materializationManifestHints: manifest
       ? {
@@ -90,7 +92,8 @@ export function deriveProductFaithfulnessInput(
           whatFailed: livePreviewInteractionProof.summary.whatFailed,
         }
       : null,
-    workspaceManifestSummary: manifest ? [manifest.expectedAppType ?? '', manifest.promptSummary ?? ''].filter(Boolean) : null,
+    // Workspace summary must not include expectedAppType (lexical classifier residue).
+    workspaceManifestSummary: manifest?.promptSummary ? [manifest.promptSummary] : null,
   };
 }
 
@@ -139,7 +142,8 @@ export function deriveGenerationFaithfulnessStages(
       stage: 'ARCHITECTURE',
       input: {
         prompt: '',
-        architectureSummary: manifest?.promptSummary ? [manifest.promptSummary, manifest.expectedAppType ?? ''] : null,
+        // Classifier labels (expectedAppType) must not enter concept extraction.
+        architectureSummary: manifest?.promptSummary ? [manifest.promptSummary] : null,
         generatedFeatureModules: [...approvedModuleIds],
       },
     },
@@ -163,7 +167,7 @@ export function deriveGenerationFaithfulnessStages(
       stage: 'MANIFEST',
       input: {
         prompt: '',
-        workspaceManifestSummary: manifest ? [manifest.expectedAppType ?? '', manifest.promptSummary ?? ''].filter(Boolean) : null,
+        workspaceManifestSummary: manifest?.promptSummary ? [manifest.promptSummary] : null,
         generatedFeatureModules: manifest?.featureModules ?? [],
       },
     },

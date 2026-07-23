@@ -54,7 +54,10 @@ function normalizeStageInputForExtraction(input: ProductFaithfulnessInput): Prod
   return {
     ...input,
     generatedFeatureModules: [...(input.generatedFeatureModules ?? []), ...extraFeatureModules],
-    workspaceManifestSummary: [...(input.workspaceManifestSummary ?? []), ...extraSummaryLines],
+    // Fold architecture summary into visibleHeadings — extractGeneratedConcepts intentionally
+    // omits workspaceManifestSummary (classifier/prompt-summary residue), so that bridge no
+    // longer carries stage evidence. visibleHeadings remains direct UI/evidence text.
+    visibleHeadings: [...(input.visibleHeadings ?? []), ...extraSummaryLines],
   };
 }
 

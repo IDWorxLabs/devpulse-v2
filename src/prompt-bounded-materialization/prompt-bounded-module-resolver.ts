@@ -20,6 +20,7 @@ import {
   promptExplicitlyJustifiesGenericModule,
 } from './module-origin-evidence.js';
 import { promptExplicitlyRequiresAuth } from '../universal-build-pipeline-verification/build-profile-policy.js';
+import { partitionProductAndInfrastructureModules } from '../contract-to-module-traceability/contract-to-module-infrastructure-registry.js';
 import type {
   BlockedModuleRecord,
   FeatureModuleCandidate,
@@ -271,9 +272,15 @@ export function buildDefinitionFromModulePlan(
   baseDefinition: PromptBoundedModulePlanInput['profileDefinition'],
   plan: PromptBoundedModulePlan,
 ): PromptBoundedModulePlanInput['profileDefinition'] {
+  const partitioned = partitionProductAndInfrastructureModules(plan.approvedModuleIds);
+  const productSet = new Set(partitioned.productFeatureModules);
+  const routes = plan.approvedModuleIds
+    .map((moduleId, index) => ({ moduleId, route: plan.routes[index] }))
+    .filter((entry) => productSet.has(entry.moduleId))
+    .map((entry) => entry.route ?? (entry.moduleId === 'auth' ? '/' : `/${entry.moduleId}`));
   return {
     ...baseDefinition,
-    featureModules: [...plan.approvedModuleIds],
-    routes: [...plan.routes],
+    featureModules: partitioned.productFeatureModules,
+    routes,
   };
 }

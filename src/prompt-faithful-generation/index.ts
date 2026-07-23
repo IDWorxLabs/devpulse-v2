@@ -28,6 +28,7 @@ export {
 } from './prompt-profile-selection-guard.js';
 export {
   buildCustomProfileFeatureDefinition,
+  deriveExpectedAppTypeFromExtraction,
   shouldUseCustomFeatureDefinition,
 } from './custom-feature-contract-builder.js';
 export { buildPromptSpecificDomainCopy, buildLisaFirstScreenCopy } from './prompt-specific-ui-copy-builder.js';

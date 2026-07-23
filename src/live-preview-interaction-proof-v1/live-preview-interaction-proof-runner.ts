@@ -24,6 +24,8 @@ export interface ProofPageDriver {
   goto(url: string, timeoutMs: number): Promise<{ ok: boolean; error?: string }>;
   /** Traverses generic blueprint launch/onboarding chrome to the first product feature surface. */
   prepareFeatureSurface?(): Promise<void>;
+  /** Wait for AiDevEngine preview readiness handshake when present. */
+  waitForPreviewReady?(timeoutMs?: number): Promise<boolean>;
   /** Generic console.error() messages — informational, not necessarily fatal. */
   getConsoleErrors(): string[];
   /** Uncaught exceptions (pageerror) or console errors that clearly indicate a crash. */
@@ -32,6 +34,10 @@ export interface ProofPageDriver {
   findVisibleText(term: string): Promise<boolean>;
   hasButton(): Promise<boolean>;
   clickFirstButton(): Promise<boolean>;
+  /** Prefer a visible enabled Create/Save/Submit control outside navigation chrome. */
+  clickPrimaryActionButton?(): Promise<boolean>;
+  /** Fill label input + click Create; returns whether a success signal appeared. */
+  performCreateWorkflow?(label: string): Promise<{ found: boolean; performed: boolean; stateChanged: boolean; detail: string }>;
   hasTextInput(): Promise<boolean>;
   fillAndSubmitFirstTextInput(value: string): Promise<boolean>;
   hasCheckbox(): Promise<boolean>;
@@ -103,17 +109,31 @@ class PlaywrightProofPageDriver implements ProofPageDriver {
   async goto(url: string, timeoutMs: number): Promise<{ ok: boolean; error?: string }> {
     try {
       await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: timeoutMs });
+      await this.waitForPreviewReady(Math.min(12_000, timeoutMs));
       return { ok: true };
     } catch (err) {
       return { ok: false, error: err instanceof Error ? err.message : String(err) };
     }
   }
 
+  async waitForPreviewReady(timeoutMs = 12_000): Promise<boolean> {
+    try {
+      await this.page.waitForSelector('[data-aidev-preview-ready="1"]', {
+        timeout: timeoutMs,
+        state: 'attached',
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async prepareFeatureSurface(): Promise<void> {
     try {
+      await this.waitForPreviewReady(8_000);
       await this.page
         .waitForSelector(
-          '[data-blueprint="welcome-screen"], [data-blueprint="onboarding"], [data-blueprint="app-shell"], [data-feature-module]',
+          '[data-blueprint="welcome-screen"], [data-blueprint="onboarding"], [data-blueprint="app-shell"], [data-feature-module], [data-direct-feature-app="true"], [data-root-feature]',
           { timeout: 5_000, state: 'visible' },
         )
         .catch(() => undefined);
@@ -184,12 +204,100 @@ class PlaywrightProofPageDriver implements ProofPageDriver {
   }
 
   async clickFirstButton(): Promise<boolean> {
+    return this.clickPrimaryActionButton();
+  }
+
+  async clickPrimaryActionButton(): Promise<boolean> {
     try {
-      const btn = this.page.locator('button, [role="button"]').first();
-      await btn.click({ timeout: 2000 });
-      return true;
+      const semantic = this.page.locator(
+        '[data-aidev-action="create"], [data-aidev-action="save"], [data-aidev-action="submit"], [data-aidev-action="update"]',
+      );
+      const semanticCount = await semantic.count();
+      for (let i = 0; i < Math.min(semanticCount, 8); i += 1) {
+        const btn = semantic.nth(i);
+        if (!(await btn.isVisible().catch(() => false))) continue;
+        if (!(await btn.isEnabled().catch(() => false))) continue;
+        await btn.click({ timeout: 2000 });
+        return true;
+      }
+      const candidates = this.page.locator(
+        'main button, [data-feature-module] button, [data-direct-feature-app] button, [data-root-feature] button, form button',
+      );
+      const count = await candidates.count();
+      for (let i = 0; i < Math.min(count, 12); i += 1) {
+        const btn = candidates.nth(i);
+        if (!(await btn.isVisible().catch(() => false))) continue;
+        if (!(await btn.isEnabled().catch(() => false))) continue;
+        const text = ((await btn.textContent().catch(() => '')) ?? '').trim().toLowerCase();
+        if (!text) continue;
+        if (/^(next|previous|prev|cancel|retry|resume|refresh|export|open |link )/i.test(text)) continue;
+        if (/create|save|submit|add|new|update|confirm/i.test(text)) {
+          await btn.click({ timeout: 2000 });
+          return true;
+        }
+      }
+      // Fallback: first enabled non-nav button in main/feature surface.
+      for (let i = 0; i < Math.min(count, 12); i += 1) {
+        const btn = candidates.nth(i);
+        if (!(await btn.isVisible().catch(() => false))) continue;
+        if (!(await btn.isEnabled().catch(() => false))) continue;
+        const text = ((await btn.textContent().catch(() => '')) ?? '').trim().toLowerCase();
+        if (/^(next|previous|prev|cancel|retry|resume|refresh|export)$/i.test(text)) continue;
+        await btn.click({ timeout: 2000 });
+        return true;
+      }
+      return false;
     } catch {
       return false;
+    }
+  }
+
+  async performCreateWorkflow(
+    label: string,
+  ): Promise<{ found: boolean; performed: boolean; stateChanged: boolean; detail: string }> {
+    try {
+      const input = this.page
+        .locator(
+          '[data-aidev-action="create-label"], input[placeholder="Enter label"], input[placeholder*="label" i], main input[type="text"], [data-feature-module] input[type="text"]',
+        )
+        .first();
+      const createBtn = this.page
+        .locator('[data-aidev-action="create"], main button, [data-feature-module] button, form button')
+        .filter({ hasText: /^Create$/i })
+        .last();
+      const inputVisible = await input.isVisible().catch(() => false);
+      const btnVisible = await createBtn.isVisible().catch(() => false);
+      if (!inputVisible || !btnVisible) {
+        return {
+          found: false,
+          performed: false,
+          stateChanged: false,
+          detail: 'No create form (label input + Create button) was found on the feature surface.',
+        };
+      }
+      const before = await this.snapshotBodyText();
+      await input.fill(label, { timeout: 2000 });
+      await createBtn.click({ timeout: 2000 });
+      await new Promise((r) => setTimeout(r, 400));
+      const after = await this.snapshotBodyText();
+      const success =
+        /created successfully/i.test(after) ||
+        (after.includes(label) && after !== before);
+      return {
+        found: true,
+        performed: true,
+        stateChanged: success,
+        detail: success
+          ? `Create workflow persisted visible record "${label}".`
+          : 'Create workflow ran but no visible success/state change was detected.',
+      };
+    } catch (error) {
+      return {
+        found: true,
+        performed: false,
+        stateChanged: false,
+        detail: error instanceof Error ? error.message : String(error),
+      };
     }
   }
 
@@ -308,11 +416,36 @@ export async function attemptInteraction(
   });
 
   switch (interaction.type) {
+    case 'CREATE_WORKFLOW': {
+      if (typeof driver.performCreateWorkflow === 'function') {
+        const result = await driver.performCreateWorkflow(`Proof ${Date.now().toString(36)}`);
+        return base(result.found, result.performed, result.stateChanged, result.detail);
+      }
+      // Drivers without create workflow fall through to primary action click.
+      const found = await driver.hasButton();
+      if (!found) return base(false, false, false, 'No button was found on the page.');
+      const before = await driver.snapshotBodyText();
+      const performed = driver.clickPrimaryActionButton
+        ? await driver.clickPrimaryActionButton()
+        : await driver.clickFirstButton();
+      if (!performed) return base(true, false, false, 'A primary action button was found but could not be clicked.');
+      const after = await driver.snapshotBodyText();
+      return base(
+        true,
+        true,
+        before !== after,
+        before !== after
+          ? 'Clicking the primary action changed the visible content.'
+          : 'Clicking the primary action did not change the visible content.',
+      );
+    }
     case 'BUTTON_CLICK': {
       const found = await driver.hasButton();
       if (!found) return base(false, false, false, 'No button was found on the page.');
       const before = await driver.snapshotBodyText();
-      const performed = await driver.clickFirstButton();
+      const performed = driver.clickPrimaryActionButton
+        ? await driver.clickPrimaryActionButton()
+        : await driver.clickFirstButton();
       if (!performed) return base(true, false, false, 'A button was found but could not be clicked.');
       const after = await driver.snapshotBodyText();
       return base(true, true, before !== after, before !== after ? 'Clicking the button changed the visible content.' : 'Clicking the button did not change the visible content.');

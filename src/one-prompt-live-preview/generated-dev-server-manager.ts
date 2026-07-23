@@ -2,6 +2,9 @@
  * Manages long-running Vite dev servers for generated workspaces (multi-project).
  */
 
+import { createHash } from 'node:crypto';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { spawn, type ChildProcess } from 'node:child_process';
 import {
   killChildProcessTree,
@@ -11,6 +14,37 @@ import {
 } from './child-process-teardown.js';
 import { getActiveProjectId } from './workspace-tab-registry.js';
 import { parseViteDevServerUrl, summarizeDevServerStartupFailure } from './vite-dev-server-output.js';
+import { ensurePreviewReadinessHandshake } from '../end-to-end-build-reality-engine-v1/preview-readiness-contract.js';
+import { stampPreviewWorkspaceIdentity } from '../end-to-end-build-reality-engine-v1/preview-workspace-identity.js';
+import { GENERATED_APP_MANIFEST_FILENAME } from '../universal-prompt-to-app-materialization/generated-app-manifest.js';
+
+/**
+ * Resolve the workspace hash used for preview identity BEFORE Vite starts.
+ * Must match `contract-expectation-extractor` hashing so FALSE_SUCCESS_SCAN does not
+ * treat a working preview as stale. Never invent `pre-vite-*` placeholders — those
+ * poison meta tags and fail hash alignment against the real expectation hash.
+ */
+function resolvePreviewWorkspaceHash(workspaceDir: string): string {
+  try {
+    const manifestPath = join(workspaceDir, GENERATED_APP_MANIFEST_FILENAME);
+    if (existsSync(manifestPath)) {
+      const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as { workspaceHash?: string };
+      const hash = typeof manifest.workspaceHash === 'string' ? manifest.workspaceHash.trim() : '';
+      if (hash && !hash.startsWith('pre-vite-')) return hash;
+    }
+  } catch {
+    // Fall through to path fingerprint.
+  }
+  return createHash('sha256').update(workspaceDir).digest('hex');
+}
+
+function ensureHandshakeBeforeVite(workspaceDir: string, projectId: string): void {
+  const workspaceHash = resolvePreviewWorkspaceHash(workspaceDir);
+  const stamped = stampPreviewWorkspaceIdentity({ workspaceDir, workspaceHash, projectId });
+  if (!stamped) {
+    ensurePreviewReadinessHandshake({ workspaceDir, projectId, workspaceHash });
+  }
+}
 
 export interface GeneratedDevServerState {
   child: ChildProcess;
@@ -238,6 +272,10 @@ export function startGeneratedAppDevServer(input: {
       if (existing) {
         await stopGeneratedDevServerByKey(key);
       }
+
+      // Stamp hydration handshake BEFORE Vite serves — PREVIEW_AUTHORITY must not race forensic
+      // completion, which historically stamped readiness only after the audit already ran.
+      ensureHandshakeBeforeVite(input.workspaceDir, input.workspaceId);
 
       const spawnTarget = resolveViteDevSpawnTarget(input.workspaceDir);
       if (!spawnTarget) {

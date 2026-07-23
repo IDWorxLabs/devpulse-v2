@@ -380,12 +380,22 @@ export function createPlaywrightDomRealityPage(page: {
     goto: async (url) => {
       await page.goto(url, { waitUntil: 'load', timeout: 25_000 });
       try {
-        await page.waitForFunction(
-          () => (document.querySelector('#root')?.childElementCount ?? 0) > 0,
-          { timeout: 15_000 },
-        );
+        // Prefer deterministic AiDevEngine readiness handshake over bare #root existence.
+        await page.waitForSelector('[data-aidev-preview-ready="1"]', {
+          timeout: 20_000,
+          state: 'attached',
+        });
       } catch {
-        // Contract-derived selectors below produce actionable failures.
+        try {
+          await page.waitForFunction(
+            () =>
+              (document.querySelector('#root')?.childElementCount ?? 0) > 0 ||
+              Boolean(document.querySelector('[data-direct-feature-app="true"], [data-feature-module], [data-root-feature]')),
+            { timeout: 12_000 },
+          );
+        } catch {
+          // Contract-derived selectors below produce actionable failures.
+        }
       }
     },
     waitForSelector: async (selector, options) => {

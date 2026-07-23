@@ -21,6 +21,7 @@ import {
   shouldGenerateUniversalCrudForModule,
   entityDescriptorFromApprovedModule,
 } from '../universal-crud-generation-engine/index.js';
+import { INFRASTRUCTURE_SHELL_MODULE_IDS } from '../contract-to-module-traceability/contract-to-module-infrastructure-registry.js';
 import type { ApprovedProductionBuildEnvelope } from '../contract-bound-generation-authority-v4/approved-production-build-envelope.js';
 import { resolveMaterializationModuleIdsFromEnvelope } from '../contract-to-module-traceability/contract-to-module-materialization-gate.js';
 import {
@@ -109,15 +110,7 @@ export interface GeneratedFeatureModuleManifestEntry {
   status: 'generated';
 }
 
-const INFRASTRUCTURE_MODULES = new Set([
-  'persistence',
-  'auth',
-  'dashboard',
-  'settings',
-  'navigation-router',
-  'filter-ui',
-]);
-
+const INFRASTRUCTURE_MODULES = new Set<string>(INFRASTRUCTURE_SHELL_MODULE_IDS);
 function esc(value: string): string {
   return value.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/`/g, '\\`');
 }

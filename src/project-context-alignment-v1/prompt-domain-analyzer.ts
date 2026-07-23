@@ -12,6 +12,7 @@ import {
   proposedNameShouldNotBeTaskTracker,
   resolveLisaProjectDomain,
 } from '../project-context-switching/project-context-classifier-guard.js';
+import { maskNegatedProductPhrases } from '../product-faithfulness-v1/product-faithfulness-feature-extractor.js';
 import type { PromptDomainSignals } from './project-context-alignment-types.js';
 
 interface DomainTag {
@@ -37,12 +38,14 @@ const DOMAIN_TAGS: readonly DomainTag[] = [
     proposedName: 'ExpenseTracker',
     patterns: [/\b(expense|expenses|spending|receipt|budget|finance tracker)\b/i],
   },
+  // "checklist" alone (runbook step checklists) must not classify ContinuityHub as a task tracker.
+  // Prefer explicit multi-word task-product phrases over bare "checklist".
   {
     id: 'task',
     label: 'task tracking',
     appType: 'task tracker',
     proposedName: 'TaskTracker',
-    patterns: [/\b(task tracker|todo|to-do|checklist|add tasks|mark them complete)\b/i],
+    patterns: [/\b(task tracker|todo|to-do|add tasks|mark them complete|generic todo list)\b/i],
   },
   {
     id: 'crm',
@@ -56,7 +59,8 @@ const DOMAIN_TAGS: readonly DomainTag[] = [
     label: 'inventory management',
     appType: 'inventory manager',
     proposedName: 'InventoryManager',
-    patterns: [/\b(inventory|stock|warehouse)\b/i],
+    // Retail/warehouse inventory — not "inventory means failover capacity" continuity phrasing.
+    patterns: [/\b(inventory management|warehouse inventory|stock levels|sku inventory)\b/i],
   },
   {
     id: 'booking',
@@ -100,6 +104,18 @@ function matchDomainTags(text: string): DomainTag[] {
     }
   }
   return matches;
+}
+
+/**
+ * Strip ban-list / "do not inject … (tasks, expenses, …)" clauses so domain tagging does not
+ * treat disclaimers as affirmative product signals (e.g. ContinuityHub → ExpenseTracker).
+ */
+function maskBanListAndNegationClauses(text: string): string {
+  return maskNegatedProductPhrases(text)
+    .replace(/\bdo\s+not\s+inject\b[^.\n]*/gi, ' ')
+    .replace(/\bbanned\s+fallback\s+shells?\b[^.\n]*/gi, ' ')
+    .replace(/\bwithout\s+inventing\b[^.\n]*/gi, ' ')
+    .replace(/\bno\s+(?:payments|ecommerce\s+inventory|crm(?:\s+pipeline)?|generic\s+todo\s+list)\b[^.\n]*/gi, ' ');
 }
 
 function domainLabelFromTags(tags: DomainTag[]): string {
@@ -149,10 +165,14 @@ export function extractPromptDomainSignals(
   prompt: string,
   options?: { activeProjectName?: string | null },
 ): PromptDomainSignals {
-  const normalized = prompt.trim();
-  const tags = matchDomainTags(normalized);
-  const nameTokens = splitProjectNameTokens(normalized);
-  const profile = resolveBuildIntentProfile(normalized);
+  const normalized = prompt.replace(/^\uFEFF/, '').trim();
+  const affirmative = maskBanListAndNegationClauses(normalized);
+  const tags = matchDomainTags(affirmative);
+  // Only scan the opening build line for name-token domain expansion — full-prompt tokenization
+  // falsely promotes words like "Inventory" from definitional disclaimers into domain tags.
+  const openingLine = affirmative.split(/\r?\n/, 1)[0] ?? affirmative;
+  const nameTokens = splitProjectNameTokens(openingLine);
+  const profile = resolveBuildIntentProfile(affirmative);
   const activeProjectName = options?.activeProjectName?.trim() || null;
 
   let domainIds = [...new Set(tags.map((tag) => tag.id))];
@@ -164,14 +184,14 @@ export function extractPromptDomainSignals(
     }
   }
 
-  domainIds = filterMisplacedTaskDomainIds(domainIds, normalized, activeProjectName);
+  domainIds = filterMisplacedTaskDomainIds(domainIds, affirmative, activeProjectName);
   if (promptMentionsLisaOrAccessibility(normalized) && !domainIds.includes('accessibility')) {
     domainIds.push('accessibility');
   }
 
   const filteredTags = DOMAIN_TAGS.filter((tag) => domainIds.includes(tag.id));
   let proposedProjectName = proposedNameFromTags(filteredTags);
-  if (proposedNameShouldNotBeTaskTracker(normalized, proposedProjectName)) {
+  if (proposedNameShouldNotBeTaskTracker(affirmative, proposedProjectName)) {
     proposedProjectName = promptMentionsLisaOrAccessibility(normalized) ? 'LISA' : null;
   }
   if (!proposedProjectName) {
@@ -185,7 +205,7 @@ export function extractPromptDomainSignals(
       ...(profile ? [profile.toLowerCase()] : []),
     ]),
   ];
-  keywords = filterTaskTrackingKeywordsFromBoilerplate(normalized, keywords);
+  keywords = filterTaskTrackingKeywordsFromBoilerplate(affirmative, keywords);
 
   const domainLabel =
     promptMentionsLisaOrAccessibility(normalized) || (activeProjectName && isLisaProjectName(activeProjectName))

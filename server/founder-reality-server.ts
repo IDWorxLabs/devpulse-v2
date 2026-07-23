@@ -430,6 +430,16 @@ export function createFounderRealityServer() {
       return;
     }
 
+    if (urlPath === '/api/build/ready' && (req.method === 'GET' || req.method === 'HEAD')) {
+      if (req.method === 'HEAD') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end();
+        return;
+      }
+      buildFromPromptHandler.handleBuildReadyRequest(req, res);
+      return;
+    }
+
     if (urlPath === '/api/build/from-prompt' && req.method === 'POST') {
       await buildFromPromptHandler.handleBuildFromPromptRequest(req, res);
       return;
@@ -1036,6 +1046,7 @@ export function startFounderRealityServer(port = FOUNDER_REALITY_PORT, host = FO
     console.log('');
     console.log('Phase 11.1A Brain Runtime — POST /api/brain/respond + GET /api/brain/health');
     console.log('Phase 27.2 One-Prompt Live Preview — POST /api/build/from-prompt + GET /api/build/live-preview');
+    console.log('Build submission readiness — GET /api/build/ready');
     console.log('Phase 27.3 Local Runtime Launcher — Runtime Authority manages dev lifecycle on npm run dev');
     logRuntimeTruthStartupSummary(ROOT_DIR);
     console.log('Runtime Authority consolidates duplicate servers and resolves occupied ports automatically.');

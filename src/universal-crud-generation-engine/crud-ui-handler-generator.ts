@@ -53,6 +53,7 @@ export default function ${pascal}Feature() {
       data-universal-crud-engine="v1"
       data-modular-feature-v1="true"
       data-interaction-control="true"
+      data-aidev-action-surface="crud"
       data-prompt-terms="${escTsString(promptTerms.join(','))}"
     >
       <header className="modular-feature-header">
@@ -61,31 +62,32 @@ export default function ${pascal}Feature() {
       </header>
 
       <div className="universal-crud-toolbar">
-        <button type="button" data-interaction-control="true" className="universal-crud-btn" onClick={() => crud.refresh()}>
+        <button type="button" data-interaction-control="true" data-aidev-action="refresh" className="universal-crud-btn" onClick={() => crud.refresh()}>
           Refresh
         </button>
         {crud.undoSnapshot ? (
-          <button type="button" data-interaction-control="true" className="universal-crud-btn" onClick={() => crud.undoDelete()}>
+          <button type="button" data-interaction-control="true" data-aidev-action="undo-delete" className="universal-crud-btn" onClick={() => crud.undoDelete()}>
             Undo delete
           </button>
         ) : null}
         <span className="universal-crud-meta">Total: {crud.total}</span>
       </div>
 
-      {crud.loading ? <p className="universal-crud-status" data-loading="true">Loading…</p> : null}
-      {crud.error ? <p className="universal-crud-status universal-crud-error" data-error="true">{crud.error}</p> : null}
-      {crud.success ? <p className="universal-crud-status universal-crud-success" data-success="true">{crud.success}</p> : null}
+      {crud.loading ? <p className="universal-crud-status" data-loading="true" data-aidev-persist-state="rehydrating">Loading…</p> : null}
+      {crud.error ? <p className="universal-crud-status universal-crud-error" data-error="true" data-aidev-persist-state="save-failed">{crud.error}</p> : null}
+      {crud.success ? <p className="universal-crud-status universal-crud-success" data-success="true" data-aidev-persist-state="persisted">{crud.success}</p> : null}
 
-      <form className="universal-crud-form" onSubmit={onCreateSubmit}>
+      <form className="universal-crud-form" onSubmit={onCreateSubmit} data-aidev-action="create-form">
         <label htmlFor="${descriptor.entityId}-create-label">Create ${escTsString(displayName)}</label>
         <input
           id="${descriptor.entityId}-create-label"
           data-interaction-control="true"
+          data-aidev-action="create-label"
           value={createLabel}
           onChange={(e) => setCreateLabel(e.target.value)}
           placeholder="Enter label"
         />
-        <button type="submit" data-interaction-control="true" className="universal-crud-btn universal-crud-btn-primary">
+        <button type="submit" data-interaction-control="true" data-aidev-action="create" className="universal-crud-btn universal-crud-btn-primary">
           Create
         </button>
       </form>

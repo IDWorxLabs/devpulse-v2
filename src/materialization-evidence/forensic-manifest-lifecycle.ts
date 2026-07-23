@@ -11,6 +11,7 @@ import {
   serializeGeneratedAppManifest,
   type GeneratedAppManifest,
 } from '../universal-prompt-to-app-materialization/generated-app-manifest.js';
+import { partitionProductAndInfrastructureModules } from '../contract-to-module-traceability/contract-to-module-infrastructure-registry.js';
 import { discoverWorkspaceFiles } from './workspace-file-discovery-engine.js';
 import { attachManifestHashes } from './materialization-hash-engine.js';
 import { stampPreviewWorkspaceIdentity } from '../end-to-end-build-reality-engine-v1/preview-workspace-identity.js';
@@ -522,6 +523,8 @@ export function finalizeForensicManifestSuccess(
       dir !== 'src/features/domain',
   );
 
+  const partitionedModules = partitionProductAndInfrastructureModules(input.featureModules);
+
   const baseManifest: GeneratedAppManifest = {
     ...(existing ??
       buildInitialGeneratedAppManifest({
@@ -533,7 +536,8 @@ export function finalizeForensicManifestSuccess(
         expectedAppType: input.expectedAppType,
         promptSummary: input.promptSummary,
         confidence: input.confidence,
-        featureModules: input.featureModules,
+        featureModules: partitionedModules.productFeatureModules,
+        infrastructureModules: partitionedModules.infrastructureModules,
         routes: input.routes,
         fallbackUsed: input.fallbackUsed,
       })),
@@ -584,7 +588,12 @@ export function finalizeForensicManifestSuccess(
     promptSpecificTermsPresent: input.validation.promptSpecificTermsPresent,
     generatedFiles: discovery.files,
     generatedDirectories: discovery.directories,
-    featureModules: input.featureModules,
+    featureModules: partitionedModules.productFeatureModules,
+    ...(partitionedModules.infrastructureModules.length > 0
+      ? { infrastructureModules: partitionedModules.infrastructureModules }
+      : existing?.infrastructureModules
+        ? { infrastructureModules: existing.infrastructureModules }
+        : {}),
     routes: input.routes,
     services: pathsByCategory(discovery.files, 'Service'),
     models: pathsByCategory(discovery.files, 'Model'),

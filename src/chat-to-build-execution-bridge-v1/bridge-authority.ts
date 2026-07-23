@@ -498,7 +498,12 @@ export async function executeChatToBuildBridge(
   const alignment = assessProjectContextAlignment({
     prompt: buildPrompt,
     activeProjectId: alignmentActiveProjectId,
-    activeProjectName: input.projectName ?? resumeRoute.resumingProjectName,
+    // Never pass a resume display name without an active project id — stale same-prompt
+    // ExpenseTracker (or other) records would otherwise re-bind as "active project".
+    activeProjectName:
+      alignmentActiveProjectId == null
+        ? null
+        : (input.projectName ?? resumeRoute.resumingProjectName),
     confirmProjectContextAlignment: input.confirmProjectContextAlignment === true,
     rootDir: input.rootDir,
   });
@@ -793,10 +798,11 @@ export async function executeChatToBuildBridge(
       projectId: input.activeProjectId ?? undefined,
       projectName: input.projectName ?? undefined,
     });
+    const failedBuildResult = payload.onePromptLivePreview as OnePromptLivePreviewBuildResult;
     const enrichedPayload = await applyBuildResultConversationalIntelligence({
       message: input.message,
       payload,
-      buildResult: payload.onePromptLivePreview as OnePromptLivePreviewBuildResult,
+      buildResult: failedBuildResult,
       rootDir: input.repoRootDir,
     });
     return {
@@ -805,12 +811,16 @@ export async function executeChatToBuildBridge(
       classification,
       bridgeEvents: machine.getEvents(),
       progressItems: machine.buildProgressItems('FAILED'),
+      // Always attach the synthetic failure build so /api/build/from-prompt can return a structured
+      // generation-stage failure instead of an opaque "did not produce a build result" 400.
+      buildResult: failedBuildResult,
       brainPayload: attachBridgeMetadata(enrichedPayload, {
         readOnly: true,
         kind: 'BUILD_FAILED',
         classification,
         bridgeEvents: machine.getEvents(),
         progressItems: machine.buildProgressItems('FAILED'),
+        buildResult: failedBuildResult,
       }, bridgeRunId),
     };
   }

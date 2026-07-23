@@ -246,6 +246,22 @@ export function applyRealProductionPathProjectionToBuild(
   if (!blocked) {
     return { ...build, projectName: projectTitle };
   }
+  // Preserve an unlocked preview as diagnostic so founders can still open the running app when
+  // a later gate (e.g. PREVIEW_AUTHORITY) fails. Do not claim livePreviewAvailable/READY.
+  const unlockedPreviewUrl =
+    build.previewUrl ??
+    build.previewContract?.previewUrl ??
+    (build.livePreviewGate && typeof build.livePreviewGate === 'object'
+      ? (build.livePreviewGate as { previewUrl?: string | null }).previewUrl ?? null
+      : null) ??
+    build.diagnosticPreviewUrl ??
+    null;
+  const gateUnlocked =
+    build.previewStatus === 'UNLOCKED' ||
+    (build.livePreviewGate &&
+      typeof build.livePreviewGate === 'object' &&
+      String((build.livePreviewGate as { state?: string }).state ?? '').includes('UNLOCKED'));
+
   return {
     ...build,
     projectName: projectTitle,
@@ -253,7 +269,13 @@ export function applyRealProductionPathProjectionToBuild(
     buildResult: 'FAIL',
     livePreviewAvailable: false,
     previewUrl: null,
-    devServerRunning: false,
+    diagnosticPreviewUrl:
+      gateUnlocked && unlockedPreviewUrl
+        ? unlockedPreviewUrl
+        : build.diagnosticPreviewUrl ?? unlockedPreviewUrl,
+    // Keep runtime truth when a gate-unlocked Vite URL still exists — stripping it hides
+    // a working preview behind a failed E2E authority check.
+    devServerRunning: Boolean(gateUnlocked && unlockedPreviewUrl) || build.devServerRunning,
   };
 }
 

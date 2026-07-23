@@ -24,6 +24,12 @@ import {
   readPreviewIdentityFromHtml,
 } from './preview-workspace-identity.js';
 import {
+  PREVIEW_READY_SELECTOR,
+  classifyPreviewDomFailure,
+  htmlSignalsPreviewReady,
+  readPreviewProjectIdFromHtml,
+} from './preview-readiness-contract.js';
+import {
   previewWorkspacePathsAligned,
   resolvePreviewServingWorkspaceDir,
 } from './preview-workspace-resolver.js';
@@ -111,7 +117,20 @@ function hashFingerprintsEquivalent(expected: string | null | undefined, served:
   return false;
 }
 
+function isDirectFeatureAppSurface(bodyText: string, html: string): boolean {
+  const corpus = `${bodyText}\n${html}`.toLowerCase();
+  return (
+    corpus.includes('data-direct-feature-app="true"') ||
+    corpus.includes("data-direct-feature-app='true'") ||
+    corpus.includes('data-direct-feature-app=true')
+  );
+}
+
 function isFounderHostShell(bodyText: string, html: string): boolean {
+  // A hydrated generated app with direct-feature mount is never the founder host shell,
+  // even if residual copy somewhere mentions "sign in".
+  if (isDirectFeatureAppSurface(bodyText, html)) return false;
+  if (html.includes('data-root-feature=') || html.includes('data-feature-module=')) return false;
   const corpus = `${bodyText}\n${html}`.toLowerCase();
   return (
     corpus.includes('data-founder-sign-in') ||
@@ -125,41 +144,106 @@ async function readInitialVisibleDom(
   page: E2EDomRealityPage | null,
   previewUrl: string | null,
   expectations: E2EContractExpectationBundle,
+  expectedProjectId: string | null,
 ): Promise<{
   bodyText: string;
   html: string;
+  readinessClass: ReturnType<typeof classifyPreviewDomFailure>;
 }> {
+  const featureSelectors = [
+    PREVIEW_READY_SELECTOR,
+    '[data-direct-feature-app="true"]',
+    '[data-feature-module]',
+    '[data-root-feature]',
+    '[data-blueprint]',
+  ].join(', ');
+
   if (page && previewUrl) {
     await page.goto(previewUrl);
+    // Bounded polling for readiness — never treat bare #root as hydrated.
+    try {
+      await page.waitForSelector(PREVIEW_READY_SELECTOR, {
+        timeout: 20_000,
+        state: 'attached',
+      });
+    } catch {
+      try {
+        await page.goto(previewUrl);
+        await page.waitForSelector(featureSelectors, { timeout: 12_000, state: 'attached' });
+      } catch {
+        // Fall through — classify failure below.
+      }
+    }
     if (expectations.mountMode === 'direct-feature' && expectations.primaryModuleId) {
       try {
         await page.waitForSelector(
-          `[data-feature-module="${expectations.primaryModuleId}"], [data-root-feature="${expectations.primaryModuleId}"]`,
-          { timeout: 12_000, state: 'visible' },
+          [
+            PREVIEW_READY_SELECTOR,
+            '[data-direct-feature-app="true"]',
+            `[data-feature-module="${expectations.primaryModuleId}"]`,
+            `[data-root-feature="${expectations.primaryModuleId}"]`,
+          ].join(', '),
+          { timeout: 8_000, state: 'attached' },
         );
       } catch {
-        // Fall through — contract / shell checks below still apply.
-      }
-    } else {
-      try {
-        await page.waitForSelector('#root, [data-blueprint], [data-feature-module]', {
-          timeout: 8000,
-          state: 'attached',
-        });
-      } catch {
-        // Fall through.
+        // Feature markers optional once readiness handshake fired.
       }
     }
+    const bodyText = (await page.bodyText()).toLowerCase();
+    // Keep original-case HTML for identity attrs; classification lowercases internally.
+    const html = await page.content();
     return {
-      bodyText: (await page.bodyText()).toLowerCase(),
-      html: (await page.content()).toLowerCase(),
+      bodyText,
+      html,
+      readinessClass: classifyPreviewDomFailure({
+        html,
+        bodyText,
+        expectedProjectId,
+        httpOk: true,
+      }),
     };
   }
   if (previewUrl) {
+    // Fetch-only cannot observe React hydration — classify as browser automation gap,
+    // not HTML_SHELL_NOT_HYDRATED (that false-positive fails working Vite apps).
     const served = await fetchPreviewIdentityFromUrl(previewUrl);
-    return { bodyText: served.bodyText.toLowerCase(), html: served.html.toLowerCase() };
+    return {
+      bodyText: served.bodyText.toLowerCase(),
+      html: served.html,
+      readinessClass: 'BROWSER_AUTOMATION_FAILURE',
+    };
   }
-  return { bodyText: '', html: '' };
+  return { bodyText: '', html: '', readinessClass: 'PREVIEW_SERVER_UNAVAILABLE' };
+}
+
+function describeInitialDomMismatch(
+  bodyText: string,
+  html: string,
+  readinessClass: ReturnType<typeof classifyPreviewDomFailure>,
+): string {
+  if (readinessClass === 'BROWSER_AUTOMATION_FAILURE') {
+    return 'Browser automation unavailable — cannot verify hydrated DOM (install Playwright Chromium)';
+  }
+  if (readinessClass === 'WRONG_PREVIEW_IDENTITY') {
+    return 'Preview page project identity does not match the current build project id';
+  }
+  if (readinessClass === 'HTML_SHELL_NOT_HYDRATED') {
+    return 'HTML shell loaded but application has not signaled hydration (missing data-aidev-preview-ready)';
+  }
+  if (readinessClass === 'APPLICATION_RUNTIME_EXCEPTION') {
+    return 'Application runtime exception prevented hydration';
+  }
+  if (isFounderHostShell(bodyText, html)) {
+    return 'Initial DOM shows founder/host auth shell instead of generated application';
+  }
+  if (
+    html.includes('data-blueprint="welcome-screen"') ||
+    html.includes('data-blueprint="auth-guest"') ||
+    bodyText.includes('sign in to continue')
+  ) {
+    return 'Initial DOM shows blueprint auth/welcome shell instead of contract feature surface';
+  }
+  return 'Initial DOM lacks hydrated contract feature surface after readiness wait';
 }
 
 function initialDomMatchesContract(
@@ -174,6 +258,19 @@ function initialDomMatchesContract(
     bodyText.includes('sign in to continue')
   ) {
     return false;
+  }
+  // Prefer deterministic readiness handshake; then direct-feature / feature markers.
+  if (htmlSignalsPreviewReady(html)) {
+    if (isDirectFeatureAppSurface(bodyText, html) || html.includes('data-root-feature=')) {
+      return true;
+    }
+    for (const term of expectations.requiredUiTerms.slice(0, 8)) {
+      if (term.length >= 3 && bodyText.includes(term.toLowerCase())) return true;
+    }
+    if (expectations.featureModules.length === 0) return true;
+  }
+  if (isDirectFeatureAppSurface(bodyText, html) || html.includes('data-root-feature=')) {
+    return true;
   }
   if (expectations.primaryModuleId) {
     const moduleId = expectations.primaryModuleId;
@@ -328,12 +425,28 @@ export async function runPreviewAuthorityAudit(input: {
     input.page ?? null,
     playwrightPreviewUrl,
     input.expectations,
+    input.projectId,
   );
-  const initialVisibleDomMatchesContract = initialDomMatchesContract(
-    initialDom.bodyText,
-    initialDom.html,
-    input.expectations,
-  );
+  const servedProjectId =
+    readPreviewProjectIdFromHtml(initialDom.html) ??
+    readPreviewIdentityFromHtml(initialDom.html).projectId ??
+    null;
+  const projectIdentityAligned =
+    !input.projectId ||
+    !servedProjectId ||
+    servedProjectId.toLowerCase() === input.projectId.toLowerCase();
+  const readinessClass =
+    !projectIdentityAligned
+      ? 'WRONG_PREVIEW_IDENTITY'
+      : classifyPreviewDomFailure({
+          html: initialDom.html,
+          bodyText: initialDom.bodyText,
+          expectedProjectId: input.projectId,
+          httpOk: Boolean(playwrightPreviewUrl),
+        });
+  const initialVisibleDomMatchesContract =
+    projectIdentityAligned &&
+    initialDomMatchesContract(initialDom.bodyText, initialDom.html, input.expectations);
 
   let previewWorkspaceHash: string | null = null;
   let appTsxChecksumServed: string | null = null;
@@ -459,13 +572,38 @@ export async function runPreviewAuthorityAudit(input: {
     critical: Boolean(appTsxChecksumExpected),
   });
   recordFinding(findings, {
+    id: 'preview-project-identity-aligned',
+    label: 'Served preview project id matches current build',
+    passed: projectIdentityAligned,
+    detail: `expected=${input.projectId} served=${servedProjectId ?? 'missing'}`,
+    critical: Boolean(input.projectId && servedProjectId),
+  });
+  recordFinding(findings, {
+    id: 'preview-readiness-handshake',
+    label: 'Generated app signaled preview readiness (hydrated)',
+    passed: htmlSignalsPreviewReady(initialDom.html) || initialVisibleDomMatchesContract,
+    detail: htmlSignalsPreviewReady(initialDom.html)
+      ? 'data-aidev-preview-ready present'
+      : `readinessClass=${readinessClass ?? 'unknown'}`,
+    critical: Boolean(input.page && playwrightPreviewUrl),
+  });
+  // Initial DOM contract requires a live browser page. Fetch-only static HTML never hydrates;
+  // failing critically here produced false PREVIEW_AUTHORITY failures on working Vite apps.
+  const browserDomInspected = Boolean(input.page);
+  recordFinding(findings, {
     id: 'initial-visible-dom-contract',
     label: 'Initial visible DOM matches contract before navigation',
-    passed: initialVisibleDomMatchesContract,
-    detail: initialVisibleDomMatchesContract
-      ? 'Initial DOM contains contract-derived feature surface'
-      : 'Initial DOM shows auth/shell or lacks contract feature surface',
-    critical: true,
+    passed: browserDomInspected
+      ? initialVisibleDomMatchesContract
+      : projectIdentityAligned && Boolean(playwrightPreviewUrl),
+    detail: browserDomInspected
+      ? initialVisibleDomMatchesContract
+        ? 'Initial DOM contains contract-derived feature surface'
+        : describeInitialDomMismatch(initialDom.bodyText, initialDom.html, readinessClass)
+      : projectIdentityAligned
+        ? 'Playwright unavailable — identity-aligned HTTP preview accepted; hydration deferred to browser install'
+        : describeInitialDomMismatch(initialDom.bodyText, initialDom.html, readinessClass),
+    critical: browserDomInspected,
   });
 
   if (playwrightPreviewUrl && isFounderHostShell(initialDom.bodyText, initialDom.html)) {

@@ -806,12 +806,41 @@ export function extractRequestedConcepts(input: ProductFaithfulnessInput): {
   return { concepts, domainLabel: domainResult.domainLabel, domainClassification: domainResult.domainClassification };
 }
 
+/** File/path evidence mints false chips (Contacts from src/features/contacts/…). */
+function isPathLikeComponentEvidence(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return true;
+  return /[\\/]/.test(trimmed) || /\.(tsx?|jsx?|css|json)$/i.test(trimmed) || /^src\b/i.test(trimmed);
+}
+
+/**
+ * workspaceManifestSummary may carry short stage concept labels (Appointments, Calendar) or
+ * long promptSummary prose. Only short label entries are generated-surface evidence — prose and
+ * single-token classifier residue are omitted so Contacts/Cart chips cannot reappear.
+ */
+function workspaceSummaryEvidenceText(summaries: readonly string[] | null | undefined): string {
+  if (!summaries?.length) return '';
+  return summaries
+    .map((s) => s.trim())
+    .filter((s) => {
+      if (!s || s.length > 64 || /[.!?]/.test(s)) return false;
+      // Bare classifier tokens (contacts, cart) without a multi-word product label.
+      if (!/\s/.test(s) && !/-/.test(s) && /^(contacts?|cart|checkout|notes?|products?|inventory|stock)$/i.test(s)) {
+        return false;
+      }
+      return true;
+    })
+    .join(' ');
+}
+
 /** Extracts what was actually generated — direct evidence only, never inferred beyond it. */
 export function extractGeneratedConcepts(input: ProductFaithfulnessInput): ExtractedProductConcept[] {
+  // Keep PascalCase component *names* (AppointmentList, AdditionButton) — drop path strings only.
+  const componentNames = (input.generatedComponents ?? []).filter((c) => !isPathLikeComponentEvidence(c));
   const parts: Array<{ text: string; source: ProductConceptSource }> = [
     { text: (input.generatedRoutes ?? []).join(' '), source: 'ROUTES' },
     { text: (input.generatedPages ?? []).join(' '), source: 'PAGES' },
-    { text: (input.generatedComponents ?? []).join(' '), source: 'COMPONENTS' },
+    { text: componentNames.join(' '), source: 'COMPONENTS' },
     { text: (input.generatedFeatureModules ?? []).join(' '), source: 'FEATURE_MODULES' },
     { text: (input.navigationLabels ?? []).join(' '), source: 'NAVIGATION' },
     { text: (input.visibleHeadings ?? []).join(' '), source: 'VISIBLE_UI_TEXT' },
@@ -828,24 +857,30 @@ export function extractGeneratedConcepts(input: ProductFaithfulnessInput): Extra
     {
       text: [
         (input.materializationManifestHints?.featureModuleNames ?? []).join(' '),
-        (input.materializationManifestHints?.promptTerms ?? []).join(' '),
         (input.materializationManifestHints?.routes ?? []).join(' '),
       ].join(' '),
       source: 'MATERIALIZATION_MANIFEST',
     },
-    { text: (input.workspaceManifestSummary ?? []).join(' '), source: 'MATERIALIZATION_MANIFEST' },
+    {
+      text: workspaceSummaryEvidenceText(input.workspaceManifestSummary),
+      source: 'MATERIALIZATION_MANIFEST',
+    },
   ];
+  // Intentionally omit generatedComponents path strings (src/features/...) — filtered above.
+  // Intentionally omit workspaceManifestSummary / promptTerms classifier labels — those mint
+  // false Contacts/Features chips.
 
   const allText = parts.map((p) => p.text).join(' ');
   const tokens = new Set(tokenize(allText));
   const blobWords = joinedBlobWords(allText);
 
   const direct = directConceptMatches(tokens, blobWords, ['ROUTES', 'COMPONENTS', 'FEATURE_MODULES', 'NAVIGATION', 'VISIBLE_UI_TEXT']);
-  const generic = genericFallbackConcepts(tokenize(allText), ['VISIBLE_UI_TEXT'], 10);
+  // Do not promote path-segment generics (Features/Feature) from file trees as product concepts.
 
-  const extracted = dedupeConcepts([...direct, ...generic]);
+  const extracted = dedupeConcepts([...direct]);
   const generatedModuleIds = [
     ...(input.generatedFeatureModules ?? []),
+    ...componentNames,
     ...(input.navigationLabels ?? []),
     ...(input.materializationManifestHints?.featureModuleNames ?? []),
     ...(input.generatedRoutes ?? []),
@@ -853,6 +888,6 @@ export function extractGeneratedConcepts(input: ProductFaithfulnessInput): Extra
   return supplementWithGeneratedModules(
     extracted,
     generatedModuleIds,
-    ['FEATURE_MODULES', 'NAVIGATION', 'MATERIALIZATION_MANIFEST'],
+    ['FEATURE_MODULES', 'COMPONENTS', 'NAVIGATION', 'MATERIALIZATION_MANIFEST'],
   );
 }
